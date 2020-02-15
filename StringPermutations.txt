@@ -1,0 +1,18 @@
+s = "abc"
+first = "a"
+remainder = "bc"
+words = "bc, cb"
+permutations = "abc, bac, bca, ..."
+
+ s = "bc"
+ first = "b"
+ remainder = "c"
+ words = "c"
+ permutations = "bc, cb"
+
+   s = "c"
+   first = "c"
+   remainder = ""
+   words = ""
+   permutations = "c"
+

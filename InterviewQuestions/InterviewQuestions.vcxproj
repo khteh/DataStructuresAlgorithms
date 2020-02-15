@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{153DF1CE-50A7-419E-B21C-4E1865E779B2}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>InterviewQuestions</RootNamespace>
+    <SccProjectName>SAK</SccProjectName>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccProvider>SAK</SccProvider>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>-std=c++11</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Call.h" />
+    <ClInclude Include="CallHandler.h" />
+    <ClInclude Include="Card.h" />
+    <ClInclude Include="DiamondProblem.h" />
+    <ClInclude Include="FunctionObject.h" />
+    <ClInclude Include="interval_map.h" />
+    <ClInclude Include="KDTree.h" />
+    <ClInclude Include="LinkedList.h" />
+    <ClInclude Include="NodeTest.h" />
+    <ClInclude Include="Square.h" />
+    <ClInclude Include="TreasureGame.h" />
+    <ClInclude Include="VertexEdge.h" />
+    <ClInclude Include="Employee.h" />
+    <ClInclude Include="Error.h" />
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="Heap.h" />
+    <ClInclude Include="InterviewQuestions.h" />
+    <ClInclude Include="MyQueue.h" />
+    <ClInclude Include="MyStack.h" />
+    <ClInclude Include="NameHidingExample.h" />
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="Poker.h" />
+    <ClInclude Include="PrefixTrie.h" />
+    <ClInclude Include="PriorityQueueMedian.h" />
+    <ClInclude Include="Singleton.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SuffixTree.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Tower.h" />
+    <ClInclude Include="Tree.h" />
+    <ClInclude Include="Trie.h" />
+    <ClInclude Include="Vertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Call.cpp" />
+    <ClCompile Include="CallHandler.cpp" />
+    <ClCompile Include="Card.cpp" />
+    <ClCompile Include="DiamondProblem.cpp" />
+    <ClCompile Include="FunctionObject.cpp" />
+    <ClCompile Include="interval_map.cpp" />
+    <ClCompile Include="KDTree.cpp" />
+    <ClCompile Include="LinkedList.cpp" />
+    <ClCompile Include="NodeTest.cpp" />
+    <ClCompile Include="Square.cpp" />
+    <ClCompile Include="TreasureGame.cpp" />
+    <ClCompile Include="VertexEdge.cpp" />
+    <ClCompile Include="Employee.cpp" />
+    <ClCompile Include="Error.cpp" />
+    <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="Heap.cpp" />
+    <ClCompile Include="InterviewQuestions.cpp" />
+    <ClCompile Include="MyQueue.cpp" />
+    <ClCompile Include="MyStack.cpp" />
+    <ClCompile Include="NameHidingExample.cpp" />
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Poker.cpp" />
+    <ClCompile Include="PrefixTrie.cpp" />
+    <ClCompile Include="PriorityQueueMedian.cpp" />
+    <ClCompile Include="Singleton.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SuffixTree.cpp" />
+    <ClCompile Include="Tower.cpp" />
+    <ClCompile Include="Tree.cpp" />
+    <ClCompile Include="Trie.cpp" />
+    <ClCompile Include="Vertex.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

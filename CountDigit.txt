@@ -1,0 +1,51 @@
+----- Algo for 0...n (n < 10):  -----
+first-digit: (power=1, remainder=0)
+if (remainder > 2): 1
+
+other-digits:
+n/power * F(0) + F(0) = 0
+
+----- Algo for 0...n (n < 100): -----
+15: (power=10, remainder=9)
+last-digit: 1(2) + 1(12)
+first-digit: 0
+
+25:
+last-digit: 2 (2 x 1) + 1(22)
+first-digit: 6 (20...25)
+
+35:
+last-digit: 3 (3 x 1) + 1(32)
+first-figit: 10
+
+65:
+last-digit: 6 (6 x 1) + 1(62)
+first-digit: 10 (20...29)
+
+first-digit:
+if (n/power == 2): remainder + 1
+if (n/power > 2): power(10)
+
+other digits:
+n/power * F(9) + F(remainder) = 10 <== KEY
+
+first-digit + other-digits = 20
+
+----- Algo for 0...n (n < 200): -----
+0...199: (power=100, remainder=99)
+First-digit: 0
+if (n/power == 2): remainder + 1
+if (n/power > 2): power(100)
+
+Other digits:
+n/power * F(99) + F(99) = 40
+
+----- Algo for 0...n (n < 1000): -----
+0...345: (power=100, remainder=45)
+3 x 20(0...99) + 100(200...299) + remainder(45)
+First-digit:
+if (n/power == 2): remainder + 1
+if (n/power > 2): power(100)
+
+other-digit:
+n/power * F(99) + F(45) = 3 * 20 + 15

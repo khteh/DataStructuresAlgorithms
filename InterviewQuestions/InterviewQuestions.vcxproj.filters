@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tower.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyStack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityQueueMedian.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SuffixTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InterviewQuestions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DiamondProblem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Heap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NameHidingExample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Card.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Poker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Call.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Employee.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CallHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Trie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PrefixTrie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexEdge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KDTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Square.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TreasureGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interval_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InterviewQuestions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tower.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyStack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PriorityQueueMedian.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SuffixTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DiamondProblem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Heap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NameHidingExample.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Singleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Card.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Poker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Call.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Employee.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CallHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Trie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PrefixTrie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Error.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexEdge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkedList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KDTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Square.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TreasureGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FunctionObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interval_map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

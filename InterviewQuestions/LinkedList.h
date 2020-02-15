@@ -1,0 +1,19 @@
+#pragma once
+#include "Node.h"
+#include <vector>
+#include <iostream>
+using namespace std;
+template<class T>
+class LinkedList
+{
+private:
+	Node<T> *m_head;
+public:
+	LinkedList(Node<T>*);
+	LinkedList(vector<T>&);
+	virtual ~LinkedList();
+	void Print(Node<T>* n = nullptr);
+	void SplitList(Node<T>*&, Node<T>*&);
+	void ToVector(vector<T>&);
+	size_t Length();
+};
