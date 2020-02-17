@@ -16,4 +16,6 @@ public:
 	void SplitList(Node<T>*&, Node<T>*&);
 	void ToVector(vector<T>&);
 	size_t Length();
+	// Implement an algorithm to find the nth to last element of a singly linked list.
+	Node<T>* NthElementFromBack(size_t);
 };

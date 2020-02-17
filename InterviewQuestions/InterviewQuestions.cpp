@@ -1130,6 +1130,20 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Odd: ";
 	ll.Print(odd);
 	ll.Print();
+	a.clear();
+	for (size_t i = 0; i < 10; i++)
+		a.push_back(i);
+	LinkedList<long> ll1(a);
+	assert(ll1.Length() == 10);
+	// Implement an algorithm to find the nth to last element of a singly linked list.
+	Node<long>* lptr = ll1.NthElementFromBack(3);
+	assert(lptr);
+	assert(lptr->Item() == 7);
+	lptr = ll1.NthElementFromBack(10);
+	assert(lptr);
+	assert(lptr->Item() == 0);
+	lptr = ll1.NthElementFromBack(11);
+	assert(!lptr);
 	Square square1(0, 0, 10, 10), square2(5, 5, 10, 10);
 	assert(square1.IsOverlappig(square2));
 	assert(square2.IsOverlappig(square1));
@@ -1743,10 +1757,13 @@ void RemoveDuplicateCharacters(string& str)
 }
 bool areAnagrams(string const &s1, string const &s2)
 {
-	string str1(s1), str2(s2);
-	sort(str1.begin(), str1.end());
-	sort(str2.begin(), str2.end());
-	return str1 == str2;
+	if (s1.size() == s2.size()) {
+		string str1(s1), str2(s2);
+		sort(str1.begin(), str1.end());
+		sort(str2.begin(), str2.end());
+		return str1 == str2;
+	} else
+		return false;
 }
 void FindAnagrams(vector<string> const& s, vector<vector<string>> &result)
 {

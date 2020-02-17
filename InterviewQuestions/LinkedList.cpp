@@ -90,3 +90,17 @@ size_t LinkedList<T>::Length()
 		length++;
 	return length;
 }
+template<class T>
+Node<T>* LinkedList<T>::NthElementFromBack(size_t n)
+{
+	Node<T> *p1 = m_head;
+	Node<T>* p2 = m_head;
+	for (size_t i = 0; i < n - 1 && p2; i++, p2 = p2->Next());
+	if (!p2)
+		return nullptr;
+	while (p2->Next()) {
+		p1 = p1->Next();
+		p2 = p2->Next();
+	}
+	return p1;
+}
