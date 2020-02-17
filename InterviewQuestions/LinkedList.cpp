@@ -36,7 +36,10 @@ LinkedList<T>::~LinkedList()
 		delete tmp;
 	}
 }
-
+template<class T>
+Node<T>* LinkedList<T>::Head() {
+	return m_head;
+}
 template<class T>
 void LinkedList<T>::Print(Node<T> *node)
 {
@@ -103,4 +106,24 @@ Node<T>* LinkedList<T>::NthElementFromBack(size_t n)
 		p2 = p2->Next();
 	}
 	return p1;
+}
+// Input: 
+//   p1:   3 -> 1 -> 5
+//   p2:   5 -> 9 -> 2
+// Output: 8 -> 0 -> 8
+template<class T>
+Node<T>* LinkedList<T>::AddNumbers(Node<T>* p1, Node<T>* p2, T carry)
+{
+	if (p1 || p2 || carry > T()) {
+		Node<T>* result = new Node<T>(carry);
+		if (p1)
+			result->SetItem(result->Item() + p1->Item());
+		if (p2)
+			result->SetItem(result->Item() + p2->Item());
+		carry = result->Item() / 10;
+		result->SetItem(result->Item() % 10);
+		result->SetNext(AddNumbers(p1 ? p1->Next() : nullptr, p2 ? p2->Next() : nullptr, carry));
+		return result;
+	}
+	return nullptr;
 }

@@ -12,10 +12,12 @@ public:
 	LinkedList(Node<T>*);
 	LinkedList(vector<T>&);
 	virtual ~LinkedList();
+	Node<T>* Head();
 	void Print(Node<T>* n = nullptr);
 	void SplitList(Node<T>*&, Node<T>*&);
 	void ToVector(vector<T>&);
 	size_t Length();
 	// Implement an algorithm to find the nth to last element of a singly linked list.
 	Node<T>* NthElementFromBack(size_t);
+	Node<T>* AddNumbers(Node<T>*, Node<T>*, T carry = 0);
 };
