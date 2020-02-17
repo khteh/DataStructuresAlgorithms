@@ -106,6 +106,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	string str = "m";
 	string str1 = str.substr(1);
+	assert(str1.size() == 0);
+	str1 = str.substr(0, 0);
+	assert(str1.size() == 0);
 	cout << "sizeof(int): " << (int)sizeof(int) << endl;
 	cout << "sizeof(long): " << (int)sizeof(long) << endl;
 	cout << "sizeof(long long): " << (int)sizeof(long long) << endl;
@@ -2514,11 +2517,9 @@ void TestStringPermutations()
 }
 void parentheses(vector<string> &result, string &str, size_t index, long left, long right)
 {
-	if (left < 0 || right < left)
-		return;
-	else if (!left && !right)
+	if (!left && !right)
 		result.push_back(str);
-	else {
+	else if (left >= 0 && right >= left) {
 		if (left > 0) {
 			str[index] = '(';
 			parentheses(result, str, index + 1, left - 1, right);
