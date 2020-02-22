@@ -104,6 +104,7 @@ long NumberSolitaire(vector<long>&);
 long MaxProfit(vector<long>&);
 string decimal_to_binary(int);
 void decimal_to_binary(int decimal, vector<bool>&, size_t width);
+size_t binary_gap(long);
 void reverse(string&);
 void reverseWords(string&);
 void RemoveDuplicateCharacters(string&);

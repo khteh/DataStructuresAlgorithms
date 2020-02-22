@@ -1567,6 +1567,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(6);
 	assert(MaxProductOfThree(a) == 60);
 	IncreasingSequenceTests();
+	assert(binary_gap(9) == 2);
+	assert(binary_gap(32) == 0);
+	assert(binary_gap(529) == 4);
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -5820,6 +5823,27 @@ void decimal_to_binary(int decimal, vector<bool>& binary, size_t width)
 	for (size_t i = binary.size(); i < width; i++)
 		binary.push_back(false);
 	reverse(binary.begin(), binary.end());
+}
+// Find longest sequence of zeros in binary representation of an integer.
+// 9: 1001 => 2
+// 529: 1000010001  => 4
+// 32: 100000 => 0
+size_t binary_gap(long n)
+{
+	bool start = false;
+	int count = 0, max = 0;
+	bitset<32> x(n);
+	for (int i = 0; i < x.size(); i++) {
+		if (start && x[i] == 0)
+			count++;
+		else if (x[i] == 1) {
+			if (count > max)
+				max = count;
+			count = 0;
+			start = true;
+		}
+	}
+	return max;
 }
 //For a given array A of N integers and a sequence S of N integers from the set{ −1, 1 }, we define val(A, S) as follows :
 //val(A, S) = | sum{ A[i] * S[i] for i = 0..N−1 } |
