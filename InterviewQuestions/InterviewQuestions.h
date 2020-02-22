@@ -118,6 +118,7 @@ string FindBiggestPalindromeSubstring(string const&);
 size_t PalindromeAnagramCount(string const&);
 size_t PalindromeAnagramCount1(string const &);
 bool AreRotatedStrings(string const &, string const &, size_t);
+void RotateArray(vector<int>&, int);
 vector<size_t> FindSubString(string const &, string const s2);
 size_t KMPSearch(string const&, string const&);
 void KMPTable(string const&, vector<long>&);

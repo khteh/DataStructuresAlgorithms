@@ -1570,6 +1570,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(binary_gap(9) == 2);
 	assert(binary_gap(32) == 0);
 	assert(binary_gap(529) == 4);
+	data.clear();
+	for (size_t i = 0; i < 5; i++)
+		data.push_back(i);
+	RotateArray(data, 3);
+	for (size_t i = 0, j = 2; i < 5; i++, j = ++j % 5)
+		assert(data[i] == j);
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -6491,4 +6497,19 @@ long MaxProductOfThree(vector<long> &data)
 		return data[data.size() - 1] * (tmp1 > tmp2 ? tmp1 : tmp2);
 	else
 		return data[data.size() - 1] * (tmp1 < tmp2 ? tmp1 : tmp2);
+}
+void RotateArray(vector<int>& data, int n)
+{
+	int previous, current;
+	for (; n > 0; n--)
+		for (size_t i = 0; i < data.size(); i++) {
+			if (!i) {
+				previous = data[i];
+				data[i] = data[data.size() - 1];
+			} else {
+				current = data[i];
+				data[i] = previous;
+				previous = current;
+			}
+		}
 }
