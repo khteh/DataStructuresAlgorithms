@@ -282,3 +282,4 @@ int IncreasingSequences(vector<long>&, vector<long>&);
 void IncreasingSequenceTests();
 void cpluplus17();
 long MaxProductOfThree(vector<long>&);
+size_t CountDiv(size_t, size_t, size_t);

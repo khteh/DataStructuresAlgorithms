@@ -111,6 +111,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(str1.size() == 0);
 	cout << "sizeof(int): " << (int)sizeof(int) << endl;
 	cout << "sizeof(long): " << (int)sizeof(long) << endl;
+	cout << "sizeof(size_t): " << (int)sizeof(size_t) << endl;
 	cout << "sizeof(long long): " << (int)sizeof(long long) << endl;
 	cout << "sizeof(unsigned long long): " << (int)sizeof(unsigned long long) << endl;
 	cout << "sizeof(double): " << (int)sizeof(double) << endl;
@@ -1576,6 +1577,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	RotateArray(data, 3);
 	for (size_t i = 0, j = 2; i < 5; i++, j = ++j % 5)
 		assert(data[i] == j);
+	assert(CountDiv(6, 11, 2) == 3);
+	assert(CountDiv(6, 11, 6) == 1);
+	//assert(CountDiv(101, 123450000, 10000) == 12345);
+	assert(CountDiv(0, 2000000000, 2000000000) == 2);
+	assert(CountDiv(0, numeric_limits<int>::max(), numeric_limits<int>::max()) == 2);
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -5748,38 +5754,22 @@ size_t CountTriangles(vector<long>& data)
 	}
 	return result;
 }
-size_t MaxNonOverlappingSegments(vector<long>& a, vector<long>& b)
+// https://app.codility.com/programmers/lessons/16-greedy_algorithms/max_nonoverlapping_segments/
+// 100%
+size_t MaxNonOverlappingSegments(vector<long>& head, vector<long>& tail)
 {
-	vector<string> segments;
-	ostringstream oss;
-	size_t n = min(a.size(), b.size());
-	oss << 0;
-	segments.push_back(oss.str());
-	oss.str("");
-	size_t max = min(n, (size_t)1);
-	for (size_t i = 1; i < n; i++) {
-		vector<string> tmp;
-		for (vector<string>::iterator it = segments.begin(); it != segments.end(); it++) {
-			vector<string> segments1;
-			split(*it, ',', segments1);
-			string::size_type sz;   // alias of size_t
-			size_t index = it->find_last_of(',') + 1;
-			int j = std::stoi(it->substr(index), &sz);
-			if (a[i] > b[j]) {
-				oss << *it << ',' << i;
-				*it = oss.str();
-				oss.str("");
-				if (segments1.size() + 1 > max)
-					max = segments1.size() + 1;
-			} else {
-				oss << i;
-				tmp.push_back(oss.str());
-				oss.str("");
+	size_t count = 0, last_nonoverlapping_tail;
+	if (!head.empty() && !tail.empty() && head.size() == tail.size()) {
+		last_nonoverlapping_tail = tail[0];
+		count++;
+		for (size_t i = 1; i < head.size(); i++) {
+			if (head[i] > last_nonoverlapping_tail) {
+				last_nonoverlapping_tail = tail[i];
+				count++;
 			}
 		}
-		copy(segments.begin(), segments.end(), back_inserter(tmp));
 	}
-	return max;
+	return count;
 }
 //There are N ropes numbered from 0 to N − 1, whose lengths are given in a zero - indexed array A, lying on the floor in a line.For each I(0 ≤ I < N), the length of rope I on the line is A[I].
 //	We say that two ropes I and I + 1 are adjacent.Two adjacent ropes can be tied together with a knot, and the length of the tied rope is the sum of lengths of both ropes.The resulting new rope can then be tied again.
@@ -6512,4 +6502,26 @@ void RotateArray(vector<int>& data, int n)
 				previous = current;
 			}
 		}
+}
+// https://app.codility.com/programmers/lessons/5-prefix_sums/count_div/
+// Pending. Only 87%
+size_t CountDiv(size_t a, size_t b, size_t k)
+{
+	if (b < a || k > b)
+		return 0;
+	else if (b == a)
+		return !(a % k) ? 1 : 0;
+	else if (k == 1)
+		return b - a + 1;
+	else if (!a && k == b)
+		return 2;
+	else {
+		//size_t multiples = (b - a + 1) / k;
+		// n * k >= a => n >= a / k
+		//size_t first = round(a / k);
+		//size_t last = first + k * multiples;
+		//return (last + multiples <= b) ? multiples++ : multiples;
+		double result = ((double)b - (double)a + (double)1) / (double)k;
+		return !(k % 10) ? floor(result) : round(result);
+	}
 }
