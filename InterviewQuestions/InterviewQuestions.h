@@ -97,6 +97,7 @@ long ConsecutiveLargestSumOfFactors(vector<zerofactors_t>& data, vector<zerofact
 long LongestNonNegativeSumSlice(vector<long>&);
 size_t CountDistinctSlices(long m, vector<long>&);
 size_t CountTriangles(vector<long>&);
+// Greedy Algorithms
 size_t MaxNonOverlappingSegments(vector<long>&, vector<long>&);
 size_t TieRopes(vector<long>&, long);
 long MinAbsSum(vector<long>&);
