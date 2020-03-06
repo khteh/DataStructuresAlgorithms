@@ -2759,7 +2759,8 @@ void findPrimes(unsigned long n, vector<long>& result)
 	}
 }
 // https://app.codility.com/programmers/lessons/12-euclidean_algorithm/common_prime_divisors/
-// 100% correctness. Timeout error.
+// Correctness: 100%
+// 61% due to timeout
 size_t CommonPrimeDivisors(vector<long>& data1, vector<long>& data2)
 {
 	vector<size_t> indices;
