@@ -35,6 +35,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	NameHidingExample *hide1 = new NameHidingExampleDerived(0xdeadbeef);
 	ExceptionTest();
 	TestRandom();
+	TestGreedyAlgorithms();
 	SparseNumberTests();
 	sortingTests();
 	TestBinarySearch();
@@ -547,6 +548,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	d = round(0.1234, 3);
 	d = round(0.1234, 4);
 	assert(factorial(5) == 120);
+	assert(SequenceSum(0) == 0);
+	assert(SequenceSum(1) == 1);
+	assert(SequenceSum(5) == 15);
 	assert(fibonacci(-1) == -1);
 	assert(fibonacci(0) == 0);
 	assert(fibonacci(1) == 1);
@@ -577,8 +581,28 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	a.clear();
 	b.clear();
-	findPrime(20, a); // Find prime numbers 0 to 20: 2,3,5,7,11,13,17,19
+	findPrimes(20, a); // Find prime numbers 0 to 20: 2,3,5,7,11,13,17,19
 	assert(a.size() == 8);
+	a.clear();
+	b.clear();
+	a.push_back(15);
+	a.push_back(10);
+	a.push_back(3);
+	b.push_back(75);
+	b.push_back(30);
+	b.push_back(5);
+	assert(CommonPrimeDivisors(a, b) == 1);
+	a.clear();
+	b.clear();
+	a.push_back(7);
+	a.push_back(17);
+	a.push_back(5);
+	a.push_back(3);
+	b.push_back(7);
+	b.push_back(11);
+	b.push_back(5);
+	b.push_back(2);
+	assert(CommonPrimeDivisors(a, b) == 2);
 	cout << "Prime numbers from 0 to 20: ";
 	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
 	cout << endl;
@@ -1191,19 +1215,66 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(ChocolatesByNumbers(10, 2) == 5);
 	assert(ChocolatesByNumbers(10, 4) == 5);
 	a.clear();
-	a.push_back(3);
-	a.push_back(4);
-	a.push_back(5);
-	a.push_back(5);
-	a.push_back(2);
+	a.push_back(3); // 3
+	a.push_back(4); // 2
+	a.push_back(5); // 1
+	a.push_back(5); // 2
+	a.push_back(2); // 1
 	assert(CountDistinctSlices(6, a) == 9);
 	a.clear();
-	a.push_back(0);
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(3);
-	a.push_back(4);
-	assert(CountDistinctSlices(6, a) == 15);
+	a.push_back(0); // 5
+	a.push_back(1); // 4
+	a.push_back(2); // 3
+	a.push_back(3); // 2
+	a.push_back(4); // 1
+	assert(CountDistinctSlices(6, a) == 15); // 5 + 4 + 3
+	a.clear();
+	a.push_back(1); // 5
+	a.push_back(1); // 4
+	a.push_back(1); // 3
+	a.push_back(1); // 2
+	a.push_back(1); // 1
+	assert(CountDistinctSlices(2, a) == 5); // 5 + 4 + 3
+	a.clear();
+	a.push_back(1); // 2
+	a.push_back(2); // 1
+	a.push_back(2); // 2
+	a.push_back(3); // 1
+	a.push_back(3); // 2
+	a.push_back(4); // 1
+	assert(CountDistinctSlices(3, a) == 9); // 5 + 4 + 3
+	a.clear();
+	a.push_back(1); // 2
+	a.push_back(2); // 1
+	a.push_back(2); // 3
+	a.push_back(3); // 2
+	a.push_back(4); // 1
+	a.push_back(4); // 1
+	assert(CountDistinctSlices(3, a) == 10); // 5 + 4 + 3
+	a.clear();
+	a.push_back(1); // 1
+	a.push_back(1); // 4
+	a.push_back(2); // 3
+	a.push_back(3); // 2
+	a.push_back(4); // 1
+	a.push_back(4); // 1
+	assert(CountDistinctSlices(3, a) == 12); // 5 + 4 + 3
+	a.clear();
+	a.push_back(1); // 2
+	a.push_back(2); // 1
+	a.push_back(1); // 3
+	a.push_back(2); // 2
+	a.push_back(4); // 1
+	a.push_back(4); // 1
+	assert(CountDistinctSlices(3, a) == 10); // 5 + 4 + 3
+	a.clear();
+	a.push_back(1); // 2
+	a.push_back(2); // 1
+	a.push_back(3); // 3
+	a.push_back(4); // 2
+	a.push_back(5); // 1
+	a.push_back(6); // 1
+	assert(CountDistinctSlices(3, a) == 21); // 5 + 4 + 3
 	a.clear();
 	a.push_back(10);
 	a.push_back(2);
@@ -1212,56 +1283,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(8);
 	a.push_back(12);
 	assert(CountTriangles(a) == 4);
-	a.clear();
-	a.push_back(1);
-	a.push_back(3);
-	a.push_back(7);
-	a.push_back(9);
-	a.push_back(9);
-	b.clear();
-	b.push_back(5);
-	b.push_back(6);
-	b.push_back(8);
-	b.push_back(9);
-	b.push_back(10);
-	assert(MaxNonOverlappingSegments(a, b) == 3);
-	a.clear();
-	a.push_back(1);
-	a.push_back(6);
-	a.push_back(7);
-	a.push_back(9);
-	a.push_back(10);
-	b.clear();
-	b.push_back(5);
-	b.push_back(6);
-	b.push_back(8);
-	b.push_back(9);
-	b.push_back(10);
-	assert(MaxNonOverlappingSegments(a, b) == 5); // No overlapping segments
-	a.clear();
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(3);
-	a.push_back(4);
-	a.push_back(5);
-	a.push_back(6);
-	b.clear();
-	b.push_back(5);
-	b.push_back(6);
-	b.push_back(7);
-	b.push_back(8);
-	b.push_back(9);
-	b.push_back(10);
-	assert(MaxNonOverlappingSegments(a, b) == 2);
-	a.clear();
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(3);
-	a.push_back(4);
-	a.push_back(1);
-	a.push_back(1);
-	a.push_back(3);
-	assert(TieRopes(a, 4) == 3);
 	assert(decimal_to_binary(0) == "0");
 	a.clear();
 	a.push_back(1);
@@ -1732,7 +1753,7 @@ long LongestNonNegativeSumSlice(vector<long>& data)
 	}
 	return max_len;
 }
-size_t CountDistinctSlices(long m, vector<long>& data)
+size_t CountDistinctSlices1(long m, vector<long>& data)
 {
 	size_t slices = 0;
 	set<string> uniqueslices;
@@ -1748,6 +1769,27 @@ size_t CountDistinctSlices(long m, vector<long>& data)
 		i = j;
 	}
 	return slices;
+}
+// a.push_back(3); // 3
+// a.push_back(4); // 2
+// a.push_back(5); // 1
+// a.push_back(5); // 2
+// a.push_back(2); // 1
+size_t CountDistinctSlices(long m, vector<long>& data)
+{
+	size_t slices = 0, start = 0;
+	set<long> unique;
+	for (size_t i = 0; i < data.size(); i++) {
+		if (unique.find(data[i]) == unique.end())
+			unique.emplace(data[i]);
+		else {
+			slices += SequenceSum(i - start);
+			start = i;
+			unique.clear();
+			unique.emplace(data[i]);
+		}
+	}
+	return slices + SequenceSum(data.size() - start);
 }
 // "Hello World!!!" -> "!!!dlroW olleH"
 void reverse(string& str)
@@ -2071,6 +2113,11 @@ long fibonacci(long n)
 unsigned long long factorial(long n)
 {
 	return (n <= 0) ? 1 : n * factorial(n - 1);
+}
+long SequenceSum(long n)
+{
+	//return (n <= 0) ? 0 : n + SequenceSum(n - 1);
+	return (n + 1) * (n) / 2;
 }
 /*
  Trailing zeros are contributed by pairs of 5 and 2, because 5*2 = 10. 
@@ -2694,7 +2741,7 @@ void findDistinct(vector<long>& input, vector<long>& output)
 }
 
 // http://en.wikipedia.org/wiki/Prime_number - Trial division implementation
-void findPrime(unsigned long n, vector<long>& result)
+void findPrimes(unsigned long n, vector<long>& result)
 {
 	if (n <= 3) {
 		result.push_back(2);
@@ -2706,12 +2753,36 @@ void findPrime(unsigned long n, vector<long>& result)
 		for (unsigned long i = 4; i <= n; i++) {
 			long double sqrtI = sqrt(i);
 			for (j = 2; j <= sqrtI && (i % (long)j); j++);
-			if (j >= sqrtI && (i % (long)j))
+			if (j > sqrtI)
 				result.push_back(i);
 		}
 	}
 }
-
+// https://app.codility.com/programmers/lessons/12-euclidean_algorithm/common_prime_divisors/
+// 100% correctness. Timeout error.
+size_t CommonPrimeDivisors(vector<long>& data1, vector<long>& data2)
+{
+	vector<size_t> indices;
+	vector<long> a(data1), b(data2);
+	sort(a.begin(), a.end());
+	sort(b.begin(), b.end());
+	long maxNum = max(a.back(), b.back());
+	vector<long> primes;
+	findPrimes(maxNum, primes);
+	if (data1.size() == 1 && data2.size() == 1 && data1[0] == 1 && data2[0] == 1)
+		return 1;
+	for (size_t i = 0; i < data1.size(); i++) {
+		maxNum = max(data1[i], data2[i]);
+		bool flag = true;
+		for (vector<long>::const_iterator it = primes.begin(); it < primes.end() && *it <= maxNum; it++) {
+			if (!(data1[i] % *it) ^ !(data2[i] % *it))
+				flag = false;
+		}
+		if (flag)
+			indices.push_back(i);
+	}
+	return indices.size();
+}
 // 2 1 1 2 => (2+1)*(2+1) = 9
 // 2 3 3 2 :
 // (1) 2 + 3 + 3 + 2 = 10
@@ -5700,33 +5771,6 @@ void OrderedMergedCombinations(set<string>&result, string &s1, string &s2, strin
 	//for (size_t i = 0; i <= s1.size(); i++) // Same result as above
 	//	OrderedMergedCombinations(result, s1.substr(i, s1.size() - i), s2.substr(1, s2.size() - 1), cur + s1.substr(0, i) + s2[0]);
 }
-//Two positive integers N and M are given.Integer N represents the number of chocolates arranged in a circle, numbered from 0 to N − 1.
-//You start to eat the chocolates.After eating a chocolate you leave only a wrapper.
-//You begin with eating chocolate number 0. Then you omit the next M − 1 chocolates or wrappers on the circle, and eat the following one.
-//More precisely, if you ate chocolate number X, then you will next eat the chocolate with number(X + M) modulo N(remainder of division).
-//You stop eating when you encounter an empty wrapper.
-//For example, given integers N = 10 and M = 4. You will eat the following chocolates : 0, 4, 8, 2, 6.
-//The goal is to count the number of chocolates that you will eat, following the above rules.
-size_t ChocolatesByNumbers(size_t n, size_t m)
-{
-	set<size_t> status;
-	if (n == 0 || m == 0)
-		return 0;
-	else if (n == 1 && m > n)
-		return 1;
-	else if (m == 1)
-		return n;
-	else if (m == 2)
-		return n / 2;
-	for (size_t i = 0; status.find(i) == status.end(); ) {
-		status.emplace(i);
-		size_t j = i;
-		i = (i + m) % n;
-		if (i < j && i == 0)
-			break;
-	}
-	return status.size();
-}
 //A zero - indexed array A consisting of N integers is given.A triplet(P, Q, R) is triangular if it is possible to build a triangle with sides of lengths A[P], A[Q] and A[R].In other words, triplet(P, Q, R) is triangular if 0 ≤ P < Q < R < N and:
 //
 //•A[P] + A[Q] > A[R],
@@ -5784,6 +5828,60 @@ size_t TieRopes(vector<long>& data, long n)
 			result++;
 	}
 	return result;
+}
+void TestGreedyAlgorithms()
+{
+	vector<long> a, b;
+	a.clear();
+	a.push_back(1);
+	a.push_back(3);
+	a.push_back(7);
+	a.push_back(9);
+	a.push_back(9);
+	b.clear();
+	b.push_back(5);
+	b.push_back(6);
+	b.push_back(8);
+	b.push_back(9);
+	b.push_back(10);
+	assert(MaxNonOverlappingSegments(a, b) == 3);
+	a.clear();
+	a.push_back(1);
+	a.push_back(6);
+	a.push_back(7);
+	a.push_back(9);
+	a.push_back(10);
+	b.clear();
+	b.push_back(5);
+	b.push_back(6);
+	b.push_back(8);
+	b.push_back(9);
+	b.push_back(10);
+	assert(MaxNonOverlappingSegments(a, b) == 5); // No overlapping segments
+	a.clear();
+	a.push_back(1);
+	a.push_back(2);
+	a.push_back(3);
+	a.push_back(4);
+	a.push_back(5);
+	a.push_back(6);
+	b.clear();
+	b.push_back(5);
+	b.push_back(6);
+	b.push_back(7);
+	b.push_back(8);
+	b.push_back(9);
+	b.push_back(10);
+	assert(MaxNonOverlappingSegments(a, b) == 2);
+	a.clear();
+	a.push_back(1);
+	a.push_back(2);
+	a.push_back(3);
+	a.push_back(4);
+	a.push_back(1);
+	a.push_back(1);
+	a.push_back(3);
+	assert(TieRopes(a, 4) == 3);
 }
 string decimal_to_binary(int decimal)
 {
@@ -6509,4 +6607,30 @@ size_t CountDiv(size_t a, size_t b, size_t k)
 		double result = ((double)b - (double)a + (double)1) / (double)k;
 		return !(k % 10) ? floor(result) : round(result);
 	}
+}
+// https://app.codility.com/programmers/lessons/12-euclidean_algorithm/chocolates_by_numbers/
+// Correctness: 100%
+// 87% due to timeout
+long ChocolatesByNumbers(long n, long m)
+{
+	long count = 0;
+	if (n <= 0 || m <= 0)
+		return 0;
+	else if (n == 1 && m > n)
+		return 1;
+	else if (m == 1)
+		return n;
+	else if (m == 2)
+		return n / 2;
+	long greatestCommonDivisor = gcd(n, m);
+	long N = n / greatestCommonDivisor;
+	long M = m / greatestCommonDivisor;
+	for (size_t i = 0; i < N;) {
+		count++;
+		i += M;
+		i %= N;
+		if (!i)
+			break;
+	}
+	return count;
 }
