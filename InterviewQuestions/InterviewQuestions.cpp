@@ -1214,6 +1214,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(ChocolatesByNumbers(10, 1) == 10);
 	assert(ChocolatesByNumbers(10, 2) == 5);
 	assert(ChocolatesByNumbers(10, 4) == 5);
+	//ChocolatesByNumbers(415633212, 234332);
 	a.clear();
 	a.push_back(3); // 3
 	a.push_back(4); // 2
@@ -6611,7 +6612,7 @@ size_t CountDiv(size_t a, size_t b, size_t k)
 }
 // https://app.codility.com/programmers/lessons/12-euclidean_algorithm/chocolates_by_numbers/
 // Correctness: 100%
-// 87% due to timeout
+// 87% due to timeout. For example: ChocolatesByNumbers(415633212, 234332);
 long ChocolatesByNumbers(long n, long m)
 {
 	long count = 0;
