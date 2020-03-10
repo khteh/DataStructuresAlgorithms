@@ -1604,6 +1604,20 @@ int _tmain(int argc, _TCHAR* argv[])
 	//assert(CountDiv(101, 123450000, 10000) == 12345);
 	assert(CountDiv(0, 2000000000, 2000000000) == 2);
 	assert(CountDiv(0, numeric_limits<int>::max(), numeric_limits<int>::max()) == 2);
+	a.clear();
+	a.push_back(2);
+	a.push_back(1);
+	a.push_back(5);
+	a.push_back(3);
+	a.push_back(4);
+	assert(minimumBribes(a) == 3);
+	a.clear();
+	a.push_back(2);
+	a.push_back(5);
+	a.push_back(1);
+	a.push_back(3);
+	a.push_back(4);
+	assert(minimumBribes(a) == -1);
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -6633,6 +6647,35 @@ long ChocolatesByNumbers(long n, long m)
 		i %= N;
 		if (!i)
 			break;
+	}
+	return count;
+}
+// https://www.hackerrank.com/challenges/new-year-chaos/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=arrays
+// It's New Year's Day and everyone's in line for the Wonderland rollercoaster ride! There are a number of people queued up, and each person wears a sticker indicating their initial position in the queue. Initial positions increment by  from  at the front of the line to  at the back.
+// Any person in the queue can bribe the person directly in front of them to swap positions.If two people swap positions, they still wear the same sticker denoting their original places in line.One person can bribe at most two others.For example, ifand bribes, the queue will look like this: .
+// Fascinated by this chaotic queue, you decide you must know the minimum number of bribes that took place to get the queue into its current state!
+// Use a modification of Bubble sort. Timeouts!
+size_t minimumBribes(vector<long> &data) 
+{
+	size_t count = 0;
+	long tmp;
+	map<long, size_t> bribes;
+	pair<map<long, size_t>::iterator, bool> found;
+	for (size_t lastIndex = data.size() - 1; lastIndex >= 1; lastIndex--) {
+		for (size_t i = 0; i < lastIndex; i++) {
+			if (data[i] > data[i + 1]) {
+				found = bribes.emplace(data[i], 1);
+				if (!found.second) {
+					bribes[data[i]]++;
+					if (bribes[data[i]] > 2)
+						return -1;
+				}
+				count++;
+				tmp = data[i];
+				data[i] = data[i + 1];
+				data[i + 1] = tmp;
+			}
+		}
 	}
 	return count;
 }
