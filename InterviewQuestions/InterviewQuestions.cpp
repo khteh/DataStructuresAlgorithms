@@ -5891,9 +5891,7 @@ long maxMin(long k, vector<long>& arr)
 	long unfair = numeric_limits<long>::max();
 	long max = 0;
 	for (size_t i = 0; i < arr.size() && max < arr.size() - 1; i++) {
-		max = i + k - 1;
-		while (max >= arr.size())
-			max--;
+		for (max = i + k - 1; max >= arr.size(); max--);
 		if (i != max) {
 			long diff = abs(abs(arr[max]) - abs(arr[i]));
 			if (diff < unfair)
