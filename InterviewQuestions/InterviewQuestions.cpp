@@ -5845,6 +5845,63 @@ size_t TieRopes(vector<long>& data, long n)
 	}
 	return result;
 }
+// https://www.hackerrank.com/challenges/greedy-florist/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=greedy-algorithms
+// XXX: 0%
+// 3 2
+// 2 5 6 : 1..2 [1]
+// 5 3
+// 1 3 5 7 9 : 1..2 [2]
+// 5 3
+// 1 3 5 7 9
+long getMinimumCost(long k, vector<long>& c) 
+{
+	long price = 0;
+	if (!c.empty()) {
+		size_t flowers = c.size();
+		if (flowers > k) {
+			long solos = 0;
+			while ((flowers - solos) % k) {
+				solos++;
+				k--;
+			}
+			size_t perperson = (c.size() - solos) / k;
+			sort(c.begin(), c.end());
+			size_t soloCnt = 0;
+			for (vector<long>::reverse_iterator it = c.rbegin(); it != c.rend() && soloCnt < solos; it++, soloCnt++)
+				price += *it;
+			for (size_t firstflower = c.size() - 1 - solos; k > 0; k--, firstflower--) {
+				price += c[firstflower];
+				for (size_t i = 1; i < perperson; i++) {
+					if (firstflower == perperson - 1)
+						price += c[firstflower - i] * (i + 1);
+					else
+						price += c[firstflower - perperson * i] * (i + 1);
+				}
+			}
+		} else
+			price = accumulate(c.begin(), c.end(), 0);
+	}
+	return price;
+}
+// https://www.hackerrank.com/challenges/angry-children/problem?utm_campaign=challenge-recommendation&utm_medium=email&utm_source=24-hour-campaign
+// 100%
+long maxMin(long k, vector<long>& arr) 
+{
+	sort(arr.begin(), arr.end());
+	long unfair = numeric_limits<long>::max();
+	long max = 0;
+	for (size_t i = 0; i < arr.size() && max < arr.size() - 1; i++) {
+		max = i + k - 1;
+		while (max >= arr.size())
+			max--;
+		if (i != max) {
+			long diff = abs(abs(arr[max]) - abs(arr[i]));
+			if (diff < unfair)
+				unfair = diff;
+		}
+	}
+	return unfair;
+}
 void TestGreedyAlgorithms()
 {
 	vector<long> a, b;
@@ -5898,6 +5955,55 @@ void TestGreedyAlgorithms()
 	a.push_back(1);
 	a.push_back(3);
 	assert(TieRopes(a, 4) == 3);
+	a.clear();
+	a.push_back(2);
+	a.push_back(5);
+	a.push_back(6);
+	assert(getMinimumCost(2, a) == 15);
+	a.clear();
+	a.push_back(1);
+	a.push_back(3);
+	a.push_back(5);
+	a.push_back(7);
+	a.push_back(9);
+	assert(getMinimumCost(3, a) == 29);
+	a.clear();
+	a.push_back(10);
+	a.push_back(100);
+	a.push_back(300);
+	a.push_back(200);
+	a.push_back(1000);
+	a.push_back(20);
+	a.push_back(30);
+	assert(maxMin(3, a) == 20);
+	a.clear();
+	a.push_back(1);
+	a.push_back(2);
+	a.push_back(3);
+	a.push_back(4);
+	a.push_back(10);
+	a.push_back(20);
+	a.push_back(30);
+	a.push_back(40);
+	a.push_back(100);
+	a.push_back(200);
+	assert(maxMin(4, a) == 3);
+	a.clear();
+	a.push_back(1);
+	a.push_back(2);
+	a.push_back(1);
+	a.push_back(2);
+	a.push_back(1);
+	assert(maxMin(2, a) == 0);
+	a.clear();
+	a.push_back(100);
+	a.push_back(200);
+	a.push_back(300);
+	a.push_back(350);
+	a.push_back(400);
+	a.push_back(401);
+	a.push_back(402);
+	assert(maxMin(3, a) == 2);
 }
 string decimal_to_binary(int decimal)
 {
