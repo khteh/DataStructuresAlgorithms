@@ -1596,7 +1596,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	data.clear();
 	for (size_t i = 0; i < 5; i++)
 		data.push_back(i);
-	RotateArray(data, 3);
+	RotateRightArray(data, 3);
 	for (size_t i = 0, j = 2; i < 5; i++, j = ++j % 5)
 		assert(data[i] == j);
 	assert(CountDiv(6, 11, 2) == 3);
@@ -1618,6 +1618,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(3);
 	a.push_back(4);
 	assert(minimumBribes(a) == -1);
+	assert(isPalindrome("abcdefghhgfedecba"));
+	assert(!isPalindrome("aabbcd"));
+	assert(isPalindrome("aabbc"));
+	assert(!isPalindrome("xxxaabbccrry"));
+//	assert(!isPalindrome("aaaabbcc"));
+	assert(SherlockValidString("abcdefghhgfedecba"));
+	assert(!SherlockValidString("aabbcd"));
+	assert(!SherlockValidString("aaaabbcc"));
+	assert(!SherlockValidString("xxxaabbccrry"));
+	assert(SherlockValidString("ibfdgaeadiaefgbhbdghhhbgdfgeiccbiehhfcggchgghadhdhagfbahhddgghbdehidbibaeaagaeeigffcebfbaieggabcfbiiedcabfihchdfabifahcbhagccbdfifhghcadfiadeeaheeddddiecaicbgigccageicehfdhdgafaddhffadigfhhcaedcedecafeacbdacgfgfeeibgaiffdehigebhhehiaahfidibccdcdagifgaihacihadecgifihbebffebdfbchbgigeccahgihbcbcaggebaaafgfedbfgagfediddghdgbgehhhifhgcedechahidcbchebheihaadbbbiaiccededchdagfhccfdefigfibifabeiaccghcegfbcghaefifbachebaacbhbfgfddeceababbacgffbagidebeadfihaefefegbghgddbbgddeehgfbhafbccidebgehifafgbghafacgfdccgifdcbbbidfifhdaibgigebigaedeaaiadegfefbhacgddhchgcbgcaeaieiegiffchbgbebgbehbbfcebciiagacaiechdigbgbghefcahgbhfibhedaeeiffebdiabcifgccdefabccdghehfibfiifdaicfedagahhdcbhbicdgibgcedieihcichadgchgbdcdagaihebbabhibcihicadgadfcihdheefbhffiageddhgahaidfdhhdbgciiaciegchiiebfbcbhaeagccfhbfhaddagnfieihghfbaggiffbbfbecgaiiidccdceadbbdfgigibgcgchafccdchgifdeieicbaididhfcfdedbhaadedfageigfdehgcdaecaebebebfcieaecfagfdieaefdiedbcadchabhebgehiidfcgahcdhcdhgchhiiheffiifeegcfdgbdeffhgeghdfhbfbifgidcafbfcd"));
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -6691,7 +6701,7 @@ long MaxProductOfThree(vector<long> &data)
 	else
 		return data[data.size() - 1] * (tmp1 < tmp2 ? tmp1 : tmp2);
 }
-void RotateArray(vector<int>& data, int n)
+void RotateRightArray(vector<int>& data, int n)
 {
 	int previous, current;
 	for (; n > 0; n--)
@@ -6706,6 +6716,16 @@ void RotateArray(vector<int>& data, int n)
 			}
 		}
 }
+// https://www.hackerrank.com/challenges/ctci-array-left-rotation/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=arrays
+// 100%
+vector<int> RotateLeftArray(vector<int>& a, int d)
+{
+	vector<int> result;
+	for (size_t i = 0; i < a.size(); i++)
+		result.push_back(a[(i + d) % a.size()]);
+	return result;
+}
+
 // https://app.codility.com/programmers/lessons/5-prefix_sums/count_div/
 // Pending. Only 87%
 size_t CountDiv(size_t a, size_t b, size_t k)
@@ -6782,4 +6802,32 @@ size_t minimumBribes(vector<long> &data)
 		}
 	}
 	return count;
+}
+// https://www.hackerrank.com/challenges/sherlock-and-valid-string/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=strings
+// adapt from isPalindrome()
+// 100%
+bool SherlockValidString(string s)
+{
+	size_t odd = 0;
+	size_t length = s.length();
+	map<char, size_t> counts;
+	for (string::const_iterator it = s.begin(); it != s.end(); it++)
+		counts[*it]++;
+	size_t min = numeric_limits<size_t>::max(), max = 0;
+	bool result = true;
+	map<size_t, size_t> countsCounts;
+	for (map<char, size_t>::const_iterator it = counts.begin(); it != counts.end(); it++) {
+		if (it->second % 2 && (!(length % 2) || ++odd > 1))
+			result = false;
+		if (it->second > max)
+			max = it->second;
+		if (it->second < min)
+			min = it->second;
+		pair<map<size_t, size_t>::iterator, bool> result1 = countsCounts.emplace(it->second, 1);
+		if (!result1.second)
+			countsCounts[it->second]++;
+	}
+	if (countsCounts.size() == 2 && countsCounts.find(1) != countsCounts.end() && countsCounts[1] == 1)
+		return true;
+	return max - min > 1? false: result;
 }

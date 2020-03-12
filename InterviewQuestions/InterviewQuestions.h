@@ -18,6 +18,7 @@
 #include <exception>
 #include <ppl.h>
 #include <limits.h>
+#include <cmath>
 #include "Tower.h"
 #include "MyStack.h"
 #include "MyQueue.h"
@@ -119,7 +120,8 @@ string FindBiggestPalindromeSubstring(string const&);
 size_t PalindromeAnagramCount(string const&);
 size_t PalindromeAnagramCount1(string const &);
 bool AreRotatedStrings(string const &, string const &, size_t);
-void RotateArray(vector<int>&, int);
+void RotateRightArray(vector<int>&, int);
+vector<int> RotateLeftArray(vector<int>&, int);
 vector<size_t> FindSubString(string const &, string const s2);
 size_t KMPSearch(string const&, string const&);
 void KMPTable(string const&, vector<long>&);
@@ -290,3 +292,4 @@ size_t CountDiv(size_t, size_t, size_t);
 long ChocolatesByNumbers(long, long);
 long getMinimumCost(long, vector<long>&);
 long maxMin(long, vector<long>&);
+bool SherlockValidString(string);
