@@ -1959,6 +1959,34 @@ bool isPalindrome2(string const& s)
 	}
 	return true;
 }
+// https://www.hackerrank.com/challenges/sherlock-and-valid-string/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=strings
+// adapt from isPalindrome()
+// 100%
+bool SherlockValidString(string s)
+{
+	size_t odd = 0;
+	size_t length = s.length();
+	map<char, size_t> counts;
+	for (string::const_iterator it = s.begin(); it != s.end(); it++)
+		counts[*it]++;
+	size_t min = numeric_limits<size_t>::max(), max = 0;
+	bool result = true;
+	map<size_t, size_t> countsCounts;
+	for (map<char, size_t>::const_iterator it = counts.begin(); it != counts.end(); it++) {
+		if (it->second % 2 && (!(length % 2) || ++odd > 1))
+			result = false;
+		if (it->second > max)
+			max = it->second;
+		if (it->second < min)
+			min = it->second;
+		pair<map<size_t, size_t>::iterator, bool> result1 = countsCounts.emplace(it->second, 1);
+		if (!result1.second)
+			countsCounts[it->second]++;
+	}
+	if (countsCounts.size() == 2 && countsCounts.find(1) != countsCounts.end() && countsCounts[1] == 1)
+		return true;
+	return max - min > 1 ? false : result;
+}
 string FindBiggestPalindromeSubstring(string const& s)
 {
 	string tmp, palindrome;
@@ -6802,32 +6830,4 @@ size_t minimumBribes(vector<long> &data)
 		}
 	}
 	return count;
-}
-// https://www.hackerrank.com/challenges/sherlock-and-valid-string/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=strings
-// adapt from isPalindrome()
-// 100%
-bool SherlockValidString(string s)
-{
-	size_t odd = 0;
-	size_t length = s.length();
-	map<char, size_t> counts;
-	for (string::const_iterator it = s.begin(); it != s.end(); it++)
-		counts[*it]++;
-	size_t min = numeric_limits<size_t>::max(), max = 0;
-	bool result = true;
-	map<size_t, size_t> countsCounts;
-	for (map<char, size_t>::const_iterator it = counts.begin(); it != counts.end(); it++) {
-		if (it->second % 2 && (!(length % 2) || ++odd > 1))
-			result = false;
-		if (it->second > max)
-			max = it->second;
-		if (it->second < min)
-			min = it->second;
-		pair<map<size_t, size_t>::iterator, bool> result1 = countsCounts.emplace(it->second, 1);
-		if (!result1.second)
-			countsCounts[it->second]++;
-	}
-	if (countsCounts.size() == 2 && countsCounts.find(1) != countsCounts.end() && countsCounts[1] == 1)
-		return true;
-	return max - min > 1? false: result;
 }
