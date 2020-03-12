@@ -1962,7 +1962,7 @@ bool isPalindrome2(string const& s)
 // https://www.hackerrank.com/challenges/sherlock-and-valid-string/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=strings
 // adapt from isPalindrome()
 // 100%
-bool SherlockValidString(string s)
+bool SherlockValidString(string const& s)
 {
 	size_t odd = 0;
 	size_t length = s.length();
