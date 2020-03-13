@@ -3881,6 +3881,38 @@ void TopDownMergeSort(vector<long>& B, vector<long>& A, size_t start, size_t end
 	TopDownMergeSort(A, B, middle, end);
 	Merge(B, A, start, middle, end);
 }
+// https://www.hackerrank.com/challenges/ctci-merge-sort/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=sorting
+// 100%
+size_t TopDownMergeSortCountConversions(vector<long>& B, vector<long>& A, size_t start, size_t end)
+{
+	size_t inversions = 0;
+	if (end - start < 2)
+		return inversions;
+	// recursively split runs into two halves until run size == 1,
+	// then merge them and return back up the call chain
+	size_t middle = start + (end - start) / 2 + (end - start) % 2;
+	inversions += TopDownMergeSortCountConversions(A, B, start, middle);
+	inversions += TopDownMergeSortCountConversions(A, B, middle, end);
+	inversions += MergeCountInversions(B, A, start, middle, end);
+	return inversions;
+}
+size_t MergeCountInversions(vector<long>& A, vector<long>& B, size_t start, size_t middle, size_t end)
+{
+	size_t inversions = 0;
+	size_t left = start;
+	size_t right = middle;
+	// While there are elements in the left or right runs...
+	for (size_t i = start; i < end; i++) {
+		// If left run head exists and is <= existing right run head.
+		if (left < middle && (right >= end || A[left] <= A[right]))
+			B[i] = A[left++];
+		else {
+			inversions += right - i;
+			B[i] = A[right++];
+		}
+	}
+	return inversions;
+}
 // bottom-up merge sort algorithm which treats the list as an array of n sublists (called runs in this example) 
 // of size 1, and iteratively merges sub-lists back and forth between two buffers
 void BottomUpMergeSort(vector<long>& A, vector<long>& B)
@@ -6904,36 +6936,4 @@ size_t minimumBribes(vector<long> &data)
 		}
 	}
 	return count;
-}
-// https://www.hackerrank.com/challenges/ctci-merge-sort/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=sorting
-// 100%
-size_t TopDownMergeSortCountConversions(vector<long>& B, vector<long>& A, size_t start, size_t end)
-{
-	size_t inversions = 0;
-	if (end - start < 2)
-		return inversions;
-	// recursively split runs into two halves until run size == 1,
-	// then merge them and return back up the call chain
-	size_t middle = start + (end - start) / 2 + (end - start) % 2;
-	inversions += TopDownMergeSortCountConversions(A, B, start, middle);
-	inversions += TopDownMergeSortCountConversions(A, B, middle, end);
-	inversions += MergeCountInversions(B, A, start, middle, end);
-	return inversions;
-}
-size_t MergeCountInversions(vector<long>& A, vector<long>& B, size_t start, size_t middle, size_t end)
-{
-	size_t inversions = 0;
-	size_t left = start;
-	size_t right = middle;
-	// While there are elements in the left or right runs...
-	for (size_t i = start; i < end; i++) {
-		// If left run head exists and is <= existing right run head.
-		if (left < middle && (right >= end || A[left] <= A[right]))
-			B[i] = A[left++];
-		else {
-			inversions += right - i;
-			B[i] = A[right++];
-		}
-	}
-	return inversions;
 }
