@@ -3360,7 +3360,7 @@ void sortingTests()
 	random_device device;
 	mt19937_64 engine(device());
 	uniform_int_distribution<long> uniformDistribution;
-	vector<long> a, b, sortData;
+	vector<long> a, b, sortData, buffer;
 	sortData.clear();
 	sortData.push_back(1);
 	sortData.push_back(0);
@@ -3488,17 +3488,41 @@ void sortingTests()
 	assert(sortData[0] == 1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == -1);
-	TopDownMergeSort(sortData, 0, sortData.size());
+	buffer = sortData;
+	TopDownMergeSort(buffer, sortData, 0, sortData.size());
 	assert(sortData[0] == -1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == 1);
+
+	sortData.clear();
+	sortData.push_back(2);
+	sortData.push_back(1);
+	sortData.push_back(3);
+	sortData.push_back(1);
+	sortData.push_back(2);
+	assert(sortData[0] == 2);
+	assert(sortData[1] == 1);
+	assert(sortData[2] == 3);
+	assert(sortData[3] == 1);
+	assert(sortData[4] == 2);
+	buffer = sortData;
+	TopDownMergeSort(buffer, sortData, 0, sortData.size());
+	assert(sortData[0] == 1);
+	assert(sortData[1] == 1);
+	assert(sortData[2] == 2);
+	assert(sortData[3] == 2);
+	assert(sortData[4] == 3);
+
 	sortData.clear();
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
 	cout << "Before TopDownMergeSort: ";
 	copy(sortData.begin(), sortData.end(), ostream_iterator<long>(cout, " "));
 	cout << endl;
-	TopDownMergeSort(sortData, 0, sortData.size());
+
+	buffer.clear();
+	buffer = sortData;
+	TopDownMergeSort(buffer, sortData, 0, sortData.size());
 	cout << "After TopDownMergeSort: ";
 	for (vector<long>::iterator it = sortData.begin(); it != sortData.end(); it++) {
 		cout << *it << " ";
@@ -3518,7 +3542,8 @@ void sortingTests()
 	assert(sortData[0] == 1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == -1);
-	BottomUpMergeSort(sortData);
+	buffer = sortData;
+	BottomUpMergeSort(sortData, buffer);
 	assert(sortData[0] == -1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == 1);
@@ -3526,9 +3551,10 @@ void sortingTests()
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
 	cout << "Before BottomUpMergeSort: ";
-	copy(sortData.begin(), sortData.end(), ostream_iterator<long>(cout, " "));
+	buffer = sortData;
 	cout << endl;
-	BottomUpMergeSort(sortData);
+	buffer = sortData;
+	BottomUpMergeSort(sortData, buffer);
 	cout << "After BottomUpMergeSort: ";
 	for (vector<long>::iterator it = sortData.begin(); it != sortData.end(); it++) {
 		cout << *it << " ";
@@ -3618,6 +3644,47 @@ void sortingTests()
 				break;
 			}
 	}
+	a.clear();
+	b.clear();
+	a.push_back(1);
+	a.push_back(5);
+	a.push_back(3);
+	a.push_back(7);
+	b = a;
+	assert(TopDownMergeSortCountConversions(b, a, 0, a.size()) == 1);
+	assert(a[0] == 1);
+	assert(a[1] == 3);
+	assert(a[2] == 5);
+	assert(a[3] == 7);
+
+	a.clear();
+	b.clear();
+	a.push_back(7);
+	a.push_back(5);
+	a.push_back(3);
+	a.push_back(1);
+	b = a;
+	assert(TopDownMergeSortCountConversions(b, a, 0, a.size()) == 6);
+	assert(a[0] == 1);
+	assert(a[1] == 3);
+	assert(a[2] == 5);
+	assert(a[3] == 7);
+
+	a.clear();
+	b.clear();
+	a.push_back(2);
+	a.push_back(1);
+	a.push_back(3);
+	a.push_back(1);
+	a.push_back(2);
+	b = a;
+	assert(TopDownMergeSortCountConversions(b, a, 0, a.size()) == 4);
+	assert(a[0] == 1);
+	assert(a[1] == 1);
+	assert(a[2] == 2);
+	assert(a[3] == 2);
+	assert(a[4] == 3);
+
 	cout << endl << endl;
 }
 void TestBinarySearch()
@@ -3800,39 +3867,47 @@ void InsertionSort(vector<long> &data)
 			Swap(data[j], data[j - 1]);
 }
 // http://en.wikipedia.org/wiki/Merge_sort
-void TopDownMergeSort(vector<long>& data, size_t start, size_t end)
+// top-down merge sort algorithm that recursively splits the list (called runs in this example) into sublists 
+// until sublist size is 1, then merges those sublists to produce a sorted list
+//  The copy back step is avoided with alternating the direction of the merge with each level of recursion (except for an initial one time copy)
+void TopDownMergeSort(vector<long>& B, vector<long>& A, size_t start, size_t end)
 {
 	if (end - start < 2)
 		return;
 	// recursively split runs into two halves until run size == 1,
 	// then merge them and return back up the call chain
 	size_t middle = start + (end - start) / 2 + (end - start) % 2;
-	TopDownMergeSort(data, start, middle);
-	TopDownMergeSort(data, middle, end);
-	Merge(data, start, middle, end);
+	TopDownMergeSort(A, B, start, middle);
+	TopDownMergeSort(A, B, middle, end);
+	Merge(B, A, start, middle, end);
 }
-void BottomUpMergeSort(vector<long>& data)
+// bottom-up merge sort algorithm which treats the list as an array of n sublists (called runs in this example) 
+// of size 1, and iteratively merges sub-lists back and forth between two buffers
+void BottomUpMergeSort(vector<long>& A, vector<long>& B)
 {
-	size_t n = data.size();
+	size_t n = A.size();
 	// Each 1-element run in data is already "sorted".
 	// Make successively longer sorted runs of length 2, 4, 8, 16... until whole array is sorted.
-	for (size_t width = 1; width < data.size(); width *= 2)
+	for (size_t width = 1; width < A.size(); width *= 2) {
 		// data is full of runs of length width.
-		for (size_t i = 0; i < data.size(); i += 2 * width)
-			Merge(data, i, min(i + width, n), min(i + 2 * width, n));
+		for (size_t i = 0; i < A.size(); i += 2 * width)
+			Merge(A, B, i, min(i + width, n), min(i + 2 * width, n));
+		// Now work array B is full of runs of length 2*width.
+				// Copy array B to array A for next iteration.
+				// A more efficient implementation would swap the roles of A and B.
+		A = B;
+		// Now array A is full of runs of length 2*width.
+	}
 }
-void Merge(vector<long>& data, size_t start, size_t middle, size_t end)
+void Merge(vector<long>& A, vector<long>& B, size_t start, size_t middle, size_t end)
 {
 	vector<long> buffer;
 	size_t left = start;
 	size_t right = middle;
-	buffer.resize(end);
 	// While there are elements in the left or right runs...
 	for (size_t i = start; i < end; i++)
 		// If left run head exists and is <= existing right run head.
-		buffer[i] = (left < middle && (right >= end || data[left] < data[right])) ? data[left++] : data[right++];
-	for (size_t i = start; i < end; i++)
-		data[i] = buffer[i];
+		B[i] = (left < middle && (right >= end || A[left] <= A[right])) ? A[left++] : A[right++];
 }
 void HeapSort(vector<long>& data)
 {
@@ -3849,7 +3924,6 @@ void Swap(long &a, long &b)
 	a = b;
 	b = tmp;
 }
-
 long** my2DAlloc(long rows, long cols)
 {
 	size_t header = rows * sizeof(long*); // Store the row pointers
@@ -6830,4 +6904,36 @@ size_t minimumBribes(vector<long> &data)
 		}
 	}
 	return count;
+}
+// https://www.hackerrank.com/challenges/ctci-merge-sort/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=sorting
+// 100%
+size_t TopDownMergeSortCountConversions(vector<long>& B, vector<long>& A, size_t start, size_t end)
+{
+	size_t inversions = 0;
+	if (end - start < 2)
+		return inversions;
+	// recursively split runs into two halves until run size == 1,
+	// then merge them and return back up the call chain
+	size_t middle = start + (end - start) / 2 + (end - start) % 2;
+	inversions += TopDownMergeSortCountConversions(A, B, start, middle);
+	inversions += TopDownMergeSortCountConversions(A, B, middle, end);
+	inversions += MergeCountInversions(B, A, start, middle, end);
+	return inversions;
+}
+size_t MergeCountInversions(vector<long>& A, vector<long>& B, size_t start, size_t middle, size_t end)
+{
+	size_t inversions = 0;
+	size_t left = start;
+	size_t right = middle;
+	// While there are elements in the left or right runs...
+	for (size_t i = start; i < end; i++) {
+		// If left run head exists and is <= existing right run head.
+		if (left < middle && (right >= end || A[left] <= A[right]))
+			B[i] = A[left++];
+		else {
+			inversions += right - i;
+			B[i] = A[right++];
+		}
+	}
+	return inversions;
 }
