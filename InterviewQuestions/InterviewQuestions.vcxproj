@@ -161,6 +161,9 @@
     <ClCompile Include="Trie.cpp" />
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="queryFrequencyInput.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

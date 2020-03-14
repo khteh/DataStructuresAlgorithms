@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -296,3 +297,4 @@ size_t CountDiv(size_t, size_t, size_t);
 long ChocolatesByNumbers(long, long);
 long getMinimumCost(long, vector<long>&);
 long maxMin(long, vector<long>&);
+vector<int> freqQuery(vector<vector<int>>&);

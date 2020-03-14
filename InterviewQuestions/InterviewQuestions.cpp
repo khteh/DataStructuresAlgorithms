@@ -658,9 +658,26 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(4);
 	a.push_back(5);
 	a.push_back(6);
+	a.push_back(5);
 	cout << "Pairs with sum 8: " << endl;
 	assert(sumpairs(a, 8) == 2);
-	
+
+	a.clear();
+	a.push_back(5);
+	a.push_back(7);
+	a.push_back(9);
+	a.push_back(13);
+	a.push_back(11);
+	a.push_back(6);
+	a.push_back(6);
+	a.push_back(3);
+	a.push_back(3);
+	cout << "Pairs with sum 8: " << endl;
+	assert(sumpairs(a, 12) == 3);
+
+	//long testData[] = { 92,407,1152,403,1419,689,1029,108,128,1307,300,775,622,730,978,526,943,127,566,869,715,983,820,1394,901,606,497,98,1222,843,600,1153,302,1450,1457,973,1431,217,936,958,1258,970,1155,1061,1341,657,333,1151,790,101,588,263,101,534,747,405,585,111,849,695,1256,1508,139,336,1430,615,1295,550,783,575,992,709,828,1447,1457,738,1024,529,406,164,994,1008,50,811,564,580,952,768,863,1225,251,1032,1460,1558 };
+	//vector<int> testDataVector(testData, testData + sizeof(testData) / sizeof(testData[0]));
+	//assert(sumpairs(a, 8) == 2);
 	a.clear();
 	cout << endl;
 	a.resize(10);
@@ -1136,7 +1153,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings.push_back("XTFN");
 	strings.push_back("ABCDEF");
 	long max = MaxLengths(strings);
-	assert(max = 24);
+	assert(max == 24);
 	a.clear();
 	a.resize(10);
 	generate(a.begin(), a.end(), [&] {return uniformDistribution(engine); });
@@ -1628,6 +1645,37 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(!SherlockValidString("aaaabbcc"));
 	assert(!SherlockValidString("xxxaabbccrry"));
 	assert(SherlockValidString("ibfdgaeadiaefgbhbdghhhbgdfgeiccbiehhfcggchgghadhdhagfbahhddgghbdehidbibaeaagaeeigffcebfbaieggabcfbiiedcabfihchdfabifahcbhagccbdfifhghcadfiadeeaheeddddiecaicbgigccageicehfdhdgafaddhffadigfhhcaedcedecafeacbdacgfgfeeibgaiffdehigebhhehiaahfidibccdcdagifgaihacihadecgifihbebffebdfbchbgigeccahgihbcbcaggebaaafgfedbfgagfediddghdgbgehhhifhgcedechahidcbchebheihaadbbbiaiccededchdagfhccfdefigfibifabeiaccghcegfbcghaefifbachebaacbhbfgfddeceababbacgffbagidebeadfihaefefegbghgddbbgddeehgfbhafbccidebgehifafgbghafacgfdccgifdcbbbidfifhdaibgigebigaedeaaiadegfefbhacgddhchgcbgcaeaieiegiffchbgbebgbehbbfcebciiagacaiechdigbgbghefcahgbhfibhedaeeiffebdiabcifgccdefabccdghehfibfiifdaicfedagahhdcbhbicdgibgcedieihcichadgchgbdcdagaihebbabhibcihicadgadfcihdheefbhffiageddhgahaidfdhhdbgciiaciegchiiebfbcbhaeagccfhbfhaddagnfieihghfbaggiffbbfbecgaiiidccdceadbbdfgigibgcgchafccdchgifdeieicbaididhfcfdedbhaadedfageigfdehgcdaecaebebebfcieaecfagfdieaefdiedbcadchabhebgehiidfcgahcdhcdhgchhiiheffiifeegcfdgbdeffhgeghdfhbfbifgidcafbfcd"));
+	int freqResult[] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,1,1,1,0,1,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,1,1,1,1,1,0,1,0,1,1,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,1,1,1,0,1,1,1,0,1,1,0,1,1,1,1,1,0,0,1,0,0,1,1,0,0,1,1,0,1,1,1,0,1,1,1,0,0,0,1,0,0,1,0,0,1,1,0,0,1,0,0,1,0,0,0,1,1,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,0,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1 };
+	std::ifstream infile("queryFrequencyInput.txt");
+	vector<vector<int>> freqTestData;
+	vector<int> inserts, deletions;
+	while (getline(infile, line)) {
+		istringstream iss(line);
+		int operation, data;
+		if (!(iss >> operation >> data))
+			break;
+		vector<int> d;
+		d.push_back(operation);
+		d.push_back(data);
+		freqTestData.push_back(d);
+		if (operation == 1)
+			inserts.push_back(data);
+		else if (operation == 2)
+			deletions.push_back(data);
+	}
+	vector<int> freqQueryExpectedResult(freqResult, freqResult + sizeof(freqResult) / sizeof(freqResult[0]));
+	vector<int> freqQueryResult = freqQuery(freqTestData);
+	assert(freqQueryExpectedResult.size() == freqQueryResult.size());
+	for (size_t i = 0; i < freqQueryResult.size(); i++) {
+		//assert(freqQueryResult[i] == freqQueryExpectedResult[i]);
+		if (freqQueryResult[i] != freqQueryExpectedResult[i]) {
+			cout << "freqQuery i: " << i << " Expects " << freqQueryExpectedResult[i] << " Gets " << freqQueryResult[i] << endl;
+			for (size_t j = 0, cnt = 0; j < freqTestData.size(); j++) {
+//				if (freqTestData[j][0] == 3 && ++cnt == i)
+//					assert(false);
+			}
+		}
+	}
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -5001,10 +5049,12 @@ size_t sumpairs(vector<long>& numbers, long sum)
 	size_t count = 0;
 	long tmp;
 	set<long> found;
+	set<long> exclude;
 	for (vector<long>::const_iterator it = numbers.begin(); it != numbers.end(); it++) {
 		tmp = sum - *it;
-		if (found.find(tmp) != found.end()) {
+		if (found.find(tmp) != found.end() && exclude.find(tmp) == exclude.end()) {
 			count++;
+			exclude.emplace(tmp);
 			cout << *it << " + " << tmp << endl;
 		} else
 			found.emplace(*it);
@@ -5464,10 +5514,10 @@ bool GetSum(vector<long> &data, size_t K, long P, size_t index, vector<long>& le
 }
 //Question was "Given a pattern and a string input - find if the string follows the same pattern and return 0 or 1. 
 //Examples:
-//1) Pattern : "abba" (.+)(.+)\\2\\1 input : "redbluebluered" should return 1.
-//2) Pattern: "aaaa"  (.+)\\1\\1\\1  input : "asdasdasdasd" should return 1.
-//3) Pattern: "aabb"  (.+)\\1(.+)\\2 input : "xyzabcxyzabc" should return 0.
-//3) Pattern: "abab"  (.+)(.+)\\1\\2 input : "xyzabcxyzabc" should return 1.
+//1) Pattern: "abba" (.+)(.+)\\2\\1 input : "redbluebluered" should return 1.
+//2) Pattern: "aaaa" (.+)\\1\\1\\1  input : "asdasdasdasd" should return 1.
+//3) Pattern: "aabb" (.+)\\1(.+)\\2 input : "xyzabcxyzabc" should return 0.
+//3) Pattern: "abab" (.+)(.+)\\1\\2 input : "xyzabcxyzabc" should return 1.
 bool match(string pattern, string input)
 {
 	map<char, long> patternCount;
@@ -6936,4 +6986,43 @@ size_t minimumBribes(vector<long> &data)
 		}
 	}
 	return count;
+}
+// https://www.hackerrank.com/challenges/frequency-queries/problem?h_l=interview&playlist_slugs%5B%5D%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D%5B%5D=dictionaries-hashmaps
+// 5/15 failed
+// Test case 5 data included in solution as queryFrequencyInput.txt
+vector<int> freqQuery(vector<vector<int>>& queries) 
+{
+	unordered_map<int, int> frequency; // frequency of data
+	unordered_map<int, int> frequencies; // frequeny of frequency
+	vector<int> result;
+	for (size_t i = 0; i < queries.size(); i++) {
+		switch (queries[i][0]) {
+		case 1: // Insert
+		{
+			pair<unordered_map<int, int>::iterator, bool> insert = frequency.emplace(queries[i][1], 1);
+			if (!insert.second)
+				frequency[queries[i][1]]++;
+			insert = frequencies.emplace(frequency[queries[i][1]], 1);
+			if (!insert.second)
+				frequencies[frequency[queries[i][1]]]++;
+		}
+		break;
+		case 2: // Remove
+			if (frequency.find(queries[i][1]) != frequency.end()) {
+				if (--frequencies[frequency[queries[i][1]]] <= 0)
+					frequencies.erase(frequency[queries[i][1]]);
+				frequency[queries[i][1]]--;
+			}
+			break;
+		case 3: // Find frequency
+		{
+			int j = frequencies.find(queries[i][1]) != frequencies.end() ? 1 : 0;
+			result.push_back(frequencies.find(queries[i][1]) != frequencies.end() ? 1 : 0);
+		}
+			break;
+		default:
+			break;
+		}
+	}
+	return result;
 }
