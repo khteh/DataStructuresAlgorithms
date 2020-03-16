@@ -2040,7 +2040,7 @@ string FindBiggestPalindromeSubstring(string const& s)
 	string tmp, palindrome;
 	for (size_t i = 1; i < s.size() - 1; i++) {
 		if (s[i] == s[i + 1]) { // Even palindrome
-			for (size_t j = i, k = i + 1; j >= 0; j--, k++) {
+			for (int j = i, k = i + 1; j >= 0; j--, k++) {
 				if (s[j] == s[k]) {
 					tmp = s.substr(j, k - j + 1);
 					if (tmp.size() > palindrome.size())
@@ -2049,7 +2049,7 @@ string FindBiggestPalindromeSubstring(string const& s)
 					break;
 			}
 		} else if (s[i - 1] == s[i + 1]) { // Odd palindrome
-			for (size_t j = i - 1, k = i + 1; j >= 0; j--, k++) {
+			for (int j = i - 1, k = i + 1; j >= 0; j--, k++) {
 				if (s[j] == s[k]) {
 					tmp = s.substr(j, k - j + 1);
 					if (tmp.size() > palindrome.size())
@@ -5811,7 +5811,7 @@ long buildmax(vector<long>& a, vector<long>& b, size_t size)
 }
 long MaxLengths(vector<string>& data)
 {
-	sort(data.begin(), data.end(), [&](string a, string b) {return a.size() > b.size(); });
+	sort(data.begin(), data.end(), [](string a, string b) {return a.size() > b.size(); });
 	for (vector<string>::const_iterator it = data.begin(); it != data.end(); it++)
 		for (vector<string>::const_iterator it1 = it + 1; it1 != data.end(); it1++) {
 			size_t i = 0;
