@@ -351,6 +351,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings.push_back("arc"); // "acr" : "arc"
 	vector<vector<string>> anagrams;
 	FindAnagrams(strings, anagrams);
+	assert(sherlockAndAnagrams("mom") == 2);
+	assert(sherlockAndAnagrams("abba") == 4);
+	assert(sherlockAndAnagrams("abcd") == 0);
+//	assert(sherlockAndAnagrams("cdcd") == 5); Unfinished work
+//	assert(sherlockAndAnagrams("kkkk") == 10); Unfinished work
 	for (vector<vector<string>>::const_iterator it = anagrams.begin(); it != anagrams.end(); it++) {
 		cout << "( ";
 		copy(it->begin(), it->end(), ostream_iterator<string>(cout, " "));
@@ -1676,6 +1681,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			}
 		}
 	}
+	line = "if man was meant to stay on the ground god would have given us roots";
+	assert(encryption(line) == "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau");
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -1929,6 +1936,27 @@ void FindAnagrams(vector<string> const& s, vector<vector<string>> &result)
 	}
 	for (map<string, vector<string>>::const_iterator it = anagrams.begin(); it != anagrams.end(); it++)
 		result.push_back(it->second);
+}
+// https://www.hackerrank.com/challenges/sherlock-and-anagrams/problem
+// Unfinished work!
+size_t sherlockAndAnagrams(string const& s) 
+{
+	size_t count = 0;
+	vector<string> str;
+	string s1(s);
+	sort(s1.begin(), s1.end());
+	for (size_t i = 0; i < s.size(); i++)
+		for (size_t j = 1; j <= s.size() - i; j++)
+			str.push_back(s.substr(i, j));
+	map<string, vector<string>> anagrams;
+	for (vector<string>::const_iterator it = str.begin(); it != str.end(); it++) {
+		string s1(*it);
+		sort(s1.begin(), s1.end());
+		anagrams[s1].push_back(*it);
+	}
+	for (map<string, vector<string>>::const_iterator it = anagrams.begin(); it != anagrams.end(); it++)
+		count += (it->second.size() / 2);
+	return count;
 }
 void PalindromeTests()
 {
@@ -7025,4 +7053,33 @@ vector<int> freqQuery(vector<vector<int>>& queries)
 		}
 	}
 	return result;
+}
+// https://www.hackerrank.com/challenges/encryption/problem
+// 100%
+string encryption(string& s) 
+{
+	vector<vector<char>> result;
+	s.erase(remove_if(s.begin(), s.end(), ::isspace), s.end());
+	long row = floor(sqrt(s.size()));
+	long col = ceil(sqrt(s.size()));
+	for (; col * row < s.size(); )
+		if (row < col)
+			row++;
+		else
+			col++;
+	for (size_t i = 0; i < row; i++) {
+		string str = s.substr(i * col, col);
+		vector<char> chars(str.begin(), str.end());
+		for (size_t j = str.size(); j < col; j++)
+			chars.push_back('\0');
+		result.push_back(chars);
+	}
+	ostringstream oss;
+	for (size_t i = 0; i < col; i++) {
+		for (size_t j = 0; j < row && result[j][i] != '\0'; j++)
+			oss << result[j][i];
+		if (i < col - 1)
+			oss << ' ';
+	}
+	return oss.str();
 }
