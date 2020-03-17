@@ -1683,6 +1683,24 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	line = "if man was meant to stay on the ground god would have given us roots";
 	assert(encryption(line) == "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau");
+	a.clear();
+	a.push_back(100);
+	a.push_back(100);
+	a.push_back(50);
+	a.push_back(40);
+	a.push_back(40);
+	a.push_back(20);
+	a.push_back(10);
+	b.clear();
+	b.push_back(5);
+	b.push_back(25);
+	b.push_back(50);
+	b.push_back(120);
+	vector<size_t> leaderBoardResult = climbingLeaderboard(a, b);
+	assert(leaderBoardResult[0] == 6);
+	assert(leaderBoardResult[1] == 4);
+	assert(leaderBoardResult[2] == 2);
+	assert(leaderBoardResult[3] == 1);
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -5953,7 +5971,7 @@ bool LexicographicSort(string s1, string s2)
 	map<string, size_t>::iterator s1It = order.end(), s2It = order.end();
 	std::transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
 	std::transform(s2.begin(), s2.end(), s2.begin(), ::tolower);
-	for (i = 0, j = 0; i < s1.size(), j < s2.size(); ) {
+	for (i = 0, j = 0; i < s1.size() && j < s2.size(); ) {
 		if (i < s1.size() - 1) {
 			s1It = order.find(s1.substr(i, 2));
 			if (s1It != order.end())
@@ -7082,4 +7100,18 @@ string encryption(string& s)
 			oss << ' ';
 	}
 	return oss.str();
+}
+// https://www.hackerrank.com/challenges/climbing-the-leaderboard/problem
+// 100%
+vector<size_t> climbingLeaderboard(vector<long>& scores, vector<long>& alice) 
+{
+	vector<size_t> result;
+	sort(scores.begin(), scores.end());
+	scores.erase(unique(scores.begin(), scores.end()), scores.end());
+	for (size_t i = 0; i < alice.size(); i++) {
+		vector<long>::iterator it = upper_bound(scores.begin(), scores.end(), alice[i]);
+		result.push_back(scores.end() - it + 1);
+		scores.insert(it, alice[i]);
+	}
+	return result;
 }

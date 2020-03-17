@@ -300,3 +300,4 @@ long getMinimumCost(long, vector<long>&);
 long maxMin(long, vector<long>&);
 vector<int> freqQuery(vector<vector<int>>&);
 string encryption(string&);
+vector<size_t> climbingLeaderboard(vector<long>& scores, vector<long>& alice);
