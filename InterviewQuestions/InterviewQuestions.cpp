@@ -6865,10 +6865,12 @@ void IncreasingSequenceTests()
 }
 // https://app.codility.com/demo/results/trainingCP4NRT-FE4/
 // https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/discuss/119835/Java-O(n)-DP-Solution
-// Perfect score!
+// 100%
 int IncreasingSequences(vector<long> &a, vector<long> &b)
 {
 	bool outOfSequence = false;
+	// swapRecord means for the ith element in A and B, the minimum swaps if we swap A[i] and B[i]
+	// fixRecord means for the ith element in A and B, the minimum swaps if we DONOT swap A[i] and B[i]
 	int swapRecord = 1, fixRecord = 0;
 	if (a.size() != b.size())
 		return -1;
@@ -6881,7 +6883,7 @@ int IncreasingSequences(vector<long> &a, vector<long> &b)
 	for (size_t i = 1; i < a.size(); i++) {
 		if (a[i - 1] >= b[i] || b[i - 1] >= a[i]) {
 			// In this case, the ith manipulation should be same as the i-1th manipulation
-					// fixRecord = fixRecord;
+			// fixRecord = fixRecord;
 			swapRecord++;
 			//isSwap = true;
 		} else if (a[i - 1] >= a[i] || b[i - 1] >= b[i]) {
