@@ -120,6 +120,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "https://en.wikipedia.org/wiki/Machine_epsilon: Float: " << numeric_limits<float>::epsilon() << ", Double: " << numeric_limits<double>::epsilon() << endl;
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
+	a.resize(10);
+	generate(a.begin(), a.end(), [n = 1]()mutable{return n++; });
+	for (size_t i = 0; i < a.size(); i++)
+		assert(a[i] == i+1);
 	unsigned long gridArray[3][3] = {{1,3,5}, {2,4,6}, {7,8,9}};
 	grid.resize(3);
 	for (size_t i = 0; i < 3; i++) {
@@ -704,7 +708,23 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Pairs with diff 3: " << diffpairs(lSet, 3) << endl;
 	assert(diffpairs(lSet, 3) == 6);
 	cout << endl;
-
+	
+	a.clear();
+	a.push_back(1);
+	a.push_back(5);
+	a.push_back(3);
+	a.push_back(4);
+	a.push_back(2);
+	assert(diffpairs(a, 2) == 3);
+	a.clear();
+	a.push_back(1);
+	a.push_back(3);
+	a.push_back(5);
+	a.push_back(8);
+	a.push_back(6);
+	a.push_back(4);
+	a.push_back(2);
+	assert(diffpairs(a, 2) == 5);
 	// 0 1 2 3 4 5 6 7 8 9
 	//         ^ (10 / 2 - 1)
 	// (0,9), (0,8)			2
@@ -1701,6 +1721,27 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(leaderBoardResult[1] == 4);
 	assert(leaderBoardResult[2] == 2);
 	assert(leaderBoardResult[3] == 1);
+	a = absolutePermutation(10, 0);
+	for (size_t i = 0; i < a.size(); i++)
+		assert(a[i] == i + 1);
+	a = absolutePermutation(10, 1);
+	//for (int i = 0; i < a.size(); i++)
+	//	assert(abs(a[i] - i - 1) == 1); Unfinished work!
+	a.clear();
+	a.push_back(3);
+	a.push_back(1);
+	a.push_back(5);
+	a.push_back(4);
+	a.push_back(2);
+	assert(calculateMedian(a) == 3);
+	a.clear();
+	a.push_back(3);
+	a.push_back(1);
+	a.push_back(5);
+	a.push_back(4);
+	a.push_back(2);
+	a.push_back(6);
+	assert(calculateMedian(a) == 3);
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -1957,7 +1998,7 @@ void FindAnagrams(vector<string> const& s, vector<vector<string>> &result)
 }
 // https://www.hackerrank.com/challenges/sherlock-and-anagrams/problem
 // Unfinished work!
-size_t sherlockAndAnagrams(string const& s) 
+size_t sherlockAndAnagrams(string const& s)
 {
 	size_t count = 0;
 	vector<string> str;
@@ -2660,7 +2701,7 @@ void MaxZeroProductTests()
 	//long result2 = MaxZeroProduct(data);
 	//assert(result1 == result2);
 }
-set<string> permute(const string &str)
+set<string> permute(string const &str)
 {
 	set<string> permutations;
 	if (!str.size())
@@ -5107,6 +5148,22 @@ size_t sumpairs(vector<long>& numbers, long sum)
 	}
 	return count;
 }
+// https://www.hackerrank.com/challenges/pairs/problem
+// 100%
+size_t diffpairs(vector<long>& numbers, long diff)
+{
+	size_t count = 0;
+	set<long> pairs(numbers.begin(), numbers.end());
+	long tmp;
+	for (vector<long>::const_iterator it = numbers.begin(); it != numbers.end(); it++)
+	{
+		tmp = *it + diff;
+		if (pairs.find(tmp) != pairs.end())
+			count++;
+	}
+	return count;
+}
+
 size_t diffpairs(set<long>& numbers, long diff)
 {
 	size_t count = 0;
@@ -7116,4 +7173,34 @@ vector<size_t> climbingLeaderboard(vector<long>& scores, vector<long>& alice)
 		scores.insert(it, alice[i]);
 	}
 	return result;
+}
+// https://www.hackerrank.com/challenges/absolute-permutation/problem
+// Unfinished work!
+vector<long> absolutePermutation(long n, long k) 
+{
+	vector<long> result;
+	if (k == 0) {
+		result.resize(n);
+		generate(result.begin(), result.end(), [n = 1]()mutable{return n++; });
+		return result;
+	}
+	else if (n / 2 != k)
+		return vector<long>(1, -1);
+	// |result[i] - i| = k
+	result.resize(n);
+	generate(result.begin(), result.end(), [i = k + 1, n]()mutable {
+		int tmp = i++ % n;
+		return !(tmp % n) ? n : tmp % n;
+	});
+	return result;
+}
+long calculateMedian(vector<long>& data)
+{
+	const auto middleItr = data.begin() + data.size() / 2;// +data.size() % 2;
+	nth_element(data.begin(), middleItr, data.end());
+	if (data.size() % 2 == 0) {
+		const auto leftMiddleItr = max_element(data.begin(), middleItr);
+		return (*leftMiddleItr + *middleItr) / 2;
+	}
+	return *middleItr;
 }
