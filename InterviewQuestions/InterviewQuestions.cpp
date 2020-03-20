@@ -707,6 +707,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	lSet.emplace(13);
 	cout << "Pairs with diff 3: " << diffpairs(lSet, 3) << endl;
 	assert(diffpairs(lSet, 3) == 6);
+	lSet.clear();
+	lSet.emplace(1);
+	lSet.emplace(5);
+	lSet.emplace(3);
+	lSet.emplace(4);
+	lSet.emplace(2);
+	assert(diffpairs(lSet, 2) == 3);
+	lSet.clear();
+	lSet.emplace(1);
+	lSet.emplace(3);
+	lSet.emplace(5);
+	lSet.emplace(8);
+	lSet.emplace(6);
+	lSet.emplace(4);
+	lSet.emplace(2);
+	assert(diffpairs(lSet, 2) == 5);
 	cout << endl;
 	
 	a.clear();
@@ -5163,7 +5179,6 @@ size_t diffpairs(vector<long>& numbers, long diff)
 	}
 	return count;
 }
-
 size_t diffpairs(set<long>& numbers, long diff)
 {
 	size_t count = 0;
