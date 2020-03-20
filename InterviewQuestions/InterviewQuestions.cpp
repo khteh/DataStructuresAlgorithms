@@ -233,6 +233,16 @@ int _tmain(int argc, _TCHAR* argv[])
 			grid1[i][j] = gridArray5[i][j];
 	}
 	assert(MatrixPatternCount(grid1) == 6);
+	long gridArray6[5][4] = { { 0,0,1,1 },{ 0,0,1,0 },{ 0,1,1,0 },{0,1,0,0},{1,1,0,0} };
+	grid1.clear();
+	grid1.resize(5);
+	for (size_t i = 0; i < 5; i++) {
+		grid1[i].resize(4);
+		for (size_t j = 0; j < 4; j++)
+			grid1[i][j] = gridArray6[i][j];
+	}
+	assert(connectedCell(grid1) == 8);
+
 	char puzzle[4][5] = {{0,0,1,0,1},{0,0,0,0,0},{0,1,1,1,1},{0,1,1,0,0}};
 	maze.resize(4);
 	for (size_t i = 0; i < 4; i++) {
@@ -1758,6 +1768,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(2);
 	a.push_back(6);
 	assert(calculateMedian(a) == 3);
+	assert(timeInWords(5, 47) == "thirteen minutes to six");
+	assert(timeInWords(12, 29) == "twenty nine minutes past twelve");
+	assert(timeInWords(6, 30) == "half past six");
+	assert(timeInWords(1, 1) == "one minute past one");
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -5466,6 +5480,28 @@ long MatrixPatternCount(vector<vector<long>>& data)
 				count++;
 	return count;
 }
+// https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+// Unfinished work!
+size_t connectedCell(vector<vector<long>>& matrix) 
+{
+	size_t count = 0, max = 0;
+	for (size_t i = 0; i < matrix.size(); i++)
+		for (size_t j = 0; j < matrix[0].size(); j++) {
+			if (matrix[i][j] == 1) {
+				count++;
+				if (i < matrix.size() - 1 && j < matrix[0].size() - 1)
+					if (matrix[i + 1][j] == 0 && matrix[i][j + 1] == 0 && matrix[i + 1][j + 1] == 0) {
+						if (j > 0 && matrix[i + 1][j - 1] == 1)
+							continue;
+						if (count > max) {
+							max = count;
+							count = 0;
+						}
+					}
+			}
+		}
+	return Max(max, count);
+}
 // 0 0 1 0 1
 // 0 0 0 0 0
 // 0 1 1 1 1
@@ -7218,4 +7254,57 @@ long calculateMedian(vector<long>& data)
 		return (*leftMiddleItr + *middleItr) / 2;
 	}
 	return *middleItr;
+}
+string timeInWords(int h, int m) 
+{
+	static map<int, string> numbers = {
+		{1, "one"},
+		{2, "two"},
+		{3, "three"},
+		{4, "four"},
+		{5, "five"},
+		{6, "six"},
+		{7, "seven"},
+		{8, "eight"},
+		{9, "nine"},
+		{10, "ten"},
+		{11, "eleven"},
+		{12, "twelve"},
+		{13, "thirteen"},
+		{14, "fourteen"},
+		{15, "fifteen"},
+		{16, "sixteen"},
+		{17, "seventeen"},
+		{18, "eighteen"},
+		{19, "nineteen"},
+		{20, "twenty"}
+	};
+	ostringstream str, hour;
+	if (m == 0) {
+		str << numbers[h] << " o' clock";
+		return str.str();
+	} else if (m == 15) {
+		str << "quarter past " << numbers[h];
+		return str.str();
+	}
+	else if (m == 30) {
+		str << "half past " << numbers[h];
+		return str.str();
+	}
+	else if (m == 45) {
+		str << "quarter to " << numbers[h + 1];
+		return str.str();
+	}
+	if (m > 30) {
+		m -= 30;
+		m = 30 - m;
+		hour << " to " << numbers[h + 1];
+	} else
+		hour << " past " << numbers[h];
+	if (m > 20)
+		str << "twenty " << numbers[m % 20] << " minutes";
+	else
+		str << numbers[m] << (m > 1 ? " minutes" : " minute");
+	str << hour.str();
+	return str.str();
 }

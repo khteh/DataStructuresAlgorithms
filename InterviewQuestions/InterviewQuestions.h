@@ -240,6 +240,7 @@ void MatrixDistance(vector<vector<long>>&, size_t, size_t);
 void MatrixSort(vector<vector<long>>&);
 long MatrixPatternCount(vector<vector<long>>&);
 void MatrixSortWithHeap(vector<vector<long>>&);
+size_t connectedCell(vector<vector<long>>&);
 // Start of Sort numbers into consecutive positive/negative numbers
 template<typename type>
 void sortNumbers(vector<long> &);
@@ -304,3 +305,4 @@ string encryption(string&);
 vector<size_t> climbingLeaderboard(vector<long>& scores, vector<long>& alice);
 vector<long> absolutePermutation(long n, long k);
 long calculateMedian(vector<long>&);
+string timeInWords(int, int);
