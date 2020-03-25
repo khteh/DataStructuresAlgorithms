@@ -43,7 +43,11 @@ T Node<T>::Item()
 {
 	return m_item;
 }
-
+template<class T>
+Node<T>* Node<T>::Previous()
+{
+	return m_previous;
+}
 template<class T>
 Node<T> *Node<T>::Next()
 {
@@ -61,11 +65,17 @@ Node<T> *Node<T>::Right()
 {
 	return m_right;
 }
-
+template<class T>
+void Node<T>::SetPrevious(Node<T>* node)
+{
+	m_previous = node;
+}
 template<class T>
 void Node<T>::SetNext(Node<T> *node)
 {
 	m_next = node;
+	if (node)
+		node->SetPrevious(this);
 	m_adjacents.insert(node);
 }
 
@@ -90,6 +100,7 @@ void Node<T>::SetItem(T item)
 template<class T>
 Node<T>& Node<T>::operator=(Node<T>& rhs)
 {
+	m_previous = rhs.Previous();
 	m_item = rhs.Item();
 	m_next = rhs.Next();
 	m_left = rhs.Left();
@@ -102,6 +113,7 @@ bool Node<T>::operator==(Node<T>& rhs)
 {
 	return m_item == rhs.Item() &&
 	m_next == rhs.Next() &&
+	m_previous == rhs.Previous() &&
 	m_left == rhs.Left() &&
 	m_right == rhs.Right();
 }

@@ -2,7 +2,8 @@
 #include "LinkedList.h"
 template class LinkedList<int>;
 template class LinkedList<long>;
-
+template class LinkedList<string>;
+using Type = std::variant<int, long>;
 template<class T>
 LinkedList<T>::LinkedList(Node<T>* n)
 {
@@ -37,8 +38,24 @@ LinkedList<T>::~LinkedList()
 	}
 }
 template<class T>
-Node<T>* LinkedList<T>::Head() {
+Node<T>* LinkedList<T>::Head() 
+{
 	return m_head;
+}
+template<class T>
+Node<T>* LinkedList<T>::Tail() 
+{
+	Node<T>* node = nullptr;
+	for (node = m_head; node->Next(); node = node->Next());
+	return node;
+}
+template<class T>
+Node<T>* LinkedList<T>::Find(Node<T>& n) {
+	Node<T>* node = nullptr;
+	for (node = m_head; node; node = node->Next())
+		if (*node == n)
+			break;
+	return node;
 }
 template<class T>
 void LinkedList<T>::Print(Node<T> *node)
@@ -86,12 +103,44 @@ void LinkedList<T>::SplitList(Node<T>*& even, Node<T>*& odd)
 		oddTail->SetNext(nullptr);
 }
 template<class T>
-size_t LinkedList<T>::Length()
+size_t LinkedList<T>::Join(LinkedList<T>& other)
+{
+	if (*this == other)
+		throw runtime_error("LinkedList Cannot join itself!");
+	Node<T>* tail = Tail();
+	if (tail)
+		tail->SetNext(other.Head());
+	return Length();
+}
+template<class T>
+size_t LinkedList<T>::Length() const
 {
 	size_t length = 0;
 	for (Node<T>* node = m_head; node; node = node->Next())
 		length++;
 	return length;
+}
+template<class T>
+bool LinkedList<T>::operator==(LinkedList<T>& other)
+{
+	return Head() == other.Head()
+		&& Tail() == other.Tail()
+		&& Length() == other.Length();
+}
+template<class T>
+bool LinkedList<T>::operator!=(LinkedList<T>& other)
+{
+	return !(*this == other);
+}
+template<class T>
+bool LinkedList<T>::operator<(LinkedList<T>& other)
+{
+	return Length() < other.Length();
+}
+template<class T>
+bool LinkedList<T>::operator>(LinkedList<T>& other)
+{
+	return Length() > other.Length();
 }
 template<class T>
 Node<T>* LinkedList<T>::NthElementFromBack(size_t n)
@@ -114,16 +163,18 @@ Node<T>* LinkedList<T>::NthElementFromBack(size_t n)
 template<class T>
 Node<T>* LinkedList<T>::AddNumbers(Node<T>* p1, Node<T>* p2, T carry)
 {
-	if (p1 || p2 || carry > T()) {
-		Node<T>* result = new Node<T>(carry);
-		if (p1)
-			result->SetItem(result->Item() + p1->Item());
-		if (p2)
-			result->SetItem(result->Item() + p2->Item());
-		carry = result->Item() / 10;
-		result->SetItem(result->Item() % 10);
-		result->SetNext(AddNumbers(p1 ? p1->Next() : nullptr, p2 ? p2->Next() : nullptr, carry));
-		return result;
+	if constexpr (is_same_v<T, long> || is_same_v<T, int>) {
+		if (p1 || p2 || carry > T()) {
+			Node<T>* result = new Node<T>(carry);
+			if (p1)
+				result->SetItem(result->Item() + p1->Item());
+			if (p2)
+				result->SetItem(result->Item() + p2->Item());
+			carry = result->Item() / 10;
+			result->SetItem(result->Item() % 10);
+			result->SetNext(AddNumbers(p1 ? p1->Next() : nullptr, p2 ? p2->Next() : nullptr, carry));
+			return result;
+		}
 	}
 	return nullptr;
 }

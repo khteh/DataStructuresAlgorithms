@@ -7,7 +7,7 @@ class Node
 {
 protected:
 	T m_item;
-	Node<T> *m_next, *m_left, *m_right;
+	Node<T> *m_next, *m_previous, *m_left, *m_right;
 public:
 	explicit Node(T item);
 	Node(const Node &);
@@ -15,8 +15,10 @@ public:
 	virtual ~Node();
 	T Item();
 	Node<T> *Next();
+	Node<T>* Previous();
 	Node<T> *Left();
 	Node<T> *Right();
+	void SetPrevious(Node<T>*);
 	void SetNext(Node<T>*);
 	void SetLeft(Node<T>*);
 	void SetRight(Node<T>*);

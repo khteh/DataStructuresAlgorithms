@@ -233,15 +233,60 @@ int _tmain(int argc, _TCHAR* argv[])
 			grid1[i][j] = gridArray5[i][j];
 	}
 	assert(MatrixPatternCount(grid1) == 6);
-	long gridArray6[5][4] = { { 0,0,1,1 },{ 0,0,1,0 },{ 0,1,1,0 },{0,1,0,0},{1,1,0,0} };
+	long gridArray6[4][4] = { { 1,1,0,0 },{ 0,1,1,0 },{ 0,0,1,0 },{1,0,0,0} };
+	grid1.clear();
+	grid1.resize(4);
+	for (size_t i = 0; i < 4; i++) {
+		grid1[i].resize(4);
+		for (size_t j = 0; j < 4; j++)
+			grid1[i][j] = gridArray6[i][j];
+	}
+	cout << endl;
+	assert(ConnectedCellsInAGrid(grid1) == 5);
+
+	long gridArray7[5][4] = { { 0,0,1,1 },{ 0,0,1,0 },{ 0,1,1,0 },{0,1,0,0},{1,1,0,0} };
 	grid1.clear();
 	grid1.resize(5);
 	for (size_t i = 0; i < 5; i++) {
 		grid1[i].resize(4);
 		for (size_t j = 0; j < 4; j++)
-			grid1[i][j] = gridArray6[i][j];
+			grid1[i][j] = gridArray7[i][j];
 	}
-	assert(connectedCell(grid1) == 8);
+	cout << endl;
+	assert(ConnectedCellsInAGrid(grid1) == 8);
+
+	long gridArray8[5][5] = { { 1, 1, 0, 0, 0 },{0, 1, 1, 0, 0 },{ 0, 0, 1, 0, 1 },{1, 0, 0, 0, 1},{0, 1, 0, 1, 1} };
+	grid1.clear();
+	grid1.resize(5);
+	for (size_t i = 0; i < 5; i++) {
+		grid1[i].resize(5);
+		for (size_t j = 0; j < 4; j++)
+			grid1[i][j] = gridArray8[i][j];
+	}
+	cout << endl;
+	assert(ConnectedCellsInAGrid(grid1) == 5);
+
+	long gridArray9[5][5] = { { 0, 1, 1, 1, 1 },{1, 0, 0, 0, 1 },{ 1, 1, 0, 1, 0 },{0, 1, 0, 1, 1},{0, 1, 1, 1, 0} };
+	grid1.clear();
+	grid1.resize(5);
+	for (size_t i = 0; i < 5; i++) {
+		grid1[i].resize(5);
+		for (size_t j = 0; j < 5; j++)
+			grid1[i][j] = gridArray9[i][j];
+	}
+	cout << endl;
+	assert(ConnectedCellsInAGrid(grid1) == 15);
+
+	long gridArray10[7][5] = { { 1, 1, 1, 0, 1 },{0, 0, 1, 0, 0 },{ 1, 1, 0, 1, 0 },{0, 1, 1, 0, 0},{0, 0, 0, 0, 0},{0, 1, 0, 0, 0},{0, 0, 1, 1, 0} };
+	grid1.clear();
+	grid1.resize(7);
+	for (size_t i = 0; i < 7; i++) {
+		grid1[i].resize(5);
+		for (size_t j = 0; j < 5; j++)
+			grid1[i][j] = gridArray10[i][j];
+	}
+	cout << endl;
+	assert(ConnectedCellsInAGrid(grid1) == 9);
 
 	char puzzle[4][5] = {{0,0,1,0,1},{0,0,0,0,0},{0,1,1,1,1},{0,1,1,0,0}};
 	maze.resize(4);
@@ -1210,49 +1255,52 @@ int _tmain(int argc, _TCHAR* argv[])
 	generate(a.begin(), a.end(), [&] {return uniformDistribution(engine); });
 	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
 	cout << endl;
-	LinkedList<long> ll(a);
-	ll.Print();
+	LinkedList<long> lla1(a);
+	assert(lla1.Length() == 10);
+	lla1.Print();
 	b.clear();
-	ll.ToVector(b);
+	lla1.ToVector(b);
 	assert(a.size() == b.size());
 	for (size_t i = 0; i < a.size(); i++)
 		assert(a[i] == b[i]);
 	Node<long> *odd = nullptr, *even = nullptr;
-	ll.SplitList(even, odd);
+	lla1.SplitList(even, odd);
 	assert(odd);
 	assert(even);
 	cout << "Even: ";
-	ll.Print(even);
+	lla1.Print(even);
 	cout << "Odd: ";
-	ll.Print(odd);
-	ll.Print();
+	lla1.Print(odd);
+	lla1.Print();
 	a.clear();
 	for (size_t i = 0; i < 10; i++)
 		a.push_back(i);
-	LinkedList<long> ll1(a);
-	assert(ll1.Length() == 10);
+	LinkedList<long> lla2(a);
+	assert(lla2.Length() == 10);
 	// Implement an algorithm to find the nth to last element of a singly linked list.
-	Node<long>* lptr = ll1.NthElementFromBack(3);
+	Node<long>* lptr = lla2.NthElementFromBack(3);
 	assert(lptr);
 	assert(lptr->Item() == 7);
-	lptr = ll1.NthElementFromBack(10);
+	lptr = lla2.NthElementFromBack(10);
 	assert(lptr);
 	assert(lptr->Item() == 0);
-	lptr = ll1.NthElementFromBack(11);
+	lptr = lla2.NthElementFromBack(11);
 	assert(!lptr);
 	a.clear();
 	a.push_back(1);
 	a.push_back(2);
 	a.push_back(3);
-	LinkedList<long> lla(a);
-	lla.Print();
+	LinkedList<long> lla3(a);
+	assert(lla3.Length() == 3);
+	lla3.Print();
 	a.clear();
 	a.push_back(7);
 	a.push_back(8);
 	a.push_back(9);
-	LinkedList<long> llb(a);
-	llb.Print();
-	LinkedList<long> listAdditionResult = lla.AddNumbers(lla.Head(), llb.Head());
+	LinkedList<long> llb1(a);
+	assert(llb1.Length() == 3);
+	llb1.Print();
+	LinkedList<long> listAdditionResult = lla3.AddNumbers(lla3.Head(), llb1.Head());
 	listAdditionResult.Print();
 	vector<long> listAdditionResultVector;
 	listAdditionResult.ToVector(listAdditionResultVector);
@@ -1261,6 +1309,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(listAdditionResultVector[1] == 0);
 	assert(listAdditionResultVector[2] == 3);
 	assert(listAdditionResultVector[3] == 1);
+	a.clear();
+	b.clear();
+	a.resize(10);
+	b.resize(10);
+	generate(a.begin(), a.end(), [&] {return uniformDistribution(engine); });
+	generate(b.begin(), b.end(), [&] {return uniformDistribution(engine); });
+	LinkedList<long> lla4(a), llb2(b);
+	assert(lla4.Length() == 10);
+	assert(llb2.Length() == 10);
+	lla4.Join(llb2);
+	assert(lla4.Length() == 20);
 	Square square1(0, 0, 10, 10), square2(5, 5, 10, 10);
 	assert(square1.IsOverlappig(square2));
 	assert(square2.IsOverlappig(square1));
@@ -5480,27 +5539,170 @@ long MatrixPatternCount(vector<vector<long>>& data)
 				count++;
 	return count;
 }
-// https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
-// Unfinished work!
-size_t connectedCell(vector<vector<long>>& matrix) 
+template<typename A, typename B>
+std::pair<B, A> flip_pair(const std::pair<A, B>& p)
 {
-	size_t count = 0, max = 0;
-	for (size_t i = 0; i < matrix.size(); i++)
-		for (size_t j = 0; j < matrix[0].size(); j++) {
-			if (matrix[i][j] == 1) {
-				count++;
-				if (i < matrix.size() - 1 && j < matrix[0].size() - 1)
-					if (matrix[i + 1][j] == 0 && matrix[i][j + 1] == 0 && matrix[i + 1][j + 1] == 0) {
-						if (j > 0 && matrix[i + 1][j - 1] == 1)
-							continue;
-						if (count > max) {
-							max = count;
-							count = 0;
+	return std::pair<B, A>(p.second, p.first);
+}
+
+template<typename A, typename B>
+std::multimap<B, A> flip_map(const std::map<A, B>& src)
+{
+	std::multimap<B, A> dst;
+	std::transform(src.begin(), src.end(), std::inserter(dst, dst.begin()),
+		flip_pair<A, B>);
+	return dst;
+}
+// https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+// 100%
+size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
+{
+	map<string, Node<string>*> nodes;
+	set<LinkedList<string>*> clusters;
+	ostringstream location, oss;
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[0].size(); j++) {
+			if (grid[i][j] == 1) {
+				location.str("");
+				location << i << "," << j;
+				Node<string>* node = new Node<string>(location.str());
+				nodes[location.str()] = node;
+				Node<string>* parent = nullptr;
+				set<LinkedList<string>*> joins;
+				bool skip = false;
+				// Upper Left
+				if (i > 0 && j > 0 && grid[i - 1][j - 1] != 0) {
+					oss.str("");
+					oss << i - 1 << "," << j - 1;
+					parent = nodes[oss.str()];
+					if (parent != nullptr) {
+						Node<string>* tail = nullptr;
+						for (set<LinkedList<string>*>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
+							Node<string>* head = (*it)->Find(*parent);
+							if (head) {
+								tail = (*it)->Tail();
+								if (tail)
+									joins.emplace(*it);
+							}
+						}
+						if (!skip && tail) {
+							tail->SetNext(node);
+							//continue;
+							skip = true;
 						}
 					}
-			}
+				}
+				// Up
+				if (i > 0 && grid[i - 1][j] != 0) {
+					oss.str("");
+					oss << i - 1 << "," << j;
+					parent = nodes[oss.str()];
+					if (parent != nullptr) {
+						Node<string>* tail = nullptr;
+						for (set<LinkedList<string>*>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
+							Node<string>* head = (*it)->Find(*parent);
+							if (head) {
+								tail = (*it)->Tail();
+								if (tail)
+									joins.emplace(*it);
+							}
+						}
+						if (!skip && tail) {
+							tail->SetNext(node);
+							//continue;
+							skip = true;
+						}
+					}
+				}
+				// Upper Right
+				if (i > 0 && j < grid[0].size() - 1 && grid[i - 1][j + 1] != 0) {
+					oss.str("");
+					oss << i - 1 << "," << j + 1;
+					parent = nodes[oss.str()];
+					if (parent != nullptr) {
+						Node<string>* tail = nullptr;
+						for (set<LinkedList<string>*>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
+							Node<string>* head = (*it)->Find(*parent);
+							if (head) {
+								tail = (*it)->Tail();
+								if (tail)
+									joins.emplace(*it);
+							}
+						}
+						if (!skip && tail) {
+							tail->SetNext(node);
+							//continue;
+							skip = true;
+						}
+					}
+				}
+				// Left
+				if (j > 0 && grid[i][j - 1] != 0) {
+					oss.str("");
+					oss << i << "," << j - 1;
+					parent = nodes[oss.str()];
+					if (parent != nullptr) {
+						Node<string>* tail = nullptr;
+						for (set<LinkedList<string>*>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
+							Node<string>* head = (*it)->Find(*parent);
+							if (head) {
+								tail = (*it)->Tail();
+								if (tail)
+									joins.emplace(*it);
+							}
+						}
+						if (!skip && tail) {
+							tail->SetNext(node);
+							//continue;
+							skip = true;
+						}
+					}
+				}
+				// Right
+				if (j < grid[0].size() - 1 && grid[i][j + 1] != 0) {
+					oss.str("");
+					oss << i << "," << j + 1;
+					parent = nodes[oss.str()];
+					if (parent != nullptr) {
+						Node<string>* tail = nullptr;
+						for (set<LinkedList<string>*>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
+							Node<string>* head = (*it)->Find(*parent);
+							if (head) {
+								tail = (*it)->Tail();
+								if (tail)
+									joins.emplace(*it);
+							}
+						}
+						if (!skip && tail) {
+							tail->SetNext(node);
+							//continue;
+							skip = true;
+						}
+					}
+				}
+				if (!joins.empty() && joins.size() > 1) {
+					set<LinkedList<string>*>::iterator it = joins.begin();
+					set<LinkedList<string>*>::iterator joinTo = clusters.find(*it++);
+					for (; it != joins.end(); it++) {
+						set<LinkedList<string>*>::iterator it1 = clusters.find(*it);
+						(*joinTo)->Join(**it1);
+						clusters.erase(*it1);
+					}
+				}
+				if (!skip)
+					clusters.emplace(new LinkedList<string>(node));
+				joins.clear();
+			} // if (grid[i][j] == 1) {
 		}
-	return Max(max, count);
+	size_t max = 0;
+	for (set<LinkedList<string>*>::iterator it = clusters.begin(); it != clusters.end(); it++) {
+		(*it)->Print();
+		if ((*it)->Length() > max)
+			max = (*it)->Length();
+	}
+	nodes.clear();
+	clusters.clear();
+	return max;
 }
 // 0 0 1 0 1
 // 0 0 0 0 0
