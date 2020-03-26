@@ -9,6 +9,7 @@ class LinkedList
 {
 private:
 	Node<T> *m_head;
+	void SetHead(Node<T>*);
 public:
 	LinkedList(Node<T>*);
 	LinkedList(vector<T>&);
@@ -21,6 +22,7 @@ public:
 	void SplitList(Node<T>*&, Node<T>*&);
 	void ToVector(vector<T>&);
 	size_t Length() const;
+	void Clear();
 	bool operator==(LinkedList<T>&);
 	bool operator!=(LinkedList<T>&);
 	bool operator<(LinkedList<T>&);

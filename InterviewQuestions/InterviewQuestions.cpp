@@ -1264,7 +1264,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	for (size_t i = 0; i < a.size(); i++)
 		assert(a[i] == b[i]);
 	Node<long> *odd = nullptr, *even = nullptr;
-	lla1.SplitList(even, odd);
+	lla1.SplitList(even, odd); // Problem here!
 	assert(odd);
 	assert(even);
 	cout << "Even: ";
@@ -1272,6 +1272,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Odd: ";
 	lla1.Print(odd);
 	lla1.Print();
+	lla1.Clear();
 	a.clear();
 	for (size_t i = 0; i < 10; i++)
 		a.push_back(i);
@@ -1286,6 +1287,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(lptr->Item() == 0);
 	lptr = lla2.NthElementFromBack(11);
 	assert(!lptr);
+	lla2.Clear();
 	a.clear();
 	a.push_back(1);
 	a.push_back(2);
@@ -1309,6 +1311,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(listAdditionResultVector[1] == 0);
 	assert(listAdditionResultVector[2] == 3);
 	assert(listAdditionResultVector[3] == 1);
+	listAdditionResult.Clear();
+	lla3.Clear();
+	llb1.Clear();
 	a.clear();
 	b.clear();
 	a.resize(10);
@@ -1320,6 +1325,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(llb2.Length() == 10);
 	lla4.Join(llb2);
 	assert(lla4.Length() == 20);
+	assert(llb2.Length() == 0);
+	lla4.Clear();
+	llb2.Clear();
 	Square square1(0, 0, 10, 10), square2(5, 5, 10, 10);
 	assert(square1.IsOverlappig(square2));
 	assert(square2.IsOverlappig(square1));
@@ -1831,6 +1839,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(timeInWords(12, 29) == "twenty nine minutes past twelve");
 	assert(timeInWords(6, 30) == "half past six");
 	assert(timeInWords(1, 1) == "one minute past one");
+//	assert(beautifulQuadruples(1, 1, 1, 1) == 0);
+//	assert(beautifulQuadruples(3, 3, 3, 3) == 2);
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -7509,4 +7519,24 @@ string timeInWords(int h, int m)
 		str << numbers[m] << (m > 1 ? " minutes" : " minute");
 	str << hour.str();
 	return str.str();
+}
+size_t beautifulQuadruples(int a, int b, int c, int d) 
+{
+	/*
+	 * Write your code here.
+	 */
+	set<multiset<int>> quadruples;
+	for (int i = 1; i <= a; i++)
+		for (int j = 1; j <= b; j++)
+			for (int k = 1; k <= c; k++)
+				for (int l = 1; l <= d; l++)
+					if ((i ^ j ^ k ^ l) != 0) {
+						multiset<int> tmp;
+						tmp.emplace(i);
+						tmp.emplace(j);
+						tmp.emplace(k);
+						tmp.emplace(l);
+						quadruples.emplace(tmp);
+					}
+	return quadruples.size();
 }

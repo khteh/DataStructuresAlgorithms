@@ -10,13 +10,14 @@ template class Node<string>;
 
 template<class T>
 Node<T>::Node(T item)
-	:m_item(item), m_next(nullptr), m_left(nullptr), m_right(nullptr)
+	:m_item(item), m_previous(nullptr), m_next(nullptr), m_left(nullptr), m_right(nullptr)
 {
 }
 
 template<class T>
 Node<T>::Node(const Node &node) // Shallow Copy !!! It will have runtime error with create/delete of objects
 	: m_item(node.m_item)
+	, m_previous(node.m_previous)
 	, m_next(node.m_next)
 	, m_left(node.m_left)
 	, m_right(node.m_right)
@@ -26,6 +27,7 @@ Node<T>::Node(const Node &node) // Shallow Copy !!! It will have runtime error w
 template<class T>
 Node<T>::Node(const Node *node) // Shallow Copy !!! It will have runtime error with create/delete of objects
 	: m_item(node->m_item)
+	, m_previous(node->m_previous)
 	, m_next(node->m_next)
 	, m_left(node->m_left)
 	, m_right(node->m_right)

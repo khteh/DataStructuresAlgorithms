@@ -306,3 +306,4 @@ vector<size_t> climbingLeaderboard(vector<long>& scores, vector<long>& alice);
 vector<long> absolutePermutation(long n, long k);
 long calculateMedian(vector<long>&);
 string timeInWords(int, int);
+size_t beautifulQuadruples(int a, int b, int c, int d);

@@ -23,6 +23,7 @@ LinkedList<T>::LinkedList(vector<T>& data)
 		} else {
 			Node<T> *n = new Node<T>(*it);
 			tail->SetNext(n);
+			n->SetPrevious(tail);
 			tail = n;
 		}
 	}
@@ -31,16 +32,17 @@ LinkedList<T>::LinkedList(vector<T>& data)
 template<class T>
 LinkedList<T>::~LinkedList()
 {
-	for (Node<T>* n = m_head; n;) {
-		Node<T>* tmp = n;
-		n = n->Next();
-		delete tmp;
-	}
+	Clear();
 }
 template<class T>
 Node<T>* LinkedList<T>::Head() 
 {
 	return m_head;
+}
+template<class T>
+void LinkedList<T>::SetHead(Node<T>* node)
+{
+	m_head = node;
 }
 template<class T>
 Node<T>* LinkedList<T>::Tail() 
@@ -50,7 +52,8 @@ Node<T>* LinkedList<T>::Tail()
 	return node;
 }
 template<class T>
-Node<T>* LinkedList<T>::Find(Node<T>& n) {
+Node<T>* LinkedList<T>::Find(Node<T>& n) 
+{
 	Node<T>* node = nullptr;
 	for (node = m_head; node; node = node->Next())
 		if (*node == n)
@@ -102,6 +105,9 @@ void LinkedList<T>::SplitList(Node<T>*& even, Node<T>*& odd)
 	if (oddTail)
 		oddTail->SetNext(nullptr);
 }
+// XXX: After join the ownership of the nodes in 'other' LinkedList is/should be transferred to 
+// *this LinkedList. So when other calls Clear() AFTER this->Clear() it results in dangling pointer
+// and undefined behaviour. To prevent that, set other.Head to nullptr
 template<class T>
 size_t LinkedList<T>::Join(LinkedList<T>& other)
 {
@@ -110,6 +116,7 @@ size_t LinkedList<T>::Join(LinkedList<T>& other)
 	Node<T>* tail = Tail();
 	if (tail)
 		tail->SetNext(other.Head());
+	other.SetHead(nullptr);
 	return Length();
 }
 template<class T>
@@ -141,6 +148,17 @@ template<class T>
 bool LinkedList<T>::operator>(LinkedList<T>& other)
 {
 	return Length() > other.Length();
+}
+template<class T>
+void LinkedList<T>::Clear()
+{
+	for (Node<T>* n = m_head; n;) {
+		Node<T>* tmp = n;
+		n = n->Next();
+		delete tmp;
+		tmp = nullptr;
+	}
+	m_head = nullptr;
 }
 template<class T>
 Node<T>* LinkedList<T>::NthElementFromBack(size_t n)

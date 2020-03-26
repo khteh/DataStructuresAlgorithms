@@ -44,7 +44,7 @@ void Tower::print()
 // let n be the total number of discs
 // number the discs from 1 (smallest, topmost) to n (largest, bottommost)
 // The above is a recursive algorithm, to carry out steps 1 and 3, apply the same algorithm again for n−1. 
-// The entire procedure is a finite number of steps, since at some point the algorithm will be required for n = 1. 
+// The entire procedure is a finite number of steps, since at some point the algorithm will be required for n = 1.
 // This step, moving a single disc from peg A to peg B, is trivial.
 void Tower::MoveDisks(int n, Tower *dest, Tower *buffer)
 {
