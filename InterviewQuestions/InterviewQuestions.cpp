@@ -1839,8 +1839,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(timeInWords(12, 29) == "twenty nine minutes past twelve");
 	assert(timeInWords(6, 30) == "half past six");
 	assert(timeInWords(1, 1) == "one minute past one");
-//	assert(beautifulQuadruples(1, 1, 1, 1) == 0);
-//	assert(beautifulQuadruples(3, 3, 3, 3) == 2);
+	assert(beautifulQuadruples(1, 1, 1, 1) == 0);
+	assert(beautifulQuadruples(3, 3, 3, 3) == 9);
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -7520,6 +7520,8 @@ string timeInWords(int h, int m)
 	str << hour.str();
 	return str.str();
 }
+// https://www.hackerrank.com/challenges/xor-quadruples/problem
+// 100% Functionality. However, time out as it is O(N^3)
 size_t beautifulQuadruples(int a, int b, int c, int d) 
 {
 	/*
