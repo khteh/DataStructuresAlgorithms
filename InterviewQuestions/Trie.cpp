@@ -5,35 +5,33 @@ template class Trie<int>;
 template<typename T>
 Trie<T>::Trie()
 {
-	m_root = new TrieNode<T>();
+	m_root = make_shared<TrieNode<T>>();
 }
 
 template<typename T>
 Trie<T>::Trie(string const &str, T value)
 {
-	m_root = new TrieNode<T>();
+	m_root = make_shared<TrieNode<T>>();
 	Insert(str, value);
 }
 
 template<typename T>
 Trie<T>::~Trie()
 {
-	delete m_root;
-	m_root = nullptr;
+	Clear();
 }
 
 template<typename T>
 void Trie<T>::Clear()
 {
-	delete m_root;
-	m_root = nullptr;
+	m_root.reset();
 }
 
 template<typename T>
 void Trie<T>::Insert(string const &str, T value)
 {
 	if (!m_root)
-		m_root = new TrieNode<T>();
+		m_root = make_shared<TrieNode<T>>();
 	m_root->InsertString(str, value);
 }
 
@@ -80,7 +78,7 @@ template<typename T>
 void TrieNode<T>::InsertString(string const &str, T value)
 {
 	if (!str.empty()) {
-		pair<map<char, TrieNode<T>*>::iterator, bool> result = m_children.emplace(str[0], new TrieNode<T>());
+		pair<map<char, shared_ptr<TrieNode<T>>>::iterator, bool> result = m_children.emplace(str[0], new TrieNode<T>());
 		result.first->second->InsertString(str.substr(1), value);
 	} else
 		m_value = value;
@@ -107,7 +105,7 @@ template<typename T>
 size_t TrieNode<T>::Count()
 {
 	size_t count = m_children.size();
-	for (map<char, TrieNode<T>*>::iterator it = m_children.begin(); it != m_children.end(); it++)
+	for (map<char, shared_ptr<TrieNode<T>>>::iterator it = m_children.begin(); it != m_children.end(); it++)
 		if (it->second)
 			count += it->second->Count();
 		else

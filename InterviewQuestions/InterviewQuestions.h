@@ -283,11 +283,11 @@ void PlayTreasureGame();
 const size_t moves[][2] = { {0,1}, {0, -1}, {1, 0}, {-1, 0} };
 size_t countPaths(size_t, size_t, size_t, size_t, size_t);
 void testPathCount(size_t, size_t, size_t, size_t, size_t);
-vector<Node<string>*> shortest_cycle_path(Node<string>*);
+vector<shared_ptr<Node<string>>> shortest_cycle_path(shared_ptr<Node<string>>);
 int findMinFlip(vector<int>&);
 bool IsValidMatrix(vector<vector<char>> const&);
 template <class T>
-T TreeArithmeticTotal(Node<string> *);
+T TreeArithmeticTotal(shared_ptr<Node<string>>);
 size_t ZigZagEscape(vector<long>&);
 size_t ZigZagEscape(vector<long>&, set<string>&);
 vector<string> ZigZagEscape(vector<long>&, vector<long>&, size_t lIndex, size_t rIndex, long current, bool dir);

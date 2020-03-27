@@ -25,7 +25,7 @@ Node<T>::Node(const Node &node) // Shallow Copy !!! It will have runtime error w
 }
 
 template<class T>
-Node<T>::Node(const Node *node) // Shallow Copy !!! It will have runtime error with create/delete of objects
+Node<T>::Node(const shared_ptr<Node> node) // Shallow Copy !!! It will have runtime error with create/delete of objects
 	: m_item(node->m_item)
 	, m_previous(node->m_previous)
 	, m_next(node->m_next)
@@ -46,49 +46,49 @@ T Node<T>::Item()
 	return m_item;
 }
 template<class T>
-Node<T>* Node<T>::Previous()
+shared_ptr<Node<T>> Node<T>::Previous()
 {
 	return m_previous;
 }
 template<class T>
-Node<T> *Node<T>::Next()
+shared_ptr<Node<T>> Node<T>::Next()
 {
 	return m_next;
 }
 
 template<class T>
-Node<T> *Node<T>::Left()
+shared_ptr<Node<T>> Node<T>::Left()
 {
 	return m_left;
 }
 
 template<class T>
-Node<T> *Node<T>::Right()
+shared_ptr<Node<T>> Node<T>::Right()
 {
 	return m_right;
 }
 template<class T>
-void Node<T>::SetPrevious(Node<T>* node)
+void Node<T>::SetPrevious(shared_ptr<Node<T>> node)
 {
 	m_previous = node;
 }
 template<class T>
-void Node<T>::SetNext(Node<T> *node)
+void Node<T>::SetNext(shared_ptr<Node<T>> node)
 {
 	m_next = node;
 	if (node)
-		node->SetPrevious(this);
+		node->SetPrevious(shared_from_this());
 	m_adjacents.insert(node);
 }
 
 template<class T>
-void Node<T>::SetLeft(Node<T> *node)
+void Node<T>::SetLeft(shared_ptr<Node<T>> node)
 {
 	m_left = node;
 }
 
 template<class T>
-void Node<T>::SetRight(Node<T> *node)
+void Node<T>::SetRight(shared_ptr<Node<T>> node)
 {
 	m_right = node;
 }

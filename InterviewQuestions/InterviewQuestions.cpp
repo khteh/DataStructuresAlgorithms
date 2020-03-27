@@ -1263,7 +1263,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(a.size() == b.size());
 	for (size_t i = 0; i < a.size(); i++)
 		assert(a[i] == b[i]);
-	Node<long> *odd = nullptr, *even = nullptr;
+	shared_ptr<Node<long>> odd = nullptr, even = nullptr;
 	lla1.SplitList(even, odd); // Problem here!
 	assert(odd);
 	assert(even);
@@ -1279,7 +1279,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	LinkedList<long> lla2(a);
 	assert(lla2.Length() == 10);
 	// Implement an algorithm to find the nth to last element of a singly linked list.
-	Node<long>* lptr = lla2.NthElementFromBack(3);
+	shared_ptr<Node<long>> lptr = lla2.NthElementFromBack(3);
 	assert(lptr);
 	assert(lptr->Item() == 7);
 	lptr = lla2.NthElementFromBack(10);
@@ -1499,44 +1499,44 @@ int _tmain(int argc, _TCHAR* argv[])
 		\         ^
 		-------/
 	*/
-	Node<string> nodeA("a");
-	Node<string> nodeB("b");
-	Node<string> nodeC("c");
-	Node<string> nodeD("d");
-	Node<string> nodeE("e");
-	Node<string> nodeF("f");
-	Node<string> nodeG("g");
-	Node<string> nodeH("h");
-	nodeA.SetNext(&nodeB);
-	nodeB.SetNext(&nodeC);
-	nodeC.SetNext(&nodeE);
-	nodeC.SetNext(&nodeD);
-	nodeD.SetNext(&nodeE);
-	nodeE.SetNext(&nodeF);
-	nodeE.SetNext(&nodeE);
-	nodeF.SetNext(&nodeB);
-	nodeF.SetNext(&nodeA);
-	nodeD.SetNext(&nodeG);
-	nodeD.SetNext(&nodeH);
-	nodeG.SetNext(&nodeH);
-	vector<Node<string>*> path = shortest_cycle_path(&nodeA);
-	cout << nodeA.Item() << " ";
-	for (vector<Node<string>*>::iterator it = path.begin(); it != path.end(); it++)
+	shared_ptr<Node<string>> nodeA = make_shared<Node<string>>("a");
+	shared_ptr<Node<string>> nodeB = make_shared<Node<string>>("b");
+	shared_ptr<Node<string>> nodeC = make_shared<Node<string>>("c");
+	shared_ptr<Node<string>> nodeD = make_shared<Node<string>>("d");
+	shared_ptr<Node<string>> nodeE = make_shared<Node<string>>("e");
+	shared_ptr<Node<string>> nodeF = make_shared<Node<string>>("f");
+	shared_ptr<Node<string>> nodeG = make_shared<Node<string>>("g");
+	shared_ptr<Node<string>> nodeH = make_shared<Node<string>>("h");
+	nodeA->SetNext(nodeB);
+	nodeB->SetNext(nodeC);
+	nodeC->SetNext(nodeE);
+	nodeC->SetNext(nodeD);
+	nodeD->SetNext(nodeE);
+	nodeE->SetNext(nodeF);
+	nodeE->SetNext(nodeE);
+	nodeF->SetNext(nodeB);
+	nodeF->SetNext(nodeA);
+	nodeD->SetNext(nodeG);
+	nodeD->SetNext(nodeH);
+	nodeG->SetNext(nodeH);
+	vector<shared_ptr<Node<string>>> path = shortest_cycle_path(nodeA);
+	cout << nodeA->Item() << " ";
+	for (vector<shared_ptr<Node<string>>>::iterator it = path.begin(); it != path.end(); it++)
 		cout << (*it)->Item() << " ";
 	cout << endl;
-	path = shortest_cycle_path(&nodeB);
-	cout << nodeB.Item() << " ";
-	for (vector<Node<string>*>::iterator it = path.begin(); it != path.end(); it++)
+	path = shortest_cycle_path(nodeB);
+	cout << nodeB->Item() << " ";
+	for (vector<shared_ptr<Node<string>>>::iterator it = path.begin(); it != path.end(); it++)
 		cout << (*it)->Item() << " ";
 	cout << endl;
-	path = shortest_cycle_path(&nodeE);
-	cout << nodeE.Item() << " ";
-	for (vector<Node<string>*>::iterator it = path.begin(); it != path.end(); it++)
+	path = shortest_cycle_path(nodeE);
+	cout << nodeE->Item() << " ";
+	for (vector<shared_ptr<Node<string>>>::iterator it = path.begin(); it != path.end(); it++)
 		cout << (*it)->Item() << " ";
 	cout << endl;
-	path = shortest_cycle_path(&nodeG);
-	cout << nodeG.Item() << " ";
-	for (vector<Node<string>*>::iterator it = path.begin(); it != path.end(); it++)
+	path = shortest_cycle_path(nodeG);
+	cout << nodeG->Item() << " ";
+	for (vector<shared_ptr<Node<string>>>::iterator it = path.begin(); it != path.end(); it++)
 		cout << (*it)->Item() << " ";
 	cout << endl;
 	data.clear();
@@ -1579,26 +1579,26 @@ int _tmain(int argc, _TCHAR* argv[])
 		{ 'B', 'R', 'Y', 'B' },
 	};
 	assert(!IsValidMatrix(m2));
-	Node<string> multiplier("*");
-	Node<string> adder("+");
-	Node<string> minus("-");
-	Node<string> num1("1"), num2("2"), num3("3"), num4("4");
-	Node<string> num5("1.2"), num6("2.3"), num7("3.4"), num8("4.5");
-	adder.SetLeft(&num1);
-	adder.SetRight(&num2);
-	minus.SetLeft(&num3);
-	minus.SetRight(&num4);
-	multiplier.SetLeft(&adder);
-	multiplier.SetRight(&minus);
+	shared_ptr<Node<string>> multiplier = make_shared<Node<string>>("*");
+	shared_ptr<Node<string>> adder = make_shared<Node<string>>("+");
+	shared_ptr<Node<string>> minus = make_shared<Node<string>>("-");
+	shared_ptr<Node<string>> num1 = make_shared<Node<string>>("1"), num2 = make_shared<Node<string>>("2"), num3 = make_shared<Node<string>>("3"), num4 = make_shared<Node<string>>("4");
+	shared_ptr<Node<string>> num5 = make_shared<Node<string>>("1.2"), num6 = make_shared<Node<string>>("2.3"), num7 = make_shared<Node<string>>("3.4"), num8 = make_shared<Node<string>>("4.5");
+	adder->SetLeft(num1);
+	adder->SetRight(num2);
+	minus->SetLeft(num3);
+	minus->SetRight(num4);
+	multiplier->SetLeft(adder);
+	multiplier->SetRight(minus);
 	// (1 + 2) * (3 - 4) = 3 * -1 = -3
-	assert(TreeArithmeticTotal<long>(&multiplier) == -3);
-	adder.SetLeft(&num5);
-	adder.SetRight(&num6);
-	minus.SetLeft(&num7);
-	minus.SetRight(&num8);
+	assert(TreeArithmeticTotal<long>(multiplier) == -3);
+	adder->SetLeft(num5);
+	adder->SetRight(num6);
+	minus->SetLeft(num7);
+	minus->SetRight(num8);
 	// (1.2 + 2.3) * (3.4 - 4.5) = 3.5 * -1.1 = -3.85
 	double expected = (1.2 + 2.3) * (3.4 - 4.5);
-	assert(fabs(TreeArithmeticTotal<double>(&multiplier) - expected) < numeric_limits<double>::epsilon());
+	assert(fabs(TreeArithmeticTotal<double>(multiplier) - expected) < numeric_limits<double>::epsilon());
 	a.clear();
 	a.push_back(13);
 	a.push_back(2);
@@ -1763,37 +1763,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(!SherlockValidString("aaaabbcc"));
 	assert(!SherlockValidString("xxxaabbccrry"));
 	assert(SherlockValidString("ibfdgaeadiaefgbhbdghhhbgdfgeiccbiehhfcggchgghadhdhagfbahhddgghbdehidbibaeaagaeeigffcebfbaieggabcfbiiedcabfihchdfabifahcbhagccbdfifhghcadfiadeeaheeddddiecaicbgigccageicehfdhdgafaddhffadigfhhcaedcedecafeacbdacgfgfeeibgaiffdehigebhhehiaahfidibccdcdagifgaihacihadecgifihbebffebdfbchbgigeccahgihbcbcaggebaaafgfedbfgagfediddghdgbgehhhifhgcedechahidcbchebheihaadbbbiaiccededchdagfhccfdefigfibifabeiaccghcegfbcghaefifbachebaacbhbfgfddeceababbacgffbagidebeadfihaefefegbghgddbbgddeehgfbhafbccidebgehifafgbghafacgfdccgifdcbbbidfifhdaibgigebigaedeaaiadegfefbhacgddhchgcbgcaeaieiegiffchbgbebgbehbbfcebciiagacaiechdigbgbghefcahgbhfibhedaeeiffebdiabcifgccdefabccdghehfibfiifdaicfedagahhdcbhbicdgibgcedieihcichadgchgbdcdagaihebbabhibcihicadgadfcihdheefbhffiageddhgahaidfdhhdbgciiaciegchiiebfbcbhaeagccfhbfhaddagnfieihghfbaggiffbbfbecgaiiidccdceadbbdfgigibgcgchafccdchgifdeieicbaididhfcfdedbhaadedfageigfdehgcdaecaebebebfcieaecfagfdieaefdiedbcadchabhebgehiidfcgahcdhcdhgchhiiheffiifeegcfdgbdeffhgeghdfhbfbifgidcafbfcd"));
-	int freqResult[] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,1,1,1,0,1,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,1,1,1,1,1,1,0,1,0,1,1,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,1,1,1,0,1,1,1,0,1,1,0,1,1,1,1,1,0,0,1,0,0,1,1,0,0,1,1,0,1,1,1,0,1,1,1,0,0,0,1,0,0,1,0,0,1,1,0,0,1,0,0,1,0,0,0,1,1,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,0,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1 };
-	std::ifstream infile("queryFrequencyInput.txt");
-	vector<vector<int>> freqTestData;
-	vector<int> inserts, deletions;
-	while (getline(infile, line)) {
-		istringstream iss(line);
-		int operation, data;
-		if (!(iss >> operation >> data))
-			break;
-		vector<int> d;
-		d.push_back(operation);
-		d.push_back(data);
-		freqTestData.push_back(d);
-		if (operation == 1)
-			inserts.push_back(data);
-		else if (operation == 2)
-			deletions.push_back(data);
-	}
-	vector<int> freqQueryExpectedResult(freqResult, freqResult + sizeof(freqResult) / sizeof(freqResult[0]));
-	vector<int> freqQueryResult = freqQuery(freqTestData);
-	assert(freqQueryExpectedResult.size() == freqQueryResult.size());
-	for (size_t i = 0; i < freqQueryResult.size(); i++) {
-		//assert(freqQueryResult[i] == freqQueryExpectedResult[i]);
-		if (freqQueryResult[i] != freqQueryExpectedResult[i]) {
-			cout << "freqQuery i: " << i << " Expects " << freqQueryExpectedResult[i] << " Gets " << freqQueryResult[i] << endl;
-			for (size_t j = 0, cnt = 0; j < freqTestData.size(); j++) {
-//				if (freqTestData[j][0] == 3 && ++cnt == i)
-//					assert(false);
-			}
-		}
-	}
 	line = "if man was meant to stay on the ground god would have given us roots";
 	assert(encryption(line) == "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau");
 	a.clear();
@@ -4715,35 +4684,35 @@ void PrefixTrieTests()
 	cout << endl;
 
 	PrefixTrieNode* node = prefixTrie.GetNode("apple");
-	assert(node != nullptr);
+	assert(node);
 	assert(node->Value() == "apple");
 
 	node = prefixTrie.GetNode("app");
-	assert(node != nullptr);
+	assert(node);
 	assert(node->Value() == "");
 
 	node = prefixTrie.GetNode("to");
-	assert(node != nullptr);
+	assert(node);
 	assert(node->Value() == "to");
 
 	node = prefixTrie.GetNode("in");
-	assert(node != nullptr);
+	assert(node);
 	assert(node->Value() == "in");
 
 	node = prefixTrie.GetNode("a");
-	assert(node != nullptr);
+	assert(node);
 	assert(node->Value() == "");
 
 	node = prefixTrie.GetNode("i");
-	assert(node != nullptr);
+	assert(node);
 	assert(node->Value() == "");
 
 	node = prefixTrie.GetNode("t");
-	assert(node != nullptr);
+	assert(node);
 	assert(node->Value() == "");
 
 	node = prefixTrie.GetNode("te");
-	assert(node != nullptr);
+	assert(node);
 	assert(node->Value() == "");
 
 	string longestCommonPrefix = prefixTrie.LongestCommonPrefix("a");
@@ -4899,17 +4868,17 @@ void BinaryTreeTests()
 	cout << endl;
 	result.clear();
 
-	map<unsigned long, vector<Node<long>*>> nodes;
+	map<unsigned long, vector<shared_ptr<Node<long>>>> nodes;
 	tree.GetNodes(nodes);
 	assert(!nodes.empty());
 	cout << "Binary Tree content by level:" << endl;
-	for (map<unsigned long, vector<Node<long>*>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
+	for (map<unsigned long, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
 		cout << "Level " << it->first << ": ";
-		for (vector<Node<long>*>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+		for (vector<shared_ptr<Node<long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 			cout << (*it1)->Item() << " ";
 		cout << endl;
 	}
-	Node<long> *node = tree.FindNode(-50), *node1, *node2;
+	shared_ptr<Node<long>> node = tree.FindNode(-50), node1, node2;
 	assert(node);
 	cout << "In-order successor of -50: " << tree.InOrderSuccessor(node)->Item() << endl;
 	node = tree.FindNode(50);
@@ -4948,7 +4917,7 @@ void BinarySearchTreeTests()
 	cout << "BST tests..." << endl;
 	vector<long> a, b;
 	vector<string> result;
-	map<unsigned long, vector<Node<long>*>> nodes;
+	map<unsigned long, vector<shared_ptr<Node<long>>>> nodes;
 	Tree<long> subtree((long)0);
 	subtree.InsertItem(-50);
 	subtree.InsertItem(10);
@@ -5021,13 +4990,13 @@ void BinarySearchTreeTests()
 	tree1.GetNodes(nodes);
 	assert(!nodes.empty());
 	cout << "Binary Search Tree content by level:" << endl;
-	for (map<unsigned long, vector<Node<long>*>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
+	for (map<unsigned long, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
 		cout << "Level " << it->first << ": ";
-		for (vector<Node<long>*>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+		for (vector<shared_ptr<Node<long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 			cout << (*it1)->Item() << " ";
 		cout << endl;
 	}
-	Node<long> *node, *node1, *node2;
+	shared_ptr<Node<long>> node, node1, node2;
 	node = tree1.FindNode(-50);
 	assert(node);
 	//assert(tree1.InOrderSuccessor(node)->Item() == 0);
@@ -5112,13 +5081,13 @@ void MinHeapTests()
 	cout << "MinHeap content: " << endl;
 	heap.PrintTree();
 	cout << endl;
-	map<unsigned long, vector<Node<long>*>> nodes;
+	map<unsigned long, vector<shared_ptr<Node<long>>>> nodes;
 	heap.GetNodes(nodes);
 	assert(!nodes.empty());
 	cout << "MinHeap content by level:" << endl;
-	for (map<unsigned long, vector<Node<long>*>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
+	for (map<unsigned long, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
 		cout << "Level " << it->first << ": ";
-		for (vector<Node<long>*>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+		for (vector<shared_ptr<Node<long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 			cout << (*it1)->Item() << " ";
 		cout << endl;
 	}
@@ -5153,13 +5122,13 @@ void MaxHeapTests()
 	cout << "MaxHeap content: " << endl;
 	heap.PrintTree();
 	cout << endl;
-	map<unsigned long, vector<Node<long>*>> nodes;
+	map<unsigned long, vector<shared_ptr<Node<long>>>> nodes;
 	heap.GetNodes(nodes);
 	assert(!nodes.empty());
 	cout << "MaxHeap content by level:" << endl;
-	for (map<unsigned long, vector<Node<long>*>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
+	for (map<unsigned long, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
 		cout << "Level " << it->first << ": ";
-		for (vector<Node<long>*>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+		for (vector<shared_ptr<Node<long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 			cout << (*it1)->Item() << " ";
 		cout << endl;
 	}
@@ -5193,13 +5162,13 @@ void MinMaxHeapTests()
 	cout << "MinMaxHeap content: " << endl;
 	heap.PrintTree();
 	cout << endl;
-	map<unsigned long, vector<Node<long>*>> nodes;
+	map<unsigned long, vector<shared_ptr<Node<long>>>> nodes;
 	heap.GetNodes(nodes);
 	assert(!nodes.empty());
 	cout << "MinMaxHeap content by level:" << endl;
-	for (map<unsigned long, vector<Node<long>*>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
+	for (map<unsigned long, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
 		cout << "Level " << it->first << ": ";
-		for (vector<Node<long>*>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+		for (vector<shared_ptr<Node<long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 			cout << (*it1)->Item() << " ";
 		cout << endl;
 	}
@@ -5567,28 +5536,30 @@ std::multimap<B, A> flip_map(const std::map<A, B>& src)
 // 100%
 size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 {
-	map<string, Node<string>*> nodes;
-	set<LinkedList<string>*> clusters;
+	map<string, shared_ptr<Node<string>>> nodes;
+	set<shared_ptr<LinkedList<string>>> clusters;
 	ostringstream location, oss;
 	for (size_t i = 0; i < grid.size(); i++)
 		for (size_t j = 0; j < grid[0].size(); j++) {
 			if (grid[i][j] == 1) {
 				location.str("");
 				location << i << "," << j;
-				Node<string>* node = new Node<string>(location.str());
+				//Node<string>* node = new Node<string>(location.str());
+				shared_ptr<Node<string>> node(new Node<string>(location.str()));
+				//nodes[location.str()] = shared_ptr<Node<string>>(node);
 				nodes[location.str()] = node;
-				Node<string>* parent = nullptr;
-				set<LinkedList<string>*> joins;
+				shared_ptr<Node<string>> parent = nullptr;
+				set<shared_ptr<LinkedList<string>>> joins;
 				bool skip = false;
 				// Upper Left
 				if (i > 0 && j > 0 && grid[i - 1][j - 1] != 0) {
 					oss.str("");
 					oss << i - 1 << "," << j - 1;
 					parent = nodes[oss.str()];
-					if (parent != nullptr) {
-						Node<string>* tail = nullptr;
-						for (set<LinkedList<string>*>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
-							Node<string>* head = (*it)->Find(*parent);
+					if (parent) {
+						shared_ptr<Node<string>> tail = nullptr;
+						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
+							shared_ptr<Node<string>> head = (*it)->Find(*parent);
 							if (head) {
 								tail = (*it)->Tail();
 								if (tail)
@@ -5607,10 +5578,10 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 					oss.str("");
 					oss << i - 1 << "," << j;
 					parent = nodes[oss.str()];
-					if (parent != nullptr) {
-						Node<string>* tail = nullptr;
-						for (set<LinkedList<string>*>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
-							Node<string>* head = (*it)->Find(*parent);
+					if (parent) {
+						shared_ptr<Node<string>> tail = nullptr;
+						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
+							shared_ptr<Node<string>> head = (*it)->Find(*parent);
 							if (head) {
 								tail = (*it)->Tail();
 								if (tail)
@@ -5629,10 +5600,10 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 					oss.str("");
 					oss << i - 1 << "," << j + 1;
 					parent = nodes[oss.str()];
-					if (parent != nullptr) {
-						Node<string>* tail = nullptr;
-						for (set<LinkedList<string>*>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
-							Node<string>* head = (*it)->Find(*parent);
+					if (parent) {
+						shared_ptr<Node<string>> tail = nullptr;
+						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
+							shared_ptr<Node<string>> head = (*it)->Find(*parent);
 							if (head) {
 								tail = (*it)->Tail();
 								if (tail)
@@ -5651,10 +5622,10 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 					oss.str("");
 					oss << i << "," << j - 1;
 					parent = nodes[oss.str()];
-					if (parent != nullptr) {
-						Node<string>* tail = nullptr;
-						for (set<LinkedList<string>*>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
-							Node<string>* head = (*it)->Find(*parent);
+					if (parent) {
+						shared_ptr<Node<string>> tail = nullptr;
+						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
+							shared_ptr<Node<string>> head = (*it)->Find(*parent);
 							if (head) {
 								tail = (*it)->Tail();
 								if (tail)
@@ -5673,10 +5644,10 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 					oss.str("");
 					oss << i << "," << j + 1;
 					parent = nodes[oss.str()];
-					if (parent != nullptr) {
-						Node<string>* tail = nullptr;
-						for (set<LinkedList<string>*>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
-							Node<string>* head = (*it)->Find(*parent);
+					if (parent) {
+						shared_ptr<Node<string>> tail = nullptr;
+						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++) {
+							shared_ptr<Node<string>> head = (*it)->Find(*parent);
 							if (head) {
 								tail = (*it)->Tail();
 								if (tail)
@@ -5690,22 +5661,23 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 						}
 					}
 				}
+				// Join the overlapping clusters
 				if (!joins.empty() && joins.size() > 1) {
-					set<LinkedList<string>*>::iterator it = joins.begin();
-					set<LinkedList<string>*>::iterator joinTo = clusters.find(*it++);
+					set<shared_ptr<LinkedList<string>>>::iterator it = joins.begin();
+					set<shared_ptr<LinkedList<string>>>::iterator joinTo = clusters.find(*it++); // Get the first cluster from "clusters" and join the others to it
 					for (; it != joins.end(); it++) {
-						set<LinkedList<string>*>::iterator it1 = clusters.find(*it);
+						set<shared_ptr<LinkedList<string>>>::iterator it1 = clusters.find(*it);
 						(*joinTo)->Join(**it1);
 						clusters.erase(*it1);
 					}
 				}
 				if (!skip)
-					clusters.emplace(new LinkedList<string>(node));
+					clusters.emplace(shared_ptr<LinkedList<string>>(new LinkedList<string>(node)));
 				joins.clear();
 			} // if (grid[i][j] == 1) {
 		}
 	size_t max = 0;
-	for (set<LinkedList<string>*>::iterator it = clusters.begin(); it != clusters.end(); it++) {
+	for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end(); it++) {
 		(*it)->Print();
 		if ((*it)->Length() > max)
 			max = (*it)->Length();
@@ -6713,14 +6685,14 @@ void testPathCount(size_t m, size_t n, size_t x, size_t y, size_t k)
 {
 	cout << "test case (m,n): " << m << "," << n << " (x,y): " << x << "," << y << " k:" << k << " => " << countPaths(m, n, x, y, k) << endl;
 }
-vector<Node<string>*> shortest_cycle_path(Node<string>* node)
+vector<shared_ptr<Node<string>>> shortest_cycle_path(shared_ptr<Node<string>> node)
 {
-	map<Node<string>*, Node<string>*> parents;
-	deque<Node<string>*> q(1, node);
+	map<shared_ptr<Node<string>>, shared_ptr<Node<string>>> parents;
+	deque<shared_ptr<Node<string>>> q(1, node);
 	while (!q.empty()) {
-		Node<string> *n = q.front();
+		shared_ptr<Node<string>> n = q.front();
 		q.pop_front();
-		for (set<Node<string>*>::iterator i = n->m_adjacents.begin(); i != n->m_adjacents.end(); i++) {
+		for (set<shared_ptr<Node<string>>>::iterator i = n->m_adjacents.begin(); i != n->m_adjacents.end(); i++) {
 			if (parents.find(*i) == parents.end()) {
 				parents.emplace(*i, n);
 				if (*i == node) {
@@ -6732,8 +6704,8 @@ vector<Node<string>*> shortest_cycle_path(Node<string>* node)
 		}
 	}
 	// Build path
-	vector<Node<string>*> path;
-	Node<string>* current = node;
+	vector<shared_ptr<Node<string>>> path;
+	shared_ptr<Node<string>> current = node;
 	do {
 		path.push_back(current);
 		current = parents[current];
@@ -6790,7 +6762,7 @@ bool IsValidMatrix(vector<vector<char>> const& data)
 // Return the arithmetic total.
 // Tree nodes are arithmetic operators. Only leaf nodes are values (long in this case).
 template <class T>
-T TreeArithmeticTotal(Node<string> *node)
+T TreeArithmeticTotal(shared_ptr<Node<string>> node)
 {
 	T result;
 	if (node->isLeaf()) {
@@ -6967,30 +6939,30 @@ vector<string> ZigZagEscape(vector<long>& left, vector<long>& right, size_t lInd
 }
 void CircularLinkedListLoopStart()
 {
-	Node<int> *head = new Node<int>(-3);
-	Node<int> *n1 = new Node<int>(-2);
+	shared_ptr<Node<int>> head(new Node<int>(-3));
+	shared_ptr<Node<int>> n1(new Node<int>(-2));
 	head->SetNext(n1);
-	Node<int> *n2 = new Node<int>(-1);
+	shared_ptr<Node<int>> n2(new Node<int>(-1));
 	n1->SetNext(n2);
-	Node<int> *n3 = new Node<int>(0);
+	shared_ptr<Node<int>> n3(new Node<int>(0));
 	n2->SetNext(n3);
-	Node<int> *n4 = new Node<int>(1);
+	shared_ptr<Node<int>> n4(new Node<int>(1));
 	n3->SetNext(n4);
-	Node<int> *n5 = new Node<int>(2);
+	shared_ptr<Node<int>> n5(new Node<int>(2));
 	n4->SetNext(n5);
-	Node<int> *n6 = new Node<int>(3);
+	shared_ptr<Node<int>> n6(new Node<int>(3));
 	n5->SetNext(n6);
-	Node<int> *n7 = new Node<int>(4);
+	shared_ptr<Node<int>> n7(new Node<int>(4));
 	n6->SetNext(n7);
-	Node<int> *n8 = new Node<int>(5);
+	shared_ptr<Node<int>> n8(new Node<int>(5));
 	n7->SetNext(n8);
-	Node<int> *n9 = new Node<int>(6);
+	shared_ptr<Node<int>> n9(new Node<int>(6));
 	n8->SetNext(n9);
-	Node<int> *n10 = new Node<int>(7);
+	shared_ptr<Node<int>> n10(new Node<int>(7));
 	n9->SetNext(n10);
 	n10->SetNext(n3);
-	Node<int> *node1 = head;
-	Node<int> *node2 = head;
+	shared_ptr<Node<int>> node1 = head;
+	shared_ptr<Node<int>> node2 = head;
 	// Find meeting point
 	while (node2->Next()) {
 		node1 = node1->Next();

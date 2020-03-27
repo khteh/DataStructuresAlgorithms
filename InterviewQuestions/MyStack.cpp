@@ -30,13 +30,13 @@ MyStack<T>::~MyStack()
 template<class T>
 bool MyStack<T>::isEmpty()
 {
-	return m_top == nullptr;
+	return !m_top;
 }
 
 template<class T>
 T MyStack<T>::pop()
 {
-	Node<T> *top = m_top;
+	shared_ptr<Node<T>> top = m_top;
 	m_top = m_top->Next();
 	m_size--;
 	return top->Item();
@@ -45,8 +45,8 @@ T MyStack<T>::pop()
 template<class T>
 void MyStack<T>::push(T item)
 {
-	Node<T>* node = m_top;
-	m_top = new Node<T>(item);
+	shared_ptr<Node<T>> node = m_top;
+	m_top = make_shared<Node<T>>(item);
 	m_top->SetNext(node);
 	m_size++;
 }
@@ -67,22 +67,21 @@ unsigned long MyStack<T>::size()
 template<class T>
 void MyStack<T>::clear()
 {
-	Node<T> *next;
-	for (Node<T> *node = m_top; node;)
+	shared_ptr<Node<T>> next;
+	for (shared_ptr<Node<T>> node = m_top; node;)
 	{
 		next = node->Next();
-		delete node;
-		node = nullptr;
+		node.reset();
 		node = next;
 	}
-	m_top = nullptr;
+	m_top.reset();
 	m_size = 0;
 }
 
 template<class T>
 void MyStack<T>::PrintStack()
 {
-	for (Node<T> *node = m_top; node; node = node->Next())
+	for (shared_ptr<Node<T>> node = m_top; node; node = node->Next())
 		cout << node->Item() << " ";
 	cout << endl;
 }

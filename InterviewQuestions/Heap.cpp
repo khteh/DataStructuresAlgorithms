@@ -20,7 +20,7 @@ Heap<T>::Heap(T item, HeapType t)
 }
 
 template<class T>
-Heap<T>::Heap(Node<T> *node, HeapType t)
+Heap<T>::Heap(shared_ptr<Node<T>> node, HeapType t)
 	: type_(t)
 	, Tree(node)
 {
@@ -33,10 +33,10 @@ Heap<T>::Heap(vector<T>& data, HeapType type)
 		InsertItem(*it);
 }
 template<class T>
-void Heap<T>::InsertNode(Node<T> *root, Node<T> *node)
+void Heap<T>::InsertNode(shared_ptr<Node<T>> root, shared_ptr<Node<T>> node)
 {
 	if (node) {
-		Node<T>* p = FindEmptyLeafParent();
+		shared_ptr<Node<T>> p = FindEmptyLeafParent();
 		assert(p);
 		if (p) {
 			if (!p->Left()) {
@@ -54,15 +54,15 @@ void Heap<T>::InsertNode(Node<T> *root, Node<T> *node)
 // MinHeap/MinMaxHeap: Remove min
 // MaxHeap: Remove max
 template<class T>
-Node<T>* Heap<T>::pop()
+shared_ptr<Node<T>> Heap<T>::pop()
 {
-	Node<T> * result(nullptr), *node(nullptr);
+	shared_ptr<Node<T>> result(nullptr), node(nullptr);
 	if (m_root) {
-		result = new Node<T>(m_root->Item());
+		result = make_shared<Node<T>>(m_root->Item());
 		node = FindLastLeaf();
 		if (node && node != m_root) {
 			swap(node, m_root);
-			Node<T> *p(node->Next());
+			shared_ptr<Node<T>> p(node->Next());
 			if (p) { // If not the only node left (= m_root)
 				if (p->Left() == node)
 					p->SetLeft(nullptr);
@@ -71,12 +71,9 @@ Node<T>* Heap<T>::pop()
 				else
 					assert(false);
 			}
-			delete node;
-			node = nullptr;
-		} else if (m_root) {
-			delete m_root;
-			m_root = nullptr;
-		}
+			node.reset();
+		} else if (m_root)
+			m_root.reset();
 		if (m_root)
 			HeapifyDown(m_root);
 	}
@@ -84,7 +81,7 @@ Node<T>* Heap<T>::pop()
 }
 
 template<class T>
-Node<T>* Heap<T>::front()
+shared_ptr<Node<T>> Heap<T>::front()
 {
 	return m_root;
 }
@@ -92,13 +89,13 @@ Node<T>* Heap<T>::front()
 template<class T>
 void Heap<T>::Serialize(vector<T>& result)
 {
-	Node<T> *node;
+	shared_ptr<Node<T>> node;
 	while (node = pop())
 		result.push_back(node->Item());
 }
 
 template<class T>
-void Heap<T>::swap(Node<T> *n, Node<T>* m)
+void Heap<T>::swap(shared_ptr<Node<T>> n, shared_ptr<Node<T>> m)
 {
 	T tmp;
 	tmp = n->Item();
@@ -107,7 +104,7 @@ void Heap<T>::swap(Node<T> *n, Node<T>* m)
 }
 
 template<class T>
-void Heap<T>::HeapifyUp(Node<T> *node, unsigned long level)
+void Heap<T>::HeapifyUp(shared_ptr<Node<T>> node, unsigned long level)
 {
 	if (node && level >= 0) {
 		switch (type_) {
@@ -126,7 +123,7 @@ void Heap<T>::HeapifyUp(Node<T> *node, unsigned long level)
 		case MinMaxHeap: // http://en.wikipedia.org/wiki/Min-max_heap
 			{
 				bool isMaxLevel = level % 2;
-				Node<T> *grandparent = nullptr;
+				shared_ptr<Node<T>> grandparent = nullptr;
 				if (isMaxLevel) { // parent is at Min Level
 					if (node->Next() && *node < *node->Next()) {
 						// Item is smaller than parent(Min) and all items at Max levels. Only need to check the Min levels
@@ -172,7 +169,7 @@ void Heap<T>::HeapifyUp(Node<T> *node, unsigned long level)
 }
 
 template<class T>
-void Heap<T>::HeapifyDown(Node<T> *node)
+void Heap<T>::HeapifyDown(shared_ptr<Node<T>> node)
 {
 	if (node) {
 		switch (type_) {
@@ -207,16 +204,16 @@ void Heap<T>::HeapifyDown(Node<T> *node)
 				if (node->Right() && *node > *node->Right())
 					swap(node, node->Right());
 			} else if (MaxDepth(node) > 2) { // Condition 3
-				Node<T> *min(node);
-				map<unsigned long, vector<Node<T>*>> nodes;
+				shared_ptr<Node<T>> min(node);
+				map<unsigned long, vector<shared_ptr<Node<T>>>> nodes;
 				GetNodes(nodes, 2);
 				assert(!nodes[2].empty());
-				for (vector<Node<T>*>::iterator it = nodes[2].begin(); it != nodes[2].end(); it++) {
+				for (vector<shared_ptr<Node<T>>>::iterator it = nodes[2].begin(); it != nodes[2].end(); it++) {
 					if (*min > *(*it))
 						min = *it;
 				}
 				if (*node > *min) {
-					Node<T> *p(min->Next());
+					shared_ptr<Node<T>> p(min->Next());
 					swap(node, min); // Min is moved to the root
 					// node has min; min has original node value
 					if (*min > *p)
@@ -232,18 +229,18 @@ void Heap<T>::HeapifyDown(Node<T> *node)
 }
 
 template<class T>
-Node<T>* Heap<T>::FindEmptyLeafParent() // Use Breath-First-Search to find empty leaf
+shared_ptr<Node<T>> Heap<T>::FindEmptyLeafParent() // Use Breath-First-Search to find empty leaf
 {
 	unsigned long level = 0;
-	vector<Node<T>*> nodes;
-	map<unsigned long, vector<Node<T>*>> levelNodes;
+	vector<shared_ptr<Node<T>>> nodes;
+	map<unsigned long, vector<shared_ptr<Node<T>>>> levelNodes;
 	if (!m_root)
 		return m_root;
 	nodes.push_back(m_root);
 	levelNodes.emplace(0, nodes);
 	while (!nodes.empty()) {
 		nodes.clear();
-		for (vector<Node<T>*>::iterator it = levelNodes[level].begin(); it != levelNodes[level].end(); it++) {
+		for (vector<shared_ptr<Node<T>>>::iterator it = levelNodes[level].begin(); it != levelNodes[level].end(); it++) {
 			assert(*it);
 			if (*it) {
 				if ((*it)->Right() && !(*it)->Left())
@@ -264,19 +261,19 @@ Node<T>* Heap<T>::FindEmptyLeafParent() // Use Breath-First-Search to find empty
 }
 
 template<class T>
-Node<T>* Heap<T>::FindLastLeaf() // Use Breadth-First-Search to find empty leaf
+shared_ptr<Node<T>> Heap<T>::FindLastLeaf() // Use Breadth-First-Search to find empty leaf
 {
-	Node<T> *result(nullptr);
+	shared_ptr<Node<T>> result(nullptr);
 	unsigned long level = 0;
-	vector<Node<T>*> nodes;
-	map<unsigned long, vector<Node<T>*>> levelNodes;
+	vector<shared_ptr<Node<T>>> nodes;
+	map<unsigned long, vector<shared_ptr<Node<T>>>> levelNodes;
 	if (!m_root)
 		return m_root;
 	nodes.push_back(m_root);
 	levelNodes.emplace(0, nodes);
 	while (!nodes.empty()) {
 		nodes.clear();
-		for (vector<Node<T>*>::iterator it = levelNodes[level].begin(); it != levelNodes[level].end(); it++) {
+		for (vector<shared_ptr<Node<T>>>::iterator it = levelNodes[level].begin(); it != levelNodes[level].end(); it++) {
 			if (*it) {
 				if ((*it)->Left())
 					result = (*it)->Left();

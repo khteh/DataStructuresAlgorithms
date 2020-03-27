@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <assert.h>
+#include <memory>
 using namespace std;
 template<typename T>
 class TrieNode;
@@ -11,7 +12,7 @@ template<typename T>
 class Trie
 {
 private:
-	TrieNode<T> *m_root;
+	shared_ptr<TrieNode<T>> m_root;
 public:
 	Trie();
 	Trie(string const &, T);
@@ -28,7 +29,7 @@ class TrieNode
 {
 private:
 	T m_value;
-	map<char, TrieNode<T>*> m_children;
+	map<char, shared_ptr<TrieNode<T>>> m_children;
 public:
 	TrieNode();
 	TrieNode(T value);

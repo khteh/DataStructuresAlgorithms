@@ -5,7 +5,7 @@ template<class T>
 class MyStack
 {
 private:
-	Node<T> *m_top;
+	shared_ptr<Node<T>> m_top;
 	unsigned long m_size;
 public:
 	MyStack();

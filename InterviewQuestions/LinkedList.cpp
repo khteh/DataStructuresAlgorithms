@@ -5,7 +5,7 @@ template class LinkedList<long>;
 template class LinkedList<string>;
 using Type = std::variant<int, long>;
 template<class T>
-LinkedList<T>::LinkedList(Node<T>* n)
+LinkedList<T>::LinkedList(shared_ptr<Node<T>> n)
 {
 	m_head = n;
 }
@@ -13,15 +13,15 @@ LinkedList<T>::LinkedList(Node<T>* n)
 template<class T>
 LinkedList<T>::LinkedList(vector<T>& data)
 {
-	m_head = nullptr;
-	Node<T> *tail = nullptr;
+	m_head.reset();
+	shared_ptr<Node<T>> tail = nullptr;
 	for (vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
 		if (!m_head) {
-			m_head = new Node<T>(*it);
+			m_head = make_shared<Node<T>>(*it);
 			tail = m_head;
 		} else {
-			Node<T> *n = new Node<T>(*it);
+			shared_ptr<Node<T>>n = make_shared<Node<T>>(*it);
 			tail->SetNext(n);
 			n->SetPrevious(tail);
 			tail = n;
@@ -35,35 +35,38 @@ LinkedList<T>::~LinkedList()
 	Clear();
 }
 template<class T>
-Node<T>* LinkedList<T>::Head() 
+shared_ptr<Node<T>> LinkedList<T>::Head() 
 {
 	return m_head;
 }
 template<class T>
-void LinkedList<T>::SetHead(Node<T>* node)
+void LinkedList<T>::SetHead(shared_ptr<Node<T>> node)
 {
-	m_head = node;
+	if (!node)
+		m_head.reset();
+	else
+		m_head = node;
 }
 template<class T>
-Node<T>* LinkedList<T>::Tail() 
+shared_ptr<Node<T>> LinkedList<T>::Tail()
 {
-	Node<T>* node = nullptr;
+	shared_ptr<Node<T>> node = nullptr;
 	for (node = m_head; node->Next(); node = node->Next());
 	return node;
 }
 template<class T>
-Node<T>* LinkedList<T>::Find(Node<T>& n) 
+shared_ptr<Node<T>> LinkedList<T>::Find(Node<T>& n)
 {
-	Node<T>* node = nullptr;
+	shared_ptr<Node<T>> node = nullptr;
 	for (node = m_head; node; node = node->Next())
 		if (*node == n)
 			break;
 	return node;
 }
 template<class T>
-void LinkedList<T>::Print(Node<T> *node)
+void LinkedList<T>::Print(shared_ptr<Node<T>>node)
 {
-	for (Node<T>* n = node ? node : m_head; n; n = n->Next())
+	for (shared_ptr<Node<T>> n = node ? node : m_head; n; n = n->Next())
 		cout << n->Item() << " ";
 	cout << endl;
 }
@@ -71,17 +74,17 @@ void LinkedList<T>::Print(Node<T> *node)
 template<class T>
 void LinkedList<T>::ToVector(vector<T>& data)
 {
-	for (Node<T>* n = m_head; n; n = n->Next())
+	for (shared_ptr<Node<T>> n = m_head; n; n = n->Next())
 		data.push_back(n->Item());
 }
 
 template<class T>
-void LinkedList<T>::SplitList(Node<T>*& even, Node<T>*& odd)
+void LinkedList<T>::SplitList(shared_ptr<Node<T>>& even, shared_ptr<Node<T>>& odd)
 {
-	Node<T> *evenTail, *oddTail;
+	shared_ptr<Node<T>> evenTail, oddTail;
 	even = odd = nullptr;
 	size_t i = 0;
-	for (Node<T>* n = m_head; n; n = n->Next(), i++) {
+	for (shared_ptr<Node<T>> n = m_head; n; n = n->Next(), i++) {
 		if (!(i % 2)) {
 			if (!even) {
 				even = n;
@@ -113,7 +116,7 @@ size_t LinkedList<T>::Join(LinkedList<T>& other)
 {
 	if (*this == other)
 		throw runtime_error("LinkedList Cannot join itself!");
-	Node<T>* tail = Tail();
+	shared_ptr<Node<T>> tail = Tail();
 	if (tail)
 		tail->SetNext(other.Head());
 	other.SetHead(nullptr);
@@ -123,7 +126,7 @@ template<class T>
 size_t LinkedList<T>::Length() const
 {
 	size_t length = 0;
-	for (Node<T>* node = m_head; node; node = node->Next())
+	for (shared_ptr<Node<T>> node = m_head; node; node = node->Next())
 		length++;
 	return length;
 }
@@ -152,19 +155,18 @@ bool LinkedList<T>::operator>(LinkedList<T>& other)
 template<class T>
 void LinkedList<T>::Clear()
 {
-	for (Node<T>* n = m_head; n;) {
-		Node<T>* tmp = n;
+	for (shared_ptr<Node<T>> n = m_head; n;) {
+		shared_ptr<Node<T>> tmp = n;
 		n = n->Next();
-		delete tmp;
-		tmp = nullptr;
+		tmp.reset();
 	}
-	m_head = nullptr;
+	m_head.reset();
 }
 template<class T>
-Node<T>* LinkedList<T>::NthElementFromBack(size_t n)
+shared_ptr<Node<T>> LinkedList<T>::NthElementFromBack(size_t n)
 {
-	Node<T> *p1 = m_head;
-	Node<T>* p2 = m_head;
+	shared_ptr<Node<T>>p1 = m_head;
+	shared_ptr<Node<T>> p2 = m_head;
 	for (size_t i = 0; i < n - 1 && p2; i++, p2 = p2->Next());
 	if (!p2)
 		return nullptr;
@@ -179,11 +181,11 @@ Node<T>* LinkedList<T>::NthElementFromBack(size_t n)
 //   p2:   5 -> 9 -> 2
 // Output: 8 -> 0 -> 8
 template<class T>
-Node<T>* LinkedList<T>::AddNumbers(Node<T>* p1, Node<T>* p2, T carry)
+shared_ptr<Node<T>> LinkedList<T>::AddNumbers(shared_ptr<Node<T>> p1, shared_ptr<Node<T>> p2, T carry)
 {
 	if constexpr (is_same_v<T, long> || is_same_v<T, int>) {
 		if (p1 || p2 || carry > T()) {
-			Node<T>* result = new Node<T>(carry);
+			shared_ptr<Node<T>> result = make_shared<Node<T>>(carry);
 			if (p1)
 				result->SetItem(result->Item() + p1->Item());
 			if (p2)
