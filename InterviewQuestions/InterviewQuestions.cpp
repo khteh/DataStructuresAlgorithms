@@ -5,7 +5,6 @@
 #include "NameHidingExample.h"
 #include "Singleton.h"
 using namespace std;
-
 int _tmain(int argc, _TCHAR* argv[])
 {
 	string line, line1;
@@ -1814,14 +1813,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	getline(cin, line);
 	return 0;
 }
-
 void testPointerReference(int *& ptr)
 {
 	free(ptr);
 	ptr = (int*)malloc(101 * sizeof(int));
 	memset(ptr, 0xabababab, 101 * sizeof(ptr));
 }
-
 long Min(long a, long b)
 {
 	long delta = b - a;
@@ -1830,7 +1827,6 @@ long Min(long a, long b)
 	// b < a: sign = 1: returns a - (a - b) = b
 	return a - sign * (a - b);
 }
-
 long Max(long a, long b)
 {
 	long delta = a - b;
@@ -1881,7 +1877,6 @@ bool isUniqueString(string const &str)
 	}
 	return true;
 }
-
 vector<string> findUnique(vector<string> const& a, vector<string>const& b)
 {
 	vector<string> result;
