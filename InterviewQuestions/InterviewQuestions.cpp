@@ -1935,6 +1935,7 @@ long ConsecutiveLargestSum(vector<long>& data, vector<long>& result)
 // https://app.codility.com/programmers/task/longest_nonnegative_sum_slice/
 // https://app.codility.com/programmers/challenges/ferrum2018/
 // Find the longest sequence when the graph crosses a previous point. The crossing point is when negative becodes positive and vice versa
+// 100%
 long LongestNonNegativeSumSlice(vector<long>& data)
 {
 	// -1, -1, -1, -1, -1, -1, 1 (max_len = max(1, 6 - 4) = 2), 1 (max_len = max(2, 7 - 3) = 4)
