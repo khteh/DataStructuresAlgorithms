@@ -3803,6 +3803,30 @@ void sortingTests()
 	assert(sortData[2] == 1);
 
 	sortData.clear();
+	sortData.push_back(456);
+	sortData.push_back(789);
+	sortData.push_back(123);
+	assert(sortData[0] == 456);
+	assert(sortData[1] == 789);
+	assert(sortData[2] == 123);
+	CountingSort(sortData);
+	assert(sortData[0] == 123);
+	assert(sortData[1] == 456);
+	assert(sortData[2] == 789);
+
+	sortData.clear();
+	sortData.push_back(-123);
+	sortData.push_back(-789);
+	sortData.push_back(-456);
+	assert(sortData[0] == -123);
+	assert(sortData[1] == -789);
+	assert(sortData[2] == -456);
+	CountingSort(sortData);
+	assert(sortData[0] == -789);
+	assert(sortData[1] == -456);
+	assert(sortData[2] == -123);
+
+	sortData.clear();
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
 	cout << "Before HeapSort: ";
@@ -4179,14 +4203,6 @@ void HeapSort(vector<long>& data)
 void CountingSort(vector<long>& data)
 {
 	vector<long> input(data);
-	// First, need to find the RANGE!
-	long min = numeric_limits<long>::max(), max = 0;
-	for (vector<long>::iterator it = input.begin(); it != input.end(); it++) {
-		if (*it < min)
-			min = *it;
-		if (*it > max)
-			max = *it;
-	}
 	map<long, size_t> counts;
 	for (vector<long>::iterator it = input.begin(); it != input.end(); it++) {
 		pair<map<long, size_t>::iterator, bool> result = counts.emplace(*it, 1);
