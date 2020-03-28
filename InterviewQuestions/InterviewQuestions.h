@@ -178,6 +178,7 @@ void QuickSort(vector<long> &, long left, long right);
 void SelectionSort(vector<long> &);
 void InsertionSort(vector<long> &);
 void HeapSort(vector<long> &);
+void CountingSort(vector<long> &);
 void TopDownMergeSort(vector<long>&, vector<long>&, size_t, size_t);
 void BottomUpMergeSort(vector<long>&, vector<long>&);
 long countInversions(vector<long>&);

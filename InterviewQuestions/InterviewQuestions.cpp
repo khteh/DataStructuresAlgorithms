@@ -3777,6 +3777,31 @@ void sortingTests()
 	assert(sortData[0] == -1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == 1);
+
+	sortData.clear();
+	sortData.push_back(1);
+	sortData.push_back(0);
+	sortData.push_back(2);
+	assert(sortData[0] == 1);
+	assert(sortData[1] == 0);
+	assert(sortData[2] == 2);
+	CountingSort(sortData);
+	assert(sortData[0] == 0);
+	assert(sortData[1] == 1);
+	assert(sortData[2] == 2);
+
+	sortData.clear();
+	sortData.push_back(1);
+	sortData.push_back(0);
+	sortData.push_back(-1);
+	assert(sortData[0] == 1);
+	assert(sortData[1] == 0);
+	assert(sortData[2] == -1);
+	CountingSort(sortData);
+	assert(sortData[0] == -1);
+	assert(sortData[1] == 0);
+	assert(sortData[2] == 1);
+
 	sortData.clear();
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
@@ -4140,6 +4165,7 @@ void Merge(vector<long>& A, vector<long>& B, size_t start, size_t middle, size_t
 		// If left run head exists and is <= existing right run head.
 		B[i] = (left < middle && (right >= end || A[left] <= A[right])) ? A[left++] : A[right++];
 }
+// https://en.wikipedia.org/wiki/Heapsort
 void HeapSort(vector<long>& data)
 {
 	Heap<long> heap(data, MaxHeap);
@@ -4147,6 +4173,34 @@ void HeapSort(vector<long>& data)
 	for (long end = data.size() - 1; end >= 0; end--) {
 		long item = heap.pop()->Item();
 		Swap(data[end], item);
+	}
+}
+// https://en.wikipedia.org/wiki/Counting_sort
+void CountingSort(vector<long>& data)
+{
+	vector<long> input(data);
+	// First, need to find the RANGE!
+	long min = numeric_limits<long>::max(), max = 0;
+	for (vector<long>::iterator it = input.begin(); it != input.end(); it++) {
+		if (*it < min)
+			min = *it;
+		if (*it > max)
+			max = *it;
+	}
+	map<long, size_t> counts;
+	for (vector<long>::iterator it = input.begin(); it != input.end(); it++) {
+		pair<map<long, size_t>::iterator, bool> result = counts.emplace(*it, 1);
+		if (!result.second)
+			counts[*it]++;
+	}
+	size_t count = 0;
+	for (map<long, size_t>::iterator it = counts.begin(); it != counts.end(); it++) {
+		it->second += count;
+		count = it->second;
+	}
+	for (size_t i = 0; i < input.size(); i++) {
+		data[counts[input[i]] - 1] = input[i];
+		counts[input[i]]--;
 	}
 }
 void Swap(long &a, long &b)
