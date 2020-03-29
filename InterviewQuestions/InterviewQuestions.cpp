@@ -3825,7 +3825,7 @@ void sortingTests()
 	str.push_back("be");
 	strSort.push_back(str);
 	str.clear();
-	str.push_back("1000");
+	str.push_back("1100");
 	str.push_back("-");
 	strSort.push_back(str);
 	str.clear();
@@ -4255,6 +4255,7 @@ void CountingSort(vector<size_t>& data)
 		if (*it > max)
 			max = *it;
 	}
+	// Do NOT use map / multimap to keep the counts. map / multimap auto-sort on keys. This defeats the purpose of CountingSort
 	vector<size_t> counts(max + 1, 0);
 	for (vector<size_t>::iterator it = input.begin(); it != input.end(); it++)
 		counts[*it]++;
@@ -4278,8 +4279,8 @@ string CountingSort(vector<vector<string>>& data)
 		if (key > max)
 			max = key;
 	}
+	// Do NOT use map / multimap to keep the counts. map / multimap auto-sort on keys. This defeats the purpose of CountingSort
 	vector<size_t> counts(max + 1, 0);
-	result.resize(max + 1);
 	for (vector<vector<string>>::iterator it = data.begin(); it != data.end(); it++) {
 		size_t key;
 		istringstream((*it)[0]) >> key;
@@ -4287,6 +4288,7 @@ string CountingSort(vector<vector<string>>& data)
 	}
 	for (size_t i = min > 0 ? min : 1; i <= max; i++)
 		counts[i] += counts[i - 1];
+	result.resize(counts[counts.size() - 1]);
 	// Use reverse_iterator for a stable sort
 	for (vector<vector<string>>::reverse_iterator it = data.rbegin(); it != data.rend(); it++) {
 		size_t key;
@@ -4296,12 +4298,13 @@ string CountingSort(vector<vector<string>>& data)
 	}
 	ostringstream oss;
 	for (size_t i = 0; i < result.size(); i++) {
-		if (!result[i].empty())
-			oss << result[i] << " ";
+		if (!result[i].empty()) {
+			oss << result[i];
+			if (i < result.size() - 1)
+				oss << " ";
+		}
 	}
-	string s = oss.str();
-	s.erase(s.find_last_not_of(" \n\r\t") + 1);
-	return s;
+	return oss.str();
 }
 void Swap(long &a, long &b)
 {
