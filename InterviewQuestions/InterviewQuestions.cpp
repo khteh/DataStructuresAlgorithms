@@ -3778,53 +3778,30 @@ void sortingTests()
 	assert(sortData[1] == 0);
 	assert(sortData[2] == 1);
 
-	sortData.clear();
-	sortData.push_back(1);
-	sortData.push_back(0);
-	sortData.push_back(2);
-	assert(sortData[0] == 1);
-	assert(sortData[1] == 0);
-	assert(sortData[2] == 2);
-	CountingSort(sortData);
-	assert(sortData[0] == 0);
-	assert(sortData[1] == 1);
-	assert(sortData[2] == 2);
+	vector<size_t> sortData1;
+	sortData1.clear();
+	sortData1.push_back(1);
+	sortData1.push_back(0);
+	sortData1.push_back(2);
+	assert(sortData1[0] == 1);
+	assert(sortData1[1] == 0);
+	assert(sortData1[2] == 2);
+	CountingSort(sortData1);
+	assert(sortData1[0] == 0);
+	assert(sortData1[1] == 1);
+	assert(sortData1[2] == 2);
 
-	sortData.clear();
-	sortData.push_back(1);
-	sortData.push_back(0);
-	sortData.push_back(-1);
-	assert(sortData[0] == 1);
-	assert(sortData[1] == 0);
-	assert(sortData[2] == -1);
-	CountingSort(sortData);
-	assert(sortData[0] == -1);
-	assert(sortData[1] == 0);
-	assert(sortData[2] == 1);
-
-	sortData.clear();
-	sortData.push_back(456);
-	sortData.push_back(789);
-	sortData.push_back(123);
-	assert(sortData[0] == 456);
-	assert(sortData[1] == 789);
-	assert(sortData[2] == 123);
-	CountingSort(sortData);
-	assert(sortData[0] == 123);
-	assert(sortData[1] == 456);
-	assert(sortData[2] == 789);
-
-	sortData.clear();
-	sortData.push_back(-123);
-	sortData.push_back(-789);
-	sortData.push_back(-456);
-	assert(sortData[0] == -123);
-	assert(sortData[1] == -789);
-	assert(sortData[2] == -456);
-	CountingSort(sortData);
-	assert(sortData[0] == -789);
-	assert(sortData[1] == -456);
-	assert(sortData[2] == -123);
+	sortData1.clear();
+	sortData1.push_back(456);
+	sortData1.push_back(789);
+	sortData1.push_back(123);
+	assert(sortData1[0] == 456);
+	assert(sortData1[1] == 789);
+	assert(sortData1[2] == 123);
+	CountingSort(sortData1);
+	assert(sortData1[0] == 123);
+	assert(sortData1[1] == 456);
+	assert(sortData1[2] == 789);
 
 	sortData.clear();
 	sortData.resize(100);
@@ -4200,23 +4177,25 @@ void HeapSort(vector<long>& data)
 	}
 }
 // https://en.wikipedia.org/wiki/Counting_sort
-void CountingSort(vector<long>& data)
+//  each of which has a non-negative integer key whose maximum value is at most k
+void CountingSort(vector<size_t>& data)
 {
-	vector<long> input(data);
-	map<long, size_t> counts;
-	for (vector<long>::iterator it = input.begin(); it != input.end(); it++) {
-		pair<map<long, size_t>::iterator, bool> result = counts.emplace(*it, 1);
-		if (!result.second)
-			counts[*it]++;
+	vector<size_t> input(data);
+	long min = numeric_limits<size_t>::max(), max = 0;
+	for (vector<size_t>::iterator it = input.begin(); it != input.end(); it++) {
+		if (*it < min)
+			min = *it;
+		if (*it > max)
+			max = *it;
 	}
-	size_t count = 0;
-	for (map<long, size_t>::iterator it = counts.begin(); it != counts.end(); it++) {
-		it->second += count;
-		count = it->second;
-	}
-	for (size_t i = 0; i < input.size(); i++) {
-		data[counts[input[i]] - 1] = input[i];
-		counts[input[i]]--;
+	vector<size_t> counts(max + 1, 0);
+	for (vector<size_t>::iterator it = input.begin(); it != input.end(); it++)
+		counts[*it]++;
+	for (size_t i = 1; i < counts.size(); i++)
+		counts[i] += counts[i - 1];
+	for (vector<size_t>::iterator it = input.begin(); it != input.end(); it++) {
+		data[counts[*it] - 1] = *it;
+		counts[*it]--;
 	}
 }
 void Swap(long &a, long &b)
