@@ -3853,18 +3853,22 @@ void sortingTests()
 
 	strSort.clear();
 	str.clear();
-	str.push_back("10");
+	str.push_back("100");
 	str.push_back("!!!");
 	strSort.push_back(str);
 	str.clear();
-	str.push_back("5");
+	str.push_back("55");
 	str.push_back("Hello");
 	strSort.push_back(str);
 	str.clear();
-	str.push_back("5");
+	str.push_back("10");
+	str.push_back("Hey,");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("55");
 	str.push_back("World");
 	strSort.push_back(str);
-	assert(CountingSort(strSort) == "Hello World !!!");
+	assert(CountingSort(strSort) == "Hey, Hello World !!!");
 
 	sortData.clear();
 	sortData.resize(100);
