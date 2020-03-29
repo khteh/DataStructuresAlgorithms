@@ -3803,6 +3803,53 @@ void sortingTests()
 	assert(sortData1[1] == 456);
 	assert(sortData1[2] == 789);
 
+	vector<vector<string>> strSort;
+	vector<string> str;
+	str.push_back("400");
+	str.push_back("not");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("1500");
+	str.push_back("question");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("550");
+	str.push_back("to");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("100");
+	str.push_back("to");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("650");
+	str.push_back("be");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("1000");
+	str.push_back("-");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("200");
+	str.push_back("be");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("1234");
+	str.push_back("is");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("1100");
+	str.push_back("that");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("300");
+	str.push_back("or");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("1250");
+	str.push_back("the");
+	strSort.push_back(str);
+	str.clear();
+	assert(CountingSort(strSort) == "to be or not to be - that is the question");
 	sortData.clear();
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
@@ -4197,6 +4244,43 @@ void CountingSort(vector<size_t>& data)
 		data[counts[*it] - 1] = *it;
 		counts[*it]--;
 	}
+}
+string CountingSort(vector<vector<string>>& data)
+{
+	vector<string> result;
+	long min = numeric_limits<size_t>::max(), max = 0;
+	for (vector<vector<string>>::iterator it = data.begin(); it != data.end(); it++) {
+		size_t key;
+		istringstream((*it)[0]) >> key;
+		if (key < min)
+			min = key;
+		if (key > max)
+			max = key;
+	}
+	vector<size_t> counts(max + 1, 0);
+	result.resize(max + 1);
+	for (vector<vector<string>>::iterator it = data.begin(); it != data.end(); it++) {
+		size_t key;
+		istringstream((*it)[0]) >> key;
+		counts[key]++;
+	}
+	for (size_t i = 1; i < counts.size(); i++)
+		counts[i] += counts[i - 1];
+	for (vector<vector<string>>::iterator it = data.begin(); it != data.end(); it++) {
+		size_t key;
+		istringstream((*it)[0]) >> key;
+		result[key - 1] = (*it)[1];
+		counts[key]--;
+	}
+	ostringstream oss;
+	for (size_t i = 0; i < result.size(); i++) {
+		if (!result[i].empty()) {
+			oss << result[i];
+			if (i < result.size() - 2) // Because of the result[key - 1] = (*it)[1];
+				oss << " ";
+		}
+	}
+	return oss.str();
 }
 void Swap(long &a, long &b)
 {
@@ -6159,9 +6243,8 @@ long concat(vector<long>& data)
 	});
 	for (vector<long>::reverse_iterator it = data.rbegin(); it != data.rend(); it++)
 		oss << *it;
-	istringstream iss(oss.str());
 	long result;
-	iss >> result;
+	istringstream(oss.str()) >> result;
 	return result;
 }
 long buildmax(vector<long>& a, vector<long>& b, size_t size)
