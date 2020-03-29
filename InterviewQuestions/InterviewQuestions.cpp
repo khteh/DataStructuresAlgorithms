@@ -4238,7 +4238,7 @@ void CountingSort(vector<size_t>& data)
 	vector<size_t> counts(max + 1, 0);
 	for (vector<size_t>::iterator it = input.begin(); it != input.end(); it++)
 		counts[*it]++;
-	for (size_t i = 1; i < counts.size(); i++)
+	for (size_t i = min > 0 ? min : 1; i <= max; i++)
 		counts[i] += counts[i - 1];
 	for (vector<size_t>::iterator it = input.begin(); it != input.end(); it++) {
 		data[counts[*it] - 1] = *it;
@@ -4264,7 +4264,7 @@ string CountingSort(vector<vector<string>>& data)
 		istringstream((*it)[0]) >> key;
 		counts[key]++;
 	}
-	for (size_t i = 1; i < counts.size(); i++)
+	for (size_t i = min > 0 ? min : 1; i <= max; i++)
 		counts[i] += counts[i - 1];
 	for (vector<vector<string>>::iterator it = data.begin(); it != data.end(); it++) {
 		size_t key;
