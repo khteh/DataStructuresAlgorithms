@@ -3850,6 +3850,22 @@ void sortingTests()
 	strSort.push_back(str);
 	str.clear();
 	assert(CountingSort(strSort) == "to be or not to be - that is the question");
+
+	strSort.clear();
+	str.clear();
+	str.push_back("10");
+	str.push_back("!!!");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("5");
+	str.push_back("Hello");
+	strSort.push_back(str);
+	str.clear();
+	str.push_back("5");
+	str.push_back("World");
+	strSort.push_back(str);
+	assert(CountingSort(strSort) == "Hello World !!!");
+
 	sortData.clear();
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
@@ -4240,7 +4256,8 @@ void CountingSort(vector<size_t>& data)
 		counts[*it]++;
 	for (size_t i = min > 0 ? min : 1; i <= max; i++)
 		counts[i] += counts[i - 1];
-	for (vector<size_t>::iterator it = input.begin(); it != input.end(); it++) {
+	// Use reverse_iterator for a stable sort
+	for (vector<size_t>::reverse_iterator it = input.rbegin(); it != input.rend(); it++) {
 		data[counts[*it] - 1] = *it;
 		counts[*it]--;
 	}
@@ -4266,21 +4283,21 @@ string CountingSort(vector<vector<string>>& data)
 	}
 	for (size_t i = min > 0 ? min : 1; i <= max; i++)
 		counts[i] += counts[i - 1];
-	for (vector<vector<string>>::iterator it = data.begin(); it != data.end(); it++) {
+	// Use reverse_iterator for a stable sort
+	for (vector<vector<string>>::reverse_iterator it = data.rbegin(); it != data.rend(); it++) {
 		size_t key;
 		istringstream((*it)[0]) >> key;
-		result[key - 1] = (*it)[1];
+		result[counts[key] - 1] = (*it)[1];
 		counts[key]--;
 	}
 	ostringstream oss;
 	for (size_t i = 0; i < result.size(); i++) {
-		if (!result[i].empty()) {
-			oss << result[i];
-			if (i < result.size() - 2) // Because of the result[key - 1] = (*it)[1];
-				oss << " ";
-		}
+		if (!result[i].empty())
+			oss << result[i] << " ";
 	}
-	return oss.str();
+	string s = oss.str();
+	s.erase(s.find_last_not_of(" \n\r\t") + 1);
+	return s;
 }
 void Swap(long &a, long &b)
 {
