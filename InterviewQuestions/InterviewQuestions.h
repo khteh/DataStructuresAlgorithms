@@ -220,6 +220,7 @@ typedef struct PathResult {
 } pathResult_t;
 pathResult_t FindMaxPath(vector<vector<unsigned long>>&, size_t, size_t);
 bool PathExists(vector<vector<char>>&, size_t, size_t, size_t, size_t, queue<string>&, char obstacle);
+vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int j_end);
 typedef struct Position {
 	Position() : row(-1), col(-1) {}
 	Position(size_t r, size_t c) : row(r), col(c) {}

@@ -1809,6 +1809,33 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(timeInWords(1, 1) == "one minute past one");
 	assert(beautifulQuadruples(1, 1, 1, 1) == 0);
 	assert(beautifulQuadruples(3, 3, 3, 3) == 9);
+	vector<string> paths = findShortestPath(5, 4, 1, 0, 3);
+	assert(paths.size() == 2);
+	assert(paths[0] == "2");
+	assert(paths[1] == "UR UR");
+	paths = findShortestPath(7, 6, 6, 0, 1);
+	assert(paths.size() == 2);
+	assert(paths[0] == "4");
+	assert(paths[1] == "UL UL UL L");
+	paths = findShortestPath(6, 5, 1, 0, 5);
+	assert(paths.size() == 1);
+	assert(paths[0] == "Impossible");
+	paths = findShortestPath(7, 0, 3, 4, 3);
+	assert(paths.size() == 2);
+	assert(paths[0] == "2");
+	assert(paths[1] == "LR LL");
+	paths = findShortestPath(150, 24, 15, 46, 102);
+	assert(paths.size() == 2);
+	assert(paths[0] == "49");
+	assert(paths[1] == "R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R LR LR LR LR LR LR LR LR LR LR LR");
+	paths = findShortestPath(70, 7, 15, 67, 3);
+	assert(paths.size() == 2);
+	assert(paths[0] == "30");
+	assert(paths[1] == "LR LR LR LR LR LR LR LR LR LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL");
+	paths = findShortestPath(100, 2, 24, 92, 45);
+	assert(paths.size() == 2);
+	assert(paths[0] == "45");
+	assert(paths[1] == "LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LL LL LL LL LL LL LL LL LL LL LL LL");
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -7665,4 +7692,241 @@ size_t beautifulQuadruples(int a, int b, int c, int d)
 						quadruples.emplace(tmp);
 					}
 	return quadruples.size();
+}
+// https://www.hackerrank.com/challenges/red-knights-shortest-path/problem
+// 100%
+vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int j_end)
+{
+	vector<string> result;
+	ostringstream oss;
+	// Print the distance along with the sequence of moves.
+// UL, UR, R, LR, LL, L.
+	size_t diff_i = abs(i_end - i_start), diff_j = abs(j_end - j_start);
+	// Upper Left
+	if (i_end < i_start && j_end < j_start) {
+		if ((i_start - i_end) % 2) {
+			result.push_back("Impossible");
+			return result;
+		}
+		int uls = (i_start - i_end) / 2; // 6 / 2 = 3
+		int dest_j = j_start - uls; // 6 - 3 = 3
+		if ((abs(j_end - dest_j)) % 2) {
+			result.push_back("Impossible");
+			return result;
+		}
+		int L = (dest_j - j_end) / 2;
+		oss << uls + L;
+		result.push_back(oss.str());
+		oss.str("");
+		for (size_t i = 0; i < uls; i++) {
+			oss << "UL";
+			if (i != uls - 1)
+				oss << " ";
+		}
+		if (L)
+			oss << " ";
+		for (size_t i = 0; i < L; i++) {
+			oss << "L";
+			if (i < L - 1)
+				oss << " ";
+		}
+	}
+	// Upper Right
+	else if (i_end < i_start && j_end > j_start) {
+		if ((i_start - i_end) % 2) {
+			result.push_back("Impossible");
+			return result;
+		}
+		int urs = (i_start - i_end) / 2; // 4 / 2 = 2
+		int dest_j = j_start + urs; // 2 - 1 = 1
+		if ((abs(j_end - dest_j)) % 2) {
+			result.push_back("Impossible");
+			return result;
+		}
+		int R = (j_end - dest_j) / 2; // (3 - 
+		oss << urs + R;
+		result.push_back(oss.str());
+		oss.str("");
+		for (size_t i = 0; i < urs; i++) {
+			oss << "UR";
+			if (i != urs - 1)
+				oss << " ";
+		}
+		if (R)
+			oss << " ";
+		for (size_t i = 0; i < R; i++) {
+			oss << "R";
+			if (i < R - 1)
+				oss << " ";
+		}
+	}
+	// Lower Left
+	else if (i_end > i_start && j_end < j_start) {
+		if ((i_end - i_start) % 2) {
+			result.push_back("Impossible");
+			return result;
+		}
+		int lls = (i_end - i_start) / 2;
+		int dest_j = j_start - lls;
+		if ((abs(j_end - dest_j)) % 2) {
+			result.push_back("Impossible");
+			return result;
+		}
+		int L = (dest_j - j_end) / 2;
+		if (L >= 0) {
+			oss << lls + L;
+			result.push_back(oss.str());
+			oss.str("");
+			for (size_t i = 0; i < lls; i++) {
+				oss << "LL";
+				if (i != lls - 1)
+					oss << " ";
+			}
+			if (L)
+				oss << " ";
+			for (size_t i = 0; i < L; i++) {
+				oss << "L";
+				if (i < L - 1)
+					oss << " ";
+			}
+		} else {  // L < 0
+			oss << lls;
+			result.push_back(oss.str());
+			oss.str("");
+			for (int i = L; i < 0; i++) {
+				oss << "LR";
+				if (i < -1)
+					oss << " ";
+			}
+			if (lls + L)
+				oss << " ";
+			for (size_t i = 0; i < (lls + L); i++) {
+				oss << "LL";
+				if (i != (lls + L - 1))
+					oss << " ";
+			}
+		}
+	}
+	// Lower Right
+	else if (i_end > i_start && j_end > j_start) {
+		if ((i_end - i_start) % 2) {
+			result.push_back("Impossible");
+			return result;
+		}
+		int lrs = (i_end - i_start) / 2;
+		int dest_j = j_start + lrs;
+		if ((abs(j_end - dest_j)) % 2) {
+			result.push_back("Impossible");
+			return result;
+		}
+		int R = (j_end - dest_j) / 2;
+		if (R >= 0) {
+			oss << lrs + R;
+			result.push_back(oss.str());
+			oss.str("");
+			for (size_t i = 0; i < R; i++) {
+				oss << "R";
+				if (i < R - 1)
+					oss << " ";
+			}
+			if (lrs)
+				oss << " ";
+			for (size_t i = 0; i < lrs; i++) {
+				oss << "LR";
+				if (i != lrs - 1)
+					oss << " ";
+			}
+		}
+		else { // R < 0
+			oss << lrs;
+			result.push_back(oss.str());
+			oss.str("");
+			for (size_t i = 0; i < (lrs + R); i++) {
+				oss << "LR";
+				if (i != (lrs + R - 1))
+					oss << " ";
+			}
+			if (R < 0)
+				oss << " ";
+			for (int i = R; i < 0; i++) {
+				oss << "LL";
+				if (i < -1)
+					oss << " ";
+			}
+		}
+	}
+	// UP
+	else if (j_end == j_start && i_end < i_start) {
+		size_t diff = i_start - i_end;
+		if (diff % 4) {
+			result.push_back("Impossible");
+			return result;
+		}
+		else {
+			oss << diff / 2;
+			result.push_back(oss.str());
+			oss.str("");
+			for (size_t i = 0; i < (diff / 4); i++) {
+				oss << "UL UR";
+				if (i != (diff / 4) - 1)
+					oss << " ";
+			}
+		}
+	}
+	// DOWN
+	else if (j_end == j_start && i_end > i_start) {
+		size_t diff = i_end - i_start;
+		if (diff % 4) {
+			result.push_back("Impossible");
+			return result;
+		}
+		else {
+			oss << diff / 2;
+			result.push_back(oss.str());
+			oss.str("");
+			for (size_t i = 0; i < (diff / 4); i++) {
+				oss << "LR LL";
+				if (i != (diff / 4) - 1)
+					oss << " ";
+			}
+		}
+	}
+	// Left
+	else if (i_end == i_start && j_end < j_start) {
+		if ((j_start - j_end) % 2) {
+			result.push_back("Impossible");
+			return result;
+		}
+		size_t L = (j_start - j_end) / 2;
+		oss << L;
+		result.push_back(oss.str());
+		oss.str("");
+		for (size_t i = 0; i < L; i++) {
+			oss << "L";
+			if (i != L - 1)
+				oss << " ";
+		}
+	}
+	// Right
+	else if (i_end == i_start && j_end > j_start) {
+		if ((j_end - j_start) % 2) {
+			result.push_back("Impossible");
+			return result;
+		}
+		size_t R = (j_end - j_start) / 2;
+		oss << R;
+		result.push_back(oss.str());
+		oss.str("");
+		for (size_t i = 0; i < R; i++) {
+			oss << "R";
+			if (i != R - 1)
+				oss << " ";
+		}
+	}
+	else {
+		// Destination = start?
+		oss << 0 << endl;
+	}
+	result.push_back(oss.str());
+	return result;
 }
