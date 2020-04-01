@@ -47,12 +47,12 @@ void DisJointSet<T>::Union(T x, T y)
 	T j = Find(y);
 	if (i == T()) {
 		ostringstream oss;
-		oss << x << " is not a disjoint tree!";
+		oss << x << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << x << ");";
 		throw runtime_error(oss.str());
 	}
 	if (j == T()) {
 		ostringstream oss;
-		oss << y << " is not a disjoint tree!";
+		oss << y << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << y << ");";
 		throw runtime_error(oss.str());
 	}
 	if (i != j) {
