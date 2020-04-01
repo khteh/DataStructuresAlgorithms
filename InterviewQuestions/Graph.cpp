@@ -36,7 +36,7 @@ void Graph<T>::AddDirectedEdge(VertexEdge<T> from, VertexEdge<T> to, long cost)
 	from.AddNeighbour(to, cost);
 }
 template<class T>
-void Graph<T>::AddUndirectedEdge(VertexEdge<T>, VertexEdge<T>, long)
+void Graph<T>::AddUndirectedEdge(VertexEdge<T> from, VertexEdge<T> to, long cost)
 {
 	from.AddNeighbour(to, cost);
 	to.AddNeighbour(from, cost);

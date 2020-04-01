@@ -97,6 +97,8 @@
     <ClInclude Include="CallHandler.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="DiamondProblem.h" />
+    <ClInclude Include="DisJointSet.h" />
+    <ClInclude Include="Edge.h" />
     <ClInclude Include="FunctionObject.h" />
     <ClInclude Include="interval_map.h" />
     <ClInclude Include="KDTree.h" />
@@ -131,6 +133,8 @@
     <ClCompile Include="CallHandler.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="DiamondProblem.cpp" />
+    <ClCompile Include="DisJointSet.cpp" />
+    <ClCompile Include="Edge.cpp" />
     <ClCompile Include="FunctionObject.cpp" />
     <ClCompile Include="interval_map.cpp" />
     <ClCompile Include="KDTree.cpp" />

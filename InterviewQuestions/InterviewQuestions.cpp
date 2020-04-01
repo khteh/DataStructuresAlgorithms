@@ -1836,6 +1836,70 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(paths.size() == 2);
 	assert(paths[0] == "45");
 	assert(paths[1] == "LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LL LL LL LL LL LL LL LL LL LL LL LL");
+	a.clear();
+	a.push_back(1);
+	a.push_back(3);
+	a.push_back(5);
+	a.push_back(7);
+	a.push_back(9);
+	DisJointSet<long> disjointSet(a);
+	disjointSet.Print(a);
+	assert(disjointSet.Find(3) != disjointSet.Find(7));
+	assert(disjointSet.Rank(3) == 0);
+	assert(disjointSet.Rank(7) == 0);
+	disjointSet.Union(3, 7);
+	assert(disjointSet.Rank(3) == 1);
+	assert(disjointSet.Rank(7) == 1);
+	disjointSet.Print(a);
+	assert(disjointSet.Find(1) != disjointSet.Find(3));
+	disjointSet.Union(1, 3);
+	assert(disjointSet.Rank(1) == 1);
+	assert(disjointSet.Rank(3) == 1);
+	assert(disjointSet.Rank(7) == 1);
+	disjointSet.Print(a);
+	assert(disjointSet.Find(3) == disjointSet.Find(7));
+	assert(disjointSet.Find(1) == disjointSet.Find(3));
+	assert(disjointSet.Find(2) == 0);
+	assert(disjointSet.Find(1) != disjointSet.Find(2));
+	vector<long> from, to, weights;
+	from.push_back(1);
+	from.push_back(1);
+	from.push_back(4);
+	from.push_back(2);
+	from.push_back(3);
+	from.push_back(3);
+	to.push_back(2);
+	to.push_back(3);
+	to.push_back(1);
+	to.push_back(4);
+	to.push_back(2);
+	to.push_back(4);
+	weights.push_back(5);
+	weights.push_back(3);
+	weights.push_back(6);
+	weights.push_back(7);
+	weights.push_back(4);
+	weights.push_back(5);
+	assert(kruskals(4, from, to, weights) == 12);
+	from.clear();
+	to.clear();
+	weights.clear();
+	from.push_back(1);
+	from.push_back(3);
+	from.push_back(4);
+	from.push_back(1);
+	from.push_back(3);
+	to.push_back(2);
+	to.push_back(2);
+	to.push_back(3);
+	to.push_back(4);
+	to.push_back(1);
+	weights.push_back(1);
+	weights.push_back(150);
+	weights.push_back(99);
+	weights.push_back(100);
+	weights.push_back(200);
+	assert(kruskals(4, from, to, weights) == 200);
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -4713,6 +4777,13 @@ void SuffixTreeTests()
 	assert(indices1.size() == 2); // sissippi, sippi
 	indices1 = sTree.GetIndexes("ssi");
 	assert(indices1.size() == 2); // ssissippi, ssippi
+	sTree.InsertString("sister");
+	indices1 = sTree.GetIndexes("sis");
+	copy(indices1.begin(), indices1.end(), ostream_iterator<size_t>(cout, " "));
+	cout << endl;
+	indices1 = sTree.GetIndexes("sister");
+	copy(indices1.begin(), indices1.end(), ostream_iterator<size_t>(cout, " "));
+	cout << endl;
 	sTree.Clear();
 	assert(!sTree.Count());
 	sTree.InsertString("Amazon");
@@ -7929,4 +8000,22 @@ vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int 
 	}
 	result.push_back(oss.str());
 	return result;
+}
+// https://www.hackerrank.com/challenges/kruskalmstrsub/problem
+// 100%
+int kruskals(int nodes, vector<long>& from, vector<long>& to, vector<long>& weight) 
+{
+	multiset<Edge> edges;
+	int sum = 0;
+	for (size_t i = 0; i < weight.size(); i++)
+		edges.emplace(Edge(weight[i], from[i], to[i]));
+	DisJointSet<long> disjointSet(from);
+	disjointSet.MakeSet(to);
+	for (multiset<Edge>::iterator it = edges.begin(); it != edges.end(); it++) {
+		if (disjointSet.Find(it->node1) != disjointSet.Find(it->node2)) {
+			sum += it->weight;
+			disjointSet.Union(it->node1, it->node2);
+		}
+	}
+	return sum;
 }

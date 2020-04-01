@@ -38,6 +38,8 @@
 #include "TreasureGame.h"
 #include "FunctionObject.h"
 #include "interval_map.h"
+#include "DisJointSet.h"
+#include "Edge.h"
 using namespace std;
 using namespace concurrency;
 typedef enum { SORT_ASCENDING, SORT_DESCENDING } sort_order_t;
@@ -310,3 +312,4 @@ vector<long> absolutePermutation(long, long);
 long calculateMedian(vector<long>&);
 string timeInWords(int, int);
 size_t beautifulQuadruples(int, int, int, int);
+int kruskals(int, vector<long>&, vector<long>&, vector<long>&);
