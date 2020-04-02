@@ -5987,8 +5987,6 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 								counts[root]++;
 						} 
 					}
-					else
-						cout << node << " and upper-left " << neighbour << " are same in the same disjoint set!" << endl;
 				}
 				// Up
 				if (i > 0 && grid[i - 1][j] == 1) {
@@ -6005,8 +6003,6 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 								counts[root]++;
 						}
 					}
-					else
-						cout << node << " and Up " << neighbour << " are same in the same disjoint set!" << endl;
 				}
 				// Upper Right
 				if (i > 0 && j < grid[0].size() - 1 && grid[i - 1][j + 1] == 1) {
@@ -6023,8 +6019,6 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 								counts[root]++;
 						}
 					}
-					else
-						cout << node << " and upper right " << neighbour << " are same in the same disjoint set!" << endl;
 				}
 				// Left
 				if (j > 0 && grid[i][j - 1] == 1) {
@@ -6041,8 +6035,6 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 								counts[root]++;
 						}
 					}
-					else
-						cout << node << " and left " << neighbour << " are same in the same disjoint set!" << endl;
 				}
 				// Right
 				if (j < grid[0].size() - 1 && grid[i][j + 1] == 1) {
@@ -6058,8 +6050,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 							if (!result.second)
 								counts[root]++;
 						}
-					} else
-						cout << node << " and right " << neighbour << " are same in the same disjoint set!" << endl;
+					}
 				}
 			} // if (grid[i][j] == 1) {
 		} // for (size_t j = 0; j < grid[0].size(); j++) {
