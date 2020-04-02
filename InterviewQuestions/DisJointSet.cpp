@@ -29,49 +29,59 @@ T DisJointSet<T>::Find(T item)
 	}
 }
 template<class T>
-size_t DisJointSet<T>::Size(T item)
-{
-	return _parent[item] == item ? 1 : 1 + Size(item);
-}
-template<class T>
 size_t DisJointSet<T>::Rank(T item)
 {
 	return _rank[Find(item)];
 }
 template<class T>
-void DisJointSet<T>::Union(T x, T y)
+T DisJointSet<T>::Union(T x, T y)
 {
 	// Unites the set that includes x
 	// and the set that includes y
-	T i = Find(x);
-	T j = Find(y);
-	if (i == T()) {
+	T rootX = Find(x);
+	T rootY = Find(y);
+	if (rootX == T()) {
 		ostringstream oss;
 		oss << x << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << x << ");";
 		throw runtime_error(oss.str());
 	}
-	if (j == T()) {
+	if (rootY == T()) {
 		ostringstream oss;
 		oss << y << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << y << ");";
 		throw runtime_error(oss.str());
 	}
-	if (i != j) {
+	T root;
+	if (rootX != rootY) {
 		// Put smaller ranked item under bigger ranked item if ranks are different 
-		if (_rank[i] < _rank[j])
-			_parent[i] = j;
-		else if (_rank[i] > _rank[j])
-			_parent[j] = i;
-		// If ranks are same, increment the rank
+		if (_rank[rootX] < _rank[rootY]) {
+			_parent[rootX] = rootY;
+			root = rootY;
+		}
+		else if (_rank[rootY] < _rank[rootX]) {
+			_parent[rootY] = rootX;
+			root = rootX;
+		}
 		else {
-			_parent[i] = j;
-			_rank[j]++;
+			// If ranks are same, increment the rank
+			_parent[rootX] = rootY;
+			root = rootY;
+			_rank[rootY]++;
 		}
 	}
+	else
+		root = T(); // Already joined
+	return root;
 }
 template<class T>
-void DisJointSet<T>::Print(vector<T> const& data)
+void DisJointSet<T>::Print(vector<T> const& data, size_t linesize)
 {
-	for (vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
-		cout << Find(*it) << ", ";
+	size_t i = 1;
+	for (vector<T>::const_iterator it = data.begin(); it != data.end(); it++, i++) {
+		cout << Find(*it);
+		if (!(i % linesize))
+			cout << endl;
+		else
+			cout << ", ";
+	}
 	cout << endl;
 }

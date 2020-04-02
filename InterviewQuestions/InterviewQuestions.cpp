@@ -241,6 +241,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			grid1[i][j] = gridArray6[i][j];
 	}
 	cout << endl;
+	assert(ConnectedCellsInAGridLinkedList(grid1) == 5);
 	assert(ConnectedCellsInAGrid(grid1) == 5);
 
 	long gridArray7[5][4] = { { 0,0,1,1 },{ 0,0,1,0 },{ 0,1,1,0 },{0,1,0,0},{1,1,0,0} };
@@ -252,6 +253,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			grid1[i][j] = gridArray7[i][j];
 	}
 	cout << endl;
+	assert(ConnectedCellsInAGridLinkedList(grid1) == 8);
 	assert(ConnectedCellsInAGrid(grid1) == 8);
 
 	long gridArray8[5][5] = { { 1, 1, 0, 0, 0 },{0, 1, 1, 0, 0 },{ 0, 0, 1, 0, 1 },{1, 0, 0, 0, 1},{0, 1, 0, 1, 1} };
@@ -263,6 +265,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			grid1[i][j] = gridArray8[i][j];
 	}
 	cout << endl;
+	assert(ConnectedCellsInAGridLinkedList(grid1) == 5);
 	assert(ConnectedCellsInAGrid(grid1) == 5);
 
 	long gridArray9[5][5] = { { 0, 1, 1, 1, 1 },{1, 0, 0, 0, 1 },{ 1, 1, 0, 1, 0 },{0, 1, 0, 1, 1},{0, 1, 1, 1, 0} };
@@ -274,6 +277,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			grid1[i][j] = gridArray9[i][j];
 	}
 	cout << endl;
+	assert(ConnectedCellsInAGridLinkedList(grid1) == 15);
 	assert(ConnectedCellsInAGrid(grid1) == 15);
 
 	long gridArray10[7][5] = { { 1, 1, 1, 0, 1 },{0, 0, 1, 0, 0 },{ 1, 1, 0, 1, 0 },{0, 1, 1, 0, 0},{0, 0, 0, 0, 0},{0, 1, 0, 0, 0},{0, 0, 1, 1, 0} };
@@ -285,7 +289,20 @@ int _tmain(int argc, _TCHAR* argv[])
 			grid1[i][j] = gridArray10[i][j];
 	}
 	cout << endl;
+	assert(ConnectedCellsInAGridLinkedList(grid1) == 9);
 	assert(ConnectedCellsInAGrid(grid1) == 9);
+
+	long gridArray11[7][8] = { { 1, 0, 0, 1, 0, 1, 0, 0 },{0, 0, 0, 0, 0, 0, 0, 1, },{ 1, 0, 1, 0, 1, 0, 0, 0, },{0, 0, 0, 0, 0, 0, 1, 0},{1, 0, 0, 1, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0, 1},{0, 1, 0, 0, 0, 1, 0, 0} };
+	grid1.clear();
+	grid1.resize(7);
+	for (size_t i = 0; i < 7; i++) {
+		grid1[i].resize(8);
+		for (size_t j = 0; j < 8; j++)
+			grid1[i][j] = gridArray11[i][j];
+	}
+	cout << endl;
+	assert(ConnectedCellsInAGridLinkedList(grid1) == 1);
+	assert(ConnectedCellsInAGrid(grid1) == 1);
 
 	char puzzle[4][5] = {{0,0,1,0,1},{0,0,0,0,0},{0,1,1,1,1},{0,1,1,0,0}};
 	maze.resize(4);
@@ -1847,12 +1864,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(disjointSet.Find(3) != disjointSet.Find(7));
 	assert(disjointSet.Rank(3) == 0);
 	assert(disjointSet.Rank(7) == 0);
-	disjointSet.Union(3, 7);
+	assert(disjointSet.Union(3, 7) == 7);
 	assert(disjointSet.Rank(3) == 1);
 	assert(disjointSet.Rank(7) == 1);
 	disjointSet.Print(a);
 	assert(disjointSet.Find(1) != disjointSet.Find(3));
-	disjointSet.Union(1, 3);
+	// Put smaller ranked item under bigger ranked item if ranks are different 
+	assert(disjointSet.Union(1, 3) == 7);
+	assert(disjointSet.Union(1, 7) == 0);
 	assert(disjointSet.Rank(1) == 1);
 	assert(disjointSet.Rank(3) == 1);
 	assert(disjointSet.Rank(7) == 1);
@@ -5785,7 +5804,7 @@ std::multimap<B, A> flip_map(const std::map<A, B>& src)
 }
 // https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
 // 100%
-size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
+size_t ConnectedCellsInAGridLinkedList(vector<vector<long>>& grid)
 {
 	map<string, shared_ptr<Node<string>>> nodes;
 	set<shared_ptr<LinkedList<string>>> clusters;
@@ -5803,7 +5822,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 				set<shared_ptr<LinkedList<string>>> joins;
 				bool skip = false;
 				// Upper Left
-				if (i > 0 && j > 0 && grid[i - 1][j - 1] != 0) {
+				if (i > 0 && j > 0 && grid[i - 1][j - 1] == 1) {
 					oss.str("");
 					oss << i - 1 << "," << j - 1;
 					parent = nodes[oss.str()];
@@ -5825,7 +5844,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 					}
 				}
 				// Up
-				if (i > 0 && grid[i - 1][j] != 0) {
+				if (i > 0 && grid[i - 1][j] == 1) {
 					oss.str("");
 					oss << i - 1 << "," << j;
 					parent = nodes[oss.str()];
@@ -5847,7 +5866,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 					}
 				}
 				// Upper Right
-				if (i > 0 && j < grid[0].size() - 1 && grid[i - 1][j + 1] != 0) {
+				if (i > 0 && j < grid[0].size() - 1 && grid[i - 1][j + 1] == 1) {
 					oss.str("");
 					oss << i - 1 << "," << j + 1;
 					parent = nodes[oss.str()];
@@ -5869,7 +5888,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 					}
 				}
 				// Left
-				if (j > 0 && grid[i][j - 1] != 0) {
+				if (j > 0 && grid[i][j - 1] == 1) {
 					oss.str("");
 					oss << i << "," << j - 1;
 					parent = nodes[oss.str()];
@@ -5891,7 +5910,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 					}
 				}
 				// Right
-				if (j < grid[0].size() - 1 && grid[i][j + 1] != 0) {
+				if (j < grid[0].size() - 1 && grid[i][j + 1] == 1) {
 					oss.str("");
 					oss << i << "," << j + 1;
 					parent = nodes[oss.str()];
@@ -5935,6 +5954,119 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 	}
 	nodes.clear();
 	clusters.clear();
+	return max;
+}
+// https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+// 100%
+size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
+{
+	vector<long> data;
+	data.resize(grid.size() * grid[0].size());
+	generate(data.begin(), data.end(), [i = 1]()mutable{return i++; });
+	DisJointSet<long> disjointSet(data);
+	size_t width = grid[0].size();
+	map<long, size_t> counts;
+	size_t max = 0;
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[0].size(); j++) {
+			if (grid[i][j] == 1) {
+				max = 1;
+				long node = i * width + j + 1;
+				long currentRoot = disjointSet.Find(node);
+				// Upper Left
+				if (i > 0 && j > 0 && grid[i - 1][j - 1] == 1) {
+					long neighbour = (i - 1) * width + j;
+					long root = disjointSet.Union(node, neighbour);
+					if (root != 0) {
+						if (root != currentRoot && counts.find(currentRoot) != counts.end()) { // Existing disjoint set with more than one element
+							counts[root] += counts[currentRoot];
+							counts.erase(currentRoot);
+						} else { // Single-element set
+							pair<map<long, size_t>::iterator, bool> result = counts.emplace(root, 2);
+							if (!result.second)
+								counts[root]++;
+						} 
+					}
+					else
+						cout << node << " and upper-left " << neighbour << " are same in the same disjoint set!" << endl;
+				}
+				// Up
+				if (i > 0 && grid[i - 1][j] == 1) {
+					long neighbour = (i - 1) * width + j + 1;
+					long root = disjointSet.Union(node, neighbour);
+					if (root != 0) {
+						if (root != currentRoot && counts.find(currentRoot) != counts.end()) { // Existing disjoint set with more than one element
+							counts[root] += counts[currentRoot];
+							counts.erase(currentRoot);
+						}
+						else { // Single-element set
+							pair<map<long, size_t>::iterator, bool> result = counts.emplace(root, 2);
+							if (!result.second)
+								counts[root]++;
+						}
+					}
+					else
+						cout << node << " and Up " << neighbour << " are same in the same disjoint set!" << endl;
+				}
+				// Upper Right
+				if (i > 0 && j < grid[0].size() - 1 && grid[i - 1][j + 1] == 1) {
+					long neighbour = (i - 1) * width + j + 2;
+					long root = disjointSet.Union(node, neighbour);
+					if (root != 0) {
+						if (root != currentRoot && counts.find(currentRoot) != counts.end()) { // Existing disjoint set with more than one element
+							counts[root] += counts[currentRoot];
+							counts.erase(currentRoot);
+						}
+						else { // Single-element set
+							pair<map<long, size_t>::iterator, bool> result = counts.emplace(root, 2);
+							if (!result.second)
+								counts[root]++;
+						}
+					}
+					else
+						cout << node << " and upper right " << neighbour << " are same in the same disjoint set!" << endl;
+				}
+				// Left
+				if (j > 0 && grid[i][j - 1] == 1) {
+					long neighbour = i * width + j;
+					long root = disjointSet.Union(node, neighbour);
+					if (root != 0) {
+						if (root != currentRoot && counts.find(currentRoot) != counts.end()) { // Existing disjoint set with more than one element
+							counts[root] += counts[currentRoot];
+							counts.erase(currentRoot);
+						}
+						else { // Single-element set
+							pair<map<long, size_t>::iterator, bool> result = counts.emplace(root, 2);
+							if (!result.second)
+								counts[root]++;
+						}
+					}
+					else
+						cout << node << " and left " << neighbour << " are same in the same disjoint set!" << endl;
+				}
+				// Right
+				if (j < grid[0].size() - 1 && grid[i][j + 1] == 1) {
+					long neighbour = i * width + j + 2;
+					long root = disjointSet.Union(node, neighbour);
+					if (root != 0) {
+						if (root != currentRoot && counts.find(currentRoot) != counts.end()) { // Existing disjoint set with more than one element
+							counts[root] += counts[currentRoot];
+							counts.erase(currentRoot);
+						}
+						else { // Single-element set
+							pair<map<long, size_t>::iterator, bool> result = counts.emplace(root, 2);
+							if (!result.second)
+								counts[root]++;
+						}
+					} else
+						cout << node << " and right " << neighbour << " are same in the same disjoint set!" << endl;
+				}
+			} // if (grid[i][j] == 1) {
+		} // for (size_t j = 0; j < grid[0].size(); j++) {
+	for (map<long, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+		if (it->second > max)
+			max = it->second;
+	disjointSet.Print(data, grid[0].size());
 	return max;
 }
 // 0 0 1 0 1

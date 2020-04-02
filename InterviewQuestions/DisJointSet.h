@@ -15,8 +15,7 @@ public:
 	DisJointSet(vector<T>&);
 	void MakeSet(vector<T>&);
 	T Find(T);
-	size_t Size(T);
 	size_t Rank(T);
-	void Union(T, T);
-	void Print(vector<T> const&);
+	T Union(T, T);
+	void Print(vector<T> const&, size_t linesize = numeric_limits<size_t>::max());
 };

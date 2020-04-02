@@ -245,6 +245,7 @@ void MatrixDistance(vector<vector<long>>&, size_t, size_t);
 void MatrixSort(vector<vector<long>>&);
 long MatrixPatternCount(vector<vector<long>>&);
 void MatrixSortWithHeap(vector<vector<long>>&);
+size_t ConnectedCellsInAGridLinkedList(vector<vector<long>>&);
 size_t ConnectedCellsInAGrid(vector<vector<long>>&);
 // Start of Sort numbers into consecutive positive/negative numbers
 template<typename type>
