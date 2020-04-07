@@ -106,7 +106,6 @@
     <ClInclude Include="NodeTest.h" />
     <ClInclude Include="Square.h" />
     <ClInclude Include="TreasureGame.h" />
-    <ClInclude Include="VertexEdge.h" />
     <ClInclude Include="Employee.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="Graph.h" />
@@ -142,7 +141,6 @@
     <ClCompile Include="NodeTest.cpp" />
     <ClCompile Include="Square.cpp" />
     <ClCompile Include="TreasureGame.cpp" />
-    <ClCompile Include="VertexEdge.cpp" />
     <ClCompile Include="Employee.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="Graph.cpp" />

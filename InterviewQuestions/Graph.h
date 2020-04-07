@@ -2,22 +2,23 @@
 #include <map>
 #include <set>
 #include "Vertex.h"
-#include "VertexEdge.h"
 using namespace std;
 template<class T>
 class Graph
 {
 public:
 	Graph();
+	Graph(vector<T>&);
 	virtual ~Graph();
 	size_t Count();
-	void AddVertex(VertexEdge<T>);
-	VertexEdge<T>* AddVertex(T);
-	void AddDirectedEdge(VertexEdge<T>, VertexEdge<T>, long);
-	void AddUndirectedEdge(VertexEdge<T>, VertexEdge<T>, long);
+	void AddVertex(shared_ptr<Vertex<T>>);
+	shared_ptr<Vertex<T>> AddVertex(T);
+	void AddDirectedEdge(shared_ptr<Vertex<T>>, shared_ptr<Vertex<T>>, long);
+	void AddUndirectedEdge(shared_ptr<Vertex<T>>, shared_ptr<Vertex<T>>, long);
 	bool HasVertex(T);
+	shared_ptr<Vertex<T>> GetVertex(T);
 	bool Remove(T);
-	void Print(VertexEdge<T>* vertex, set<T> visited);
+	void Print(shared_ptr<Vertex<T>>);
 private:
-	map<T, Vertex<T>*> vertices_;
+	map<T, shared_ptr<Vertex<T>>> vertices_;
 };

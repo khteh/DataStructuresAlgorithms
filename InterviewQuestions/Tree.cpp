@@ -98,7 +98,7 @@ shared_ptr<Node<T>> Tree<T>::Copy(shared_ptr<Node<T>>node, map<shared_ptr<Node<T
 	if (node) {
 		if (copied.find(node) != copied.end())
 			return copied[node];
-		shared_ptr<Node<T>>n = make_shared<Node<T>>(node);
+		shared_ptr<Node<T>> n = make_shared<Node<T>>(node);
 		copied.emplace(node, n); // Map original tree node to new tree node
 		n->SetLeft(Copy(node->Left(), copied));
 		n->SetRight(Copy(node->Right(), copied));
@@ -313,7 +313,7 @@ size_t Tree<T>::Count()
 	return m_root ? 1 + Count(m_root->Left()) + Count(m_root->Right()) : 0;
 }
 template<class T>
-void Tree<T>::GetNodes(map<unsigned long, vector<shared_ptr<Node<T>>>>& result, unsigned long lvl) // Typical Breadth-First-Search algorithm
+void Tree<T>::GetNodes(map<unsigned long, vector<shared_ptr<Node<T>>>>& result, long lvl) // Typical Breadth-First-Search algorithm
 {
 	unsigned long level = 0;
 	vector<shared_ptr<Node<T>>> nodes;

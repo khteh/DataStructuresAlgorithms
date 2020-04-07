@@ -22,6 +22,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	unsigned long long mask = 0;
 	vector<string> strings, strings1;
 	set<string> stringset, stringset1;
+	stringset.erase("Does not exist");
 	vector<long> a, b, sortData;
 	vector<int> data, data1;
 	vector<unsigned long long> ull;
@@ -52,7 +53,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	TrieTests();
 	PrefixTrieTests();
 	TestStringPermutations();
-
+	TestGraph();
 	strings.clear();
 	strings.push_back("abcczch");
 	strings.push_back("abcchcz");
@@ -1919,6 +1920,23 @@ int _tmain(int argc, _TCHAR* argv[])
 	weights.push_back(100);
 	weights.push_back(200);
 	assert(kruskals(4, from, to, weights) == 200);
+	vector<vector<size_t>> ladders, snakes;
+	size_t gridArray12[2][2] = { { 3, 54}, {37, 100} };
+	ladders.clear();
+	ladders.resize(2);
+	for (size_t i = 0; i < 2; i++) {
+		ladders[i].resize(2);
+		for (size_t j = 0; j < 2; j++)
+			ladders[i][j] = gridArray12[i][j];
+	}
+	size_t gridArray13[2][2] = { { 56, 33} };
+	snakes.clear();
+	snakes.resize(1);
+	for (size_t i = 0; i < 1; i++) {
+		snakes[i].resize(2);
+		for (size_t j = 0; j < 2; j++)
+			snakes[i][j] = gridArray13[i][j];
+	}
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -2938,6 +2956,58 @@ void TestStringPermutations()
 	assert(permutations.find("BHeoby") != permutations.end());
 	assert(permutations.find("BHeoyb") != permutations.end());
 	assert(permutations.find("BHeyob") != permutations.end());
+}
+void TestGraph()
+{
+	vector<long> data(5);
+	generate(data.begin(), data.end(), [n = 1]()mutable{return n++; });
+	Graph<long> graph(data);
+	shared_ptr<Vertex<long>> v1 = graph.GetVertex(1);
+	assert(v1);
+	assert(graph.HasVertex(1));
+	assert(graph.HasVertex(2));
+	assert(graph.HasVertex(3));
+	assert(graph.HasVertex(4));
+	assert(graph.HasVertex(5));
+
+	assert(!v1->HasNeighbours());
+	shared_ptr<Vertex<long>> v2 = graph.GetVertex(2);
+	assert(v2);
+	assert(!v2->HasNeighbours());
+	shared_ptr<Vertex<long>> v3 = graph.GetVertex(3);
+	assert(v3);
+	assert(!v3->HasNeighbours());
+	shared_ptr<Vertex<long>> v4 = graph.GetVertex(4);
+	assert(v4);
+	assert(!v4->HasNeighbours());
+	shared_ptr<Vertex<long>> v5 = graph.GetVertex(5);
+	assert(v5);
+	assert(!v5->HasNeighbours());
+
+	graph.AddUndirectedEdge(v1, v2, 1);
+	assert(v1->HasNeighbour(v2));
+	assert(v1->GetCost(v2) == 1);
+	assert(v2->HasNeighbour(v1));
+	assert(v2->GetCost(v1) == 1);
+	graph.AddUndirectedEdge(v2, v3, 2);
+	assert(v2->HasNeighbour(v3));
+	assert(v2->GetCost(v3) == 2);
+	assert(v3->HasNeighbour(v2));
+	assert(v3->GetCost(v2) == 2);
+	graph.AddUndirectedEdge(v2, v4, 2);
+	assert(v2->HasNeighbour(v4));
+	assert(v2->GetCost(v4) == 2);
+	assert(v4->HasNeighbour(v2));
+	assert(v4->GetCost(v2) == 2);
+	graph.AddUndirectedEdge(v3, v5, 3);
+	assert(v3->HasNeighbour(v5));
+	assert(v3->GetCost(v5) == 3);
+	assert(v5->HasNeighbour(v3));
+	assert(v5->GetCost(v3) == 3);
+
+	graph.Print(v1);
+	graph.Print(v2);
+	graph.Print(v3);
 }
 void parentheses(vector<string> &result, string &str, size_t index, long left, long right)
 {
@@ -8125,6 +8195,7 @@ vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int 
 	return result;
 }
 // https://www.hackerrank.com/challenges/kruskalmstrsub/problem
+// https://en.wikipedia.org/wiki/Kruskal%27s_algorithm
 // 100%
 int kruskals(int nodes, vector<long>& from, vector<long>& to, vector<long>& weight) 
 {
@@ -8141,4 +8212,9 @@ int kruskals(int nodes, vector<long>& from, vector<long>& to, vector<long>& weig
 		}
 	}
 	return sum;
+}
+size_t postmanProblem()
+{
+	Graph<long> graph;
+	return 0;
 }

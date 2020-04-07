@@ -20,6 +20,7 @@
 #include <ppl.h>
 #include <limits.h>
 #include <cmath>
+#include "Graph.h"
 #include "Tower.h"
 #include "MyStack.h"
 #include "MyQueue.h"
@@ -173,6 +174,7 @@ void SuffixTreeTests();
 void PrefixTrieTests();
 void TrieTests();
 void TestStringPermutations();
+void TestGraph();
 void BubbleSort(vector<long>&);
 size_t minimumBribes(vector<long>&);
 size_t Partition(vector<long> &, size_t left, size_t right, size_t pivot);
@@ -314,3 +316,4 @@ long calculateMedian(vector<long>&);
 string timeInWords(int, int);
 size_t beautifulQuadruples(int, int, int, int);
 int kruskals(int, vector<long>&, vector<long>&, vector<long>&);
+size_t postmanProblem();
