@@ -1920,6 +1920,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	weights.push_back(100);
 	weights.push_back(200);
 	assert(kruskals(4, from, to, weights) == 200);
+
 	vector<vector<size_t>> ladders, snakes;
 	size_t gridArray12[2][2] = { { 3, 54}, {37, 100} };
 	ladders.clear();
@@ -1937,6 +1938,39 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (size_t j = 0; j < 2; j++)
 			snakes[i][j] = gridArray13[i][j];
 	}
+	long gridArray14[6][3] = { { 1,2,3 },{ 1,3,4 },{ 4,2,6 },{5,2,2},{2,3,5},{3,5,7} };
+	grid1.clear();
+	grid1.resize(6);
+	for (size_t i = 0; i < 6; i++) {
+		grid1[i].resize(3);
+		for (size_t j = 0; j < 3; j++)
+			grid1[i][j] = gridArray14[i][j];
+	}
+	cout << endl;
+	assert(PrimMinimumSpanningTree(5, grid1, 1) == 15);
+
+	long gridArray15[7][3] = { { 1,2,20 },{ 1,3,50 },{ 1,4,70 },{1,5,90},{2,3,30},{3,4,40}, {4,5,60} };
+	grid1.clear();
+	grid1.resize(7);
+	for (size_t i = 0; i < 7; i++) {
+		grid1[i].resize(3);
+		for (size_t j = 0; j < 3; j++)
+			grid1[i][j] = gridArray15[i][j];
+	}
+	cout << endl;
+	assert(PrimMinimumSpanningTree(5, grid1, 2) == 150);
+
+	long gridArray16[6][3] = { { 2,1,1000 },{ 3,4,299 },{ 2,4,200 },{2,4,100},{3,2,300},{3,2,6} };
+	grid1.clear();
+	grid1.resize(6);
+	for (size_t i = 0; i < 6; i++) {
+		grid1[i].resize(3);
+		for (size_t j = 0; j < 3; j++)
+			grid1[i][j] = gridArray16[i][j];
+	}
+	cout << endl;
+	assert(PrimMinimumSpanningTree(4, grid1, 2) == 1106);
+
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -2963,7 +2997,6 @@ void TestGraph()
 	generate(data.begin(), data.end(), [n = 1]()mutable{return n++; });
 	Graph<long> graph(data);
 	shared_ptr<Vertex<long>> v1 = graph.GetVertex(1);
-	assert(v1);
 	assert(graph.HasVertex(1));
 	assert(graph.HasVertex(2));
 	assert(graph.HasVertex(3));
@@ -2972,16 +3005,12 @@ void TestGraph()
 
 	assert(!v1->HasNeighbours());
 	shared_ptr<Vertex<long>> v2 = graph.GetVertex(2);
-	assert(v2);
 	assert(!v2->HasNeighbours());
 	shared_ptr<Vertex<long>> v3 = graph.GetVertex(3);
-	assert(v3);
 	assert(!v3->HasNeighbours());
 	shared_ptr<Vertex<long>> v4 = graph.GetVertex(4);
-	assert(v4);
 	assert(!v4->HasNeighbours());
 	shared_ptr<Vertex<long>> v5 = graph.GetVertex(5);
-	assert(v5);
 	assert(!v5->HasNeighbours());
 
 	graph.AddUndirectedEdge(v1, v2, 1);
@@ -3008,6 +3037,11 @@ void TestGraph()
 	graph.Print(v1);
 	graph.Print(v2);
 	graph.Print(v3);
+
+	graph.Remove(3);
+	assert(!graph.HasVertex(3));
+	assert(!v2->HasNeighbour(v3));
+	assert(!v5->HasNeighbour(v3));
 }
 void parentheses(vector<string> &result, string &str, size_t index, long left, long right)
 {
@@ -8212,6 +8246,31 @@ int kruskals(int nodes, vector<long>& from, vector<long>& to, vector<long>& weig
 		}
 	}
 	return sum;
+}
+// https://www.hackerrank.com/challenges/primsmstsub/problem
+// https://en.wikipedia.org/wiki/Prim%27s_algorithm
+// https://www.geeksforgeeks.org/prims-algorithm-using-priority_queue-stl/
+// 2 cases with 1000 vertices and 10,000 edges failed
+size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>>& edges, long start)
+{
+	Graph<long> graph;
+	for (size_t i = 0; i < edges.size(); i++) {
+		shared_ptr<Vertex<long>> v1 = graph.GetVertex(edges[i][0]);
+		shared_ptr<Vertex<long>> v2 = graph.GetVertex(edges[i][1]);
+		if (!v1)
+			v1 = make_shared<Vertex<long>>(edges[i][0]);
+		if (!v2)
+			v2 = make_shared<Vertex<long>>(edges[i][1]);
+		graph.AddUndirectedEdge(v1, v2, edges[i][2]);
+	}
+	shared_ptr<Vertex<long>> startVertex = graph.GetVertex(start);
+	assert(startVertex);
+	for (size_t i = 0; i < nodes; i++) {
+		shared_ptr<Vertex<long>> v = graph.GetVertex(i+1);
+		assert(v);
+		graph.Print(v);
+	}
+	return graph.PrimMinimumSpanningTree(startVertex);
 }
 size_t postmanProblem()
 {

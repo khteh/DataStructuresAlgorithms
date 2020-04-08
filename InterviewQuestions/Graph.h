@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <set>
+#include <numeric>
 #include "Vertex.h"
 using namespace std;
 template<class T>
@@ -18,6 +19,7 @@ public:
 	bool HasVertex(T);
 	shared_ptr<Vertex<T>> GetVertex(T);
 	bool Remove(T);
+	size_t PrimMinimumSpanningTree(shared_ptr<Vertex<T>>);
 	void Print(shared_ptr<Vertex<T>>);
 private:
 	map<T, shared_ptr<Vertex<T>>> vertices_;

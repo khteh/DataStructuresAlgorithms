@@ -18,6 +18,7 @@ Graph<T>::Graph(vector<T>& data)
 template<class T>
 Graph<T>::~Graph()
 {
+	vertices_.clear();
 }
 template<class T>
 size_t Graph<T>::Count()
@@ -39,11 +40,19 @@ shared_ptr<Vertex<T>> Graph<T>::AddVertex(T tag)
 template<class T>
 void Graph<T>::AddDirectedEdge(shared_ptr<Vertex<T>> from, shared_ptr<Vertex<T>> to, long cost)
 {
+	if (vertices_.find(from->GetTag()) == vertices_.end())
+		vertices_.emplace(from->GetTag(), from);
+	if (vertices_.find(to->GetTag()) == vertices_.end())
+		vertices_.emplace(to->GetTag(), to);
 	from->AddNeighbour(to, cost);
 }
 template<class T>
 void Graph<T>::AddUndirectedEdge(shared_ptr<Vertex<T>> from, shared_ptr<Vertex<T>> to, long cost)
 {
+	if (vertices_.find(from->GetTag()) == vertices_.end())
+		vertices_.emplace(from->GetTag(), from);
+	if (vertices_.find(to->GetTag()) == vertices_.end())
+		vertices_.emplace(to->GetTag(), to);
 	from->AddNeighbour(to, cost);
 	to->AddNeighbour(from, cost);
 }
@@ -82,4 +91,50 @@ void Graph<T>::Print(shared_ptr<Vertex<T>> vertex)
 	bool space = false;
 	for (vector<shared_ptr<Vertex<T>>>::iterator it = neighbours.begin(); it != neighbours.end(); *it++, space = true)
 		cout << (space ? " " : "") << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << (*it)->GetTag() << " [" << previous->GetCost(*it) << "] " << endl;
+}
+// https://www.hackerrank.com/challenges/primsmstsub/problem
+// https://en.wikipedia.org/wiki/Prim%27s_algorithm
+// https://www.geeksforgeeks.org/prims-algorithm-using-priority_queue-stl/
+// 2 cases with 1000 vertices and 10,000 edges failed
+template<class T>
+size_t Graph<T>::PrimMinimumSpanningTree(shared_ptr<Vertex<T>> start)
+{
+	// Create a priority queue to store vertices that are part of MST.
+	multimap<size_t, shared_ptr<Vertex<T>>> priorityQueue;
+	// Create a vector for keys and initialize all keys as infinite (INF) 
+	map<T, T> keys;
+
+	// To store parent array which in turn store MST 
+	//vector<shared_ptr<Vertex<T>>> parents(vertices_.size(), nullptr);
+	map<T, shared_ptr<Vertex<T>>> parents;
+
+	// To keep track of vertices included in MST 
+	map<T, bool> inMST;
+
+	// Insert source itself in priority queue and initialize its key as 0. 
+	priorityQueue.emplace(0, start);
+	keys.emplace(start->GetTag(), 0);
+	while (!priorityQueue.empty()) {
+		pair<size_t, shared_ptr<Vertex<long>>> entry = *(priorityQueue.begin());
+		shared_ptr<Vertex<long>> u = entry.second;
+		priorityQueue.erase(entry.first);
+		inMST[u->GetTag()] = true; // Include vertex in MST
+		map<shared_ptr<Vertex<T>>, long> neighbours = u->GetNeighboursWithCost();
+		for (map<shared_ptr<Vertex<T>>, long>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+			//  If v is not in MST and weight of (u,v) is smaller than current key of v 
+			if (!inMST[it->first->GetTag()] && (keys.find(it->first->GetTag()) == keys.end() || keys[it->first->GetTag()] > it->second))
+			{
+				// Updating key of v 
+				keys[it->first->GetTag()] = it->second;
+				priorityQueue.emplace(keys[it->first->GetTag()], it->first);
+				//parents[it->first->GetTag()] = u;
+				parents.emplace(it->first->GetTag(), u);
+			}
+		}
+	}
+	// Print edges of MST using parent array
+	for (map<T, shared_ptr<Vertex<T>>>::iterator it = parents.begin(); it != parents.end(); it++)
+		cout << it->second->GetTag() << " - " << it->first << endl;
+	size_t sum = accumulate(keys.begin(), keys.end(), 0, [](size_t value, const map<T, T>::value_type& p) { return value + p.second; });
+	return sum;
 }

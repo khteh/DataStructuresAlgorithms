@@ -316,4 +316,5 @@ long calculateMedian(vector<long>&);
 string timeInWords(int, int);
 size_t beautifulQuadruples(int, int, int, int);
 int kruskals(int, vector<long>&, vector<long>&, vector<long>&);
+size_t PrimMinimumSpanningTree(size_t, vector<vector<long>>&, long);
 size_t postmanProblem();
