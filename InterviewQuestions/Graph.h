@@ -20,6 +20,7 @@ public:
 	shared_ptr<Vertex<T>> GetVertex(T);
 	bool Remove(T);
 	size_t PrimMinimumSpanningTree(shared_ptr<Vertex<T>>);
+	void UnbeatenPath(T, vector<T>&);
 	void Print(shared_ptr<Vertex<T>>);
 private:
 	map<T, shared_ptr<Vertex<T>>> vertices_;

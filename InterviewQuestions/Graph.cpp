@@ -85,8 +85,7 @@ void Graph<T>::Print(shared_ptr<Vertex<T>> vertex)
 	string uni = "-->";
 	string multi = "<-->";
 	vector<shared_ptr<Vertex<T>>> neighbours = vertex->GetNeighbours();
-	if (neighbours.size() > 0)
-		cout << vertex->GetTag();
+	cout << vertex->GetTag();
 	shared_ptr<Vertex<T>> previous = vertex;
 	bool space = false;
 	for (vector<shared_ptr<Vertex<T>>>::iterator it = neighbours.begin(); it != neighbours.end(); *it++, space = true)
@@ -137,4 +136,34 @@ size_t Graph<T>::PrimMinimumSpanningTree(shared_ptr<Vertex<T>> start)
 		cout << it->second->GetTag() << " - " << it->first << endl;
 	size_t sum = accumulate(keys.begin(), keys.end(), 0, [](size_t value, const map<T, T>::value_type& p) { return value + p.second; });
 	return sum;
+}
+// https://www.hackerrank.com/challenges/rust-murderer/problem
+// 3/7 test cases failed :(
+template<class T>
+void Graph<T>::UnbeatenPath(T start, vector<T>& paths)
+{
+	for (T destination = 1; destination <= vertices_.size(); destination++) {
+		shared_ptr<Vertex<T>> v = GetVertex(start);
+		if (destination == start)
+			continue;
+		size_t count = 0;
+		for (T hop = start + 1; ; ) {
+			if (!v->HasNeighbour(destination)) {
+				count++;
+				break;
+			}
+			if (!v->HasNeighbour(hop)) {
+				count++;
+				v = GetVertex(hop);
+			}
+			if (++hop > vertices_.size())
+				hop = 1;
+			if (hop == destination) {
+				if (!v->HasNeighbour(hop))
+					count++;
+				break;
+			}
+		}
+		paths.push_back(count);
+	}
 }

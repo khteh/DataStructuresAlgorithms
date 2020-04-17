@@ -120,6 +120,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "https://en.wikipedia.org/wiki/Machine_epsilon: Float: " << numeric_limits<float>::epsilon() << ", Double: " << numeric_limits<double>::epsilon() << endl;
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
+	cout << "numeric_limits<int>::max(): " << numeric_limits<int>::max() << endl;
 	a.resize(10);
 	generate(a.begin(), a.end(), [n = 1]()mutable{return n++; });
 	for (size_t i = 0; i < a.size(); i++)
@@ -643,6 +644,20 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(fibonacci(7) == 13);
 	assert(fibonacci(8) == 21);
 	assert(fibonacci(9) == 34);
+	assert(fibonacciModified(0, 1, 4) == "5");
+	assert(fibonacciModified(0, 1, 5) == "27");
+	assert(fibonacciModified(0, 1, 6) == "734");
+	assert(fibonacciModified(0, 1, 7) == "538783");
+	assert(fibonacciModified(0, 1, 8) == "290287121823");
+	assert(fibonacciModified(2, 0, 0) == "2");
+	assert(fibonacciModified(2, 0, 1) == "0");
+	assert(fibonacciModified(2, 0, 2) == "2");
+	assert(fibonacciModified(2, 0, 3) == "4");
+	assert(fibonacciModified(2, 0, 4) == "18");
+	assert(fibonacciModified(2, 0, 5) == "328");
+	assert(fibonacciModified(2, 0, 6) == "107602");
+	assert(fibonacciModified(2, 0, 7) == "11578190732");
+	assert(fibonacciModified(2, 0, 11) == "104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308");
 	ostringstream oss;
 	unsigned long long factorialResult = factorial(26);
 	cout << "26!: " << setiosflags(ios::fixed) << factorialResult << endl;
@@ -956,6 +971,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(i ==  0xfeedbeef);
 	cout << "0 + 0xfeedbeef = 0x" << hex << i << dec << endl;
 
+	assert(NumberStringSum(string("1234567890"), string("9876543210")) == "11111111100");
+	assert(NumberStringMultiplication(string("123456"), string("654321")) == "80779853376");
+	assert(NumberStringMultiplication(string("456789"), string("987654")) == "451149483006");
 	for (i = 0; i < 64; i++)
 		mask |= (1 << i);
 	cout << "mask: " << hex << mask << dec << endl << endl;
@@ -1971,6 +1989,37 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << endl;
 	assert(PrimMinimumSpanningTree(4, grid1, 2) == 1106);
 
+	long gridArray17[3][2] = { { 1,2 },{ 2,3 },{ 1,4 } };
+	grid1.clear();
+	grid1.resize(3);
+	for (size_t i = 0; i < 3; i++) {
+		grid1[i].resize(2);
+		for (size_t j = 0; j < 2; j++)
+			grid1[i][j] = gridArray17[i][j];
+	}
+	cout << endl;
+	a.clear();
+	UnbeatenPaths(4, grid1, 1, a);
+	assert(a.size() == 3);
+	assert(a[0] == 3);
+	assert(a[1] == 1);
+	assert(a[2] == 2);
+	long gridArray18[2][2] = { { 1,2 },{ 2,3 } };
+	grid1.clear();
+	grid1.resize(2);
+	for (size_t i = 0; i < 2; i++) {
+		grid1[i].resize(2);
+		for (size_t j = 0; j < 2; j++)
+			grid1[i][j] = gridArray18[i][j];
+	}
+	cout << endl;
+	a.clear();
+	UnbeatenPaths(4, grid1, 2, a);
+	assert(a.size() == 3);
+	assert(a[0] == 2);
+	assert(a[1] == 2);
+	assert(a[2] == 1);
+
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
@@ -2519,7 +2568,35 @@ void copy_on_write_string()
 }
 long fibonacci(long n)
 {
+	// Index: 0 1 2 3
+	// Value: 0 1 1 2
 	return (n <= 1) ? n : fibonacci(n - 2) + fibonacci(n - 1);
+}
+// https://www.hackerrank.com/challenges/fibonacci-modified/problem
+// Timeout!
+string fibonacciModified(long t1, long t2, long n)
+{
+	// Index: 0 1 2 3 4 5  6   7	  8
+	// Value: 0 1 1 2 5 27 734 538783 ...
+	ostringstream oss;
+	string result = "";
+	if (n == 0) {
+		oss << t1;
+		return oss.str();
+	}
+	else if (n == 1) {
+		oss << t2;
+		return oss.str();
+	} else if (n <= 2) {
+		oss << t1 + t2 * t2;
+		result = oss.str();
+	} else {
+		string s1 = fibonacciModified(t1, t2, n - 2);
+		string s2 = fibonacciModified(t1, t2, n - 1);
+		string s3 = NumberStringMultiplication(s2, s2);
+		result = NumberStringSum(s1, s3);
+	}
+	return result;
 }
 // http://web2.0calc.com/
 // 64-bit max is 18446744073709551615
@@ -4547,6 +4624,125 @@ long AddWithoutArithmetic(long sum, long carry)
 	long sum1 = sum ^ carry;
 	long carry1 = (sum & carry) << 1;
 	return AddWithoutArithmetic(sum1, carry1);
+}
+// Function for finding sum of larger numbers 
+string NumberStringSum(string& str1, string& str2)
+{
+	// Before proceeding further, make sure length of str2 is larger. 
+	if (str1.length() > str2.length())
+		swap(str1, str2);
+
+	// Take an empty string for storing result 
+	string str = "";
+
+	// Calculate length of both string 
+	int n1 = str1.length(), n2 = str2.length();
+	int diff = n2 - n1;
+
+	// Initially take carry zero 
+	int carry = 0;
+
+	// Traverse from end of both strings 
+	for (int i = n1 - 1; i >= 0; i--)
+	{
+		// Do school mathematics, compute sum of 
+		// current digits and carry 
+		int sum = ((str1[i] - '0') +
+			(str2[i + diff] - '0') +
+			carry);
+		str.push_back(sum % 10 + '0');
+		carry = sum / 10;
+	}
+
+	// Add remaining digits of str2[] 
+	for (int i = n2 - n1 - 1; i >= 0; i--)
+	{
+		int sum = ((str2[i] - '0') + carry);
+		str.push_back(sum % 10 + '0');
+		carry = sum / 10;
+	}
+
+	// Add remaining carry 
+	if (carry)
+		str.push_back(carry + '0');
+
+	// reverse resultant string 
+	reverse(str.begin(), str.end());
+	return str;
+}
+// Multiplies str1 and str2, and prints result. 
+string NumberStringMultiplication(string& num1, string& num2)
+{
+	int len1 = num1.size();
+	int len2 = num2.size();
+	if (len1 == 0 || len2 == 0)
+		return "0";
+
+	// will keep the result number in vector 
+	// in reverse order 
+	vector<int> result(len1 + len2, 0);
+
+	// Below two indexes are used to find positions 
+	// in result.  
+	int i_n1 = 0;
+	int i_n2 = 0;
+
+	// Go from right to left in num1 
+	for (int i = len1 - 1; i >= 0; i--)
+	{
+		int carry = 0;
+		int n1 = num1[i] - '0';
+
+		// To shift position to left after every 
+		// multiplication of a digit in num2 
+		i_n2 = 0;
+
+		// Go from right to left in num2              
+		for (int j = len2 - 1; j >= 0; j--)
+		{
+			// Take current digit of second number 
+			int n2 = num2[j] - '0';
+
+			// Multiply with current digit of first number 
+			// and add result to previously stored result 
+			// at current position.  
+			int sum = n1 * n2 + result[i_n1 + i_n2] + carry;
+
+			// Carry for next iteration 
+			carry = sum / 10;
+
+			// Store result 
+			result[i_n1 + i_n2] = sum % 10;
+
+			i_n2++;
+		}
+
+		// store carry in next cell 
+		if (carry > 0)
+			result[i_n1 + i_n2] += carry;
+
+		// To shift position to left after every 
+		// multiplication of a digit in num1. 
+		i_n1++;
+	}
+
+	// ignore '0's from the right 
+	int i = result.size() - 1;
+	while (i >= 0 && result[i] == 0)
+		i--;
+
+	// If all were '0's - means either both or 
+	// one of num1 or num2 were '0' 
+	if (i == -1)
+		return "0";
+
+	// generate the result string 
+	string s = "";
+
+	while (i >= 0)
+		s += std::to_string(result[i--]);
+
+	return s;
 }
 // http://www.cplusplus.com/reference/cstdlib/rand/
 // A typical way to generate trivial pseudo-random numbers in a determined range using rand is to use 
@@ -8272,8 +8468,24 @@ size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>>& edges, long s
 	}
 	return graph.PrimMinimumSpanningTree(startVertex);
 }
-size_t postmanProblem()
+// https://www.hackerrank.com/challenges/rust-murderer/problem
+// 3/7 test cases failed :(
+void UnbeatenPaths(size_t nodes, vector<vector<long>>& edges, long start, vector<long>& paths)
 {
 	Graph<long> graph;
-	return 0;
+	for (size_t i = 1; i <= nodes; i++)
+		graph.AddVertex(i);
+	for (size_t i = 0; i < edges.size(); i++) {
+		shared_ptr<Vertex<long>> v1 = graph.GetVertex(edges[i][0]);
+		shared_ptr<Vertex<long>> v2 = graph.GetVertex(edges[i][1]);
+		assert(v1);
+		assert(v2);
+		graph.AddUndirectedEdge(v1, v2, 0);
+	}
+	for (size_t i = 0; i < nodes; i++) {
+		shared_ptr<Vertex<long>> v = graph.GetVertex(i + 1);
+		assert(v);
+		graph.Print(v);
+	}
+	graph.UnbeatenPath(start, paths);
 }
