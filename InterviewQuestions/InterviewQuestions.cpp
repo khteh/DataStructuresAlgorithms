@@ -2578,25 +2578,14 @@ string fibonacciModified(long t1, long t2, long n)
 {
 	// Index: 0 1 2 3 4 5  6   7	  8
 	// Value: 0 1 1 2 5 27 734 538783 ...
-	ostringstream oss;
-	string result = "";
-	if (n == 0) {
-		oss << t1;
-		return oss.str();
-	}
-	else if (n == 1) {
-		oss << t2;
-		return oss.str();
-	} else if (n <= 2) {
-		oss << t1 + t2 * t2;
-		result = oss.str();
-	} else {
-		string s1 = fibonacciModified(t1, t2, n - 2);
-		string s2 = fibonacciModified(t1, t2, n - 1);
-		string s3 = NumberStringMultiplication(s2, s2);
-		result = NumberStringSum(s1, s3);
-	}
-	return result;
+	if (n == 0)
+		return to_string(t1);
+	else if (n == 1)
+		return to_string(t2);
+	string s1 = fibonacciModified(t1, t2, n - 2);
+	string s2 = fibonacciModified(t1, t2, n - 1);
+	string s3 = NumberStringMultiplication(s2, s2);
+	return NumberStringSum(s1, s3);
 }
 // http://web2.0calc.com/
 // 64-bit max is 18446744073709551615
