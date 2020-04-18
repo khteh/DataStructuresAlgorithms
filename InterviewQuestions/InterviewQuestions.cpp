@@ -972,6 +972,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "0 + 0xfeedbeef = 0x" << hex << i << dec << endl;
 
 	assert(NumberStringSum(string("1234567890"), string("9876543210")) == "11111111100");
+	assert(NumberStringMultiplication(string("-4"), string("5")) == "-20");
+	assert(NumberStringMultiplication(string("3"), string("-4")) == "-12");
+	assert(NumberStringMultiplication(string("-7"), string("-8")) == "56");
 	assert(NumberStringMultiplication(string("123456"), string("654321")) == "80779853376");
 	assert(NumberStringMultiplication(string("456789"), string("987654")) == "451149483006");
 	for (i = 0; i < 64; i++)
@@ -4662,30 +4665,34 @@ string NumberStringSum(string& str1, string& str2)
 // Multiplies str1 and str2, and prints result. 
 string NumberStringMultiplication(string& num1, string& num2)
 {
+	if (num1.empty() && !num2.empty())
+		return num2;
+	else if (!num1.empty() && num2.empty())
+		return num1;
+	else if (num1.empty() && num2.empty())
+		return "";
+	bool isNegative = (num1[0] == '-' && num2[0] != '-') || (num1[0] != '-' && num2[0] == '-');
+	if (num1[0] == '-')
+		num1 = num1.substr(1);
+	if (num2[0] == '-')
+		num2 = num2.substr(1);
 	int len1 = num1.size();
 	int len2 = num2.size();
 	if (len1 == 0 || len2 == 0)
 		return "0";
 
-	// will keep the result number in vector 
-	// in reverse order 
-	vector<int> result(len1 + len2, 0);
+	// will keep the result number in vector in reverse order 
+	vector<long> result(len1 + len2, 0);
 
-	// Below two indexes are used to find positions 
-	// in result.  
-	int i_n1 = 0;
-	int i_n2 = 0;
-
+	// Below two indexes are used to find positions in result.  
+	size_t i_n1 = 0, i_n2 = 0;
 	// Go from right to left in num1 
 	for (int i = len1 - 1; i >= 0; i--)
 	{
 		int carry = 0;
 		int n1 = num1[i] - '0';
-
-		// To shift position to left after every 
-		// multiplication of a digit in num2 
+		// To shift position to left after every multiplication of a digit in num2 
 		i_n2 = 0;
-
 		// Go from right to left in num2              
 		for (int j = len2 - 1; j >= 0; j--)
 		{
@@ -4710,28 +4717,23 @@ string NumberStringMultiplication(string& num1, string& num2)
 		if (carry > 0)
 			result[i_n1 + i_n2] += carry;
 
-		// To shift position to left after every 
-		// multiplication of a digit in num1. 
+		// To shift position to left after every multiplication of a digit in num1. 
 		i_n1++;
 	}
-
 	// ignore '0's from the right 
 	int i = result.size() - 1;
 	while (i >= 0 && result[i] == 0)
 		i--;
-
-	// If all were '0's - means either both or 
-	// one of num1 or num2 were '0' 
+	// If all were '0's - means either both or one of num1 or num2 were '0' 
 	if (i == -1)
 		return "0";
-
 	// generate the result string 
-	string s = "";
-
+	ostringstream oss;
+	if (isNegative)
+		oss << '-';
 	while (i >= 0)
-		s += std::to_string(result[i--]);
-
-	return s;
+		oss << result[i--];
+	return oss.str();
 }
 // http://www.cplusplus.com/reference/cstdlib/rand/
 // A typical way to generate trivial pseudo-random numbers in a determined range using rand is to use 
