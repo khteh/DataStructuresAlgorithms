@@ -1988,8 +1988,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(from1.size() == 45);
 	assert(to1.size() == 45);
 	assert(weights1.size() == 45);
-//	long lowestPathCost = getLowestPathCost(10, from1, to1, weights1);
-//	assert(lowestPathCost == 1196);
+	long lowestPathCost = getLowestPathCost(10, from1, to1, weights1);
+	assert(lowestPathCost == 1196);
 	vector<vector<size_t>> ladders, snakes;
 	size_t gridArray12[2][2] = { { 3, 54}, {37, 100} };
 	ladders.clear();
@@ -8549,6 +8549,7 @@ void UnbeatenPaths(size_t nodes, vector<vector<long>>& edges, long start, vector
 	graph.UnbeatenPath(start, paths);
 }
 // https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
+// Timeout! for test cases with 50000 nodes
 long getLowestPathCost(size_t g_nodes, vector<long>& g_from, vector<long>& g_to, vector<long>& g_weight)
 {
 	// Breadth-First-Search algorithm
@@ -8560,17 +8561,15 @@ long getLowestPathCost(size_t g_nodes, vector<long>& g_from, vector<long>& g_to,
 		shared_ptr<Vertex<long>> v2 = graph.GetVertex(g_to[i]);
 		assert(v1);
 		assert(v2);
-		//graph.AddUndirectedEdge(v1, v2, g_weight[i]);
-		graph.AddDirectedEdge(v1, v2, g_weight[i]);
+		graph.AddUndirectedEdge(v1, v2, g_weight[i]);
 	}
 	for (size_t i = 1; i <= g_nodes; i++)
 		graph.Print(graph.GetVertex(i));
 	cout << endl;
-	set<long> costs;
-	map<long, string> paths;
-	graph.GetPathsCosts1(paths, costs, graph.GetVertex(1), graph.GetVertex(g_nodes));
-	for (map<long, string>::iterator it = paths.begin(); it != paths.end(); it++)
-		cout << it->first << ": " << it->second << endl;
-	long cost = *min_element(costs.begin(), costs.end());
+	set<shared_ptr<Vertex<long>>> spt;
+	long cost = graph.GetPathsCosts(spt, graph.GetVertex(1), graph.GetVertex(g_nodes));
+	cout << "Vertex\tDistance from Source" << endl;
+	for (set<shared_ptr<Vertex<long>>>::iterator it = spt.begin(); it != spt.end(); it++)
+		cout << (*it)->GetTag() << "\t" << (*it)->GetTotalCost() << endl;
 	return cost;
 }

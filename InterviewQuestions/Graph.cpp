@@ -268,60 +268,41 @@ void Graph<T>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<T>>>>& result, s
 	}
 }
 // https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
+// Timeout! for test cases with 50000 nodes
 template<class T>
-void Graph<T>::GetPathsCosts1(map<long, string>& paths, set<long>& costs, shared_ptr<Vertex<T>>& start, shared_ptr<Vertex<T>>& destination)
+long Graph<T>::GetPathsCosts(set<shared_ptr<Vertex<T>>>& spt, shared_ptr<Vertex<T>> vertex, shared_ptr<Vertex<T>> destination)
 {
-	if (start) {
-		unsigned long level = 0;
-		vector<shared_ptr<Vertex<T>>> vertices;
-		vertices.push_back(start);
-		map<size_t, vector<shared_ptr<Vertex<T>>>> result;
-		map<long, long> backtrack;
-		result.emplace(level, vertices);
-		while (!vertices.empty()) {
-			vertices.clear();
-			for (vector<shared_ptr<Vertex<T>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++) {
-				if (*it) {
-					vector<shared_ptr<Vertex<T>>> neighbours = (*it)->GetNeighbours();
-					for (vector<shared_ptr<Vertex<T>>>::iterator it1 = neighbours.begin(); it1 != neighbours.end(); it1++) {
-						long cost = (*it)->GetTotalCost();
-						long cost1 = (*it)->GetCost(*it1);
-						long nextHopCost = cost1 - cost;
-						long newTotalCost = nextHopCost > 0 ? cost + nextHopCost : cost;
-						(*it1)->SetTotalCost(newTotalCost);
-						if (**it1 == *destination) {
-							costs.insert((*it1)->GetTotalCost());
-							ostringstream oss;
-							oss << (*it)->GetPath() << "," << (*it1)->GetTag();
-							paths.emplace((*it1)->GetTotalCost(), oss.str());
-							continue;
-						}
-						if (level > 0) { // Don't insert the parents. This happens for UnDirected Graph
-							bool isBackPointer = false;
-							for (vector<shared_ptr<Vertex<T>>>::iterator it2 = result[level - 1].begin(); it2 != result[level - 1].end(); it2++)
-								if (*it2 == *it1) {
-									isBackPointer = true;
-									break;
-								}
-							if (!isBackPointer) {
-								ostringstream oss;
-								oss << (*it)->GetPath() << "," << (*it1)->GetTag();
-								(*it1)->SetPath(oss.str());
-								vertices.push_back(*it1);
-							}
-						} else {
-							ostringstream oss;
-							oss << (*it)->GetPath() << "," << (*it1)->GetTag();
-							(*it1)->SetPath(oss.str());
-						}
-					}
-					if (level == 0)
-						vertices.insert(vertices.end(), neighbours.begin(), neighbours.end());
-				}
-			}
-			level++;
-			if (!vertices.empty())
-				result.emplace(level, vertices);
+	set<shared_ptr<Vertex<T>>> vertices;
+	vertex->SetTotalCost(0);
+	for (; vertex && destination && vertex != destination;) {
+		spt.emplace(vertex);
+		// Update dist value of the adjacent vertices of the picked vertex. 
+		vector<shared_ptr<Vertex<T>>> neighbours = vertex->GetNeighbours();
+		for (vector<shared_ptr<Vertex<T>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+			// Update dist[v] only if it:
+			// (1) is not in sptSet
+			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
+			// (3) and total weight of path from src to v through u is smaller than current value of dist[v]
+			long cost = vertex->GetTotalCost();
+			long cost1 = vertex->GetCost(*it);
+			long nextHopCost = cost1 - cost;
+			long newTotalCost = nextHopCost > 0 ? cost + nextHopCost : cost;
+			if (spt.find(*it) == spt.end() && newTotalCost < (*it)->GetTotalCost())
+				(*it)->SetTotalCost(newTotalCost);
+			if (spt.find(*it) == spt.end())
+				vertices.insert(*it);
 		}
+		vertex = nullptr;
+		long min = numeric_limits<long>::max();
+		for (set<shared_ptr<Vertex<T>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
+			if ((*it)->GetTotalCost() < min) {
+				min = (*it)->GetTotalCost();
+				vertex = *it;
+			}
+		if (vertex)
+			vertices.erase(vertex);
 	}
+	if (vertex)
+		spt.emplace(vertex);
+	return vertex ? vertex->GetTotalCost() : -1;
 }

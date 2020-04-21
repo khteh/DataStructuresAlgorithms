@@ -25,7 +25,7 @@ public:
 	long Dijkstra(T, T);
 	void UnbeatenPath(T, vector<T>&);
 	void GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<T>>>>&, shared_ptr<Vertex<T>>&);
-	void GetPathsCosts1(map<long, string>&, set<long>&, shared_ptr<Vertex<T>>&, shared_ptr<Vertex<T>>&);
+	long GetPathsCosts(set<shared_ptr<Vertex<T>>>&, shared_ptr<Vertex<T>>, shared_ptr<Vertex<T>>);
 	void Print(shared_ptr<Vertex<T>>);
 private:
 	map<T, shared_ptr<Vertex<T>>> vertices_;
