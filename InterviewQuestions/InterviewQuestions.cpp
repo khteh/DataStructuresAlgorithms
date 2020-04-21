@@ -1988,8 +1988,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(from1.size() == 45);
 	assert(to1.size() == 45);
 	assert(weights1.size() == 45);
-	long lowestPathCost = getLowestPathCost(10, from1, to1, weights1);
-	assert(lowestPathCost == 1196);
+	assert(getLowestPathCost(10, from1, to1, weights1) == 1196);
+
 	vector<vector<size_t>> ladders, snakes;
 	size_t gridArray12[2][2] = { { 3, 54}, {37, 100} };
 	ladders.clear();
@@ -2070,7 +2070,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(a[0] == 2);
 	assert(a[1] == 2);
 	assert(a[2] == 1);
-
+	cout << endl;
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
