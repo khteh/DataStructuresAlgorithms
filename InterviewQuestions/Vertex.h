@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <string>
 using namespace std;
 template<class T>
 class Vertex
@@ -14,6 +15,10 @@ public:
 	virtual ~Vertex();
 	T GetTag() const;
 	long GetCost(shared_ptr<Vertex<T>>);
+	string GetPath();
+	void SetPath(string);
+	long GetTotalCost();
+	void SetTotalCost(long);
 	void AddNeighbour(shared_ptr<Vertex<T>>, long);
 	void RemoveNeighbour(shared_ptr<Vertex<T>>);
 	vector<shared_ptr<Vertex<T>>> GetNeighbours();
@@ -29,5 +34,7 @@ public:
 	bool operator>(Vertex<T>&);
 protected:
 	T tag_;
-	map<shared_ptr<Vertex<T>>, long> neighbours_;
+	long cost_;
+	string path_;
+	map<shared_ptr<Vertex<T>>, long> neighbours_; // neighbours and costs from this vertex to them
 };

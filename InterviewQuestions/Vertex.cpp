@@ -3,17 +3,17 @@
 template class Vertex<long>;
 template<class T>
 Vertex<T>::Vertex()
-	: tag_(T())
+	: tag_(T()), cost_(numeric_limits<T>::max())
 {
 }
 template<class T>
 Vertex<T>::Vertex(T tag)
-	: tag_(tag)
+	: tag_(tag), cost_(numeric_limits<T>::max()), path_(to_string(tag))
 {
 }
 template<class T>
 Vertex<T>::Vertex(T tag, map<shared_ptr<Vertex<T>>, long> neighbours)
-	: tag_(tag), neighbours_(neighbours)
+	: tag_(tag), cost_(numeric_limits<T>::max()), neighbours_(neighbours), path_(to_string(tag))
 {
 }
 template<class T>
@@ -81,7 +81,29 @@ size_t Vertex<T>::NeighbourCount() const
 template<class T>
 long Vertex<T>::GetCost(shared_ptr<Vertex<T>> v)
 {
+	if (v->GetTag() == GetTag())
+		return 0;
 	return neighbours_.find(v) != neighbours_.end() ? neighbours_[v] : -1;
+}
+template<class T>
+string Vertex<T>::GetPath()
+{
+	return path_;
+}
+template<class T>
+void Vertex<T>::SetPath(string path)
+{
+	path_ = path;
+}
+template<class T>
+long Vertex<T>::GetTotalCost()
+{
+	return cost_;
+}
+template<class T>
+void Vertex<T>::SetTotalCost(long cost)
+{
+	cost_ = cost;
 }
 template<class T>
 Vertex<T>& Vertex<T>::operator=(Vertex<T>& rhs)

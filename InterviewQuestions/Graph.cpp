@@ -98,7 +98,7 @@ void Graph<T>::Print(shared_ptr<Vertex<T>> vertex)
 template<class T>
 size_t Graph<T>::PrimMinimumSpanningTree(shared_ptr<Vertex<T>> start)
 {
-	// Create a priority queue to store vertices that are part of MST.
+	// Create a priority queue to store vertices that are part of MST (Minimum Spanning Tree).
 	multimap<size_t, shared_ptr<Vertex<T>>> priorityQueue;
 	// Create a vector for keys and initialize all keys as infinite (INF) 
 	map<T, T> keys;
@@ -137,6 +137,72 @@ size_t Graph<T>::PrimMinimumSpanningTree(shared_ptr<Vertex<T>> start)
 	size_t sum = accumulate(keys.begin(), keys.end(), 0, [](size_t value, const map<T, T>::value_type& p) { return value + p.second; });
 	return sum;
 }
+template<class T>
+void Graph<T>::Dijkstra(T source, set<shared_ptr<Vertex<T>>>& spt)// spt: Shortest Path Tree
+{
+	//set<shared_ptr<Vertex<T>>> spt; 
+	set<shared_ptr<Vertex<T>>> vertices;
+	shared_ptr<Vertex<T>> vertex = GetVertex(source);
+	vertex->SetTotalCost(0);
+	for (; vertex;) {
+		spt.emplace(vertex);
+		// Update dist value of the adjacent vertices of the picked vertex. 
+		vector<shared_ptr<Vertex<T>>> neighbours = vertex->GetNeighbours();
+		for (vector<shared_ptr<Vertex<T>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+			// Update dist[v] only if it:
+			// (1) is not in sptSet
+			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
+			// (3) and total weight of path from src to v through u is smaller than current value of dist[v]
+			if (spt.find(*it) == spt.end() && vertex->GetTotalCost() + vertex->GetCost(*it) < (*it)->GetTotalCost())
+				(*it)->SetTotalCost(vertex->GetTotalCost() + vertex->GetCost(*it));
+			if (spt.find(*it) == spt.end())
+				vertices.insert(*it);
+		}
+		vertex = nullptr;
+		long min = numeric_limits<long>::max();
+		for (set<shared_ptr<Vertex<T>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
+			if ((*it)->GetTotalCost() < min) {
+				min = (*it)->GetTotalCost();
+				vertex = *it;
+			}
+		if (vertex)
+			vertices.erase(vertex);
+	}
+}
+template<class T>
+long Graph<T>::Dijkstra(T src, T dest)
+{
+	set<shared_ptr<Vertex<T>>> spt; 
+	set<shared_ptr<Vertex<T>>> vertices;
+	shared_ptr<Vertex<T>> vertex = GetVertex(src);
+	shared_ptr<Vertex<T>> destination = GetVertex(dest);
+	vertex->SetTotalCost(0);
+	for (; vertex && destination && vertex != destination;) {
+		spt.emplace(vertex);
+		// Update dist value of the adjacent vertices of the picked vertex. 
+		vector<shared_ptr<Vertex<T>>> neighbours = vertex->GetNeighbours();
+		for (vector<shared_ptr<Vertex<T>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+			// Update dist[v] only if it:
+			// (1) is not in sptSet
+			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
+			// (3) and total weight of path from src to v through u is smaller than current value of dist[v]
+			if (spt.find(*it) == spt.end() && vertex->GetTotalCost() + vertex->GetCost(*it) < (*it)->GetTotalCost())
+				(*it)->SetTotalCost(vertex->GetTotalCost() + vertex->GetCost(*it));
+			if (spt.find(*it) == spt.end())
+				vertices.insert(*it);
+		}
+		vertex = nullptr;
+		long min = numeric_limits<long>::max();
+		for (set<shared_ptr<Vertex<T>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
+			if ((*it)->GetTotalCost() < min) {
+				min = (*it)->GetTotalCost();
+				vertex = *it;
+			}
+		if (vertex)
+			vertices.erase(vertex);
+	}
+	return vertex ? vertex->GetTotalCost() : -1;
+}
 // https://www.hackerrank.com/challenges/rust-murderer/problem
 // 3/7 test cases failed :(
 template<class T>
@@ -165,5 +231,97 @@ void Graph<T>::UnbeatenPath(T start, vector<T>& paths)
 			}
 		}
 		paths.push_back(count);
+	}
+}
+template<class T>
+void Graph<T>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<T>>>>& result, shared_ptr<Vertex<T>>& start)
+{
+	if (start) {
+		unsigned long level = 0;
+		vector<shared_ptr<Vertex<T>>> vertices;
+		vertices.push_back(start);
+		result.emplace(level, vertices);
+		while (!vertices.empty()) {
+			vertices.clear();
+			for (vector<shared_ptr<Vertex<T>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++) {
+				if (*it) {
+					vector<shared_ptr<Vertex<T>>> neighbours = (*it)->GetNeighbours();
+					if (level > 0) { // Don't insert the parents. This happens for UnDirected Graph
+						for (vector<shared_ptr<Vertex<T>>>::iterator it1 = neighbours.begin(); it1 != neighbours.end(); it1++) {
+							bool isBackPointer = false;
+							for (vector<shared_ptr<Vertex<T>>>::iterator it2 = result[level - 1].begin(); it2 != result[level - 1].end(); it2++)
+								if (*it2 == *it1) {
+									isBackPointer = true;
+									break;
+								}
+							if (!isBackPointer)
+								vertices.push_back(*it1);
+						}
+					} else
+						vertices.insert(vertices.end(), neighbours.begin(), neighbours.end());
+				}
+			}
+			level++;
+			if (!vertices.empty())
+				result.emplace(level, vertices);
+		}
+	}
+}
+// https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
+template<class T>
+void Graph<T>::GetPathsCosts1(map<long, string>& paths, set<long>& costs, shared_ptr<Vertex<T>>& start, shared_ptr<Vertex<T>>& destination)
+{
+	if (start) {
+		unsigned long level = 0;
+		vector<shared_ptr<Vertex<T>>> vertices;
+		vertices.push_back(start);
+		map<size_t, vector<shared_ptr<Vertex<T>>>> result;
+		map<long, long> backtrack;
+		result.emplace(level, vertices);
+		while (!vertices.empty()) {
+			vertices.clear();
+			for (vector<shared_ptr<Vertex<T>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++) {
+				if (*it) {
+					vector<shared_ptr<Vertex<T>>> neighbours = (*it)->GetNeighbours();
+					for (vector<shared_ptr<Vertex<T>>>::iterator it1 = neighbours.begin(); it1 != neighbours.end(); it1++) {
+						long cost = (*it)->GetTotalCost();
+						long cost1 = (*it)->GetCost(*it1);
+						long nextHopCost = cost1 - cost;
+						long newTotalCost = nextHopCost > 0 ? cost + nextHopCost : cost;
+						(*it1)->SetTotalCost(newTotalCost);
+						if (**it1 == *destination) {
+							costs.insert((*it1)->GetTotalCost());
+							ostringstream oss;
+							oss << (*it)->GetPath() << "," << (*it1)->GetTag();
+							paths.emplace((*it1)->GetTotalCost(), oss.str());
+							continue;
+						}
+						if (level > 0) { // Don't insert the parents. This happens for UnDirected Graph
+							bool isBackPointer = false;
+							for (vector<shared_ptr<Vertex<T>>>::iterator it2 = result[level - 1].begin(); it2 != result[level - 1].end(); it2++)
+								if (*it2 == *it1) {
+									isBackPointer = true;
+									break;
+								}
+							if (!isBackPointer) {
+								ostringstream oss;
+								oss << (*it)->GetPath() << "," << (*it1)->GetTag();
+								(*it1)->SetPath(oss.str());
+								vertices.push_back(*it1);
+							}
+						} else {
+							ostringstream oss;
+							oss << (*it)->GetPath() << "," << (*it1)->GetTag();
+							(*it1)->SetPath(oss.str());
+						}
+					}
+					if (level == 0)
+						vertices.insert(vertices.end(), neighbours.begin(), neighbours.end());
+				}
+			}
+			level++;
+			if (!vertices.empty())
+				result.emplace(level, vertices);
+		}
 	}
 }

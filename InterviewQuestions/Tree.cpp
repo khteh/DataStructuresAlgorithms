@@ -313,7 +313,7 @@ size_t Tree<T>::Count()
 	return m_root ? 1 + Count(m_root->Left()) + Count(m_root->Right()) : 0;
 }
 template<class T>
-void Tree<T>::GetNodes(map<unsigned long, vector<shared_ptr<Node<T>>>>& result, long lvl) // Typical Breadth-First-Search algorithm
+void Tree<T>::GetNodes(map<size_t, vector<shared_ptr<Node<T>>>>& result, long lvl) // Typical Breadth-First-Search algorithm
 {
 	unsigned long level = 0;
 	vector<shared_ptr<Node<T>>> nodes;

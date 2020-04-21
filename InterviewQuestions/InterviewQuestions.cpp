@@ -1942,6 +1942,54 @@ int _tmain(int argc, _TCHAR* argv[])
 	weights.push_back(200);
 	assert(kruskals(4, from, to, weights) == 200);
 
+	from.clear();
+	to.clear();
+	weights.clear();
+	from.push_back(1);
+	from.push_back(3);
+	from.push_back(1);
+	from.push_back(4);
+	from.push_back(2);
+	to.push_back(2);
+	to.push_back(5);
+	to.push_back(4);
+	to.push_back(5);
+	to.push_back(3);
+	weights.push_back(60);
+	weights.push_back(70);
+	weights.push_back(120);
+	weights.push_back(150);
+	weights.push_back(80);
+	assert(getLowestPathCost(5, from, to, weights) == 80);
+
+	from.clear();
+	to.clear();
+	weights.clear();
+	from.push_back(1);
+	from.push_back(2);
+	from.push_back(1);
+	from.push_back(3);
+	to.push_back(2);
+	to.push_back(4);
+	to.push_back(3);
+	to.push_back(4);
+	weights.push_back(20);
+	weights.push_back(30);
+	weights.push_back(5);
+	weights.push_back(40);
+	assert(getLowestPathCost(4, from, to, weights) == 30);
+	
+	from.clear();
+	to.clear();
+	weights.clear();
+	vector<long> from1{ 1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,6,6,6,6,7,7,7,8,8,9 };
+	vector<long> to1{ 2,3,4,5,6,7,8,9,10,3,4,5,6,7,8,9,10,4,5,6,7,8,9,10,5,6,7,8,9,10,6,7,8,9,10,7,8,9,10,8,9,10,9,10,10 };
+	vector<long> weights1 { 6337,1594,3766,3645,75,5877,8561,242,6386,3331,4194,8069,3934,101,8536,6963,9303,7639,8512,1330,6458,1180,3913,1565,9488,1369,8066,9439,7510,6833,4215,194,4774,4328,187,1196,200,8743,1433,2933,2069,1974,7349,2351,8423 };
+	assert(from1.size() == 45);
+	assert(to1.size() == 45);
+	assert(weights1.size() == 45);
+//	long lowestPathCost = getLowestPathCost(10, from1, to1, weights1);
+//	assert(lowestPathCost == 1196);
 	vector<vector<size_t>> ladders, snakes;
 	size_t gridArray12[2][2] = { { 3, 54}, {37, 100} };
 	ladders.clear();
@@ -3081,7 +3129,10 @@ void TestGraph()
 	assert(!v4->HasNeighbours());
 	shared_ptr<Vertex<long>> v5 = graph.GetVertex(5);
 	assert(!v5->HasNeighbours());
-
+	assert(v1->GetCost(v1) == 0);
+	assert(v2->GetCost(v2) == 0);
+	assert(v3->GetCost(v3) == 0);
+	assert(v4->GetCost(v4) == 0);
 	graph.AddUndirectedEdge(v1, v2, 1);
 	assert(v1->HasNeighbour(v2));
 	assert(v1->GetCost(v2) == 1);
@@ -3092,21 +3143,41 @@ void TestGraph()
 	assert(v2->GetCost(v3) == 2);
 	assert(v3->HasNeighbour(v2));
 	assert(v3->GetCost(v2) == 2);
-	graph.AddUndirectedEdge(v2, v4, 2);
+	graph.AddUndirectedEdge(v2, v4, 3);
 	assert(v2->HasNeighbour(v4));
-	assert(v2->GetCost(v4) == 2);
+	assert(v2->GetCost(v4) == 3);
 	assert(v4->HasNeighbour(v2));
-	assert(v4->GetCost(v2) == 2);
-	graph.AddUndirectedEdge(v3, v5, 3);
+	assert(v4->GetCost(v2) == 3);
+	graph.AddUndirectedEdge(v3, v5, 4);
 	assert(v3->HasNeighbour(v5));
-	assert(v3->GetCost(v5) == 3);
+	assert(v3->GetCost(v5) == 4);
 	assert(v5->HasNeighbour(v3));
-	assert(v5->GetCost(v3) == 3);
-
+	assert(v5->GetCost(v3) == 4);
+	graph.AddUndirectedEdge(v4, v5, 5);
+	assert(v4->HasNeighbour(v5));
+	assert(v4->GetCost(v5) == 5);
+	assert(v5->HasNeighbour(v4));
+	assert(v5->GetCost(v4) == 5);
 	graph.Print(v1);
 	graph.Print(v2);
 	graph.Print(v3);
-
+	graph.Print(v4);
+	map<size_t, vector<shared_ptr<Vertex<long>>>> vertices; // Get BFS vertices
+	graph.GetBFSNodes(vertices, v1);
+	assert(!vertices.empty());
+	cout << "Graph content by level:" << endl;
+	for (map<size_t, vector<shared_ptr<Vertex<long>>>>::const_iterator it = vertices.begin(); it != vertices.end(); it++) {
+		cout << "Level " << it->first << ": ";
+		for (vector<shared_ptr<Vertex<long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+			cout << (*it1)->GetTag() << " ";
+		cout << endl;
+	}
+	set<shared_ptr<Vertex<long>>> spt; // Shortest Path Tree
+	graph.Dijkstra(1, spt);
+	cout << "Vertex\tDistance from Source" << endl;
+	for (set<shared_ptr<Vertex<long>>>::iterator it = spt.begin(); it != spt.end(); it++)
+		cout << (*it)->GetTag() << "\t" << (*it)->GetTotalCost() << endl;
+	assert(graph.Dijkstra(1, 5) == 7);
 	graph.Remove(3);
 	assert(!graph.HasVertex(3));
 	assert(!v2->HasNeighbour(v3));
@@ -5426,11 +5497,11 @@ void BinaryTreeTests()
 	cout << endl;
 	result.clear();
 
-	map<unsigned long, vector<shared_ptr<Node<long>>>> nodes;
+	map<size_t, vector<shared_ptr<Node<long>>>> nodes;
 	tree.GetNodes(nodes);
 	assert(!nodes.empty());
 	cout << "Binary Tree content by level:" << endl;
-	for (map<unsigned long, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
+	for (map<size_t, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
 		cout << "Level " << it->first << ": ";
 		for (vector<shared_ptr<Node<long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 			cout << (*it1)->Item() << " ";
@@ -5475,7 +5546,7 @@ void BinarySearchTreeTests()
 	cout << "BST tests..." << endl;
 	vector<long> a, b;
 	vector<string> result;
-	map<unsigned long, vector<shared_ptr<Node<long>>>> nodes;
+	map<size_t, vector<shared_ptr<Node<long>>>> nodes;
 	Tree<long> subtree((long)0);
 	subtree.InsertItem(-50);
 	subtree.InsertItem(10);
@@ -5548,7 +5619,7 @@ void BinarySearchTreeTests()
 	tree1.GetNodes(nodes);
 	assert(!nodes.empty());
 	cout << "Binary Search Tree content by level:" << endl;
-	for (map<unsigned long, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
+	for (map<size_t, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
 		cout << "Level " << it->first << ": ";
 		for (vector<shared_ptr<Node<long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 			cout << (*it1)->Item() << " ";
@@ -5639,11 +5710,11 @@ void MinHeapTests()
 	cout << "MinHeap content: " << endl;
 	heap.PrintTree();
 	cout << endl;
-	map<unsigned long, vector<shared_ptr<Node<long>>>> nodes;
+	map<size_t, vector<shared_ptr<Node<long>>>> nodes;
 	heap.GetNodes(nodes);
 	assert(!nodes.empty());
 	cout << "MinHeap content by level:" << endl;
-	for (map<unsigned long, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
+	for (map<size_t, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
 		cout << "Level " << it->first << ": ";
 		for (vector<shared_ptr<Node<long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 			cout << (*it1)->Item() << " ";
@@ -5680,11 +5751,11 @@ void MaxHeapTests()
 	cout << "MaxHeap content: " << endl;
 	heap.PrintTree();
 	cout << endl;
-	map<unsigned long, vector<shared_ptr<Node<long>>>> nodes;
+	map<size_t, vector<shared_ptr<Node<long>>>> nodes;
 	heap.GetNodes(nodes);
 	assert(!nodes.empty());
 	cout << "MaxHeap content by level:" << endl;
-	for (map<unsigned long, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
+	for (map<size_t, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
 		cout << "Level " << it->first << ": ";
 		for (vector<shared_ptr<Node<long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 			cout << (*it1)->Item() << " ";
@@ -5720,11 +5791,11 @@ void MinMaxHeapTests()
 	cout << "MinMaxHeap content: " << endl;
 	heap.PrintTree();
 	cout << endl;
-	map<unsigned long, vector<shared_ptr<Node<long>>>> nodes;
+	map<size_t, vector<shared_ptr<Node<long>>>> nodes;
 	heap.GetNodes(nodes);
 	assert(!nodes.empty());
 	cout << "MinMaxHeap content by level:" << endl;
-	for (map<unsigned long, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
+	for (map<size_t, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++) {
 		cout << "Level " << it->first << ": ";
 		for (vector<shared_ptr<Node<long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 			cout << (*it1)->Item() << " ";
@@ -8476,4 +8547,30 @@ void UnbeatenPaths(size_t nodes, vector<vector<long>>& edges, long start, vector
 		graph.Print(v);
 	}
 	graph.UnbeatenPath(start, paths);
+}
+// https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
+long getLowestPathCost(size_t g_nodes, vector<long>& g_from, vector<long>& g_to, vector<long>& g_weight)
+{
+	// Breadth-First-Search algorithm
+	Graph<long> graph;
+	for (size_t i = 1; i <= g_nodes; i++)
+		graph.AddVertex(i);
+	for (size_t i = 0; i < g_from.size(); i++) {
+		shared_ptr<Vertex<long>> v1 = graph.GetVertex(g_from[i]);
+		shared_ptr<Vertex<long>> v2 = graph.GetVertex(g_to[i]);
+		assert(v1);
+		assert(v2);
+		//graph.AddUndirectedEdge(v1, v2, g_weight[i]);
+		graph.AddDirectedEdge(v1, v2, g_weight[i]);
+	}
+	for (size_t i = 1; i <= g_nodes; i++)
+		graph.Print(graph.GetVertex(i));
+	cout << endl;
+	set<long> costs;
+	map<long, string> paths;
+	graph.GetPathsCosts1(paths, costs, graph.GetVertex(1), graph.GetVertex(g_nodes));
+	for (map<long, string>::iterator it = paths.begin(); it != paths.end(); it++)
+		cout << it->first << ": " << it->second << endl;
+	long cost = *min_element(costs.begin(), costs.end());
+	return cost;
 }

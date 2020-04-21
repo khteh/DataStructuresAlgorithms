@@ -57,7 +57,7 @@ public:
 	virtual void InsertNode(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
 	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T>&, int, int);
 	shared_ptr<Node<T>> FindNode(T);
-	void GetNodes(map<unsigned long, vector<shared_ptr<Node<T>>>>&, long level = -1/* Get nodes of all levels by default*/);
+	void GetNodes(map<size_t, vector<shared_ptr<Node<T>>>>&, long level = -1/* Get nodes of all levels by default*/);
 	shared_ptr<Node<T>> InOrderSuccessor(shared_ptr<Node<T>>);
 	shared_ptr<Node<T>> CommonAncestor(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
 //	shared_ptr<Node<T>> CommonAncestor1(shared_ptr<Node<T>>, shared_ptr<Node<T>>, shared_ptr<Node<T>>); XXX: Fix Me

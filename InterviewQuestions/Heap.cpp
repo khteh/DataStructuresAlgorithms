@@ -205,7 +205,7 @@ void Heap<T>::HeapifyDown(shared_ptr<Node<T>> node)
 					swap(node, node->Right());
 			} else if (MaxDepth(node) > 2) { // Condition 3
 				shared_ptr<Node<T>> min(node);
-				map<unsigned long, vector<shared_ptr<Node<T>>>> nodes;
+				map<size_t, vector<shared_ptr<Node<T>>>> nodes;
 				GetNodes(nodes, 2);
 				assert(!nodes[2].empty());
 				for (vector<shared_ptr<Node<T>>>::iterator it = nodes[2].begin(); it != nodes[2].end(); it++) {
