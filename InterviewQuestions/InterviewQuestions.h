@@ -147,6 +147,7 @@ void OrderedMergedCombinations(set<string>&, string&, string&, string);
 string insertCharAt(char, string, size_t);
 void findDistinct(vector<long>&, vector<long>&);
 void findPrimes(unsigned long, vector<long>&);
+bool isPrime(unsigned long);
 size_t CommonPrimeDivisors(vector<long>&, vector<long>&);
 unsigned long long findMax(vector<unsigned long long> const&);
 void Merge(vector<long> &, vector<long> &);

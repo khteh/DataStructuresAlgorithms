@@ -121,6 +121,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
 	cout << "numeric_limits<int>::max(): " << numeric_limits<int>::max() << endl;
+	cout << "1e9: "<< 1e9 << ", 10e9: " << 10e9 << endl;
 	a.resize(10);
 	generate(a.begin(), a.end(), [n = 1]()mutable{return n++; });
 	for (size_t i = 0; i < a.size(); i++)
@@ -703,6 +704,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
 	cout << endl;
 	
+	assert(!isPrime(1));
+	assert(isPrime(2));
+	assert(isPrime(3));
+	assert(!isPrime(4));
+	assert(isPrime(5));
+	assert(!isPrime(6));
+	assert(isPrime(7));
+	assert(!isPrime(8));
+	assert(!isPrime(9));
+	assert(!isPrime(10));
 	a.clear();
 	b.clear();
 	// 1, 2, 51, 50, 60, 55, 70, 68, 80, 76, 75, 12, 45
@@ -3345,7 +3356,6 @@ void findDistinct(vector<long>& input, vector<long>& output)
 			output.push_back(*it);
 	}
 }
-
 // http://en.wikipedia.org/wiki/Prime_number - Trial division implementation
 void findPrimes(unsigned long n, vector<long>& result)
 {
@@ -3363,6 +3373,18 @@ void findPrimes(unsigned long n, vector<long>& result)
 				result.push_back(i);
 		}
 	}
+}
+// https://en.wikipedia.org/wiki/Primality_test
+bool isPrime(unsigned long n)
+{
+	if (n <= 3)
+		return n > 1;
+	else if (!(n % 2) || !(n % 3))
+		return false;
+	for (size_t i = 5; (i*i) <= n; i += 6)
+		if (!(n % i) || !(n % (i + 2)))
+			return false;
+	return true;
 }
 // https://app.codility.com/programmers/lessons/12-euclidean_algorithm/common_prime_divisors/
 // Correctness: 100%
