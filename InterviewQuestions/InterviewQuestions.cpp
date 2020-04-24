@@ -452,6 +452,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Find occurrances of " << line1 << " in " << line << ": ";
 	copy(indices.begin(), indices.end(), ostream_iterator<size_t>(cout, " "));
 	cout << endl;
+
 	//index = KMPSearch("ABC ABCDAB ABCDABCDABDE", "ABCDABD");
 	//assert(index == 15);
 	assert(bitCount(10) == 2);
@@ -3381,7 +3382,7 @@ bool isPrime(unsigned long n)
 		return n > 1;
 	else if (!(n % 2) || !(n % 3))
 		return false;
-	for (size_t i = 5; (i*i) <= n; i += 6)
+	for (size_t i = 5; (i*i) <= n; i += 6) // 5 7 11
 		if (!(n % i) || !(n % (i + 2)))
 			return false;
 	return true;
@@ -5189,6 +5190,19 @@ void SuffixTreeTests()
 	sTree.InsertString("Amazon");
 	sTree.InsertString("Neha Aman");
 	sTree.InsertString("+6591785484");
+	/*
+						root
+	A     m     a          z  o  n    N    e   h   <sp>
+	m     a     z <sp> n   o  n <5,8> e    h   a    A
+	a     z n   o   A  <7> n <4>      h    a  <sp>  m
+	z n   o <6> n   m     <3>         a  <sp>  A    a
+	o <5> n    <2>  a                <sp>  A   m    n
+	n    <1>        n                 A    m   a    <4>
+	<0>            <3>                m    a   n
+	                                  a	   n   <2>
+						              n   <1>
+						             <0>
+	*/
 	indexes = sTree.GetIndexes("Ama");
 	assert(indexes.size() == 2);
 	cout << "Suffix index of substring \"Ama\": ";
@@ -5221,6 +5235,31 @@ void SuffixTreeTests()
 	sTree.InsertString("abc.yahoo.com");
 	indexes = sTree.GetIndexes("google.com");
 	copy(indexes.begin(), indexes.end(), ostream_iterator<size_t>(cout, " "));
+	cout << endl;
+	sTree.Clear();
+	//set<size_t> substrings;
+	size_t match;
+	sTree.InsertString("abcd");
+	sTree.InsertString("bbca");
+	match = sTree.GetSubstrings(0);
+	assert(match == 2);
+	match = sTree.GetSubstrings(1);
+	assert(match == 3);
+	//copy(substrings.begin(), substrings.end(), ostream_iterator<size_t>(cout, " "));
+	cout << endl;
+	sTree.Clear();
+	sTree.InsertString("abcdefghijkl");
+	sTree.InsertString("bbcabcghijmn");
+	match = sTree.GetSubstrings(0);
+	assert(match == 4);
+	//copy(substrings.begin(), substrings.end(), ostream_iterator<size_t>(cout, " "));
+	cout << endl;
+	sTree.Clear();
+	sTree.InsertString("abcdefghijkl");
+	sTree.InsertString("bbcdemnoijkq");
+	match = sTree.GetSubstrings(0);
+	assert(match == 4);
+	//copy(substrings.begin(), substrings.end(), ostream_iterator<size_t>(cout, " "));
 	cout << endl;
 }
 void TrieTests()

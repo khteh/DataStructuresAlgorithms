@@ -1,8 +1,12 @@
 #pragma once
 #include <map>
+#include <set>
 #include <vector>
 #include <string>
+#include <algorithm>
+#include <numeric>
 #include <assert.h>
+#include <memory>
 using namespace std;
 class SuffixTreeNode;
 
@@ -26,7 +30,7 @@ class SuffixTreeNode;
 class SuffixTree
 {
 private:
-	SuffixTreeNode *m_root;
+	shared_ptr<SuffixTreeNode> m_root;
 public:
 	SuffixTree();
 	SuffixTree(string const &);
@@ -34,6 +38,7 @@ public:
 	void InsertString(string const &);
 	void RemoveString(string const &);
 	const vector<size_t> GetIndexes(string const & s);
+	const size_t GetSubstrings(size_t);
 	void Clear();
 	size_t Count();
 };
@@ -41,12 +46,13 @@ public:
 class SuffixTreeNode
 {
 private:
-	map<char, SuffixTreeNode*> m_children;
+	map<char, shared_ptr<SuffixTreeNode>> m_children;
 	vector<size_t> m_indexes;
 public:
 	~SuffixTreeNode();
 	void InsertString(string const &, size_t);
 	void RemoveString(string const &);
 	const vector<size_t> GetIndexes(string const &);
+	const set<size_t> GetSubstrings();
 	size_t Count();
 };
