@@ -199,23 +199,14 @@ const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
 	copy(m_indices.begin(), m_indices.end(), ostream_iterator<size_t>(oss, ","));
 	string indices = oss.str();
 	map<string, size_t> result;
-	//if (m_char != '\0' && m_children.size() > 1 && m_indices.size() > 1) {
-	if (m_char != '\0' && m_indices.size() > 1) {
-		//&& accumulate(m_indices.begin(), m_indices.end(), true, [first = m_indices[0]](bool acc, int b) {
-		//	return acc && (b == first);
-		//})) {
-		//result.emplace(m_char, oss.str());
+	if (m_char != '\0' && m_indices.size() > 1)
 		result.emplace(indices, 1);
-	}
 	for (map<char, shared_ptr<SuffixTreeNode>>::iterator it = m_children.begin(); it != m_children.end(); it++) {
 		map<string, size_t> tmp = it->second->LongestRepeatedSubstring();
 		for (map<string, size_t>::iterator it1 = tmp.begin(); it1 != tmp.end(); it1++) {
 			if (indices != it1->first && indices.find(it1->first) != string::npos)
 				it1->second++;
 			result[it1->first] += it1->second;
-			//pair<map<string, size_t>::iterator, bool> tmp1 = result.emplace(it1->first, 1);
-			//if (!tmp1.second)
-			//	result[it1->first] += it1->second;
 		}
 	}
 	return result;
