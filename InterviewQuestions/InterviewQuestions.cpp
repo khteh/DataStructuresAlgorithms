@@ -5178,6 +5178,7 @@ void SuffixTreeTests()
 	assert(indices1.size() == 2); // sissippi, sippi
 	indices1 = sTree.GetIndexes("ssi");
 	assert(indices1.size() == 2); // ssissippi, ssippi
+	assert(sTree.LongestRepeatedSubstring() == "issi");
 	sTree.InsertString("sister");
 	indices1 = sTree.GetIndexes("sis");
 	copy(indices1.begin(), indices1.end(), ostream_iterator<size_t>(cout, " "));
@@ -5237,28 +5238,44 @@ void SuffixTreeTests()
 	copy(indexes.begin(), indexes.end(), ostream_iterator<size_t>(cout, " "));
 	cout << endl;
 	sTree.Clear();
+	sTree.InsertString("ABABABA");
+	assert(sTree.LongestRepeatedSubstring() == "ABABA");
+	sTree.Clear();
+	sTree.InsertString("abcd1234cd12");
+	assert(sTree.LongestRepeatedSubstring() == "cd12");
+	sTree.Clear();
+	sTree.InsertString("abcd1234abcd");
+	assert(sTree.LongestRepeatedSubstring() == "abcd");
+	sTree.Clear();
+	sTree.InsertString("abcd12341234");
+	assert(sTree.LongestRepeatedSubstring() == "1234");
+	sTree.Clear();
 	//set<size_t> substrings;
 	size_t match;
 	sTree.InsertString("abcd");
-	sTree.InsertString("bbca");
-	match = sTree.GetSubstrings(0);
-	assert(match == 2);
-	match = sTree.GetSubstrings(1);
-	assert(match == 3);
-	//copy(substrings.begin(), substrings.end(), ostream_iterator<size_t>(cout, " "));
+	sTree.InsertString("adbc", 4);
+	match = sTree.LongestCommonSubstring(0);
+//	assert(match == 2);
+	match = sTree.LongestCommonSubstring(1);
+//	assert(match == 3);
 	cout << endl;
+	sTree.Clear();
+	sTree.InsertString("tabriz");
+	sTree.InsertString("torino", 6);
+	match = sTree.LongestCommonSubstring(0);
+
 	sTree.Clear();
 	sTree.InsertString("abcdefghijkl");
 	sTree.InsertString("bbcabcghijmn");
-	match = sTree.GetSubstrings(0);
-	assert(match == 4);
+	match = sTree.LongestCommonSubstring(0);
+//	assert(match == 4);
 	//copy(substrings.begin(), substrings.end(), ostream_iterator<size_t>(cout, " "));
 	cout << endl;
 	sTree.Clear();
 	sTree.InsertString("abcdefghijkl");
 	sTree.InsertString("bbcdemnoijkq");
-	match = sTree.GetSubstrings(0);
-	assert(match == 4);
+	match = sTree.LongestCommonSubstring(0);
+//	assert(match == 4);
 	//copy(substrings.begin(), substrings.end(), ostream_iterator<size_t>(cout, " "));
 	cout << endl;
 }
