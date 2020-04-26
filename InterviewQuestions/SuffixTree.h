@@ -62,6 +62,5 @@ public:
 	const set<size_t> GetIndexes();
 	const set<size_t> GetIndexes(string const &);
 	const map<string, size_t> LongestRepeatedSubstring();
-	const multimap<char, string> LongestCommonSubstring();
 	size_t Count();
 };

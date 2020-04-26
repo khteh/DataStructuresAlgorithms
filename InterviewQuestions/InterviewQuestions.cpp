@@ -5267,7 +5267,7 @@ void SuffixTreeTests()
 	sTree.InsertString("abcd");
 	sTree.InsertString("adbc", 4);
 	match = sTree.LongestCommonSubstring(0);
-//	assert(match == 2);
+	assert(match == 2);
 	match = sTree.LongestCommonSubstring(1);
 //	assert(match == 3);
 	cout << endl;
@@ -5275,19 +5275,19 @@ void SuffixTreeTests()
 	sTree.InsertString("tabriz");
 	sTree.InsertString("torino", 6);
 	match = sTree.LongestCommonSubstring(0);
-
+	assert(match == 2);
 	sTree.Clear();
 	sTree.InsertString("abcdefghijkl");
-	sTree.InsertString("bbcabcghijmn");
+	sTree.InsertString("bbcabcghijmn", 12); // match "ghij"
 	match = sTree.LongestCommonSubstring(0);
-//	assert(match == 4);
+	assert(match == 4);
 	//copy(substrings.begin(), substrings.end(), ostream_iterator<size_t>(cout, " "));
 	cout << endl;
 	sTree.Clear();
 	sTree.InsertString("abcdefghijkl");
-	sTree.InsertString("bbcdemnoijkq");
+	sTree.InsertString("bbcdemnoijkq", 12);	// match "bcde"
 	match = sTree.LongestCommonSubstring(0);
-//	assert(match == 4);
+	assert(match == 4);
 	//copy(substrings.begin(), substrings.end(), ostream_iterator<size_t>(cout, " "));
 	cout << endl;
 }

@@ -84,56 +84,21 @@ const string SuffixTree::LongestRepeatedSubstring()
 }
 const size_t SuffixTree::LongestCommonSubstring(size_t n)
 {
-	// (0 1 2) (5 6 7)
-	bool used = false;
-	multimap<char, string> result = m_root->LongestCommonSubstring();
-	size_t max = 0, count = 1;
-	long lastIndex = -1, lastValue = -1;
-	map<string, string> indices; // Key: indices Value: Node character string
-	map<string, size_t> indicesCount; // indices string	-> count
-	for (multimap<char, string>::iterator it = result.begin(); it != result.end(); it++) {
-		if (indices.find(it->second) == indices.end())
-			indices.emplace(it->second, string(1, it->first));
-		else
-			indices[it->second].push_back(it->first);
-		pair<map<string, size_t>::iterator, bool> tmp = indicesCount.emplace(it->second, 1);
-		if (!tmp.second)
-			indicesCount[it->second]++;
-	}
-	set<size_t> indexes;
-	for (map<string, size_t>::iterator it = indicesCount.begin(); it != indicesCount.end(); it++) {
-		if (it->second > 1) {
-			vector<size_t> tmp;
-			split(it->first, ',', tmp);
-			indexes.insert(tmp.begin(), tmp.end());
-		}
-	}
-#if 0
-	for (set<set<size_t>>::iterator it = result.begin(); it != result.end(); it++) {
-		if (lastValue != -1) {
-			if (*it != (lastValue + 1)) {
-				size_t diff = *it - lastValue - 1;
-				if (diff == n) {
-					count += (n + 1);
-					used = true;
-				}
-				else {
-					if (count > max)
-						max = count;
-					count = 1;
-				}
+	size_t count = 0;
+	if (!m_strings.empty()) {
+		map<string, size_t> result = m_root->LongestRepeatedSubstring();
+		long index = -1;
+		for (map<string, size_t>::iterator it = result.begin(); it != result.end(); it++) {
+			if (it->second > count) {
+				count = it->second;
+				vector<size_t> tmp;
+				split(it->first, ',', tmp);
+				index = tmp[0];
 			}
-			else
-				count++;
 		}
-		lastValue = *it;
+		cout << "index: " << index << ", count: " << count << endl;
 	}
-#endif
-	if (count > max)
-		max = count;
-	if (!used)
-		max += n;
-	return max;
+	return count;
 }
 SuffixTreeNode::SuffixTreeNode(char c)
 	:m_char(c)
@@ -245,35 +210,6 @@ const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
 			if (m_char != '\0' && isSamePath)
 				result[it1->first]++;
 		}
-	}
-	return result;
-}
-// Returns the length of the longest matching substrings
-const multimap<char, string> SuffixTreeNode::LongestCommonSubstring()
-{
-	// abcd [0,3], adbc [4,7] => "bc" [1,6]
-	/*
-				root
-		a     b    c<7> d
-		b d   c<6> d   <3> b
-		c b   d   <2>      c
-		d c  <1>		  <5>
-	   <0><4>
-	*/
-	multimap<char, string> result;
-	if (m_char != '\0' && m_indices.size() > 1) {
-		ostringstream oss;
-		copy(m_indices.begin(), m_indices.end(), ostream_iterator<size_t>(oss, ","));
-		result.emplace(m_char, oss.str());
-	}
-	//if (m_indices.size() > 1 && accumulate(m_indices.begin(), m_indices.end(), true, [first = m_indices[0]](bool acc, int b) {
-	//	return acc && (b == first);
-	//	}))
-	//if (m_indices.size() >= n)
-	//	result.insert(m_indices.begin(), m_indices.end());
-	for (map<char, shared_ptr<SuffixTreeNode>>::iterator it = m_children.begin(); it != m_children.end(); it++) {
-		multimap<char, string> tmp = it->second->LongestCommonSubstring();
-		result.insert(tmp.begin(), tmp.end());
 	}
 	return result;
 }
