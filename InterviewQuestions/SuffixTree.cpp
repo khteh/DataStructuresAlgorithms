@@ -42,13 +42,19 @@ void SuffixTree::RemoveString(string const &str)
 }
 const vector<size_t> SuffixTree::GetIndexes()
 {
-	return m_root->GetIndexes();
+	vector<size_t> result;
+	set<size_t> tmp = m_root->GetIndexes();
+	result.assign(tmp.begin(), tmp.end());
+	return result;
 }
 const vector<size_t> SuffixTree::GetIndexes(string const &s)
 {
-	return m_root->GetIndexes(s);
+	vector<size_t> result;
+	set<size_t> tmp = m_root->GetIndexes(s);
+	result.assign(tmp.begin(), tmp.end());
+	return result;
 }
-void SuffixTree::split(const string& s, char delim, vector<size_t>& elems)
+void split(const string& s, char delim, vector<size_t>& elems)
 {
 	std::stringstream ss(s);
 	std::string item;
@@ -152,7 +158,7 @@ size_t SuffixTreeNode::Count()
 // Neha Aman
 void SuffixTreeNode::InsertString(string const &str, size_t index)
 {
-	m_indices.push_back(index);
+	m_indices.insert(index);
 	if (!str.empty()) {
 		pair<map<char, shared_ptr<SuffixTreeNode>>::iterator, bool> result = m_children.emplace(str[0], make_shared<SuffixTreeNode>(str[0]));
 		result.first->second->InsertString(str.substr(1), index);
@@ -166,14 +172,14 @@ void SuffixTreeNode::RemoveString(string const &str)
 		m_children.erase(str[0]);
 	}
 }
-const vector<size_t> SuffixTreeNode::GetIndexes()
+const set<size_t> SuffixTreeNode::GetIndexes()
 {
 	return m_indices;
 }
 // Returns the indexes recorded by the last matched charater
-const vector<size_t> SuffixTreeNode::GetIndexes(string const &str)
+const set<size_t> SuffixTreeNode::GetIndexes(string const &str)
 {
-	vector<size_t> result;
+	set<size_t> result;
 	if (!str.length())
 		result = m_indices; // End of search string. Return indexes of this node.
 	if (m_children.find(str[0]) != m_children.end())
@@ -195,6 +201,23 @@ const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
 		A   <1>
 	   <0>
 	*/
+	// aa
+	// Longest Repeated Substring is aa. Common suffices are 0, 2
+	/*
+				root
+		a<1>
+		a
+	   <0>
+	*/
+	// aaa
+	// Longest Repeated Substring is aa. Common suffices are 0, 2
+	/*
+				root
+		a<2>
+		a<1>
+		a
+	   <0>
+	*/
 	ostringstream oss;
 	copy(m_indices.begin(), m_indices.end(), ostream_iterator<size_t>(oss, ","));
 	string indices = oss.str();
@@ -204,9 +227,23 @@ const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
 	for (map<char, shared_ptr<SuffixTreeNode>>::iterator it = m_children.begin(); it != m_children.end(); it++) {
 		map<string, size_t> tmp = it->second->LongestRepeatedSubstring();
 		for (map<string, size_t>::iterator it1 = tmp.begin(); it1 != tmp.end(); it1++) {
-			if (indices != it1->first && indices.find(it1->first) != string::npos)
-				it1->second++;
-			result[it1->first] += it1->second;
+			bool isSamePath = false;
+			if (m_char != '\0' && indices.size() > it1->first.size()) {
+				vector<size_t> indexList;
+				split(it1->first, ',', indexList);
+				for (vector<size_t>::iterator it = indexList.begin(); it != indexList.end(); it++)
+					if (m_indices.find(*it) != m_indices.end())
+						isSamePath = true;
+					else {
+						isSamePath = false;
+						break;
+					}
+			}
+			pair<map<string, size_t>::iterator, bool> tmp1 = result.emplace(it1->first, it1->second);
+			if (!tmp1.second)
+				result[it1->first] += it1->second;
+			if (m_char != '\0' && isSamePath)
+				result[it1->first]++;
 		}
 	}
 	return result;

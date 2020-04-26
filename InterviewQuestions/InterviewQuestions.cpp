@@ -5238,6 +5238,15 @@ void SuffixTreeTests()
 	copy(indexes.begin(), indexes.end(), ostream_iterator<size_t>(cout, " "));
 	cout << endl;
 	sTree.Clear();
+	sTree.InsertString("a");
+	assert(sTree.LongestRepeatedSubstring() == "");
+	sTree.Clear();
+	sTree.InsertString("aa");
+	assert(sTree.LongestRepeatedSubstring() == "a");
+	sTree.Clear();
+	sTree.InsertString("aaa");
+	assert(sTree.LongestRepeatedSubstring() == "aa");
+	sTree.Clear();
 	sTree.InsertString("ABABABA");
 	assert(sTree.LongestRepeatedSubstring() == "ABABA");
 	sTree.Clear();
@@ -5245,6 +5254,9 @@ void SuffixTreeTests()
 	assert(sTree.LongestRepeatedSubstring() == "cd12");
 	sTree.Clear();
 	sTree.InsertString("abcd1234abcd");
+	assert(sTree.LongestRepeatedSubstring() == "abcd");
+	sTree.Clear();
+	sTree.InsertString("abcdabcd1234");
 	assert(sTree.LongestRepeatedSubstring() == "abcd");
 	sTree.Clear();
 	sTree.InsertString("abcd12341234");

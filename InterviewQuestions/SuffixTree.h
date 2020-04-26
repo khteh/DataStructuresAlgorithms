@@ -34,7 +34,6 @@ class SuffixTree
 private:
 	vector<string> m_strings;
 	shared_ptr<SuffixTreeNode> m_root;
-	void split(const string&, char, vector<size_t>&);
 public:
 	SuffixTree();
 	SuffixTree(string const &);
@@ -54,14 +53,14 @@ class SuffixTreeNode
 private:
 	char m_char;
 	map<char, shared_ptr<SuffixTreeNode>> m_children;
-	vector<size_t> m_indices;
+	set<size_t> m_indices;
 public:
 	SuffixTreeNode(char);
 	~SuffixTreeNode();
 	void InsertString(string const &, size_t);
 	void RemoveString(string const &);
-	const vector<size_t> GetIndexes();
-	const vector<size_t> GetIndexes(string const &);
+	const set<size_t> GetIndexes();
+	const set<size_t> GetIndexes(string const &);
 	const map<string, size_t> LongestRepeatedSubstring();
 	const multimap<char, string> LongestCommonSubstring();
 	size_t Count();
