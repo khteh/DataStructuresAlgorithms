@@ -243,7 +243,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (size_t j = 0; j < 4; j++)
 			grid1[i][j] = gridArray6[i][j];
 	}
-	cout << endl;
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 5);
 	assert(ConnectedCellsInAGrid(grid1) == 5);
 
@@ -255,7 +254,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (size_t j = 0; j < 4; j++)
 			grid1[i][j] = gridArray7[i][j];
 	}
-	cout << endl;
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 8);
 	assert(ConnectedCellsInAGrid(grid1) == 8);
 
@@ -267,7 +265,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (size_t j = 0; j < 4; j++)
 			grid1[i][j] = gridArray8[i][j];
 	}
-	cout << endl;
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 5);
 	assert(ConnectedCellsInAGrid(grid1) == 5);
 
@@ -279,7 +276,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (size_t j = 0; j < 5; j++)
 			grid1[i][j] = gridArray9[i][j];
 	}
-	cout << endl;
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 15);
 	assert(ConnectedCellsInAGrid(grid1) == 15);
 
@@ -291,7 +287,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (size_t j = 0; j < 5; j++)
 			grid1[i][j] = gridArray10[i][j];
 	}
-	cout << endl;
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 9);
 	assert(ConnectedCellsInAGrid(grid1) == 9);
 
@@ -303,7 +298,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (size_t j = 0; j < 8; j++)
 			grid1[i][j] = gridArray11[i][j];
 	}
-	cout << endl;
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 1);
 	assert(ConnectedCellsInAGrid(grid1) == 1);
 
@@ -333,6 +327,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	queue<string> puzzleResult1;
 	assert(!PathExists(maze, 0,0, 1,2, puzzleResult1, 1));
 	line = "ab2c3";
+	assert(uncompress(line) == "ababcababcababc");
 	cout << "uncompress(\"ab2c3\"): " << uncompress(line) << endl;
 	line = "0010110100";
 	index = findLongestContiguousPattern(line, '1');
@@ -354,54 +349,36 @@ int _tmain(int argc, _TCHAR* argv[])
 	// End of Test C++ *& "pointer reference" construct
 	assert(Min(123, 456) == 123);
 	assert(Max(123, 456) == 456);
-	cout << "Min(123, 456): " << Min(123, 456) << endl;
-	cout << "Max(123, 456): " << Max(123, 456) << endl;
-
-	cout << "GCD(48, 15): " << gcd(48, 15) << endl;
-	cout << "GCD(108, 48): " << gcd(108, 48) << endl;
-	cout << "GCD(1050, 507): " << gcd(1050, 507) << endl;
-	cout << "LCM(21, 6): " << lcm(21, 6) << endl;
 	assert(gcd(48, 15) == 3);
 	assert(gcd(108, 48) == 12);
 	assert(gcd(1050, 507) == 3);
 	assert(lcm(21, 6) == 42);
 	assert(!isUniqueString("Helo World!!!"));
-	cout << (isUniqueString("Helo World!!!") ? "Unique" : "Not Unique") << endl;
-
 	line = "Hello World!!!";
 	reverse(line);
 	assert(line == "!!!dlroW olleH");
-	cout << "ReverseString(\"Hello World!!!\"): " << line << endl;
-
 	line = "The house is blue";
 	reverseWords(line);
 	assert(line == "blue is house The");
-	cout << "ReverseWords(\"The house is blue\"): " <<  line << endl;
 
 	line = "Hello World!!!";
 	RemoveDuplicateCharacters(line);
 	assert(line == "Helo Wrd!");
-	cout << "removeDuplicates(\"Hello World!!!\"): " <<  line << endl;
 	line = "aaaaa";
 	RemoveDuplicateCharacters(line);
 	assert(line == "a");
-	cout << "removeDuplicates(\"aaaa\"): " << line << endl;
 	line = "abcd";
 	RemoveDuplicateCharacters(line);
 	assert(line == "abcd");
-	cout << "removeDuplicates(\"abcd\"): " << line << endl;
 	line = "";
 	RemoveDuplicateCharacters(line);
 	assert(line == "");
-	cout << "removeDuplicates(\"\"): " << line << endl;
 	line = "aaaabbbbcccc";
 	RemoveDuplicateCharacters(line);
 	assert(line == "abc");
-	cout << "removeDuplicates(\"aaaabbbbcccc\"): " << line << endl;
 	line = "abababab";
 	RemoveDuplicateCharacters(line);
 	assert(line == "ab");
-	cout << "removeDuplicates(\"abababab\"): " << line << endl;
 	line = "Hello World!!!";
 	line1 = "World Hello!!!";
 	assert(areAnagrams(line, line1));
@@ -448,10 +425,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	line = "abcdefcdbacd";
 	line1 = "abcd";
 	vector<size_t> indices = FindSubString(line, line1);
-	assert(indices.size() == 4);
-	cout << "Find occurrances of " << line1 << " in " << line << ": ";
-	copy(indices.begin(), indices.end(), ostream_iterator<size_t>(cout, " "));
-	cout << endl;
+	assert(indices.size() == 4); // 0 6 7 8
+	assert(indices[0] == 0);
+	assert(indices[1] == 6);
+	assert(indices[2] == 7);
+	assert(indices[3] == 8);
 
 	//index = KMPSearch("ABC ABCDAB ABCDABCDABDE", "ABCDABD");
 	//assert(index == 15);
@@ -478,10 +456,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings1.push_back("b");
 	strings1.push_back("c");
 	strings = findUnique(strings, strings1);
-	assert(strings.size() == 2);
-	cout << "Unique among 2 strings are: ";
-	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, " "));
-	cout << endl;
+	assert(strings.size() == 2); //  a d
+	assert(strings[0] == "a");
+	assert(strings[1] == "d");
 	line = "a";
 	assert(CanShuffleWithoutRepeat(line));
 	cout << line << (CanShuffleWithoutRepeat(line) ? " can repeat" : " cannot repeat") << endl;
@@ -578,6 +555,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "strings without sorted: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
 	std::sort(strings.begin(), strings.end());
+	assert(strings[0] == "Angel");
+	assert(strings[1] == "Hello World!!!");
+	assert(strings[2] == "World Hello!!!");
+	assert(strings[3] == "legnA");
 	cout << "strings sorted with default comparer: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
 	std::sort(strings.begin(), strings.end(), [&strings](string a, string b) -> bool {
@@ -586,6 +567,10 @@ int _tmain(int argc, _TCHAR* argv[])
 										return a < b;
 									}
 		);
+	assert(strings[0] == "Hello World!!!");
+	assert(strings[1] == "World Hello!!!");
+	assert(strings[2] == "Angel");
+	assert(strings[3] == "legnA");
 	cout << "strings sorted with anagrams next to each other: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
 	a.clear();
@@ -602,6 +587,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(27);
 	copy(a.begin(), a.end(), ostream_iterator<long>(cout, ", "));
 	cout << endl;
+	assert(GetRange(a) == "0 - 2, 7, 10 - 12, 20, 25 - 27");
 	cout << "GetRange() returns: " << GetRange(a) << endl;
 	//copy_on_write_string();
 	float f = 0xabcd;
@@ -663,6 +649,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	ostringstream oss;
 	unsigned long long factorialResult = factorial(26);
 	cout << "26!: " << setiosflags(ios::fixed) << factorialResult << endl;
+	assert(FactorialTrailingZeroesCount(10) == 2);
+	assert(FactorialTrailingZeroesCount(25) == 6);
+	assert(FactorialTrailingZeroesCount(26) == 6);
 	cout << "10!: " << (double)factorial(10) << " has " << FactorialTrailingZeroesCount(10) << " trailing zeroes." << endl;
 	cout << "25!: " << (double)factorial(25) << " has " << FactorialTrailingZeroesCount(25) << " trailing zeroes." << endl;
 	cout << "26!: " << (double)factorial(26) << " has " << FactorialTrailingZeroesCount(26) << " trailing zeroes." << endl;
@@ -701,9 +690,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	b.push_back(5);
 	b.push_back(2);
 	assert(CommonPrimeDivisors(a, b) == 2);
-	cout << "Prime numbers from 0 to 20: ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
-	cout << endl;
 	
 	assert(!isPrime(1));
 	assert(isPrime(2));
@@ -5205,7 +5191,6 @@ void SuffixTreeTests()
 	assert(match == 2);
 	match = sTree.LongestCommonSubstring(1);
 	assert(match == 3);
-	cout << endl;
 	sTree.Clear();
 	sTree.InsertString("helloworld");
 	sTree.InsertString("yellomarin", 10);
@@ -5232,8 +5217,6 @@ void SuffixTreeTests()
 	sTree.InsertString("bbcabcghijmn", 12); // match "ghij"
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 4);
-	//copy(substrings.begin(), substrings.end(), ostream_iterator<size_t>(cout, " "));
-	cout << endl;
 	sTree.Clear();
 	sTree.InsertString("abcdefghijkl");
 	sTree.InsertString("bbcdemnoijkq", 12);	// match "bcde"
@@ -5253,7 +5236,6 @@ void SuffixTreeTests()
 void TrieTests()
 {
 	cout << "Trie tests..." << endl;
-	cout << "int(): " << int() << endl;
 	Trie<int> trie;					// Node count:
 	trie.Insert("Amy", 12);			// 3
 	trie.Insert("Christine", 34);	// 12
@@ -5338,28 +5320,30 @@ void PrefixTrieTests()
 	assert(result.size() == 3);
 
 	result = prefixTrie.Find(string("a"));
-	assert(result.size() == 3);
-	cout << result.size() << " strings with prefix \'a\': ";
-	copy(result.begin(), result.end(), ostream_iterator<string>(cout, " "));
-	cout << endl;
+	assert(result.size() == 3); // appendix, appetite, apple
+	assert(result[0] == "appendix");
+	assert(result[1] == "appetite");
+	assert(result[2] == "apple");
 
 	result = prefixTrie.Find(string("i"));
-	assert(result.size() == 3);
-	cout << result.size() << " strings with prefix \'i\': ";
-	copy(result.begin(), result.end(), ostream_iterator<string>(cout, " "));
-	cout << endl;
+	assert(result.size() == 3); // in inn intrinsics
+	assert(result[0] == "in");
+	assert(result[1] == "inn");
+	assert(result[2] == "intrinsics");
 
 	result = prefixTrie.Find(string("t"));
-	assert(result.size() == 5);
-	cout << result.size() << " strings with prefix \'t\': ";
-	copy(result.begin(), result.end(), ostream_iterator<string>(cout, " "));
-	cout << endl;
+	assert(result.size() == 5); //  tea ted ten to topple
+	assert(result[0] == "tea");
+	assert(result[1] == "ted");
+	assert(result[2] == "ten");
+	assert(result[3] == "to");
+	assert(result[4] == "topple");
 
 	result = prefixTrie.Find(string("te"));
-	assert(result.size() == 3);
-	cout << result.size() << " strings with prefix \"te\": ";
-	copy(result.begin(), result.end(), ostream_iterator<string>(cout, " "));
-	cout << endl;
+	assert(result.size() == 3); // tea ted ten
+	assert(result[0] == "tea");
+	assert(result[1] == "ted");
+	assert(result[2] == "ten");
 
 	PrefixTrieNode* node = prefixTrie.GetNode("apple");
 	assert(node);
@@ -6356,7 +6340,7 @@ size_t ConnectedCellsInAGridLinkedList(vector<vector<long>>& grid)
 		}
 	size_t max = 0;
 	for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end(); it++) {
-		(*it)->Print();
+		//(*it)->Print();
 		if ((*it)->Length() > max)
 			max = (*it)->Length();
 	}
@@ -6465,7 +6449,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 	for (map<long, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
 		if (it->second > max)
 			max = it->second;
-	disjointSet.Print(data, grid[0].size());
+	//disjointSet.Print(data, grid[0].size());
 	return max;
 }
 // 0 0 1 0 1
