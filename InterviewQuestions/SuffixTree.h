@@ -43,7 +43,7 @@ public:
 	const vector<size_t> GetIndexes();
 	const vector<size_t> GetIndexes(string const & s);
 	const string LongestRepeatedSubstring();
-	const size_t LongestCommonSubstring(size_t);
+	const size_t LongestCommonSubstring(long);
 	void Clear();
 	size_t Count();
 };

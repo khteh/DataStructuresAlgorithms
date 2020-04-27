@@ -3951,21 +3951,12 @@ void sortingTests()
 	sortData.clear();
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
-	cout << "Before BubbleSort: ";
-	copy(sortData.begin(), sortData.end(), ostream_iterator<long>(cout, " "));
-	cout << endl;
+	buffer.clear();
+	buffer.assign(sortData.begin(), sortData.end());
+	sort(buffer.begin(), buffer.end());
 	BubbleSort(sortData);
-	cout << "After BubbleSort: ";
-	for (vector<long>::iterator it = sortData.begin(); it != sortData.end(); it++) {
-		cout << *it << " ";
-		if (it != sortData.begin())
-			if (*it < *(it - 1)) {
-				cout << "Bubble Sort failed!";
-				assert(false);
-				break;
-			}
-	}
-	cout << endl;
+	for (size_t i = 0; i < sortData.size(); i++)
+		assert(sortData[i] == buffer[i]);
 
 	sortData.clear();
 	sortData.push_back(1);
@@ -3981,21 +3972,12 @@ void sortingTests()
 	sortData.clear();
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
-	cout << "Before QuickSort: ";
-	copy(sortData.begin(), sortData.end(), ostream_iterator<long>(cout, " "));
-	cout << endl;
+	buffer.clear();
+	buffer.assign(sortData.begin(), sortData.end());
+	sort(buffer.begin(), buffer.end());
 	QuickSort(sortData, 0, sortData.size() - 1);
-	cout << "After QuickSort: ";
-	for (vector<long>::iterator it = sortData.begin(); it != sortData.end(); it++) {
-		cout << *it << " ";
-		if (it != sortData.begin())
-			if (*it < *(it - 1)) {
-				cout << "Quick Sort failed!";
-				assert(false);
-				break;
-			}
-	}
-	cout << endl;
+	for (size_t i = 0; i < sortData.size(); i++)
+		assert(sortData[i] == buffer[i]);
 
 	sortData.clear();
 	sortData.push_back(1);
@@ -4011,21 +3993,12 @@ void sortingTests()
 	sortData.clear();
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
-	cout << "Before SelectionSort: ";
-	copy(sortData.begin(), sortData.end(), ostream_iterator<long>(cout, " "));
-	cout << endl;
+	buffer.clear();
+	buffer.assign(sortData.begin(), sortData.end());
+	sort(buffer.begin(), buffer.end());
 	SelectionSort(sortData);
-	cout << "After SelectionSort: ";
-	for (vector<long>::iterator it = sortData.begin(); it != sortData.end(); it++) {
-		cout << *it << " ";
-		if (it != sortData.begin())
-			if (*it < *(it - 1)) {
-				cout << "Selection Sort failed!";
-				assert(false);
-				break;
-			}
-	}
-	cout << endl;
+	for (size_t i = 0; i < sortData.size(); i++)
+		assert(sortData[i] == buffer[i]);
 
 	sortData.clear();
 	sortData.push_back(1);
@@ -4041,21 +4014,12 @@ void sortingTests()
 	sortData.clear();
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
-	cout << "Before InsertionSort: ";
-	copy(sortData.begin(), sortData.end(), ostream_iterator<long>(cout, " "));
-	cout << endl;
+	buffer.clear();
+	buffer.assign(sortData.begin(), sortData.end());
+	sort(buffer.begin(), buffer.end());
 	InsertionSort(sortData);
-	cout << "After InsertionSort: ";
-	for (vector<long>::iterator it = sortData.begin(); it != sortData.end(); it++) {
-		cout << *it << " ";
-		if (it != sortData.begin())
-			if (*it < *(it - 1)) {
-				cout << "Insertion Sort failed!";
-				assert(false);
-				break;
-			}
-	}
-	cout << endl;
+	for (size_t i = 0; i < sortData.size(); i++)
+		assert(sortData[i] == buffer[i]);
 
 	sortData.clear();
 	sortData.push_back(1);
@@ -4092,24 +4056,14 @@ void sortingTests()
 	sortData.clear();
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
-	cout << "Before TopDownMergeSort: ";
-	copy(sortData.begin(), sortData.end(), ostream_iterator<long>(cout, " "));
-	cout << endl;
-
+	a.clear();
+	a.assign(sortData.begin(), sortData.end());
+	sort(a.begin(), a.end());
 	buffer.clear();
 	buffer = sortData;
 	TopDownMergeSort(buffer, sortData, 0, sortData.size());
-	cout << "After TopDownMergeSort: ";
-	for (vector<long>::iterator it = sortData.begin(); it != sortData.end(); it++) {
-		cout << *it << " ";
-		if (it != sortData.begin())
-			if (*it < *(it - 1)) {
-				cout << "TopDownMergeSort failed!";
-				assert(false);
-				break;
-			}
-	}
-	cout << endl;
+	for (size_t i = 0; i < sortData.size(); i++)
+		assert(sortData[i] == a[i]);
 
 	sortData.clear();
 	sortData.push_back(1);
@@ -4126,22 +4080,13 @@ void sortingTests()
 	sortData.clear();
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
-	cout << "Before BottomUpMergeSort: ";
-	buffer = sortData;
-	cout << endl;
+	a.clear();
+	a.assign(sortData.begin(), sortData.end());
+	sort(a.begin(), a.end());
 	buffer = sortData;
 	BottomUpMergeSort(sortData, buffer);
-	cout << "After BottomUpMergeSort: ";
-	for (vector<long>::iterator it = sortData.begin(); it != sortData.end(); it++) {
-		cout << *it << " ";
-		if (it != sortData.begin())
-			if (*it < *(it - 1)) {
-				cout << "BottomUpMergeSort failed!";
-				assert(false);
-				break;
-			}
-	}
-	cout << endl;
+	for (size_t i = 0; i < sortData.size(); i++)
+		assert(sortData[i] == a[i]);
 
 	sortData.clear();
 	sortData.push_back(1);
@@ -4250,21 +4195,12 @@ void sortingTests()
 	sortData.clear();
 	sortData.resize(100);
 	generate(sortData.begin(), sortData.end(), [&] {return uniformDistribution(engine); });
-	cout << "Before HeapSort: ";
-	copy(sortData.begin(), sortData.end(), ostream_iterator<long>(cout, " "));
-	cout << endl;
+	buffer.clear();
+	buffer.assign(sortData.begin(), sortData.end());
+	sort(buffer.begin(), buffer.end());
 	HeapSort(sortData);
-	cout << "After HeapSort: ";
-	for (vector<long>::iterator it = sortData.begin(); it != sortData.end(); it++) {
-		cout << *it << " ";
-		if (it != sortData.begin())
-			if (*it < *(it - 1)) {
-				cout << "Heap Sort failed!";
-				assert(false);
-				break;
-			}
-	}
-	cout << endl;
+	for (size_t i = 0; i < sortData.size(); i++)
+		assert(sortData[i] == buffer[i]);
 
 	a.clear();
 	a.resize(10);
@@ -4273,15 +4209,8 @@ void sortingTests()
 	generate(b.begin(), b.end(), [&] {return uniformDistribution(engine); });
 	std::sort(a.begin(), a.end());
 	std::sort(b.begin(), b.end());
-	cout << "a sorted: ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, ", "));
-	cout << endl;
-	cout << "b sorted: ";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, ", "));
-	cout << endl;
 	Merge(a, b);
 	for (vector<long>::iterator it = a.begin(); it != a.end(); it++) {
-		cout << *it << " ";
 		if (it != a.begin())
 			if (*it < *(it - 1)) {
 				cout << "Merge 2 sorted lists failed!";
@@ -4297,15 +4226,8 @@ void sortingTests()
 	generate(b.begin(), b.end(), [&] {return uniformDistribution(engine); });
 	std::sort(a.begin(), a.end());
 	std::sort(b.begin(), b.end());
-	cout << "a sorted: ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, ", "));
-	cout << endl;
-	cout << "b sorted: ";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, ", "));
-	cout << endl;
 	Merge(a, b);
 	for (vector<long>::iterator it = a.begin(); it != a.end(); it++) {
-		cout << *it << " ";
 		if (it != a.begin())
 			if (*it < *(it - 1)) {
 				cout << "Merge 2 sorted lists failed!";
@@ -4353,7 +4275,6 @@ void sortingTests()
 	assert(a[2] == 2);
 	assert(a[3] == 2);
 	assert(a[4] == 3);
-
 	cout << endl << endl;
 }
 void TestBinarySearch()
@@ -4369,27 +4290,29 @@ void TestBinarySearch()
 	for (i = 2000; i < 2010; i++)
 		source.push_back(i);
 	rotate(source.begin(), source.begin() + source.size() / 2, source.end());
-	cout << "Rotated vector<long>: " << endl;
-	copy(source.begin(), source.end(), ostream_iterator<long>(cout, " "));
-	cout << endl;
 	pos = BinarySearch(source, 1000);
 	assert(pos >= 0);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 1000 found at location: " << pos << ", " << source[pos] << endl;
+	assert(source[pos] == 1000);
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 1000 found at location: " << pos << ", " << source[pos] << endl;
 
 	source.clear();
 	source.assign(&data[0], &data[11]);
 	pos = BinarySearch(source, 20);
 	assert(pos == 5);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 20 found at location: " << pos << ", " << source[pos] << endl;
+	assert(source[pos] == 20);
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 20 found at location: " << pos << ", " << source[pos] << endl;
 	pos = BinarySearch(source, 17);
 	assert(pos == 2);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 17 found at location: " << pos << ", " << source[pos] << endl;
+	assert(source[pos] == 17);
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 17 found at location: " << pos << ", " << source[pos] << endl;
 	pos = BinarySearch(source, 0);
 	assert(pos == 6);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 0 found at location: " << pos << ", " << source[pos] << endl;
+	assert(source[pos] == 0);
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 0 found at location: " << pos << ", " << source[pos] << endl;
 	pos = BinarySearch(source, 3);
 	assert(pos == 9);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 3 found at location: " << pos << ", " << source[pos] << endl;
+	assert(source[pos] == 3);
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 3 found at location: " << pos << ", " << source[pos] << endl;
 	pos = BinarySearch(source, 11);
 	assert(pos < 0);
 
@@ -4399,13 +4322,16 @@ void TestBinarySearch()
 	source.assign(&data1[0], &data1[14]);
 	pos = BinarySearch(source, 0);
 	assert(pos == 6);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 0 found at location: " << pos << ", " << source[pos] << endl;
+	assert(source[pos] == 0);
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 0 found at location: " << pos << ", " << source[pos] << endl;
 	pos = BinarySearch(source, 5);
 	assert(pos == 11);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 5 found at location: " << pos << ", " << source[pos] << endl;
+	assert(source[pos] == 5);
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 5 found at location: " << pos << ", " << source[pos] << endl;
 	pos = BinarySearch(source, 17);
 	assert(pos == 2);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 17 found at location: " << pos << ", " << source[pos] << endl;
+	assert(source[pos] == 17);
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 17 found at location: " << pos << ", " << source[pos] << endl;
 	pos = BinarySearch(source, 11);
 	assert(pos < 0);
 
@@ -4414,13 +4340,16 @@ void TestBinarySearch()
 	source.assign(&data2[0], &data2[11]);
 	pos = BinarySearch(source, 9);
 	assert(pos > 0);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 9 found at location: " << pos << ", " << source[pos] << endl;
+	assert(source[pos] == 9);
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 9 found at location: " << pos << ", " << source[pos] << endl;
 	pos = BinarySearch(source, 2);
 	assert(pos > 0);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 2 found at location: " << pos << ", " << source[pos] << endl;
+	assert(source[pos] == 2);
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 2 found at location: " << pos << ", " << source[pos] << endl;
 	pos = BinarySearch(source, 12);
 	assert(pos == 6);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 12 found at location: " << pos << ", " << source[pos] << endl;
+	assert(source[pos] == 12);
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 12 found at location: " << pos << ", " << source[pos] << endl;
 	pos = BinarySearch(source, 0);
 	assert(pos < 0);
 }
@@ -4455,18 +4384,16 @@ void TestBinarySearchString()
 	str.push_back("XYZ");
 	str.push_back("");
 	sort(str.begin(), str.end());
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: sorted strings: ";
-	for (vector<string>::const_iterator it = str.begin(); it != str.end(); it++)
-		cout << (it->empty() ? "EMPTY" : *it) << " ";
-	cout << endl;
 
 	pos = BinarySearch(str, "123");
 	assert(pos == 2);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: \"123\" found at location: " << pos << ", " << str[pos] << endl;
+	assert(str[pos] == "123");
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: \"123\" found at location: " << pos << ", " << str[pos] << endl;
 
 	pos = BinarySearch(str, "abc");
 	assert(pos == 6);
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: \"abc\" found at location: " << pos << ", " << str[pos] << endl;
+	assert(str[pos] == "abc");
+	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: \"abc\" found at location: " << pos << ", " << str[pos] << endl;
 }
 void BubbleSort(vector<long> &data)
 {
@@ -5142,10 +5069,11 @@ long KthNumberWith357PrimeFactors(long n)
 void SuffixTreeTests()
 {
 	cout << "Test Suffix Tree..." << endl;
-	SuffixTree sTree("Mississippi");
+	string s1 = "Mississippi";
+	SuffixTree sTree(s1);
 	vector<size_t> indexes;
 	vector<string> subStrings;
-	subStrings.push_back("Mississippi");
+	subStrings.push_back(s1);
 	subStrings.push_back("M");
 	subStrings.push_back("m");
 	subStrings.push_back("i");
@@ -5174,23 +5102,30 @@ void SuffixTreeTests()
 	}
 	vector<size_t> indices1 = sTree.GetIndexes("is");
 	assert(indices1.size() == 2); // ississippi, issippi
+	assert(indices1[0] == 1);
+	assert(indices1[1] == 4);
 	indices1 = sTree.GetIndexes("si");
 	assert(indices1.size() == 2); // sissippi, sippi
+	assert(indices1[0] == 3);
+	assert(indices1[1] == 6);
 	indices1 = sTree.GetIndexes("ssi");
 	assert(indices1.size() == 2); // ssissippi, ssippi
+	assert(indices1[0] == 2);
+	assert(indices1[1] == 5);
 	assert(sTree.LongestRepeatedSubstring() == "issi");
-	sTree.InsertString("sister");
+	sTree.InsertString("sister", s1.size());
 	indices1 = sTree.GetIndexes("sis");
-	copy(indices1.begin(), indices1.end(), ostream_iterator<size_t>(cout, " "));
-	cout << endl;
+	assert(indices1.size() == 2);
+	assert(indices1[0] == 3);
+	assert(indices1[1] == s1.size());
 	indices1 = sTree.GetIndexes("sister");
-	copy(indices1.begin(), indices1.end(), ostream_iterator<size_t>(cout, " "));
-	cout << endl;
+	assert(indices1.size() == 1);
+	assert(indices1[0] == s1.size());
 	sTree.Clear();
 	assert(!sTree.Count());
 	sTree.InsertString("Amazon");
-	sTree.InsertString("Neha Aman");
-	sTree.InsertString("+6591785484");
+	sTree.InsertString("Neha Aman", 6);
+	sTree.InsertString("+6591785484", 15);
 	/*
 						root
 	A     m     a          z  o  n    N    e   h   <sp>
@@ -5206,16 +5141,15 @@ void SuffixTreeTests()
 	*/
 	indexes = sTree.GetIndexes("Ama");
 	assert(indexes.size() == 2);
-	cout << "Suffix index of substring \"Ama\": ";
-	copy(indexes.begin(), indexes.end(), ostream_iterator<size_t>(cout, " "));
-	cout << endl;
+	assert(indexes[0] == 0);
+	assert(indexes[1] == 11);
 	subStrings.clear();
 	indexes = sTree.GetIndexes("+6591785484");
 	assert(indexes.size() == 1);
-	assert(indexes[0] == 0);
+	assert(indexes[0] == 15);
 	indexes = sTree.GetIndexes("91785484");
 	assert(indexes.size() == 1);
-	assert(indexes[0] == 3);
+	assert(indexes[0] == 18);
 	sTree.RemoveString("Amazon");
 	sTree.RemoveString("Neha Aman");
 	sTree.RemoveString("+6591785484");
@@ -5235,8 +5169,9 @@ void SuffixTreeTests()
 	sTree.InsertString("yahoo.com");
 	sTree.InsertString("abc.yahoo.com");
 	indexes = sTree.GetIndexes("google.com");
-	copy(indexes.begin(), indexes.end(), ostream_iterator<size_t>(cout, " "));
-	cout << endl;
+	assert(indexes.size() == 2);
+	assert(indexes[0] == 4);
+	assert(indexes[1] == 8);
 	sTree.Clear();
 	sTree.InsertString("a");
 	assert(sTree.LongestRepeatedSubstring() == "");
@@ -5269,13 +5204,29 @@ void SuffixTreeTests()
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 2);
 	match = sTree.LongestCommonSubstring(1);
-//	assert(match == 3);
+	assert(match == 3);
 	cout << endl;
+	sTree.Clear();
+	sTree.InsertString("helloworld");
+	sTree.InsertString("yellomarin", 10);
+	match = sTree.LongestCommonSubstring(0);
+	assert(match == 4);
+	match = sTree.LongestCommonSubstring(3);
+	assert(match == 8);
+	sTree.Clear();
+	sTree.InsertString("abacba");
+	sTree.InsertString("abcaba", 6);
+	match = sTree.LongestCommonSubstring(0);
+	assert(match == 3);
+	//match = sTree.LongestCommonSubstring(1); // 'abaxba'
+	//assert(match == 4);
 	sTree.Clear();
 	sTree.InsertString("tabriz");
 	sTree.InsertString("torino", 6);
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 2);
+	match = sTree.LongestCommonSubstring(2);
+	assert(match == 4);
 	sTree.Clear();
 	sTree.InsertString("abcdefghijkl");
 	sTree.InsertString("bbcabcghijmn", 12); // match "ghij"
@@ -5288,7 +5239,15 @@ void SuffixTreeTests()
 	sTree.InsertString("bbcdemnoijkq", 12);	// match "bcde"
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 4);
-	//copy(substrings.begin(), substrings.end(), ostream_iterator<size_t>(cout, " "));
+	sTree.Clear();
+#if 0
+	Stack overflow!
+	string s1 = "gatezejttddpkmndtauvjcffiiafgzhkqgzliirdldbmqkdfpeadgjxcirgkmkcfxorthhpujbnenxansboejjrqfxoohuolsxgohukxmpzfukzvkduurvajrodlpxojzsihiqftrbkixbcxraqpiyadbkzqihmigunrzfzcgzfkeszcpkdotulkktfduekyqzkymqpeidhpyuhotynqaxknnsheiogrhobrajzkrekexvorlvlyhtgstjrtdgjzahvmjnprcumulnvftgoiyctjgtthleeunkgbemapsntmfdnuaydkrbyngbrbpsznfdftonfmbjahqrpgddbkokvdxfflzysneapnqvsqhilxabbjamkdhpktscxsczpoontmliozurkrvagnidnmcayiradtbacltouzacvseayrdzkkkqgbfrrnfydbnnxvctffgtfpbmfzsqjnclcnttztcvvpbmkovahvpdnjqghcafzcxhrxumhxxkdtyjqypljzsbidfpoydlumdrhokvmstydlmymldvimdduvzzcmiyxapbrrrndhjnhncpibdmiryjteyvcydxkthxcbgxshffuzevvfrcrpzaotcpbefqqppehgdlbfstralgzbtdfervuvejyvvocrabkiohjxjnnrshvyijyonzzioeakpbkgxybtlcbybgzvvvvhhkdfvpupxnlecqizvzhgigliotybprnnntqdsiquxvdxojripdlmzsyorhjandaqtjfptgebxbjmnokevncfxkkadrsqjvxuttokcabefxehmnhkcbgrdmnmmycflifrrkriggeplcfafpxsbfchbdzbvdgsbrcebgkgsdbdntfdbaltnsdzraafhobrsygkvetomeqvkrntyzeqimcaktnvfcehaeexqjnjfyvomfqlbdjxhhjojvytaovvprpfrdpgurzfhknsimnmhctbkzxfxjrzfjvjsigivmlxcgiginjitarxettzzcpceonufetlpdxupmpfmhzanufjxrkaapaaalaulebxizfjshbjsagmxmuesvecuoobuctngykkzsztzauquxxdgmjxuybkzvxsftzpqhmarlsbaeriaahlrcdgjadhbrizmnabcfadtnfdzobdhayhrxmdddycenimblnrlicasqhttekqyiafijoiykcmutzbjupsbqxbzeyqxbsshelvzieoiozylenrlaelpykdpvzhvpttmsyxsjbrfqchgrxcuvkgqinluzjrqlnzitvhlofjiznsxvbbhscsuoufodozsrmjecfdrkcslgmmrcletuvxcdfitpmgocjdcurrbfqpefxtndzkuuzxpaxfanxdxnteiapkzouvqiykxntmltdpmyzjveivnfuhzlrkseyhpbgrtcvnqmpqcgubjyourdrizixmoflmyzsskvfagtdopgthcdmmqhkmksxgeckagmjgauvz";
+	sTree.InsertString(s1);
+	sTree.InsertString("bbcdemnoijgltezejtfdehkmndtauvicffiiafozhkqmzlieedldbmqjdfpeadgjxcirbkmkcfxorthhpujbnekzansboejjrqfxoohuozsxgohukxmpzbukzvkduurvajrodlpxojzsvhiqftrbgixbcxmaqpiyadbkzqnhmigunrzfzugzfkeszcpbdotulketftuekfqzkymqpeidhpyuhotynqqxknnsheitgrhobrajzkrekexvorlvlyhtmstjrldhjzahvmjnprgtgulhvftgoiyctjgtthleeunkgbemapsntmfdnuaydkrbyigbrbpsknfdftonfmbtahqrpgddbkokvdxfflzysneapnqvsqhilnabbjamkdhpktsxxsczpoontmliozurkrvagnidnmcayiradtbacltouzacvseayrdzkkkqgbfrrnfydbnnxuctfegtfpbmfzsqjnclcnttftcvvpbmkovahvpdnjqghcafzcxhrgumhoxkityjqypljzsbidfcoynlumdrhokvmstydlmymldvimrduvzzcmiyxapbrrrndhjnhncpjbdmiryjteyvcydxkthxcbgxshffyzevvfrcrpzaotcpbefqqppehgdlbfstaalgzbtdfervuvehyvvocrabkioojxjnnrshvyijymnnzioeakpbkgxdbtlobybgzvpvvhhkdcvplpvnlecqizvzhgiglsotobprnnntqdsiquxvdxojripdlmzsyorhjandaqtjfptgegxbjmnokevncfxkladrsqjvxugtokcabeqxehmnhkcbgrdmnmmyfsmifrrkriggeplcfbfpxsbfcxbdzbvdgsbrcebmkpsdbdntfdbaltnsdzrfafhobrsygktetomeqvkrztyzeqimcaktnvfcehaeexqjnjfyvomfqsbdjxhhjojvytaovvirpfrdpgurzfhknsimnmhctbkixfcjrzfjvjsigilmoxcuiginjitarxettzzcpcesnufbtlpdxupmpfmhzqnufjxrkaapaaalaulebxizfjshbjsagmxmueshecuoobzctngykkzsftzatquxxdgmjxuybkzvxsftzpqhmarlsbayriaahlrcdgjadhbrizmnaycfaftnfdzobdhhyhrxvddsycenimblnrcicasqhttekqyiafijoiykcmstzbjupsbqxbzeyqxbsshelvzxekiozylenrlaelpykdpvzhvpttmsyxsjbrfqchgrxcubkgqinluzjrqltzitvhlofjizxsxvbbqbcsuoufodozsrmjecfdricsljmmrcletuvxcxfitpmgocjdcurzbfqpefxtndzkuuzxpaxfanxdxntuiapkzoufqiykxntmlyepmyzjneyvnfuqzlrkseyhpbgrtcpnqmpqcgubjuourdriziimoflmyzsskvfagldopgthcdmmqhrmksxgeckarmjgauvjkq", s1.size());	// match "bcde"
+	match = sTree.LongestCommonSubstring(11);
+	assert(match == 5);
+#endif
 	cout << endl;
 }
 void TrieTests()
@@ -5599,10 +5558,10 @@ void BinaryTreeTests()
 	}
 	shared_ptr<Node<long>> node = tree.FindNode(-50), node1, node2;
 	assert(node);
-	cout << "In-order successor of -50: " << tree.InOrderSuccessor(node)->Item() << endl;
+	assert(tree.InOrderSuccessor(node)->Item() == 0);
 	node = tree.FindNode(50);
 	assert(node);
-	cout << "In-order successor of 50: " << tree.InOrderSuccessor(node)->Item() << endl;
+	assert(tree.InOrderSuccessor(node)->Item() == 60);
 	nodes.clear();
 
 	node = tree.FindNode(-50);

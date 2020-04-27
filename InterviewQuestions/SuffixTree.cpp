@@ -1,7 +1,16 @@
 #include "StdAfx.h"
 #include "SuffixTree.h"
 #include <iterator>
-
+void split(const string& s, char delim, vector<size_t>& elems)
+{
+	std::stringstream ss(s);
+	std::string item;
+	while (std::getline(ss, item, delim)) {
+		size_t i;
+		istringstream(item) >> i;
+		elems.push_back(i);
+	}
+}
 SuffixTree::SuffixTree()
 {
 	m_root = make_shared<SuffixTreeNode>(0);
@@ -54,16 +63,6 @@ const vector<size_t> SuffixTree::GetIndexes(string const &s)
 	result.assign(tmp.begin(), tmp.end());
 	return result;
 }
-void split(const string& s, char delim, vector<size_t>& elems)
-{
-	std::stringstream ss(s);
-	std::string item;
-	while (std::getline(ss, item, delim)) {
-		size_t i;
-		istringstream(item) >> i;
-		elems.push_back(i);
-	}
-}
 const string SuffixTree::LongestRepeatedSubstring()
 {
 	if (!m_strings.empty()) {
@@ -82,21 +81,58 @@ const string SuffixTree::LongestRepeatedSubstring()
 	}
 	return "";
 }
-const size_t SuffixTree::LongestCommonSubstring(size_t n)
+const size_t SuffixTree::LongestCommonSubstring(long n)
 {
 	size_t count = 0;
 	if (!m_strings.empty()) {
 		map<string, size_t> result = m_root->LongestRepeatedSubstring();
-		long index = -1;
+		long index1 = -1, index2 = -1;
 		for (map<string, size_t>::iterator it = result.begin(); it != result.end(); it++) {
 			if (it->second > count) {
 				count = it->second;
 				vector<size_t> tmp;
 				split(it->first, ',', tmp);
-				index = tmp[0];
+				index1 = tmp[0];
+				index2 = tmp[1];
 			}
 		}
-		cout << "index: " << index << ", count: " << count << endl;
+		//cout << "index: " << index1 << ", count: " << count << endl;
+		if (n > 0) {
+			index2 -= m_strings[0].size();
+			long start1 = index1 - n >= 0 ? index1 - n : 0;
+			long start2 = index2 - n >= 0 ? index2 - n : 0;
+			long end1 = index1 + count + (n - (index1 - start1));
+			long end2 = index2 + count + (n - (index2 - start2));
+			if (end1 > m_strings[0].size())
+				end1 = m_strings[0].size();
+			if (end2 > m_strings[1].size())
+				end2 = m_strings[1].size();
+			map<size_t, size_t> lengths; // Key: length, Value: start index
+			for (; ; ) {
+				string s1 = m_strings[0].substr(start1, end1 - start1);
+				string s2 = m_strings[1].substr(start2, end2 - start2);
+				long matches = 0 - count;
+				for (size_t i = 0; i < min(s1.size(), s2.size()); i++)
+					if (s1[i] == s2[i])
+						matches++;
+				lengths.emplace(count + n + matches, start1);
+				bool breakOut = true;
+				if (start1 < index1 && end1 < m_strings[0].size()) {
+					start1++;
+					end1++;
+					breakOut = false;
+				}
+				if (start2 < index2 && end2 < m_strings[1].size()) {
+					start2++;
+					end2++;
+					breakOut = false;
+				}
+				if (breakOut)
+					break;
+			}
+			map<size_t, size_t>::reverse_iterator it = lengths.rbegin();
+			count = it->first;
+		}
 	}
 	return count;
 }
@@ -167,19 +203,19 @@ const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
 	   <0>
 	*/
 	// aa
-	// Longest Repeated Substring is aa. Common suffices are 0, 2
+	// Longest Repeated Substring is a. Common suffices are 0
 	/*
 				root
-		a<1>
+		a<0,1>
 		a
 	   <0>
 	*/
 	// aaa
-	// Longest Repeated Substring is aa. Common suffices are 0, 2
+	// Longest Repeated Substring is aa. Common suffices are 0, 1
 	/*
 				root
-		a<2>
-		a<1>
+		a<0,1,2>
+		a<0,1>
 		a
 	   <0>
 	*/
