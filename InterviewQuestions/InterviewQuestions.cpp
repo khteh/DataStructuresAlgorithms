@@ -1316,24 +1316,24 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(!lptr);
 	lla2.Clear();
 	a.clear();
-	a.push_back(1);
+	a.push_back(1); // LSB
 	a.push_back(2);
-	a.push_back(3);
+	a.push_back(3); // MSB
 	LinkedList<long> lla3(a);
 	assert(lla3.Length() == 3);
 	lla3.Print();
 	a.clear();
-	a.push_back(7);
+	a.push_back(7); // LSB
 	a.push_back(8);
-	a.push_back(9);
+	a.push_back(9); // MSB
 	LinkedList<long> llb1(a);
 	assert(llb1.Length() == 3);
 	llb1.Print();
 	a.clear();
-	a.push_back(8);
+	a.push_back(8); // LSB
 	a.push_back(0);
 	a.push_back(3);
-	a.push_back(1);
+	a.push_back(1); // MSB
 	LinkedList<long> listAdditionResult = lla3.AddNumbers(lla3.Head(), llb1.Head()); // 987 + 321 = 1308 List in reverse order. Head points to LSB
 	assert(listAdditionResult.Length() == 4);
 	listAdditionResult.Print();
@@ -5183,7 +5183,9 @@ void SuffixTreeTests()
 	sTree.InsertString("abcd12341234");
 	assert(sTree.LongestRepeatedSubstring() == "1234");
 	sTree.Clear();
-	//set<size_t> substrings;
+	sTree.InsertString("aaaa_11111_bbbb");
+	assert(sTree.LongestRepeatedSubstring() == "1111");
+	sTree.Clear();
 	size_t match;
 	sTree.InsertString("abcd");
 	sTree.InsertString("adbc");

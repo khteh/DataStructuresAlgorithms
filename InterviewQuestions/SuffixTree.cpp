@@ -69,14 +69,16 @@ const vector<size_t> SuffixTree::GetIndexes(string const &s)
 const string SuffixTree::LongestRepeatedSubstring()
 {
 	if (!m_strings.empty()) {
+		string str;
+		str.resize(m_strings[0].size());
 		map<string, size_t> result = m_root->LongestRepeatedSubstring();
 		size_t count = 0;
 		long index = -1;
 		for (map<string, size_t>::iterator it = result.begin(); it != result.end(); it++) {
+			vector<size_t> tmp;
+			split(it->first, ',', tmp);
 			if (it->second > count) {
 				count = it->second;
-				vector<size_t> tmp;
-				split(it->first, ',', tmp);
 				index = tmp[0];
 			}
 		}
@@ -91,14 +93,15 @@ const size_t SuffixTree::LongestCommonSubstring(long n)
 		map<string, size_t> result = m_root->LongestRepeatedSubstring();
 		long index1 = -1, index2 = -1;
 		for (map<string, size_t>::iterator it = result.begin(); it != result.end(); it++) {
+			vector<size_t> tmp;
+			split(it->first, ',', tmp);
 			if (it->second > count) {
-				vector<size_t> tmp;
-				split(it->first, ',', tmp);
 				if (tmp.size() == m_strings.size()) {
 					count = it->second;
 					index1 = tmp[0];
 					index2 = tmp[1];
 				}
+			} else { // Look for gap or overlap with the 
 			}
 		}
 		//cout << "index: " << index1 << ", count: " << count << endl;
