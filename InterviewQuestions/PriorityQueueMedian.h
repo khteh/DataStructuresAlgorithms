@@ -17,4 +17,5 @@ public:
 	~PriorityQueueMedian();
 	void Add(T);
 	double GetMedian();
+	void Clear();
 };

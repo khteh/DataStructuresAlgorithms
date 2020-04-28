@@ -729,7 +729,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	ull.push_back(2);
 	unsigned long long findMaxResult = findMax(ull);
 	assert(findMaxResult == 9);
-	cout << "findMax(1 2 1 2): " << findMaxResult << endl;
 
 	ull.clear();
 	ull.push_back(2);
@@ -738,12 +737,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	ull.push_back(2);
 	findMaxResult = findMax(ull);
 	assert(findMaxResult == 36);
-	cout << "findMax(2 3 3 2): " << findMaxResult << endl;
 
 	line = "     Hello     World!!!     ";
+	assert(line.size() == 28);
 	cout << line << " size: " << line.size();
 	trim(line);
-	cout << " trim(line): " << line << " size: " << line.size() << endl;
+	//assert(line == "Hello     World!!!");
+	cout << " trim(line): |" << line << "| size: " << line.size() << endl;
 
 	a.clear();
 	a.push_back(1);
@@ -753,7 +753,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(5);
 	a.push_back(6);
 	a.push_back(5);
-	cout << "Pairs with sum 8: " << endl;
 	assert(sumpairs(a, 8) == 2);
 
 	a.clear();
@@ -766,7 +765,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(6);
 	a.push_back(3);
 	a.push_back(3);
-	cout << "Pairs with sum 8: " << endl;
 	assert(sumpairs(a, 12) == 3);
 
 	//long testData[] = { 92,407,1152,403,1419,689,1029,108,128,1307,300,775,622,730,978,526,943,127,566,869,715,983,820,1394,901,606,497,98,1222,843,600,1153,302,1450,1457,973,1431,217,936,958,1258,970,1155,1061,1341,657,333,1151,790,101,588,263,101,534,747,405,585,111,849,695,1256,1508,139,336,1430,615,1295,550,783,575,992,709,828,1447,1457,738,1024,529,406,164,994,1008,50,811,564,580,952,768,863,1225,251,1032,1460,1558 };
@@ -776,7 +774,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << endl;
 	a.resize(10);
 	iota(a.begin(), a.end(), 0);
-	cout << "Pairs with sum 10: " << sumpairs(a, 10) << endl;
 	assert(sumpairs(a, 10) == 4);
 	
 	set<long> lSet;
@@ -790,7 +787,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	lSet.emplace(11);
 	lSet.emplace(12);
 	lSet.emplace(13);
-	cout << "Pairs with diff 3: " << diffpairs(lSet, 3) << endl;
 	assert(diffpairs(lSet, 3) == 6);
 	lSet.clear();
 	lSet.emplace(1);
@@ -808,7 +804,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	lSet.emplace(4);
 	lSet.emplace(2);
 	assert(diffpairs(lSet, 2) == 5);
-	cout << endl;
 	
 	a.clear();
 	a.push_back(1);
@@ -842,7 +837,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a.resize(10);
 	iota(a.begin(), a.end(), 0);
-	cout << "Pairs with sum >= 8: " << greaterthansumpairs(a, 8) << endl;
 	assert(greaterthansumpairs(a, 8) == 35);
 
 	// 0 1 2 3 4 5 6 7 8 9 10
@@ -861,7 +855,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a.resize(11);
 	iota(a.begin(), a.end(), 0);
-	cout << "Pairs with sum >= 8: " << greaterthansumpairs(a, 8) << endl;
 	assert(greaterthansumpairs(a, 8) == 45);
 	OrderArrayIntoNegativePositiveSeriesTests();
 
@@ -869,16 +862,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings.clear();
 	parentheses(strings, 2);
 	assert(strings.size() == 2);
-	cout << "2 pairs of valid parenthesis: ";
-	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, " "));
-	cout << endl;
+	assert(strings[0] == "(())");
+	assert(strings[1] == "()()");
 
 	strings.clear();
 	parentheses(strings, 3);
-	assert(strings.size() == 5);
-	cout << "3 pairs of valid parenthesis: ";
-	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, " "));
-	cout << endl;
+	assert(strings.size() == 5); // ((())) (()()) (())() ()(()) ()()()
+	assert(strings[0] == "((()))");
+	assert(strings[1] == "(()())");
+	assert(strings[2] == "(())()");
+	assert(strings[3] == "()(())");
+	assert(strings[4] == "()()()");
 	assert(LongestValidParentheses(string("(")) == 0);
 	assert(LongestValidParentheses(string("((()")) == 2);
 	assert(LongestValidParentheses(string("())()")) == 2);
@@ -939,7 +933,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	towers[0]->print();
 	towers[1]->print();
 	towers[2]->print();
-	cout << endl;
 
 	// Test 2D memory buffer allocation
 	long** my2Dbuffer = my2DAlloc(10, 10);
@@ -955,19 +948,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Test addition without using arithmetic symbol: " << endl;
 	i = AddWithoutArithmetic(0, 0);
 	assert(i == 0);
-	cout << "0 + 0 = 0x" << hex << i << dec << endl;
 
-	i = AddWithoutArithmetic(0xdeadbeef, 0xfeedbeef);
-	assert(i == (0xdeadbeef + 0xfeedbeef));
-	cout << "0xdeadbeef + 0xfeedbeef = 0x" << hex << i << dec << endl;
+	long long ll = AddWithoutArithmetic(0xdeadbeef, 0xfeedbeef);
+	assert(ll == 0x1dd9b7dde);
 
 	i = AddWithoutArithmetic(0xdeadbeef, 0);
 	assert(i == 0xdeadbeef);
-	cout << "0xdeadbeef + 0 = 0x" << hex << i << dec << endl;
 
 	i = AddWithoutArithmetic(0, 0xfeedbeef);
 	assert(i ==  0xfeedbeef);
-	cout << "0 + 0xfeedbeef = 0x" << hex << i << dec << endl;
 
 	assert(NumberStringSum(string("1234567890"), string("9876543210")) == "11111111100");
 	assert(NumberStringMultiplication(string("-4"), string("5")) == "-20");
@@ -976,7 +965,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(NumberStringMultiplication(string("123456"), string("654321")) == "80779853376");
 	assert(NumberStringMultiplication(string("456789"), string("987654")) == "451149483006");
 	for (i = 0; i < 64; i++)
-		mask |= (1 << i);
+		mask |= ((unsigned long long)1 << i);
 	cout << "mask: " << hex << mask << dec << endl << endl;
 
 	cout << "Test shuffle deck of cards: " << endl;
@@ -1001,24 +990,26 @@ int _tmain(int argc, _TCHAR* argv[])
 		maxHeap.push(i);
 		minHeap.push(i);
 	}
-	cout << "std::priority_queue with default less compare: ";
-	while (!maxHeap.empty()) {
-		cout << maxHeap.top() << " ";
+	for (long i = 9; !maxHeap.empty(); i--) {
+		//cout << maxHeap.top() << " ";
+		assert(maxHeap.top() == i);
 		maxHeap.pop();
 	}
-	cout << endl;
-	cout << "std::priority_queue with greater compare: ";
-	while (!minHeap.empty()) {
-		cout << minHeap.top() << " ";
+	for (long i = -10; !minHeap.empty(); i++) {
+		//cout << minHeap.top() << " ";
+		assert(minHeap.top() == i);
 		minHeap.pop();
 	}
-	cout << endl;
 
 	// Test Priority Queue which returns median value
-	for (i = -10; i < 10; i++)
+	for (i = -10; i < 10; i++) // 20 numbers. Median = (10th + 11th) / 2
 		pqueue.Add(i);
+	assert(pqueue.GetMedian() == -0.5);
 	cout << "Median: " << pqueue.GetMedian() << endl << endl;
-	
+	pqueue.Add(10); // 21 numbers. Median = 11th number = 0
+	assert(pqueue.GetMedian() == 0);
+	pqueue.Clear();
+	assert(pqueue.GetMedian() == 0);
 	// Test countDigits
 	//0 - 99: 10 + 10 = 20
 	//100 - 199: 2 * 20
@@ -4612,7 +4603,7 @@ long** my2DAlloc(long rows, long cols)
 		rowptr[i] = dataptr + i * cols;
 	return rowptr;
 }
-long AddWithoutArithmetic(long sum, long carry)
+long long AddWithoutArithmetic(long long sum, long long carry)
 {
 	if (!carry)
 		return sum;
@@ -4620,8 +4611,8 @@ long AddWithoutArithmetic(long sum, long carry)
 		return carry;
 	if (!sum && !carry)
 		return 0;
-	long sum1 = sum ^ carry;
-	long carry1 = (sum & carry) << 1;
+	long long sum1 = sum ^ carry;
+	long long carry1 = (sum & carry) << 1;
 	return AddWithoutArithmetic(sum1, carry1);
 }
 // Function for finding sum of larger numbers 

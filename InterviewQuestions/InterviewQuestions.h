@@ -194,7 +194,7 @@ size_t MergeCountInversions(vector<long>&, vector<long>&, size_t, size_t, size_t
 void Merge(vector<long>&, vector<long>&, size_t start, size_t middle, size_t end);
 void Swap(long &, long &);
 long** my2DAlloc(long, long);
-long AddWithoutArithmetic(long, long);
+long long AddWithoutArithmetic(long long, long long);
 string NumberStringSum(string&, string&);
 string NumberStringMultiplication(string& num1, string& num2);
 void shuffleCards(vector<long> &);

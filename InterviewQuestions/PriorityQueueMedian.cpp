@@ -11,8 +11,16 @@ PriorityQueueMedian<T>::PriorityQueueMedian()
 template<class T>
 PriorityQueueMedian<T>::~PriorityQueueMedian()
 {
+	Clear();
 }
-
+template<class T>
+void PriorityQueueMedian<T>::Clear()
+{
+	while (!maxHeap.empty())
+		maxHeap.pop();
+	while (!minHeap.empty())
+		minHeap.pop();
+}
 /*
  maxHeap...Median...minHeap
  */
@@ -46,7 +54,7 @@ double PriorityQueueMedian<T>::GetMedian()
 	else if (minHeap.empty())
 		return maxHeap.top();
 	else if (minHeap.size() == maxHeap.size())
-		return (double)(minHeap.top() + maxHeap.top()) / 2;
+		return (double)((double)minHeap.top() + (double)maxHeap.top()) / 2;
 	else
 		return maxHeap.size() > minHeap.size() ? maxHeap.top() : minHeap.top();
 }
