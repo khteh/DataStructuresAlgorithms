@@ -585,10 +585,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(25);
 	a.push_back(26);
 	a.push_back(27);
+	string strRange = GetRange(a);
+	assert(strRange == "0 - 2, 7, 10 - 12, 20, 25 - 27");
+	cout << "GetRange(\"";
 	copy(a.begin(), a.end(), ostream_iterator<long>(cout, ", "));
-	cout << endl;
-	assert(GetRange(a) == "0 - 2, 7, 10 - 12, 20, 25 - 27");
-	cout << "GetRange() returns: " << GetRange(a) << endl;
+	cout << "\") : " << strRange << endl;
 	//copy_on_write_string();
 	float f = 0xabcd;
 	cout << "float f = 0xabcd: " << fixed << f << dec << endl;
@@ -1005,7 +1006,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	for (i = -10; i < 10; i++) // 20 numbers. Median = (10th + 11th) / 2
 		pqueue.Add(i);
 	assert(pqueue.GetMedian() == -0.5);
-	cout << "Median: " << pqueue.GetMedian() << endl << endl;
 	pqueue.Add(10); // 21 numbers. Median = 11th number = 0
 	assert(pqueue.GetMedian() == 0);
 	pqueue.Clear();
@@ -1021,7 +1021,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Number of '2' in 345 is: " << countDigits(2, 345) << endl;
 	cout << "Number of '0' in 345 is: " << countDigits(0, 345) << endl;
 
-	cout << endl;
 	a.clear();
 	b.clear();
 	a.push_back(1);
@@ -5863,7 +5862,7 @@ size_t sumpairs(vector<long>& numbers, long sum)
 		if (found.find(tmp) != found.end() && exclude.find(tmp) == exclude.end()) {
 			count++;
 			exclude.emplace(tmp);
-			cout << *it << " + " << tmp << endl;
+			//cout << *it << " + " << tmp << endl;
 		} else
 			found.emplace(*it);
 	}
@@ -5894,10 +5893,8 @@ size_t diffpairs(set<long>& numbers, long diff)
 		tmp = diff + *it;
 		srcIt = numbers.find(tmp);
 		if (srcIt != numbers.end())
-		{
 			count++;
-			cout << *it << ", " << *srcIt << endl;
-		}
+			//cout << *it << ", " << *srcIt << endl;
 	}
 	return count;
 }
@@ -6831,7 +6828,7 @@ void TestURNG(URNG& urng)
 	shuffle(strings.begin(), strings.end(), urng);
 	cout << "Randomized vector<string>: ";
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, " "));
-	cout << endl << endl;
+	cout << endl;
 }
 void TestRandom()
 {
