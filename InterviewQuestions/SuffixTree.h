@@ -38,10 +38,10 @@ public:
 	SuffixTree();
 	SuffixTree(string const &);
 	~SuffixTree();
-	void InsertString(string const &, size_t index = 0);
-	void RemoveString(string const &);
+	void InsertString(string const&);
+	void RemoveString(string const&);
 	const vector<size_t> GetIndexes();
-	const vector<size_t> GetIndexes(string const & s);
+	const vector<size_t> GetIndexes(string const&);
 	const string LongestRepeatedSubstring();
 	const size_t LongestCommonSubstring(long);
 	void Clear();

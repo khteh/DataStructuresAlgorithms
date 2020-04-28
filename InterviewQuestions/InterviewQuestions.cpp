@@ -1546,22 +1546,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	nodeD->SetNext(nodeH);
 	nodeG->SetNext(nodeH);
 	vector<shared_ptr<Node<string>>> path = shortest_cycle_path(nodeA);
-	cout << nodeA->Item() << " ";
+	cout << "Shortest Cycle Path of node A: " << nodeA->Item() << " ";
 	for (vector<shared_ptr<Node<string>>>::iterator it = path.begin(); it != path.end(); it++)
 		cout << (*it)->Item() << " ";
 	cout << endl;
 	path = shortest_cycle_path(nodeB);
-	cout << nodeB->Item() << " ";
+	cout << "Shortest Cycle Path of node B: " << nodeB->Item() << " ";
 	for (vector<shared_ptr<Node<string>>>::iterator it = path.begin(); it != path.end(); it++)
 		cout << (*it)->Item() << " ";
 	cout << endl;
 	path = shortest_cycle_path(nodeE);
-	cout << nodeE->Item() << " ";
+	cout << "Shortest Cycle Path of node E: " << nodeE->Item() << " ";
 	for (vector<shared_ptr<Node<string>>>::iterator it = path.begin(); it != path.end(); it++)
 		cout << (*it)->Item() << " ";
 	cout << endl;
 	path = shortest_cycle_path(nodeG);
-	cout << nodeG->Item() << " ";
+	cout << "Shortest Cycle Path of node G: " << nodeG->Item() << " ";
 	for (vector<shared_ptr<Node<string>>>::iterator it = path.begin(); it != path.end(); it++)
 		cout << (*it)->Item() << " ";
 	cout << endl;
@@ -1651,7 +1651,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(5);
 	stringset.clear();
 	//assert(ZigZagEscape(a, stringset) == 41);
-	//assert(ZigZagEscape(a) == 41);
+	//assert(ZigZagEscape(a) == 41); Unfinished work!
 	CircularLinkedListLoopStart();
 	MaxZeroProductTests();
 	cpluplus17();
@@ -5045,11 +5045,10 @@ long KthNumberWith357PrimeFactors(long n)
 void SuffixTreeTests()
 {
 	cout << "Test Suffix Tree..." << endl;
-	string s1 = "Mississippi";
-	SuffixTree sTree(s1);
+	SuffixTree sTree("Mississippi");
 	vector<size_t> indexes;
 	vector<string> subStrings;
-	subStrings.push_back(s1);
+	subStrings.push_back("Mississippi");
 	subStrings.push_back("M");
 	subStrings.push_back("m");
 	subStrings.push_back("i");
@@ -5089,19 +5088,19 @@ void SuffixTreeTests()
 	assert(indices1[0] == 2);
 	assert(indices1[1] == 5);
 	assert(sTree.LongestRepeatedSubstring() == "issi");
-	sTree.InsertString("sister", s1.size());
+	sTree.InsertString("sister");
 	indices1 = sTree.GetIndexes("sis");
 	assert(indices1.size() == 2);
 	assert(indices1[0] == 3);
-	assert(indices1[1] == s1.size());
+	assert(indices1[1] == string("Mississippi").size());
 	indices1 = sTree.GetIndexes("sister");
 	assert(indices1.size() == 1);
-	assert(indices1[0] == s1.size());
+	assert(indices1[0] == string("Mississippi").size());
 	sTree.Clear();
 	assert(!sTree.Count());
 	sTree.InsertString("Amazon");
-	sTree.InsertString("Neha Aman", 6);
-	sTree.InsertString("+6591785484", 15);
+	sTree.InsertString("Neha Aman");
+	sTree.InsertString("+6591785484");
 	/*
 						root
 	A     m     a          z  o  n    N    e   h   <sp>
@@ -5146,8 +5145,8 @@ void SuffixTreeTests()
 	sTree.InsertString("abc.yahoo.com");
 	indexes = sTree.GetIndexes("google.com");
 	assert(indexes.size() == 2);
-	assert(indexes[0] == 4);
-	assert(indexes[1] == 8);
+	assert(indexes[0] == 8);
+	assert(indexes[1] == 22);
 	sTree.Clear();
 	sTree.InsertString("a");
 	assert(sTree.LongestRepeatedSubstring() == "");
@@ -5176,77 +5175,65 @@ void SuffixTreeTests()
 	//set<size_t> substrings;
 	size_t match;
 	sTree.InsertString("abcd");
-	sTree.InsertString("adbc", 4);
+	sTree.InsertString("adbc");
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 2);
 	match = sTree.LongestCommonSubstring(1);
 	assert(match == 3);
 	sTree.Clear();
 	sTree.InsertString("helloworld");
-	sTree.InsertString("yellomarin", 10);
+	sTree.InsertString("yellomarin");
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 4);
 	match = sTree.LongestCommonSubstring(3);
 	assert(match == 8);
 	sTree.Clear();
 	sTree.InsertString("abacba");
-	sTree.InsertString("abcaba", 6);
+	sTree.InsertString("abcaba");
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 3);
 	//match = sTree.LongestCommonSubstring(1); // 'abaxba'
 	//assert(match == 4);
 	sTree.Clear();
 	sTree.InsertString("tabriz");
-	sTree.InsertString("torino", 6);
+	sTree.InsertString("torino");
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 2);
 	match = sTree.LongestCommonSubstring(2);
 	assert(match == 4);
 	sTree.Clear();
 	sTree.InsertString("abcdefghijkl");
-	sTree.InsertString("bbcabcghijmnopq", 12); // match "ghij"
+	sTree.InsertString("bbcabcghijmnopq"); // match "ghij"
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 4);
 	sTree.Clear();
 	sTree.InsertString("abcdefghijkl");
-	sTree.InsertString("bmnobcdeijkq", 12);	// match "bcde"
+	sTree.InsertString("bmnobcdeijkq");	// match "bcde"
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 4);
 	sTree.Clear();
-	s1 = "abcdefghijkl";
-	string s2 = "bbijkmnopqrstuv";
-	string s3 = "ijklmnopqrst";
-	sTree.InsertString(s1);
-	sTree.InsertString(s2, s1.size());	// match "bcde" with first string
-	sTree.InsertString(s3, s1.size() + s2.size());	// match "ijk" with all other strings
+	sTree.InsertString("abcdefghijkl");
+	sTree.InsertString("bbijkmnopqrstuv");	// match "bcde" with first string
+	sTree.InsertString("ijklmnopqrst");	// match "ijk" with all other strings
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 3);
 	match = sTree.LongestCommonSubstring(1);
 	assert(match == 4);
 	sTree.Clear();
-	s1 = "abcdefghijkl";
-	s2 = "bbcfghiopqrstuv";
-	s3 = "ijklmnopfghistuvw";
-	string s4 = "fghimnopqrstuv";
-	sTree.InsertString(s1);
-	sTree.InsertString(s2, s1.size());
-	sTree.InsertString(s3, s1.size() + s2.size());
-	sTree.InsertString(s4, s1.size() + s2.size() + s3.size());	// match "fghi" with all other strings
+	sTree.InsertString("abcdefghijkl");
+	sTree.InsertString("bbcfghiopqrstuv");
+	sTree.InsertString("ijklmnopfghistuvw");
+	sTree.InsertString("fghimnopqrstuv");	// match "fghi" with all other strings
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 4);
 	match = sTree.LongestCommonSubstring(1);
 	assert(match == 5);
 	sTree.Clear();
-	s1 = "abcdewxyzjkl";
-	s2 = "bbcwxyzoijkq";
-	s3 = "ijklmnopwxyzstuv";
-	s4 = "wxyzmnopqrst";
-	string s5 = "abcdmnopqrstwxyz";
-	sTree.InsertString(s1);
-	sTree.InsertString(s2, s1.size());
-	sTree.InsertString(s3, s1.size() + s2.size());
-	sTree.InsertString(s4, s1.size() + s2.size() + s3.size());
-	sTree.InsertString(s5, s1.size() + s2.size() + s3.size() + s4.size());	// match "wxyz" with all other strings
+	sTree.InsertString("abcdewxyzjkl");
+	sTree.InsertString("bbcwxyzoijkq");
+	sTree.InsertString("ijklmnopwxyzstuv");
+	sTree.InsertString("wxyzmnopqrst");
+	sTree.InsertString("abcdmnopqrstwxyz");	// match "wxyz" with all other strings
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 4);
 	match = sTree.LongestCommonSubstring(1);
@@ -7574,7 +7561,7 @@ T TreeArithmeticTotal(shared_ptr<Node<string>> node)
 }
 // https://app.codility.com/programmers/task/zig_zag_escape/
 // Given a sequence S of integers, find a number of increasing sequences I such that every two consecutive elements in I appear in S, but on the opposite sides of the first element of I.
-// Still doesn't work. TIMEOUT ERROR.
+// Unfinished work!
 //Task Score: 18 %
 //Correctness: 44 %
 //Performance: 0 %
@@ -7597,41 +7584,43 @@ size_t ZigZagEscape(vector<long>& data)
 			r.clear();
 			r.emplace(zigzag[i].value);
 			for (size_t j = i + k, isFirst = true; j < zigzag.size(); j++) {
-				cout << "i: " << i << ", j: " << j << ", k: " << k << endl;
+				//cout << "i: " << i << ", j: " << j << ", k: " << k << endl;
 				if (isFirst) {
 					isFirst = false;
 					wasSmaller = zigzag[j].index < zigzag[i].index;
 					r.emplace(zigzag[j].value);
-					copy(r.begin(), r.end(), ostream_iterator<size_t>(cout, " "));
-					cout << endl;
+					//copy(r.begin(), r.end(), ostream_iterator<size_t>(cout, " "));
+					//cout << endl;
 					result.emplace(r);
 				} else if (wasSmaller && zigzag[j].index > zigzag[i].index) {
 					wasSmaller = !wasSmaller;
 					r.emplace(zigzag[j].value);
-					copy(r.begin(), r.end(), ostream_iterator<size_t>(cout, " "));
-					cout << endl;
+					//copy(r.begin(), r.end(), ostream_iterator<size_t>(cout, " "));
+					//cout << endl;
 					result.emplace(r);
 				} else if (!wasSmaller && zigzag[j].index < zigzag[i].index) {
 					wasSmaller = !wasSmaller;
 					r.emplace(zigzag[j].value);
-					copy(r.begin(), r.end(), ostream_iterator<size_t>(cout, " "));
-					cout << endl;
+					//copy(r.begin(), r.end(), ostream_iterator<size_t>(cout, " "));
+					//cout << endl;
 					result.emplace(r);
 				} else {
 					set<int> tmp(r);
 					tmp.erase(zigzag[j - 1].value);
 					tmp.emplace(zigzag[j].value);
 					result.emplace(tmp);
-					cout << "No result! i:" << zigzag[i].index << " " << zigzag[i].value << ", j: " << zigzag[j].index << " " << zigzag[j].value << endl;
+					//cout << "No result! i:" << zigzag[i].index << " " << zigzag[i].value << ", j: " << zigzag[j].index << " " << zigzag[j].value << endl;
 				}
 			}
 		}
 	}
+#if 0
 	cout << "Final: " << endl;
 	for (set<set<int>>::const_iterator it = result.begin(); it != result.end(); it++) {
 		copy(it->begin(), it->end(), ostream_iterator<size_t>(cout, " "));
 		cout << endl;
 	}
+#endif
 	return result.size();
 }
 size_t ZigZagEscape(vector<long>& data, set<string>& strResult)
