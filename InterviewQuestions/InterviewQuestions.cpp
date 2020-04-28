@@ -5204,15 +5204,53 @@ void SuffixTreeTests()
 	assert(match == 4);
 	sTree.Clear();
 	sTree.InsertString("abcdefghijkl");
-	sTree.InsertString("bbcabcghijmn", 12); // match "ghij"
+	sTree.InsertString("bbcabcghijmnopq", 12); // match "ghij"
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 4);
 	sTree.Clear();
 	sTree.InsertString("abcdefghijkl");
-	sTree.InsertString("bbcdemnoijkq", 12);	// match "bcde"
+	sTree.InsertString("bmnobcdeijkq", 12);	// match "bcde"
 	match = sTree.LongestCommonSubstring(0);
 	assert(match == 4);
 	sTree.Clear();
+	s1 = "abcdefghijkl";
+	string s2 = "bbijkmnopqrstuv";
+	string s3 = "ijklmnopqrst";
+	sTree.InsertString(s1);
+	sTree.InsertString(s2, s1.size());	// match "bcde" with first string
+	sTree.InsertString(s3, s1.size() + s2.size());	// match "ijk" with all other strings
+	match = sTree.LongestCommonSubstring(0);
+	assert(match == 3);
+	match = sTree.LongestCommonSubstring(1);
+	assert(match == 4);
+	sTree.Clear();
+	s1 = "abcdefghijkl";
+	s2 = "bbcfghiopqrstuv";
+	s3 = "ijklmnopfghistuvw";
+	string s4 = "fghimnopqrstuv";
+	sTree.InsertString(s1);
+	sTree.InsertString(s2, s1.size());
+	sTree.InsertString(s3, s1.size() + s2.size());
+	sTree.InsertString(s4, s1.size() + s2.size() + s3.size());	// match "fghi" with all other strings
+	match = sTree.LongestCommonSubstring(0);
+	assert(match == 4);
+	match = sTree.LongestCommonSubstring(1);
+	assert(match == 5);
+	sTree.Clear();
+	s1 = "abcdewxyzjkl";
+	s2 = "bbcwxyzoijkq";
+	s3 = "ijklmnopwxyzstuv";
+	s4 = "wxyzmnopqrst";
+	string s5 = "abcdmnopqrstwxyz";
+	sTree.InsertString(s1);
+	sTree.InsertString(s2, s1.size());
+	sTree.InsertString(s3, s1.size() + s2.size());
+	sTree.InsertString(s4, s1.size() + s2.size() + s3.size());
+	sTree.InsertString(s5, s1.size() + s2.size() + s3.size() + s4.size());	// match "wxyz" with all other strings
+	match = sTree.LongestCommonSubstring(0);
+	assert(match == 4);
+	match = sTree.LongestCommonSubstring(1);
+	assert(match == 5);
 #if 0
 	Stack overflow!
 	string s1 = "gatezejttddpkmndtauvjcffiiafgzhkqgzliirdldbmqkdfpeadgjxcirgkmkcfxorthhpujbnenxansboejjrqfxoohuolsxgohukxmpzfukzvkduurvajrodlpxojzsihiqftrbkixbcxraqpiyadbkzqihmigunrzfzcgzfkeszcpkdotulkktfduekyqzkymqpeidhpyuhotynqaxknnsheiogrhobrajzkrekexvorlvlyhtgstjrtdgjzahvmjnprcumulnvftgoiyctjgtthleeunkgbemapsntmfdnuaydkrbyngbrbpsznfdftonfmbjahqrpgddbkokvdxfflzysneapnqvsqhilxabbjamkdhpktscxsczpoontmliozurkrvagnidnmcayiradtbacltouzacvseayrdzkkkqgbfrrnfydbnnxvctffgtfpbmfzsqjnclcnttztcvvpbmkovahvpdnjqghcafzcxhrxumhxxkdtyjqypljzsbidfpoydlumdrhokvmstydlmymldvimdduvzzcmiyxapbrrrndhjnhncpibdmiryjteyvcydxkthxcbgxshffuzevvfrcrpzaotcpbefqqppehgdlbfstralgzbtdfervuvejyvvocrabkiohjxjnnrshvyijyonzzioeakpbkgxybtlcbybgzvvvvhhkdfvpupxnlecqizvzhgigliotybprnnntqdsiquxvdxojripdlmzsyorhjandaqtjfptgebxbjmnokevncfxkkadrsqjvxuttokcabefxehmnhkcbgrdmnmmycflifrrkriggeplcfafpxsbfchbdzbvdgsbrcebgkgsdbdntfdbaltnsdzraafhobrsygkvetomeqvkrntyzeqimcaktnvfcehaeexqjnjfyvomfqlbdjxhhjojvytaovvprpfrdpgurzfhknsimnmhctbkzxfxjrzfjvjsigivmlxcgiginjitarxettzzcpceonufetlpdxupmpfmhzanufjxrkaapaaalaulebxizfjshbjsagmxmuesvecuoobuctngykkzsztzauquxxdgmjxuybkzvxsftzpqhmarlsbaeriaahlrcdgjadhbrizmnabcfadtnfdzobdhayhrxmdddycenimblnrlicasqhttekqyiafijoiykcmutzbjupsbqxbzeyqxbsshelvzieoiozylenrlaelpykdpvzhvpttmsyxsjbrfqchgrxcuvkgqinluzjrqlnzitvhlofjiznsxvbbhscsuoufodozsrmjecfdrkcslgmmrcletuvxcdfitpmgocjdcurrbfqpefxtndzkuuzxpaxfanxdxnteiapkzouvqiykxntmltdpmyzjveivnfuhzlrkseyhpbgrtcvnqmpqcgubjyourdrizixmoflmyzsskvfagtdopgthcdmmqhkmksxgeckagmjgauvz";

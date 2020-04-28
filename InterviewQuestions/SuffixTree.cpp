@@ -89,11 +89,13 @@ const size_t SuffixTree::LongestCommonSubstring(long n)
 		long index1 = -1, index2 = -1;
 		for (map<string, size_t>::iterator it = result.begin(); it != result.end(); it++) {
 			if (it->second > count) {
-				count = it->second;
 				vector<size_t> tmp;
 				split(it->first, ',', tmp);
-				index1 = tmp[0];
-				index2 = tmp[1];
+				if (tmp.size() == m_strings.size()) {
+					count = it->second;
+					index1 = tmp[0];
+					index2 = tmp[1];
+				}
 			}
 		}
 		//cout << "index: " << index1 << ", count: " << count << endl;
