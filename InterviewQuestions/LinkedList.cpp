@@ -78,6 +78,7 @@ void LinkedList<T>::ToVector(vector<T>& data)
 		data.push_back(n->Item());
 }
 
+// Unfinished work!
 template<class T>
 void LinkedList<T>::SplitList(shared_ptr<Node<T>>& even, shared_ptr<Node<T>>& odd)
 {

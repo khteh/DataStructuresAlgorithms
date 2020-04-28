@@ -1279,20 +1279,21 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a.resize(10);
 	generate(a.begin(), a.end(), [&] {return uniformDistribution(engine); });
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
-	cout << endl;
 	LinkedList<long> lla1(a);
 	assert(lla1.Length() == 10);
-	lla1.Print();
 	b.clear();
 	lla1.ToVector(b);
 	assert(a.size() == b.size());
 	for (size_t i = 0; i < a.size(); i++)
 		assert(a[i] == b[i]);
 	shared_ptr<Node<long>> odd = nullptr, even = nullptr;
-	lla1.SplitList(even, odd); // Problem here!
+	lla1.SplitList(even, odd); // Unfinished work!
 	assert(odd);
 	assert(even);
+	//for (; even; even = even->Next())
+	//	assert(!(even->Item() % 2));
+	//for (; odd; odd = odd->Next())
+	//	assert(even->Item() % 2);
 	cout << "Even: ";
 	lla1.Print(even);
 	cout << "Odd: ";
@@ -1328,8 +1329,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	LinkedList<long> llb1(a);
 	assert(llb1.Length() == 3);
 	llb1.Print();
-	LinkedList<long> listAdditionResult = lla3.AddNumbers(lla3.Head(), llb1.Head());
+	a.clear();
+	a.push_back(8);
+	a.push_back(0);
+	a.push_back(3);
+	a.push_back(1);
+	LinkedList<long> listAdditionResult = lla3.AddNumbers(lla3.Head(), llb1.Head()); // 987 + 321 = 1308 List in reverse order. Head points to LSB
+	assert(listAdditionResult.Length() == 4);
 	listAdditionResult.Print();
+	i = 0;
+	for (shared_ptr<Node<long>> n = listAdditionResult.Head(); n; n = n->Next())
+		assert(n->Item() == a[i++]);
 	vector<long> listAdditionResultVector;
 	listAdditionResult.ToVector(listAdditionResultVector);
 	assert(listAdditionResultVector.size() == 4);
@@ -1667,7 +1677,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	mymap.emplace(4, 'B');
 	mymap.emplace(5, 'B');
 	mapIt = mymap.upper_bound(3);
-	cout << (--mapIt)->first << endl;
+	assert(mapIt->first == 4);
+	assert((--mapIt)->first == 2);
 	mymap.emplace(3, 'C');
 	cout << numeric_limits<int>::lowest() << endl;
 	interval_map<int, char> imap(0);
@@ -7420,8 +7431,11 @@ long MaxProfit(vector<long>& data)
 	}
 	return delta;
 }
-// You are a game developer working on a game that randomly generates levels. A level is an undirected graph of rooms, each connected by doors. The player starts in one room, and there is a treasure in another room. Some doors are locked, and each lock is opened by a unique key. A room may contain one of those unique keys, or the treasure, or nothing. 
-// Implement a representation for a level and write code that, given a level and starting room, returns true if the treasure can be reached by the player—likely requiring them to find certain other keys first—or false if there is no solution.
+// You are a game developer working on a game that randomly generates levels. A level is an undirected graph of rooms, each connected by doors. 
+// The player starts in one room, and there is a treasure in another room. Some doors are locked, and each lock is opened by a unique key. 
+// A room may contain one of those unique keys, or the treasure, or nothing. Implement a representation for a level and write code that, 
+// given a level and starting room, returns true if the treasure can be reached by the player—likely requiring them to find certain other keys first—or 
+// false if there is no solution.
 void PlayTreasureGame()
 {
 	TreasureGame game;
@@ -7432,9 +7446,11 @@ void PlayTreasureGame()
 	a.addDoor(&d, 1);
 	d.addDoor(&e, 3);
 	e.addDoor(&f, 7);
-	cout << "Start with room a " << game.hasTreasure(&a) << endl;
+	//cout << "Start with room a " << game.hasTreasure(&a) << endl;
+	assert(!game.hasTreasure(&a));
 	c.addDoor(&f, 2);
-	cout << "Start with room a " << game.hasTreasure(&a) << endl;
+	//cout << "Start with room a " << game.hasTreasure(&a) << endl;
+	assert(game.hasTreasure(&a));
 }
 //Given a matrix of N * M, given the coordinates(x, y) present in a matrix,
 //Find the number of paths that can reach(0, 0) from the(x, y) points with k steps(requires exactly k, k> = 0)
