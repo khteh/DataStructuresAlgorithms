@@ -78,7 +78,6 @@ void LinkedList<T>::ToVector(vector<T>& data)
 		data.push_back(n->Item());
 }
 
-// Unfinished work!
 template<class T>
 void LinkedList<T>::SplitList(shared_ptr<Node<T>>& even, shared_ptr<Node<T>>& odd)
 {
@@ -86,21 +85,22 @@ void LinkedList<T>::SplitList(shared_ptr<Node<T>>& even, shared_ptr<Node<T>>& od
 	even = odd = nullptr;
 	size_t i = 0;
 	for (shared_ptr<Node<T>> n = m_head; n; n = n->Next(), i++) {
+		shared_ptr<Node<T>> node = make_shared<Node<T>>(n);
 		if (!(i % 2)) {
 			if (!even) {
-				even = n;
-				evenTail = n;
+				even = node;
+				evenTail = node;
 			} else {
-				evenTail->SetNext(n);
-				evenTail = n;
+				evenTail->SetNext(node);
+				evenTail = node;
 			}
 		} else {
 			if (!odd) {
-				odd = n;
-				oddTail = n;
+				odd = node;
+				oddTail = node;
 			} else {
-				oddTail->SetNext(n);
-				oddTail = n;
+				oddTail->SetNext(node);
+				oddTail = node;
 			}
 		}
 	}

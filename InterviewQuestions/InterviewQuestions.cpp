@@ -1304,19 +1304,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	for (size_t i = 0; i < a.size(); i++)
 		assert(a[i] == b[i]);
 	shared_ptr<Node<long>> odd = nullptr, even = nullptr;
-	lla1.Print();
-	lla1.SplitList(even, odd); // Unfinished work!
-	lla1.Print();
+	lla1.SplitList(even, odd);
+	assert(lla1.Length() == 10);
 	assert(odd);
 	assert(even);
-	for (size_t i = 0; even; even = even->Next(), i += 2)
-		assert(even->Item() == a[i]);
-	for (size_t i = 1; odd; odd = odd->Next(), i += 2)
-		assert(odd->Item() == a[i]);
-	cout << "Even: ";
-	lla1.Print(even);
-	cout << "Odd: ";
-	lla1.Print(odd);
+	shared_ptr<Node<long>> node = even;
+	for (size_t i = 0; node; node = node->Next(), i += 2)
+		assert(node->Item() == a[i]);
+	node = odd;
+	for (size_t i = 1; node; node = node->Next(), i += 2)
+		assert(node->Item() == a[i]);
 	lla1.Clear();
 	a.clear();
 	for (size_t i = 0; i < 10; i++)
