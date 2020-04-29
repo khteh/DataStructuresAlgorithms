@@ -89,7 +89,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << tx->Read() << endl;
 	rx->Write("Receiver");
 	cout << rx->Read() << endl;
-	cout << endl;
 
 	Transmitter *tx1 = new Transmitter();
 	cout << tx1->Read() << endl;
@@ -437,14 +436,40 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(bitCount(12) == 2);
 	assert(bitCount(7) == 3);
 	a.clear();
-	BitCombinations(3, a);
+	BitCombinations(3, a); // 000 001 010 100 011 101 110 111
 	assert(a.size() == 8);
+	assert(a[0] == 0);
+	assert(a[1] == 1);
+	assert(a[2] == 2);
+	assert(a[3] == 4);
+	assert(a[4] == 3);
+	assert(a[5] == 5);
+	assert(a[6] == 6);
+	assert(a[7] == 7);
+	cout << "BitCombinations from 0 to 3 of '1' bits: ";
 	for (vector<long>::iterator it = a.begin(); it != a.end(); it++)
 		cout << bitset<3>(*it) << " ";
 	cout << endl;
 	a.clear();
-	BitCombinations(4, a);
+	BitCombinations(4, a); // 0000 0001 0010 0100 1000 0011 0101 0110 1001 1010 1100 0111 1011 1101 1110 1111
 	assert(a.size() == 16);
+	assert(a[0] == 0);
+	assert(a[1] == 1);
+	assert(a[2] == 2);
+	assert(a[3] == 4);
+	assert(a[4] == 8);
+	assert(a[5] == 3);
+	assert(a[6] == 5);
+	assert(a[7] == 6);
+	assert(a[8] == 9);
+	assert(a[9] == 10);
+	assert(a[10] == 12);
+	assert(a[11] == 7);
+	assert(a[12] == 11);
+	assert(a[13] == 13);
+	assert(a[14] == 14);
+	assert(a[15] == 15);
+	cout << "BitCombinations from 0 to 4 of '1' bits: ";
 	for (vector<long>::iterator it = a.begin(); it != a.end(); it++)
 		cout << bitset<4>(*it) << " ";
 	cout << endl;
@@ -459,18 +484,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(strings.size() == 2); //  a d
 	assert(strings[0] == "a");
 	assert(strings[1] == "d");
-	line = "a";
-	assert(CanShuffleWithoutRepeat(line));
-	cout << line << (CanShuffleWithoutRepeat(line) ? " can repeat" : " cannot repeat") << endl;
-	line = "aa";
-	assert(!CanShuffleWithoutRepeat(line));
-	cout << line << (CanShuffleWithoutRepeat(line) ? " can repeat" : " cannot repeat") << endl;
-	line = "aab";
-	assert(CanShuffleWithoutRepeat(line));
-	cout << line << (CanShuffleWithoutRepeat(line) ? " can repeat" : " cannot repeat") << endl;
-	line = "aaaabbcc";
-	assert(CanShuffleWithoutRepeat(line));
-	cout << line << (CanShuffleWithoutRepeat(line) ? " can repeat" : " cannot repeat") << endl;
+	assert(CanShuffleWithoutRepeat(string("a")));
+	assert(!CanShuffleWithoutRepeat(string("aa")));
+	assert(CanShuffleWithoutRepeat(string("aab")));
+	assert(CanShuffleWithoutRepeat(string("aaaabbcc")));
 	a.clear();
 	a.push_back(-2);
 	a.push_back(-3);
@@ -1287,18 +1304,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	for (size_t i = 0; i < a.size(); i++)
 		assert(a[i] == b[i]);
 	shared_ptr<Node<long>> odd = nullptr, even = nullptr;
+	lla1.Print();
 	lla1.SplitList(even, odd); // Unfinished work!
+	lla1.Print();
 	assert(odd);
 	assert(even);
-	//for (; even; even = even->Next())
-	//	assert(!(even->Item() % 2));
-	//for (; odd; odd = odd->Next())
-	//	assert(even->Item() % 2);
+	for (size_t i = 0; even; even = even->Next(), i += 2)
+		assert(even->Item() == a[i]);
+	for (size_t i = 1; odd; odd = odd->Next(), i += 2)
+		assert(odd->Item() == a[i]);
 	cout << "Even: ";
 	lla1.Print(even);
 	cout << "Odd: ";
 	lla1.Print(odd);
-	lla1.Print();
 	lla1.Clear();
 	a.clear();
 	for (size_t i = 0; i < 10; i++)
@@ -3510,7 +3528,7 @@ void SortStack(MyStack<T> &src, MyStack<T> &dest, sort_order_t order)
 				src.push(dest.pop());
 			break;
 		default:
-			throw "Invalid sort order";
+			throw runtime_error("Invalid sort order");
 			break;
 		}
 		dest.push(item);
@@ -4221,13 +4239,10 @@ void sortingTests()
 	for (vector<long>::iterator it = a.begin(); it != a.end(); it++) {
 		if (it != a.begin())
 			if (*it < *(it - 1)) {
-				cout << "Merge 2 sorted lists failed!";
-				assert(false);
+				throw runtime_error("Merge 2 sorted lists failed!");
 				break;
 			}
 	}
-	cout << endl;
-
 	a.resize(20);
 	b.resize(10);
 	generate(a.begin(), a.end(), [&] {return uniformDistribution(engine); });
@@ -4283,7 +4298,6 @@ void sortingTests()
 	assert(a[2] == 2);
 	assert(a[3] == 2);
 	assert(a[4] == 3);
-	cout << endl << endl;
 }
 void TestBinarySearch()
 {
@@ -4888,7 +4902,7 @@ long countDigits(char digit, long n)
 {
 	long power = 1, firstDigits = 0;
 	if (digit < 0 || digit > 9)
-		throw "digit must be between 0 and 9!";
+		throw runtime_error("digit must be between 0 and 9!");
 	if (!n)
 		return 0;
 
@@ -5040,7 +5054,7 @@ bool DifferentSigns(long a, long b)
 long DivideWithPlusSign(long a, long b)
 {
 	if (!b)
-		throw "Divide by zero exception";
+		throw runtime_error("Divide by zero exception");
 	long quotient;
 	long divisor = ToggleSign(absolute(b)); // * -1
 	long dividend = absolute(a);

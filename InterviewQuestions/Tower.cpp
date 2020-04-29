@@ -19,9 +19,9 @@ void Tower::Add(int disk)
 {
 	if (!m_disks.isEmpty() && m_disks.peek() <= disk)
 	{
-		stringstream ss;
-		ss << "Cannot stack bigger disk " << disk << " on smaller disk";
-		throw ss.str();
+		ostringstream oss;
+		oss << "Cannot stack bigger disk " << disk << " on smaller disk";
+		throw runtime_error(oss.str());
 	} else
 		m_disks.push(disk);
 }

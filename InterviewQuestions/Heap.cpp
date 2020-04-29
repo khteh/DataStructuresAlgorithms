@@ -162,7 +162,7 @@ void Heap<T>::HeapifyUp(shared_ptr<Node<T>> node, unsigned long level)
 			}
 			break;
 		default:
-			throw "Invalid Heap Type!";
+			throw runtime_error("Invalid Heap Type!");
 			break;
 		}
 	}
@@ -222,7 +222,7 @@ void Heap<T>::HeapifyDown(shared_ptr<Node<T>> node)
 			}
 			break;
 		default:
-			throw "Invalid Heap Type!";
+			throw runtime_error("Invalid Heap Type!");
 			break;
 		}
 	}
