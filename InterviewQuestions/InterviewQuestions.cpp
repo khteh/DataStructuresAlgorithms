@@ -1515,16 +1515,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(-10);
 	assert(NumberSolitaire(a) == -13);
 	PlayTreasureGame();
-	testPathCount(2, 2, 1, 1, 2);
-	testPathCount(2, 2, 1, 1, 3);
-	testPathCount(2, 2, 1, 1, 4);
-	testPathCount(5, 5, 4, 4, 5);
-	testPathCount(5, 8, 4, 6, 10);
-	testPathCount(5, 8, 4, 6, 16);
-	testPathCount(5, 8, 4, 6, 17);
-	//testPathCount(5, 8, 4, 6, 18);
-	//testPathCount(5, 8, 4, 6, 20);
-	//testPathCount(5, 8, 4, 6, 21);
+	assert(countPaths(2, 2, 1, 1, 2) == 2); // 2
+	assert(countPaths(2, 2, 1, 1, 3) == 0); // 0
+	assert(countPaths(2, 2, 1, 1, 4) == 8); // 8
+	assert(countPaths(5, 5, 4, 4, 5) == 0); // 0
+	assert(countPaths(5, 8, 4, 6, 10) == 210); // 210
+	assert(countPaths(5, 8, 4, 6, 16) == 2840838); // 2840838
+	assert(countPaths(5, 8, 4, 6, 17) == 0); // 0
+	//countPaths(5, 8, 4, 6, 18); too big
+	//countPaths(5, 8, 4, 6, 20); too big
+	//countPaths(5, 8, 4, 6, 21); too big
 	/*
 		/------(f)<-   /--\
 		v   ---/     \ v   |
@@ -7486,21 +7486,23 @@ void PlayTreasureGame()
 //0 0 0 0 0
 //0 0 0 0 0
 //(x, y) = (1, 1), k = 2, the output is 2
+const size_t moves[][2] = { {0,1}, {0, -1}, {1, 0}, {-1, 0} };
 size_t countPaths(size_t m, size_t n, size_t x, size_t y, size_t k)
 {
-	if ((x + y) <= k && x < m && y < n) {
+	// It is clear that the shortest path to reach (0, 0) from (x, y) will be minMoves = (|x| + |y|)
+	// if K ≥ minMoves then after reaching (0, 0) in minMoves number of moves the remaining (K – minMoves) number of moves have to be even in order to 
+	// remain at that point for the rest of the moves.
+	size_t minMoves = x + y;
+	if (k >= minMoves && !((k - minMoves) % 2) && x < m && y < n) {
 		if (k == 0 && x == 0 && y == 0)
 			return 1;
 		size_t sum = 0;
+		//cout << "sizeof(moves): " << sizeof(moves) << ", sizeof(decltype(moves[0])): " << sizeof(decltype(moves[0])) << endl;
 		for (size_t i = 0; i < sizeof(moves) / sizeof(decltype(moves[0])); i++)
 			sum += countPaths(m, n, x + moves[i][0], y + moves[i][1], k - 1);
 		return sum;
 	}
 	return 0;
-}
-void testPathCount(size_t m, size_t n, size_t x, size_t y, size_t k)
-{
-	cout << "test case (m,n): " << m << "," << n << " (x,y): " << x << "," << y << " k:" << k << " => " << countPaths(m, n, x, y, k) << endl;
 }
 vector<shared_ptr<Node<string>>> shortest_cycle_path(shared_ptr<Node<string>> node)
 {
