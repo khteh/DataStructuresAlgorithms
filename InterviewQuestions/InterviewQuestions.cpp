@@ -1882,25 +1882,46 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(9);
 	DisJointSet<long> disjointSet(a);
 	disjointSet.Print(a);
-	assert(disjointSet.Find(3) != disjointSet.Find(7));
+	// Test islands
+	//assert(disjointSet.Find(0) == 0); C++ map will insert non-existing key silently
+	assert(disjointSet.Find(1) == 1);
+	assert(disjointSet.Find(3) == 3);
+	assert(disjointSet.Find(5) == 5);
+	assert(disjointSet.Find(7) == 7);
+	assert(disjointSet.Find(9) == 9);
+	// Test all islands of Rank 0
+	assert(disjointSet.Rank(1) == 0);
 	assert(disjointSet.Rank(3) == 0);
+	assert(disjointSet.Rank(5) == 0);
 	assert(disjointSet.Rank(7) == 0);
-	assert(disjointSet.Union(3, 7) == 7);
+	assert(disjointSet.Rank(9) == 0);
+	assert(disjointSet.Find(1) != disjointSet.Find(3));
+	assert(disjointSet.Find(3) != disjointSet.Find(5));
+	assert(disjointSet.Find(5) != disjointSet.Find(7));
+	assert(disjointSet.Find(7) != disjointSet.Find(9));
+	assert(disjointSet.Union(3, 7) == 7); // 3,7 root: 7
+	assert(disjointSet.Find(1) != disjointSet.Find(3));
+	assert(disjointSet.Find(3) != disjointSet.Find(5));
+	assert(disjointSet.Find(5) != disjointSet.Find(7));
+	assert(disjointSet.Find(7) != disjointSet.Find(9));
+	assert(disjointSet.Find(3) == disjointSet.Find(7));
 	assert(disjointSet.Rank(3) == 1);
 	assert(disjointSet.Rank(7) == 1);
 	disjointSet.Print(a);
-	assert(disjointSet.Find(1) != disjointSet.Find(3));
 	// Put smaller ranked item under bigger ranked item if ranks are different 
-	assert(disjointSet.Union(1, 3) == 7);
-	assert(disjointSet.Union(1, 7) == 0);
+	assert(disjointSet.Union(1, 3) == 7); // 1, 3, 7 root: 7
+	assert(disjointSet.Union(1, 7) == 0); // Already joined!
 	assert(disjointSet.Rank(1) == 1);
 	assert(disjointSet.Rank(3) == 1);
 	assert(disjointSet.Rank(7) == 1);
 	disjointSet.Print(a);
-	assert(disjointSet.Find(3) == disjointSet.Find(7));
 	assert(disjointSet.Find(1) == disjointSet.Find(3));
-	assert(disjointSet.Find(2) == 0);
-	assert(disjointSet.Find(1) != disjointSet.Find(2));
+	assert(disjointSet.Find(3) != disjointSet.Find(5));
+	assert(disjointSet.Find(5) != disjointSet.Find(7));
+	assert(disjointSet.Find(7) != disjointSet.Find(9));
+	assert(disjointSet.Find(3) == disjointSet.Find(7));
+	//assert(disjointSet.Find(2) == 0); C++ map will insert non-existing key silently
+	//assert(disjointSet.Find(1) != disjointSet.Find(2)); C++ map will insert non-existing key silently
 	vector<long> from, to, weights;
 	from.push_back(1);
 	from.push_back(1);

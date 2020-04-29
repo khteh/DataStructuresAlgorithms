@@ -16,6 +16,12 @@ void DisJointSet<T>::MakeSet(vector<T>& data)
 template<class T>
 T DisJointSet<T>::Find(T item)
 {
+	// C++ map will insert non-existing key silently
+	if (_parent.find(item) == _parent.end()) {
+		ostringstream oss;
+		oss << item << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << item << ");";
+		throw runtime_error(oss.str());
+	}
 	// Find the root of the set in which element l belongs
 	if (_parent[item] == item)
 		return item;
@@ -52,7 +58,7 @@ T DisJointSet<T>::Union(T x, T y)
 	}
 	T root;
 	if (rootX != rootY) {
-		// Put smaller ranked item under bigger ranked item if ranks are different 
+		// Put smaller ranked item under bigger ranked item if ranks are different. Copying of smaller ranked item saves time!
 		if (_rank[rootX] < _rank[rootY]) {
 			_parent[rootX] = rootY;
 			root = rootY;
