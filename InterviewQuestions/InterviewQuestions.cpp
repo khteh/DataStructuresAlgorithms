@@ -7478,7 +7478,7 @@ void PlayTreasureGame()
 //Given a matrix of N * M, given the coordinates(x, y) present in a matrix,
 //Find the number of paths that can reach(0, 0) from the(x, y) points with k steps(requires exactly k, k> = 0)
 //From each point you can go up, down, left and right in four directions.
-//
+// https://www.geeksforgeeks.org/check-if-it-is-possible-to-move-from-0-0-to-x-y-in-exactly-k-steps/
 //For example, the following matrix :
 //----------
 //0 0 0 0 0
