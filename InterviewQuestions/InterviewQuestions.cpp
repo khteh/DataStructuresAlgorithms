@@ -2103,13 +2103,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	grid1.clear();
 	grid1.resize(1);
 	grid1[0].push_back(1);
-	assert(surfaceArea(grid1) == 6);
+	assert(SurfaceArea3D(grid1) == 6);
 	grid1.clear();
 	grid1.resize(1);
 	grid1[0].push_back(1);
 	grid1[0].push_back(0);
 	grid1[0].push_back(1);
-	assert(surfaceArea(grid1) == 12);
+	assert(SurfaceArea3D(grid1) == 12);
 	unsigned long gridArray19[3][3] = { {1,3,4}, {2,2,3}, {1,2,4} };
 	grid1.clear();
 	grid1.resize(3);
@@ -2118,7 +2118,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (size_t j = 0; j < 3; j++)
 			grid1[i][j] = gridArray19[i][j];
 	}
-	assert(surfaceArea(grid1) == 60);
+	assert(SurfaceArea3D(grid1) == 60);
 	grid1.clear();
 	grid1.resize(1);
 	grid1[0].push_back(1);
@@ -2131,7 +2131,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	grid1[0].push_back(3);
 	grid1[0].push_back(2);
 	grid1[0].push_back(1);
-	assert(surfaceArea(grid1) == 90);
+	assert(SurfaceArea3D(grid1) == 90);
 	unsigned long gridArray20[10][1] = { {1}, {2}, {3}, {4}, {5}, {5}, {4}, {3}, {2}, {1} };
 	grid1.clear();
 	grid1.resize(10);
@@ -2140,7 +2140,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (size_t j = 0; j < 1; j++)
 			grid1[i][j] = gridArray20[i][j];
 	}
-	assert(surfaceArea(grid1) == 90);
+	assert(SurfaceArea3D(grid1) == 90);
 	grid1.clear();
 	grid1.resize(1);
 	grid1[0].push_back(1);
@@ -2154,7 +2154,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	grid1[0].push_back(3);
 	grid1[0].push_back(2);
 	grid1[0].push_back(1);
-	assert(surfaceArea(grid1) == 102);
+	assert(SurfaceArea3D(grid1) == 102);
 	unsigned long gridArray21[11][1] = { {1}, {2}, {3}, {4}, {5}, {4},{5}, {4}, {3}, {2}, {1} };
 	grid1.clear();
 	grid1.resize(11);
@@ -2163,7 +2163,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (size_t j = 0; j < 1; j++)
 			grid1[i][j] = gridArray21[i][j];
 	}
-	assert(surfaceArea(grid1) == 102);
+	assert(SurfaceArea3D(grid1) == 102);
 	unsigned long gridArray22[10][1] = { {51}, {32}, {28}, {49}, {28}, {21}, {98}, {56}, {99}, {77} };
 	grid1.clear();
 	grid1.resize(10);
@@ -2172,7 +2172,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (size_t j = 0; j < 1; j++)
 			grid1[i][j] = gridArray22[i][j];
 	}
-	assert(surfaceArea(grid1) == 1482);
+	assert(SurfaceArea3D(grid1) == 1482);
 	cout << endl;
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
@@ -8768,7 +8768,7 @@ long getLowestPathCost(size_t g_nodes, vector<long>& g_from, vector<long>& g_to,
 }
 // https://www.hackerrank.com/challenges/3d-surface-area/problem
 // 100%
-size_t surfaceArea(vector<vector<long>>& data) 
+size_t SurfaceArea3D(vector<vector<long>>& data) 
 {
 	size_t zArea = 0, xArea = 0, yArea = 0;
 	for (size_t i = 0; i < data.size(); i++) {

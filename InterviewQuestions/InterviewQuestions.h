@@ -321,4 +321,4 @@ int kruskals(int, vector<long>&, vector<long>&, vector<long>&);
 size_t PrimMinimumSpanningTree(size_t, vector<vector<long>>&, long);
 void UnbeatenPaths(size_t, vector<vector<long>>&, long start, vector<long>&);
 long getLowestPathCost(size_t g_nodes, vector<long>&, vector<long>&, vector<long>&);
-size_t surfaceArea(vector<vector<long>>&);
+size_t SurfaceArea3D(vector<vector<long>>&);
