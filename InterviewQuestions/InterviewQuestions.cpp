@@ -956,11 +956,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	long** my2Dbuffer = my2DAlloc(10, 10);
 	for (i = 0; i < 10; i++)
 		for (j = 0; j < 10; j++)
-			my2Dbuffer[i][j] = j;
+			my2Dbuffer[i][j] = i*10 + j;
 	cout << "Content of 2D buffer: " << endl;
 	for (i = 0; i < 10; i++) {
-		for (j = 0; j < 10; j++)
+		for (j = 0; j < 10; j++) {
 			cout << my2Dbuffer[i][j] << " ";
+			assert(my2Dbuffer[i][j] == i*10 + j);
+		}
 		cout << endl;
 	}
 	free(my2Dbuffer);
@@ -969,12 +971,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	for (i = 0; i < 10; i++)
 		for (j = 0; j < 10; j++)
 			for (size_t k = 0; k < 10; k++)
-				my3Dbuffer[i][j][k] = k;
+				my3Dbuffer[i][j][k] = i*10 + j*10 + k;
 	cout << "Content of 3D buffer: " << endl;
 	for (i = 0; i < 10; i++) {
 		for (j = 0; j < 10; j++)
-			for (size_t k = 0; k < 10; k++)
+			for (size_t k = 0; k < 10; k++) {
 				cout << my3Dbuffer[i][j][k] << " ";
+				assert(my3Dbuffer[i][j][k] == i * 10 + j * 10 + k);
+			}
 		cout << endl;
 	}
 	free(my3Dbuffer);
