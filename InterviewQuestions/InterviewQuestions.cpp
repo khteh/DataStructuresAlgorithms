@@ -963,6 +963,21 @@ int _tmain(int argc, _TCHAR* argv[])
 			cout << my2Dbuffer[i][j] << " ";
 		cout << endl;
 	}
+	free(my2Dbuffer);
+	// Test 3D memory buffer allocation
+	long*** my3Dbuffer = my3DAlloc(10, 10, 10);
+	for (i = 0; i < 10; i++)
+		for (j = 0; j < 10; j++)
+			for (size_t k = 0; k < 10; k++)
+				my3Dbuffer[i][j][k] = k;
+	cout << "Content of 3D buffer: " << endl;
+	for (i = 0; i < 10; i++) {
+		for (j = 0; j < 10; j++)
+			for (size_t k = 0; k < 10; k++)
+				cout << my3Dbuffer[i][j][k] << " ";
+		cout << endl;
+	}
+	free(my3Dbuffer);
 	cout << "Test addition without using arithmetic symbol: " << endl;
 	i = AddWithoutArithmetic(0, 0);
 	assert(i == 0);
@@ -4729,13 +4744,27 @@ void Swap(long &a, long &b)
 }
 long** my2DAlloc(long rows, long cols)
 {
-	size_t header = rows * sizeof(long*); // Store the row pointers
+	size_t header = rows * sizeof(long*); // Store the row pointers [i]
 	size_t data = rows * cols * sizeof(long); // Store the data
 	long** rowptr = (long**)malloc(header + data); // row pointers + data buffers
 	long *dataptr = (long*)(rowptr + rows); // Pointer arithmetic to get the first location of data buffer
 	for (int i = 0; i < rows; i++)
 		rowptr[i] = dataptr + i * cols;
 	return rowptr;
+}
+long*** my3DAlloc(long rows, long cols, long heights)
+{
+	size_t header = rows * sizeof(long*) + rows * cols * sizeof(long*); // Store the row pointers [i] and every cell of the 2D-plane is pointer to the Z-buffer [i][j]
+	size_t data = rows * cols * heights * sizeof(long); // data
+	long*** ptrs = (long***)malloc(header + data); // row pointers + 2-D plane of pointers to Z-plane data
+	long** columns = (long**)(ptrs + rows); // Pointer arithmetic to get the first location of 2D plane of Z-plane pointers [i][j]
+	long* dataPtr = (long*)(ptrs + rows + rows * cols); // Pointer arithmetic to get the first location of data buffer
+	for (size_t i = 0; i < rows; i++) {
+		ptrs[i] = columns + i * cols;
+		for (size_t j = 0; j < cols; j++)
+			ptrs[i][j] = dataPtr + i * cols * heights + j * heights;
+	}
+	return ptrs;
 }
 long long AddWithoutArithmetic(long long sum, long long carry)
 {
