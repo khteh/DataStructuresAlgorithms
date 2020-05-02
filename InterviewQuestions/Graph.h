@@ -13,6 +13,7 @@ public:
 	Graph(vector<T>&);
 	virtual ~Graph();
 	size_t Count();
+	void Clear();
 	void AddVertex(shared_ptr<Vertex<T>>);
 	shared_ptr<Vertex<T>> AddVertex(T);
 	void AddDirectedEdge(shared_ptr<Vertex<T>>, shared_ptr<Vertex<T>>, long);

@@ -15,9 +15,8 @@ public:
 	virtual ~Vertex();
 	T GetTag() const;
 	long GetCost(shared_ptr<Vertex<T>>);
-	string GetPath();
-	void SetPath(string);
 	long GetTotalCost();
+	void ResetTotalCost();
 	void SetTotalCost(long);
 	void AddNeighbour(shared_ptr<Vertex<T>>, long);
 	void RemoveNeighbour(shared_ptr<Vertex<T>>);
@@ -35,6 +34,5 @@ public:
 protected:
 	T tag_;
 	long cost_;
-	string path_;
 	map<shared_ptr<Vertex<T>>, long> neighbours_; // neighbours and costs from this vertex to them
 };

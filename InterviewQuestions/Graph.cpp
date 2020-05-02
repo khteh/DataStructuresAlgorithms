@@ -5,6 +5,7 @@
 #include <iostream>
 using namespace std;
 template class Graph<long>;
+template class Graph<size_t>;
 template<class T>
 Graph<T>::Graph()
 {
@@ -18,6 +19,11 @@ Graph<T>::Graph(vector<T>& data)
 template<class T>
 Graph<T>::~Graph()
 {
+	Clear();
+}
+template<class T>
+void Graph<T>::Clear()
+{
 	vertices_.clear();
 }
 template<class T>
@@ -25,7 +31,6 @@ size_t Graph<T>::Count()
 {
 	return vertices_.size();
 }
-
 template<class T>
 void Graph<T>::AddVertex(shared_ptr<Vertex<T>> v)
 {
@@ -114,8 +119,8 @@ size_t Graph<T>::PrimMinimumSpanningTree(shared_ptr<Vertex<T>> start)
 	priorityQueue.emplace(0, start);
 	keys.emplace(start->GetTag(), 0);
 	while (!priorityQueue.empty()) {
-		pair<size_t, shared_ptr<Vertex<long>>> entry = *(priorityQueue.begin());
-		shared_ptr<Vertex<long>> u = entry.second;
+		pair<size_t, shared_ptr<Vertex<T>>> entry = *(priorityQueue.begin());
+		shared_ptr<Vertex<T>> u = entry.second;
 		priorityQueue.erase(entry.first);
 		inMST[u->GetTag()] = true; // Include vertex in MST
 		map<shared_ptr<Vertex<T>>, long> neighbours = u->GetNeighboursWithCost();
@@ -143,6 +148,8 @@ void Graph<T>::Dijkstra(T source, set<shared_ptr<Vertex<T>>>& spt)// spt: Shorte
 	//set<shared_ptr<Vertex<T>>> spt; 
 	set<shared_ptr<Vertex<T>>> vertices;
 	shared_ptr<Vertex<T>> vertex = GetVertex(source);
+	for (map<T, shared_ptr<Vertex<T>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
+		it->second->ResetTotalCost();
 	vertex->SetTotalCost(0);
 	for (; vertex;) {
 		spt.emplace(vertex);
@@ -176,6 +183,8 @@ long Graph<T>::Dijkstra(T src, T dest)
 	set<shared_ptr<Vertex<T>>> vertices;
 	shared_ptr<Vertex<T>> vertex = GetVertex(src);
 	shared_ptr<Vertex<T>> destination = GetVertex(dest);
+	for (map<T, shared_ptr<Vertex<T>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
+		it->second->ResetTotalCost();
 	vertex->SetTotalCost(0);
 	for (; vertex && destination && vertex != destination;) {
 		spt.emplace(vertex);

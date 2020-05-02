@@ -1805,11 +1805,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(3);
 	a.push_back(4);
 	assert(minimumBribes(a) == -1);
-	assert(isPalindrome("abcdefghhgfedecba"));
-	assert(!isPalindrome("aabbcd"));
-	assert(isPalindrome("aabbc"));
-	assert(!isPalindrome("xxxaabbccrry"));
-//	assert(!isPalindrome("aaaabbcc"));
 	assert(SherlockValidString("abcdefghhgfedecba"));
 	assert(!SherlockValidString("aabbcd"));
 	assert(!SherlockValidString("aaaabbcc"));
@@ -2105,6 +2100,79 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(a[0] == 2);
 	assert(a[1] == 2);
 	assert(a[2] == 1);
+	grid1.clear();
+	grid1.resize(1);
+	grid1[0].push_back(1);
+	assert(surfaceArea(grid1) == 6);
+	grid1.clear();
+	grid1.resize(1);
+	grid1[0].push_back(1);
+	grid1[0].push_back(0);
+	grid1[0].push_back(1);
+	assert(surfaceArea(grid1) == 12);
+	unsigned long gridArray19[3][3] = { {1,3,4}, {2,2,3}, {1,2,4} };
+	grid1.clear();
+	grid1.resize(3);
+	for (size_t i = 0; i < 3; i++) {
+		grid1[i].resize(3);
+		for (size_t j = 0; j < 3; j++)
+			grid1[i][j] = gridArray19[i][j];
+	}
+	assert(surfaceArea(grid1) == 60);
+	grid1.clear();
+	grid1.resize(1);
+	grid1[0].push_back(1);
+	grid1[0].push_back(2);
+	grid1[0].push_back(3);
+	grid1[0].push_back(4);
+	grid1[0].push_back(5);
+	grid1[0].push_back(5);
+	grid1[0].push_back(4);
+	grid1[0].push_back(3);
+	grid1[0].push_back(2);
+	grid1[0].push_back(1);
+	assert(surfaceArea(grid1) == 90);
+	unsigned long gridArray20[10][1] = { {1}, {2}, {3}, {4}, {5}, {5}, {4}, {3}, {2}, {1} };
+	grid1.clear();
+	grid1.resize(10);
+	for (size_t i = 0; i < 10; i++) {
+		grid1[i].resize(1);
+		for (size_t j = 0; j < 1; j++)
+			grid1[i][j] = gridArray20[i][j];
+	}
+	assert(surfaceArea(grid1) == 90);
+	grid1.clear();
+	grid1.resize(1);
+	grid1[0].push_back(1);
+	grid1[0].push_back(2);
+	grid1[0].push_back(3);
+	grid1[0].push_back(4);
+	grid1[0].push_back(5);
+	grid1[0].push_back(4);
+	grid1[0].push_back(5);
+	grid1[0].push_back(4);
+	grid1[0].push_back(3);
+	grid1[0].push_back(2);
+	grid1[0].push_back(1);
+	assert(surfaceArea(grid1) == 102);
+	unsigned long gridArray21[11][1] = { {1}, {2}, {3}, {4}, {5}, {4},{5}, {4}, {3}, {2}, {1} };
+	grid1.clear();
+	grid1.resize(11);
+	for (size_t i = 0; i < 11; i++) {
+		grid1[i].resize(1);
+		for (size_t j = 0; j < 1; j++)
+			grid1[i][j] = gridArray21[i][j];
+	}
+	assert(surfaceArea(grid1) == 102);
+	unsigned long gridArray22[10][1] = { {51}, {32}, {28}, {49}, {28}, {21}, {98}, {56}, {99}, {77} };
+	grid1.clear();
+	grid1.resize(10);
+	for (size_t i = 0; i < 10; i++) {
+		grid1[i].resize(1);
+		for (size_t j = 0; j < 1; j++)
+			grid1[i][j] = gridArray22[i][j];
+	}
+	assert(surfaceArea(grid1) == 1482);
 	cout << endl;
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
@@ -2380,6 +2448,11 @@ size_t sherlockAndAnagrams(string const& s)
 }
 void PalindromeTests()
 {
+	assert(isPalindrome("abcdefghhgfedecba"));
+	assert(!isPalindrome("aabbcd"));
+	assert(isPalindrome("aabbc"));
+	assert(!isPalindrome("xxxaabbccrry"));
+	//	assert(!isPalindrome("aaaabbcc"));
 	assert(isPalindrome("mmo"));
 	assert(!isPalindrome2("mmo"));
 	assert(isPalindrome("yakak"));
@@ -3148,6 +3221,7 @@ void TestGraph()
 	vector<long> data(5);
 	generate(data.begin(), data.end(), [n = 1]()mutable{return n++; });
 	Graph<long> graph(data);
+	assert(graph.Count() == 5);
 	shared_ptr<Vertex<long>> v1 = graph.GetVertex(1);
 	assert(graph.HasVertex(1));
 	assert(graph.HasVertex(2));
@@ -3209,7 +3283,7 @@ void TestGraph()
 	}
 	set<shared_ptr<Vertex<long>>> spt; // Shortest Path Tree
 	graph.Dijkstra(1, spt);
-	cout << "Vertex\tDistance from Source" << endl;
+	cout << "Vertex\tDistance from Source (1): " << endl;
 	for (set<shared_ptr<Vertex<long>>>::iterator it = spt.begin(); it != spt.end(); it++)
 		cout << (*it)->GetTag() << "\t" << (*it)->GetTotalCost() << endl;
 	assert(graph.Dijkstra(1, 5) == 7);
@@ -3217,6 +3291,24 @@ void TestGraph()
 	assert(!graph.HasVertex(3));
 	assert(!v2->HasNeighbour(v3));
 	assert(!v5->HasNeighbour(v3));
+	spt.clear();
+	graph.Clear();
+	assert(graph.Count() == 0);
+	v1 = graph.AddVertex(1);
+	v2 = graph.AddVertex(2);
+	v3 = graph.AddVertex(3);
+	v4 = graph.AddVertex(4);
+	v5 = graph.AddVertex(5);
+	assert(graph.Count() == 5);
+	graph.AddUndirectedEdge(v1, v2, 1);
+	graph.AddUndirectedEdge(v2, v3, 2);
+	graph.AddUndirectedEdge(v3, v5, 3);
+	graph.AddUndirectedEdge(v2, v4, 2);
+	cout << "1 - 3: " << graph.Dijkstra(1, 3) << endl;
+	cout << "1 - 4: " << graph.Dijkstra(1, 4) << endl;
+	cout << "3 - 4: " << graph.Dijkstra(3, 4) << endl;
+	spt.clear();
+	graph.Clear();
 }
 void parentheses(vector<string> &result, string &str, size_t index, long left, long right)
 {
@@ -7440,18 +7532,19 @@ long NumberSolitaire(vector<long>& data)
 			memo[i] = std::max(memo[i], data[i] + memo[i - j]);
 	return memo[data.size() - 1];
 }
-//A zero - indexed array A consisting of N integers is given.It contains daily prices of a stock share for a period of N consecutive days.
-//If a single share was bought on day P and sold on day Q, where 0 ≤ P ≤ Q < N, then the profit of such transaction is equal to A[Q] − A[P], provided that A[Q] ≥ A[P].Otherwise, the transaction brings loss of A[P] − A[Q].
-//For example, consider the following array A consisting of six elements such that :
-//A[0] = 23171
-//A[1] = 21011
-//A[2] = 21123
-//A[3] = 21366
-//A[4] = 21013
-//A[5] = 21367
-//If a share was bought on day 0 and sold on day 2, a loss of 2048 would occur because A[2] − A[0] = 21123 − 23171 = −2048. 
-//If a share was bought on day 4 and sold on day 5, a profit of 354 would occur because A[5] − A[4] = 21367 − 21013 = 354. 
-//Maximum possible profit was 356. It would occur if a share was bought on day 1 and sold on day 5.
+// A zero - indexed array A consisting of N integers is given.It contains daily prices of a stock share for a period of N consecutive days.
+// If a single share was bought on day P and sold on day Q, where 0 ≤ P ≤ Q < N, then the profit of such transaction is equal to A[Q] − A[P], provided that A[Q] ≥ A[P].
+// Otherwise, the transaction brings loss of A[P] − A[Q].
+// For example, consider the following array A consisting of six elements such that :
+// A[0] = 23171
+// A[1] = 21011
+// A[2] = 21123
+// A[3] = 21366
+// A[4] = 21013
+// A[5] = 21367
+// If a share was bought on day 0 and sold on day 2, a loss of 2048 would occur because A[2] − A[0] = 21123 − 23171 = −2048. 
+// If a share was bought on day 4 and sold on day 5, a profit of 354 would occur because A[5] − A[4] = 21367 − 21013 = 354. 
+// Maximum possible profit was 356. It would occur if a share was bought on day 1 and sold on day 5.
 // My score: 100%
 long MaxProfit(vector<long>& data)
 {
@@ -8672,4 +8765,37 @@ long getLowestPathCost(size_t g_nodes, vector<long>& g_from, vector<long>& g_to,
 	for (set<shared_ptr<Vertex<long>>>::iterator it = spt.begin(); it != spt.end(); it++)
 		cout << (*it)->GetTag() << "\t" << (*it)->GetTotalCost() << endl;
 	return cost;
+}
+// https://www.hackerrank.com/challenges/3d-surface-area/problem
+// 100%
+size_t surfaceArea(vector<vector<long>>& data) 
+{
+	size_t zArea = 0, xArea = 0, yArea = 0;
+	for (size_t i = 0; i < data.size(); i++) {
+		for (size_t j = 0; j < data[i].size(); j++) {
+			if (data[i][j] > 0)
+				zArea++;
+			// X-Axis : Side / Left/Right views
+			if (i == 0) // Start X-Axis border
+				xArea += data[i][j];
+			if (i == data.size() - 1) {// End X-Axis border
+				xArea += data[i][j];
+				if (i != 0)
+					xArea += abs(data[i][j] - data[i - 1][j]);
+			}
+			if (i != 0 && i != data.size() - 1)
+				xArea += abs(data[i][j] - data[i - 1][j]);
+			// Y-Axis : Front/Back views
+			if (j == 0) // Start Y-Axis border
+				yArea += data[i][j];
+			if (j == data[i].size() - 1) {// End Y-Axis border
+				yArea += data[i][j];
+				if (j != 0)
+					yArea += abs(data[i][j] - data[i][j - 1]);
+			}
+			if (j != 0 && j != data[i].size() - 1)
+				yArea += abs(data[i][j] - data[i][j - 1]);
+		}
+	}
+	return xArea + yArea + zArea * 2;
 }

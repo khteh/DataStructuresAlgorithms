@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Vertex.h"
 template class Vertex<long>;
+template class Vertex<size_t>;
 template<class T>
 Vertex<T>::Vertex()
 	: tag_(T()), cost_(numeric_limits<T>::max())
@@ -8,12 +9,12 @@ Vertex<T>::Vertex()
 }
 template<class T>
 Vertex<T>::Vertex(T tag)
-	: tag_(tag), cost_(numeric_limits<T>::max()), path_(to_string(tag))
+	: tag_(tag), cost_(numeric_limits<T>::max())
 {
 }
 template<class T>
 Vertex<T>::Vertex(T tag, map<shared_ptr<Vertex<T>>, long> neighbours)
-	: tag_(tag), cost_(numeric_limits<T>::max()), neighbours_(neighbours), path_(to_string(tag))
+	: tag_(tag), cost_(numeric_limits<T>::max()), neighbours_(neighbours)
 {
 }
 template<class T>
@@ -86,19 +87,14 @@ long Vertex<T>::GetCost(shared_ptr<Vertex<T>> v)
 	return neighbours_.find(v) != neighbours_.end() ? neighbours_[v] : -1;
 }
 template<class T>
-string Vertex<T>::GetPath()
-{
-	return path_;
-}
-template<class T>
-void Vertex<T>::SetPath(string path)
-{
-	path_ = path;
-}
-template<class T>
 long Vertex<T>::GetTotalCost()
 {
 	return cost_;
+}
+template<class T>
+void Vertex<T>::ResetTotalCost()
+{
+	cost_ = numeric_limits<T>::max();
 }
 template<class T>
 void Vertex<T>::SetTotalCost(long cost)
