@@ -953,33 +953,35 @@ int _tmain(int argc, _TCHAR* argv[])
 	towers[2]->print();
 
 	// Test 2D memory buffer allocation
+	cout << "Test 2D memory buffer allocation...." << endl;
 	long** my2Dbuffer = my2DAlloc(10, 10);
 	for (i = 0; i < 10; i++)
 		for (j = 0; j < 10; j++)
 			my2Dbuffer[i][j] = i*10 + j;
-	cout << "Content of 2D buffer: " << endl;
+	//cout << "Content of 2D buffer: " << endl;
 	for (i = 0; i < 10; i++) {
 		for (j = 0; j < 10; j++) {
-			cout << my2Dbuffer[i][j] << " ";
+			//cout << my2Dbuffer[i][j] << " ";
 			assert(my2Dbuffer[i][j] == i*10 + j);
 		}
-		cout << endl;
+		//cout << endl;
 	}
 	free(my2Dbuffer);
 	// Test 3D memory buffer allocation
+	cout << "Test 3D memory buffer allocation...." << endl;
 	long*** my3Dbuffer = my3DAlloc(10, 10, 10);
 	for (i = 0; i < 10; i++)
 		for (j = 0; j < 10; j++)
 			for (size_t k = 0; k < 10; k++)
 				my3Dbuffer[i][j][k] = i*10 + j*10 + k;
-	cout << "Content of 3D buffer: " << endl;
+	//cout << "Content of 3D buffer: " << endl;
 	for (i = 0; i < 10; i++) {
 		for (j = 0; j < 10; j++)
 			for (size_t k = 0; k < 10; k++) {
-				cout << my3Dbuffer[i][j][k] << " ";
+				//cout << my3Dbuffer[i][j][k] << " ";
 				assert(my3Dbuffer[i][j][k] == i * 10 + j * 10 + k);
 			}
-		cout << endl;
+		//cout << endl;
 	}
 	free(my3Dbuffer);
 	cout << "Test addition without using arithmetic symbol: " << endl;
