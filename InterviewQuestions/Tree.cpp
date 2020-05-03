@@ -278,14 +278,20 @@ template<class T>
 void Tree<T>::FindSum(shared_ptr<Node<T>> node, long sum, vector<string>& result)
 {
 	vector<long> values;
-	if (!node)
-		return;
-	FindSum(node, sum, 0, values, result); 
+	if (node)
+		FindSum(node, sum, 0, values, result); 
 }
 
 template<class T>
 void Tree<T>::FindSum(shared_ptr<Node<T>> node, long sum, long level, vector<long> values, vector<string>& result)
 {
+	/*
+Binary Tree content:
+Level 0:                50
+Level 1:      -100(50)        60(50)
+Level 2:            0(-100)         100(60)
+Level 3:       -50(0)     10(0)  75(100)   150(100)
+	*/
 	ostringstream oss;
 	if (!node)
 		return;
@@ -455,44 +461,30 @@ void Tree<T>::PrintTree()
 		cout << "Empty tree!" << endl;
 		return;
 	}
-	unsigned long level = 0;
-	vector<shared_ptr<Node<T>>> nodes;
-	map<long, vector<shared_ptr<Node<T>>>> levels;
-	nodes.push_back(m_root);
-	levels.emplace(level, nodes);
-	while (!nodes.empty()) {
-		nodes.clear();
-		for (vector<shared_ptr<Node<T>>>::const_iterator it = levels[level].begin(); it != levels[level].end(); it++) {
-			if (*it) {
-				if ((*it)->Left())
-					nodes.push_back((*it)->Left());
-				if ((*it)->Right())
-					nodes.push_back((*it)->Right());
+	map<size_t, vector<shared_ptr<Node<T>>>> levels;
+	GetNodes(levels);
+	if (!levels.empty()) {
+		long lvl = 0;
+		map<size_t, vector<shared_ptr<Node<T>>>>::reverse_iterator maxKeyIterator = levels.rbegin();
+		size_t level = maxKeyIterator->first;
+		for (map<size_t, vector<shared_ptr<Node<T>>>>::const_iterator it = levels.begin(); it != levels.end(); it++) {
+			bool printOnce = true;
+			for (vector<shared_ptr<Node<T>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++) {
+				if (printOnce) {
+					cout << "Level " << lvl << ": ";
+					for (size_t i = 0; i < level; i++)
+						cout << "\t";
+					printOnce = false;
+					level--;
+					lvl++;
+				}
+				cout << (*it1)->Item();
+				if ((*it1)->Next())
+					cout << "(" << (*it1)->Next()->Item() << ") ";
+				cout << "\t";
 			}
+			cout << endl;
 		}
-		level++;
-		if (!nodes.empty())
-			levels.emplace(level, nodes);
-	}
-	long lvl = 0;
-	bool printOnce = true;
-	for (map<long, vector<shared_ptr<Node<T>>>>::const_iterator it = levels.begin(); it != levels.end(); it++) {
-		printOnce = true;
-		for (vector<shared_ptr<Node<T>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++) {
-			if (printOnce) {
-				cout << "Level " << lvl << ": ";
-				for (size_t i = 0; i < level; i++)
-					cout << "\t";
-				printOnce = false;
-				level--;
-				lvl++;
-			}
-			cout << (*it1)->Item();
-			if ((*it1)->Next())
-				cout << "(" << (*it1)->Next()->Item() << ") ";
-			cout << "\t";
-		}
-		cout << endl;
 	}
 }
 #if 0
