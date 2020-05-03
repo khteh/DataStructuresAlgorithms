@@ -135,23 +135,23 @@ void Tree<T>::InsertItem(T item)
 
 // 50(root), -100, 0
 template<class T>
-void Tree<T>::InsertNode(shared_ptr<Node<T>>root, shared_ptr<Node<T>>node) // This will produce a Binary Search Tree
+void Tree<T>::InsertNode(shared_ptr<Node<T>> parent, shared_ptr<Node<T>> node) // This will produce a Binary Search Tree
 {
-	if (root->Item() == node->Item()) // No duplicate!
+	if (parent->Item() == node->Item()) // No duplicate!
 		node.reset();
-	else if (root->Item() > node->Item()) {
-		if (root->Left())
-			InsertNode(root->Left(), node);
+	else if (parent->Item() > node->Item()) {
+		if (parent->Left())
+			InsertNode(parent->Left(), node);
 		else {
-			root->SetLeft(node);
-			node->SetNext(root);
+			parent->SetLeft(node);
+			node->SetNext(parent);
 		}
 	} else {
-		if (root->Right())
-			InsertNode(root->Right(), node);
+		if (parent->Right())
+			InsertNode(parent->Right(), node);
 		else {
-			root->SetRight(node);
-			node->SetNext(root);
+			parent->SetRight(node);
+			node->SetNext(parent);
 		}
 	}
 }
@@ -340,14 +340,20 @@ void Tree<T>::GetNodes(map<size_t, vector<shared_ptr<Node<T>>>>& result, long lv
 template<class T>
 shared_ptr<Node<T>> Tree<T>::InOrderSuccessor(shared_ptr<Node<T>> node)
 {
+	/*
+Binary Tree content:
+Level 0:                50
+Level 1:      -100(50)        60(50)
+Level 2:            0(-100)         100(60)
+Level 3:       -50(0)     10(0)  75(100)   150(100)
+	*/
 	if (node) {
-		if (node->Right())
-			return LeftMostChild(node->Right());
+		if (node->Right()) // If node as right child, the in-order successor must be on the right side of the node
+			return LeftMostChild(node->Right()); // Then the left-most child must be the first node visisted in that subtree
 		else {
-			for (shared_ptr<Node<T>> p = node->Next(); p; node = p) {
-				if (p->Left() == node)
-					return p;
-			}
+			for (shared_ptr<Node<T>> n = node->Next(); n; node = n, n = n->Next())
+				if (n->Left() == node) // If node is the left child of n, then n must be the in-order successor of node.
+					return n;
 		}
 	}
 	return nullptr;

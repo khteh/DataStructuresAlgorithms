@@ -5727,13 +5727,23 @@ void BinaryTreeTests()
 			cout << (*it1)->Item() << " ";
 		cout << endl;
 	}
+	nodes.clear();
+	/*
+Binary Tree content:
+Level 0:                50
+Level 1:      -100(50)        60(50)
+Level 2:            0(-100)         100(60)
+Level 3:       -50(0)     10(0)  75(100)   150(100)
+	*/
 	shared_ptr<Node<long>> node = tree.FindNode(-50), node1, node2;
 	assert(node);
 	assert(tree.InOrderSuccessor(node)->Item() == 0);
 	node = tree.FindNode(50);
 	assert(node);
 	assert(tree.InOrderSuccessor(node)->Item() == 60);
-	nodes.clear();
+	node = tree.FindNode(10);
+	assert(node);
+	assert(tree.InOrderSuccessor(node)->Item() == 50);
 
 	node = tree.FindNode(-50);
 	assert(node);
