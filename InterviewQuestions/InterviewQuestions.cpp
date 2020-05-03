@@ -5704,6 +5704,8 @@ void BinaryTreeTests()
 	cout << "MinDepth: " << tree.MinDepth(tree.Root()) << ", MaxDepth: " << tree.MaxDepth(tree.Root()) << " " << (tree.IsBalancedTree() ? "balanced" : "Unbalanced") << endl;
 	tree.PrintTreeColumns();
 	tree.FindSum(tree.Root(), -100, result);
+	assert(!result.empty());
+	assert(result.size() == 3); //"-100" "-100 0" "-50 0 -100 50"
 	cout << "Sum -100 path: ";
 	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
 		cout << "\"" << *it << "\" ";
@@ -5711,6 +5713,7 @@ void BinaryTreeTests()
 	result.clear();
 
 	tree.FindSum(tree.Root(), 110, result);
+	assert(result.size() == 1);
 	cout << "Sum 110 path: ";
 	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
 		cout << "\"" << *it << "\" ";
@@ -5772,7 +5775,25 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	assert(tree == tree1);
 	cout << "Tree1 content (= Tree): " << endl;
 	tree1.PrintTree();
-	cout << endl << endl;
+
+	tree.Clear();
+	tree.InsertItem(2);
+	tree.InsertItem(3);
+	tree.InsertItem(-4);
+	tree.InsertItem(3);
+	tree.InsertItem(1);
+	tree.InsertItem(2);
+	result.clear();
+	cout << "Tree content (= Tree): " << endl;
+	tree.PrintTree();
+	tree.FindSum(tree.Root(), 5, result);
+	assert(!result.empty());
+	assert(result.size() == 1);
+	cout << "Sum 5 path: ";
+	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
+		cout << "\"" << *it << "\" ";
+	result.clear();
+	cout << endl;
 }
 void BinarySearchTreeTests()
 {

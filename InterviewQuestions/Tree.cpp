@@ -56,7 +56,11 @@ Tree<T>::Tree(vector<T>& v)
 	if (!v.empty())
 		m_root = AddToTree(nullptr, v, 0, v.size() - 1);
 }
-
+template<class T>
+Tree<T>::~Tree()
+{
+	Clear();
+}
 template<class T>
 shared_ptr<Node<T>> Tree<T>::AddToTree(shared_ptr<Node<T>>parent, vector<T>& v, long begin, long end)
 {
@@ -68,12 +72,6 @@ shared_ptr<Node<T>> Tree<T>::AddToTree(shared_ptr<Node<T>>parent, vector<T>& v, 
 	node->SetRight(AddToTree(node, v, middle + 1, end));
 	node->SetNext(parent);
 	return node;
-}
-
-template<class T>
-Tree<T>::~Tree()
-{
-	Clear(m_root);
 }
 
 template<class T>
@@ -106,15 +104,22 @@ shared_ptr<Node<T>> Tree<T>::Copy(shared_ptr<Node<T>>node, map<shared_ptr<Node<T
 	} else
 		return nullptr;
 }
-
 template<class T>
 shared_ptr<Node<T>> Tree<T>::Root()
 {
 	return m_root;
 }
-
 template<class T>
-void Tree<T>::Clear(shared_ptr<Node<T>>node)
+void Tree<T>::Clear()
+{
+	if (m_root) {
+		Clear(m_root->Left());
+		Clear(m_root->Right());
+		m_root.reset();
+	}
+}
+template<class T>
+void Tree<T>::Clear(shared_ptr<Node<T>> node)
 {
 	if (node) {
 		Clear(node->Left());
@@ -248,7 +253,7 @@ bool Tree<T>::SubTree(shared_ptr<Node<T>>parent, shared_ptr<Node<T>>child)
 		return false;
 	if (!child)
 		return true;
-	//if (*parent == *child && MatchTree(parent, child)) Don't compare parent/next node
+	//if (*parent == *child && MatchTree(parent, child)) Don't compare parent/next node, i.e, "upstream" nodes
 	if (parent->Item() == child->Item() && MatchTree(parent, child))
 		return true;
 	return SubTree(parent->Left(), child) || SubTree(parent->Right(), child);
@@ -263,7 +268,7 @@ bool Tree<T>::MatchTree(shared_ptr<Node<T>>p, shared_ptr<Node<T>>q)
 		return false; // Big tree empty and subtree still not found
 	if (!q)
 		return true; // Finished matching all the subtree nodes
-	//if (*p != *q) Don't compare parent/next node
+	//if (*p != *q) Don't compare parent/next node, i.e, "upstream" nodes
 	if (p->Item() != q->Item())
 		return false;  // Stop condition: current nodes do NOT match
 	return MatchTree(p->Left(), q->Left()) && MatchTree(p->Right(), q->Right());
@@ -295,7 +300,6 @@ void Tree<T>::FindSum(shared_ptr<Node<T>> node, long sum, long level, vector<lon
 					oss << " ";
 			}
 			result.push_back(oss.str());
-			oss.str("");
 		}
 	}
 	FindSum(node->Left(), sum, level + 1, values, result);

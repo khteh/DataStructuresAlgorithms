@@ -60,7 +60,6 @@ public:
 	void GetNodes(map<size_t, vector<shared_ptr<Node<T>>>>&, long level = -1/* Get nodes of all levels by default*/);
 	shared_ptr<Node<T>> InOrderSuccessor(shared_ptr<Node<T>>);
 	shared_ptr<Node<T>> CommonAncestor(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
-//	shared_ptr<Node<T>> CommonAncestor1(shared_ptr<Node<T>>, shared_ptr<Node<T>>, shared_ptr<Node<T>>); XXX: Fix Me
 	void FindSum(shared_ptr<Node<T>>, long, vector<string>&);
 	bool SubTree(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
 	bool MatchTree(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
@@ -69,6 +68,7 @@ public:
 	bool IsBalancedTree();
 	T MinDiffInBST();
 	size_t Count();
+	void Clear();
 	void Clear(shared_ptr<Node<T>>);
 	virtual void PrintTree();
 	void PrintTreeColumns();
