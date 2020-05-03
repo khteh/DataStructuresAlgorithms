@@ -5751,11 +5751,13 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	assert(node1);
 	node2 = tree.CommonAncestor(node, node1);
 	assert(node2);
+	assert(node2->Item() == 0);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 	node1 = tree.FindNode(75);
 	assert(node1);
 	node2 = tree.CommonAncestor(node, node1);
 	assert(node2);
+	assert(node2->Item() == 50);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 	node = tree.FindNode(60);
 	assert(node);
@@ -5763,6 +5765,7 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	assert(node1);
 	node2 = tree.CommonAncestor(node, node1);
 	assert(node2);
+	assert(node2->Item() == 60);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 	
 	Tree<long> tree1(tree);

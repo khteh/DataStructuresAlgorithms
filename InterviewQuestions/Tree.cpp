@@ -58,11 +58,11 @@ Tree<T>::Tree(vector<T>& v)
 }
 
 template<class T>
-shared_ptr<Node<T>> Tree<T>::AddToTree(shared_ptr<Node<T>>parent, vector<T>& v, int begin, int end)
+shared_ptr<Node<T>> Tree<T>::AddToTree(shared_ptr<Node<T>>parent, vector<T>& v, long begin, long end)
 {
 	if (end < begin)
 		return nullptr;
-	int middle = begin + (end - begin) / 2 + (end - begin) % 2;
+	long middle = begin + (end - begin) / 2 + (end - begin) % 2;
 	shared_ptr<Node<T>>node = make_shared<Node<T>>(v[middle]);
 	node->SetLeft(AddToTree(node, v, begin, middle - 1));
 	node->SetRight(AddToTree(node, v, middle + 1, end));

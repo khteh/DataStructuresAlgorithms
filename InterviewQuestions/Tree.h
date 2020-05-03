@@ -55,7 +55,7 @@ public:
 	shared_ptr<Node<T>> Root();
 	void InsertItem(T);
 	virtual void InsertNode(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
-	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T>&, int, int);
+	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T>&, long, long);
 	shared_ptr<Node<T>> FindNode(T);
 	void GetNodes(map<size_t, vector<shared_ptr<Node<T>>>>&, long level = -1/* Get nodes of all levels by default*/);
 	shared_ptr<Node<T>> InOrderSuccessor(shared_ptr<Node<T>>);
