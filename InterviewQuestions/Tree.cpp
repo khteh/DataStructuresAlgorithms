@@ -23,7 +23,7 @@ using namespace std;
  */
 template class Tree<int>;
 template class Tree<long>;
-
+template class Tree<size_t>;
 template<class T>
 Tree<T>::Tree()
 	: m_root(nullptr)
@@ -32,7 +32,7 @@ Tree<T>::Tree()
 
 template<class T>
 Tree<T>::Tree(T item)
-	: m_root(new Node<T>(item))
+	: m_root(make_shared<Node<T>>(item))
 {
 }
 
@@ -325,7 +325,7 @@ size_t Tree<T>::Count()
 template<class T>
 void Tree<T>::GetNodes(map<size_t, vector<shared_ptr<Node<T>>>>& result, long lvl) // Typical Breadth-First-Search algorithm
 {
-	unsigned long level = 0;
+	long level = 0;
 	vector<shared_ptr<Node<T>>> nodes;
 	nodes.push_back(m_root);
 	result.emplace(level, nodes);
@@ -378,13 +378,13 @@ shared_ptr<Node<T>> Tree<T>::LeftMostChild(shared_ptr<Node<T>> node)
 }
 
 template<class T>
-unsigned long Tree<T>::MinDepth(shared_ptr<Node<T>>node)
+size_t Tree<T>::MinDepth(shared_ptr<Node<T>>node)
 {
 	return node ? 1 + min(MinDepth(node->Left()), MinDepth(node->Right())) : 0;
 }
 
 template<class T>
-unsigned long Tree<T>::MaxDepth(shared_ptr<Node<T>>node)
+size_t Tree<T>::MaxDepth(shared_ptr<Node<T>>node)
 {
 	return node ? 1 + max(MaxDepth(node->Left()), MaxDepth(node->Right())) : 0;
 }
@@ -403,15 +403,20 @@ T Tree<T>::MinDiffInBST()
 template<class T>
 T Tree<T>::MinDiffInBST(shared_ptr<Node<T>> current, shared_ptr<Node<T>> previous)
 {
-	T minimum = LONG_MAX;
+	T minimum = numeric_limits<T>::max();//LONG_MAX;
 	// Use In-Order traversal to find min diff between any 2 nodes
 	if (current) {
 		minimum = MinDiffInBST(current->Left(), current);
 		if (previous)
-			minimum = min(minimum, abs(current->Item() - previous->Item()));
+			minimum = min((long)minimum, abs((long)current->Item() - (long)previous->Item()));
 		minimum = min(minimum, MinDiffInBST(current->Right(), current));
 	}
 	return minimum;
+}
+template<class T>
+T Tree<T>::MinSubTreesDifference()
+{
+	return m_root ? m_root->MinSubTreesDifference() : 0;
 }
 template<class T>
 void Tree<T>::PrintTreeColumns()

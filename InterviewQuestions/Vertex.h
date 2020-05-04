@@ -4,35 +4,43 @@
 #include <memory>
 #include <algorithm>
 #include <string>
+#include <sstream>
 using namespace std;
-template<class T>
+template<typename TTag, typename TItem>	// TTag is used as a unique ID. Graph vertices can have duplicate values of TItem
 class Vertex
 {
 public:
 	Vertex();
-	Vertex(T tag);
-	Vertex(T tag, map<shared_ptr<Vertex<T>>, long>);
+	Vertex(TTag tag);
+	Vertex(TTag tag, TItem item);
+	Vertex(TTag tag, TItem item, map<shared_ptr<Vertex<TTag, TItem>>, long>);
 	virtual ~Vertex();
-	T GetTag() const;
-	long GetCost(shared_ptr<Vertex<T>>);
-	long GetTotalCost();
+	TTag GetTag() const;
+	TItem GetItem() const;
+	long GetCost(shared_ptr<Vertex<TTag, TItem>>);
+	long GetTotalCost() const;
+	TItem GetSum() const;
 	void ResetTotalCost();
 	void SetTotalCost(long);
-	void AddNeighbour(shared_ptr<Vertex<T>>, long);
-	void RemoveNeighbour(shared_ptr<Vertex<T>>);
-	vector<shared_ptr<Vertex<T>>> GetNeighbours();
-	map<shared_ptr<Vertex<T>>, long> GetNeighboursWithCost();
+	void AddNeighbour(shared_ptr<Vertex<TTag, TItem>>, long);
+	void RemoveNeighbour(shared_ptr<Vertex<TTag, TItem>>);
+	vector<shared_ptr<Vertex<TTag, TItem>>> GetNeighbours();
+	map<shared_ptr<Vertex<TTag, TItem>>, long> GetNeighboursWithCost();
 	bool HasNeighbours() const;
-	bool HasNeighbour(T) const;
-	bool HasNeighbour(shared_ptr<Vertex<T>>) const;
+	bool HasNeighbour(TTag) const;
+	bool HasNeighbour(TTag, TItem) const;
+	bool HasNeighbour(shared_ptr<Vertex<TTag, TItem>>) const;
 	size_t NeighbourCount() const;
-	Vertex<T>& operator=(Vertex<T>&);
-	bool operator==(Vertex<T>&);
-	bool operator!=(Vertex<T>&);
-	bool operator<(Vertex<T>&);
-	bool operator>(Vertex<T>&);
+	TItem MinSubGraphDifference(TItem sum = 0);
+	Vertex<TTag, TItem>& operator=(Vertex<TTag, TItem>&);
+	bool operator==(Vertex<TTag, TItem>&);
+	bool operator!=(Vertex<TTag, TItem>&);
+	bool operator<(Vertex<TTag, TItem>&);
+	bool operator>(Vertex<TTag, TItem>&);
 protected:
-	T tag_;
+	TTag tag_;
+	TItem item_;
 	long cost_;
-	map<shared_ptr<Vertex<T>>, long> neighbours_; // neighbours and costs from this vertex to them
+	map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours_; // neighbours and costs from this vertex to them
+	TItem MinSubGraphDifference(shared_ptr<Vertex<TTag, TItem>>, TItem, TItem);
 };

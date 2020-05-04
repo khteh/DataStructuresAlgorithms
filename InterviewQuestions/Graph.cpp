@@ -4,46 +4,52 @@
 #include <set>
 #include <iostream>
 using namespace std;
-template class Graph<long>;
-template class Graph<size_t>;
-template<class T>
-Graph<T>::Graph()
+template class Graph<long, long>;
+template class Graph<size_t, size_t>;
+template<typename TTag, typename TItem>
+Graph<TTag, TItem>::Graph()
 {
 }
-template<class T>
-Graph<T>::Graph(vector<T>& data)
+template<typename TTag, typename TItem>
+Graph<TTag, TItem>::Graph(vector<TItem>& data)
 {
-	for (vector<T>::iterator it = data.begin(); it != data.end(); it++)
-		AddVertex(*it);
+	for (vector<TItem>::iterator it = data.begin(); it != data.end(); it++)
+		AddVertex(*it, *it); // tag = item
 }
-template<class T>
-Graph<T>::~Graph()
+template<typename TTag, typename TItem>
+Graph<TTag, TItem>::~Graph()
 {
 	Clear();
 }
-template<class T>
-void Graph<T>::Clear()
+template<typename TTag, typename TItem>
+void Graph<TTag, TItem>::Clear()
 {
 	vertices_.clear();
 }
-template<class T>
-size_t Graph<T>::Count()
+template<typename TTag, typename TItem>
+size_t Graph<TTag, TItem>::Count()
 {
 	return vertices_.size();
 }
-template<class T>
-void Graph<T>::AddVertex(shared_ptr<Vertex<T>> v)
+template<typename TTag, typename TItem>
+void Graph<TTag, TItem>::AddVertex(shared_ptr<Vertex<TTag, TItem>> v)
 {
 	vertices_.emplace(v->GetTag(), v);
 }
-template<class T>
-shared_ptr<Vertex<T>> Graph<T>::AddVertex(T tag)
+template<typename TTag, typename TItem>
+shared_ptr<Vertex<TTag, TItem>> Graph<TTag, TItem>::AddVertex(TTag tag)
 {
-	vertices_.emplace(tag, make_shared<Vertex<T>>(tag));
+	vertices_.emplace(tag, make_shared<Vertex<TTag, TItem>>(tag));
 	return vertices_[tag];
 }
-template<class T>
-void Graph<T>::AddDirectedEdge(shared_ptr<Vertex<T>> from, shared_ptr<Vertex<T>> to, long cost)
+template<typename TTag, typename TItem>
+shared_ptr<Vertex<TTag, TItem>> Graph<TTag, TItem>::AddVertex(TTag tag, TItem item)
+{
+	vertices_.emplace(tag, make_shared<Vertex<TTag, TItem>>(tag, item));
+	return vertices_[tag];
+}
+template<typename TTag, typename TItem>
+void Graph<TTag, TItem>::AddDirectedEdge(shared_ptr<Vertex<TTag, TItem>> from, shared_ptr<Vertex<TTag, TItem>> to, long cost)
 {
 	if (vertices_.find(from->GetTag()) == vertices_.end())
 		vertices_.emplace(from->GetTag(), from);
@@ -51,8 +57,8 @@ void Graph<T>::AddDirectedEdge(shared_ptr<Vertex<T>> from, shared_ptr<Vertex<T>>
 		vertices_.emplace(to->GetTag(), to);
 	from->AddNeighbour(to, cost);
 }
-template<class T>
-void Graph<T>::AddUndirectedEdge(shared_ptr<Vertex<T>> from, shared_ptr<Vertex<T>> to, long cost)
+template<typename TTag, typename TItem>
+void Graph<TTag, TItem>::AddUndirectedEdge(shared_ptr<Vertex<TTag, TItem>> from, shared_ptr<Vertex<TTag, TItem>> to, long cost)
 {
 	if (vertices_.find(from->GetTag()) == vertices_.end())
 		vertices_.emplace(from->GetTag(), from);
@@ -61,70 +67,72 @@ void Graph<T>::AddUndirectedEdge(shared_ptr<Vertex<T>> from, shared_ptr<Vertex<T
 	from->AddNeighbour(to, cost);
 	to->AddNeighbour(from, cost);
 }
-template<class T>
-bool Graph<T>::HasVertex(T tag)
+template<typename TTag, typename TItem>
+bool Graph<TTag, TItem>::HasVertex(TTag tag)
 {
 	return vertices_.find(tag) != vertices_.end();
 }
-template<class T>
-shared_ptr<Vertex<T>> Graph<T>::GetVertex(T tag)
+template<typename TTag, typename TItem>
+shared_ptr<Vertex<TTag, TItem>> Graph<TTag, TItem>::GetVertex(TTag tag)
 {
 	return vertices_.find(tag) != vertices_.end() ? vertices_[tag] : nullptr;
 }
-template<class T>
-bool Graph<T>::Remove(T tag)
+template<typename TTag, typename TItem>
+bool Graph<TTag, TItem>::Remove(TTag tag)
 {
-	shared_ptr<Vertex<T>> vertex;
+	shared_ptr<Vertex<TTag, TItem>> vertex;
 	if (vertices_.find(tag) == vertices_.end())
 		return false;
 	vertex = vertices_[tag];
 	vertices_.erase(tag);
-	for (map<T, shared_ptr<Vertex<T>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
+	for (map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
 		if (it->second->HasNeighbour(tag))
 			it->second->RemoveNeighbour(vertex);
 	return true;
 }
-template<class T>
-void Graph<T>::Print(shared_ptr<Vertex<T>> vertex)
+template<typename TTag, typename TItem>
+void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex)
 {
 	string uni = "-->";
 	string multi = "<-->";
-	vector<shared_ptr<Vertex<T>>> neighbours = vertex->GetNeighbours();
-	cout << vertex->GetTag();
-	shared_ptr<Vertex<T>> previous = vertex;
+	vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
+	cout << vertex->GetTag() << "(" << vertex->GetItem() << ") ";
+	if (neighbours.empty())
+		cout << endl;
+	shared_ptr<Vertex<TTag, TItem>> previous = vertex;
 	bool space = false;
-	for (vector<shared_ptr<Vertex<T>>>::iterator it = neighbours.begin(); it != neighbours.end(); *it++, space = true)
-		cout << (space ? " " : "") << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << (*it)->GetTag() << " [" << previous->GetCost(*it) << "] " << endl;
+	for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); *it++, space = true)
+		cout << (space ? " " : "") << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << (*it)->GetTag() << "(" << (*it)->GetItem() << ") " << " [" << previous->GetCost(*it) << "] " << endl;
 }
 // https://www.hackerrank.com/challenges/primsmstsub/problem
 // https://en.wikipedia.org/wiki/Prim%27s_algorithm
 // https://www.geeksforgeeks.org/prims-algorithm-using-priority_queue-stl/
 // 2 cases with 1000 vertices and 10,000 edges failed
-template<class T>
-size_t Graph<T>::PrimMinimumSpanningTree(shared_ptr<Vertex<T>> start)
+template<typename TTag, typename TItem>
+size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem>> start)
 {
 	// Create a priority queue to store vertices that are part of MST (Minimum Spanning Tree).
-	multimap<size_t, shared_ptr<Vertex<T>>> priorityQueue;
+	multimap<size_t, shared_ptr<Vertex<TTag, TItem>>> priorityQueue;
 	// Create a vector for keys and initialize all keys as infinite (INF) 
-	map<T, T> keys;
+	map<TTag, long> keys;
 
 	// To store parent array which in turn store MST 
-	//vector<shared_ptr<Vertex<T>>> parents(vertices_.size(), nullptr);
-	map<T, shared_ptr<Vertex<T>>> parents;
+	//vector<shared_ptr<Vertex<TTag, TItem>>> parents(vertices_.size(), nullptr);
+	map<TTag, shared_ptr<Vertex<TTag, TItem>>> parents;
 
 	// To keep track of vertices included in MST 
-	map<T, bool> inMST;
+	map<TTag, bool> inMST;
 
 	// Insert source itself in priority queue and initialize its key as 0. 
 	priorityQueue.emplace(0, start);
 	keys.emplace(start->GetTag(), 0);
 	while (!priorityQueue.empty()) {
-		pair<size_t, shared_ptr<Vertex<T>>> entry = *(priorityQueue.begin());
-		shared_ptr<Vertex<T>> u = entry.second;
+		pair<size_t, shared_ptr<Vertex<TTag, TItem>>> entry = *(priorityQueue.begin());
+		shared_ptr<Vertex<TTag, TItem>> u = entry.second;
 		priorityQueue.erase(entry.first);
 		inMST[u->GetTag()] = true; // Include vertex in MST
-		map<shared_ptr<Vertex<T>>, long> neighbours = u->GetNeighboursWithCost();
-		for (map<shared_ptr<Vertex<T>>, long>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+		map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours = u->GetNeighboursWithCost();
+		for (map<shared_ptr<Vertex<TTag, TItem>>, long>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
 			//  If v is not in MST and weight of (u,v) is smaller than current key of v 
 			if (!inMST[it->first->GetTag()] && (keys.find(it->first->GetTag()) == keys.end() || keys[it->first->GetTag()] > it->second))
 			{
@@ -137,25 +145,26 @@ size_t Graph<T>::PrimMinimumSpanningTree(shared_ptr<Vertex<T>> start)
 		}
 	}
 	// Print edges of MST using parent array
-	for (map<T, shared_ptr<Vertex<T>>>::iterator it = parents.begin(); it != parents.end(); it++)
+	for (map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = parents.begin(); it != parents.end(); it++)
 		cout << it->second->GetTag() << " - " << it->first << endl;
-	size_t sum = accumulate(keys.begin(), keys.end(), 0, [](size_t value, const map<T, T>::value_type& p) { return value + p.second; });
+	size_t sum = accumulate(keys.begin(), keys.end(), 0, [](size_t value, const map<TTag, long>::value_type& p) { return value + p.second; });
 	return sum;
 }
-template<class T>
-void Graph<T>::Dijkstra(T source, set<shared_ptr<Vertex<T>>>& spt)// spt: Shortest Path Tree
+template<typename TTag, typename TItem>
+void Graph<TTag, TItem>::Dijkstra(TTag source, set<shared_ptr<Vertex<TTag, TItem>>>& spt)// spt: Shortest Path Tree
 {
-	//set<shared_ptr<Vertex<T>>> spt; 
-	set<shared_ptr<Vertex<T>>> vertices;
-	shared_ptr<Vertex<T>> vertex = GetVertex(source);
-	for (map<T, shared_ptr<Vertex<T>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
+	//set<shared_ptr<Vertex<TTag, TItem>>> spt; 
+	set<shared_ptr<Vertex<TTag, TItem>>> vertices;
+	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(source);
+	assert(vertex);
+	for (map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
 		it->second->ResetTotalCost();
 	vertex->SetTotalCost(0);
 	for (; vertex;) {
 		spt.emplace(vertex);
 		// Update dist value of the adjacent vertices of the picked vertex. 
-		vector<shared_ptr<Vertex<T>>> neighbours = vertex->GetNeighbours();
-		for (vector<shared_ptr<Vertex<T>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
+		for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
 			// Update dist[v] only if it:
 			// (1) is not in sptSet
 			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
@@ -167,7 +176,7 @@ void Graph<T>::Dijkstra(T source, set<shared_ptr<Vertex<T>>>& spt)// spt: Shorte
 		}
 		vertex = nullptr;
 		long min = numeric_limits<long>::max();
-		for (set<shared_ptr<Vertex<T>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
+		for (set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
 			if ((*it)->GetTotalCost() < min) {
 				min = (*it)->GetTotalCost();
 				vertex = *it;
@@ -176,21 +185,23 @@ void Graph<T>::Dijkstra(T source, set<shared_ptr<Vertex<T>>>& spt)// spt: Shorte
 			vertices.erase(vertex);
 	}
 }
-template<class T>
-long Graph<T>::Dijkstra(T src, T dest)
+template<typename TTag, typename TItem>
+long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 {
-	set<shared_ptr<Vertex<T>>> spt; 
-	set<shared_ptr<Vertex<T>>> vertices;
-	shared_ptr<Vertex<T>> vertex = GetVertex(src);
-	shared_ptr<Vertex<T>> destination = GetVertex(dest);
-	for (map<T, shared_ptr<Vertex<T>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
+	set<shared_ptr<Vertex<TTag, TItem>>> spt; 
+	set<shared_ptr<Vertex<TTag, TItem>>> vertices;
+	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(src);
+	shared_ptr<Vertex<TTag, TItem>> destination = GetVertex(dest);
+	assert(vertex);
+	assert(destination);
+	for (map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
 		it->second->ResetTotalCost();
 	vertex->SetTotalCost(0);
 	for (; vertex && destination && vertex != destination;) {
 		spt.emplace(vertex);
 		// Update dist value of the adjacent vertices of the picked vertex. 
-		vector<shared_ptr<Vertex<T>>> neighbours = vertex->GetNeighbours();
-		for (vector<shared_ptr<Vertex<T>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
+		for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
 			// Update dist[v] only if it:
 			// (1) is not in sptSet
 			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
@@ -202,7 +213,7 @@ long Graph<T>::Dijkstra(T src, T dest)
 		}
 		vertex = nullptr;
 		long min = numeric_limits<long>::max();
-		for (set<shared_ptr<Vertex<T>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
+		for (set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
 			if ((*it)->GetTotalCost() < min) {
 				min = (*it)->GetTotalCost();
 				vertex = *it;
@@ -214,15 +225,15 @@ long Graph<T>::Dijkstra(T src, T dest)
 }
 // https://www.hackerrank.com/challenges/rust-murderer/problem
 // 3/7 test cases failed :(
-template<class T>
-void Graph<T>::UnbeatenPath(T start, vector<T>& paths)
+template<typename TTag, typename TItem>
+void Graph<TTag, TItem>::UnbeatenPath(TTag start, vector<size_t>& paths)
 {
-	for (T destination = 1; destination <= vertices_.size(); destination++) {
-		shared_ptr<Vertex<T>> v = GetVertex(start);
+	for (TTag destination = 1; destination <= vertices_.size(); destination++) {
+		shared_ptr<Vertex<TTag, TItem>> v = GetVertex(start);
 		if (destination == start)
 			continue;
 		size_t count = 0;
-		for (T hop = start + 1; ; ) {
+		for (TTag hop = start + 1; ; ) {
 			if (!v->HasNeighbour(destination)) {
 				count++;
 				break;
@@ -242,23 +253,23 @@ void Graph<T>::UnbeatenPath(T start, vector<T>& paths)
 		paths.push_back(count);
 	}
 }
-template<class T>
-void Graph<T>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<T>>>>& result, shared_ptr<Vertex<T>>& start)
+template<typename TTag, typename TItem>
+void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>>& result, shared_ptr<Vertex<TTag, TItem>>& start)
 {
 	if (start) {
 		unsigned long level = 0;
-		vector<shared_ptr<Vertex<T>>> vertices;
+		vector<shared_ptr<Vertex<TTag, TItem>>> vertices;
 		vertices.push_back(start);
 		result.emplace(level, vertices);
 		while (!vertices.empty()) {
 			vertices.clear();
-			for (vector<shared_ptr<Vertex<T>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++) {
+			for (vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++) {
 				if (*it) {
-					vector<shared_ptr<Vertex<T>>> neighbours = (*it)->GetNeighbours();
+					vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = (*it)->GetNeighbours();
 					if (level > 0) { // Don't insert the parents. This happens for UnDirected Graph
-						for (vector<shared_ptr<Vertex<T>>>::iterator it1 = neighbours.begin(); it1 != neighbours.end(); it1++) {
+						for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it1 = neighbours.begin(); it1 != neighbours.end(); it1++) {
 							bool isBackPointer = false;
-							for (vector<shared_ptr<Vertex<T>>>::iterator it2 = result[level - 1].begin(); it2 != result[level - 1].end(); it2++)
+							for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it2 = result[level - 1].begin(); it2 != result[level - 1].end(); it2++)
 								if (*it2 == *it1) {
 									isBackPointer = true;
 									break;
@@ -278,16 +289,16 @@ void Graph<T>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<T>>>>& result, s
 }
 // https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
 // Timeout! for test cases with 50000 nodes
-template<class T>
-long Graph<T>::GetPathsCosts(set<shared_ptr<Vertex<T>>>& spt, shared_ptr<Vertex<T>> vertex, shared_ptr<Vertex<T>> destination)
+template<typename TTag, typename TItem>
+long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>>& spt, shared_ptr<Vertex<TTag, TItem>> vertex, shared_ptr<Vertex<TTag, TItem>> destination)
 {
-	set<shared_ptr<Vertex<T>>> vertices;
+	set<shared_ptr<Vertex<TTag, TItem>>> vertices;
 	vertex->SetTotalCost(0);
 	for (; vertex && destination && vertex != destination;) {
 		spt.emplace(vertex);
 		// Update dist value of the adjacent vertices of the picked vertex. 
-		vector<shared_ptr<Vertex<T>>> neighbours = vertex->GetNeighbours();
-		for (vector<shared_ptr<Vertex<T>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
+		for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
 			// Update dist[v] only if it:
 			// (1) is not in sptSet
 			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
@@ -303,7 +314,7 @@ long Graph<T>::GetPathsCosts(set<shared_ptr<Vertex<T>>>& spt, shared_ptr<Vertex<
 		}
 		vertex = nullptr;
 		long min = numeric_limits<long>::max();
-		for (set<shared_ptr<Vertex<T>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
+		for (set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
 			if ((*it)->GetTotalCost() < min) {
 				min = (*it)->GetTotalCost();
 				vertex = *it;
@@ -314,4 +325,9 @@ long Graph<T>::GetPathsCosts(set<shared_ptr<Vertex<T>>>& spt, shared_ptr<Vertex<
 	if (vertex)
 		spt.emplace(vertex);
 	return vertex ? vertex->GetTotalCost() : -1;
+}
+template<typename TTag, typename TItem>
+TItem Graph<TTag, TItem>::MinSubTreesDifference(shared_ptr<Vertex<TTag, TItem>> node)
+{
+	return node ? node->MinSubGraphDifference() : 0;
 }

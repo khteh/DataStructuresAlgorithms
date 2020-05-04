@@ -2100,12 +2100,12 @@ int _tmain(int argc, _TCHAR* argv[])
 			grid1[i][j] = gridArray17[i][j];
 	}
 	cout << endl;
-	a.clear();
-	UnbeatenPaths(4, grid1, 1, a);
-	assert(a.size() == 3);
-	assert(a[0] == 3);
-	assert(a[1] == 1);
-	assert(a[2] == 2);
+	vector<size_t> unbeatenPaths;
+	UnbeatenPaths(4, grid1, 1, unbeatenPaths);
+	assert(unbeatenPaths.size() == 3);
+	assert(unbeatenPaths[0] == 3);
+	assert(unbeatenPaths[1] == 1);
+	assert(unbeatenPaths[2] == 2);
 	long gridArray18[2][2] = { { 1,2 },{ 2,3 } };
 	grid1.clear();
 	grid1.resize(2);
@@ -2115,12 +2115,12 @@ int _tmain(int argc, _TCHAR* argv[])
 			grid1[i][j] = gridArray18[i][j];
 	}
 	cout << endl;
-	a.clear();
-	UnbeatenPaths(4, grid1, 2, a);
-	assert(a.size() == 3);
-	assert(a[0] == 2);
-	assert(a[1] == 2);
-	assert(a[2] == 1);
+	unbeatenPaths.clear();
+	UnbeatenPaths(4, grid1, 2, unbeatenPaths);
+	assert(unbeatenPaths.size() == 3);
+	assert(unbeatenPaths[0] == 2);
+	assert(unbeatenPaths[1] == 2);
+	assert(unbeatenPaths[2] == 1);
 	grid1.clear();
 	grid1.resize(1);
 	grid1[0].push_back(1);
@@ -3241,9 +3241,9 @@ void TestGraph()
 {
 	vector<long> data(5);
 	generate(data.begin(), data.end(), [n = 1]()mutable{return n++; });
-	Graph<long> graph(data);
+	Graph<long, long> graph(data);
 	assert(graph.Count() == 5);
-	shared_ptr<Vertex<long>> v1 = graph.GetVertex(1);
+	shared_ptr<Vertex<long, long>> v1 = graph.GetVertex(1);
 	assert(graph.HasVertex(1));
 	assert(graph.HasVertex(2));
 	assert(graph.HasVertex(3));
@@ -3251,13 +3251,13 @@ void TestGraph()
 	assert(graph.HasVertex(5));
 
 	assert(!v1->HasNeighbours());
-	shared_ptr<Vertex<long>> v2 = graph.GetVertex(2);
+	shared_ptr<Vertex<long, long>> v2 = graph.GetVertex(2);
 	assert(!v2->HasNeighbours());
-	shared_ptr<Vertex<long>> v3 = graph.GetVertex(3);
+	shared_ptr<Vertex<long, long>> v3 = graph.GetVertex(3);
 	assert(!v3->HasNeighbours());
-	shared_ptr<Vertex<long>> v4 = graph.GetVertex(4);
+	shared_ptr<Vertex<long, long>> v4 = graph.GetVertex(4);
 	assert(!v4->HasNeighbours());
-	shared_ptr<Vertex<long>> v5 = graph.GetVertex(5);
+	shared_ptr<Vertex<long, long>> v5 = graph.GetVertex(5);
 	assert(!v5->HasNeighbours());
 	assert(v1->GetCost(v1) == 0);
 	assert(v2->GetCost(v2) == 0);
@@ -3292,21 +3292,21 @@ void TestGraph()
 	graph.Print(v2);
 	graph.Print(v3);
 	graph.Print(v4);
-	map<size_t, vector<shared_ptr<Vertex<long>>>> vertices; // Get BFS vertices
+	map<size_t, vector<shared_ptr<Vertex<long, long>>>> vertices; // Get BFS vertices
 	graph.GetBFSNodes(vertices, v1);
 	assert(!vertices.empty());
 	cout << "Graph content by level:" << endl;
-	for (map<size_t, vector<shared_ptr<Vertex<long>>>>::const_iterator it = vertices.begin(); it != vertices.end(); it++) {
+	for (map<size_t, vector<shared_ptr<Vertex<long, long>>>>::const_iterator it = vertices.begin(); it != vertices.end(); it++) {
 		cout << "Level " << it->first << ": ";
-		for (vector<shared_ptr<Vertex<long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
-			cout << (*it1)->GetTag() << " ";
+		for (vector<shared_ptr<Vertex<long, long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+			cout << (*it1)->GetItem() << " ";
 		cout << endl;
 	}
-	set<shared_ptr<Vertex<long>>> spt; // Shortest Path Tree
+	set<shared_ptr<Vertex<long, long>>> spt; // Shortest Path Tree
 	graph.Dijkstra(1, spt);
 	cout << "Vertex\tDistance from Source (1): " << endl;
-	for (set<shared_ptr<Vertex<long>>>::iterator it = spt.begin(); it != spt.end(); it++)
-		cout << (*it)->GetTag() << "\t" << (*it)->GetTotalCost() << endl;
+	for (set<shared_ptr<Vertex<long, long>>>::iterator it = spt.begin(); it != spt.end(); it++)
+		cout << (*it)->GetItem() << "\t" << (*it)->GetTotalCost() << endl;
 	assert(graph.Dijkstra(1, 5) == 7);
 	graph.Remove(3);
 	assert(!graph.HasVertex(3));
@@ -3325,11 +3325,76 @@ void TestGraph()
 	graph.AddUndirectedEdge(v2, v3, 2);
 	graph.AddUndirectedEdge(v3, v5, 3);
 	graph.AddUndirectedEdge(v2, v4, 2);
+	assert(graph.Dijkstra(1, 2) == 1);
+	assert(graph.Dijkstra(1, 3) == 3); // 1 + 2
+	assert(graph.Dijkstra(1, 4) == 3); // 1 + 2
+	assert(graph.Dijkstra(3, 4) == 4); // 2 + 2
 	cout << "1 - 3: " << graph.Dijkstra(1, 3) << endl;
 	cout << "1 - 4: " << graph.Dijkstra(1, 4) << endl;
 	cout << "3 - 4: " << graph.Dijkstra(3, 4) << endl;
 	spt.clear();
 	graph.Clear();
+	vector<size_t> data1 = { 10, 5, 11 }; // Vertices' values
+	vector<vector<size_t>> links = { {1, 2}, {1, 3} }; // Use tag. Not value
+	/*
+			10
+		11		5
+	Diff: 15 - 11 = 4
+	*/
+	assert(MinSubGraphDifference(data1, links) == 4);
+	data1.clear();
+	data1.push_back(10);
+	data1.push_back(5);
+	data1.push_back(6);
+	data1.push_back(20);
+	/*
+			10
+		 5		6
+	  20
+	Diff: 21 - 20 = 1
+	*/
+	size_t gridArray1[3][2] = { {1,2}, {1,3}, {2,4} };//{ {10,5}, {10,6}, {5,20} };
+	links.resize(3);
+	for (size_t i = 0; i < 3; i++) {
+		links[i].resize(2);
+		for (size_t j = 0; j < 2; j++)
+			links[i][j] = gridArray1[i][j];
+	}
+	assert(MinSubGraphDifference(data1, links) == 1);
+	/*
+			10
+		 5
+	  20
+	Diff: 20 - 15 = 5
+	*/
+	data1.clear();
+	data1.push_back(10);
+	data1.push_back(5);
+	data1.push_back(20);
+	size_t gridArray2[2][2] = { {1,2}, {2,3} };//{ {10,5}, {5,20} };
+	links.resize(2);
+	for (size_t i = 0; i < 2; i++) {
+		links[i].resize(2);
+		for (size_t j = 0; j < 2; j++)
+			links[i][j] = gridArray2[i][j];
+	}
+	assert(MinSubGraphDifference(data1, links) == 5);
+	cout << endl;
+	data1.clear();
+	data1.push_back(100); //1
+	data1.push_back(200);
+	data1.push_back(100);
+	data1.push_back(100);
+	data1.push_back(500);
+	data1.push_back(600);
+	size_t gridArray3[5][2] = { {1,2}, {2,3}, {2,4}, {4,5}, {4,6} };
+	links.resize(5);
+	for (size_t i = 0; i < 5; i++) {
+		links[i].resize(2);
+		for (size_t j = 0; j < 2; j++)
+			links[i][j] = gridArray3[i][j];
+	}
+	assert(MinSubGraphDifference(data1, links) == 400);
 }
 void parentheses(vector<string> &result, string &str, size_t index, long left, long right)
 {
@@ -5792,7 +5857,53 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	cout << "Sum 5 path: ";
 	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
 		cout << "\"" << *it << "\" ";
+	cout << endl;
 	result.clear();
+	vector<size_t> data = {10, 5, 11};
+	vector<vector<size_t>> links = { {10, 5}, {10,11} };
+	/*
+			10
+		11		5
+	Diff: 15 - 11 = 4
+	*/
+	assert(cutTheTree(data, links) == 4);
+	data.clear();
+	data.push_back(10);
+	data.push_back(5);
+	data.push_back(6);
+	data.push_back(20);
+	/*
+			10
+		 5		6
+	  20
+	Diff: 21 - 20 = 1
+	*/
+	size_t gridArray1[3][2] = { {10,5}, {10,6}, {5,20} };
+	links.resize(3);
+	for (size_t i = 0; i < 3; i++) {
+		links[i].resize(2);
+		for (size_t j = 0; j < 2; j++)
+			links[i][j] = gridArray1[i][j];
+	}
+	assert(cutTheTree(data, links) == 1);
+	/*
+			10
+		 5		
+	  20
+	Diff: 20 - 15 = 5
+	*/
+	data.clear();
+	data.push_back(10);
+	data.push_back(5);
+	data.push_back(20);
+	size_t gridArray2[2][2] = { {10,5}, {5,20} };
+	links.resize(2);
+	for (size_t i = 0; i < 2; i++) {
+		links[i].resize(2);
+		for (size_t j = 0; j < 2; j++)
+			links[i][j] = gridArray2[i][j];
+	}
+	assert(cutTheTree(data, links) == 5);
 	cout << endl;
 }
 void BinarySearchTreeTests()
@@ -8770,20 +8881,20 @@ int kruskals(int nodes, vector<long>& from, vector<long>& to, vector<long>& weig
 // 2 cases with 1000 vertices and 10,000 edges failed
 size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>>& edges, long start)
 {
-	Graph<long> graph;
+	Graph<long, long> graph;
 	for (size_t i = 0; i < edges.size(); i++) {
-		shared_ptr<Vertex<long>> v1 = graph.GetVertex(edges[i][0]);
-		shared_ptr<Vertex<long>> v2 = graph.GetVertex(edges[i][1]);
+		shared_ptr<Vertex<long, long>> v1 = graph.GetVertex(edges[i][0]);
+		shared_ptr<Vertex<long, long>> v2 = graph.GetVertex(edges[i][1]);
 		if (!v1)
-			v1 = make_shared<Vertex<long>>(edges[i][0]);
+			v1 = make_shared<Vertex<long, long>>(edges[i][0]);
 		if (!v2)
-			v2 = make_shared<Vertex<long>>(edges[i][1]);
+			v2 = make_shared<Vertex<long, long>>(edges[i][1]);
 		graph.AddUndirectedEdge(v1, v2, edges[i][2]);
 	}
-	shared_ptr<Vertex<long>> startVertex = graph.GetVertex(start);
+	shared_ptr<Vertex<long, long>> startVertex = graph.GetVertex(start);
 	assert(startVertex);
 	for (size_t i = 0; i < nodes; i++) {
-		shared_ptr<Vertex<long>> v = graph.GetVertex(i+1);
+		shared_ptr<Vertex<long, long>> v = graph.GetVertex(i+1);
 		assert(v);
 		graph.Print(v);
 	}
@@ -8791,20 +8902,20 @@ size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>>& edges, long s
 }
 // https://www.hackerrank.com/challenges/rust-murderer/problem
 // 3/7 test cases failed :(
-void UnbeatenPaths(size_t nodes, vector<vector<long>>& edges, long start, vector<long>& paths)
+void UnbeatenPaths(size_t nodes, vector<vector<long>>& edges, long start, vector<size_t>& paths)
 {
-	Graph<long> graph;
+	Graph<long, long> graph;
 	for (size_t i = 1; i <= nodes; i++)
 		graph.AddVertex(i);
 	for (size_t i = 0; i < edges.size(); i++) {
-		shared_ptr<Vertex<long>> v1 = graph.GetVertex(edges[i][0]);
-		shared_ptr<Vertex<long>> v2 = graph.GetVertex(edges[i][1]);
+		shared_ptr<Vertex<long, long>> v1 = graph.GetVertex(edges[i][0]);
+		shared_ptr<Vertex<long, long>> v2 = graph.GetVertex(edges[i][1]);
 		assert(v1);
 		assert(v2);
 		graph.AddUndirectedEdge(v1, v2, 0);
 	}
 	for (size_t i = 0; i < nodes; i++) {
-		shared_ptr<Vertex<long>> v = graph.GetVertex(i + 1);
+		shared_ptr<Vertex<long, long>> v = graph.GetVertex(i + 1);
 		assert(v);
 		graph.Print(v);
 	}
@@ -8815,12 +8926,12 @@ void UnbeatenPaths(size_t nodes, vector<vector<long>>& edges, long start, vector
 long getLowestPathCost(size_t g_nodes, vector<long>& g_from, vector<long>& g_to, vector<long>& g_weight)
 {
 	// Breadth-First-Search algorithm
-	Graph<long> graph;
+	Graph<long, long> graph;
 	for (size_t i = 1; i <= g_nodes; i++)
 		graph.AddVertex(i);
 	for (size_t i = 0; i < g_from.size(); i++) {
-		shared_ptr<Vertex<long>> v1 = graph.GetVertex(g_from[i]);
-		shared_ptr<Vertex<long>> v2 = graph.GetVertex(g_to[i]);
+		shared_ptr<Vertex<long, long>> v1 = graph.GetVertex(g_from[i]);
+		shared_ptr<Vertex<long, long>> v2 = graph.GetVertex(g_to[i]);
 		assert(v1);
 		assert(v2);
 		graph.AddUndirectedEdge(v1, v2, g_weight[i]);
@@ -8828,10 +8939,10 @@ long getLowestPathCost(size_t g_nodes, vector<long>& g_from, vector<long>& g_to,
 	for (size_t i = 1; i <= g_nodes; i++)
 		graph.Print(graph.GetVertex(i));
 	cout << endl;
-	set<shared_ptr<Vertex<long>>> spt;
+	set<shared_ptr<Vertex<long, long>>> spt;
 	long cost = graph.GetPathsCosts(spt, graph.GetVertex(1), graph.GetVertex(g_nodes));
 	cout << "Vertex\tDistance from Source" << endl;
-	for (set<shared_ptr<Vertex<long>>>::iterator it = spt.begin(); it != spt.end(); it++)
+	for (set<shared_ptr<Vertex<long, long>>>::iterator it = spt.begin(); it != spt.end(); it++)
 		cout << (*it)->GetTag() << "\t" << (*it)->GetTotalCost() << endl;
 	return cost;
 }
@@ -8867,4 +8978,35 @@ size_t SurfaceArea3D(vector<vector<long>>& data)
 		}
 	}
 	return xArea + yArea + zArea * 2;
+}
+size_t cutTheTree(vector<size_t>& data, vector<vector<size_t>>& edges)
+{
+	Tree<size_t> tree(data[0]);
+	for (size_t i = 0; i < edges.size(); i++) {
+		shared_ptr<Node<size_t>> parent = tree.FindNode(edges[i][0]);
+		assert(parent);
+		shared_ptr<Node<size_t>> n = make_shared<Node<size_t>>(edges[i][1]);
+		tree.InsertNode(parent, n);
+	}
+	tree.PrintTree();
+	size_t result = tree.MinSubTreesDifference();
+	return result;
+}
+size_t MinSubGraphDifference(vector<size_t>& data, vector<vector<size_t>>& edges)
+{
+	Graph<size_t, size_t> graph;
+	for (size_t i = 0; i < data.size(); i++)
+		graph.AddVertex(i + 1, data[i]);
+	for (size_t i = 0; i < edges.size(); i++) {
+		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(edges[i][0]);
+		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex(edges[i][1]);
+		assert(v1);
+		assert(v2);
+		graph.AddDirectedEdge(v1, v2, 0);
+	}
+	for (size_t i = 0; i < data.size(); i++)
+		graph.Print(graph.GetVertex(i + 1));
+	cout << endl;
+	size_t result = graph.MinSubTreesDifference(graph.GetVertex(1));
+	return result;
 }

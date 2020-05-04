@@ -63,8 +63,9 @@ public:
 	void FindSum(shared_ptr<Node<T>>, long, vector<string>&);
 	bool SubTree(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
 	bool MatchTree(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
-	unsigned long MinDepth(shared_ptr<Node<T>>);
-	unsigned long MaxDepth(shared_ptr<Node<T>>);
+	size_t MinDepth(shared_ptr<Node<T>>);
+	size_t MaxDepth(shared_ptr<Node<T>>);
+	T MinSubTreesDifference();
 	bool IsBalancedTree();
 	T MinDiffInBST();
 	size_t Count();
