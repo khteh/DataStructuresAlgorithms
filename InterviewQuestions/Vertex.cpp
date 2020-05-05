@@ -111,11 +111,13 @@ long Vertex<TTag, TItem>::GetTotalCost() const
 	return cost_;
 }
 template<typename TTag, typename TItem>
-TItem Vertex<TTag, TItem>::GetSum() const
+TItem Vertex<TTag, TItem>::GetSum(set<TTag> visited) const
 {
 	size_t sum = item_;
+	visited.insert(tag_);
 	for (map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
-		sum += it->first->GetSum();
+		if (visited.find(it->first->GetTag()) == visited.end())
+			sum += it->first->GetSum(visited);
 	return sum;
 }
 template<typename TTag, typename TItem>
@@ -129,30 +131,7 @@ void Vertex<TTag, TItem>::SetTotalCost(long cost)
 	cost_ = cost;
 }
 template<typename TTag, typename TItem>
-TItem Vertex<TTag, TItem>::MinSubGraphDifference(shared_ptr<Vertex<TTag, TItem>> n, TItem sum, TItem subgraphSum)
-{
-	ostringstream oss;
-	if constexpr (is_same_v<TItem, long> || is_same_v<TItem, int> || is_same_v<TItem, size_t>) {
-		if (sum == subgraphSum)
-			return 0;
-		else if (sum >= subgraphSum)
-			return abs((long)sum - (long)subgraphSum);
-		else {
-			TItem adjustedSum = subgraphSum - n->GetItem();
-			if (sum + n->GetItem() == adjustedSum)
-				return 0;
-			else if (sum + n->GetItem() > adjustedSum)
-				return abs((long)(sum + n->GetItem()) - (long)adjustedSum);
-			else
-				return n->MinSubGraphDifference(sum);
-		}
-	} else {
-		oss << __FUNCTION__ << " is only applicable to integral types!";
-		throw runtime_error(oss.str());
-	}
-}
-template<typename TTag, typename TItem>
-TItem Vertex<TTag, TItem>::MinSubGraphDifference(TItem sum)
+TItem Vertex<TTag, TItem>::MinSubGraphDifference(set<TTag> visited, TItem sum)
 {
 	/*
 			10
@@ -165,15 +144,22 @@ TItem Vertex<TTag, TItem>::MinSubGraphDifference(TItem sum)
 	*/
 	ostringstream oss;
 	multimap<TItem, shared_ptr<Vertex<TTag, TItem>>> vertices;
+	visited.insert(tag_);
 	if constexpr (is_same_v<TItem, long> || is_same_v<TItem, int> || is_same_v<TItem, size_t>) {
-		if (neighbours_.empty())
+		if (neighbours_.empty()) // This will always be false in an UnDirected graph as every node points to it's parent
 			return abs((long)sum - (long)item_);
 		else if (neighbours_.size() == 1) {
 			typename map<shared_ptr<Vertex<TTag, TItem>>, long>::iterator it = neighbours_.begin();
-			return it->first->MinSubGraphDifference(sum + item_);
+			return visited.find(it->first->GetTag()) == visited.end() ?
+					it->first->MinSubGraphDifference(visited, sum + item_) : abs((long)sum - (long)item_);
 		}
 		for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
-			vertices.emplace(it->first->GetSum(), it->first);
+			if (visited.find(it->first->GetTag()) == visited.end())
+				vertices.emplace(it->first->GetSum(visited), it->first);
+		if (vertices.size() == 1) {
+			typename multimap<TItem, shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin();
+			return it->second->MinSubGraphDifference(visited, sum + item_);
+		}
 		typename map<TItem, shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin();
 		typename map<TItem, shared_ptr<Vertex<TTag, TItem>>>::reverse_iterator it1 = vertices.rbegin();
 		TItem leftSum = it->first, rightSum = it1->first;
@@ -194,15 +180,23 @@ TItem Vertex<TTag, TItem>::MinSubGraphDifference(TItem sum)
 		sum += item_;
 		if (leftSum == rightSum)
 			return 0;
-		else if (leftSum < rightSum)
-			return MinSubGraphDifference(it1->second, sum + leftSum, rightSum);
-		else
-			return MinSubGraphDifference(it->second, sum + rightSum, leftSum);
-	}
-	else {
+		TItem sum1 = sum + min(leftSum, rightSum);
+		TItem subgraphSum = max(leftSum, rightSum);
+		if (sum1 >= subgraphSum)
+			return abs((long)sum1 - (long)subgraphSum);
+		shared_ptr<Vertex<TTag, TItem>> n = it1->second;
+		TItem adjustedSum = subgraphSum - n->GetItem();
+		if (sum1 + n->GetItem() == adjustedSum)
+			return 0;
+		else if (sum1 + n->GetItem() > adjustedSum)
+			return abs((long)(sum1 + n->GetItem()) - (long)adjustedSum);
+		else if (visited.find(n->GetTag()) == visited.end())
+			return n->MinSubGraphDifference(visited, sum1);
+	} else {
 		oss << __FUNCTION__ << " is only applicable to integral types!";
 		throw runtime_error(oss.str());
 	}
+	return -1;
 }
 template<typename TTag, typename TItem>
 Vertex<TTag, TItem>& Vertex<TTag, TItem>::operator=(Vertex<TTag, TItem>& rhs)

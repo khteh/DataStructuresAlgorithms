@@ -329,5 +329,6 @@ long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>>& spt
 template<typename TTag, typename TItem>
 TItem Graph<TTag, TItem>::MinSubTreesDifference(shared_ptr<Vertex<TTag, TItem>> node)
 {
-	return node ? node->MinSubGraphDifference() : 0;
+	set<TTag> visited;
+	return node ? node->MinSubGraphDifference(visited) : 0;
 }

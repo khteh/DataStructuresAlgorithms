@@ -1,4 +1,5 @@
 #pragma once
+#include <set>
 #include <map>
 #include <vector>
 #include <memory>
@@ -19,7 +20,7 @@ public:
 	TItem GetItem() const;
 	long GetCost(shared_ptr<Vertex<TTag, TItem>>);
 	long GetTotalCost() const;
-	TItem GetSum() const;
+	TItem GetSum(set<TTag>) const;
 	void ResetTotalCost();
 	void SetTotalCost(long);
 	void AddNeighbour(shared_ptr<Vertex<TTag, TItem>>, long);
@@ -31,7 +32,7 @@ public:
 	bool HasNeighbour(TTag, TItem) const;
 	bool HasNeighbour(shared_ptr<Vertex<TTag, TItem>>) const;
 	size_t NeighbourCount() const;
-	TItem MinSubGraphDifference(TItem sum = 0);
+	TItem MinSubGraphDifference(set<TTag>, TItem sum = 0);
 	Vertex<TTag, TItem>& operator=(Vertex<TTag, TItem>&);
 	bool operator==(Vertex<TTag, TItem>&);
 	bool operator!=(Vertex<TTag, TItem>&);
@@ -42,5 +43,4 @@ protected:
 	TItem item_;
 	long cost_;
 	map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours_; // neighbours and costs from this vertex to them
-	TItem MinSubGraphDifference(shared_ptr<Vertex<TTag, TItem>>, TItem, TItem);
 };
