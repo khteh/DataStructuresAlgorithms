@@ -108,7 +108,6 @@ void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex)
 			cout << setw(oss.str().size()) << " " << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << " " << (*it)->GetTag() << "(" << (*it)->GetItem() << ") " << " [" << previous->GetCost(*it) << "] " << endl;
 		else
 			cout << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << " " << (*it)->GetTag() << "(" << (*it)->GetItem() << ") " << " [" << previous->GetCost(*it) << "] " << endl;
-		//cout << (space ? " " : "") << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << (*it)->GetTag() << "(" << (*it)->GetItem() << ") " << " [" << previous->GetCost(*it) << "] " << endl;
 	}
 }
 // https://www.hackerrank.com/challenges/primsmstsub/problem
