@@ -3423,7 +3423,7 @@ void TestGraph()
 			links[i][j] = gridArray5[i][j];
 	}
 	size_t result = MinSubGraphDifference(data2, links);
-	//assert(result == 525);
+	//assert(result == 525); Fail but difficult to check due to the sheer number of data points.
 	cout << endl;
 }
 void parentheses(vector<string> &result, string &str, size_t index, long left, long right)
@@ -8923,6 +8923,7 @@ size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>>& edges, long s
 	}
 	shared_ptr<Vertex<long, long>> startVertex = graph.GetVertex(start);
 	assert(startVertex);
+	cout << __FUNCTION__ << " graph (" << nodes << " nodes):" << endl;
 	for (size_t i = 0; i < nodes; i++) {
 		shared_ptr<Vertex<long, long>> v = graph.GetVertex(i+1);
 		assert(v);
@@ -8944,6 +8945,7 @@ void UnbeatenPaths(size_t nodes, vector<vector<long>>& edges, long start, vector
 		assert(v2);
 		graph.AddUndirectedEdge(v1, v2, 0);
 	}
+	cout << __FUNCTION__ << " graph (" << nodes << " nodes):" << endl;
 	for (size_t i = 0; i < nodes; i++) {
 		shared_ptr<Vertex<long, long>> v = graph.GetVertex(i + 1);
 		assert(v);
@@ -8966,6 +8968,7 @@ long getLowestPathCost(size_t g_nodes, vector<long>& g_from, vector<long>& g_to,
 		assert(v2);
 		graph.AddUndirectedEdge(v1, v2, g_weight[i]);
 	}
+	cout << __FUNCTION__ << " graph (" << g_nodes << " nodes):" << endl;
 	for (size_t i = 1; i <= g_nodes; i++)
 		graph.Print(graph.GetVertex(i));
 	cout << endl;
@@ -9038,6 +9041,7 @@ size_t MinSubGraphDifference(vector<size_t>& data, vector<vector<size_t>>& edges
 		assert(v2);
 		graph.AddUndirectedEdge(v1, v2, 0);
 	}
+	cout << __FUNCTION__ << " graph (" << data.size() << " nodes)" << endl;
 	for (size_t i = 0; i < data.size(); i++)
 		graph.Print(graph.GetVertex(i + 1));
 	cout << endl;

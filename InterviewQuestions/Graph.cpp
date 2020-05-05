@@ -93,16 +93,23 @@ bool Graph<TTag, TItem>::Remove(TTag tag)
 template<typename TTag, typename TItem>
 void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex)
 {
+	ostringstream oss;
 	string uni = "-->";
 	string multi = "<-->";
 	vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
-	cout << vertex->GetTag() << "(" << vertex->GetItem() << ") ";
+	oss << vertex->GetTag() << "(" << vertex->GetItem() << ") ";
+	cout << oss.str();
 	if (neighbours.empty())
 		cout << endl;
 	shared_ptr<Vertex<TTag, TItem>> previous = vertex;
 	bool space = false;
-	for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); *it++, space = true)
-		cout << (space ? " " : "") << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << (*it)->GetTag() << "(" << (*it)->GetItem() << ") " << " [" << previous->GetCost(*it) << "] " << endl;
+	for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); *it++, space = true) {
+		if (space)
+			cout << setw(oss.str().size()) << " " << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << " " << (*it)->GetTag() << "(" << (*it)->GetItem() << ") " << " [" << previous->GetCost(*it) << "] " << endl;
+		else
+			cout << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << " " << (*it)->GetTag() << "(" << (*it)->GetItem() << ") " << " [" << previous->GetCost(*it) << "] " << endl;
+		//cout << (space ? " " : "") << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << (*it)->GetTag() << "(" << (*it)->GetItem() << ") " << " [" << previous->GetCost(*it) << "] " << endl;
+	}
 }
 // https://www.hackerrank.com/challenges/primsmstsub/problem
 // https://en.wikipedia.org/wiki/Prim%27s_algorithm
