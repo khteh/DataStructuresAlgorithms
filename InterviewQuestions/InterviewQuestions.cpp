@@ -109,6 +109,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(str1.size() == 0);
 	str1 = str.substr(0, 0);
 	assert(str1.size() == 0);
+	cout << "sizeof(void*): " << sizeof(void*) << endl;
 	cout << "sizeof(int): " << (int)sizeof(int) << endl;
 	cout << "sizeof(long): " << (int)sizeof(long) << endl;
 	cout << "sizeof(size_t): " << (int)sizeof(size_t) << endl;
@@ -121,6 +122,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
 	cout << "numeric_limits<int>::max(): " << numeric_limits<int>::max() << endl;
 	cout << "1e9: "<< 1e9 << ", 10e9: " << 10e9 << endl;
+	i = 3;
+	assert(-i == -3);
+	assert(~i == -4);
+	cout << "int -" << hex << i <<": " << -i << dec << " " << -i << ", ~" << i << ": " << hex << ~i << " " << dec << ~i << endl;
+	unsigned int ui = 3;
+	cout << "uint -" << hex << ui << ": " << -ui << dec << " " << -ui << ", ~" << ui << ": " << hex << ~ui << " " << dec << ~ui << endl;
 	a.resize(10);
 	generate(a.begin(), a.end(), [n = 1]()mutable{return n++; });
 	for (size_t i = 0; i < a.size(); i++)
@@ -7167,6 +7174,22 @@ vector<string> numbersegments(vector<long>& data)
 			oss << *it;
 	return result;
 }
+/*
+sizeof(void*) = 4
+Align 4: alignment - 1 = 3
+1 : 1 + 3 = 4 / 4 = 1
+2 : 2 + 3 = 5 / 4 = 1
+3 : 3 + 3 = 6 / 4 = 1
+4 : 4 + 3 = 7 / 4 = 1
+
+5 : 5 + 3 = 8 / 4 = 2
+6 : 6 + 3 = 9 / 4 = 2
+7 : 7 + 3 = 10 / 4 = 2
+8 : 8 + 3 = 11 / 4 = 2
+
+9 : 9 + 3 = 12 / 4 = 3
+10 : 10 + 3 = 13 / 4 = 3
+*/
 void * alignedMalloc(size_t size, size_t alignment)
 {
 	size_t bytes = alignment / 8;
