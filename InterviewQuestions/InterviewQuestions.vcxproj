@@ -90,9 +90,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Call.h" />
     <ClInclude Include="CallHandler.h" />
     <ClInclude Include="Card.h" />
@@ -161,9 +158,6 @@
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="Trie.cpp" />
     <ClCompile Include="Vertex.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="queryFrequencyInput.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
