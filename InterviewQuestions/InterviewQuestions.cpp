@@ -13,7 +13,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	// Advanced uses. Allows more than 32 bits of randomness.
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
-	std::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(begin(seeds), end(seeds));
 	mt19937_64 engine(sequence);
 	uniform_int_distribution<long> uniformDistribution;
@@ -408,8 +408,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(sherlockAndAnagrams("mom") == 2);
 	assert(sherlockAndAnagrams("abba") == 4);
 	assert(sherlockAndAnagrams("abcd") == 0);
-//	assert(sherlockAndAnagrams("cdcd") == 5); Unfinished work
-//	assert(sherlockAndAnagrams("kkkk") == 10); Unfinished work
+	cout << sherlockAndAnagrams("cdcd") << endl;
+	cout << sherlockAndAnagrams("kkkk") << endl;
+	cout << sherlockAndAnagrams("ifailuhkqq") << endl;
+	//assert(sherlockAndAnagrams("cdcd") == 5); //Unfinished work
+	//assert(sherlockAndAnagrams("kkkk") == 10); //Unfinished work
+	//assert(sherlockAndAnagrams("ifailuhkqq") == 3); //Unfinished work
 	for (vector<vector<string>>::const_iterator it = anagrams.begin(); it != anagrams.end(); it++) {
 		cout << "( ";
 		copy(it->begin(), it->end(), ostream_iterator<string>(cout, " "));
@@ -571,16 +575,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings.push_back("World Hello!!!");
 	cout << "strings without sorted: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
-	std::sort(strings.begin(), strings.end());
+	sort(strings.begin(), strings.end());
 	assert(strings[0] == "Angel");
 	assert(strings[1] == "Hello World!!!");
 	assert(strings[2] == "World Hello!!!");
 	assert(strings[3] == "legnA");
 	cout << "strings sorted with default comparer: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
-	std::sort(strings.begin(), strings.end(), [&strings](string a, string b) -> bool {
-										std::sort(a.begin(), a.end());
-										std::sort(b.begin(), b.end());
+	sort(strings.begin(), strings.end(), [&strings](string a, string b) -> bool {
+										sort(a.begin(), a.end());
+										sort(b.begin(), b.end());
 										return a < b;
 									}
 		);
@@ -635,6 +639,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	d = round(0.1234, 2);
 	d = round(0.1234, 3);
 	d = round(0.1234, 4);
+	assert(factorial(1) == 1);
+	assert(factorial(2) == 2);
+	assert(factorial(3) == 6);
+	assert(factorial(4) == 24);
 	assert(factorial(5) == 120);
 	assert(SequenceSum(0) == 0);
 	assert(SequenceSum(1) == 1);
@@ -1137,7 +1145,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	dictionary.insert("LIME");
 	dictionary.insert("LIKE");
 	dictionary.insert("LAKE");
-	std::queue<string> result1;
+	queue<string> result1;
 	Transform(string("DAMP"), string("LIKE"), dictionary, result1);
 	assert(result1.size() > 0);
 	cout << "Single-character transformation from \"DAMP\" to \"LIKE\": ";
@@ -1702,6 +1710,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	MaxZeroProductTests();
 	cpluplus17();
 	FunctionObject functionObject;
+	map<string, size_t> myKeyCount;
+	myKeyCount["Hello World!!!"]++;
+	assert(myKeyCount["Hello World!!!"] == 1);
+
+	map<size_t, string> myStringCount;
+	myStringCount[1].append("Hello ");
+	myStringCount[1].append("World!!!");
+	assert(myStringCount[1] == "Hello World!!!");
 	map<int, char> mymap;
 	mymap[123] = 'A';
 	assert(mymap.size() == 1);
@@ -2450,22 +2466,8 @@ void FindAnagrams(vector<string> const& s, vector<vector<string>> &result)
 // Unfinished work!
 size_t sherlockAndAnagrams(string const& s)
 {
-	size_t count = 0;
-	vector<string> str;
-	string s1(s);
-	sort(s1.begin(), s1.end());
-	for (size_t i = 0; i < s.size(); i++)
-		for (size_t j = 1; j <= s.size() - i; j++)
-			str.push_back(s.substr(i, j));
-	map<string, vector<string>> anagrams;
-	for (vector<string>::const_iterator it = str.begin(); it != str.end(); it++) {
-		string s1(*it);
-		sort(s1.begin(), s1.end());
-		anagrams[s1].push_back(*it);
-	}
-	for (map<string, vector<string>>::const_iterator it = anagrams.begin(); it != anagrams.end(); it++)
-		count += (it->second.size() / 2);
-	return count;
+	SuffixTree tree(s);
+	return tree.AnagramSubStrings();
 }
 void PalindromeTests()
 {
@@ -3514,7 +3516,7 @@ long LongestValidParenthesesWithFixes(string& str, size_t k)
 	}
 	long *stackEnd = &stack.top() + 1;
 	long *stackBegin = stackEnd - stack.size();
-	std::vector<long> list(stackBegin, stackEnd);
+	vector<long> list(stackBegin, stackEnd);
 	// The algorithm implemented is based on reverse-engineering of the result sets obtained from the remaining stack elements after the for loop above.
 	if (k == 0 || list.empty() || (list.size() == 1 && list[0] == -1))
 		return result;
@@ -3781,7 +3783,7 @@ void sortNumbers(vector<type> &data)
 }
 // http://cpluspluslearning-petert.blogspot.co.uk/2014/10/data-structure-and-algorithm-order.html
 template<typename type>
- void OrderArrayIntoNegativePositiveSeries(std::vector<type>& arr)
+ void OrderArrayIntoNegativePositiveSeries(vector<type>& arr)
  {
 	 if (arr.empty() || arr.size() < 3)
 		 return;
@@ -3861,7 +3863,7 @@ template<typename type>
  }
  void TestCornerCases()
  {
-	 std::vector<int> testArr;
+	 vector<int> testArr;
 	 OrderArrayIntoNegativePositiveSeries(testArr);
 	 assert(testArr.empty());
 
@@ -3880,7 +3882,7 @@ template<typename type>
  }
  void TestCase1()
  {
-	 std::vector<int> testArr;
+	 vector<int> testArr;
 	 //{ 2, -1, -3, -7, -8, 9, 5, -5, -7 };
 	 testArr.push_back(2);
 	 testArr.push_back(-1);
@@ -3891,7 +3893,7 @@ template<typename type>
 	 testArr.push_back(5);
 	 testArr.push_back(-5);
 	 testArr.push_back(-7);
-	 std::vector<int> result;
+	 vector<int> result;
 	 // { 2, -1, 9, -3, 5, -7, -8, -5, -7 };
 	 result.push_back(2);
 	 result.push_back(-1);
@@ -3907,7 +3909,7 @@ template<typename type>
  }
  void TestCase2()
  {
-	 std::vector<int> testArr; 
+	 vector<int> testArr; 
 	 //{ 2, 9, 5, 3, 2, 1, -1, -3, -7, -8, -5, -7 };
 	 testArr.push_back(2);
 	 testArr.push_back(9);
@@ -3921,7 +3923,7 @@ template<typename type>
 	 testArr.push_back(-8);
 	 testArr.push_back(-5);
 	 testArr.push_back(-7);
-	 std::vector<int> result;
+	 vector<int> result;
 	 // { 2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7 };
 	 result.push_back(2);
 	 result.push_back(-1);
@@ -3940,7 +3942,7 @@ template<typename type>
  }
  void TestCase3()
  {
-	 std::vector<int> testArr;
+	 vector<int> testArr;
 	 // { 2, -1, -3, - 7, -8, -5, -7, 9, 5, 3, 2, 1 };
 	 testArr.push_back(2);
 	 testArr.push_back(-1);
@@ -3954,7 +3956,7 @@ template<typename type>
 	 testArr.push_back(3);
 	 testArr.push_back(2);
 	 testArr.push_back(1);
-	 std::vector<int> result;
+	 vector<int> result;
 	 // { 2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7 };
 	 result.push_back(2);
 	 result.push_back(-1);
@@ -3973,7 +3975,7 @@ template<typename type>
  }
  void TestCase4()
  {
-	 std::vector<int> testArr;
+	 vector<int> testArr;
 	 //= { 2, -1, -3, - 7, 9, 5, 3, 2, 1, -8, -5, -7 };
 	 testArr.push_back(2);
 	 testArr.push_back(-1);
@@ -3987,7 +3989,7 @@ template<typename type>
 	 testArr.push_back(-8);
 	 testArr.push_back(-5);
 	 testArr.push_back(-7);
-	 std::vector<int> result;
+	 vector<int> result;
 	 // { 2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7 };
 	 result.push_back(2);
 	 result.push_back(-1);
@@ -4006,7 +4008,7 @@ template<typename type>
 }
 void TestCase5()
 {
-	 std::vector<int> testArr;
+	 vector<int> testArr;
 	 // { -1, -3, - 7, 2, 9, 5, 3, 2, 1, -8, -5, -7 };
 	 testArr.push_back(-1);
 	 testArr.push_back(-3);
@@ -4020,7 +4022,7 @@ void TestCase5()
 	 testArr.push_back(-8);
 	 testArr.push_back(-5);
 	 testArr.push_back(-7);
-	 std::vector<int> result;
+	 vector<int> result;
 	 // { -1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1};
 	 result.push_back(-1);
 	 result.push_back(2);
@@ -4039,7 +4041,7 @@ void TestCase5()
 }
 void TestCase6()
 {
-	 std::vector<int> testArr;
+	 vector<int> testArr;
 	 // { -1, -3, - 7, -8, -5, -7, 2, 9, 5, 3, 2, 1 };
 	 testArr.push_back(-1);
 	 testArr.push_back(-3);
@@ -4053,7 +4055,7 @@ void TestCase6()
 	 testArr.push_back(3);
 	 testArr.push_back(2);
 	 testArr.push_back(1);
-	 std::vector<int> result;
+	 vector<int> result;
 	 // { -1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1 };
 	 result.push_back(-1);
 	 result.push_back(2);
@@ -4438,8 +4440,8 @@ void sortingTests()
 	b.resize(20);
 	generate(a.begin(), a.end(), [&] {return uniformDistribution(engine); });
 	generate(b.begin(), b.end(), [&] {return uniformDistribution(engine); });
-	std::sort(a.begin(), a.end());
-	std::sort(b.begin(), b.end());
+	sort(a.begin(), a.end());
+	sort(b.begin(), b.end());
 	Merge(a, b);
 	for (vector<long>::iterator it = a.begin(); it != a.end(); it++) {
 		if (it != a.begin())
@@ -4452,8 +4454,8 @@ void sortingTests()
 	b.resize(10);
 	generate(a.begin(), a.end(), [&] {return uniformDistribution(engine); });
 	generate(b.begin(), b.end(), [&] {return uniformDistribution(engine); });
-	std::sort(a.begin(), a.end());
-	std::sort(b.begin(), b.end());
+	sort(a.begin(), a.end());
+	sort(b.begin(), b.end());
 	Merge(a, b);
 	for (vector<long>::iterator it = a.begin(); it != a.end(); it++) {
 		if (it != a.begin())
@@ -5007,7 +5009,7 @@ void shuffleCards(vector<long> &cards)
 	random_device device;
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
-	std::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(begin(seeds), end(seeds));
 	mt19937_64 engine(sequence);
 	if (!cards.empty() && cards.size() <= 52)
@@ -5041,7 +5043,7 @@ void randomSubset(vector<long> &source, size_t count, vector<long>& result)
 	random_device device;
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
-	std::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(begin(seeds), end(seeds));
 	mt19937_64 engine(sequence);
 	for (size_t i = 0; i < count; i++) {
@@ -6541,16 +6543,16 @@ long MatrixPatternCount(vector<vector<long>>& data)
 	return count;
 }
 template<typename A, typename B>
-std::pair<B, A> flip_pair(const std::pair<A, B>& p)
+pair<B, A> flip_pair(const pair<A, B>& p)
 {
-	return std::pair<B, A>(p.second, p.first);
+	return pair<B, A>(p.second, p.first);
 }
 
 template<typename A, typename B>
-std::multimap<B, A> flip_map(const std::map<A, B>& src)
+multimap<B, A> flip_map(const map<A, B>& src)
 {
-	std::multimap<B, A> dst;
-	std::transform(src.begin(), src.end(), std::inserter(dst, dst.begin()),
+	multimap<B, A> dst;
+	transform(src.begin(), src.end(), inserter(dst, dst.begin()),
 		flip_pair<A, B>);
 	return dst;
 }
@@ -6949,7 +6951,7 @@ void EqualAverageDivide(vector<long>& data, vector<long> &left)
 	long sum = 0, P = 0;
 	size_t N = data.size(), K;
 	// Sort the data
-	std::sort(data.begin(), data.end());
+	sort(data.begin(), data.end());
 	sum = parallel_reduce(data.begin(), data.end(), 0);
 	for (K = 1; K < (N - K); K++) {
 		if (((K * sum) % N)) //  check if such P can be integer (we operate with array of integers).
@@ -7082,11 +7084,11 @@ string subtract(istream& a, istream& b)
 	cout << "Result : " << oss.str() << endl;
 	return oss.str();
 }
-void split(const std::string &s, char delim, std::vector<std::string> &elems)
+void split(const string &s, char delim, vector<string> &elems)
 {
-	std::stringstream ss(s);
-	std::string item;
-	while (std::getline(ss, item, delim))
+	stringstream ss(s);
+	string item;
+	while (getline(ss, item, delim))
 		elems.push_back(item);
 }
 //file: "This is a dog"
@@ -7125,7 +7127,7 @@ set<string> intersectionNgram(string& file1, string& file2, int n)
 	for (set<string>::const_iterator it = ngrams2.begin(); it != ngrams2.end(); it++)
 		cout << "\"" << *it << "\"" << ", ";
 	cout << endl;
-	set_intersection(ngrams1.begin(), ngrams1.end(), ngrams2.begin(), ngrams2.end(), std::inserter(result,result.begin()));
+	set_intersection(ngrams1.begin(), ngrams1.end(), ngrams2.begin(), ngrams2.end(), inserter(result,result.begin()));
 	return result;
 }
 vector<int> Increment(vector<int>& data)
@@ -7172,7 +7174,7 @@ void * alignedMalloc(size_t size, size_t alignment)
 }
 void alignedFree(void **p)
 {
-	std::free(*p);
+	free(*p);
 	*p = nullptr;
 }
 unsigned long long XOR(unsigned long long n)
@@ -7225,7 +7227,7 @@ void TestRandom()
 	vector<unsigned int> seeds;
 	cout << "mt19937_64::state_size: " << mt19937_64::state_size << endl;
 	seeds.resize(mt19937_64::state_size);
-	std::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(begin(seeds), end(seeds));
 	TestURNG(mt19937_64(sequence));
 }
@@ -7386,8 +7388,8 @@ bool LexicographicSort(string s1, string s2)
 	size_t i, j;
 	map<string, size_t> order = { { "a", 0 },{ "b", 1 },{ "c", 2 },{ "ch", 3 },{ "cz", 4 },{ "d", 5 },{ "e", 6 },{ "f", 7 },{ "g", 8 },{ "h", 9 },{ "i", 10 },{ "j", 11 },{ "k", 12 },{ "l", 13 },{ "m", 14 },{ "n", 15 },{ "o", 16 },{ "p", 17 },{ "q", 18 },{ "r", 18 },{ "s", 19 },{ "t", 20 },{ "u", 21 },{ "v", 22 },{ "w", 23 },{ "x", 24 },{ "y", 24 },{ "z", 25 } };
 	map<string, size_t>::iterator s1It = order.end(), s2It = order.end();
-	std::transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
-	std::transform(s2.begin(), s2.end(), s2.begin(), ::tolower);
+	transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
+	transform(s2.begin(), s2.end(), s2.begin(), ::tolower);
 	for (i = 0, j = 0; i < s1.size() && j < s2.size(); ) {
 		if (i < s1.size() - 1) {
 			s1It = order.find(s1.substr(i, 2));
@@ -7739,7 +7741,7 @@ long NumberSolitaire(vector<long>& data)
 	memo[0] = data[0];
 	for (int i = 1; i < data.size(); i++)
 		for (int j = 1; j < 7 && (i - j) >= 0; j++)
-			memo[i] = std::max(memo[i], data[i] + memo[i - j]);
+			memo[i] = max(memo[i], data[i] + memo[i - j]);
 	return memo[data.size() - 1];
 }
 // A zero - indexed array A consisting of N integers is given.It contains daily prices of a stock share for a period of N consecutive days.
@@ -9041,10 +9043,10 @@ size_t MinSubGraphDifference(vector<size_t>& data, vector<vector<size_t>>& edges
 		assert(v2);
 		graph.AddUndirectedEdge(v1, v2, 0);
 	}
-	cout << __FUNCTION__ << " graph (" << data.size() << " nodes)" << endl;
-	for (size_t i = 0; i < data.size(); i++)
-		graph.Print(graph.GetVertex(i + 1));
-	cout << endl;
+	//cout << __FUNCTION__ << " graph (" << data.size() << " nodes)" << endl;
+	//for (size_t i = 0; i < data.size(); i++)
+	//	graph.Print(graph.GetVertex(i + 1));
+	//cout << endl;
 	size_t result = graph.MinSubTreesDifference(graph.GetVertex(1));
 	return result;
 }
