@@ -2,22 +2,26 @@
 #include "Singleton.h"
 #include <iostream>
 using namespace std;
-
-Singleton::Singleton(void)
+Singleton* Singleton::_instance = nullptr;
+Singleton::Singleton()
 {
 }
-
-Singleton::~Singleton(void)
+Singleton::~Singleton()
 {
+	if (_instance) {
+		//delete _instance; This will call Singleton::~Singleton() again! :/
+		_instance = nullptr;
+	}
 }
 
-Singleton& Singleton::instance()
+Singleton* Singleton::Instance()
 {
-	static Singleton instance_;
-	return instance_;
+	if (!_instance)
+		_instance = new Singleton();
+	return _instance;
 }
 
-void Singleton::print()
+void Singleton::Print(string str)
 {
-	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]" << endl;
+	cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: " << str << endl;
 }

@@ -66,7 +66,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(strings[3] == "ABCCZCH");
 	assert(strings[4] == "abcde");
 	assert(strings[5] == "ABCDE");
-	Singleton::instance().print();
+	Singleton*singleton = Singleton::Instance();
+	assert(singleton);
+	singleton->Print("Hello Singleton!!!");
 	hide->Print(1);
 	hide1->Print(1);
 	//hide->Print(1, 2);

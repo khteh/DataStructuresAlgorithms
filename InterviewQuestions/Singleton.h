@@ -1,13 +1,14 @@
 #pragma once
-
+#include <string>
+using namespace std;
 class Singleton
 {
 public:
-	static Singleton& instance();
-	void print();
+	static Singleton* Instance();
+	void Print(string);
 protected:
-	Singleton(void);
-	Singleton(Singleton const&);
-	void operator=(Singleton const&);
-	virtual ~Singleton(void);
+	Singleton();
+	virtual ~Singleton();
+private:
+	static Singleton* _instance;
 };
