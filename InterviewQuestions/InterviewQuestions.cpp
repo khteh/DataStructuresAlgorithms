@@ -2,8 +2,6 @@
 //
 #include "stdafx.h"
 #include "InterviewQuestions.h"
-#include "NameHidingExample.h"
-#include "Singleton.h"
 using namespace std;
 int _tmain(int argc, _TCHAR* argv[])
 {

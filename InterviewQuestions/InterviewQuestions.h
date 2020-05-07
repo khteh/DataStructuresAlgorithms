@@ -20,6 +20,8 @@
 #include <ppl.h>
 #include <limits.h>
 #include <cmath>
+#include "NameHidingExample.h"
+#include "Singleton.h"
 #include "Graph.h"
 #include "Tower.h"
 #include "MyStack.h"
