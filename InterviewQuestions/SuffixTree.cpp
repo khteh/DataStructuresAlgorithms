@@ -27,12 +27,12 @@ void splitString(size_t count, const string& s, char delim, set<string>& elems, 
 }
 SuffixTree::SuffixTree()
 {
-	m_root = make_shared<SuffixTreeNode>(0);
+	m_root = make_unique<SuffixTreeNode>(0);
 }
 
 SuffixTree::SuffixTree(string const &str)
 {
-	m_root = make_shared<SuffixTreeNode>(0);
+	m_root = make_unique<SuffixTreeNode>(0);
 	InsertString(str);
 }
 
@@ -58,7 +58,7 @@ void SuffixTree::InsertString(string const &str)
 		index += it->size();
 	m_strings.push_back(str);
 	if (!m_root)
-		m_root = make_shared<SuffixTreeNode>(0);
+		m_root = make_unique<SuffixTreeNode>(0);
 	for (size_t i = 0; i < str.size(); i++)
 		m_root->InsertString(str.substr(i), index + i);
 }
@@ -189,7 +189,7 @@ SuffixTreeNode::~SuffixTreeNode()
 size_t SuffixTreeNode::Count()
 {
 	size_t count = m_children.size();
-	for (map<char, shared_ptr<SuffixTreeNode>>::iterator it = m_children.begin(); it != m_children.end(); it++)
+	for (map<char, unique_ptr<SuffixTreeNode>>::iterator it = m_children.begin(); it != m_children.end(); it++)
 		if (it->second)
 			count += it->second->Count();
 		else
@@ -202,7 +202,7 @@ void SuffixTreeNode::InsertString(string const &str, size_t index)
 {
 	m_indices.insert(index);
 	if (!str.empty()) {
-		pair<map<char, shared_ptr<SuffixTreeNode>>::iterator, bool> result = m_children.emplace(str[0], make_shared<SuffixTreeNode>(str[0]));
+		pair<map<char, unique_ptr<SuffixTreeNode>>::iterator, bool> result = m_children.emplace(str[0], make_unique<SuffixTreeNode>(str[0]));
 		result.first->second->InsertString(str.substr(1), index);
 	}
 }
@@ -259,7 +259,7 @@ const map<size_t, string> SuffixTreeNode::AnagramSubStrings()
 	if (m_char != '\0')
 		str = m_char;
 	bool isSplit = false;
-	for (map<char, shared_ptr<SuffixTreeNode>>::iterator it = m_children.begin(); it != m_children.end(); it++) {
+	for (map<char, unique_ptr<SuffixTreeNode>>::iterator it = m_children.begin(); it != m_children.end(); it++) {
 		map<size_t, string> tmp = it->second->AnagramSubStrings();
 		for (map<size_t, string>::iterator it1 = tmp.begin(); it1 != tmp.end(); it1++) {
 			isSplit = m_indices.size() != it1->first;
@@ -317,7 +317,7 @@ const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
 	map<string, size_t> result;
 	if (m_char != '\0' && m_indices.size() > 1)
 		result.emplace(indices, 1);
-	for (map<char, shared_ptr<SuffixTreeNode>>::iterator it = m_children.begin(); it != m_children.end(); it++) {
+	for (map<char, unique_ptr<SuffixTreeNode>>::iterator it = m_children.begin(); it != m_children.end(); it++) {
 		map<string, size_t> tmp = it->second->LongestRepeatedSubstring();
 		for (map<string, size_t>::iterator it1 = tmp.begin(); it1 != tmp.end(); it1++) {
 			bool isSamePath = false;

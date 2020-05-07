@@ -33,7 +33,7 @@ class SuffixTree
 {
 private:
 	vector<string> m_strings;
-	shared_ptr<SuffixTreeNode> m_root;
+	unique_ptr<SuffixTreeNode> m_root;
 public:
 	SuffixTree();
 	SuffixTree(string const &);
@@ -53,7 +53,7 @@ class SuffixTreeNode
 {
 private:
 	char m_char;
-	map<char, shared_ptr<SuffixTreeNode>> m_children;
+	map<char, unique_ptr<SuffixTreeNode>> m_children;
 	set<size_t> m_indices;
 public:
 	SuffixTreeNode(char);

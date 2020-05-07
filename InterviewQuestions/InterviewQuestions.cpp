@@ -5603,6 +5603,9 @@ void PrefixTrieTests()
 
 	result = prefixTrie.Find(string("app"));
 	assert(result.size() == 3);
+	assert(result[0] == "appendix");
+	assert(result[1] == "appetite");
+	assert(result[2] == "apple");
 
 	result = prefixTrie.Find(string("to"));
 	assert(result.size() == 2);
@@ -5667,6 +5670,9 @@ void PrefixTrieTests()
 	node = prefixTrie.GetNode("te");
 	assert(node);
 	assert(node->Value() == "");
+	
+	result = prefixTrie.GetNodes();
+	assert(!result.empty());
 
 	string longestCommonPrefix = prefixTrie.LongestCommonPrefix("a");
 	assert(longestCommonPrefix == "app");

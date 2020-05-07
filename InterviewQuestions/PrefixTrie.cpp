@@ -3,15 +3,14 @@
 
 PrefixTrie::PrefixTrie(vector<string>& str)
 {
-	m_root = new PrefixTrieNode();
+	m_root = make_unique<PrefixTrieNode>();
 	for (vector<string>::const_iterator it = str.begin(); it != str.end(); it++)
 		m_root->InsertString(*it, 0);
 }
 
 PrefixTrie::~PrefixTrie()
 {
-	delete m_root;
-	m_root = nullptr;
+	m_root.reset();
 }
 size_t PrefixTrie::Count()
 {
@@ -25,6 +24,10 @@ void PrefixTrie::RemoveString(string const &str)
 vector<string> PrefixTrie::Find(string const& prefix)
 {
 	return m_root && !prefix.empty() ? m_root->Find(prefix, 0) : vector<string>();
+}
+vector<string> PrefixTrie::GetNodes()
+{
+	return m_root ? m_root->GetNodes() : vector<string>();
 }
 PrefixTrieNode* PrefixTrie::GetNode(string const& prefix)
 {
@@ -52,7 +55,7 @@ string PrefixTrieNode::Value()
 size_t PrefixTrieNode::Count()
 {
 	size_t count = m_children.size();
-	for (map<char, PrefixTrieNode*>::iterator it = m_children.begin(); it != m_children.end(); it++)
+	for (map<char, unique_ptr<PrefixTrieNode>>::iterator it = m_children.begin(); it != m_children.end(); it++)
 		if (it->second)
 			count += it->second->Count();
 		else
@@ -62,7 +65,7 @@ size_t PrefixTrieNode::Count()
 void PrefixTrieNode::InsertString(string str, size_t index)
 {
 	if (index < str.size()) {
-		pair<map<char, PrefixTrieNode*>::iterator, bool> result = m_children.emplace(str[index], new PrefixTrieNode());
+		pair<map<char, unique_ptr<PrefixTrieNode>>::iterator, bool> result = m_children.emplace(str[index], new PrefixTrieNode());
 		result.first->second->InsertString(str, index + 1);
 	} else
 		m_value = str;
@@ -75,17 +78,40 @@ void PrefixTrieNode::RemoveString(string str)
 		m_children.erase(str[0]);
 	}
 }
+vector<string> PrefixTrieNode::GetNodes()
+{
+	ostringstream oss;
+	vector<string> result;
+	for (map<char, unique_ptr<PrefixTrieNode>>::iterator it = m_children.begin(); it != m_children.end(); it++) {
+		vector<string> tmp = it->second->GetNodes();
+		string str(1, it->first);
+		if (tmp.empty())
+			result.push_back(str);
+		for (vector<string>::iterator it1 = tmp.begin(); it1 != tmp.end(); it1++) {
+			oss << it->first << *it1;
+			result.push_back(oss.str());
+			oss.str("");
+		}
+	}
+	return result;
+}
 vector<string> PrefixTrieNode::Find(string const& prefix, size_t index)
 {
 	vector<string> result;
 	if (index < prefix.size() && m_children.find(prefix[index]) != m_children.end())
-		result = m_children[prefix[index]]->Find(prefix, index + 1);
-	else if (m_children.empty())
+		result = m_children[prefix[index]]->Find(prefix, index + 1); // Nodes with common prefix
+	else if (m_children.empty()) // Leaf node
 		result.push_back(m_value);
 	else {
 		if (!m_value.empty())
 			result.push_back(m_value);
-		for (map<char, PrefixTrieNode*>::iterator it = m_children.begin(); it != m_children.end(); it++)
+		/*
+			apple, appendix, appetite
+			prefix: app
+			index: 3
+			m_children contains 'l', 'e' but ordered to 'e', 'l' as std::map is ordered
+		*/
+		for (map<char, unique_ptr<PrefixTrieNode>>::iterator it = m_children.begin(); it != m_children.end(); it++)
 		{
 			vector<string> tmp = it->second->Find(prefix, index + 1);
 			result.insert(result.end(), tmp.begin(), tmp.end());
