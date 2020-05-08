@@ -16,7 +16,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	mt19937_64 engine(sequence);
 	uniform_int_distribution<long> uniformDistribution;
 	int i, j, index, *iPtr;
-	bool flag;
 	unsigned long long mask = 0;
 	vector<string> strings, strings1;
 	set<string> stringset, stringset1;
@@ -109,6 +108,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(str1.size() == 0);
 	str1 = str.substr(0, 0);
 	assert(str1.size() == 0);
+	char cstr[8];
+	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;
 	cout << "sizeof(void*): " << sizeof(void*) << endl;
 	cout << "sizeof(int): " << (int)sizeof(int) << endl;
 	cout << "sizeof(long): " << (int)sizeof(long) << endl;
@@ -1000,17 +1001,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	free(my3Dbuffer);
 	cout << "Test addition without using arithmetic symbol: " << endl;
-	i = AddWithoutArithmetic(0, 0);
-	assert(i == 0);
-
-	long long ll = AddWithoutArithmetic(0xdeadbeef, 0xfeedbeef);
-	assert(ll == 0x1dd9b7dde);
-
-	i = AddWithoutArithmetic(0xdeadbeef, 0);
-	assert(i == 0xdeadbeef);
-
-	i = AddWithoutArithmetic(0, 0xfeedbeef);
-	assert(i ==  0xfeedbeef);
+	assert(AddWithoutArithmetic(0, 0) == 0);
+	assert(AddWithoutArithmetic(0xdeadbeef, 0xfeedbeef) == 0x1dd9b7dde);
+	assert(AddWithoutArithmetic(0xdeadbeef, 0) == 0xdeadbeef);
+	assert(AddWithoutArithmetic(0, 0xfeedbeef) ==  0xfeedbeef);
 
 	assert(NumberStringSum(string("1234567890"), string("9876543210")) == "11111111100");
 	assert(NumberStringMultiplication(string("-4"), string("5")) == "-20");
@@ -3492,7 +3486,7 @@ long LongestValidParentheses(string& str)
 			stack.push(i);
 		else if (str[i] == ')') {
 			stack.pop(); // Remove the last matching opening bracket or -1
-			if (!stack.isEmpty() && (i - stack.peek()) > result)
+			if (!stack.isEmpty() && (long)(i - stack.peek()) > result)
 				result = i - stack.peek();
 			else if (stack.isEmpty())
 				stack.push(i);
@@ -3513,7 +3507,7 @@ long LongestValidParenthesesWithFixes(string& str, size_t k)
 			stack.push(i);
 		else if (str[i] == ')') {
 			stack.pop(); // Remove the last matching opening bracket or -1
-			if (!stack.empty() && (i - stack.top()) > result) {
+			if (!stack.empty() && (long)(i - stack.top()) > result) {
 				result = i - stack.top();
 				start = stack.top() + 1;
 				end = i;
@@ -3537,7 +3531,7 @@ long LongestValidParenthesesWithFixes(string& str, size_t k)
 				size--;// remove -1
 			//if (list[0] != 0) {
 				result = !(size % 2) ? size : size - 1;
-				if ((list[0] == 0 && k > (result / 2)) || (list[0] != 0 && k >= (result / 2)))
+				if ((list[0] == 0 && (long)k > (result / 2)) || (list[0] != 0 && (long)k >= (result / 2)))
 					result = min((long)(k * 2), result);
 				else
 					result = 0;
@@ -4172,7 +4166,6 @@ int BinarySearch(vector<string> source, string toSearch)
 void sortingTests()
 {
 	// Test Sorting algorithms
-	size_t i;
 	random_device device;
 	mt19937_64 engine(device());
 	uniform_int_distribution<long> uniformDistribution;
@@ -4790,16 +4783,16 @@ void CountingSort(vector<size_t>& data)
 	vector<size_t> input(data);
 	long min = numeric_limits<size_t>::max(), max = 0;
 	for (vector<size_t>::iterator it = input.begin(); it != input.end(); it++) {
-		if (*it < min)
+		if ((long)*it < min)
 			min = *it;
-		if (*it > max)
+		if ((long)*it > max)
 			max = *it;
 	}
 	// Do NOT use map / multimap to keep the counts. map / multimap auto-sort on keys. This defeats the purpose of CountingSort
 	vector<size_t> counts(max + 1, 0);
 	for (vector<size_t>::iterator it = input.begin(); it != input.end(); it++)
 		counts[*it]++;
-	for (size_t i = min > 0 ? min : 1; i <= max; i++)
+	for (long i = min > 0 ? min : 1; i <= max; i++)
 		counts[i] += counts[i - 1];
 	// Use reverse_iterator for a stable sort
 	for (vector<size_t>::reverse_iterator it = input.rbegin(); it != input.rend(); it++) {
@@ -4812,7 +4805,7 @@ string CountingSort(vector<vector<string>>& data)
 	vector<string> result;
 	long min = numeric_limits<size_t>::max(), max = 0;
 	for (vector<vector<string>>::iterator it = data.begin(); it != data.end(); it++) {
-		size_t key;
+		long key;
 		istringstream((*it)[0]) >> key;
 		if (key < min)
 			min = key;
@@ -4826,7 +4819,7 @@ string CountingSort(vector<vector<string>>& data)
 		istringstream((*it)[0]) >> key;
 		counts[key]++;
 	}
-	for (size_t i = min > 0 ? min : 1; i <= max; i++)
+	for (long i = min > 0 ? min : 1; i <= max; i++)
 		counts[i] += counts[i - 1];
 	result.resize(counts[counts.size() - 1]);
 	// Use reverse_iterator for a stable sort
@@ -4869,9 +4862,9 @@ long*** my3DAlloc(long rows, long cols, long heights)
 	long*** ptrs = (long***)malloc(header + data); // row pointers + 2-D plane of pointers to Z-plane data
 	long** columns = (long**)(ptrs + rows); // Pointer arithmetic to get the first location of 2D plane of Z-plane pointers [i][j]
 	long* dataPtr = (long*)(ptrs + rows + rows * cols); // Pointer arithmetic to get the first location of data buffer
-	for (size_t i = 0; i < rows; i++) {
+	for (long i = 0; i < rows; i++) {
 		ptrs[i] = columns + i * cols;
-		for (size_t j = 0; j < cols; j++)
+		for (long j = 0; j < cols; j++)
 			ptrs[i][j] = dataPtr + i * cols * heights + j * heights;
 	}
 	return ptrs;
@@ -4930,15 +4923,24 @@ string NumberStringSum(string& str1, string& str2)
 	reverse(str.begin(), str.end());
 	return str;
 }
-// Multiplies str1 and str2, and prints result. 
+/*
+  Multiplies str1 and str2, and prints result.
+	  345 (n2)
+	 x 76 (n1)
+	 ----
+	 2070 result: 0(3) 7(2) 0(2) 2(carry) n1: 0, n2: 3
+	2415  result:      2(4) 2(3) 6(2)  2(carry) n1: 1, n2: 3
+	-----
+	26220
+*/
 string NumberStringMultiplication(string& num1, string& num2)
 {
 	if (num1.empty() && !num2.empty())
-		return num2;
+		return "0";
 	else if (!num1.empty() && num2.empty())
-		return num1;
+		return "0";
 	else if (num1.empty() && num2.empty())
-		return "";
+		return "0";
 	bool isNegative = (num1[0] == '-' && num2[0] != '-') || (num1[0] != '-' && num2[0] == '-');
 	if (num1[0] == '-')
 		num1 = num1.substr(1);
@@ -4954,12 +4956,12 @@ string NumberStringMultiplication(string& num1, string& num2)
 
 	// Below two indexes are used to find positions in result.  
 	size_t i_n1 = 0, i_n2 = 0;
-	// Go from right to left in num1 
+	// Go from right to left in num1 (bottom) 
 	for (int i = len1 - 1; i >= 0; i--)
 	{
 		int carry = 0;
 		int n1 = num1[i] - '0';
-		// To shift position to left after every multiplication of a digit in num2 
+		// To shift position to left after every multiplication of a digit in num2 (top)
 		i_n2 = 0;
 		// Go from right to left in num2              
 		for (int j = len2 - 1; j >= 0; j--)
@@ -5210,26 +5212,26 @@ double _atod(string str, char base)
 			if (isRemainder) {
 				qCount *= base;
 				remainder *= base;
-				remainder += str[i] - '0';
+				remainder += (double)str[i] - '0';
 			} else {
 				quotient *= base;
-				quotient += str[i] - '0';
+				quotient += (double)str[i] - '0';
 			}
 		} else if (base == 16 && ((str[i] >= 'a' && str[i] <= 'f') || str[i] >= 'A' && str[i] <= 'F')) {
 			if (isRemainder) {
 				qCount *= base;
 				remainder *= base;
 				if (str[i] >= 'a' && str[i] <= 'f')
-					remainder += str[i] - 'a';
+					remainder += (double)str[i] - 'a';
 				else
-					remainder += str[i] - 'A';
+					remainder += (double)str[i] - 'A';
 				remainder += 10;
 			} else {
 				quotient *= base;
 				if (str[i] >= 'a' && str[i] <= 'f')
-					quotient += str[i] - 'a';
+					quotient += (double)str[i] - 'a';
 				else
-					quotient += str[i] - 'A';
+					quotient += (double)str[i] - 'A';
 				quotient += 10;
 			}
 		} else if (str[i] == '.')
@@ -5249,7 +5251,7 @@ double round(double num , int n)
 	unsigned long long tmp, tmp1;
 	tmp = num * pow(10, n+1);
 	tmp1 = num * pow(10, n);
-	if (tmp%10 >= 5)
+	if (tmp % 10 >= 5)
 		tmp1++;
 	return tmp1 / pow(10, n);
 }
@@ -6217,7 +6219,7 @@ void MinMaxHeapTests()
 		cout << *it << " ";
 		if (it != result.begin())
 			if (*it < *(it - 1)) {
-				assert(false, "Heap building failed!");
+				throw runtime_error("Heap building failed!");
 				break;
 			}
 	}
@@ -6544,12 +6546,12 @@ long MatrixPatternCount(vector<vector<long>>& data)
 			break;
 		}
 	long ii = i, jj = j;
-	if (ii < data.size() - 1)
+	if (ii < (long)data.size() - 1)
 		for (; j >= 0; j--)
 			for (i = ii + 1; !data[i][j]; i++)
 				count++;
 	i = ii;
-	if (jj < data[ii].size() - 1)
+	if (jj < (long)data[ii].size() - 1)
 		for (; i >= 0; i--)
 			for (j = jj + 1; !data[i][j]; j++)
 				count++;
@@ -7511,7 +7513,7 @@ size_t MaxNonOverlappingSegments(vector<long>& head, vector<long>& tail)
 		last_nonoverlapping_tail = tail[0];
 		count++;
 		for (size_t i = 1; i < head.size(); i++) {
-			if (head[i] > last_nonoverlapping_tail) {
+			if (head[i] > (long)last_nonoverlapping_tail) {
 				last_nonoverlapping_tail = tail[i];
 				count++;
 			}
@@ -7521,7 +7523,7 @@ size_t MaxNonOverlappingSegments(vector<long>& head, vector<long>& tail)
 }
 // https://app.codility.com/programmers/lessons/16-greedy_algorithms/tie_ropes/
 // 100%
-size_t TieRopes(vector<long>& data, long n)
+size_t TieRopes(vector<long>& data, size_t n)
 {
 	size_t result = 0;
 	for (size_t i = 0, sum = 0; i < data.size(); ) {

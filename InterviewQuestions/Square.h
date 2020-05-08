@@ -2,7 +2,7 @@
 class Square
 {
 private:
-	int x, y;
+	long x, y;
 	size_t width, height;
 public:
 	Square();

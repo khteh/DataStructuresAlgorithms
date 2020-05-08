@@ -1,9 +1,11 @@
 #pragma once
+#include "stdafx.h"
 #include <map>
 #include <string>
 #include <vector>
 #include <assert.h>
 #include <memory>
+#include <stdexcept>
 using namespace std;
 template<typename T>
 class TrieNode;

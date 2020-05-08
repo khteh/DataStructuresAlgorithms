@@ -54,8 +54,7 @@ void MyStack<T>::push(T item)
 template<class T>
 T MyStack<T>::peek()
 {
-	if (!isEmpty())
-		return m_top->Item();
+	return !isEmpty() ? m_top->Item() : T();
 }
 
 template<class T>

@@ -34,6 +34,7 @@ T MyQueue<T>::peek()
 		back2front();
 		return front_.peek();
 	}
+	return T();
 }
 
 template<class T>
@@ -45,6 +46,7 @@ T MyQueue<T>::front()
 		back2front();
 		return front_.pop();
 	}
+	return T();
 }
 
 template<class T>

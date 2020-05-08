@@ -234,7 +234,7 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 template<typename TTag, typename TItem>
 void Graph<TTag, TItem>::UnbeatenPath(TTag start, vector<size_t>& paths)
 {
-	for (TTag destination = 1; destination <= vertices_.size(); destination++) {
+	for (TTag destination = 1; destination <= (TTag)vertices_.size(); destination++) {
 		shared_ptr<Vertex<TTag, TItem>> v = GetVertex(start);
 		if (destination == start)
 			continue;
@@ -248,7 +248,7 @@ void Graph<TTag, TItem>::UnbeatenPath(TTag start, vector<size_t>& paths)
 				count++;
 				v = GetVertex(hop);
 			}
-			if (++hop > vertices_.size())
+			if (++hop > (TTag)vertices_.size())
 				hop = 1;
 			if (hop == destination) {
 				if (!v->HasNeighbour(hop))

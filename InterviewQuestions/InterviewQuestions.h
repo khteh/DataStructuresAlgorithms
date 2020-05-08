@@ -106,7 +106,7 @@ size_t CountDistinctSlices(long m, vector<long>&);
 size_t CountTriangles(vector<long>&);
 // Greedy Algorithms
 size_t MaxNonOverlappingSegments(vector<long>&, vector<long>&);
-size_t TieRopes(vector<long>&, long);
+size_t TieRopes(vector<long>&, size_t);
 long MinAbsSum(vector<long>&);
 long NumberSolitaire(vector<long>&);
 long MaxProfit(vector<long>&);

@@ -144,9 +144,9 @@ const size_t SuffixTree::LongestCommonSubstring(long n)
 			long start2 = index2 - n >= 0 ? index2 - n : 0;
 			long end1 = index1 + count + (n - (index1 - start1));
 			long end2 = index2 + count + (n - (index2 - start2));
-			if (end1 > m_strings[0].size())
+			if (end1 > (long)m_strings[0].size())
 				end1 = m_strings[0].size();
-			if (end2 > m_strings[1].size())
+			if (end2 > (long)m_strings[1].size())
 				end2 = m_strings[1].size();
 			map<size_t, size_t> lengths; // Key: length, Value: start index
 			for (; ; ) {
@@ -158,12 +158,12 @@ const size_t SuffixTree::LongestCommonSubstring(long n)
 						matches++;
 				lengths.emplace(count + n + matches, start1);
 				bool breakOut = true;
-				if (start1 < index1 && end1 < m_strings[0].size()) {
+				if (start1 < index1 && end1 < (long)m_strings[0].size()) {
 					start1++;
 					end1++;
 					breakOut = false;
 				}
-				if (start2 < index2 && end2 < m_strings[1].size()) {
+				if (start2 < index2 && end2 < (long)m_strings[1].size()) {
 					start2++;
 					end2++;
 					breakOut = false;

@@ -59,7 +59,7 @@ size_t PrefixTrieNode::Count()
 		if (it->second)
 			count += it->second->Count();
 		else
-			assert(false, "Bogus node!!!");
+			throw runtime_error("Bogus node!!!");
 	return count;
 }
 void PrefixTrieNode::InsertString(string str, size_t index)
