@@ -7548,8 +7548,8 @@ long getMinimumCost(long k, vector<long>& c)
 	long price = 0;
 	if (!c.empty()) {
 		size_t flowers = c.size();
-		if (flowers > k) {
-			long solos = 0;
+		if ((long)flowers > k) {
+			size_t solos = 0;
 			while ((flowers - solos) % k) {
 				solos++;
 				k--;
@@ -7573,13 +7573,13 @@ long getMinimumCost(long k, vector<long>& c)
 	}
 	return price;
 }
-// https://www.hackerrank.com/challenges/angry-children/problem?utm_campaign=challenge-recommendation&utm_medium=email&utm_source=24-hour-campaign
+// https://www.hackerrank.com/challenges/angry-children/problem
 // 100%
 long maxMin(long k, vector<long>& arr) 
 {
 	sort(arr.begin(), arr.end());
 	long unfair = numeric_limits<long>::max();
-	long max = 0;
+	size_t max = 0;
 	for (size_t i = 0; i < arr.size() && max < arr.size() - 1; i++) {
 		for (max = i + k - 1; max >= arr.size(); max--);
 		if (i != max) {
@@ -7722,7 +7722,7 @@ size_t binary_gap(long n)
 	bool start = false;
 	int count = 0, max = 0;
 	bitset<32> x(n);
-	for (int i = 0; i < x.size(); i++) {
+	for (size_t i = 0; i < x.size(); i++) {
 		if (start && x[i] == 0)
 			count++;
 		else if (x[i] == 1) {
@@ -7751,7 +7751,7 @@ long MinAbsSum(vector<long>& data)
 {
 	long sum = 0;
 	long min = LONG_MAX;
-	for (size_t i = 0; i < (1 << data.size()); i++) {
+	for (size_t i = 0; i < ((size_t)1 << data.size()); i++) {
 		vector<bool> binary;
 		decimal_to_binary(i, binary, data.size());
 		for (size_t j = 0; j < binary.size(); j++)
@@ -7770,8 +7770,8 @@ long NumberSolitaire(vector<long>& data)
 {
 	vector<long> memo(data.size(), numeric_limits<long>::min());
 	memo[0] = data[0];
-	for (int i = 1; i < data.size(); i++)
-		for (int j = 1; j < 7 && (i - j) >= 0; j++)
+	for (size_t i = 1; i < data.size(); i++)
+		for (size_t j = 1; j < 7 && (i - j) >= 0; j++)
 			memo[i] = max(memo[i], data[i] + memo[i - j]);
 	return memo[data.size() - 1];
 }
@@ -7833,7 +7833,7 @@ void PlayTreasureGame()
 //0 0 0 0 0
 //0 0 0 0 0
 //(x, y) = (1, 1), k = 2, the output is 2
-const size_t moves[][2] = { {0,1}, {0, -1}, {1, 0}, {-1, 0} };
+const long moves[][2] = { {0,1}, {0, -1}, {1, 0}, {-1, 0} };
 size_t countPaths(size_t m, size_t n, size_t x, size_t y, size_t k)
 {
 	// It is clear that the shortest path to reach (0, 0) from (x, y) will be minMoves = (|x| + |y|)
@@ -8457,7 +8457,7 @@ long ChocolatesByNumbers(long n, long m)
 	long greatestCommonDivisor = gcd(n, m);
 	long N = n / greatestCommonDivisor;
 	long M = m / greatestCommonDivisor;
-	for (size_t i = 0; i < N;) {
+	for (long i = 0; i < N;) {
 		count++;
 		i += M;
 		i %= N;
@@ -8540,8 +8540,8 @@ string encryption(string& s)
 {
 	vector<vector<char>> result;
 	s.erase(remove_if(s.begin(), s.end(), ::isspace), s.end());
-	long row = floor(sqrt(s.size()));
-	long col = ceil(sqrt(s.size()));
+	size_t row = floor(sqrt(s.size()));
+	size_t col = ceil(sqrt(s.size()));
 	for (; col * row < s.size(); )
 		if (row < col)
 			row++;
@@ -8550,7 +8550,7 @@ string encryption(string& s)
 	for (size_t i = 0; i < row; i++) {
 		string str = s.substr(i * col, col);
 		vector<char> chars(str.begin(), str.end());
-		for (size_t j = str.size(); j < col; j++)
+		for (size_t j = str.size(); j < (size_t)col; j++)
 			chars.push_back('\0');
 		result.push_back(chars);
 	}
@@ -8697,26 +8697,26 @@ vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int 
 			result.push_back("Impossible");
 			return result;
 		}
-		int uls = (i_start - i_end) / 2; // 6 / 2 = 3
-		int dest_j = j_start - uls; // 6 - 3 = 3
+		long uls = (i_start - i_end) / 2; // 6 / 2 = 3
+		long dest_j = j_start - uls; // 6 - 3 = 3
 		if ((abs(j_end - dest_j)) % 2) {
 			result.push_back("Impossible");
 			return result;
 		}
-		int L = (dest_j - j_end) / 2;
+		long L = (dest_j - j_end) / 2;
 		oss << uls + L;
 		result.push_back(oss.str());
 		oss.str("");
-		for (size_t i = 0; i < uls; i++) {
+		for (size_t i = 0; i < (size_t)uls; i++) {
 			oss << "UL";
 			if (i != uls - 1)
 				oss << " ";
 		}
 		if (L)
 			oss << " ";
-		for (size_t i = 0; i < L; i++) {
+		for (size_t i = 0; i < (size_t)L; i++) {
 			oss << "L";
-			if (i < L - 1)
+			if ((long)i < L - 1)
 				oss << " ";
 		}
 	}
@@ -8736,16 +8736,16 @@ vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int 
 		oss << urs + R;
 		result.push_back(oss.str());
 		oss.str("");
-		for (size_t i = 0; i < urs; i++) {
+		for (size_t i = 0; i < (size_t)urs; i++) {
 			oss << "UR";
-			if (i != urs - 1)
+			if ((long)i != urs - 1)
 				oss << " ";
 		}
 		if (R)
 			oss << " ";
-		for (size_t i = 0; i < R; i++) {
+		for (size_t i = 0; i < (size_t)R; i++) {
 			oss << "R";
-			if (i < R - 1)
+			if ((long)i < R - 1)
 				oss << " ";
 		}
 	}
@@ -8766,16 +8766,16 @@ vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int 
 			oss << lls + L;
 			result.push_back(oss.str());
 			oss.str("");
-			for (size_t i = 0; i < lls; i++) {
+			for (size_t i = 0; i < (size_t)lls; i++) {
 				oss << "LL";
-				if (i != lls - 1)
+				if ((long)i != lls - 1)
 					oss << " ";
 			}
 			if (L)
 				oss << " ";
-			for (size_t i = 0; i < L; i++) {
+			for (size_t i = 0; i < (size_t)L; i++) {
 				oss << "L";
-				if (i < L - 1)
+				if ((long)i < L - 1)
 					oss << " ";
 			}
 		} else {  // L < 0
@@ -8789,9 +8789,9 @@ vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int 
 			}
 			if (lls + L)
 				oss << " ";
-			for (size_t i = 0; i < (lls + L); i++) {
+			for (size_t i = 0; i < (size_t)(lls + L); i++) {
 				oss << "LL";
-				if (i != (lls + L - 1))
+				if ((long)i != (lls + L - 1))
 					oss << " ";
 			}
 		}
@@ -8813,16 +8813,16 @@ vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int 
 			oss << lrs + R;
 			result.push_back(oss.str());
 			oss.str("");
-			for (size_t i = 0; i < R; i++) {
+			for (size_t i = 0; i < (size_t)R; i++) {
 				oss << "R";
-				if (i < R - 1)
+				if ((long)i < R - 1)
 					oss << " ";
 			}
 			if (lrs)
 				oss << " ";
-			for (size_t i = 0; i < lrs; i++) {
+			for (size_t i = 0; i < (size_t)lrs; i++) {
 				oss << "LR";
-				if (i != lrs - 1)
+				if ((long)i != lrs - 1)
 					oss << " ";
 			}
 		}
@@ -8830,7 +8830,7 @@ vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int 
 			oss << lrs;
 			result.push_back(oss.str());
 			oss.str("");
-			for (size_t i = 0; i < (lrs + R); i++) {
+			for (size_t i = 0; i < (size_t)(lrs + R); i++) {
 				oss << "LR";
 				if (i != (lrs + R - 1))
 					oss << " ";
