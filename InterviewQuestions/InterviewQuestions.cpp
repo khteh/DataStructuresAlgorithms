@@ -2757,7 +2757,7 @@ long fibonacci(long n)
 	return (n <= 1) ? n : fibonacci(n - 2) + fibonacci(n - 1);
 }
 // https://www.hackerrank.com/challenges/fibonacci-modified/problem
-// Timeout!
+// Timeout for n >= 20
 string fibonacciModified(long t1, long t2, long n)
 {
 	// Index: 0 1 2 3 4 5  6   7	  8
