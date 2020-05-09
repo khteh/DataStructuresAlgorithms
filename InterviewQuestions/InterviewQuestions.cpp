@@ -9187,7 +9187,7 @@ long PostmanProblem(vector<long>& k, vector<vector<long>>& roads)
 				costCache[oss1.str()] = cost;
 				costCache[oss2.str()] = cost;
 			}
-			cout << path[i] << " - " << path[i + 1] << ": " << cost << endl;
+			//cout << path[i] << " - " << path[i + 1] << ": " << cost << endl;
 			if (cost >= 0)
 				totalCost += cost;
 			else
