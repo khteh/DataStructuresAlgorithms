@@ -9154,7 +9154,7 @@ size_t MinSubGraphDifference(vector<size_t>& data, vector<vector<size_t>>& edges
 	return result;
 }
 // https://www.hackerrank.com/challenges/jeanies-route/problem
-// Times out! ;)
+// Times out for more than 100 nodes! ;)
 long PostmanProblem(vector<long>& k, vector<vector<long>>& roads)
 {
 	Graph<long, long> graph;
@@ -9185,6 +9185,7 @@ long PostmanProblem(vector<long>& k, vector<vector<long>>& roads)
 			else {
 				cost = graph.Dijkstra(path[i], path[i + 1]);
 				costCache[oss1.str()] = cost;
+				costCache[oss2.str()] = cost;
 			}
 			cout << path[i] << " - " << path[i + 1] << ": " << cost << endl;
 			if (cost >= 0)
