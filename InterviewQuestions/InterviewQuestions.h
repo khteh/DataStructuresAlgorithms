@@ -13,6 +13,7 @@
 #include <assert.h>
 #include <queue>
 #include <set>
+#include <unordered_set>
 #include <bitset>
 #include <iomanip>
 #include <regex>
@@ -144,9 +145,11 @@ long MaxZeroProductBruteForce(vector<int> const&);
 long MaxZeroProduct(vector<int> const&, size_t);
 void MaxZeroProductTests();
 set<string> permute(string const&);
+set<vector<long>> permute(vector<long>&);
 void BitCombinations(size_t, vector<long> &);
 void OrderedMergedCombinations(set<string>&, string&, string&, string);
 string insertCharAt(char, string, size_t);
+vector<long> insertItemAt(long, vector<long>&, size_t);
 void findDistinct(vector<long>&, vector<long>&);
 void findPrimes(unsigned long, vector<long>&);
 bool isPrime(unsigned long);
@@ -178,6 +181,7 @@ void SuffixTreeTests();
 void PrefixTrieTests();
 void TrieTests();
 void TestStringPermutations();
+void TestListPermutations();
 void TestGraph();
 void BubbleSort(vector<long>&);
 size_t minimumBribes(vector<long>&);
@@ -327,3 +331,4 @@ long getLowestPathCost(size_t g_nodes, vector<long>&, vector<long>&, vector<long
 size_t SurfaceArea3D(vector<vector<long>>&);
 size_t cutTheTree(vector<size_t>&, vector<vector<size_t>>&);
 size_t MinSubGraphDifference(vector<size_t>&, vector<vector<size_t>>&);
+long PostmanProblem(vector<long>&, vector<vector<long>>&);

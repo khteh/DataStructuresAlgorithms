@@ -50,6 +50,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	TrieTests();
 	PrefixTrieTests();
 	TestStringPermutations();
+	TestListPermutations();
 	TestGraph();
 	strings.clear();
 	strings.push_back("abcczch");
@@ -3179,7 +3180,7 @@ void MaxZeroProductTests()
 set<string> permute(string const &str)
 {
 	set<string> permutations;
-	if (!str.size())
+	if (str.empty())
 		return permutations;
 	else if (str.size() == 1) {
 		permutations.insert(str);
@@ -3193,11 +3194,38 @@ set<string> permute(string const &str)
 	}
 	return permutations;
 }
+set<vector<long>> permute(vector<long>& data)
+{
+	set<vector<long>> permutations;
+	if (data.empty())
+		return permutations;
+	else if (data.size() == 1) {
+		vector<long> tmp { data[0] };
+		permutations.insert(tmp);
+		return permutations;
+	}
+	long toInsert = data[0];
+	vector<long> subset(data.begin() + 1, data.end());
+	set<vector<long>> combinations = permute(subset);
+	for (set<vector<long>>::iterator it = combinations.begin(); it != combinations.end(); it++) {
+		vector<long> tmp = *it;
+		for (size_t offset = 0; offset <= tmp.size(); offset++)
+			permutations.insert(insertItemAt(toInsert, tmp, offset));
+	}
+	return permutations;
+}
 string insertCharAt(char toInsert, string str, size_t offset)
 {
 	string start = str.substr(0, offset);
 	string end = str.substr(offset);
 	return start + toInsert + end;
+}
+vector<long> insertItemAt(long toInsert, vector<long>& items, size_t offset)
+{
+	vector<long> result(items.begin(), items.begin() + offset);
+	result.push_back(toInsert);
+	result.insert(result.end(), items.begin() + offset, items.end());
+	return result;
 }
 void TestStringPermutations()
 {
@@ -3240,13 +3268,26 @@ void TestStringPermutations()
 	assert(permutations.find("BHeoyb") != permutations.end());
 	assert(permutations.find("BHeyob") != permutations.end());
 }
+void TestListPermutations()
+{
+	set<vector<long>> permutations;
+	vector<long> data{1,2,3};
+	permutations = permute(data);
+	assert(permutations.size() == 6);
+	cout << "permutations of List of {1,2,3} are:" << endl;
+	for (set<vector<long>>::iterator it = permutations.begin(); it != permutations.end(); it++) {
+		copy(it->begin(), it->end(), ostream_iterator<long>(cout, " "));
+		cout << endl;
+	}
+	permutations.clear();
+}
 void TestGraph()
 {
-	vector<long> data(5);
+	vector<size_t> data(5);
 	generate(data.begin(), data.end(), [n = 1]()mutable{return n++; });
-	Graph<long, long> graph(data);
+	Graph<size_t, size_t> graph(data);
 	assert(graph.Count() == 5);
-	shared_ptr<Vertex<long, long>> v1 = graph.GetVertex(1);
+	shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(1);
 	assert(graph.HasVertex(1));
 	assert(graph.HasVertex(2));
 	assert(graph.HasVertex(3));
@@ -3254,13 +3295,13 @@ void TestGraph()
 	assert(graph.HasVertex(5));
 
 	assert(!v1->HasNeighbours());
-	shared_ptr<Vertex<long, long>> v2 = graph.GetVertex(2);
+	shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex(2);
 	assert(!v2->HasNeighbours());
-	shared_ptr<Vertex<long, long>> v3 = graph.GetVertex(3);
+	shared_ptr<Vertex<size_t, size_t>> v3 = graph.GetVertex(3);
 	assert(!v3->HasNeighbours());
-	shared_ptr<Vertex<long, long>> v4 = graph.GetVertex(4);
+	shared_ptr<Vertex<size_t, size_t>> v4 = graph.GetVertex(4);
 	assert(!v4->HasNeighbours());
-	shared_ptr<Vertex<long, long>> v5 = graph.GetVertex(5);
+	shared_ptr<Vertex<size_t, size_t>> v5 = graph.GetVertex(5);
 	assert(!v5->HasNeighbours());
 	assert(v1->GetCost(v1) == 0);
 	assert(v2->GetCost(v2) == 0);
@@ -3295,20 +3336,20 @@ void TestGraph()
 	graph.Print(v2);
 	graph.Print(v3);
 	graph.Print(v4);
-	map<size_t, vector<shared_ptr<Vertex<long, long>>>> vertices; // Get BFS vertices
+	map<size_t, vector<shared_ptr<Vertex<size_t, size_t>>>> vertices; // Get BFS vertices
 	graph.GetBFSNodes(vertices, v1);
 	assert(!vertices.empty());
 	cout << "Graph content by level:" << endl;
-	for (map<size_t, vector<shared_ptr<Vertex<long, long>>>>::const_iterator it = vertices.begin(); it != vertices.end(); it++) {
+	for (map<size_t, vector<shared_ptr<Vertex<size_t, size_t>>>>::const_iterator it = vertices.begin(); it != vertices.end(); it++) {
 		cout << "Level " << it->first << ": ";
-		for (vector<shared_ptr<Vertex<long, long>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+		for (vector<shared_ptr<Vertex<size_t, size_t>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 			cout << (*it1)->GetItem() << " ";
 		cout << endl;
 	}
-	set<shared_ptr<Vertex<long, long>>> spt; // Shortest Path Tree
+	set<shared_ptr<Vertex<size_t, size_t>>> spt; // Shortest Path Tree
 	graph.Dijkstra(1, spt);
 	cout << "Vertex\tDistance from Source (1): " << endl;
-	for (set<shared_ptr<Vertex<long, long>>>::iterator it = spt.begin(); it != spt.end(); it++)
+	for (set<shared_ptr<Vertex<size_t, size_t>>>::iterator it = spt.begin(); it != spt.end(); it++)
 		cout << (*it)->GetItem() << "\t" << (*it)->GetTotalCost() << endl;
 	assert(graph.Dijkstra(1, 5) == 7);
 	graph.Remove(3);
@@ -3337,19 +3378,22 @@ void TestGraph()
 	cout << "3 - 4: " << graph.Dijkstra(3, 4) << endl;
 	spt.clear();
 	graph.Clear();
-	vector<size_t> data1 = { 10, 5, 11 }; // Vertices' values
+	data.clear();
+	data.push_back(10);
+	data.push_back(5);
+	data.push_back(11);
 	vector<vector<size_t>> links = { {1, 2}, {1, 3} }; // Use tag. Not value
 	/*
 			10
 		11		5
 	Diff: 15 - 11 = 4
 	*/
-	assert(MinSubGraphDifference(data1, links) == 4);
-	data1.clear();
-	data1.push_back(10);
-	data1.push_back(5);
-	data1.push_back(6);
-	data1.push_back(20);
+	assert(MinSubGraphDifference(data, links) == 4);
+	data.clear();
+	data.push_back(10);
+	data.push_back(5);
+	data.push_back(6);
+	data.push_back(20);
 	/*
 			10
 		 5		6
@@ -3363,17 +3407,17 @@ void TestGraph()
 		for (size_t j = 0; j < 2; j++)
 			links[i][j] = gridArray1[i][j];
 	}
-	assert(MinSubGraphDifference(data1, links) == 1);
+	assert(MinSubGraphDifference(data, links) == 1);
 	/*
 			10
 		 5
 	  20
 	Diff: 20 - 15 = 5
 	*/
-	data1.clear();
-	data1.push_back(10);
-	data1.push_back(5);
-	data1.push_back(20);
+	data.clear();
+	data.push_back(10);
+	data.push_back(5);
+	data.push_back(20);
 	size_t gridArray2[2][2] = { {1,2}, {2,3} };//{ {10,5}, {5,20} };
 	links.resize(2);
 	for (size_t i = 0; i < 2; i++) {
@@ -3381,15 +3425,15 @@ void TestGraph()
 		for (size_t j = 0; j < 2; j++)
 			links[i][j] = gridArray2[i][j];
 	}
-	assert(MinSubGraphDifference(data1, links) == 5);
+	assert(MinSubGraphDifference(data, links) == 5);
 	cout << endl;
-	data1.clear();
-	data1.push_back(100); //1
-	data1.push_back(200);
-	data1.push_back(100);
-	data1.push_back(100);
-	data1.push_back(500);
-	data1.push_back(600);
+	data.clear();
+	data.push_back(100); //1
+	data.push_back(200);
+	data.push_back(100);
+	data.push_back(100);
+	data.push_back(500);
+	data.push_back(600);
 	size_t gridArray3[5][2] = { {1,2}, {2,3}, {2,4}, {4,5}, {4,6} };
 	links.resize(5);
 	for (size_t i = 0; i < 5; i++) {
@@ -3397,18 +3441,18 @@ void TestGraph()
 		for (size_t j = 0; j < 2; j++)
 			links[i][j] = gridArray3[i][j];
 	}
-	assert(MinSubGraphDifference(data1, links) == 400);
-	data1.clear(); // 205 573 985 242 830 514 592 263 142 915
-	data1.push_back(205);
-	data1.push_back(573);
-	data1.push_back(985);
-	data1.push_back(242);
-	data1.push_back(830);
-	data1.push_back(514);
-	data1.push_back(592);
-	data1.push_back(263);
-	data1.push_back(142);
-	data1.push_back(915);
+	assert(MinSubGraphDifference(data, links) == 400);
+	data.clear(); // 205 573 985 242 830 514 592 263 142 915
+	data.push_back(205);
+	data.push_back(573);
+	data.push_back(985);
+	data.push_back(242);
+	data.push_back(830);
+	data.push_back(514);
+	data.push_back(592);
+	data.push_back(263);
+	data.push_back(142);
+	data.push_back(915);
 	size_t gridArray4[9][2] = { {2,8}, {10,5}, {1,7}, {6,9}, {4,3}, {8,10}, {5,1}, {7,6}, {9,4} };
 	links.resize(9);
 	for (size_t i = 0; i < 9; i++) {
@@ -3416,7 +3460,7 @@ void TestGraph()
 		for (size_t j = 0; j < 2; j++)
 			links[i][j] = gridArray4[i][j];
 	}
-	assert(MinSubGraphDifference(data1, links) == 99);
+	assert(MinSubGraphDifference(data, links) == 99);
 	vector<size_t> data2 = { 716,365,206,641,841,585,801,645,208,924,920,286,554,832,359,836,247,959,31,322,709,860,890,195,575,905,314,41,669,549,950,736,265,507,729,457,91,529,102,650,805,373,287,710,556,645,546,154,956,928 };
 	size_t gridArray5[49][2] = { {14,25 }, { 25,13 }, { 13,20 }, { 20,24 }, { 43,2 }, { 2,48 }, { 48,42 }, { 42,5 }, { 27,18 }, { 18,30 }, { 30,7 }, { 7,36 }, { 37,9 }, { 9,23 }, { 23,49 }, { 49,15 }, { 31,26 }, { 26,29 }, { 29,50 }, { 50,21 }, { 41,45 }, { 45,10 }, { 10,17 }, { 17,34 }, { 28,47 }, { 47,44 }, { 44,11 }, { 11,16 }, { 3,8 }, { 8,39 }, { 39,38 }, { 38,22 }, { 19,32 }, { 32,12 }, { 12,40 }, { 40,46 }, { 1,35 }, { 35,4 }, { 4,33 }, { 33,6 }, { 25,2 }, { 2,27 }, { 7,37 }, { 15,50 }, { 21,10 }, { 17,28 }, { 16,39 }, { 38,19 }, { 40,1} };
 	links.resize(49);
@@ -3427,6 +3471,34 @@ void TestGraph()
 	}
 	size_t result = MinSubGraphDifference(data2, links);
 	//assert(result == 525); Fail but difficult to check due to the sheer number of data points.
+	vector<long> data1;
+	vector<vector<long>> links1;
+	data1.clear();
+	data1.push_back(1);
+	data1.push_back(3);
+	data1.push_back(4);
+	long gridArray6[4][3] = { {1,2,1}, {2,3,2}, {2,4,2}, {3,5,3} };
+	links1.resize(4);
+	for (size_t i = 0; i < 4; i++) {
+		links1[i].resize(3);
+		for (size_t j = 0; j < 3; j++)
+			links1[i][j] = gridArray6[i][j];
+	}
+	assert(PostmanProblem(data1, links1) == 6);
+	data1.clear();
+	data1.push_back(5);
+	data1.push_back(11);
+	data1.push_back(12);
+	data1.push_back(15);
+	data1.push_back(16);
+	long gridArray7[19][3] = { {17,4,3},{11,12,5},{14,2,1},{16,14,4},{7,8,4},{13,5,5},{17,15,2},{5,3,5},{8,6,1},{18,10,4},{18,1,3},{16,1,2},{9,2,5},{11,6,1},{4,9,4},{7,20,2},{13,19,3},{19,12,3},{10,20,2} };
+	links1.resize(19);
+	for (size_t i = 0; i < 19; i++) {
+		links1[i].resize(3);
+		for (size_t j = 0; j < 3; j++)
+			links1[i][j] = gridArray7[i][j];
+	}
+	assert(PostmanProblem(data1, links1) == 54);
 	cout << endl;
 }
 void parentheses(vector<string> &result, string &str, size_t index, long left, long right)
@@ -7770,8 +7842,8 @@ long NumberSolitaire(vector<long>& data)
 {
 	vector<long> memo(data.size(), numeric_limits<long>::min());
 	memo[0] = data[0];
-	for (size_t i = 1; i < data.size(); i++)
-		for (size_t j = 1; j < 7 && (i - j) >= 0; j++)
+	for (long i = 1; i < data.size(); i++)
+		for (long j = 1; j < 7 && (i - j) >= 0; j++)
 			memo[i] = max(memo[i], data[i] + memo[i - j]);
 	return memo[data.size() - 1];
 }
@@ -9080,4 +9152,51 @@ size_t MinSubGraphDifference(vector<size_t>& data, vector<vector<size_t>>& edges
 	//cout << endl;
 	size_t result = graph.MinSubTreesDifference(graph.GetVertex(1));
 	return result;
+}
+// https://www.hackerrank.com/challenges/jeanies-route/problem
+// Times out! ;)
+long PostmanProblem(vector<long>& k, vector<vector<long>>& roads)
+{
+	Graph<long, long> graph;
+	for (size_t i = 0; i < roads.size(); i++) {
+		shared_ptr<Vertex<long, long>> v1 = graph.AddVertex(roads[i][0]);
+		shared_ptr<Vertex<long, long>> v2 = graph.AddVertex(roads[i][1]);
+		graph.AddUndirectedEdge(v1, v2, roads[i][2]);
+	}
+	set<vector<long>> paths;
+	paths = permute(k);
+	multimap<long, string> costs;
+	ostringstream oss, oss1, oss2;
+	map<string, long> costCache;
+	for (set<vector<long>>::iterator it = paths.begin(); it != paths.end(); it++) {
+		vector<long> path = *it;
+		long totalCost = 0;
+		bool isValidPath = true;
+		for (size_t i = 0; i < path.size() - 1 && isValidPath; i++) {
+			long cost = -1;
+			oss1.str("");
+			oss2.str("");
+			oss1 << path[i] << "-" << path[i + 1];
+			oss2 << path[i + 1] << "-" << path[i];
+			if (costCache.find(oss1.str()) != costCache.end())
+				cost = costCache[oss1.str()];
+			else if (costCache.find(oss2.str()) != costCache.end())
+				cost = costCache[oss2.str()];
+			else {
+				cost = graph.Dijkstra(path[i], path[i + 1]);
+				costCache[oss1.str()] = cost;
+			}
+			cout << path[i] << " - " << path[i + 1] << ": " << cost << endl;
+			if (cost >= 0)
+				totalCost += cost;
+			else
+				isValidPath = false;
+			oss << path[i] << "," << path[i + 1] << ",";
+		}
+		if (isValidPath) {
+			costs.emplace(totalCost, oss.str());
+			oss.str("");
+		}
+	}
+	return costs.empty() ? -1 : costs.begin()->first;
 }
