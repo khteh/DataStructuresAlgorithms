@@ -108,19 +108,19 @@ void Heap<T>::HeapifyUp(shared_ptr<Node<T>> node, unsigned long level)
 {
 	if (node && level >= 0) {
 		switch (type_) {
-		case MinHeap:
+		case HeapType::MinHeap:
 			if (node->Next() && *node < *node->Next()) {
 				swap(node, node->Next());
 				HeapifyUp(node->Next());
 			}
 			break;
-		case MaxHeap:
+		case HeapType::MaxHeap:
 			if (node->Next() && *node > *node->Next()) {
 				swap(node, node->Next());
 				HeapifyUp(node->Next());
 			}
 			break;
-		case MinMaxHeap: // http://en.wikipedia.org/wiki/Min-max_heap
+		case HeapType::MinMaxHeap: // http://en.wikipedia.org/wiki/Min-max_heap
 			{
 				bool isMaxLevel = level % 2;
 				shared_ptr<Node<T>> grandparent = nullptr;
@@ -173,7 +173,7 @@ void Heap<T>::HeapifyDown(shared_ptr<Node<T>> node)
 {
 	if (node) {
 		switch (type_) {
-		case MinHeap:
+		case HeapType::MinHeap:
 			if (node->Left() && *node > *node->Left()) { // Next minimum must come from the left branch since the tree is filled from left to right
 				swap(node, node->Left());
 				HeapifyDown(node->Left());
@@ -183,7 +183,7 @@ void Heap<T>::HeapifyDown(shared_ptr<Node<T>> node)
 				HeapifyDown(node->Right());
 			}
 			break;
-		case MaxHeap:
+		case HeapType::MaxHeap:
 			if (node->Left() && *node < *node->Left()) { // Next minimum must come from the left branch since the tree is filled from left to right
 				swap(node, node->Left());
 				HeapifyDown(node->Left());
@@ -193,7 +193,7 @@ void Heap<T>::HeapifyDown(shared_ptr<Node<T>> node)
 				HeapifyDown(node->Right());
 			}
 			break;
-		case MinMaxHeap: // http://en.wikipedia.org/wiki/Min-max_heap
+		case HeapType::MinMaxHeap: // http://en.wikipedia.org/wiki/Min-max_heap
 			// Find minimum
 			//1. x.key <= h[m].key. x must be inserted into the root. (x is already at root position when this function is called)
 			//2. x.key > h[m].key and m is child of the root.since m is in max level, it has no descendants.So the element h[m] is moved to the root and x is inserted into node m.

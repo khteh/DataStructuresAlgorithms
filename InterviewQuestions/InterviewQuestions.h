@@ -46,7 +46,7 @@
 #include "Edge.h"
 using namespace std;
 using namespace concurrency;
-typedef enum { SORT_ASCENDING, SORT_DESCENDING } sort_order_t;
+typedef enum class SortOrder { SORT_ASCENDING, SORT_DESCENDING } sort_order_t;
 typedef union {
 	long l;
 	float f;

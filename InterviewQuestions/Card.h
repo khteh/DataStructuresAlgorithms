@@ -2,7 +2,7 @@
 class Card
 {
 public:
-	enum Suit { DIAMOND, CLUB, HEART, SPADE	};
+	enum class Suit { DIAMOND, CLUB, HEART, SPADE	};
 	Card(int, Suit);
 	virtual ~Card(void);
 	int value();

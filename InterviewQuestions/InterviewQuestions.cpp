@@ -3799,11 +3799,11 @@ void SortStack(MyStack<T> &src, MyStack<T> &dest, sort_order_t order)
 	while(!src.isEmpty()) {
 		item = src.pop();
 		switch (order) {
-		case SORT_ASCENDING: // Value grows from bottom of stack to top of stack
+		case SortOrder::SORT_ASCENDING: // Value grows from bottom of stack to top of stack
 			while(!dest.isEmpty() && item < dest.peek())
 				src.push(dest.pop());
 			break;
-		case SORT_DESCENDING: // Value shrinks from bottom of stack to top of stack
+		case SortOrder::SORT_DESCENDING: // Value shrinks from bottom of stack to top of stack
 			while(!dest.isEmpty() && item > dest.peek())
 				src.push(dest.pop());
 			break;
@@ -4841,7 +4841,7 @@ void Merge(vector<long>& A, vector<long>& B, size_t start, size_t middle, size_t
 // https://en.wikipedia.org/wiki/Heapsort
 void HeapSort(vector<long>& data)
 {
-	Heap<long> heap(data, MaxHeap);
+	Heap<long> heap(data, HeapType::MaxHeap);
 	assert(heap.Count() == data.size());
 	for (long end = data.size() - 1; end >= 0; end--) {
 		long item = heap.pop()->Item();
@@ -5816,11 +5816,11 @@ void StackTests()
 	stack.PrintStack();
 
 	MyStack<int> unSortedStack(stack);
-	SortStack<int>(stack, sortedStack, SORT_ASCENDING);
+	SortStack<int>(stack, sortedStack, sort_order_t::SORT_ASCENDING);
 	cout << "Stack content (Ascending): ";
 	sortedStack.PrintStack();
 	sortedStack.clear();
-	SortStack<int>(unSortedStack, sortedStack, SORT_DESCENDING);
+	SortStack<int>(unSortedStack, sortedStack, sort_order_t::SORT_DESCENDING);
 	cout << "Stack content (Descending): ";
 	sortedStack.PrintStack();
 	cout << endl;
@@ -6221,7 +6221,7 @@ void MinHeapTests()
 void MaxHeapTests()
 {
 	vector<long> result;
-	Heap<long> heap(50, MaxHeap);
+	Heap<long> heap(50, HeapType::MaxHeap);
 	heap.InsertItem(-100);
 	heap.InsertItem(0);
 	heap.InsertItem(10);
@@ -6261,7 +6261,7 @@ void MaxHeapTests()
 void MinMaxHeapTests()
 {
 	vector<long> result;
-	Heap<long> heap(50, MinMaxHeap);
+	Heap<long> heap(50, HeapType::MinMaxHeap);
 	heap.InsertItem(-100);
 	heap.InsertItem(0);
 	heap.InsertItem(10);
@@ -7459,31 +7459,32 @@ void ExceptionTest()
 		cout << "Outer catch, &e: " << &e << " msg: " << e.msg_ << endl;
 	}
 }
-enum direction {
+enum class Direction {
 	Up, Down, NoChange
 };
 size_t LongestAlternatingSubSequence(const vector<long>& data, vector<long>& result)
 {
-	map<size_t, size_t> sequences;
-	direction direction = NoChange, flag = NoChange;
+	map<size_t, vector<long>> sequences;
+	Direction direction = Direction::NoChange, flag = Direction::NoChange;
 	size_t count = 0, start = 0, index = 0;
 	if (data.size() > 1) {
 		for (vector<long>::const_iterator it = data.begin() + 1; it != data.end(); it++, index++) {
-			flag = *it > *(it - 1) ? Up : *it < *(it -1 ) ? Down : NoChange;
+			flag = *it > *(it - 1) ? Direction::Up : *it < *(it -1 ) ? Direction::Down : Direction::NoChange;
 			if (flag != direction) {
 				count++;
 				direction = flag;
 			} else {
-				direction = NoChange;
-				if (sequences.find(index - start) == sequences.end())
-					sequences.emplace(index - start, start);
+				direction = Direction::NoChange;
+				if (sequences.find(index - start) == sequences.end()) {
+					vector<long> tmp(data.begin() + start, it);
+					sequences.emplace(index - start, tmp);
+				}
 				start = index;
 			}
 		}
 	}
 	if (sequences.size() > 0)
-		for (size_t i = 0; i <= sequences.rbegin()->first; i++)
-			result.push_back(data[i + sequences.rbegin()->second]);
+		result = sequences.rbegin()->second;
 	return result.size();
 }
 bool LexicographicSort(string s1, string s2)
@@ -7842,7 +7843,7 @@ long NumberSolitaire(vector<long>& data)
 {
 	vector<long> memo(data.size(), numeric_limits<long>::min());
 	memo[0] = data[0];
-	for (long i = 1; i < data.size(); i++)
+	for (long i = 1; i < (long)data.size(); i++)
 		for (long j = 1; j < 7 && (i - j) >= 0; j++)
 			memo[i] = max(memo[i], data[i] + memo[i - j]);
 	return memo[data.size() - 1];

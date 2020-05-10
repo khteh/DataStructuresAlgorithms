@@ -18,7 +18,7 @@ Employee::Rank Employee::rank()
 bool Employee::ReceiveCall(Call &call)
 {
 	if (isAvailable()) {
-		status_ = BUSY;
+		status_ = Status::BUSY;
 		return true;
 	}
 	return false;
@@ -26,5 +26,5 @@ bool Employee::ReceiveCall(Call &call)
 
 bool Employee::isAvailable()
 {
-	return status_ == FREE;
+	return status_ == Status::FREE;
 }
