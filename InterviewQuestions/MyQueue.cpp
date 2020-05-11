@@ -3,29 +3,28 @@
 
 template class MyQueue<int>;
 
-template<class T>
+template<typename T>
 MyQueue<T>::MyQueue()
 {
 }
-
-template<class T>
+template<typename T>
 MyQueue<T>::~MyQueue()
 {
 }
 
-template<class T>
+template<typename T>
 size_t MyQueue<T>::size()
 {
 	return front_.size() + back_.size();
 }
 
-template<class T>
+template<typename T>
 bool MyQueue<T>::isEmpty()
 {
 	return size() == 0;
 }
 
-template<class T>
+template<typename T>
 T MyQueue<T>::peek()
 {
 	if (!front_.isEmpty())
@@ -37,7 +36,7 @@ T MyQueue<T>::peek()
 	return T();
 }
 
-template<class T>
+template<typename T>
 T MyQueue<T>::front()
 {
 	if (!front_.isEmpty())
@@ -49,13 +48,13 @@ T MyQueue<T>::front()
 	return T();
 }
 
-template<class T>
+template<typename T>
 void MyQueue<T>::push_back(T item)
 {
 	back_.push(item);
 }
 
-template<class T>
+template<typename T>
 void MyQueue<T>::back2front()
 {
 	while (!back_.isEmpty())

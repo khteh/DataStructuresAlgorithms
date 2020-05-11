@@ -267,12 +267,6 @@ template<typename type>
 void OrderArrayIntoNegativePositiveSeries(vector<long> &);
 void OrderArrayIntoNegativePositiveSeriesTests();
 void TestCornerCases();
-void TestCase1();
-void TestCase2();
-void TestCase3();
-void TestCase4();
-void TestCase5();
-void TestCase6();
 // End of Sort numbers into consecutive positive/negative numbers
 void EqualAverageDivide(vector<long>&, vector<long>&);
 bool GetSum(vector<long> &, size_t K, long sum, size_t index, vector<long>&);
@@ -332,3 +326,4 @@ size_t SurfaceArea3D(vector<vector<long>>&);
 size_t cutTheTree(vector<size_t>&, vector<vector<size_t>>&);
 size_t MinSubGraphDifference(vector<size_t>&, vector<vector<size_t>>&);
 long PostmanProblem(vector<long>&, vector<vector<long>>&);
+bool ItalianJob(long, vector<long>&);

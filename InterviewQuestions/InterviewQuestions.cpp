@@ -53,12 +53,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	TestListPermutations();
 	TestGraph();
 	strings.clear();
-	strings.push_back("abcczch");
-	strings.push_back("abcchcz");
-	strings.push_back("abcde");
-	strings.push_back("ABCCZCH");
-	strings.push_back("ABCCHCZ");
-	strings.push_back("ABCDE");
+	strings = {"abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE"};
 	sort(strings.begin(), strings.end(), LexicographicSort);
 	assert(strings[0] == "abcchcz");
 	assert(strings[1] == "ABCCHCZ");
@@ -134,20 +129,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	generate(a.begin(), a.end(), [n = 1]()mutable{return n++; });
 	for (size_t i = 0; i < a.size(); i++)
 		assert(a[i] == i+1);
-	unsigned long gridArray[3][3] = {{1,3,5}, {2,4,6}, {7,8,9}};
-	grid.resize(3);
-	for (size_t i = 0; i < 3; i++) {
-		grid[i].resize(3);
-		for (size_t j = 0; j < 3; j++)
-			grid[i][j] = gridArray[i][j];
-	}
-	cout << "grid (" << grid.size() << "): " << endl;
-	for (size_t i = 0; i < 3; i++) {
-		for (size_t j = 0; j < 3; j++)
-			cout << grid[i][j] << " ";
-		cout << endl;
-	}
+	grid = { {1,3,5}, {2,4,6}, {7,8,9} };
 	pathResult_t pathResult = FindMaxPath(grid, 0, 0);
+	assert(pathResult.sum == 27);
 	cout << "Grid traversal which yields maximum sum " << pathResult.sum << ": " << pathResult.path << endl;
 
 	char mazeArray[5][5] = {{'1', '1', '1', '1', '1'}, {'S', '1', 'X', '1', '1'}, {'1', '1', '1', '1', '1'}, {'X', '1', '1', 'E', '1'}, {'1', '1', '1', '1', 'X'}};
@@ -173,13 +157,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << line << " ";
 	}
 	cout << endl;
-	long gridArray1[3][3] = {{-1,0,-1}, {-1,-1,-1}, {-1,-1,-1}};
-	grid1.resize(3);
-	for (size_t i = 0; i < 3; i++) {
-		grid1[i].resize(3);
-		for (size_t j = 0; j < 3; j++)
-			grid1[i][j] = gridArray1[i][j];
-	}
+	grid1 = { {-1,0,-1}, {-1,-1,-1}, {-1,-1,-1} };
 	MatrixDistance(grid1, 0, 1);
 	cout << "grid1 (" << grid1.size() << "): " << endl;
 	for (size_t i = 0; i < 3; i++) {
@@ -187,25 +165,14 @@ int _tmain(int argc, _TCHAR* argv[])
 			cout << grid1[i][j] << " ";
 		cout << endl;
 	}
-	long gridArray2[3][3] = { { 1,3,5 }, { 6,4,2 },{ 7,9,8 } };
-	grid1.resize(3);
-	for (size_t i = 0; i < 3; i++) {
-		grid1[i].resize(3);
-		for (size_t j = 0; j < 3; j++)
-			grid1[i][j] = gridArray2[i][j];
-	}
+	grid1 = { { 1,3,5 }, { 6,4,2 },{ 7,9,8 } };
+	grid2 = { { 1,3,5 }, { 6,4,2 },{ 7,9,8 } };
 	MatrixSort(grid1);
 	cout << "MatrixSort: " << endl;
 	for (size_t i = 0; i < grid1.size(); i++) {
 		for (size_t j = 0; j < grid1[i].size(); j++)
 			cout << grid1[i][j] << " ";
 		cout << endl;
-	}
-	grid2.resize(3);
-	for (size_t i = 0; i < 3; i++) {
-		grid2[i].resize(3);
-		for (size_t j = 0; j < 3; j++)
-			grid2[i][j] = gridArray2[i][j];
 	}
 	MatrixSortWithHeap(grid2);
 	cout << "MatrixSortWithHeap: " << endl;
@@ -216,106 +183,40 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		cout << endl;
 	}
-	long gridArray3[3][3] = { { 0,0,1 },{ 0,1,1 },{ 1,1,1 } };
-	grid1.clear();
-	grid1.resize(3);
-	for (size_t i = 0; i < 3; i++) {
-		grid1[i].resize(3);
-		for (size_t j = 0; j < 3; j++)
-			grid1[i][j] = gridArray3[i][j];
-	}
+	grid1 = { { 0,0,1 },{ 0,1,1 },{ 1,1,1 } };
 	assert(MatrixPatternCount(grid1) == 3);
-	long gridArray4[3][3] = { { 0,0,1 },{ 0,0,1 },{ 1,1,1 } };
-	grid1.clear();
-	grid1.resize(3);
-	for (size_t i = 0; i < 3; i++) {
-		grid1[i].resize(3);
-		for (size_t j = 0; j < 3; j++)
-			grid1[i][j] = gridArray4[i][j];
-	}
+
+	grid1 = { { 0,0,1 },{ 0,0,1 },{ 1,1,1 } };
 	assert(MatrixPatternCount(grid1) == 4);
-	long gridArray5[4][4] = { { 0,0,0,1 },{ 0,0,1,1 },{ 0,1,1,1 },{1,1,1,1} };
-	grid1.clear();
-	grid1.resize(4);
-	for (size_t i = 0; i < 4; i++) {
-		grid1[i].resize(4);
-		for (size_t j = 0; j < 4; j++)
-			grid1[i][j] = gridArray5[i][j];
-	}
+
+	grid1 = { { 0,0,0,1 },{ 0,0,1,1 },{ 0,1,1,1 },{1,1,1,1} };
 	assert(MatrixPatternCount(grid1) == 6);
-	long gridArray6[4][4] = { { 1,1,0,0 },{ 0,1,1,0 },{ 0,0,1,0 },{1,0,0,0} };
-	grid1.clear();
-	grid1.resize(4);
-	for (size_t i = 0; i < 4; i++) {
-		grid1[i].resize(4);
-		for (size_t j = 0; j < 4; j++)
-			grid1[i][j] = gridArray6[i][j];
-	}
+
+	grid1 = { { 1,1,0,0 },{ 0,1,1,0 },{ 0,0,1,0 },{1,0,0,0} };
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 5);
 	assert(ConnectedCellsInAGrid(grid1) == 5);
 
-	long gridArray7[5][4] = { { 0,0,1,1 },{ 0,0,1,0 },{ 0,1,1,0 },{0,1,0,0},{1,1,0,0} };
-	grid1.clear();
-	grid1.resize(5);
-	for (size_t i = 0; i < 5; i++) {
-		grid1[i].resize(4);
-		for (size_t j = 0; j < 4; j++)
-			grid1[i][j] = gridArray7[i][j];
-	}
+	grid1 = { { 0,0,1,1 },{ 0,0,1,0 },{ 0,1,1,0 },{0,1,0,0},{1,1,0,0} };
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 8);
 	assert(ConnectedCellsInAGrid(grid1) == 8);
-
-	long gridArray8[5][5] = { { 1, 1, 0, 0, 0 },{0, 1, 1, 0, 0 },{ 0, 0, 1, 0, 1 },{1, 0, 0, 0, 1},{0, 1, 0, 1, 1} };
-	grid1.clear();
-	grid1.resize(5);
-	for (size_t i = 0; i < 5; i++) {
-		grid1[i].resize(5);
-		for (size_t j = 0; j < 4; j++)
-			grid1[i][j] = gridArray8[i][j];
-	}
+	
+	grid1 = { { 1, 1, 0, 0, 0 },{0, 1, 1, 0, 0 },{ 0, 0, 1, 0, 1 },{1, 0, 0, 0, 1},{0, 1, 0, 1, 1} };
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 5);
 	assert(ConnectedCellsInAGrid(grid1) == 5);
-
-	long gridArray9[5][5] = { { 0, 1, 1, 1, 1 },{1, 0, 0, 0, 1 },{ 1, 1, 0, 1, 0 },{0, 1, 0, 1, 1},{0, 1, 1, 1, 0} };
-	grid1.clear();
-	grid1.resize(5);
-	for (size_t i = 0; i < 5; i++) {
-		grid1[i].resize(5);
-		for (size_t j = 0; j < 5; j++)
-			grid1[i][j] = gridArray9[i][j];
-	}
+	
+	grid1 = { { 0, 1, 1, 1, 1 },{1, 0, 0, 0, 1 },{ 1, 1, 0, 1, 0 },{0, 1, 0, 1, 1},{0, 1, 1, 1, 0} };
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 15);
 	assert(ConnectedCellsInAGrid(grid1) == 15);
 
-	long gridArray10[7][5] = { { 1, 1, 1, 0, 1 },{0, 0, 1, 0, 0 },{ 1, 1, 0, 1, 0 },{0, 1, 1, 0, 0},{0, 0, 0, 0, 0},{0, 1, 0, 0, 0},{0, 0, 1, 1, 0} };
-	grid1.clear();
-	grid1.resize(7);
-	for (size_t i = 0; i < 7; i++) {
-		grid1[i].resize(5);
-		for (size_t j = 0; j < 5; j++)
-			grid1[i][j] = gridArray10[i][j];
-	}
+	grid1 = { { 1, 1, 1, 0, 1 },{0, 0, 1, 0, 0 },{ 1, 1, 0, 1, 0 },{0, 1, 1, 0, 0},{0, 0, 0, 0, 0},{0, 1, 0, 0, 0},{0, 0, 1, 1, 0} };
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 9);
 	assert(ConnectedCellsInAGrid(grid1) == 9);
 
-	long gridArray11[7][8] = { { 1, 0, 0, 1, 0, 1, 0, 0 },{0, 0, 0, 0, 0, 0, 0, 1, },{ 1, 0, 1, 0, 1, 0, 0, 0, },{0, 0, 0, 0, 0, 0, 1, 0},{1, 0, 0, 1, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0, 1},{0, 1, 0, 0, 0, 1, 0, 0} };
-	grid1.clear();
-	grid1.resize(7);
-	for (size_t i = 0; i < 7; i++) {
-		grid1[i].resize(8);
-		for (size_t j = 0; j < 8; j++)
-			grid1[i][j] = gridArray11[i][j];
-	}
+	grid1 = { { 1, 0, 0, 1, 0, 1, 0, 0 },{0, 0, 0, 0, 0, 0, 0, 1, },{ 1, 0, 1, 0, 1, 0, 0, 0, },{0, 0, 0, 0, 0, 0, 1, 0},{1, 0, 0, 1, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0, 1},{0, 1, 0, 0, 0, 1, 0, 0} };
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 1);
 	assert(ConnectedCellsInAGrid(grid1) == 1);
 
-	char puzzle[4][5] = {{0,0,1,0,1},{0,0,0,0,0},{0,1,1,1,1},{0,1,1,0,0}};
-	maze.resize(4);
-	for (size_t i = 0; i < 4; i++) {
-		maze[i].resize(5);
-		for (size_t j = 0; j < 5; j++)
-			maze[i][j] = puzzle[i][j];
-	}
+	maze = {{0,0,1,0,1},{0,0,0,0,0},{0,1,1,1,1},{0,1,1,0,0}};
 	queue<string> puzzleResult;
 	assert(PathExists(maze, 1,4, 0,3, puzzleResult, 1));
 	cout << "Puzzle path: ";
@@ -325,13 +226,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << line << " ";
 	}
 	cout << endl;
-	char puzzle1[4][5] = {{0,0,1,1,1},{0,1,0,0,0},{1,1,1,1,1},{0,0,0,0,1}};
-	maze.resize(4);
-	for (size_t i = 0; i < 4; i++) {
-		maze[i].resize(5);
-		for (size_t j = 0; j < 5; j++)
-			maze[i][j] = puzzle1[i][j];
-	}
+	maze = {{0,0,1,1,1},{0,1,0,0,0},{1,1,1,1,1},{0,0,0,0,1}};
 	queue<string> puzzleResult1;
 	assert(!PathExists(maze, 0,0, 1,2, puzzleResult1, 1));
 	line = "ab2c3";
@@ -487,12 +382,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << bitset<4>(*it) << " ";
 	cout << endl;
 	strings.clear();
-	strings.push_back("a");
-	strings.push_back("b");
-	strings.push_back("c");
-	strings.push_back("d");
-	strings1.push_back("b");
-	strings1.push_back("c");
+	strings = {"a", "b", "c", "d"};
+	strings1 = { "b","c" };
 	strings = findUnique(strings, strings1);
 	assert(strings.size() == 2); //  a d
 	assert(strings[0] == "a");
@@ -502,14 +393,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(CanShuffleWithoutRepeat(string("aab")));
 	assert(CanShuffleWithoutRepeat(string("aaaabbcc")));
 	a.clear();
-	a.push_back(-2);
-	a.push_back(-3);
-	a.push_back(4);
-	a.push_back(-1);
-	a.push_back(-2);
-	a.push_back(1);	
-	a.push_back(5);
-	a.push_back(-3);
+	a = {-2, -3, 4, -1, -2, 1, 5, -3};
 	b.clear();
 	long lResult = ConsecutiveLargestSum(a, b);
 	assert(lResult == 7);
@@ -527,61 +411,26 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	b.clear();
 	//  [−1, −1, 1, −1, 1, 0, 1, −1, −1]: 2 to 8 = 7
-	a.push_back(-1);
-	a.push_back(-1);
-	a.push_back(1);
-	a.push_back(-1);
-	a.push_back(1);
-	a.push_back(0);
-	a.push_back(1);
-	a.push_back(-1);
-	a.push_back(-1);
+	a = { -1, -1, 1, -1, 1, 0, 1, -1, -1 };
 	assert(LongestNonNegativeSumSlice(a) == 7);
 	a.clear();
 	//  [1, 1, −1, −1, −1, −1, −1, 1, 1]: first or last 4
-	a.push_back(1);
-	a.push_back(1);
-	a.push_back(-1);
-	a.push_back(-1);
-	a.push_back(-1);
-	a.push_back(-1);
-	a.push_back(-1);
-	a.push_back(1);
-	a.push_back(1);
+	a = { 1, 1, -1, -1, -1, -1, -1, 1, 1 };
 	assert(LongestNonNegativeSumSlice(a) == 4);
 	a.clear();
-	// 0, -1, 0, 0, 1, 0, -1, -1
-	a.push_back(0);
-	a.push_back(-1);
-	a.push_back(0);
-	a.push_back(0);
-	a.push_back(1);
-	a.push_back(0);
-	a.push_back(-1);
-	a.push_back(-1);
+	a = { 0, -1, 0, 0, 1, 0, -1, -1 };
 	assert(LongestNonNegativeSumSlice(a) == 6);
 	lResult = ConsecutiveLargestSum(a, b);
 	assert(lResult == 1);
 	a.clear();
-	// -1, -1, -1, -1, -1, -1, 1, 1
-	a.push_back(-1);
-	a.push_back(-1);
-	a.push_back(-1);
-	a.push_back(-1);
-	a.push_back(-1);
-	a.push_back(-1);
-	a.push_back(1);
-	a.push_back(1);
+	a = { -1, -1, -1, -1, -1, -1, 1, 1 };
 	assert(LongestNonNegativeSumSlice(a) == 4);
 	lResult = ConsecutiveLargestSum(a, b);
 	assert(lResult == 2);
 	a.clear();
 	b.clear();
 	strings.clear();
-	strings.push_back("Angel");
-	strings.push_back("legnA");
-	strings.push_back("Hello World!!!");
-	strings.push_back("World Hello!!!");
+	strings = {"Angel", "legnA", "Hello World!!!", "World Hello!!!"};
 	cout << "strings without sorted: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
 	sort(strings.begin(), strings.end());
@@ -604,17 +453,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "strings sorted with anagrams next to each other: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
 	a.clear();
-	a.push_back(0);
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(7);
-	a.push_back(10);
-	a.push_back(11);
-	a.push_back(12);
-	a.push_back(20);
-	a.push_back(25);
-	a.push_back(26);
-	a.push_back(27);
+	a = {0,1,2,7,10,11,12,20,25,26,27};
 	string strRange = GetRange(a);
 	assert(strRange == "0 - 2, 7, 10 - 12, 20, 25 - 27");
 	cout << "GetRange(\"";
@@ -693,10 +532,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	data.clear();
 	str = "abc";
 	a.clear();
-	for (i = 0; i < 10; i++)
-		a.push_back(i);
-	for (i = 5; i < 20; i++)
-		a.push_back(i);
+	a.resize(25);
+	generate(a.begin(), a.begin() + 10, [n = 0]()mutable{return n++; });
+	generate(a.begin() + 10, a.end(), [n = 5]()mutable{return n++; });
 	b.clear();
 	findDistinct(a, b);
 	assert(b.size() == 20);
@@ -707,23 +545,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(a.size() == 8);
 	a.clear();
 	b.clear();
-	a.push_back(15);
-	a.push_back(10);
-	a.push_back(3);
-	b.push_back(75);
-	b.push_back(30);
-	b.push_back(5);
+	a = {15,10,3};
+	b = {75,30,5};
 	assert(CommonPrimeDivisors(a, b) == 1);
 	a.clear();
 	b.clear();
-	a.push_back(7);
-	a.push_back(17);
-	a.push_back(5);
-	a.push_back(3);
-	b.push_back(7);
-	b.push_back(11);
-	b.push_back(5);
-	b.push_back(2);
+	a = {7,17,5,3};
+	b = {7,11,5,2};
 	assert(CommonPrimeDivisors(a, b) == 2);
 	
 	assert(!isPrime(1));
@@ -738,38 +566,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(!isPrime(10));
 	a.clear();
 	b.clear();
-	// 1, 2, 51, 50, 60, 55, 70, 68, 80, 76, 75, 12, 45
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(51);
-	a.push_back(50);
-	a.push_back(60);
-	a.push_back(55);
-	a.push_back(70);
-	a.push_back(68);
-	a.push_back(80);
-	a.push_back(76);
-	a.push_back(75);
-	a.push_back(12);
-	a.push_back(45);
+	a = { 1, 2, 51, 50, 60, 55, 70, 68, 80, 76, 75, 12, 45 };
 	size_t count = LongestAlternatingSubSequence(a, b);
 	assert(count == 9);
 	assert(b.size() == 9);
 	assert(b[0] == 2);
 	assert(b[b.size() - 1] == 76);
 	ull.clear();
-	ull.push_back(1);
-	ull.push_back(2);
-	ull.push_back(1);
-	ull.push_back(2);
+	ull = {1,2,1,2};
 	unsigned long long findMaxResult = findMax(ull);
 	assert(findMaxResult == 9);
 
 	ull.clear();
-	ull.push_back(2);
-	ull.push_back(3);
-	ull.push_back(3);
-	ull.push_back(2);
+	ull = {2,3,3,2};
 	findMaxResult = findMax(ull);
 	assert(findMaxResult == 36);
 
@@ -781,25 +590,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << " trim(line): |" << line << "| size: " << line.size() << endl;
 
 	a.clear();
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(3);
-	a.push_back(4);
-	a.push_back(5);
-	a.push_back(6);
-	a.push_back(5);
+	a = {1,2,3,4,5,6,5};
 	assert(sumpairs(a, 8) == 2);
 
 	a.clear();
-	a.push_back(5);
-	a.push_back(7);
-	a.push_back(9);
-	a.push_back(13);
-	a.push_back(11);
-	a.push_back(6);
-	a.push_back(6);
-	a.push_back(3);
-	a.push_back(3);
+	a = {5,7,9,13,11,6,6,3,3};
 	assert(sumpairs(a, 12) == 3);
 
 	//long testData[] = { 92,407,1152,403,1419,689,1029,108,128,1307,300,775,622,730,978,526,943,127,566,869,715,983,820,1394,901,606,497,98,1222,843,600,1153,302,1450,1457,973,1431,217,936,958,1258,970,1155,1061,1341,657,333,1151,790,101,588,263,101,534,747,405,585,111,849,695,1256,1508,139,336,1430,615,1295,550,783,575,992,709,828,1447,1457,738,1024,529,406,164,994,1008,50,811,564,580,952,768,863,1225,251,1032,1460,1558 };
@@ -811,50 +606,20 @@ int _tmain(int argc, _TCHAR* argv[])
 	iota(a.begin(), a.end(), 0);
 	assert(sumpairs(a, 10) == 4);
 	
-	set<long> lSet;
-	lSet.emplace(1);
-	lSet.emplace(2);
-	lSet.emplace(3);
-	lSet.emplace(5);
-	lSet.emplace(6);
-	lSet.emplace(8);
-	lSet.emplace(9);
-	lSet.emplace(11);
-	lSet.emplace(12);
-	lSet.emplace(13);
+	set<long> lSet {1,2,3,5,6,8,9,11,12,13};
 	assert(diffpairs(lSet, 3) == 6);
 	lSet.clear();
-	lSet.emplace(1);
-	lSet.emplace(5);
-	lSet.emplace(3);
-	lSet.emplace(4);
-	lSet.emplace(2);
+	lSet = { 1,5,3,4,2 };
 	assert(diffpairs(lSet, 2) == 3);
 	lSet.clear();
-	lSet.emplace(1);
-	lSet.emplace(3);
-	lSet.emplace(5);
-	lSet.emplace(8);
-	lSet.emplace(6);
-	lSet.emplace(4);
-	lSet.emplace(2);
+	lSet = {1,3,5,8,6,4,2};
 	assert(diffpairs(lSet, 2) == 5);
 	
 	a.clear();
-	a.push_back(1);
-	a.push_back(5);
-	a.push_back(3);
-	a.push_back(4);
-	a.push_back(2);
+	a = {1,5,3,4,2};
 	assert(diffpairs(a, 2) == 3);
 	a.clear();
-	a.push_back(1);
-	a.push_back(3);
-	a.push_back(5);
-	a.push_back(8);
-	a.push_back(6);
-	a.push_back(4);
-	a.push_back(2);
+	a = {1,3,5,8,6,4,2};
 	assert(diffpairs(a, 2) == 5);
 	// 0 1 2 3 4 5 6 7 8 9
 	//         ^ (10 / 2 - 1)
@@ -1071,12 +836,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	a.clear();
 	b.clear();
-	a.push_back(1);
-	a.push_back(7);
-	a.push_back(15);
-	a.push_back(29);
-	a.push_back(11);
-	a.push_back(9);
+	a = {1,7,15,29,11,9};
 	EqualAverageDivide(a, b);
 	assert(b.size() == 2);
 	cout << "Left part: ";
@@ -1085,30 +845,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(sum == 24);
 	cout << "sum: " << sum << endl;
 	
-	//
-	vector<char> cData1, cData2;
-	cData1.push_back(1);
-	cData1.push_back(2);
-	cData1.push_back(3);
-
-	cData2.push_back(4);
-	cData2.push_back(5);
-	cData2.push_back(6);
+	vector<char> cData1{ 1,2,3 }, cData2{4,5,6};
 	vector<char> sumResult = AddVectors(cData1, cData2);
 	assert(sumResult.size() == 3);
 	assert(sumResult[0] == 5);
 	assert(sumResult[1] == 7);
 	assert(sumResult[2] == 9);
-
-	cData1.clear();
-	cData2.clear();
-	cData1.push_back(1);
-	cData1.push_back(2);
-	cData1.push_back(3);
-
-	cData2.push_back(4);
-	cData2.push_back(5);
-	cData2.push_back(6);
 	cData2.push_back(7);
 	sumResult = AddVectors(cData1, cData2);
 	assert(sumResult.size() == 4);
@@ -1119,13 +861,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	cData1.clear();
 	cData2.clear();
-	cData1.push_back(9);
-	cData1.push_back(8);
-	cData1.push_back(7);
-
-	cData2.push_back(6);
-	cData2.push_back(5);
-	cData2.push_back(4);
+	cData1 = { 9,8,7 };
+	cData2 = { 6,5,4 };
 	sumResult = AddVectors(cData1, cData2);
 	assert(sumResult.size() == 4);
 	assert(sumResult[0] == 1);
@@ -1196,10 +933,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	copy(ngrams.begin(), ngrams.end(), ostream_iterator<string>(cout, ", "));
 	cout << endl;
 	data.clear();
-	data.push_back(1);
-	data.push_back(2);
-	data.push_back(3);
-	data.push_back(4);
+	data.resize(4);
+	generate(data.begin(), data.end(), [n = 1]()mutable{return n++; });
 	vector<int> intResult = Increment(data);
 	assert(intResult[0] == 1);
 	assert(intResult[1] == 2);
@@ -1207,10 +942,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(intResult[3] == 5);
 
 	data.clear();
-	data.push_back(9);
-	data.push_back(9);
-	data.push_back(9);
-	data.push_back(9);
+	data = {9,9,9,9};
 	intResult = Increment(data);
 	assert(intResult[0] == 1);
 	assert(intResult[1] == 0);
@@ -1234,23 +966,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(!addr);
 
 	sortData.clear();
-	sortData.push_back(1);
-	sortData.push_back(2);
-	sortData.push_back(3);
-	sortData.push_back(10);
-	sortData.push_back(25);
-	sortData.push_back(26);
-	sortData.push_back(30);
-	sortData.push_back(31);
-	sortData.push_back(32);
-	sortData.push_back(33);
+	sortData = {1,2,3,10,25,26,30,31,32,33};
 	strings = numbersegments(sortData);
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, ","));
 	cout << endl;
-	long sum_l = 0;
-	for (size_t i = 0; i < 100; i++)
-		sum_l++;
-	cout << "SUM: " << sum_l << endl;
 	cout << hex << "XOR(1): " << XOR(1) << endl;
 	cout << hex << "XOR(2): " << XOR(2) << endl;
 	cout << hex << "XOR(3): " << XOR(3) << endl;
@@ -1288,40 +1007,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(KthNumberWith357PrimeFactors(9) == 27);
 	assert(KthNumberWith357PrimeFactors(10) == 35);
 	a.clear();
-	a.push_back(9);
-	a.push_back(918);
-	a.push_back(917);
+	a = {9,918,917};
 	assert(concat(a) == 9918917);
 	a.clear();
-	a.push_back(1);
-	a.push_back(112);
-	a.push_back(113);
+	a = {1,112,113};
 	assert(concat(a) == 1131121);
 	a.clear();
-	a.push_back(901);
-	a.push_back(9015);
+	a = {901,9015};
 	// 9019015, 9015901
 	assert(concat(a) == 9019015);
 	a.clear();
-	a.push_back(3);
-	a.push_back(4);
-	a.push_back(6);
-	a.push_back(5);
+	a = {3,4,6,5};
 	b.clear();
-	b.push_back(9);
-	b.push_back(1);
-	b.push_back(2);
-	b.push_back(5);
-	b.push_back(8);
-	b.push_back(3);
+	b = {9,1,2,5,8,3};
 	assert(buildmax(a, b, 5) == 98653);
 	strings.clear();
-	strings.push_back("ABCW");
-	strings.push_back("BAZ");
-	strings.push_back("FOO");
-	strings.push_back("BAR");
-	strings.push_back("XTFN");
-	strings.push_back("ABCDEF");
+	strings = {"ABCW", "BAZ", "FOO", "BAR", "XTFN", "ABCDEF"};
 	long max = MaxLengths(strings);
 	assert(max == 24);
 	a.clear();
@@ -1347,8 +1048,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		assert(node->Item() == a[i]);
 	lla1.Clear();
 	a.clear();
-	for (size_t i = 0; i < 10; i++)
-		a.push_back(i);
+	a.resize(10);
+	generate(a.begin(), a.end(), [n = 0]()mutable{return n++; });
 	LinkedList<long> lla2(a);
 	assert(lla2.Length() == 10);
 	// Implement an algorithm to find the nth to last element of a singly linked list.
@@ -1494,71 +1195,29 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.push_back(6); // 1
 	assert(CountDistinctSlices(3, a) == 21); // 5 + 4 + 3
 	a.clear();
-	a.push_back(10);
-	a.push_back(2);
-	a.push_back(5);
-	a.push_back(1);
-	a.push_back(8);
-	a.push_back(12);
+	a = {10,2,5,1,8,12};
 	assert(CountTriangles(a) == 4);
 	assert(decimal_to_binary(0) == "0");
 	a.clear();
-	a.push_back(1);
-	a.push_back(5);
-	a.push_back(2);
-	a.push_back(-2);
+	a = {1,5,2,-2};
 	assert(MinAbsSum(a) == 0);
 	a.clear();
-	a.push_back(2);
-	a.push_back(2);
-	a.push_back(1);
+	a = { 2,2,1 };
 	assert(MinAbsSum(a) == 1);
 	a.clear();
-	a.push_back(23171);
-	a.push_back(21011);
-	a.push_back(21123);
-	a.push_back(21366);
-	a.push_back(21013);
-	a.push_back(21367);
+	a = { 23171, 21011 , 21123 , 21366 , 21013 , 21367 };
 	assert(MaxProfit(a) == 356);
 	a.clear();
-	a.push_back(1);
-	a.push_back(-2);
-	a.push_back(0);
-	a.push_back(9);
-	a.push_back(-1);
-	a.push_back(-2);
+	a = {1,-2,0,9,-1,-2};
 	assert(NumberSolitaire(a) == 8);
 	a.clear();
-	a.push_back(1);
-	a.push_back(-2);
-	a.push_back(4);
-	a.push_back(3);
-	a.push_back(-1);
-	a.push_back(-3);
-	a.push_back(-7);
-	a.push_back(4);
-	a.push_back(-9);
+	a = {1,-2,4,3,-1,-3,-7,4,-9};
 	assert(NumberSolitaire(a) == 3);
 	a.clear();
-	a.push_back(0);
-	a.push_back(-4);
-	a.push_back(-5);
-	a.push_back(-2);
-	a.push_back(-7);
-	a.push_back(-9);
-	a.push_back(-3);
-	a.push_back(-10);
+	a = {0,-4,-5,-2,-7,-9,-3,-10};
 	assert(NumberSolitaire(a) == -12);
 	a.clear();
-	a.push_back(-1);
-	a.push_back(-4);
-	a.push_back(-5);
-	a.push_back(-2);
-	a.push_back(-7);
-	a.push_back(-9);
-	a.push_back(-3);
-	a.push_back(-10);
+	a = {-1,-4,-5,-2,-7,-9,-3,-10};
 	assert(NumberSolitaire(a) == -13);
 	PlayTreasureGame();
 	assert(countPaths(2, 2, 1, 1, 2) == 2); // 2
@@ -1622,20 +1281,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << (*it)->Item() << " ";
 	cout << endl;
 	data.clear();
-	data.push_back(1);
-	data.push_back(0);
-	data.push_back(1);
-	data.push_back(1);
-	data.push_back(0);
-	data.push_back(0);
-	data.push_back(0);
+	data = {1,0,1,1,0,0,0};
 	assert(findMinFlip(data) == 1);
 	data.clear();
-	data.push_back(0);
-	data.push_back(0);
-	data.push_back(0);
-	data.push_back(0);
-	data.push_back(1);
+	data = { 0,0,0,0,1 };
 	assert(findMinFlip(data) == 2);
 	vector<vector<char>> m = {
 		{ 'R', 'G', 'R', 'B' },
@@ -1682,29 +1331,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	double expected = (1.2 + 2.3) * (3.4 - 4.5);
 	assert(fabs(TreeArithmeticTotal<double>(multiplier) - expected) < numeric_limits<double>::epsilon());
 	a.clear();
-	a.push_back(13);
-	a.push_back(2);
-	a.push_back(5);
+	a = {13,2,5};
 	stringset.clear();
 	//assert(ZigZagEscape(a, stringset) == 7);
 	assert(ZigZagEscape(a) == 7);
 	a.clear();
-	// 4, 6, 2, 1, 5
-	a.push_back(4);
-	a.push_back(6);
-	a.push_back(2);
-	a.push_back(1);
-	a.push_back(5);
+	a = { 4, 6, 2, 1, 5 };
 	stringset.clear();
 	//assert(ZigZagEscape(a, stringset) == 23);
 	assert(ZigZagEscape(a) == 23);
 	a.clear();
-	a.push_back(6);
-	a.push_back(3);
-	a.push_back(1);
-	a.push_back(4);
-	a.push_back(2);
-	a.push_back(5);
+	a = {6,3,1,4,2,5};
 	stringset.clear();
 	//assert(ZigZagEscape(a, stringset) == 41);
 	//assert(ZigZagEscape(a) == 41); Unfinished work!
@@ -1808,20 +1445,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(imap6[2] == 'A');
 	assert(imap6[3] == 'A');
 	a.clear();
-	a.push_back(-3);
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(-2);
-	a.push_back(5);
-	a.push_back(6);
+	a = {-3,1,2,-2,5,6};
 	assert(MaxProductOfThree(a) == 60);
 	IncreasingSequenceTests();
 	assert(binary_gap(9) == 2);
 	assert(binary_gap(32) == 0);
 	assert(binary_gap(529) == 4);
 	data.clear();
-	for (size_t i = 0; i < 5; i++)
-		data.push_back(i);
+	data.resize(5);
+	generate(data.begin(), data.end(), [i = 0]()mutable{return i++; });
 	RotateRightArray(data, 3);
 	for (size_t i = 0, j = 2; i < 5; i++, j = ++j % 5)
 		assert(data[i] == j);
@@ -1831,18 +1463,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(CountDiv(0, 2000000000, 2000000000) == 2);
 	assert(CountDiv(0, numeric_limits<int>::max(), numeric_limits<int>::max()) == 2);
 	a.clear();
-	a.push_back(2);
-	a.push_back(1);
-	a.push_back(5);
-	a.push_back(3);
-	a.push_back(4);
+	a = {2,1,5,3,4};
 	assert(minimumBribes(a) == 3);
 	a.clear();
-	a.push_back(2);
-	a.push_back(5);
-	a.push_back(1);
-	a.push_back(3);
-	a.push_back(4);
+	a = {2,5,1,3,4};
 	assert(minimumBribes(a) == -1);
 	assert(SherlockValidString("abcdefghhgfedecba"));
 	assert(!SherlockValidString("aabbcd"));
@@ -1852,18 +1476,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	line = "if man was meant to stay on the ground god would have given us roots";
 	assert(encryption(line) == "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau");
 	a.clear();
-	a.push_back(100);
-	a.push_back(100);
-	a.push_back(50);
-	a.push_back(40);
-	a.push_back(40);
-	a.push_back(20);
-	a.push_back(10);
+	a = {100,100,50,40,40,20,10};
 	b.clear();
-	b.push_back(5);
-	b.push_back(25);
-	b.push_back(50);
-	b.push_back(120);
+	b = {5,25,50,120};
 	vector<size_t> leaderBoardResult = climbingLeaderboard(a, b);
 	assert(leaderBoardResult[0] == 6);
 	assert(leaderBoardResult[1] == 4);
@@ -1876,19 +1491,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	//for (int i = 0; i < a.size(); i++)
 	//	assert(abs(a[i] - i - 1) == 1); Unfinished work!
 	a.clear();
-	a.push_back(3);
-	a.push_back(1);
-	a.push_back(5);
-	a.push_back(4);
-	a.push_back(2);
+	a = {3,1,5,4,2};
 	assert(calculateMedian(a) == 3);
 	a.clear();
-	a.push_back(3);
-	a.push_back(1);
-	a.push_back(5);
-	a.push_back(4);
-	a.push_back(2);
-	a.push_back(6);
+	a = {3,1,5,4,2,6};
 	assert(calculateMedian(a) == 3);
 	assert(timeInWords(5, 47) == "thirteen minutes to six");
 	assert(timeInWords(12, 29) == "twenty nine minutes past twelve");
@@ -1924,11 +1530,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(paths[0] == "45");
 	assert(paths[1] == "LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LL LL LL LL LL LL LL LL LL LL LL LL");
 	a.clear();
-	a.push_back(1);
-	a.push_back(3);
-	a.push_back(5);
-	a.push_back(7);
-	a.push_back(9);
+	a = {1,3,5,7,9};
 	DisJointSet<long> disjointSet(a);
 	disjointSet.Print(a);
 	// Test islands
@@ -1971,168 +1573,64 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(disjointSet.Find(3) == disjointSet.Find(7));
 	//assert(disjointSet.Find(2) == 0); C++ map will insert non-existing key silently
 	//assert(disjointSet.Find(1) != disjointSet.Find(2)); C++ map will insert non-existing key silently
-	vector<long> from, to, weights;
-	from.push_back(1);
-	from.push_back(1);
-	from.push_back(4);
-	from.push_back(2);
-	from.push_back(3);
-	from.push_back(3);
-	to.push_back(2);
-	to.push_back(3);
-	to.push_back(1);
-	to.push_back(4);
-	to.push_back(2);
-	to.push_back(4);
-	weights.push_back(5);
-	weights.push_back(3);
-	weights.push_back(6);
-	weights.push_back(7);
-	weights.push_back(4);
-	weights.push_back(5);
+	vector<long> from{ 1,1,4,2,3,3 }, to{ 2,3,1,4,2,4 }, weights{5,3,6,7,4,5};
 	assert(kruskals(4, from, to, weights) == 12);
 	from.clear();
 	to.clear();
 	weights.clear();
-	from.push_back(1);
-	from.push_back(3);
-	from.push_back(4);
-	from.push_back(1);
-	from.push_back(3);
-	to.push_back(2);
-	to.push_back(2);
-	to.push_back(3);
-	to.push_back(4);
-	to.push_back(1);
-	weights.push_back(1);
-	weights.push_back(150);
-	weights.push_back(99);
-	weights.push_back(100);
-	weights.push_back(200);
+	from = {1,3,4,1,3};
+	to = {2,2,3,4,1};
+	weights = {1,150,99,100,200};
 	assert(kruskals(4, from, to, weights) == 200);
 
 	from.clear();
 	to.clear();
 	weights.clear();
-	from.push_back(1);
-	from.push_back(3);
-	from.push_back(1);
-	from.push_back(4);
-	from.push_back(2);
-	to.push_back(2);
-	to.push_back(5);
-	to.push_back(4);
-	to.push_back(5);
-	to.push_back(3);
-	weights.push_back(60);
-	weights.push_back(70);
-	weights.push_back(120);
-	weights.push_back(150);
-	weights.push_back(80);
+	from = {1,3,1,4,2};
+	to = {2,5,4,5,3};
+	weights = {60,70,120,150,80};
 	assert(getLowestPathCost(5, from, to, weights) == 80);
 
 	from.clear();
 	to.clear();
 	weights.clear();
-	from.push_back(1);
-	from.push_back(2);
-	from.push_back(1);
-	from.push_back(3);
-	to.push_back(2);
-	to.push_back(4);
-	to.push_back(3);
-	to.push_back(4);
-	weights.push_back(20);
-	weights.push_back(30);
-	weights.push_back(5);
-	weights.push_back(40);
+	from = {1,2,1,3};
+	to = {2,4,3,4};
+	weights = {20,30,5,40};
 	assert(getLowestPathCost(4, from, to, weights) == 30);
 	
 	from.clear();
 	to.clear();
 	weights.clear();
-	vector<long> from1{ 1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,6,6,6,6,7,7,7,8,8,9 };
-	vector<long> to1{ 2,3,4,5,6,7,8,9,10,3,4,5,6,7,8,9,10,4,5,6,7,8,9,10,5,6,7,8,9,10,6,7,8,9,10,7,8,9,10,8,9,10,9,10,10 };
-	vector<long> weights1 { 6337,1594,3766,3645,75,5877,8561,242,6386,3331,4194,8069,3934,101,8536,6963,9303,7639,8512,1330,6458,1180,3913,1565,9488,1369,8066,9439,7510,6833,4215,194,4774,4328,187,1196,200,8743,1433,2933,2069,1974,7349,2351,8423 };
-	assert(from1.size() == 45);
-	assert(to1.size() == 45);
-	assert(weights1.size() == 45);
-	assert(getLowestPathCost(10, from1, to1, weights1) == 1196);
+	from = { 1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,6,6,6,6,7,7,7,8,8,9 };
+	to = { 2,3,4,5,6,7,8,9,10,3,4,5,6,7,8,9,10,4,5,6,7,8,9,10,5,6,7,8,9,10,6,7,8,9,10,7,8,9,10,8,9,10,9,10,10 };
+	weights = { 6337,1594,3766,3645,75,5877,8561,242,6386,3331,4194,8069,3934,101,8536,6963,9303,7639,8512,1330,6458,1180,3913,1565,9488,1369,8066,9439,7510,6833,4215,194,4774,4328,187,1196,200,8743,1433,2933,2069,1974,7349,2351,8423 };
+	assert(from.size() == 45);
+	assert(to.size() == 45);
+	assert(weights.size() == 45);
+	assert(getLowestPathCost(10, from, to, weights) == 1196);
 
 	vector<vector<size_t>> ladders, snakes;
-	size_t gridArray12[2][2] = { { 3, 54}, {37, 100} };
-	ladders.clear();
-	ladders.resize(2);
-	for (size_t i = 0; i < 2; i++) {
-		ladders[i].resize(2);
-		for (size_t j = 0; j < 2; j++)
-			ladders[i][j] = gridArray12[i][j];
-	}
-	size_t gridArray13[2][2] = { { 56, 33} };
-	snakes.clear();
-	snakes.resize(1);
-	for (size_t i = 0; i < 1; i++) {
-		snakes[i].resize(2);
-		for (size_t j = 0; j < 2; j++)
-			snakes[i][j] = gridArray13[i][j];
-	}
-	long gridArray14[6][3] = { { 1,2,3 },{ 1,3,4 },{ 4,2,6 },{5,2,2},{2,3,5},{3,5,7} };
-	grid1.clear();
-	grid1.resize(6);
-	for (size_t i = 0; i < 6; i++) {
-		grid1[i].resize(3);
-		for (size_t j = 0; j < 3; j++)
-			grid1[i][j] = gridArray14[i][j];
-	}
-	cout << endl;
+	ladders = { { 3, 54}, {37, 100} };
+	snakes = { { 56, 33} };
+	grid1 = { { 1,2,3 },{ 1,3,4 },{ 4,2,6 },{5,2,2},{2,3,5},{3,5,7} };
 	assert(PrimMinimumSpanningTree(5, grid1, 1) == 15);
 
-	long gridArray15[7][3] = { { 1,2,20 },{ 1,3,50 },{ 1,4,70 },{1,5,90},{2,3,30},{3,4,40}, {4,5,60} };
-	grid1.clear();
-	grid1.resize(7);
-	for (size_t i = 0; i < 7; i++) {
-		grid1[i].resize(3);
-		for (size_t j = 0; j < 3; j++)
-			grid1[i][j] = gridArray15[i][j];
-	}
-	cout << endl;
+	grid1 = { { 1,2,20 },{ 1,3,50 },{ 1,4,70 },{1,5,90},{2,3,30},{3,4,40}, {4,5,60} };
 	assert(PrimMinimumSpanningTree(5, grid1, 2) == 150);
 
-	long gridArray16[6][3] = { { 2,1,1000 },{ 3,4,299 },{ 2,4,200 },{2,4,100},{3,2,300},{3,2,6} };
-	grid1.clear();
-	grid1.resize(6);
-	for (size_t i = 0; i < 6; i++) {
-		grid1[i].resize(3);
-		for (size_t j = 0; j < 3; j++)
-			grid1[i][j] = gridArray16[i][j];
-	}
-	cout << endl;
+	grid1 = { { 2,1,1000 },{ 3,4,299 },{ 2,4,200 },{2,4,100},{3,2,300},{3,2,6} };
 	assert(PrimMinimumSpanningTree(4, grid1, 2) == 1106);
 
-	long gridArray17[3][2] = { { 1,2 },{ 2,3 },{ 1,4 } };
-	grid1.clear();
-	grid1.resize(3);
-	for (size_t i = 0; i < 3; i++) {
-		grid1[i].resize(2);
-		for (size_t j = 0; j < 2; j++)
-			grid1[i][j] = gridArray17[i][j];
-	}
-	cout << endl;
+	grid1 = { { 1,2 },{ 2,3 },{ 1,4 } };
 	vector<size_t> unbeatenPaths;
 	UnbeatenPaths(4, grid1, 1, unbeatenPaths);
 	assert(unbeatenPaths.size() == 3);
 	assert(unbeatenPaths[0] == 3);
 	assert(unbeatenPaths[1] == 1);
 	assert(unbeatenPaths[2] == 2);
-	long gridArray18[2][2] = { { 1,2 },{ 2,3 } };
-	grid1.clear();
-	grid1.resize(2);
-	for (size_t i = 0; i < 2; i++) {
-		grid1[i].resize(2);
-		for (size_t j = 0; j < 2; j++)
-			grid1[i][j] = gridArray18[i][j];
-	}
-	cout << endl;
+
+	grid1 = { { 1,2 },{ 2,3 } };
 	unbeatenPaths.clear();
 	UnbeatenPaths(4, grid1, 2, unbeatenPaths);
 	assert(unbeatenPaths.size() == 3);
@@ -2145,73 +1643,32 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(SurfaceArea3D(grid1) == 6);
 	grid1.clear();
 	grid1.resize(1);
-	grid1[0].push_back(1);
-	grid1[0].push_back(0);
-	grid1[0].push_back(1);
+	grid1[0] = {1,0,1};
 	assert(SurfaceArea3D(grid1) == 12);
-	unsigned long gridArray19[3][3] = { {1,3,4}, {2,2,3}, {1,2,4} };
-	grid1.clear();
-	grid1.resize(3);
-	for (size_t i = 0; i < 3; i++) {
-		grid1[i].resize(3);
-		for (size_t j = 0; j < 3; j++)
-			grid1[i][j] = gridArray19[i][j];
-	}
+
+	grid1 = { {1,3,4}, {2,2,3}, {1,2,4} };
 	assert(SurfaceArea3D(grid1) == 60);
+
 	grid1.clear();
 	grid1.resize(1);
-	grid1[0].push_back(1);
-	grid1[0].push_back(2);
-	grid1[0].push_back(3);
-	grid1[0].push_back(4);
-	grid1[0].push_back(5);
-	grid1[0].push_back(5);
-	grid1[0].push_back(4);
-	grid1[0].push_back(3);
-	grid1[0].push_back(2);
-	grid1[0].push_back(1);
+	grid1[0] = {1,2,3,4,5,5,4,3,2,1};
 	assert(SurfaceArea3D(grid1) == 90);
-	unsigned long gridArray20[10][1] = { {1}, {2}, {3}, {4}, {5}, {5}, {4}, {3}, {2}, {1} };
-	grid1.clear();
-	grid1.resize(10);
-	for (size_t i = 0; i < 10; i++) {
-		grid1[i].resize(1);
-		for (size_t j = 0; j < 1; j++)
-			grid1[i][j] = gridArray20[i][j];
-	}
+
+	grid1 = { {1}, {2}, {3}, {4}, {5}, {5}, {4}, {3}, {2}, {1} };
 	assert(SurfaceArea3D(grid1) == 90);
+
 	grid1.clear();
 	grid1.resize(1);
-	grid1[0].push_back(1);
-	grid1[0].push_back(2);
-	grid1[0].push_back(3);
-	grid1[0].push_back(4);
-	grid1[0].push_back(5);
-	grid1[0].push_back(4);
-	grid1[0].push_back(5);
-	grid1[0].push_back(4);
-	grid1[0].push_back(3);
-	grid1[0].push_back(2);
-	grid1[0].push_back(1);
+	grid1[0] = {1,2,3,4,5,4,5,4,3,2,1};
 	assert(SurfaceArea3D(grid1) == 102);
-	unsigned long gridArray21[11][1] = { {1}, {2}, {3}, {4}, {5}, {4},{5}, {4}, {3}, {2}, {1} };
-	grid1.clear();
-	grid1.resize(11);
-	for (size_t i = 0; i < 11; i++) {
-		grid1[i].resize(1);
-		for (size_t j = 0; j < 1; j++)
-			grid1[i][j] = gridArray21[i][j];
-	}
+
+	grid1 = { {1}, {2}, {3}, {4}, {5}, {4},{5}, {4}, {3}, {2}, {1} };
 	assert(SurfaceArea3D(grid1) == 102);
-	unsigned long gridArray22[10][1] = { {51}, {32}, {28}, {49}, {28}, {21}, {98}, {56}, {99}, {77} };
-	grid1.clear();
-	grid1.resize(10);
-	for (size_t i = 0; i < 10; i++) {
-		grid1[i].resize(1);
-		for (size_t j = 0; j < 1; j++)
-			grid1[i][j] = gridArray22[i][j];
-	}
+
+	grid1 = { {51}, {32}, {28}, {49}, {28}, {21}, {98}, {56}, {99}, {77} };
 	assert(SurfaceArea3D(grid1) == 1482);
+	a.clear();
+	/***** The End *****/
 	cout << endl;
 	cout << "Press ENTER to exit!";
 	getline(cin, line);
@@ -2959,71 +2416,34 @@ void MaxZeroProductTests()
 	//assert(MaxZeroProduct(data) == 3);
 	assert(MaxZeroProductBruteForce(data) == 3);
 	data.clear();
-	data.push_back(25);
-	data.push_back(10);
-	data.push_back(25);
-	data.push_back(10);
-	data.push_back(32);
+	data = {25,10,25,10,32};
 	//assert(MaxZeroProduct(data) == 4);
 	assert(MaxZeroProductBruteForce(data) == 4);
 	data.clear();
-	// 1, 1, 100
-	data.push_back(1);
-	data.push_back(1);
-	data.push_back(100);
+	data = { 1, 1, 100 };
 	//assert(MaxZeroProduct(data) == 2);
 	assert(MaxZeroProductBruteForce(data) == 2);
 	data.clear();
-	data.push_back(1);
-	data.push_back(4);
-	data.push_back(25);
+	data = {1,4,25};
 	//assert(MaxZeroProduct(data) == 2);
 	assert(MaxZeroProductBruteForce(data) == 2);
 	data.clear();
-	// 1, 1, 101
-	data.push_back(1);
-	data.push_back(1);
-	data.push_back(101);
+	data = { 1, 1, 101 };
 	//assert(MaxZeroProduct(data) == 0);
 	assert(MaxZeroProductBruteForce(data) == 0);
 	data.clear();
-	// 1, 25, 25
-	data.push_back(1);
-	data.push_back(25);
-	data.push_back(25);
+	data = { 1, 25, 25 };
 	//assert(MaxZeroProduct(data) == 0);
 	assert(MaxZeroProductBruteForce(data) == 0);
 	data.clear();
-	// 125, 100, 125, 100, 64
-	data.push_back(125);
-	data.push_back(100);
-	data.push_back(125);
-	data.push_back(100);
-	data.push_back(64);
+	data = { 125, 100, 125, 100, 64 };
 	//assert(MaxZeroProduct(data) == 6);
 	assert(MaxZeroProductBruteForce(data) == 6);
 	data.clear();
-	data.push_back(1);
-	data.push_back(2);
-	data.push_back(3);
-	data.push_back(4);
-	data.push_back(5);
-	data.push_back(6);
-	data.push_back(7);
-	data.push_back(8);
-	data.push_back(9);
+	data.resize(9);
+	generate(data.begin(), data.end(), [i = 1]()mutable{return i++; });
 	//assert(MaxZeroProduct(data) == 1);
 	assert(MaxZeroProductBruteForce(data) == 1);
-	data.clear();
-	data.push_back(1);
-	data.push_back(2);
-	data.push_back(3);
-	data.push_back(4);
-	data.push_back(5);
-	data.push_back(6);
-	data.push_back(7);
-	data.push_back(8);
-	data.push_back(9);
 	data.push_back(10);
 	//assert(MaxZeroProduct(data) == 2);
 	assert(MaxZeroProductBruteForce(data) == 2);
@@ -3379,9 +2799,7 @@ void TestGraph()
 	spt.clear();
 	graph.Clear();
 	data.clear();
-	data.push_back(10);
-	data.push_back(5);
-	data.push_back(11);
+	data = {10,5,11};
 	vector<vector<size_t>> links = { {1, 2}, {1, 3} }; // Use tag. Not value
 	/*
 			10
@@ -3390,23 +2808,14 @@ void TestGraph()
 	*/
 	assert(MinSubGraphDifference(data, links) == 4);
 	data.clear();
-	data.push_back(10);
-	data.push_back(5);
-	data.push_back(6);
-	data.push_back(20);
+	data = {10,5,6,20};
 	/*
 			10
 		 5		6
 	  20
 	Diff: 21 - 20 = 1
 	*/
-	size_t gridArray1[3][2] = { {1,2}, {1,3}, {2,4} };//{ {10,5}, {10,6}, {5,20} };
-	links.resize(3);
-	for (size_t i = 0; i < 3; i++) {
-		links[i].resize(2);
-		for (size_t j = 0; j < 2; j++)
-			links[i][j] = gridArray1[i][j];
-	}
+	links = { {1,2}, {1,3}, {2,4} };//{ {10,5}, {10,6}, {5,20} };
 	assert(MinSubGraphDifference(data, links) == 1);
 	/*
 			10
@@ -3415,89 +2824,31 @@ void TestGraph()
 	Diff: 20 - 15 = 5
 	*/
 	data.clear();
-	data.push_back(10);
-	data.push_back(5);
-	data.push_back(20);
-	size_t gridArray2[2][2] = { {1,2}, {2,3} };//{ {10,5}, {5,20} };
-	links.resize(2);
-	for (size_t i = 0; i < 2; i++) {
-		links[i].resize(2);
-		for (size_t j = 0; j < 2; j++)
-			links[i][j] = gridArray2[i][j];
-	}
+	data = { 10,5,20 };
+	links = { {1,2}, {2,3} };//{ {10,5}, {5,20} };
 	assert(MinSubGraphDifference(data, links) == 5);
 	cout << endl;
 	data.clear();
-	data.push_back(100); //1
-	data.push_back(200);
-	data.push_back(100);
-	data.push_back(100);
-	data.push_back(500);
-	data.push_back(600);
-	size_t gridArray3[5][2] = { {1,2}, {2,3}, {2,4}, {4,5}, {4,6} };
-	links.resize(5);
-	for (size_t i = 0; i < 5; i++) {
-		links[i].resize(2);
-		for (size_t j = 0; j < 2; j++)
-			links[i][j] = gridArray3[i][j];
-	}
+	data = {100,200,100,100,500,600};
+	links = { {1,2}, {2,3}, {2,4}, {4,5}, {4,6} };
 	assert(MinSubGraphDifference(data, links) == 400);
-	data.clear(); // 205 573 985 242 830 514 592 263 142 915
-	data.push_back(205);
-	data.push_back(573);
-	data.push_back(985);
-	data.push_back(242);
-	data.push_back(830);
-	data.push_back(514);
-	data.push_back(592);
-	data.push_back(263);
-	data.push_back(142);
-	data.push_back(915);
-	size_t gridArray4[9][2] = { {2,8}, {10,5}, {1,7}, {6,9}, {4,3}, {8,10}, {5,1}, {7,6}, {9,4} };
-	links.resize(9);
-	for (size_t i = 0; i < 9; i++) {
-		links[i].resize(2);
-		for (size_t j = 0; j < 2; j++)
-			links[i][j] = gridArray4[i][j];
-	}
+	data.clear(); 
+	data = { 205, 573, 985, 242, 830, 514, 592, 263, 142, 915 };
+	links = { {2,8}, {10,5}, {1,7}, {6,9}, {4,3}, {8,10}, {5,1}, {7,6}, {9,4} };
 	assert(MinSubGraphDifference(data, links) == 99);
 	vector<size_t> data2 = { 716,365,206,641,841,585,801,645,208,924,920,286,554,832,359,836,247,959,31,322,709,860,890,195,575,905,314,41,669,549,950,736,265,507,729,457,91,529,102,650,805,373,287,710,556,645,546,154,956,928 };
-	size_t gridArray5[49][2] = { {14,25 }, { 25,13 }, { 13,20 }, { 20,24 }, { 43,2 }, { 2,48 }, { 48,42 }, { 42,5 }, { 27,18 }, { 18,30 }, { 30,7 }, { 7,36 }, { 37,9 }, { 9,23 }, { 23,49 }, { 49,15 }, { 31,26 }, { 26,29 }, { 29,50 }, { 50,21 }, { 41,45 }, { 45,10 }, { 10,17 }, { 17,34 }, { 28,47 }, { 47,44 }, { 44,11 }, { 11,16 }, { 3,8 }, { 8,39 }, { 39,38 }, { 38,22 }, { 19,32 }, { 32,12 }, { 12,40 }, { 40,46 }, { 1,35 }, { 35,4 }, { 4,33 }, { 33,6 }, { 25,2 }, { 2,27 }, { 7,37 }, { 15,50 }, { 21,10 }, { 17,28 }, { 16,39 }, { 38,19 }, { 40,1} };
-	links.resize(49);
-	for (size_t i = 0; i < 49; i++) {
-		links[i].resize(2);
-		for (size_t j = 0; j < 2; j++)
-			links[i][j] = gridArray5[i][j];
-	}
+	links = { {14,25 }, { 25,13 }, { 13,20 }, { 20,24 }, { 43,2 }, { 2,48 }, { 48,42 }, { 42,5 }, { 27,18 }, { 18,30 }, { 30,7 }, { 7,36 }, { 37,9 }, { 9,23 }, { 23,49 }, { 49,15 }, { 31,26 }, { 26,29 }, { 29,50 }, { 50,21 }, { 41,45 }, { 45,10 }, { 10,17 }, { 17,34 }, { 28,47 }, { 47,44 }, { 44,11 }, { 11,16 }, { 3,8 }, { 8,39 }, { 39,38 }, { 38,22 }, { 19,32 }, { 32,12 }, { 12,40 }, { 40,46 }, { 1,35 }, { 35,4 }, { 4,33 }, { 33,6 }, { 25,2 }, { 2,27 }, { 7,37 }, { 15,50 }, { 21,10 }, { 17,28 }, { 16,39 }, { 38,19 }, { 40,1} };
 	size_t result = MinSubGraphDifference(data2, links);
 	//assert(result == 525); Fail but difficult to check due to the sheer number of data points.
 	vector<long> data1;
 	vector<vector<long>> links1;
 	data1.clear();
-	data1.push_back(1);
-	data1.push_back(3);
-	data1.push_back(4);
-	long gridArray6[4][3] = { {1,2,1}, {2,3,2}, {2,4,2}, {3,5,3} };
-	links1.resize(4);
-	for (size_t i = 0; i < 4; i++) {
-		links1[i].resize(3);
-		for (size_t j = 0; j < 3; j++)
-			links1[i][j] = gridArray6[i][j];
-	}
+	data1 = {1,3,4};
+	links1 = { {1,2,1}, {2,3,2}, {2,4,2}, {3,5,3} };
 	assert(PostmanProblem(data1, links1) == 6);
 	data1.clear();
-	data1.push_back(5);
-	data1.push_back(11);
-	data1.push_back(12);
-	data1.push_back(15);
-	data1.push_back(16);
-	long gridArray7[19][3] = { {17,4,3},{11,12,5},{14,2,1},{16,14,4},{7,8,4},{13,5,5},{17,15,2},{5,3,5},{8,6,1},{18,10,4},{18,1,3},{16,1,2},{9,2,5},{11,6,1},{4,9,4},{7,20,2},{13,19,3},{19,12,3},{10,20,2} };
-	links1.resize(19);
-	for (size_t i = 0; i < 19; i++) {
-		links1[i].resize(3);
-		for (size_t j = 0; j < 3; j++)
-			links1[i][j] = gridArray7[i][j];
-	}
+	data1 = {5,11,12,15,16};
+	links1 = { {17,4,3},{11,12,5},{14,2,1},{16,14,4},{7,8,4},{13,5,5},{17,15,2},{5,3,5},{8,6,1},{18,10,4},{18,1,3},{16,1,2},{9,2,5},{11,6,1},{4,9,4},{7,20,2},{13,19,3},{19,12,3},{10,20,2} };
 	assert(PostmanProblem(data1, links1) == 54);
 	cout << endl;
 }
@@ -3666,13 +3017,11 @@ void findDistinct(vector<long>& input, vector<long>& output)
 // http://en.wikipedia.org/wiki/Prime_number - Trial division implementation
 void findPrimes(unsigned long n, vector<long>& result)
 {
-	if (n <= 3) {
-		result.push_back(2);
-		result.push_back(3);
-	} else {
+	if (n <= 3)
+		result = { 2,3 };
+	else {
 		long double j;
-		result.push_back(2);
-		result.push_back(3);
+		result = { 2,3 };
 		for (unsigned long i = 4; i <= n; i++) {
 			long double sqrtI = sqrt(i);
 			for (j = 2; j <= sqrtI && (i % (long)j); j++);
@@ -3909,29 +3258,43 @@ template<typename type>
  }
  void OrderArrayIntoNegativePositiveSeriesTests()
  {
-	 vector<long> a;
+	 vector<long> a{ 2,-1,-3,-7,-8,9,5,-5,-7 };
 	// Start of Sort numbers into consecutive positive/negative numbers
 	// 2,-1,-3,-7,-8,9,5,-5,-7
-	a.push_back(2);
-	a.push_back(-1);
-	a.push_back(-3);
-	a.push_back(-7);
-	a.push_back(-8);
-	a.push_back(9);
-	a.push_back(5);
-	a.push_back(-5);
-	a.push_back(-7);
 	sortNumbers(a);
 	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
 	cout << endl;
 	a.clear();
 	TestCornerCases();
-	TestCase1();
-	TestCase2();
-	TestCase3();
-	TestCase4();
-	TestCase5();
-	TestCase6();
+	vector<int> testArr{ 2, -1, -3, -7, -8, 9, 5, -5, -7 };
+	vector<int> result{ 2, -1, 9, -3, 5, -7, -8, -5, -7 };
+	OrderArrayIntoNegativePositiveSeries(testArr);
+	assert(testArr == result);
+
+	testArr = { 2, 9, 5, 3, 2, 1, -1, -3, -7, -8, -5, -7 };
+	result = { 2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7 };
+	OrderArrayIntoNegativePositiveSeries(testArr);
+	assert(testArr == result);
+
+	testArr = { 2, -1, -3, -7, -8, -5, -7, 9, 5, 3, 2, 1 };
+	result = { 2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7 };
+	OrderArrayIntoNegativePositiveSeries(testArr);
+	assert(testArr == result);
+
+	testArr = { 2, -1, -3, -7, 9, 5, 3, 2, 1, -8, -5, -7 };
+	result = { 2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7 };
+	OrderArrayIntoNegativePositiveSeries(testArr);
+	assert(testArr == result);
+
+	testArr = { -1, -3, -7, 2, 9, 5, 3, 2, 1, -8, -5, -7 };
+	result = { -1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1 };
+	OrderArrayIntoNegativePositiveSeries(testArr);
+	assert(testArr == result);
+
+	testArr = { -1, -3, -7, -8, -5, -7, 2, 9, 5, 3, 2, 1 };
+	result = { -1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1 };
+	OrderArrayIntoNegativePositiveSeries(testArr);
+	assert(testArr == result);
 	// End of Sort numbers into consecutive positive/negative numbers
  }
  void TestCornerCases()
@@ -3943,7 +3306,7 @@ template<typename type>
 	 testArr.push_back(1);
 	 OrderArrayIntoNegativePositiveSeries(testArr);
 	 assert(testArr.size() == 1);
-	 assert(testArr[0] = 1);
+	 assert(testArr[0] == 1);
 	 testArr.clear();
 
 	 testArr.push_back(1);
@@ -3953,198 +3316,6 @@ template<typename type>
 	 assert(testArr[0] == 1);
 	 assert(testArr[1] == -1);
  }
- void TestCase1()
- {
-	 vector<int> testArr;
-	 //{ 2, -1, -3, -7, -8, 9, 5, -5, -7 };
-	 testArr.push_back(2);
-	 testArr.push_back(-1);
-	 testArr.push_back(-3);
-	 testArr.push_back(-7);
-	 testArr.push_back(-8);
-	 testArr.push_back(9);
-	 testArr.push_back(5);
-	 testArr.push_back(-5);
-	 testArr.push_back(-7);
-	 vector<int> result;
-	 // { 2, -1, 9, -3, 5, -7, -8, -5, -7 };
-	 result.push_back(2);
-	 result.push_back(-1);
-	 result.push_back(9);
-	 result.push_back(-3);
-	 result.push_back(5);
-	 result.push_back(-7);
-	 result.push_back(-8);
-	 result.push_back(-5);
-	 result.push_back(-7);
-	 OrderArrayIntoNegativePositiveSeries(testArr);
-	 assert(testArr == result);
- }
- void TestCase2()
- {
-	 vector<int> testArr; 
-	 //{ 2, 9, 5, 3, 2, 1, -1, -3, -7, -8, -5, -7 };
-	 testArr.push_back(2);
-	 testArr.push_back(9);
-	 testArr.push_back(5);
-	 testArr.push_back(3);
-	 testArr.push_back(2);
-	 testArr.push_back(1);
-	 testArr.push_back(-1);
-	 testArr.push_back(-3);
-	 testArr.push_back(-7);
-	 testArr.push_back(-8);
-	 testArr.push_back(-5);
-	 testArr.push_back(-7);
-	 vector<int> result;
-	 // { 2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7 };
-	 result.push_back(2);
-	 result.push_back(-1);
-	 result.push_back(9);
-	 result.push_back(-3);
-	 result.push_back(5);
-	 result.push_back(-7);
-	 result.push_back(3);
-	 result.push_back(-8);
-	 result.push_back(2);
-	 result.push_back(-5);
-	 result.push_back(1);
-	 result.push_back(-7);
-	 OrderArrayIntoNegativePositiveSeries(testArr);
-	 assert(testArr == result);
- }
- void TestCase3()
- {
-	 vector<int> testArr;
-	 // { 2, -1, -3, - 7, -8, -5, -7, 9, 5, 3, 2, 1 };
-	 testArr.push_back(2);
-	 testArr.push_back(-1);
-	 testArr.push_back(-3);
-	 testArr.push_back(-7);
-	 testArr.push_back(-8);
-	 testArr.push_back(-5);
-	 testArr.push_back(-7);
-	 testArr.push_back(9);
-	 testArr.push_back(5);
-	 testArr.push_back(3);
-	 testArr.push_back(2);
-	 testArr.push_back(1);
-	 vector<int> result;
-	 // { 2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7 };
-	 result.push_back(2);
-	 result.push_back(-1);
-	 result.push_back(9);
-	 result.push_back(-3);
-	 result.push_back(5);
-	 result.push_back(-7);
-	 result.push_back(3);
-	 result.push_back(-8);
-	 result.push_back(2);
-	 result.push_back(-5);
-	 result.push_back(1);
-	 result.push_back(-7);
-	 OrderArrayIntoNegativePositiveSeries(testArr);
-	 assert(testArr == result);
- }
- void TestCase4()
- {
-	 vector<int> testArr;
-	 //= { 2, -1, -3, - 7, 9, 5, 3, 2, 1, -8, -5, -7 };
-	 testArr.push_back(2);
-	 testArr.push_back(-1);
-	 testArr.push_back(-3);
-	 testArr.push_back(-7);
-	 testArr.push_back(9);
-	 testArr.push_back(5);
-	 testArr.push_back(3);
-	 testArr.push_back(2);
-	 testArr.push_back(1);
-	 testArr.push_back(-8);
-	 testArr.push_back(-5);
-	 testArr.push_back(-7);
-	 vector<int> result;
-	 // { 2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7 };
-	 result.push_back(2);
-	 result.push_back(-1);
-	 result.push_back(9);
-	 result.push_back(-3);
-	 result.push_back(5);
-	 result.push_back(-7);
-	 result.push_back(3);
-	 result.push_back(-8);
-	 result.push_back(2);
-	 result.push_back(-5);
-	 result.push_back(1);
-	 result.push_back(-7);
-	 OrderArrayIntoNegativePositiveSeries(testArr);
-	 assert(testArr == result);
-}
-void TestCase5()
-{
-	 vector<int> testArr;
-	 // { -1, -3, - 7, 2, 9, 5, 3, 2, 1, -8, -5, -7 };
-	 testArr.push_back(-1);
-	 testArr.push_back(-3);
-	 testArr.push_back(-7);
-	 testArr.push_back(2);
-	 testArr.push_back(9);
-	 testArr.push_back(5);
-	 testArr.push_back(3);
-	 testArr.push_back(2);
-	 testArr.push_back(1);
-	 testArr.push_back(-8);
-	 testArr.push_back(-5);
-	 testArr.push_back(-7);
-	 vector<int> result;
-	 // { -1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1};
-	 result.push_back(-1);
-	 result.push_back(2);
-	 result.push_back(-3);
-	 result.push_back(9);
-	 result.push_back(-7);
-	 result.push_back(5);
-	 result.push_back(-8);
-	 result.push_back(3);
-	 result.push_back(-5);
-	 result.push_back(2);
-	 result.push_back(-7);
-	 result.push_back(1);
-	 OrderArrayIntoNegativePositiveSeries(testArr);
-	 assert(testArr == result);
-}
-void TestCase6()
-{
-	 vector<int> testArr;
-	 // { -1, -3, - 7, -8, -5, -7, 2, 9, 5, 3, 2, 1 };
-	 testArr.push_back(-1);
-	 testArr.push_back(-3);
-	 testArr.push_back(-7);
-	 testArr.push_back(-8);
-	 testArr.push_back(-5);
-	 testArr.push_back(-7);
-	 testArr.push_back(2);
-	 testArr.push_back(9);
-	 testArr.push_back(5);
-	 testArr.push_back(3);
-	 testArr.push_back(2);
-	 testArr.push_back(1);
-	 vector<int> result;
-	 // { -1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1 };
-	 result.push_back(-1);
-	 result.push_back(2);
-	 result.push_back(-3);
-	 result.push_back(9);
-	 result.push_back(-7);
-	 result.push_back(5);
-	 result.push_back(-8);
-	 result.push_back(3);
-	 result.push_back(-5);
-	 result.push_back(2);
-	 result.push_back(-7);
-	 result.push_back(1);
-	 OrderArrayIntoNegativePositiveSeries(testArr);
-	 assert(testArr == result);
-}
 // End of Sort numbers into consecutive positive/negative numbers
 
 // Binary Search (http://en.wikipedia.org/wiki/Binary_search_algorithm)
@@ -4243,9 +3414,7 @@ void sortingTests()
 	uniform_int_distribution<long> uniformDistribution;
 	vector<long> a, b, sortData, buffer;
 	sortData.clear();
-	sortData.push_back(1);
-	sortData.push_back(0);
-	sortData.push_back(-1);
+	sortData = {1,0,-1};
 	assert(sortData[0] == 1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == -1);
@@ -4264,9 +3433,7 @@ void sortingTests()
 		assert(sortData[i] == buffer[i]);
 
 	sortData.clear();
-	sortData.push_back(1);
-	sortData.push_back(0);
-	sortData.push_back(-1);
+	sortData = { 1,0,-1 };
 	assert(sortData[0] == 1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == -1);
@@ -4285,9 +3452,7 @@ void sortingTests()
 		assert(sortData[i] == buffer[i]);
 
 	sortData.clear();
-	sortData.push_back(1);
-	sortData.push_back(0);
-	sortData.push_back(-1);
+	sortData = {1,0,-1};
 	assert(sortData[0] == 1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == -1);
@@ -4306,9 +3471,7 @@ void sortingTests()
 		assert(sortData[i] == buffer[i]);
 
 	sortData.clear();
-	sortData.push_back(1);
-	sortData.push_back(0);
-	sortData.push_back(-1);
+	sortData = { 1,0,-1 };
 	assert(sortData[0] == 1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == -1);
@@ -4327,9 +3490,7 @@ void sortingTests()
 		assert(sortData[i] == buffer[i]);
 
 	sortData.clear();
-	sortData.push_back(1);
-	sortData.push_back(0);
-	sortData.push_back(-1);
+	sortData = { 1,0,-1 };
 	assert(sortData[0] == 1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == -1);
@@ -4340,11 +3501,7 @@ void sortingTests()
 	assert(sortData[2] == 1);
 
 	sortData.clear();
-	sortData.push_back(2);
-	sortData.push_back(1);
-	sortData.push_back(3);
-	sortData.push_back(1);
-	sortData.push_back(2);
+	sortData = {2,1,3,1,2};
 	assert(sortData[0] == 2);
 	assert(sortData[1] == 1);
 	assert(sortData[2] == 3);
@@ -4371,9 +3528,7 @@ void sortingTests()
 		assert(sortData[i] == a[i]);
 
 	sortData.clear();
-	sortData.push_back(1);
-	sortData.push_back(0);
-	sortData.push_back(-1);
+	sortData = { 1,0,-1 };
 	assert(sortData[0] == 1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == -1);
@@ -4394,9 +3549,7 @@ void sortingTests()
 		assert(sortData[i] == a[i]);
 
 	sortData.clear();
-	sortData.push_back(1);
-	sortData.push_back(0);
-	sortData.push_back(-1);
+	sortData = { 1,0,-1 };
 	assert(sortData[0] == 1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == -1);
@@ -4405,11 +3558,7 @@ void sortingTests()
 	assert(sortData[1] == 0);
 	assert(sortData[2] == 1);
 
-	vector<size_t> sortData1;
-	sortData1.clear();
-	sortData1.push_back(1);
-	sortData1.push_back(0);
-	sortData1.push_back(2);
+	vector<size_t> sortData1 { 1,0,2 };
 	assert(sortData1[0] == 1);
 	assert(sortData1[1] == 0);
 	assert(sortData1[2] == 2);
@@ -4419,9 +3568,7 @@ void sortingTests()
 	assert(sortData1[2] == 2);
 
 	sortData1.clear();
-	sortData1.push_back(456);
-	sortData1.push_back(789);
-	sortData1.push_back(123);
+	sortData1 = { 456,789,123 };
 	assert(sortData1[0] == 456);
 	assert(sortData1[1] == 789);
 	assert(sortData1[2] == 123);
@@ -4430,71 +3577,23 @@ void sortingTests()
 	assert(sortData1[1] == 456);
 	assert(sortData1[2] == 789);
 
-	vector<vector<string>> strSort;
-	vector<string> str;
-	str.push_back("400");
-	str.push_back("not");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("1500");
-	str.push_back("question");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("550");
-	str.push_back("to");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("100");
-	str.push_back("to");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("650");
-	str.push_back("be");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("1100");
-	str.push_back("-");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("200");
-	str.push_back("be");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("1234");
-	str.push_back("is");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("1100");
-	str.push_back("that");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("300");
-	str.push_back("or");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("1250");
-	str.push_back("the");
-	strSort.push_back(str);
-	str.clear();
+	vector<vector<string>> strSort{ 
+		{"400", "not"}, 
+		{"1500", "question"}, 
+		{"550", "to"}, 
+		{"100", "to"}, 
+		{"650", "be"}, 
+		{"1100", "-"}, 
+		{"200", "be"}, 
+		{"1234", "is"}, 
+		{"1100", "that"}, 
+		{"300", "or"},
+		{"1250", "the"}
+	};
 	assert(CountingSort(strSort) == "to be or not to be - that is the question");
 
 	strSort.clear();
-	str.clear();
-	str.push_back("100");
-	str.push_back("!!!");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("55");
-	str.push_back("Hello");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("10");
-	str.push_back("Hey,");
-	strSort.push_back(str);
-	str.clear();
-	str.push_back("55");
-	str.push_back("World");
-	strSort.push_back(str);
+	strSort = { {"100", "!!!"}, {"55", "Hello"}, {"10", "Hey,"}, {"55", "World"} };
 	assert(CountingSort(strSort) == "Hey, Hello World !!!");
 
 	sortData.clear();
@@ -4539,10 +3638,7 @@ void sortingTests()
 	}
 	a.clear();
 	b.clear();
-	a.push_back(1);
-	a.push_back(5);
-	a.push_back(3);
-	a.push_back(7);
+	a = {1,5,3,7};
 	b = a;
 	assert(TopDownMergeSortCountConversions(b, a, 0, a.size()) == 1);
 	assert(a[0] == 1);
@@ -4552,10 +3648,7 @@ void sortingTests()
 
 	a.clear();
 	b.clear();
-	a.push_back(7);
-	a.push_back(5);
-	a.push_back(3);
-	a.push_back(1);
+	a = { 7,5,3,1 };
 	b = a;
 	assert(TopDownMergeSortCountConversions(b, a, 0, a.size()) == 6);
 	assert(a[0] == 1);
@@ -4565,11 +3658,7 @@ void sortingTests()
 
 	a.clear();
 	b.clear();
-	a.push_back(2);
-	a.push_back(1);
-	a.push_back(3);
-	a.push_back(1);
-	a.push_back(2);
+	a = {2,1,3,1,2};
 	b = a;
 	assert(TopDownMergeSortCountConversions(b, a, 0, a.size()) == 4);
 	assert(a[0] == 1);
@@ -4580,16 +3669,14 @@ void sortingTests()
 }
 void TestBinarySearch()
 {
-	int i, pos;
+	int pos;
 	vector<long> source;
 	long data[12]  = {15, 16, 17, 18, 19, 20, 0, 1, 2, 3, 4, 5};
 					/*L				      M			         U*/
-	for (i = 0; i < 10; i++)
-		source.push_back(i);
-	for (i = 1000; i < 1010; i++)
-		source.push_back(i);
-	for (i = 2000; i < 2010; i++)
-		source.push_back(i);
+	source.resize(30);
+	generate(source.begin(), source.begin() + 10, [i = 0]()mutable{return i++; });
+	generate(source.begin() + 10, source.begin() + 20, [i = 1000]()mutable{return i++; });
+	generate(source.begin() + 20, source.begin() + 30, [i = 2000]()mutable{return i++; });
 	rotate(source.begin(), source.begin() + source.size() / 2, source.end());
 	pos = BinarySearch(source, 1000);
 	assert(pos >= 0);
@@ -4656,13 +3743,10 @@ void TestBinarySearch()
 }
 void TestBinarySearchCount()
 {
-	vector<long> ages;
-	for (size_t i = 0; i < 50; i++)
-		ages.push_back(20);
-	for (size_t i = 0; i < 30; i++)
-		ages.push_back(30);
-	for (size_t i = 0; i < 20; i++)
-		ages.push_back(50);
+	vector<long> ages(50, 20);
+	ages.resize(100);
+	generate(ages.begin() + 50, ages.begin() + 80, [i = 30]()mutable{return i; });
+	generate(ages.begin() + 80, ages.end(), [i = 50]()mutable{return i; });
 	int count = BinarySearchCountUpper(ages, 18, 0, ages.size() - 1) - BinarySearchCountLower(ages, 18, 0, ages.size() - 1);
 	assert(count == 0);
 	count = BinarySearchCountUpper(ages, 20, 0, ages.size() - 1) - BinarySearchCountLower(ages, 20, 0, ages.size() - 1) + 1;
@@ -4675,15 +3759,7 @@ void TestBinarySearchCount()
 void TestBinarySearchString()
 {
 	int pos;
-	vector<string> str;
-	str.push_back("abc");
-	str.push_back("ABC");
-	str.push_back("");
-	str.push_back("123");
-	str.push_back("789");
-	str.push_back("xyz");
-	str.push_back("XYZ");
-	str.push_back("");
+	vector<string> str{ "abc", "ABC", "", "123", "789", "xyz", "XYZ", ""};
 	sort(str.begin(), str.end());
 
 	pos = BinarySearch(str, "123");
@@ -5395,22 +4471,7 @@ void SuffixTreeTests()
 	cout << "Test Suffix Tree..." << endl;
 	SuffixTree sTree("Mississippi");
 	vector<size_t> indexes;
-	vector<string> subStrings;
-	subStrings.push_back("Mississippi");
-	subStrings.push_back("M");
-	subStrings.push_back("m");
-	subStrings.push_back("i");
-	subStrings.push_back("s");
-	subStrings.push_back("p");
-	subStrings.push_back("is");
-	subStrings.push_back("si");
-	subStrings.push_back("sip");
-	subStrings.push_back("hi");
-	subStrings.push_back("sis");
-	subStrings.push_back("pi");
-	subStrings.push_back("ppi");
-	subStrings.push_back("ssi");
-	subStrings.push_back("issi");
+	vector<string> subStrings{ "Mississippi", "M", "m", "i", "s", "p", "is", "si", "sip", "hi", "sis", "pi", "ppi","ssi","issi"};
 	size_t count = sTree.Count();
 	assert(count == 53);
 	cout << "Suffix tree of \"Mississippi\" has " << count << " nodes" << endl;
@@ -5987,23 +5048,14 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	*/
 	assert(cutTheTree(data, links) == 4);
 	data.clear();
-	data.push_back(10);
-	data.push_back(5);
-	data.push_back(6);
-	data.push_back(20);
+	data = {10,5,6,20};
 	/*
 			10
 		 5		6
 	  20
 	Diff: 21 - 20 = 1
 	*/
-	size_t gridArray1[3][2] = { {10,5}, {10,6}, {5,20} };
-	links.resize(3);
-	for (size_t i = 0; i < 3; i++) {
-		links[i].resize(2);
-		for (size_t j = 0; j < 2; j++)
-			links[i][j] = gridArray1[i][j];
-	}
+	links = { {10,5}, {10,6}, {5,20} };
 	assert(cutTheTree(data, links) == 1);
 	/*
 			10
@@ -6012,16 +5064,8 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	Diff: 20 - 15 = 5
 	*/
 	data.clear();
-	data.push_back(10);
-	data.push_back(5);
-	data.push_back(20);
-	size_t gridArray2[2][2] = { {10,5}, {5,20} };
-	links.resize(2);
-	for (size_t i = 0; i < 2; i++) {
-		links[i].resize(2);
-		for (size_t j = 0; j < 2; j++)
-			links[i][j] = gridArray2[i][j];
-	}
+	data = {10,5,20};
+	links = { {10,5}, {5,20} };
 	assert(cutTheTree(data, links) == 5);
 	cout << endl;
 }
@@ -6043,15 +5087,8 @@ void BinarySearchTreeTests()
 	subtree2.InsertItem(-100);
 	subtree2.InsertItem(60);
 
-	a.push_back(50);
-	a.push_back(-100);
-	a.push_back(0);
-	a.push_back(10);
-	a.push_back(-50);
-	a.push_back(60);
-	a.push_back(100);
-	a.push_back(75);
-	a.push_back(150);
+	a.clear();
+	a = {50,-100,0,10,-50,60,100,75,150};
 	sort(a.begin(), a.end());
 	Tree<long> tree1(a);
 	assert(tree1.Count() == 9);
@@ -6148,32 +5185,7 @@ void BinarySearchTreeTests()
 }
 void KDTreeTests()
 {
-	vector<long> a;
-	vector<vector<long>> coordinates;
-	a.clear();
-	a.push_back(2);
-	a.push_back(3);
-	coordinates.push_back(a);
-	a.clear();
-	a.push_back(5);
-	a.push_back(4);
-	coordinates.push_back(a);
-	a.clear();
-	a.push_back(9);
-	a.push_back(6);
-	coordinates.push_back(a);
-	a.clear();
-	a.push_back(4);
-	a.push_back(7);
-	coordinates.push_back(a);
-	a.clear();
-	a.push_back(8);
-	a.push_back(1);
-	coordinates.push_back(a);
-	a.clear();
-	a.push_back(7);
-	a.push_back(2);
-	coordinates.push_back(a);
+	vector<vector<long>> coordinates{ {2,3}, {5,4}, {9,6}, {4,7}, {8,1}, {7,2} };
 	KDTree<long> kdTree(coordinates);
 	kdTree.PrintTree();
 }
@@ -7667,103 +6679,42 @@ void TestGreedyAlgorithms()
 {
 	vector<long> a, b;
 	a.clear();
-	a.push_back(1);
-	a.push_back(3);
-	a.push_back(7);
-	a.push_back(9);
-	a.push_back(9);
+	a = {1,3,7,9,9};
 	b.clear();
-	b.push_back(5);
-	b.push_back(6);
-	b.push_back(8);
-	b.push_back(9);
-	b.push_back(10);
+	b = {5,6,8,9,10};
 	assert(MaxNonOverlappingSegments(a, b) == 3);
 	a.clear();
-	a.push_back(1);
-	a.push_back(6);
-	a.push_back(7);
-	a.push_back(9);
-	a.push_back(10);
+	a = {1,6,7,9,10};
 	b.clear();
-	b.push_back(5);
-	b.push_back(6);
-	b.push_back(8);
-	b.push_back(9);
-	b.push_back(10);
+	b = {5,6,8,9,10};
 	assert(MaxNonOverlappingSegments(a, b) == 5); // No overlapping segments
 	a.clear();
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(3);
-	a.push_back(4);
-	a.push_back(5);
-	a.push_back(6);
+	a.resize(6);
+	generate(a.begin(), a.end(), [i = 1]()mutable {return i++; });
 	b.clear();
-	b.push_back(5);
-	b.push_back(6);
-	b.push_back(7);
-	b.push_back(8);
-	b.push_back(9);
-	b.push_back(10);
+	b.resize(6);
+	generate(b.begin(), b.end(), [i = 5]()mutable {return i++; });
 	assert(MaxNonOverlappingSegments(a, b) == 2);
 	a.clear();
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(3);
-	a.push_back(4);
-	a.push_back(1);
-	a.push_back(1);
-	a.push_back(3);
+	a = {1,2,3,4,1,1,3};
 	assert(TieRopes(a, 4) == 3);
 	a.clear();
-	a.push_back(2);
-	a.push_back(5);
-	a.push_back(6);
+	a = {2,5,6};
 	assert(getMinimumCost(2, a) == 15);
 	a.clear();
-	a.push_back(1);
-	a.push_back(3);
-	a.push_back(5);
-	a.push_back(7);
-	a.push_back(9);
+	a = {1,3,5,7,9};
 	assert(getMinimumCost(3, a) == 29);
 	a.clear();
-	a.push_back(10);
-	a.push_back(100);
-	a.push_back(300);
-	a.push_back(200);
-	a.push_back(1000);
-	a.push_back(20);
-	a.push_back(30);
+	a = {10,100,300,200,1000,20,30};
 	assert(maxMin(3, a) == 20);
 	a.clear();
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(3);
-	a.push_back(4);
-	a.push_back(10);
-	a.push_back(20);
-	a.push_back(30);
-	a.push_back(40);
-	a.push_back(100);
-	a.push_back(200);
+	a = {1,2,3,4,10,20,30,40,100,200};
 	assert(maxMin(4, a) == 3);
 	a.clear();
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(1);
+	a = { 1,2,1,2,1};
 	assert(maxMin(2, a) == 0);
 	a.clear();
-	a.push_back(100);
-	a.push_back(200);
-	a.push_back(300);
-	a.push_back(350);
-	a.push_back(400);
-	a.push_back(401);
-	a.push_back(402);
+	a = {100,200,300,350,400,401,402};
 	assert(maxMin(3, a) == 2);
 }
 string decimal_to_binary(int decimal)
@@ -8225,148 +7176,65 @@ void IncreasingSequenceTests()
 	vector<long> a, b;
 	a.clear();
 	b.clear();
-	a.push_back(5);
-	a.push_back(3);
-	a.push_back(7);
-	a.push_back(7);
-	a.push_back(10);
-	b.push_back(1);
-	b.push_back(6);
-	b.push_back(6);
-	b.push_back(9);
-	b.push_back(9);
+	a = {5,3,7,7,10};
+	b = {1,6,6,9,9};
 	assert(IncreasingSequences(a, b) == 2);
 	a.clear();
 	b.clear();
-	a.push_back(1);
-	a.push_back(5);
-	a.push_back(6);
-	b.push_back(-2);
-	b.push_back(0);
-	b.push_back(2);
+	a = {1,5,6};
+	b = {-2,0,2};
 	assert(IncreasingSequences(a, b) == 0);
 	a.clear();
 	b.clear();
-	a.push_back(2);
-	a.push_back(5);
-	b.push_back(1);
-	b.push_back(6);
+	a = {2,5};
+	b = {1,6};
 	assert(IncreasingSequences(a, b) == 0);
 	a.clear();
 	b.clear();
-	a.push_back(5);
-	a.push_back(-3);
-	a.push_back(6);
-	a.push_back(4);
-	a.push_back(8);
-	b.push_back(2);
-	b.push_back(6);
-	b.push_back(-5);
-	b.push_back(1);
-	b.push_back(0);
+	a = {5,-3,6,4,8};
+	b = {2,6,-5,1,0};
 	assert(IncreasingSequences(a, b) == -1);
 
 	a.clear();
 	b.clear();
-	a.push_back(0);
-	a.push_back(0);
-	a.push_back(0);
-
-	b.push_back(1);
-	b.push_back(2);
-	b.push_back(3);
+	a = {0,0,0};
+	b = {1,2,3};
 	assert(IncreasingSequences(a, b) == -1);
 
 	a.clear();
 	b.clear();
-	a.push_back(0);
-	a.push_back(1);
-	a.push_back(1);
-	a.push_back(2);
-	b.push_back(5);
-	b.push_back(4);
-	b.push_back(4);
-	b.push_back(3);
+	a = {0,1,1,2};
+	b = {5,4,4,3};
 	assert(IncreasingSequences(a, b) == -1); // a increasing; b decreasing
 
 	a.clear();
 	b.clear();
-	a.push_back(0);
-	a.push_back(1);
-	a.push_back(1);
-	a.push_back(2);
-	b.push_back(3);
-	b.push_back(4);
-	b.push_back(4);
-	b.push_back(5);
+	a = {0,1,1,2};
+	b = { 3,4,4,5 };
 	assert(IncreasingSequences(a, b) == -1);// a increasing; b increasing
 
 	a.clear();
 	b.clear();
-	a.push_back(2);
-	a.push_back(1);
-	a.push_back(1);
-	a.push_back(0);
-	b.push_back(5);
-	b.push_back(4);
-	b.push_back(4);
-	b.push_back(3);
+	a = {2,1,1,0};
+	b = {5,4,4,3};
 	assert(IncreasingSequences(a, b) == -1);// a decreasing; b decreasing
 
 	a.clear();
 	b.clear();
-	a.push_back(0);
-	a.push_back(2);
-	a.push_back(2);
-	a.push_back(4);
-	a.push_back(6);
-	a.push_back(6);
-	a.push_back(8);
-	a.push_back(10);
-	a.push_back(10);
-
-	b.push_back(1);
-	b.push_back(2);
-	b.push_back(2);
-	b.push_back(3);
-	b.push_back(4);
-	b.push_back(4);
-	b.push_back(5);
-	b.push_back(6);
-	b.push_back(6);
+	a = {0,2,2,4,6,6,8,10,10};
+	b = {1,2,2,3,4,4,5,6,6};
 	assert(IncreasingSequences(a, b) == -1);
 
 	a.clear();
 	b.clear();
-	a.push_back(0);
-	a.push_back(1);
-	a.push_back(1);
-	a.push_back(2);
-	a.push_back(3);
-	a.push_back(3);
-	a.push_back(4);
-	a.push_back(5);
-	a.push_back(5);
-
-	b.push_back(10);
-	b.push_back(10);
-	b.push_back(9);
-	b.push_back(8);
-	b.push_back(8);
-	b.push_back(7);
-	b.push_back(6);
-	b.push_back(6);
-	b.push_back(5);
+	a = {0,1,1,2,3,3,4,5,5};
+	b = {10,10,9,8,8,7,6,6,5};
 	assert(IncreasingSequences(a, b) == -1);
 
 	a.clear();
 	b.clear();
-	a.push_back(0);
-	a.push_back(-1);
-	a.push_back(-2);
-	b.push_back(-2);
-	b.push_back(1);
-	b.push_back(2);
+	a = {0,-1,-2};
+	b = {-2,1,2};
 	assert(IncreasingSequences(a, b) == -1);
 	// Performance tests
 	a.clear();
@@ -9074,15 +7942,15 @@ long getLowestPathCost(size_t g_nodes, vector<long>& g_from, vector<long>& g_to,
 		assert(v2);
 		graph.AddUndirectedEdge(v1, v2, g_weight[i]);
 	}
-	cout << __FUNCTION__ << " graph (" << g_nodes << " nodes):" << endl;
-	for (size_t i = 1; i <= g_nodes; i++)
-		graph.Print(graph.GetVertex(i));
-	cout << endl;
+	//cout << __FUNCTION__ << " graph (" << g_nodes << " nodes):" << endl;
+	//for (size_t i = 1; i <= g_nodes; i++)
+	//	graph.Print(graph.GetVertex(i));
+	//cout << endl;
 	set<shared_ptr<Vertex<long, long>>> spt;
 	long cost = graph.GetPathsCosts(spt, graph.GetVertex(1), graph.GetVertex(g_nodes));
-	cout << "Vertex\tDistance from Source" << endl;
-	for (set<shared_ptr<Vertex<long, long>>>::iterator it = spt.begin(); it != spt.end(); it++)
-		cout << (*it)->GetTag() << "\t" << (*it)->GetTotalCost() << endl;
+	//cout << "Vertex\tDistance from Source" << endl;
+	//for (set<shared_ptr<Vertex<long, long>>>::iterator it = spt.begin(); it != spt.end(); it++)
+	//	cout << (*it)->GetTag() << "\t" << (*it)->GetTotalCost() << endl;
 	return cost;
 }
 // https://www.hackerrank.com/challenges/3d-surface-area/problem

@@ -1,6 +1,5 @@
 #pragma once
 #include "MyStack.h"
-
 template<class T>
 class MyQueue
 {
