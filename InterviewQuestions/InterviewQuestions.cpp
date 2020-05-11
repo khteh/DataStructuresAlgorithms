@@ -1,6 +1,4 @@
-﻿// InterviewQuestions.cpp : Defines the entry point for the console application.
-//
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "InterviewQuestions.h"
 using namespace std;
 int _tmain(int argc, _TCHAR* argv[])
@@ -1667,7 +1665,13 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	grid1 = { {51}, {32}, {28}, {49}, {28}, {21}, {98}, {56}, {99}, {77} };
 	assert(SurfaceArea3D(grid1) == 1482);
+
 	a.clear();
+	a = { 4104,8529,49984,54956,63034,82534,84473,86411,92941,95929,108831,894947,125082,137123,137276,142534,149840,154703,174744,180537,207563,221088,223069,231982,249517,252211,255192,260283,261543,262406,270616,274600,274709,283838,289532,295589,310856,314991,322201,339198,343271,383392,385869,389367,403468,441925,444543,454300,455366,469896,478627,479055,484516,499114,512738,543943,552836,560153,578730,579688,591631,594436,606033,613146,621500,627475,631582,643754,658309,666435,667186,671190,674741,685292,702340,705383,722375,722776,726812,748441,790023,795574,797416,813164,813248,827778,839998,843708,851728,857147,860454,861956,864994,868755,116375,911042,912634,914500,920825,979477};
+	assert(AlmostSorted(a) == "swap 12 95");
+	a.clear();
+	a = { 43, 65, 1, 98, 99, 101 };
+	assert(AlmostSorted(a) == "no");
 	/***** The End *****/
 	cout << endl;
 	cout << "Press ENTER to exit!";
@@ -8069,4 +8073,39 @@ long PostmanProblem(vector<long>& k, vector<vector<long>>& roads)
 		}
 	}
 	return costs.empty() ? -1 : costs.begin()->first;
+}
+// https://www.hackerrank.com/challenges/almost-sorted/problem
+// 8/25 test cases failed :(
+// These failed cases have 100000 data points
+string AlmostSorted(vector<long>& arr)
+{
+	ostringstream oss;
+	vector<long> sorted(arr);
+	sort(sorted.begin(), sorted.end());
+	vector<long> diff;
+	long positive = -1, sum = 0;
+	for (size_t i = 0; i < arr.size(); i++) {
+		diff.push_back(arr[i] - sorted[i]);
+		sum += diff[i];
+		if (diff[i] > 0 && positive < 0)
+			positive = i;
+		else if (i > 0 && diff[i - 1] == -1 && diff[i] == -1)
+			return "no";
+		else if (diff[i] < 0 && sum == 0) {
+			//cout << "positive: " << positive << endl;
+			//cout << "yes" << endl;
+			vector<long>::iterator it = find(diff.begin() + positive, diff.begin() + i, 0);
+			if (it == (diff.begin() + i) && i > (positive + 1)) {
+				if (diff[i] + diff[positive] != 0)
+					return "no";
+				else {
+					oss << "reverse " << positive + 1 << " " << i + 1;
+					return oss.str();
+				}
+			} else {
+				oss << "swap " << positive + 1 << " " << i + 1;
+				return oss.str();
+			}
+		}
+	}
 }

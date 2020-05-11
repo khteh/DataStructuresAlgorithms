@@ -326,4 +326,4 @@ size_t SurfaceArea3D(vector<vector<long>>&);
 size_t cutTheTree(vector<size_t>&, vector<vector<size_t>>&);
 size_t MinSubGraphDifference(vector<size_t>&, vector<vector<size_t>>&);
 long PostmanProblem(vector<long>&, vector<vector<long>>&);
-bool ItalianJob(long, vector<long>&);
+string AlmostSorted(vector<long>&);
