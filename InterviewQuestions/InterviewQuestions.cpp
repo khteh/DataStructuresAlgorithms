@@ -8089,13 +8089,11 @@ string AlmostSorted(vector<long>& arr)
 		sum += diff[i];
 		if (diff[i] > 0 && positive < 0)
 			positive = i;
-		else if (i > 0 && diff[i - 1] == -1 && diff[i] == -1)
-			return "no";
 		else if (diff[i] < 0 && sum == 0) {
 			//cout << "positive: " << positive << endl;
 			//cout << "yes" << endl;
 			vector<long>::iterator it = find(diff.begin() + positive, diff.begin() + i, 0);
-			if (it == (diff.begin() + i) && i > (positive + 1)) {
+			if (it == (diff.begin() + i) && i > (positive + 1)) { // No zero in the diff list
 				if (diff[i] + diff[positive] != 0)
 					return "no";
 				else {
