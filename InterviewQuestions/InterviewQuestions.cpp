@@ -8078,8 +8078,52 @@ long PostmanProblem(vector<long>& k, vector<vector<long>>& roads)
 	}
 	return costs.empty() ? -1 : costs.begin()->first;
 }
-// https://www.hackerrank.com/challenges/almost-sorted/problem
-// 100%
+/* https://www.hackerrank.com/challenges/almost-sorted/problem
+   100%
+3 1 2
+1 2 3 : No
+2 -1 -1
+
+1 3 2 4
+1 2 3 4 : Swap 1 2
+0 1 -1 0
+
+1 4 2 3
+1 2 3 4 : No
+0 2 -1 -1 : 0
+
+1 4 3 5 2
+1 2 3 4 5 : No
+0 2 0 1 -3: 0
+
+1 4 3 2
+1 2 3 4 : Swap 1 3
+0 2 0 -2
+
+1 5 4 3 2
+1 2 3 4 5: Reverse 1-4
+0 3 1 -1 -3
+
+1 5 3 4 2
+1 2 3 4 5: Swap 1 4
+0 3 0 0 -3
+
+4 2
+2 4 : Swap 0 1
+2 -2
+
+1 5 4 3 2 6
+1 2 3 4 5 6	: Reverse 1 4
+0 3 1 -1 -3 0
+
+43 65 1  98 99 101
+1  43 65 98 99 101 : No
+42 22 -64 0 0  0
+
+2 3 1 4 5 6
+1 2 3 4 5 6 : No
+1 1 -2 0 0 0
+*/
 string AlmostSorted(vector<long>& arr)
 {
 	ostringstream oss;
