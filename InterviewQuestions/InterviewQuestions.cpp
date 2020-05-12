@@ -31,6 +31,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	ExceptionTest();
 	TestRandom();
 	TestGreedyAlgorithms();
+	AnagramTests();
+	PalindromeTests();
 	SparseNumberTests();
 	sortingTests();
 	TestBinarySearch();
@@ -281,48 +283,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	RemoveDuplicateCharacters(line);
 	assert(line == "ab");
 	line = "Hello World!!!";
-	line1 = "World Hello!!!";
-	assert(areAnagrams(line, line1));
-	cout << "\"" << line << "\" and \"" << line1 << "\" -> " << (areAnagrams(line, line1) ? "Anagram" : "Not anagram") << endl;
-	line1 = "World!!! Hello";
-	assert(areAnagrams(line, line1));
-	cout << "\"" << line << "\" and \"" << line1 << "\" -> " << (areAnagrams(line, line1) ? "Anagram" : "Not anagram") << endl;
-	line1 = "!HWr ole!d!lol";
-	assert(areAnagrams(line, line1));
-	cout << "\"" << line << "\" and \"" << line1 << "\" -> " << (areAnagrams(line, line1) ? "Anagram" : "Not anagram") << endl;
-	line1 = "World Hello!!! ";
-	assert(!areAnagrams(line, line1));
-	cout << "\"" << line << "\" and \"" << line1 << "\" -> " << (areAnagrams(line, line1) ? "Anagram" : "Not anagram") << endl;
-	line1 = "world hello!!!";
-	assert(!areAnagrams(line, line1));
-	cout << "\"" << line << "\" and \"" << line1 << "\" -> " << (areAnagrams(line, line1) ? "Anagram" : "Not anagram") << endl;
-	line1 = "Good Morning!!!";
-	assert(!areAnagrams(line, line1));
-	cout << "\"" << line << "\" and \"" << line1 << "\" -> " << (areAnagrams(line, line1) ? "Anagram" : "Not anagram") << endl;
-	strings.clear();
-	strings.push_back("star"); // "arst" : "star"
-	strings.push_back("dog");
-	strings.push_back("car"); // "acr" : "car"
-	strings.push_back("rats"); // "arst" : rats
-	strings.push_back("arc"); // "acr" : "arc"
-	vector<vector<string>> anagrams;
-	FindAnagrams(strings, anagrams);
-	assert(sherlockAndAnagrams("mom") == 2);
-	assert(sherlockAndAnagrams("abba") == 4);
-	assert(sherlockAndAnagrams("abcd") == 0);
-	cout << sherlockAndAnagrams("cdcd") << endl;
-	cout << sherlockAndAnagrams("kkkk") << endl;
-	cout << sherlockAndAnagrams("ifailuhkqq") << endl;
-	//assert(sherlockAndAnagrams("cdcd") == 5); //Unfinished work
-	//assert(sherlockAndAnagrams("kkkk") == 10); //Unfinished work
-	//assert(sherlockAndAnagrams("ifailuhkqq") == 3); //Unfinished work
-	for (vector<vector<string>>::const_iterator it = anagrams.begin(); it != anagrams.end(); it++) {
-		cout << "( ";
-		copy(it->begin(), it->end(), ostream_iterator<string>(cout, " "));
-		cout << "), ";
-	}
-	cout << endl;
-	PalindromeTests();
 	line1 = "llo World!!!He";
 	assert(AreRotatedStrings(line, line1, 2));
 	if (AreRotatedStrings(line, line1, 2))
@@ -4867,6 +4827,53 @@ void Transform(string &start, string &stop, set<string>& dictionary, queue<strin
 		}
 	}
 }
+void AnagramTests()
+{
+	string str, str1;
+	vector<string> strings;
+	str = "Hello World!!!";
+	str1 = "World Hello!!!";
+	assert(areAnagrams(str, str1));
+	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+	str1 = "World!!! Hello";
+	assert(areAnagrams(str, str1));
+	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+	str1 = "!HWr ole!d!lol";
+	assert(areAnagrams(str, str1));
+	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+	str1 = "World Hello!!! ";
+	assert(!areAnagrams(str, str1));
+	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+	str1 = "world hello!!!";
+	assert(!areAnagrams(str, str1));
+	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+	str1 = "Good Morning!!!";
+	assert(!areAnagrams(str, str1));
+	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+	strings.clear();
+	strings.push_back("star"); // "arst" : "star"
+	strings.push_back("dog");
+	strings.push_back("car"); // "acr" : "car"
+	strings.push_back("rats"); // "arst" : rats
+	strings.push_back("arc"); // "acr" : "arc"
+	vector<vector<string>> anagrams;
+	FindAnagrams(strings, anagrams);
+	for (vector<vector<string>>::const_iterator it = anagrams.begin(); it != anagrams.end(); it++) {
+		cout << "( ";
+		copy(it->begin(), it->end(), ostream_iterator<string>(cout, " "));
+		cout << "), ";
+	}
+	assert(sherlockAndAnagrams("mom") == 2);
+	assert(sherlockAndAnagrams("abba") == 4);
+	assert(sherlockAndAnagrams("abcd") == 0);
+	cout << sherlockAndAnagrams("cdcd") << endl;
+	cout << sherlockAndAnagrams("kkkk") << endl;
+	cout << sherlockAndAnagrams("ifailuhkqq") << endl;
+	//assert(sherlockAndAnagrams("cdcd") == 5); //Unfinished work
+	//assert(sherlockAndAnagrams("kkkk") == 10); //Unfinished work
+	//assert(sherlockAndAnagrams("ifailuhkqq") == 3); //Unfinished work
+	cout << endl;
+}
 void StackTests()
 {
 	cout << "Stack tests..." << endl;
@@ -7444,7 +7451,7 @@ size_t minimumBribes(vector<long> &data)
 	}
 	return count;
 }
-// https://www.hackerrank.com/challenges/frequency-queries/problem?h_l=interview&playlist_slugs%5B%5D%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D%5B%5D=dictionaries-hashmaps
+// https://www.hackerrank.com/challenges/frequency-queries/problem
 // 5/15 failed
 // Test case 5 data included in solution as queryFrequencyInput.txt
 vector<int> freqQuery(vector<vector<int>>& queries) 
