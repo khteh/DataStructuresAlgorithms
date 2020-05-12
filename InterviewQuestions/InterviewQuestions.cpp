@@ -30,14 +30,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	NameHidingExample *hide1 = new NameHidingExampleDerived(0xdeadbeef);
 	ExceptionTest();
 	TestRandom();
-	TestGreedyAlgorithms();
+	GreedyAlgorithmTests();
 	AnagramTests();
 	PalindromeTests();
 	SparseNumberTests();
-	sortingTests();
-	TestBinarySearch();
-	TestBinarySearchString();
-	TestBinarySearchCount();
+	SortTests();
+	BinarySearchTests();
+	BinarySearchStringTests();
+	BinarySearchCountTests();
 	StackTests();
 	QueueTests();
 	BinaryTreeTests();
@@ -49,9 +49,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	SuffixTreeTests();
 	TrieTests();
 	PrefixTrieTests();
-	TestStringPermutations();
-	TestListPermutations();
-	TestGraph();
+	StringPermutationTests();
+	ListPermutationTests();
+	GraphTests();
 	strings.clear();
 	strings = {"abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE"};
 	sort(strings.begin(), strings.end(), LexicographicSort);
@@ -2615,7 +2615,7 @@ vector<long> insertItemAt(long toInsert, vector<long>& items, size_t offset)
 	result.insert(result.end(), items.begin() + offset, items.end());
 	return result;
 }
-void TestStringPermutations()
+void StringPermutationTests()
 {
 	set<string> permutations;
 	permutations = permute("abc");
@@ -2656,7 +2656,7 @@ void TestStringPermutations()
 	assert(permutations.find("BHeoyb") != permutations.end());
 	assert(permutations.find("BHeyob") != permutations.end());
 }
-void TestListPermutations()
+void ListPermutationTests()
 {
 	set<vector<long>> permutations;
 	vector<long> data{1,2,3};
@@ -2669,7 +2669,7 @@ void TestListPermutations()
 	}
 	permutations.clear();
 }
-void TestGraph()
+void GraphTests()
 {
 	vector<size_t> data(5);
 	generate(data.begin(), data.end(), [n = 1]()mutable{return n++; });
@@ -3374,7 +3374,7 @@ int BinarySearch(vector<string> source, string toSearch)
 	}
 	return -1;
 }
-void sortingTests()
+void SortTests()
 {
 	// Test Sorting algorithms
 	random_device device;
@@ -3635,7 +3635,7 @@ void sortingTests()
 	assert(a[3] == 2);
 	assert(a[4] == 3);
 }
-void TestBinarySearch()
+void BinarySearchTests()
 {
 	int pos;
 	vector<long> source;
@@ -3709,7 +3709,7 @@ void TestBinarySearch()
 	pos = BinarySearch(source, 0);
 	assert(pos < 0);
 }
-void TestBinarySearchCount()
+void BinarySearchCountTests()
 {
 	vector<long> ages(50, 20);
 	ages.resize(100);
@@ -3724,7 +3724,7 @@ void TestBinarySearchCount()
 	count = BinarySearchCountUpper(ages, 50, 0, ages.size() - 1) - BinarySearchCountLower(ages, 50, 0, ages.size() - 1) + 1;
 	assert(count == 20);
 }
-void TestBinarySearchString()
+void BinarySearchStringTests()
 {
 	int pos;
 	vector<string> str{ "abc", "ABC", "", "123", "789", "xyz", "XYZ", ""};
@@ -6690,7 +6690,7 @@ long maxMin(long k, vector<long>& arr)
 	}
 	return unfair;
 }
-void TestGreedyAlgorithms()
+void GreedyAlgorithmTests()
 {
 	vector<long> a, b;
 	a.clear();
