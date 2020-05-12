@@ -8091,7 +8091,7 @@ string AlmostSorted(vector<long>& arr)
 		long delta = arr[i] - sorted[i];
 		if (delta > 0 && positive < 0)
 			positive = i;
-		if (positive >= 0) {
+		if (positive >= 0) { // Start tracking from the first positive delta to minimize space complexity
 			size_t index = i - positive;
 			diff.push_back(delta);
 			sum += diff[index];
