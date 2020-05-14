@@ -928,11 +928,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings = numbersegments(sortData);
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, ","));
 	cout << endl;
-	cout << hex << "XOR(1): " << XOR(1) << endl;
-	cout << hex << "XOR(2): " << XOR(2) << endl;
-	cout << hex << "XOR(3): " << XOR(3) << endl;
-	cout << hex << "XOR(4): " << XOR(4) << endl;
-	cout << hex << "XOR(5): " << XOR(5) << endl;
 	assert(XOR(1) == 1);
 	assert(XOR(2) == 3);
 	assert(XOR(3) == 0);
@@ -7352,10 +7347,9 @@ void cpluplus17()
 	// Structured bindings
 	// Return compound objects
 	auto[it, success] = mymap.emplace(1, "Hello World!!!");
-	if (success)
-		cout << "Successfully inserted " << it->first << ": " << it->second << endl;
-	else
-		cout << "Failed to insert into mymap!" << endl;
+	assert(success);
+	assert(it->first == 1);
+	assert(it->second == "Hello World!!!");
 	// Compound object iterations
 	for (const auto&[key, value] : mymap)
 		cout << key << ": " << value << endl;
