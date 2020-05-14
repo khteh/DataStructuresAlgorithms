@@ -21,8 +21,8 @@ public:
 	Transmitter();
 	Transmitter(string);
 	~Transmitter();
-	using DiamondBase::Write;
-	void Write();
+	using DiamondBase::Write; // https://en.cppreference.com/w/cpp/language/using_declaration
+	void Write(); // Transmitter::Write(int) overrides DiamondBase::Write(int)
 };
 
 class Receiver : public virtual DiamondBase
@@ -31,7 +31,7 @@ public:
 	Receiver();
 	Receiver(string);
 	~Receiver();
-	string Read(void);
+	string Read();
 };
 
 class Radio : public Transmitter, public Receiver

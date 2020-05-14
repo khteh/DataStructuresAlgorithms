@@ -83,6 +83,9 @@ typedef struct ZeroFactorsFiveCount {
 			return count > other.count;
 	}
 } zerofactorsfivecount_t;
+typedef enum class Direction {
+	Up, Down, NoChange
+} direction_t;
 float MachineEpsilon(float value);
 float FloatMachineEpsilonApproximation();
 double MachineEpsilon(double value);
@@ -111,6 +114,7 @@ size_t TieRopes(vector<long>&, size_t);
 long MinAbsSum(vector<long>&);
 long NumberSolitaire(vector<long>&);
 long MaxProfit(vector<long>&);
+size_t StockMax(vector<long>&);
 string decimal_to_binary(int);
 void decimal_to_binary(int decimal, vector<bool>&, size_t width);
 size_t binary_gap(long);

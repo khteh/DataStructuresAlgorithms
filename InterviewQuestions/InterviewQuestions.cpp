@@ -26,8 +26,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	PriorityQueueMedian<long> pqueue;
 	vector<vector<unsigned long>> grid;
 	vector<vector<long>> grid1, grid2;
-	NameHidingExampleDerived *hide = new NameHidingExampleDerived(0xdeadbeef);
-	NameHidingExample *hide1 = new NameHidingExampleDerived(0xdeadbeef);
 	ExceptionTest();
 	TestRandom();
 	GreedyAlgorithmTests();
@@ -64,40 +62,42 @@ int _tmain(int argc, _TCHAR* argv[])
 	Singleton*singleton = Singleton::Instance();
 	assert(singleton);
 	singleton->Print("Hello Singleton!!!");
+	unique_ptr<NameHidingExampleDerived> hide = make_unique<NameHidingExampleDerived>(0xdeadbeef);
+	unique_ptr<NameHidingExample> hide1 = make_unique<NameHidingExampleDerived>(0xdeadbeef);
 	hide->Print(1);
 	hide1->Print(1);
 	//hide->Print(1, 2);
 	//((NameHidingExample*)hide)->Print(1, 2);
-	Radio *radio = new Radio("Radio");
-	Transmitter *tx = radio;
-	Receiver *rx = radio;
-	radio->Write();
-	cout << radio->Read() << endl;
-	tx->Write();
-	cout << tx->Read() << endl;
+	cout << endl;
+	unique_ptr<Radio> radio = make_unique<Radio>("Radio");
+	Transmitter* tx = radio.get();
+	Receiver* rx = radio.get();
+	radio->Write(); // Transmitter::Write() -> Receiver::Read()
+	assert(radio->Read() == "Receiver: Receiver: Radio");
+	tx->Write(); // Transmitter::Write() -> Receiver::Read()
+	assert(tx->Read() == "Receiver: Receiver: Receiver: Radio");
 	rx->Write();
-	cout << rx->Read() << endl;
-
+	assert(rx->Read() == "Receiver: Receiver: Receiver: Receiver: Radio");
 	radio->Write("Hello World!!!");
-	cout << radio->Read() << endl;
+	assert(radio->Read() == "Receiver: Hello World!!!");
 	tx->Write("Transmitter");
-	cout << tx->Read() << endl;
+	assert(tx->Read() == "Receiver: Transmitter");
 	rx->Write("Receiver");
-	cout << rx->Read() << endl;
+	assert(tx->Read() == "Receiver: Receiver");
 
-	Transmitter *tx1 = new Transmitter();
-	cout << tx1->Read() << endl;
+	unique_ptr<Transmitter> tx1 = make_unique<Transmitter>();
+	assert(tx1->Read().empty());
 	tx1->Write();
-	cout << tx1->Read() << endl;
+	assert(tx1->Read().empty());
 	tx1->Write("TX");
-	cout << tx1->Read() << endl;
+	assert(tx1->Read() == "TX");
 
-	Receiver *rx1 = new Receiver();
-	cout << rx1->Read() << endl;
+	unique_ptr<Receiver> rx1 = make_unique<Receiver>();
+	assert(rx1->Read() == "Receiver: ");
 	rx1->Write();
-	cout << rx1->Read() << endl;
+	assert(rx1->Read() == "Receiver: ");
 	rx1->Write("RX");
-	cout << rx1->Read() << endl;
+	assert(rx1->Read() == "Receiver: RX");
 
 	string str = "m";
 	string str1 = str.substr(1);
@@ -679,14 +679,14 @@ int _tmain(int argc, _TCHAR* argv[])
 #endif
 	// Tower of Hanoi
 	cout << "Tower Of Hanoi recursive solution: " << endl;
-	Tower *towers[3];
+	unique_ptr<Tower> towers[3];
 	for (i = 0; i < 3; i++)
-		towers[i] = new Tower(i);
+		towers[i] = make_unique<Tower>(i);
 	for (i = 10; i > 0; i--)
 		towers[0]->Add(i);
 	cout << "Tower 0 before move: " << endl;
 	towers[0]->print();
-	towers[0]->MoveDisks(5, towers[2], towers[1]);
+	towers[0]->MoveDisks(5, towers[2].get(), towers[1].get());
 	cout << "Tower 0,1,2 after move: " << endl;
 	towers[0]->print();
 	towers[1]->print();
@@ -1165,6 +1165,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a = { 23171, 21011 , 21123 , 21366 , 21013 , 21367 };
 	assert(MaxProfit(a) == 356);
+	a.clear();
+	a = { 5, 3, 2 };
+	assert(StockMax(a) == 0);
+	a.clear();
+	a = { 1, 2, 100 };
+	assert(StockMax(a) == 197);
+	a.clear();
+	a = { 1, 3, 1, 2 };
+	assert(StockMax(a) == 3);
 	a.clear();
 	a = {1,-2,0,9,-1,-2};
 	assert(NumberSolitaire(a) == 8);
@@ -5683,7 +5692,7 @@ size_t ConnectedCellsInAGridLinkedList(vector<vector<long>>& grid)
 				location.str("");
 				location << i << "," << j;
 				//Node<string>* node = new Node<string>(location.str());
-				shared_ptr<Node<string>> node(new Node<string>(location.str()));
+				shared_ptr<Node<string>> node(make_shared<Node<string>>(location.str()));
 				//nodes[location.str()] = shared_ptr<Node<string>>(node);
 				nodes[location.str()] = node;
 				shared_ptr<Node<string>> parent = nullptr;
@@ -5810,7 +5819,7 @@ size_t ConnectedCellsInAGridLinkedList(vector<vector<long>>& grid)
 					}
 				}
 				if (!skip)
-					clusters.emplace(shared_ptr<LinkedList<string>>(new LinkedList<string>(node)));
+					clusters.emplace(make_shared<LinkedList<string>>(node));
 				joins.clear();
 			} // if (grid[i][j] == 1) {
 		}
@@ -6486,13 +6495,10 @@ void ExceptionTest()
 		cout << "Outer catch, &e: " << &e << " msg: " << e.msg_ << endl;
 	}
 }
-enum class Direction {
-	Up, Down, NoChange
-};
 size_t LongestAlternatingSubSequence(const vector<long>& data, vector<long>& result)
 {
 	map<size_t, vector<long>> sequences;
-	Direction direction = Direction::NoChange, flag = Direction::NoChange;
+	direction_t direction = Direction::NoChange, flag = Direction::NoChange;
 	size_t count = 0, start = 0, index = 0;
 	if (data.size() > 1) {
 		for (vector<long>::const_iterator it = data.begin() + 1; it != data.end(); it++, index++) {
@@ -6840,6 +6846,25 @@ long MaxProfit(vector<long>& data)
 	}
 	return delta;
 }
+// https://www.hackerrank.com/challenges/stockmax/problem
+// 100%
+size_t StockMax(vector<long>& prices)
+{
+	size_t profit = 0;
+	size_t maxElement = 0;
+	for (size_t i = 0; i < prices.size(); i++) {
+		if (maxElement <= i) {
+			vector<long>::iterator peak = max_element(prices.begin() + i, prices.end());
+			if (peak != prices.end())
+				maxElement = peak - prices.begin();
+		}
+		if (maxElement > i) {
+			//cout << "Profit: " << *peak - prices[i] << endl;
+			profit += prices[maxElement] - prices[i];
+		}
+	}
+	return profit;
+}
 // You are a game developer working on a game that randomly generates levels. A level is an undirected graph of rooms, each connected by doors. 
 // The player starts in one room, and there is a treasure in another room. Some doors are locked, and each lock is opened by a unique key. 
 // A room may contain one of those unique keys, or the treasure, or nothing. Implement a representation for a level and write code that, 
@@ -7146,26 +7171,26 @@ vector<string> ZigZagEscape(vector<long>& left, vector<long>& right, size_t lInd
 }
 void CircularLinkedListLoopStart()
 {
-	shared_ptr<Node<int>> head(new Node<int>(-3));
-	shared_ptr<Node<int>> n1(new Node<int>(-2));
+	shared_ptr<Node<int>> head = make_shared<Node<int>>(-3);
+	shared_ptr<Node<int>> n1 = make_shared<Node<int>>(-2);
 	head->SetNext(n1);
-	shared_ptr<Node<int>> n2(new Node<int>(-1));
+	shared_ptr<Node<int>> n2 = make_shared<Node<int>>(-1);
 	n1->SetNext(n2);
-	shared_ptr<Node<int>> n3(new Node<int>(0));
+	shared_ptr<Node<int>> n3 = make_shared<Node<int>>(0);
 	n2->SetNext(n3);
-	shared_ptr<Node<int>> n4(new Node<int>(1));
+	shared_ptr<Node<int>> n4 = make_shared<Node<int>>(1);
 	n3->SetNext(n4);
-	shared_ptr<Node<int>> n5(new Node<int>(2));
+	shared_ptr<Node<int>> n5 = make_shared<Node<int>>(2);
 	n4->SetNext(n5);
-	shared_ptr<Node<int>> n6(new Node<int>(3));
+	shared_ptr<Node<int>> n6 = make_shared<Node<int>>(3);
 	n5->SetNext(n6);
-	shared_ptr<Node<int>> n7(new Node<int>(4));
+	shared_ptr<Node<int>> n7 = make_shared<Node<int>>(4);
 	n6->SetNext(n7);
-	shared_ptr<Node<int>> n8(new Node<int>(5));
+	shared_ptr<Node<int>> n8 = make_shared<Node<int>>(5);
 	n7->SetNext(n8);
-	shared_ptr<Node<int>> n9(new Node<int>(6));
+	shared_ptr<Node<int>> n9 = make_shared<Node<int>>(6);
 	n8->SetNext(n9);
-	shared_ptr<Node<int>> n10(new Node<int>(7));
+	shared_ptr<Node<int>> n10 = make_shared<Node<int>>(7);
 	n9->SetNext(n10);
 	n10->SetNext(n3);
 	shared_ptr<Node<int>> node1 = head;
@@ -8155,7 +8180,7 @@ string AlmostSorted(vector<long>& arr)
 					if (!oss.str().empty())
 						return "no";
 					oss << "swap " << positive + 1 << " " << i + 1;
-				} else if (i > (positive + 1)) {
+				} else if (i > (size_t)(positive + 1)) {
 					if (!oss.str().empty())
 						return "no";
 					oss << "reverse " << positive + 1 << " " << i + 1;
