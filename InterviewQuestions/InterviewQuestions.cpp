@@ -6740,13 +6740,14 @@ void GreedyAlgorithmTests()
 }
 string decimal_to_binary(int decimal)
 {
-	ostringstream oss;
-	int remainder = decimal % 2;
-	if (decimal == 0)
-		return "0";
-	oss << decimal_to_binary(decimal / 2);
-	oss << remainder;
-	return oss.str();
+	if (decimal > 0) {
+		ostringstream oss;
+		int remainder = decimal % 2;
+		oss << decimal_to_binary(decimal / 2);
+		oss << remainder;
+		return oss.str();
+	}
+	return "0";
 }
 void decimal_to_binary(int decimal, vector<bool>& binary, size_t width)
 {
