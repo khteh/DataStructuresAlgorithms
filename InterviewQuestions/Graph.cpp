@@ -205,17 +205,18 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 	vertex->SetTotalCost(0);
 	for (; vertex && destination && vertex != destination;) {
 		spt.emplace(vertex);
-		// Update dist value of the adjacent vertices of the picked vertex. 
+		// Update cost of the adjacent vertices of the picked vertex. 
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
-			// Update dist[v] only if it:
+			// Update cost[v] only if it:
 			// (1) is not in sptSet
 			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
 			// (3) and total weight of path from src to v through u is smaller than current value of dist[v]
-			if (spt.find(*it) == spt.end() && vertex->GetTotalCost() + vertex->GetCost(*it) < (*it)->GetTotalCost())
-				(*it)->SetTotalCost(vertex->GetTotalCost() + vertex->GetCost(*it));
-			if (spt.find(*it) == spt.end())
+			if (spt.find(*it) == spt.end()) {
+				if (vertex->GetTotalCost() + vertex->GetCost(*it) < (*it)->GetTotalCost())
+					(*it)->SetTotalCost(vertex->GetTotalCost() + vertex->GetCost(*it));
 				vertices.insert(*it);
+			}
 		}
 		vertex = nullptr;
 		long min = numeric_limits<long>::max();

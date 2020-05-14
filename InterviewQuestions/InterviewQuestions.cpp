@@ -2766,13 +2766,12 @@ void GraphTests()
 	graph.AddUndirectedEdge(v2, v3, 2);
 	graph.AddUndirectedEdge(v3, v5, 3);
 	graph.AddUndirectedEdge(v2, v4, 2);
+	assert(graph.Dijkstra(1, 5) == 6); // 1 + 2 + 3
 	assert(graph.Dijkstra(1, 2) == 1);
+	assert(graph.Dijkstra(2, 3) == 2);
 	assert(graph.Dijkstra(1, 3) == 3); // 1 + 2
 	assert(graph.Dijkstra(1, 4) == 3); // 1 + 2
 	assert(graph.Dijkstra(3, 4) == 4); // 2 + 2
-	cout << "1 - 3: " << graph.Dijkstra(1, 3) << endl;
-	cout << "1 - 4: " << graph.Dijkstra(1, 4) << endl;
-	cout << "3 - 4: " << graph.Dijkstra(3, 4) << endl;
 	spt.clear();
 	graph.Clear();
 	data.clear();
