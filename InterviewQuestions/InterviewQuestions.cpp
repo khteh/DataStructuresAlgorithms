@@ -50,6 +50,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	StringPermutationTests();
 	ListPermutationTests();
 	GraphTests();
+	LongestCommonSubsequenceTests();
 	strings.clear();
 	strings = {"abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE"};
 	sort(strings.begin(), strings.end(), LexicographicSort);
@@ -1633,38 +1634,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	a = { 43, 65, 1, 98, 99, 101 };
 	assert(AlmostSorted(a) == "no");
 	a.clear();
-	assert(LCSLength(string("HARRY"), string("SALLY")) == 2);
-	assert(LCSLength(string("SHINCHAN"), string("NOHARAAA")) == 3);
-	assert(LCSLength(string("ABCDEF"), string("FBDAMN")) == 2);
-	assert(LCSLength(string("WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS"), string("FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC")) == 15);
-	line = "HARRY";
-	line1 = "SALLY";
-	line.insert(0, 1, 0);
-	line1.insert(0, 1, 0);
-	vector<vector<size_t>> table(line.size(), vector<size_t>(line1.size()));	// Defaults to zero initial value
-	assert(LCSLength(table, line, line1) == 2);
-	assert(LCSBackTrack(table, line, line1, line.size() - 1, line1.size() - 1) == "AY");
-	line = "SHINCHAN";
-	line1 = "NOHARAAA";
-	line.insert(0, 1, 0);
-	line1.insert(0, 1, 0);
-	vector<vector<size_t>> table1(line.size(), vector<size_t>(line1.size()));	// Defaults to zero initial value
-	assert(LCSLength(table1, line, line1) == 3);
-	assert(LCSBackTrack(table1, line, line1, line.size() - 1, line1.size() - 1) == "NHA");
-	line = "ABCDEF";
-	line1 = "FBDAMN";
-	line.insert(0, 1, 0);
-	line1.insert(0, 1, 0);
-	vector<vector<size_t>> table2(line.size(), vector<size_t>(line1.size()));	// Defaults to zero initial value
-	assert(LCSLength(table2, line, line1) == 2);
-	assert(LCSBackTrack(table2, line, line1, line.size() - 1, line1.size() - 1) == "BD");
-	line = "WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS";
-	line1 = "FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC";
-	line.insert(0, 1, 0);
-	line1.insert(0, 1, 0);
-	vector<vector<size_t>> table3(line.size(), vector<size_t>(line1.size()));	// Defaults to zero initial value
-	assert(LCSLength(table3, line, line1) == 15);
-	assert(LCSBackTrack(table3, line, line1, line.size() - 1, line1.size() - 1) == "DGCGTRMZJRBAJJV");
 	/***** The End *****/
 	cout << endl;
 	cout << "Press ENTER to exit!";
@@ -3251,6 +3220,43 @@ template<typename type>
 	 assert(NextSparseNumber(7) == 8);
 	 assert(NextSparseNumber(8) == 9);
 	 assert(NextSparseNumber(9) == 10);
+ }
+ void LongestCommonSubsequenceTests()
+ {
+	 string s1, s2;
+	 assert(LCSLength(string("HARRY"), string("SALLY")) == 2);
+	 assert(LCSLength(string("SHINCHAN"), string("NOHARAAA")) == 3);
+	 assert(LCSLength(string("ABCDEF"), string("FBDAMN")) == 2);
+	 assert(LCSLength(string("WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS"), string("FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC")) == 15);
+	 s1 = "HARRY";
+	 s2 = "SALLY";
+	 s1.insert(0, 1, 0);
+	 s2.insert(0, 1, 0);
+	 vector<vector<size_t>> table(s1.size(), vector<size_t>(s2.size()));	// Defaults to zero initial value
+	 assert(LCSLength(table, s1, s2) == 2);
+	 assert(LCSBackTrack(table, s1, s2, s1.size() - 1, s2.size() - 1) == "AY");
+	 LCSPrintDiff(table, s1, s2, s1.size() - 1, s2.size() - 1);
+	 s1 = "SHINCHAN";
+	 s2 = "NOHARAAA";
+	 s1.insert(0, 1, 0);
+	 s2.insert(0, 1, 0);
+	 vector<vector<size_t>> table1(s1.size(), vector<size_t>(s2.size()));	// Defaults to zero initial value
+	 assert(LCSLength(table1, s1, s2) == 3);
+	 assert(LCSBackTrack(table1, s1, s2, s1.size() - 1, s2.size() - 1) == "NHA");
+	 s1 = "ABCDEF";
+	 s2 = "FBDAMN";
+	 s1.insert(0, 1, 0);
+	 s2.insert(0, 1, 0);
+	 vector<vector<size_t>> table2(s1.size(), vector<size_t>(s2.size()));	// Defaults to zero initial value
+	 assert(LCSLength(table2, s1, s2) == 2);
+	 assert(LCSBackTrack(table2, s1, s2, s1.size() - 1, s2.size() - 1) == "BD");
+	 s1 = "WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS";
+	 s2 = "FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC";
+	 s1.insert(0, 1, 0);
+	 s2.insert(0, 1, 0);
+	 vector<vector<size_t>> table3(s1.size(), vector<size_t>(s2.size()));	// Defaults to zero initial value
+	 assert(LCSLength(table3, s1, s2) == 15);
+	 assert(LCSBackTrack(table3, s1, s2, s1.size() - 1, s2.size() - 1) == "DGCGTRMZJRBAJJV");
  }
  void OrderArrayIntoNegativePositiveSeriesTests()
  {
@@ -8236,4 +8242,18 @@ string LCSBackTrack(vector<vector<size_t>>& table, string& s1, string& s2, size_
 	if (s1[i] == s2[j])
 		return LCSBackTrack(table, s1, s2, i - 1, j - 1) + s1[i];
 	return table[i][j - 1] > table[i - 1][j] ? LCSBackTrack(table, s1, s2, i, j - 1) : LCSBackTrack(table, s1, s2, i - 1, j);
+}
+void LCSPrintDiff(vector<vector<size_t>>& table, string& s1, string& s2, long i, long j)
+{
+	if (i > 0 && j > 0 && s1[i] == s2[j]) {
+		LCSPrintDiff(table, s1, s2, i - 1, j - 1);
+		cout << s1[i];
+	} else if (j > 0 && (!i || (table[i][j - 1] >= table[i - 1][j]))) {
+		LCSPrintDiff(table, s1, s2, i, j - 1);
+		cout << "+" << s2[j];
+	}
+	else if (i > 0 && (!j || (table[i][j - 1] < table[i - 1][j]))) {
+		LCSPrintDiff(table, s1, s2, i - 1, j);
+		cout << "-" << s1[i];
+	}
 }
