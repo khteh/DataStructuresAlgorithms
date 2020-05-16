@@ -1637,6 +1637,34 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(LCSLength(string("SHINCHAN"), string("NOHARAAA")) == 3);
 	assert(LCSLength(string("ABCDEF"), string("FBDAMN")) == 2);
 	assert(LCSLength(string("WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS"), string("FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC")) == 15);
+	line = "HARRY";
+	line1 = "SALLY";
+	line.insert(0, 1, 0);
+	line1.insert(0, 1, 0);
+	vector<vector<size_t>> table(line.size(), vector<size_t>(line1.size()));	// Defaults to zero initial value
+	assert(LCSLength(table, line, line1) == 2);
+	assert(LCSBackTrack(table, line, line1, line.size() - 1, line1.size() - 1) == "AY");
+	line = "SHINCHAN";
+	line1 = "NOHARAAA";
+	line.insert(0, 1, 0);
+	line1.insert(0, 1, 0);
+	vector<vector<size_t>> table1(line.size(), vector<size_t>(line1.size()));	// Defaults to zero initial value
+	assert(LCSLength(table1, line, line1) == 3);
+	assert(LCSBackTrack(table1, line, line1, line.size() - 1, line1.size() - 1) == "NHA");
+	line = "ABCDEF";
+	line1 = "FBDAMN";
+	line.insert(0, 1, 0);
+	line1.insert(0, 1, 0);
+	vector<vector<size_t>> table2(line.size(), vector<size_t>(line1.size()));	// Defaults to zero initial value
+	assert(LCSLength(table2, line, line1) == 2);
+	assert(LCSBackTrack(table2, line, line1, line.size() - 1, line1.size() - 1) == "BD");
+	line = "WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS";
+	line1 = "FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC";
+	line.insert(0, 1, 0);
+	line1.insert(0, 1, 0);
+	vector<vector<size_t>> table3(line.size(), vector<size_t>(line1.size()));	// Defaults to zero initial value
+	assert(LCSLength(table3, line, line1) == 15);
+	assert(LCSBackTrack(table3, line, line1, line.size() - 1, line1.size() - 1) == "DGCGTRMZJRBAJJV");
 	/***** The End *****/
 	cout << endl;
 	cout << "Press ENTER to exit!";
@@ -8193,4 +8221,19 @@ size_t LCSLength(string& s1, string& s2)
 		for (size_t j = 1; j < s2.size(); j++)
 			table[i][j] = s1[i] == s2[j] ? table[i - 1][j - 1] + 1 : max(table[i-1][j], table[i][j-1]);
 	return table[s1.size() - 1][s2.size() - 1];
+}
+size_t LCSLength(vector<vector<size_t>>& table, string& s1, string& s2)
+{
+	for (size_t i = 1; i < s1.size(); i++)
+		for (size_t j = 1; j < s2.size(); j++)
+			table[i][j] = s1[i] == s2[j] ? table[i - 1][j - 1] + 1 : max(table[i - 1][j], table[i][j - 1]);
+	return table[s1.size() - 1][s2.size() - 1];
+}
+string LCSBackTrack(vector<vector<size_t>>& table, string& s1, string& s2, size_t i, size_t j)
+{
+	if (!i || !j)
+		return "";
+	if (s1[i] == s2[j])
+		return LCSBackTrack(table, s1, s2, i - 1, j - 1) + s1[i];
+	return table[i][j - 1] > table[i - 1][j] ? LCSBackTrack(table, s1, s2, i, j - 1) : LCSBackTrack(table, s1, s2, i - 1, j);
 }
