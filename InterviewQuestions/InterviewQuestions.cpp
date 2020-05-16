@@ -134,14 +134,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(pathResult.sum == 27);
 	cout << "Grid traversal which yields maximum sum " << pathResult.sum << ": " << pathResult.path << endl;
 
-	char mazeArray[5][5] = {{'1', '1', '1', '1', '1'}, {'S', '1', 'X', '1', '1'}, {'1', '1', '1', '1', '1'}, {'X', '1', '1', 'E', '1'}, {'1', '1', '1', '1', 'X'}};
-	vector<vector<char>> maze;
-	maze.resize(5);
-	for (size_t i = 0; i < 5; i++) {
-		maze[i].resize(5);
-		for (size_t j = 0; j < 5; j++)
-			maze[i][j] = mazeArray[i][j];
-	}
+	vector<vector<char>> maze = { {'1', '1', '1', '1', '1'}, {'S', '1', 'X', '1', '1'}, {'1', '1', '1', '1', '1'}, {'X', '1', '1', 'E', '1'}, {'1', '1', '1', '1', 'X'} };
 	cout << "maze (" << maze.size() << "): " << endl;
 	for (size_t i = 0; i < 5; i++) {
 		for (size_t j = 0; j < 5; j++)
@@ -1640,6 +1633,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	a = { 43, 65, 1, 98, 99, 101 };
 	assert(AlmostSorted(a) == "no");
 	a.clear();
+	assert(LCSLength(string("HARRY"), string("SALLY")) == 2);
+	assert(LCSLength(string("SHINCHAN"), string("NOHARAAA")) == 3);
+	assert(LCSLength(string("ABCDEF"), string("FBDAMN")) == 2);
+	assert(LCSLength(string("WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS"), string("FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC")) == 15);
 	/***** The End *****/
 	cout << endl;
 	cout << "Press ENTER to exit!";
@@ -4558,14 +4555,14 @@ void SuffixTreeTests()
 	size_t match;
 	sTree.InsertString("abcd");
 	sTree.InsertString("adbc");
-	match = sTree.LongestCommonSubstring(0);
+	match = sTree.LongestCommonSubstring(0); // bc
 	assert(match == 2);
 	match = sTree.LongestCommonSubstring(1);
 	assert(match == 3);
 	sTree.Clear();
 	sTree.InsertString("helloworld");
 	sTree.InsertString("yellomarin");
-	match = sTree.LongestCommonSubstring(0);
+	match = sTree.LongestCommonSubstring(0); // ello
 	assert(match == 4);
 	match = sTree.LongestCommonSubstring(3);
 	assert(match == 8);
@@ -8183,4 +8180,17 @@ string AlmostSorted(vector<long>& arr)
 		}
 	}
 	return oss.str().empty() ? "no" : oss.str();
+}
+// https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
+// https://www.hackerrank.com/challenges/common-child/problem
+// 100%
+size_t LCSLength(string& s1, string& s2)
+{
+	s1.insert(0, 1, 0);
+	s2.insert(0, 1, 0);
+	vector<vector<size_t>> table(s1.size(), vector<size_t>(s2.size()));	// Defaults to zero initial value
+	for (size_t i = 1; i < s1.size(); i++)
+		for (size_t j = 1; j < s2.size(); j++)
+			table[i][j] = s1[i] == s2[j] ? table[i - 1][j - 1] + 1 : max(table[i-1][j], table[i][j-1]);
+	return table[s1.size() - 1][s2.size() - 1];
 }

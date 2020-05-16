@@ -50,7 +50,6 @@ size_t SuffixTree::Count()
 {
 	return m_root ? m_root->Count() : 0;
 }
-
 void SuffixTree::InsertString(string const &str)
 {
 	size_t index = 0;
@@ -196,8 +195,6 @@ size_t SuffixTreeNode::Count()
 			throw runtime_error("Bogus node!!!");
 	return count;
 }
-// Amazon
-// Neha Aman
 void SuffixTreeNode::InsertString(string const &str, size_t index)
 {
 	m_indices.insert(index);
@@ -208,7 +205,7 @@ void SuffixTreeNode::InsertString(string const &str, size_t index)
 }
 void SuffixTreeNode::RemoveString(string const &str)
 {
-	if (str.length() && m_children.find(str[0]) != m_children.end())
+	if (!str.empty() && m_children.find(str[0]) != m_children.end())
 	{
 		m_children[str[0]]->RemoveString(str.substr(1));
 		m_children.erase(str[0]);
@@ -222,7 +219,7 @@ const set<size_t> SuffixTreeNode::GetIndexes()
 const set<size_t> SuffixTreeNode::GetIndexes(string const &str)
 {
 	set<size_t> result;
-	if (!str.length())
+	if (str.empty())
 		result = m_indices; // End of search string. Return indexes of this node.
 	if (m_children.find(str[0]) != m_children.end())
 		result = m_children[str[0]]->GetIndexes(str.substr(1));

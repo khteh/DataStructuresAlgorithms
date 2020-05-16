@@ -14,7 +14,7 @@ class SuffixTreeNode;
 
 /*
  http://en.wikipedia.org/wiki/Suffix_tree
-						root
+					root
 	M   i<10>		s				p
 	i   s     p		s		i		p   i
 	s   s     p     i		s   p	i  <9>
