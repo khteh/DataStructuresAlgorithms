@@ -202,6 +202,7 @@ template<class URNG>
 void TestURNG(URNG&);
 void TestRandom();
 void GreedyAlgorithmTests();
+void Knapsack_CoinChangeTests();
 void BubbleSort(vector<long>&);
 size_t minimumBribes(vector<long>&);
 size_t Partition(vector<long> &, size_t left, size_t right, size_t pivot);
