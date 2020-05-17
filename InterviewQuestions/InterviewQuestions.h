@@ -335,7 +335,6 @@ size_t cutTheTree(vector<size_t>&, vector<vector<size_t>>&);
 size_t MinSubGraphDifference(vector<size_t>&, vector<vector<size_t>>&);
 long PostmanProblem(vector<long>&, vector<vector<long>>&);
 string AlmostSorted(vector<long>&);
-size_t LongestCommonChild(string&, string&);
 size_t LCSLength(string&, string&);
 size_t LCSLength(vector<vector<size_t>>&, string&, string&);
 string LCSBackTrack(vector<vector<size_t>>&, string&, string&, size_t, size_t);
