@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "InterviewQuestions.h"
 using namespace std;
+map<long, set<vector<size_t>>> coinChangeCache;
 int _tmain(int argc, _TCHAR* argv[])
 {
 	string line, line1;
@@ -1634,6 +1635,37 @@ int _tmain(int argc, _TCHAR* argv[])
 	a = { 43, 65, 1, 98, 99, 101 };
 	assert(AlmostSorted(a) == "no");
 	a.clear();
+	indices.clear();
+	indices = {3,2,1};
+	coinChangeCache.clear();
+	set<vector<size_t>> combinations = CoinChange(0, indices);
+	assert(combinations.empty());
+	coinChangeCache.clear();
+	combinations = CoinChange(1, indices);
+	assert(combinations.size() == 1);
+	set<vector<size_t>>::iterator it = combinations.begin();
+	assert(it->size() == 1);
+	assert((*it)[0] == 1);
+	coinChangeCache.clear();
+	combinations = CoinChange(2, indices);
+	assert(combinations.size() == 2);
+	coinChangeCache.clear();
+	combinations = CoinChange(3, indices);
+	assert(combinations.size() == 3);
+	coinChangeCache.clear();
+	combinations = CoinChange(4, indices);
+	assert(combinations.size() == 4);
+	indices.clear();
+	indices = {6,5,3,2};
+	coinChangeCache.clear();
+	combinations = CoinChange(10, indices);
+	assert(combinations.size() == 5);
+	//indices.clear();
+	//indices = { 5, 37, 8, 39, 33, 17, 22, 32, 13, 7, 10, 35, 40, 2, 43, 49, 46, 19, 41, 1, 12, 11, 28 };
+	//sort(indices.begin(), indices.end(), greater<size_t>());
+	//coinChangeCache.clear();
+	//combinations = CoinChange(166, indices);
+	//assert(combinations.size() == 96190959);
 	/***** The End *****/
 	cout << endl;
 	cout << "Press ENTER to exit!";
@@ -8256,4 +8288,37 @@ void LCSPrintDiff(vector<vector<size_t>>& table, string& s1, string& s2, long i,
 		LCSPrintDiff(table, s1, s2, i - 1, j);
 		cout << "-" << s1[i];
 	}
+}
+// https://www.hackerrank.com/challenges/coin-change/problem
+// Times out!
+set<vector<size_t>> CoinChange(long amount, vector<size_t>& coins)
+{
+	set<vector<size_t>> combinations;
+	if (amount > 0)
+	for (size_t i = 0; i < coins.size(); i++) {
+		if (amount >= (long)coins[i]) {
+			set<vector<size_t>> tmp;
+			if (coinChangeCache.find(amount - coins[i]) == coinChangeCache.end()) {
+				tmp = CoinChange(amount - coins[i], coins);
+				coinChangeCache[amount - coins[i]] = tmp;
+			} else
+				tmp = coinChangeCache[amount - coins[i]];
+			if (!tmp.empty())
+				for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
+					vector<size_t> change;
+					change.push_back(coins[i]);
+					change.insert(change.end(), it->begin(), it->end());
+					if (accumulate(change.begin(), change.end(), 0) == amount) {
+						sort(change.begin(), change.end());
+						combinations.insert(change);
+					}
+				}
+			else if (coins[i] == amount) {
+				vector<size_t> change;
+				change.push_back(coins[i]);
+				combinations.insert(change);
+			}
+		}
+	}
+	return combinations;
 }
