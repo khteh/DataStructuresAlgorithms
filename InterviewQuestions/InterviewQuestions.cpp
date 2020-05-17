@@ -1663,8 +1663,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	//indices.clear();
 	//indices = { 5, 37, 8, 39, 33, 17, 22, 32, 13, 7, 10, 35, 40, 2, 43, 49, 46, 19, 41, 1, 12, 11, 28 };
 	//sort(indices.begin(), indices.end(), greater<size_t>());
+	//sort(indices.begin(), indices.end());
 	//coinChangeCache.clear();
-	//combinations = CoinChange(166, indices); Times out!
+	//combinations = CoinChange(166, indices); //Times out!
 	//assert(combinations.size() == 96190959);
 	/***** The End *****/
 	cout << endl;
