@@ -2,6 +2,7 @@
 #include "InterviewQuestions.h"
 using namespace std;
 map<long, set<vector<size_t>>> coinChangeCache;
+map<long, set<vector<size_t>>> knapsackCache;
 int _tmain(int argc, _TCHAR* argv[])
 {
 	string line, line1;
@@ -1667,6 +1668,30 @@ int _tmain(int argc, _TCHAR* argv[])
 	//coinChangeCache.clear();
 	//combinations = CoinChange(166, indices); //Times out!
 	//assert(combinations.size() == 96190959);
+	indices.clear();
+	indices = { 2,3,4 };
+	assert(UnboundedKnapsack(9, indices) == 9);
+	indices.clear();
+	indices = { 3, 4, 10 };
+	assert(UnboundedKnapsack(12, indices) == 12);
+	assert(UnboundedKnapsack(13, indices) == 13);
+	assert(UnboundedKnapsack(16, indices) == 16);
+	indices.clear();
+	indices = { 2000,2000,2000 };
+	assert(UnboundedKnapsack(2000, indices) == 2000);
+	indices.clear();
+	indices = { 9,9,9 };
+	assert(UnboundedKnapsack(9, indices) == 9);
+	assert(UnboundedKnapsack(8, indices) == 0);
+	indices.clear();
+	indices = { 1 };
+	assert(UnboundedKnapsack(2000, indices) == 2000);
+	indices.clear();
+	indices = { 1, 2 };
+	assert(UnboundedKnapsack(2000, indices) == 2000);
+	indices.clear();
+	indices = { 5,9 };
+	assert(UnboundedKnapsack(10, indices) == 10);
 	/***** The End *****/
 	cout << endl;
 	cout << "Press ENTER to exit!";
@@ -8322,4 +8347,60 @@ set<vector<size_t>> CoinChange(long amount, vector<size_t>& coins)
 		}
 	}
 	return combinations;
+}
+// https://www.hackerrank.com/challenges/unbounded-knapsack/problem
+// 100%
+set<vector<size_t>> Knapsack(long amount, vector<size_t>& numbers)
+{
+	set<vector<size_t>> combinations;
+	if (amount > 0 && !numbers.empty()) {
+		if (numbers.size() == 1) {
+			vector<size_t> change;
+			change.push_back(amount - amount % numbers[0]);
+			combinations.insert(change);
+		}
+		else if (find(numbers.begin(), numbers.end(), 1) != numbers.end()) {
+			vector<size_t> change;
+			change.push_back(amount);
+			combinations.insert(change);
+		}
+		else {
+			for (size_t i = 0; i < numbers.size(); i++) {
+				if (amount >= (long)numbers[i]) {
+					set<vector<size_t>> tmp;
+					if (knapsackCache.find(amount - numbers[i]) == knapsackCache.end()) {
+						tmp = Knapsack(amount - numbers[i], numbers);
+						knapsackCache[amount - numbers[i]] = tmp;
+					}
+					else
+						tmp = knapsackCache[amount - numbers[i]];
+					if (!tmp.empty())
+						for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
+							vector<size_t> change;
+							change.push_back(numbers[i]);
+							change.insert(change.end(), it->begin(), it->end());
+							if (accumulate(change.begin(), change.end(), 0) <= amount) {
+								sort(change.begin(), change.end());
+								combinations.insert(change);
+							}
+						}
+					else if ((long)numbers[i] <= amount) {
+						vector<size_t> change;
+						change.push_back(numbers[i]);
+						combinations.insert(change);
+					}
+				}
+			}
+		}
+	}
+	return combinations;
+}
+size_t UnboundedKnapsack(long k, vector<size_t>& arr) 
+{
+	knapsackCache.clear();
+	set<vector<size_t>> result = Knapsack(k, arr);
+	set<size_t> sums;
+	for (set<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
+		sums.insert(accumulate(it->begin(), it->end(), 0));
+	return sums.empty() ? 0 : *sums.rbegin();
 }

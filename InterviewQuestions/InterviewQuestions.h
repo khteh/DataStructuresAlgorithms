@@ -340,3 +340,5 @@ size_t LCSLength(vector<vector<size_t>>&, string&, string&);
 string LCSBackTrack(vector<vector<size_t>>&, string&, string&, size_t, size_t);
 void LCSPrintDiff(vector<vector<size_t>>&, string&, string&, long, long);
 set<vector<size_t>> CoinChange(long, vector<size_t>&);
+set<vector<size_t>> Knapsack(long, vector<size_t>&);
+size_t UnboundedKnapsack(long, vector<size_t>&);
