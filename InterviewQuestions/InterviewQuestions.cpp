@@ -22,6 +22,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	stringset.erase("Does not exist");
 	vector<long> a, b, sortData;
 	vector<int> data, data1;
+	vector<size_t> udata, udata1;
 	vector<unsigned long long> ull;
 	priority_queue<long, deque<long>> maxHeap;
 	priority_queue<long, deque<long>, greater<long>> minHeap;
@@ -122,7 +123,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
 	cout << "numeric_limits<int>::max(): " << numeric_limits<int>::max() << endl;
+	assert(1e5 == pow(10, 5));
+	assert(1e5 == 10e4);
+	assert(1e5 == 100000);
+	assert(pow(10, 5) == 100000);
+	assert(1e10 == 10e9);
+	assert(1e10 == pow(10, 10));
+	assert(1e6 == 10e5);
+	assert(1e6 == pow(10, 6));
+	assert(1e6 == 1000000);
+	assert(1e9 + 7 == 10e8 + 7);
+	assert(1e9 + 7 == pow(10,9) + 7);
 	cout << "1e9: "<< 1e9 << ", 10e9: " << 10e9 << endl;
+	cout << "1e5: " << 1e5 << ", pow(10, 5): " << pow(10, 5) << ", " << pow(2, pow(10, 5)) << endl;
 	i = 3;
 	assert(-i == -3);
 	assert(~i == -4);
@@ -286,12 +299,12 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << line << " and " << line1 << " are rotated by 2 places" << endl;
 	line = "abcdefcdbacd";
 	line1 = "abcd";
-	vector<size_t> indices = FindSubString(line, line1);
-	assert(indices.size() == 4); // 0 6 7 8
-	assert(indices[0] == 0);
-	assert(indices[1] == 6);
-	assert(indices[2] == 7);
-	assert(indices[3] == 8);
+	udata = FindSubString(line, line1);
+	assert(udata.size() == 4); // 0 6 7 8
+	assert(udata[0] == 0);
+	assert(udata[1] == 6);
+	assert(udata[2] == 7);
+	assert(udata[3] == 8);
 
 	//index = KMPSearch("ABC ABCDAB ABCDABCDABDE", "ABCDABD");
 	//assert(index == 15);
@@ -1636,7 +1649,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a = { 43, 65, 1, 98, 99, 101 };
 	assert(AlmostSorted(a) == "no");
-	a.clear();
 	/***** The End *****/
 	cout << endl;
 	cout << "Press ENTER to exit!";
@@ -2566,6 +2578,7 @@ void MaxZeroProductTests()
 	//long result2 = MaxZeroProduct(data);
 	//assert(result1 == result2);
 }
+// O(n!)
 set<string> permute(string const &str)
 {
 	set<string> permutations;
@@ -2583,6 +2596,7 @@ set<string> permute(string const &str)
 	}
 	return permutations;
 }
+// O(n!)
 set<vector<long>> permute(vector<long>& data)
 {
 	set<vector<long>> permutations;
@@ -2660,7 +2674,7 @@ void StringPermutationTests()
 void ListPermutationTests()
 {
 	set<vector<long>> permutations;
-	vector<long> data{1,2,3};
+	vector<long> data {1,2,3};
 	permutations = permute(data);
 	assert(permutations.size() == 6);
 	cout << "permutations of List of {1,2,3} are:" << endl;
@@ -2668,6 +2682,11 @@ void ListPermutationTests()
 		copy(it->begin(), it->end(), ostream_iterator<long>(cout, " "));
 		cout << endl;
 	}
+	permutations.clear();
+	data.clear();
+	data = { 1,2,3,4,5 };
+	permutations = permute(data);
+	assert(permutations.size() == 120);
 	permutations.clear();
 }
 void GraphTests()
