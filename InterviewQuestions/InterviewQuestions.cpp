@@ -3226,8 +3226,15 @@ template<typename type>
  }
  void LongestCommonSubsequenceTests()
  {
+	 vector<char> chars1, chars2;
+	 vector<size_t> num1, num2, result;
 	 string s1, s2;
 	 assert(LCSLength(string("HARRY"), string("SALLY")) == 2);
+	 s1 = "HARRY";
+	 s2 = "SALLY";
+	 chars1.insert(chars1.end(), s1.begin(), s1.end());
+	 chars2.insert(chars2.end(), s2.begin(), s2.end());
+	 assert(LCSLength<char>(chars1, chars2) == 2);
 	 assert(LCSLength(string("SHINCHAN"), string("NOHARAAA")) == 3);
 	 assert(LCSLength(string("ABCDEF"), string("FBDAMN")) == 2);
 	 assert(LCSLength(string("WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS"), string("FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC")) == 15);
@@ -3239,6 +3246,7 @@ template<typename type>
 	 assert(LCSLength(table, s1, s2) == 2);
 	 assert(LCSBackTrack(table, s1, s2, s1.size() - 1, s2.size() - 1) == "AY");
 	 LCSPrintDiff(table, s1, s2, s1.size() - 1, s2.size() - 1);
+	 cout << endl;
 	 s1 = "SHINCHAN";
 	 s2 = "NOHARAAA";
 	 s1.insert(0, 1, 0);
@@ -3260,6 +3268,32 @@ template<typename type>
 	 vector<vector<size_t>> table3(s1.size(), vector<size_t>(s2.size()));	// Defaults to zero initial value
 	 assert(LCSLength(table3, s1, s2) == 15);
 	 assert(LCSBackTrack(table3, s1, s2, s1.size() - 1, s2.size() - 1) == "DGCGTRMZJRBAJJV");
+	 chars1.clear();
+	 chars2.clear();
+	 chars1.insert(chars1.end(), s1.begin(), s1.end());
+	 chars2.insert(chars2.end(), s2.begin(), s2.end());
+	 vector<vector<size_t>> table4(chars1.size(), vector<size_t>(chars2.size()));	// Defaults to zero initial value
+	 assert(LCSLength<char>(table4, chars1, chars2) == 15);
+	 chars1 = LCSBackTrack<char>(table4, chars1, chars2, chars1.size() - 1, chars2.size() - 1);
+	 s1.clear();
+	 s1.insert(s1.end(), chars1.begin(), chars1.end());
+	 assert(s1 == "DGCGTRMZJRBAJJV");
+	 num1 = { 1, 2, 3, 4, 1 };
+	 num2 = { 3, 4, 1, 2, 1, 3 };
+	 assert(LCSLength<size_t>(num1, num2) == 3); // "1 2 3", "1 2 1", "3 4 1" are all correct answers
+	 num1 = { 1, 2, 3, 4, 1 };
+	 num2 = { 3, 4, 1, 2, 1, 3 };
+	 num1.insert(num1.begin(), 0);
+	 num2.insert(num2.begin(), 0);
+	 vector<vector<size_t>> table5(num1.size(), vector<size_t>(num2.size()));	// Defaults to zero initial value
+	 assert(LCSLength<size_t>(table5, num1, num2) == 3);  // "1 2 3", "1 2 1", "3 4 1" are all correct answers
+	 result = LCSBackTrack<size_t>(table5, num1, num2, num1.size() - 1, num2.size() - 1);
+	 assert(result.size() == 3);
+	 assert(result[0] == 1);
+	 assert(result[1] == 2);
+	 assert(result[2] == 3);
+	 LCSPrintDiff<size_t>(table5, num1, num2, num1.size() - 1, num2.size() - 1);
+	 cout << endl;
  }
  void OrderArrayIntoNegativePositiveSeriesTests()
  {
@@ -8289,12 +8323,31 @@ size_t LCSLength(string& s1, string& s2)
 			table[i][j] = s1[i] == s2[j] ? table[i - 1][j - 1] + 1 : max(table[i-1][j], table[i][j-1]);
 	return table[s1.size() - 1][s2.size() - 1];
 }
+template<typename T>
+size_t LCSLength(vector<T>& n1, vector<T>& n2)
+{
+	n1.insert(n1.begin(), 0);
+	n2.insert(n2.begin(), 0);
+	vector<vector<size_t>> table(n1.size(), vector<size_t>(n2.size()));	// Defaults to zero initial value
+	for (size_t i = 1; i < n1.size(); i++)
+		for (size_t j = 1; j < n2.size(); j++)
+			table[i][j] = n1[i] == n2[j] ? table[i - 1][j - 1] + 1 : max(table[i - 1][j], table[i][j - 1]);
+	return table[n1.size() - 1][n2.size() - 1];
+}
 size_t LCSLength(vector<vector<size_t>>& table, string& s1, string& s2)
 {
 	for (size_t i = 1; i < s1.size(); i++)
 		for (size_t j = 1; j < s2.size(); j++)
 			table[i][j] = s1[i] == s2[j] ? table[i - 1][j - 1] + 1 : max(table[i - 1][j], table[i][j - 1]);
 	return table[s1.size() - 1][s2.size() - 1];
+}
+template<typename T>
+size_t LCSLength(vector<vector<size_t>>& table, vector<T>& n1, vector<T>& n2)
+{
+	for (size_t i = 1; i < n1.size(); i++)
+		for (size_t j = 1; j < n2.size(); j++)
+			table[i][j] = n1[i] == n2[j] ? table[i - 1][j - 1] + 1 : max(table[i - 1][j], table[i][j - 1]);
+	return table[n1.size() - 1][n2.size() - 1];
 }
 string LCSBackTrack(vector<vector<size_t>>& table, string& s1, string& s2, size_t i, size_t j)
 {
@@ -8303,6 +8356,19 @@ string LCSBackTrack(vector<vector<size_t>>& table, string& s1, string& s2, size_
 	if (s1[i] == s2[j])
 		return LCSBackTrack(table, s1, s2, i - 1, j - 1) + s1[i];
 	return table[i][j - 1] > table[i - 1][j] ? LCSBackTrack(table, s1, s2, i, j - 1) : LCSBackTrack(table, s1, s2, i - 1, j);
+}
+template<typename T>
+vector<T> LCSBackTrack(vector<vector<size_t>>& table, vector<T>& n1, vector<T>& n2, size_t i, size_t j)
+{
+	vector<T> result;
+	if (!i || !j)
+		return result;
+	if (n1[i] == n2[j]) {
+		result = LCSBackTrack(table, n1, n2, i - 1, j - 1);
+		result.push_back(n1[i]);
+		return result;
+	}
+	return table[i][j - 1] > table[i - 1][j] ? LCSBackTrack(table, n1, n2, i, j - 1) : LCSBackTrack(table, n1, n2, i - 1, j);
 }
 void LCSPrintDiff(vector<vector<size_t>>& table, string& s1, string& s2, long i, long j)
 {
@@ -8316,6 +8382,22 @@ void LCSPrintDiff(vector<vector<size_t>>& table, string& s1, string& s2, long i,
 	else if (i > 0 && (!j || (table[i][j - 1] < table[i - 1][j]))) {
 		LCSPrintDiff(table, s1, s2, i - 1, j);
 		cout << "-" << s1[i];
+	}
+}
+template<typename T>
+void LCSPrintDiff(vector<vector<size_t>>& table, vector<T>& n1, vector<T>& n2, long i, long j)
+{
+	if (i > 0 && j > 0 && n1[i] == n2[j]) {
+		LCSPrintDiff(table, n1, n2, i - 1, j - 1);
+		cout << n1[i];
+	}
+	else if (j > 0 && (!i || (table[i][j - 1] >= table[i - 1][j]))) {
+		LCSPrintDiff(table, n1, n2, i, j - 1);
+		cout << "+" << n2[j];
+	}
+	else if (i > 0 && (!j || (table[i][j - 1] < table[i - 1][j]))) {
+		LCSPrintDiff(table, n1, n2, i - 1, j);
+		cout << "-" << n1[i];
 	}
 }
 // https://www.hackerrank.com/challenges/coin-change/problem
