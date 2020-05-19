@@ -7499,6 +7499,7 @@ int IncreasingSequences(vector<long> &a, vector<long> &b)
 }
 /*
   https://www.hackerrank.com/challenges/longest-increasing-subsequent/problem
+  https://www.tutorialspoint.com/cplusplus-program-to-find-the-longest-increasing-subsequence-of-a-given-sequence
   Times out for >= 1 million data points
 [1, 3, 4, 0, 2]
 i: 1
@@ -7542,6 +7543,14 @@ size_t LongestIncreasingSubsequence(vector<size_t>& data)
 			max = lengths[i];
 	}
 	return max;
+}
+size_t LongestIncreasingSubsequence1(vector<size_t>& data)
+{
+	set<size_t> result;
+	result.insert
+	for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++) {
+		
+	}
 }
 void cpluplus17()
 {
