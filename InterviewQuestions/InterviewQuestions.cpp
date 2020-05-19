@@ -7565,34 +7565,13 @@ size_t LongestIncreasingSubsequenceNlogN(vector<size_t>& data)
 	vector<size_t> tails;
 	tails.push_back(data[0]);
 	for (size_t i = 1; i < data.size(); i++) {
-		// New smallest value
-		if (data[i] < tails[0])
-			tails[0] = data[i];
-		// data[i] extends largest subsequene
-		else if (data[i] > *tails.rbegin())
+		vector<size_t>::iterator it = lower_bound(tails.begin(), tails.end(), data[i]); // Look for element >= data[i]
+		if (it == tails.end()) // If not present change the tail element to v[i]
 			tails.push_back(data[i]);
 		else
-		// v[i] will become end candidate of an existing 
-		// subsequence or Throw away larger elements in all 
-		// LIS, to make room for upcoming grater elements 
-		// than v[i] (and also, v[i] would have already 
-		// appeared in one of LIS, identify the location 
-		// and replace it) 
-			tails[CeilIndex(tails, -1, tails.size() - 1, data[i])] = data[i];
+			*it = data[i];
 	}
 	return tails.size();
-}
-// Binary search (note boundaries in the caller) 
-long CeilIndex(vector<size_t>& data, long l, long r, size_t key)
-{
-	while (r - l > 1) {
-		long m = l + (r - l) / 2;
-		if (data[m] >= key)
-			r = m;
-		else
-			l = m;
-	}
-	return r;
 }
 void cpluplus17()
 {

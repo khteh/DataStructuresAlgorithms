@@ -177,7 +177,6 @@ bool isPrime(unsigned long);
 size_t CommonPrimeDivisors(vector<long>&, vector<long>&);
 unsigned long long findMax(vector<unsigned long long> const&);
 void Merge(vector<long> &, vector<long> &);
-long CeilIndex(vector<size_t>&, long, long, size_t);
 int BinarySearch(vector<size_t>&, size_t);
 int BinarySearchCountUpper(vector<long>&, long, long, long);
 int BinarySearchCountLower(vector<long>&, long, long, long);
