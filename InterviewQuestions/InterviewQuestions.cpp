@@ -8529,21 +8529,21 @@ Times out with k >= 8868 and original decoded string length >= 100000
 string cipher(size_t k, string& s) 
 {
 	string result;
-	vector<vector<char>> results(k);
+	vector<vector<size_t>> results(k);
 	for (size_t i = 0; i < k; i++) {
-		results[i] = vector<char>();
+		results[i] = vector<size_t>();
 		for (size_t j = 0; j < i; j++)
-			results[i].push_back('0');
+			results[i].push_back(0);
 	}
 	for (size_t i = 0; i <= s.size() - k; i++) {
-		size_t bit = s[i] == '0' ? 0 : 1;
+		size_t bit = s[i] - '0';
 		for (size_t j = 0; j < k; j++) {
 			if (i && j)
-				bit ^= (results[j][i] == '0' ? 0 : 1);
+				bit ^= results[j][i];
 		}
 		for (size_t j = 0; j < k; j++)
-			results[j].push_back(bit ? '1' : '0');
-		result.push_back(bit ? '1' : '0');
+			results[j].push_back(bit);
+		result.push_back(bit + '0');
 	}
 	return result;
 }
