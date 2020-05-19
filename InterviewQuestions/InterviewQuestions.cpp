@@ -8528,6 +8528,7 @@ Times out with k >= 8868 and original decoded string length >= 100000
 */
 string cipher(size_t k, string& s) 
 {
+	string result;
 	vector<vector<char>> results(k);
 	for (size_t i = 0; i < k; i++) {
 		results[i] = vector<char>();
@@ -8542,6 +8543,7 @@ string cipher(size_t k, string& s)
 		}
 		for (size_t j = 0; j < k; j++)
 			results[j].push_back(bit ? '1' : '0');
+		result.push_back(bit ? '1' : '0');
 	}
-	return string(results[0].begin(), results[0].end());
+	return result;
 }

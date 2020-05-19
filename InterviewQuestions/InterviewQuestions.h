@@ -87,6 +87,23 @@ typedef struct ZeroFactorsFiveCount {
 typedef enum class Direction {
 	Up, Down, NoChange
 } direction_t;
+typedef struct Position {
+	Position() : row(-1), col(-1) {}
+	Position(size_t r, size_t c) : row(r), col(c) {}
+	size_t row;
+	size_t col;
+} position_t;
+typedef struct ZigZagEscape {
+	size_t index;
+	int value;
+	ZigZagEscape(size_t i, int v) : index(i), value(v) {}
+	bool operator < (const ZigZagEscape& other) const {
+		return value < other.value;
+	}
+	bool operator > (const ZigZagEscape& other) const {
+		return value < other.value;
+	}
+} zigzag_t;
 float MachineEpsilon(float value);
 float FloatMachineEpsilonApproximation();
 double MachineEpsilon(double value);
@@ -248,23 +265,6 @@ typedef struct PathResult {
 pathResult_t FindMaxPath(vector<vector<unsigned long>>&, size_t, size_t);
 bool PathExists(vector<vector<char>>&, size_t, size_t, size_t, size_t, queue<string>&, char obstacle);
 vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int j_end);
-typedef struct Position {
-	Position() : row(-1), col(-1) {}
-	Position(size_t r, size_t c) : row(r), col(c) {}
-	size_t row;
-	size_t col;
-} position_t;
-typedef struct ZigZagEscape {
-	size_t index;
-	int value;
-	ZigZagEscape(size_t i, int v) : index(i), value(v) {}
-	bool operator < (const ZigZagEscape& other) const {
-		return value < other.value;
-	}
-	bool operator > (const ZigZagEscape& other) const {
-		return value < other.value;
-	}
-} zigzag_t;
 bool FindShortestPath(vector<vector<char>>&, size_t r, size_t c, queue<string>&, char dest, char obstacle);
 void MatrixDistance(vector<vector<long>>&, size_t, size_t);
 void MatrixSort(vector<vector<long>>&);
