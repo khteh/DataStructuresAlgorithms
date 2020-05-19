@@ -7530,6 +7530,7 @@ j: 3
 */
 size_t LongestIncreasingSubsequence(vector<size_t>& data)
 {
+	size_t max = 0;
 	vector<size_t> lengths(data.size(), 0);
 	lengths[0] = 1;
 	for (size_t i = 1; i < data.size(); i++) {
@@ -7537,9 +7538,10 @@ size_t LongestIncreasingSubsequence(vector<size_t>& data)
 			if (data[j] < data[i] && lengths[j] > lengths[i])
 				lengths[i] = lengths[j];
 		}
-		lengths[i]++;
+		if (++lengths[i] > max)
+			max = lengths[i];
 	}
-	return *max_element(lengths.begin(), lengths.end());
+	return max;
 }
 void cpluplus17()
 {
