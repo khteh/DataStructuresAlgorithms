@@ -1777,12 +1777,12 @@ long ConsecutiveLargestSum(vector<long>& data, vector<long>& result)
 }
 // https://app.codility.com/programmers/task/longest_nonnegative_sum_slice/
 // https://app.codility.com/programmers/challenges/ferrum2018/
-// Find the longest sequence when the graph crosses a previous point. The crossing point is when negative becodes positive and vice versa
+// Find the longest sequence when the graph crosses a previous point. The crossing point is when negative becomes positive and vice versa
 // 100%
 long LongestNonNegativeSumSlice(vector<long>& data)
 {
 	// -1, -1, -1, -1, -1, -1, 1 (max_len = max(1, 6 - 4) = 2), 1 (max_len = max(2, 7 - 3) = 4)
-	//  1,  1,  1,  1,  1,  1, -1(max_len = max(6, 6 - 4) = 6), -1(max_len = max(6, 7 - 3) = 6)
+	//  1,  1,  1,  1,  1,  1,-1 (max_len = max(6, 6 - 4) = 6),-1 (max_len = max(6, 7 - 3) = 6)
 	map<long, size_t> sums;
 	long sum = 0;
 	size_t max_len = 0;
@@ -1848,7 +1848,6 @@ void reverse(string& str)
 		str[i] = tmp;
 	}
 }
-
 // "Hello World!!!" -> "World!!! Hello"
 // 1: "Hello World!!!" -> "!!!dlroW olleH"
 // 2: "!!!dlroW olleH" -> World!!! Hello"
