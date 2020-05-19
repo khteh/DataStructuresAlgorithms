@@ -282,8 +282,9 @@ void TestCornerCases();
 // End of Sort numbers into consecutive positive/negative numbers
 void EqualAverageDivide(vector<long>&, vector<long>&);
 bool GetSum(vector<long> &, size_t K, long sum, size_t index, vector<long>&);
-bool match(string pattern, string input);
+bool match(string&, string&);
 string EncodeString(string);
+string cipher(size_t, string&);
 void FindPattern(string, set<string>&, set<string>&);
 string subtract(istream&, istream &);
 set<string> intersectionNgram(string&, string&, int n);

@@ -860,13 +860,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << result1.front() << " ";
 		result1.pop();
 	}
-	assert(match("abba", "redbluebluered"));
-	assert(match("aaaa", "asdasdasdasd"));
-	assert(match("aabb", "xyzxyzabcabc"));
-	assert(match("abab", "xyzabcxyzabc"));
-	assert(!match("aabb", "xyzabcxyzabc"));
-	assert(!match("abba", "xyzabcxyzabc"));
-	assert(!match("aaaa", "xyzabcxyzabc"));
+	assert(match(string("abba"), string("redbluebluered")));
+	assert(match(string("aaaa"), string("asdasdasdasd")));
+	assert(match(string("aabb"), string("xyzxyzabcabc")));
+	assert(match(string("abab"), string("xyzabcxyzabc")));
+	assert(!match(string("aabb"), string("xyzabcxyzabc")));
+	assert(!match(string("abba"), string("xyzabcxyzabc")));
+	assert(!match(string("aaaa"), string("xyzabcxyzabc")));
 	cout << endl;
 	stringset.clear();
 	stringset.insert("cdf");
@@ -1649,6 +1649,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a = { 43, 65, 1, 98, 99, 101 };
 	assert(AlmostSorted(a) == "no");
+	assert(cipher(4, string("1110101001")) == "1001011");
 	/***** The End *****/
 	cout << endl;
 	cout << "Press ENTER to exit!";
@@ -3280,20 +3281,28 @@ template<typename type>
 	 vector<vector<size_t>> table2(s1.size(), vector<size_t>(s2.size()));	// Defaults to zero initial value
 	 assert(LCSLength(table2, s1, s2) == 2);
 	 assert(LCSBackTrack(table2, s1, s2, s1.size() - 1, s2.size() - 1) == "BD");
+	 s1 = "aa";
+	 s2 = "baaa";
+	 s1.insert(0, 1, 0);
+	 s2.insert(0, 1, 0);
+	 vector<vector<size_t>> table3(s1.size(), vector<size_t>(s2.size()));	// Defaults to zero initial value
+	 assert(LCSLength(table3, s1, s2) == 2);
+	 assert(LCSBackTrack(table3, s1, s2, s1.size() - 1, s2.size() - 1) == "aa");
+	 LCSPrintDiff(table3, s1, s2, s1.size() - 1, s2.size() - 1);
 	 s1 = "WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS";
 	 s2 = "FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC";
 	 s1.insert(0, 1, 0);
 	 s2.insert(0, 1, 0);
-	 vector<vector<size_t>> table3(s1.size(), vector<size_t>(s2.size()));	// Defaults to zero initial value
-	 assert(LCSLength(table3, s1, s2) == 15);
-	 assert(LCSBackTrack(table3, s1, s2, s1.size() - 1, s2.size() - 1) == "DGCGTRMZJRBAJJV");
+	 vector<vector<size_t>> table4(s1.size(), vector<size_t>(s2.size()));	// Defaults to zero initial value
+	 assert(LCSLength(table4, s1, s2) == 15);
+	 assert(LCSBackTrack(table4, s1, s2, s1.size() - 1, s2.size() - 1) == "DGCGTRMZJRBAJJV");
 	 chars1.clear();
 	 chars2.clear();
 	 chars1.insert(chars1.end(), s1.begin(), s1.end());
 	 chars2.insert(chars2.end(), s2.begin(), s2.end());
-	 vector<vector<size_t>> table4(chars1.size(), vector<size_t>(chars2.size()));	// Defaults to zero initial value
-	 assert(LCSLength<char>(table4, chars1, chars2) == 15);
-	 chars1 = LCSBackTrack<char>(table4, chars1, chars2, chars1.size() - 1, chars2.size() - 1);
+	 vector<vector<size_t>> table5(chars1.size(), vector<size_t>(chars2.size()));	// Defaults to zero initial value
+	 assert(LCSLength<char>(table5, chars1, chars2) == 15);
+	 chars1 = LCSBackTrack<char>(table5, chars1, chars2, chars1.size() - 1, chars2.size() - 1);
 	 s1.clear();
 	 s1.insert(s1.end(), chars1.begin(), chars1.end());
 	 assert(s1 == "DGCGTRMZJRBAJJV");
@@ -3304,14 +3313,14 @@ template<typename type>
 	 num2 = { 3, 4, 1, 2, 1, 3 };
 	 num1.insert(num1.begin(), 0);
 	 num2.insert(num2.begin(), 0);
-	 vector<vector<size_t>> table5(num1.size(), vector<size_t>(num2.size()));	// Defaults to zero initial value
-	 assert(LCSLength<size_t>(table5, num1, num2) == 3);  // "1 2 3", "1 2 1", "3 4 1" are all correct answers
-	 result = LCSBackTrack<size_t>(table5, num1, num2, num1.size() - 1, num2.size() - 1);
+	 vector<vector<size_t>> table6(num1.size(), vector<size_t>(num2.size()));	// Defaults to zero initial value
+	 assert(LCSLength<size_t>(table6, num1, num2) == 3);  // "1 2 3", "1 2 1", "3 4 1" are all correct answers
+	 result = LCSBackTrack<size_t>(table6, num1, num2, num1.size() - 1, num2.size() - 1);
 	 assert(result.size() == 3);
 	 assert(result[0] == 1);
 	 assert(result[1] == 2);
 	 assert(result[2] == 3);
-	 LCSPrintDiff<size_t>(table5, num1, num2, num1.size() - 1, num2.size() - 1);
+	 LCSPrintDiff<size_t>(table6, num1, num2, num1.size() - 1, num2.size() - 1);
 	 cout << endl;
  }
  void OrderArrayIntoNegativePositiveSeriesTests()
@@ -6188,7 +6197,7 @@ bool GetSum(vector<long> &data, size_t K, long P, size_t index, vector<long>& le
 //2) Pattern: "aaaa" (.+)\\1\\1\\1  input : "asdasdasdasd" should return 1.
 //3) Pattern: "aabb" (.+)\\1(.+)\\2 input : "xyzabcxyzabc" should return 0.
 //3) Pattern: "abab" (.+)(.+)\\1\\2 input : "xyzabcxyzabc" should return 1.
-bool match(string pattern, string input)
+bool match(string& pattern, string& input)
 {
 	map<char, long> patternCount;
 	ostringstream regexStr;
@@ -8085,7 +8094,7 @@ size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>>& edges, long s
 	return graph.PrimMinimumSpanningTree(startVertex);
 }
 // https://www.hackerrank.com/challenges/rust-murderer/problem
-// 3/7 test cases failed :(
+// 2/7 test cases failed and 1 test case times out!
 void UnbeatenPaths(size_t nodes, vector<vector<long>>& edges, long start, vector<size_t>& paths)
 {
 	Graph<long, long> graph;
@@ -8507,4 +8516,32 @@ size_t UnboundedKnapsack(long k, vector<size_t>& arr)
 	for (set<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
 		sums.insert(accumulate(it->begin(), it->end(), 0));
 	return sums.empty() ? 0 : *sums.rbegin();
+}
+/* https://www.hackerrank.com/challenges/cipher/problem
+1001011     shift 0
+01001011    shift 1
+001001011   shift 2
+0001001011  shift 3
+----------
+1110101001  <- XORed/encoded string s
+Times out with k >= 8868 and original decoded string length >= 100000
+*/
+string cipher(size_t k, string& s) 
+{
+	vector<vector<char>> results(k);
+	for (size_t i = 0; i < k; i++) {
+		results[i] = vector<char>();
+		for (size_t j = 0; j < i; j++)
+			results[i].push_back('0');
+	}
+	for (size_t i = 0; i <= s.size() - k; i++) {
+		size_t bit = s[i] == '0' ? 0 : 1;
+		for (size_t j = 0; j < k; j++) {
+			if (i && j)
+				bit ^= (results[j][i] == '0' ? 0 : 1);
+		}
+		for (size_t j = 0; j < k; j++)
+			results[j].push_back(bit ? '1' : '0');
+	}
+	return string(results[0].begin(), results[0].end());
 }
