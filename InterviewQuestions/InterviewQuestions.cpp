@@ -7451,6 +7451,9 @@ void IncreasingSequenceTests()
 	iota(b.begin(), b.end(), -1000000000); // b decreasing
 	sort(b.begin(), b.end(), greater<long>());
 	assert(IncreasingSequences(a, b) == -1);
+	a.clear();
+	vector<size_t> c = { 0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15 };
+	assert(LongestIncreasingSubsequence(c) == 6); // 0, 2, 6, 9, 13, 15
 }
 // https://app.codility.com/demo/results/trainingCP4NRT-FE4/
 // https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/discuss/119835/Java-O(n)-DP-Solution
@@ -7493,6 +7496,50 @@ int IncreasingSequences(vector<long> &a, vector<long> &b)
 		outOfSequence |= A[i] <= A[i - 1] || B[i] <= B[i - 1];
 	}
 	return outOfSequence ? -1 : min(swapRecord, fixRecord);
+}
+/*
+  https://www.hackerrank.com/challenges/longest-increasing-subsequent/problem
+  Times out for >= 1 million data points
+[1, 3, 4, 0, 2]
+i: 1
+j: 0
+   lengths[1] = lengths[0] => 1
+   lengths[1]++ => 2
+
+i: 2
+j: 0
+   lengths[2] = lengths[0] => 1
+j: 1
+   lengths[1]:2 > lengths[2]:1
+   lengths[2] = lengths[1] => 2
+   lengths[2]++ => 3
+
+i: 3
+j: 0
+j: 1
+j: 2
+   lengths[3]++ => 1
+
+i: 4
+j: 0
+	lengths[4] = lengths[0] => 1
+j: 1
+j: 2
+j: 3
+   lengths[4]++ => 2
+*/
+size_t LongestIncreasingSubsequence(vector<size_t>& data)
+{
+	vector<size_t> lengths(data.size(), 0);
+	lengths[0] = 1;
+	for (size_t i = 1; i < data.size(); i++) {
+		for (size_t j = 0; j < i; j++) {
+			if (data[j] < data[i] && lengths[j] > lengths[i])
+				lengths[i] = lengths[j];
+		}
+		lengths[i]++;
+	}
+	return *max_element(lengths.begin(), lengths.end());
 }
 void cpluplus17()
 {

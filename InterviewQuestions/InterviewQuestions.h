@@ -313,6 +313,7 @@ size_t ZigZagEscape(vector<long>&, set<string>&);
 vector<string> ZigZagEscape(vector<long>&, vector<long>&, size_t lIndex, size_t rIndex, long current, bool dir);
 void CircularLinkedListLoopStart();
 int IncreasingSequences(vector<long>&, vector<long>&);
+size_t LongestIncreasingSubsequence(vector<size_t>&);
 void IncreasingSequenceTests();
 void cpluplus17();
 long MaxProductOfThree(vector<long>&);
