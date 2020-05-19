@@ -3391,7 +3391,7 @@ template<typename type>
 //			                   L             M              U
 // 4 8 9 9 9 10 12 13 1 2 2 3
 // L            M           U
-int BinarySearch(vector<long> source, int toSearch)
+int BinarySearch(vector<size_t>& source, size_t toSearch)
 {
 	int lower, middle, upper;
 	lower = 0;
@@ -3426,7 +3426,7 @@ int BinarySearch(vector<long> source, int toSearch)
 	}
 	return -1;
 }
-int BinarySearchCountUpper(vector<long> source, int toSearch, int start, int end)
+int BinarySearchCountUpper(vector<long>& source, long toSearch, long start, long end)
 {
 	int mid = start + (end - start) / 2 + (end - start) % 2;
 	if (end < start)
@@ -3438,7 +3438,7 @@ int BinarySearchCountUpper(vector<long> source, int toSearch, int start, int end
 	else
 		return BinarySearchCountUpper(source, toSearch, start, mid - 1);
 }
-int BinarySearchCountLower(vector<long> source, int toSearch, int start, int end)
+int BinarySearchCountLower(vector<long>& source, long toSearch, long start, long end)
 {
 	int mid = start + (end - start) / 2 + (end - start) % 2;
 	if (end < start)
@@ -3736,7 +3736,7 @@ void SortTests()
 void BinarySearchTests()
 {
 	int pos;
-	vector<long> source;
+	vector<size_t> source;
 	long data[12]  = {15, 16, 17, 18, 19, 20, 0, 1, 2, 3, 4, 5};
 					/*L				      M			         U*/
 	source.resize(30);
@@ -7454,6 +7454,7 @@ void IncreasingSequenceTests()
 	a.clear();
 	vector<size_t> c = { 0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15 };
 	assert(LongestIncreasingSubsequence(c) == 6); // 0, 2, 6, 9, 13, 15
+	assert(LongestIncreasingSubsequenceNlogN(c) == 6); // 0, 2, 6, 9, 13, 15
 }
 // https://app.codility.com/demo/results/trainingCP4NRT-FE4/
 // https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/discuss/119835/Java-O(n)-DP-Solution
@@ -7544,13 +7545,54 @@ size_t LongestIncreasingSubsequence(vector<size_t>& data)
 	}
 	return max;
 }
-size_t LongestIncreasingSubsequence1(vector<size_t>& data)
+/*
+  https://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/
+1. If A[i] is smallest among all end
+   candidates of active lists, we will start
+   new active list of length 1.
+2. If A[i] is largest among all end candidates of
+  active lists, we will clone the largest active
+  list, and extend it by A[i].
+3. If A[i] is in between, we will find a list with
+  largest end element that is smaller than A[i].
+  Clone and extend this list by A[i]. We will discard all
+  other lists of same length as that of this modified list.
+  https://www.hackerrank.com/challenges/longest-increasing-subsequent/problem
+  100%
+*/
+size_t LongestIncreasingSubsequenceNlogN(vector<size_t>& data)
 {
-	set<size_t> result;
-	result.insert
-	for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++) {
-		
+	vector<size_t> tails;
+	tails.push_back(data[0]);
+	for (size_t i = 1; i < data.size(); i++) {
+		// New smallest value
+		if (data[i] < tails[0])
+			tails[0] = data[i];
+		// data[i] extends largest subsequene
+		else if (data[i] > *tails.rbegin())
+			tails.push_back(data[i]);
+		else
+		// v[i] will become end candidate of an existing 
+		// subsequence or Throw away larger elements in all 
+		// LIS, to make room for upcoming grater elements 
+		// than v[i] (and also, v[i] would have already 
+		// appeared in one of LIS, identify the location 
+		// and replace it) 
+			tails[CeilIndex(tails, -1, tails.size() - 1, data[i])] = data[i];
 	}
+	return tails.size();
+}
+// Binary search (note boundaries in the caller) 
+long CeilIndex(vector<size_t>& data, long l, long r, size_t key)
+{
+	while (r - l > 1) {
+		long m = l + (r - l) / 2;
+		if (data[m] >= key)
+			r = m;
+		else
+			l = m;
+	}
+	return r;
 }
 void cpluplus17()
 {

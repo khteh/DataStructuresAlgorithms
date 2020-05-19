@@ -177,12 +177,13 @@ bool isPrime(unsigned long);
 size_t CommonPrimeDivisors(vector<long>&, vector<long>&);
 unsigned long long findMax(vector<unsigned long long> const&);
 void Merge(vector<long> &, vector<long> &);
-int BinarySearch(vector<long> source, int toSearch);
-int BinarySearchCountUpper(vector<long> source, int toSearch, int start, int end);
-int BinarySearchCountLower(vector<long> source, int toSearch, int start, int end);
-int BinarySearch(vector<string> source, string toSearch);
-void parentheses(vector<string> &, size_t);
-void parentheses(vector<string> &, string &, size_t, long, long);
+long CeilIndex(vector<size_t>&, long, long, size_t);
+int BinarySearch(vector<size_t>&, size_t);
+int BinarySearchCountUpper(vector<long>&, long, long, long);
+int BinarySearchCountLower(vector<long>&, long, long, long);
+int BinarySearch(vector<string>&, string&);
+void parentheses(vector<string>&, size_t);
+void parentheses(vector<string>&, string&, size_t, long, long);
 long LongestValidParentheses(string&);
 long LongestValidParenthesesWithFixes(string&, size_t k);
 template<class T>
@@ -314,6 +315,7 @@ vector<string> ZigZagEscape(vector<long>&, vector<long>&, size_t lIndex, size_t 
 void CircularLinkedListLoopStart();
 int IncreasingSequences(vector<long>&, vector<long>&);
 size_t LongestIncreasingSubsequence(vector<size_t>&);
+size_t LongestIncreasingSubsequenceNlogN(vector<size_t>&);
 void IncreasingSequenceTests();
 void cpluplus17();
 long MaxProductOfThree(vector<long>&);
