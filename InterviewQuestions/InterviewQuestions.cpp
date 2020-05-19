@@ -7563,13 +7563,15 @@ size_t LongestIncreasingSubsequence(vector<size_t>& data)
 size_t LongestIncreasingSubsequenceNlogN(vector<size_t>& data)
 {
 	vector<size_t> tails;
-	tails.push_back(data[0]);
-	for (size_t i = 1; i < data.size(); i++) {
-		vector<size_t>::iterator it = lower_bound(tails.begin(), tails.end(), data[i]); // Look for element >= data[i]
-		if (it == tails.end()) // If not present change the tail element to v[i]
-			tails.push_back(data[i]);
-		else
-			*it = data[i];
+	if (!data.empty()) {
+		tails.push_back(data[0]);
+		for (size_t i = 1; i < data.size(); i++) {
+			vector<size_t>::iterator it = lower_bound(tails.begin(), tails.end(), data[i]); // Look for element >= data[i]
+			if (it == tails.end()) // If not present change the tail element to v[i]
+				tails.push_back(data[i]);
+			else
+				*it = data[i];
+		}
 	}
 	return tails.size();
 }
