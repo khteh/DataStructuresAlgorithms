@@ -7462,14 +7462,14 @@ void IncreasingSequenceTests()
 int IncreasingSequences(vector<long> &a, vector<long> &b)
 {
 	bool outOfSequence = false;
-	// swapRecord means for the ith element in A and B, the minimum swaps if we swap A[i] and B[i]
-	// fixRecord means for the ith element in A and B, the minimum swaps if we DONOT swap A[i] and B[i]
-	int swapRecord = 1, fixRecord = 0;
+	// swapRecord[i]: min swaps to make A[0:i] and B[0:i] increasing if we swap A[i] and B[i]
+	// fixRecord[i] : min swaps to make A[0:i] and B[0:i] increasing if we do not swap A[i] and B[i]
+	size_t swapRecord = 1, fixRecord = 0;
 	if (a.size() != b.size())
 		return -1;
 	if (a.size() == 1)
 		return 0;
-	vector<int> A, B;
+	vector<long> A, B;
 	bool isSwap = true;
 	A.push_back(b[0]);
 	B.push_back(a[0]);
@@ -7478,19 +7478,18 @@ int IncreasingSequences(vector<long> &a, vector<long> &b)
 			// In this case, the ith manipulation should be same as the i-1th manipulation
 			// fixRecord = fixRecord;
 			swapRecord++;
-			//isSwap = true;
 		} else if (a[i - 1] >= a[i] || b[i - 1] >= b[i]) {
 			// In this case, the ith manipulation should be the opposite of the i-1th manipulation
-			int temp = swapRecord;
+			size_t temp = swapRecord;
 			swapRecord = fixRecord + 1;
 			fixRecord = temp;
 			isSwap = !isSwap;
 		} else {
 			// Either swap or fix is OK. Let's keep the minimum one
-			int minimum = min(swapRecord, fixRecord);
+			size_t minimum = min(swapRecord, fixRecord);
 			swapRecord = minimum + 1;
 			fixRecord = minimum;
-			isSwap = swapRecord < fixRecord;
+			isSwap = swapRecord < fixRecord; // Reverse-engineer from data
 		}
 		A.push_back(isSwap ? b[i] : a[i]);
 		B.push_back(isSwap ? a[i] : b[i]);
@@ -8551,21 +8550,18 @@ set<vector<size_t>> Knapsack(long amount, vector<size_t>& numbers)
 			vector<size_t> change;
 			change.push_back(amount - amount % numbers[0]);
 			combinations.insert(change);
-		}
-		else if (find(numbers.begin(), numbers.end(), 1) != numbers.end()) {
+		} else if (find(numbers.begin(), numbers.end(), 1) != numbers.end()) {
 			vector<size_t> change;
 			change.push_back(amount);
 			combinations.insert(change);
-		}
-		else {
+		} else {
 			for (size_t i = 0; i < numbers.size(); i++) {
 				if (amount >= (long)numbers[i]) {
 					set<vector<size_t>> tmp;
 					if (knapsackCache.find(amount - numbers[i]) == knapsackCache.end()) {
 						tmp = Knapsack(amount - numbers[i], numbers);
 						knapsackCache[amount - numbers[i]] = tmp;
-					}
-					else
+					} else
 						tmp = knapsackCache[amount - numbers[i]];
 					if (!tmp.empty())
 						for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
@@ -8623,7 +8619,7 @@ string cipher(size_t k, string& s)
 		}
 		for (size_t j = 0; j < k; j++)
 			results[j].push_back(bit);
-		result.push_back(bit + '0');
+		result.push_back((char)(bit + '0'));
 	}
 	return result;
 }
