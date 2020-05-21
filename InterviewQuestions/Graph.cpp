@@ -113,17 +113,16 @@ void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex)
 // https://www.hackerrank.com/challenges/primsmstsub/problem
 // https://en.wikipedia.org/wiki/Prim%27s_algorithm
 // https://www.geeksforgeeks.org/prims-algorithm-using-priority_queue-stl/
-// 2 cases with 1000 vertices and 10,000 edges failed
+// 100%
 template<typename TTag, typename TItem>
 size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem>> start)
 {
 	// Create a priority queue to store vertices that are part of MST (Minimum Spanning Tree).
-	multimap<size_t, shared_ptr<Vertex<TTag, TItem>>> priorityQueue;
+	multimap<long, shared_ptr<Vertex<TTag, TItem>>> priorityQueue; // key: cost. Vertices to be processed
 	// Create a vector for keys and initialize all keys as infinite (INF) 
-	map<TTag, long> keys;
+	map<TTag, long> costs;
 
 	// To store parent array which in turn store MST 
-	//vector<shared_ptr<Vertex<TTag, TItem>>> parents(vertices_.size(), nullptr);
 	map<TTag, shared_ptr<Vertex<TTag, TItem>>> parents;
 
 	// To keep track of vertices included in MST 
@@ -131,29 +130,29 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 
 	// Insert source itself in priority queue and initialize its key as 0. 
 	priorityQueue.emplace(0, start);
-	keys.emplace(start->GetTag(), 0);
+	costs.emplace(start->GetTag(), 0);
 	while (!priorityQueue.empty()) {
-		pair<size_t, shared_ptr<Vertex<TTag, TItem>>> entry = *(priorityQueue.begin());
-		shared_ptr<Vertex<TTag, TItem>> u = entry.second;
-		priorityQueue.erase(entry.first);
+		multimap<long, shared_ptr<Vertex<TTag, TItem>>>::iterator vertex = priorityQueue.begin();
+		shared_ptr<Vertex<TTag, TItem>> u = vertex->second;
+		priorityQueue.erase(vertex);
 		inMST[u->GetTag()] = true; // Include vertex in MST
 		map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours = u->GetNeighboursWithCost();
 		for (map<shared_ptr<Vertex<TTag, TItem>>, long>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
 			//  If v is not in MST and weight of (u,v) is smaller than current key of v 
-			if (!inMST[it->first->GetTag()] && (keys.find(it->first->GetTag()) == keys.end() || keys[it->first->GetTag()] > it->second))
+			if (!inMST[it->first->GetTag()] && (costs.find(it->first->GetTag()) == costs.end() || costs[it->first->GetTag()] > it->second)) // it->second is edge cost from u to 'it'
 			{
 				// Updating key of v 
-				keys[it->first->GetTag()] = it->second;
-				priorityQueue.emplace(keys[it->first->GetTag()], it->first);
-				//parents[it->first->GetTag()] = u;
+				costs[it->first->GetTag()] = it->second;
+				priorityQueue.emplace(it->second, it->first);
 				parents.emplace(it->first->GetTag(), u);
 			}
 		}
 	}
 	// Print edges of MST using parent array
+	cout << __FUNCTION__ << " edges of Minimum Spanning Tree: " << endl;
 	for (map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = parents.begin(); it != parents.end(); it++)
 		cout << it->second->GetTag() << " - " << it->first << endl;
-	size_t sum = accumulate(keys.begin(), keys.end(), 0, [](size_t value, const map<TTag, long>::value_type& p) { return value + p.second; });
+	size_t sum = accumulate(costs.begin(), costs.end(), 0, [](size_t value, const map<TTag, long>::value_type& p) { return value + p.second; });
 	return sum;
 }
 template<typename TTag, typename TItem>

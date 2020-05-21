@@ -540,6 +540,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(b.size() == 9);
 	assert(b[0] == 2);
 	assert(b[b.size() - 1] == 76);
+	cout << "Longest alternating subsequence of ";
+	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	cout << ": ";
+	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	cout << endl;
 	ull.clear();
 	ull = {1,2,1,2};
 	unsigned long long findMaxResult = findMax(ull);
@@ -1911,6 +1916,7 @@ size_t sherlockAndAnagrams(string const& s)
 }
 void PalindromeTests()
 {
+	set<string> palindromes;
 	assert(isPalindrome("abcdefghhgfedecba"));
 	assert(!isPalindrome("aabbcd"));
 	assert(isPalindrome("aabbc"));
@@ -1940,6 +1946,25 @@ void PalindromeTests()
 	assert(FindBiggestPalindromeSubstring("DEFABCCBAYT") == "ABCCBA");
 	assert(PalindromeAnagramCount("02002") == 11);
 	assert(PalindromeAnagramCount1("02002") == 11);
+	FindPalindromeSubstrings("a", palindromes);
+	assert(palindromes.empty());
+	palindromes.clear();
+	FindPalindromeSubstrings("aa", palindromes);
+	assert(palindromes.size() == 1);
+	assert(palindromes.find("aa") != palindromes.end());
+	palindromes.clear();
+	FindPalindromeSubstrings("aaa", palindromes);
+	assert(palindromes.size() == 2);
+	assert(palindromes.find("aa") != palindromes.end());
+	assert(palindromes.find("aaa") != palindromes.end());
+	palindromes.clear();
+	FindPalindromeSubstrings("aba", palindromes);
+	assert(palindromes.size() == 1);
+	assert(palindromes.find("aba") != palindromes.end());
+	palindromes.clear();
+	FindPalindromeSubstrings("aaazaaksforskeeggeeks", palindromes);
+	assert(palindromes.find("skeeggeeks") != palindromes.end());
+	assert(palindromes.find("aazaa") != palindromes.end());
 }
 bool isPalindrome(string const& s)
 {
@@ -2045,6 +2070,22 @@ string FindBiggestPalindromeSubstring(string const& s)
 		}
 	}
 	return palindrome;
+}
+void FindPalindromeSubstrings(string const& s, set<string>& result)
+{
+	size_t length = s.size();
+	for (size_t center = 0; center <= 2 * length - 1; center++) {
+		long left = center / 2;
+		long right = left + center % 2;
+		string palindrome; // Keep the biggest palindrome around the current 'center'
+		while (left >= 0 && right < length && s[left] == s[right]) {
+			palindrome = s.substr(left, right - left + 1);
+			left--;
+			right++;
+		}
+		if (!palindrome.empty() && palindrome.size() > 1)
+			result.insert(palindrome);
+	}
 }
 // https://app.codility.com/programmers/task/winter_lights/
 // WinterLights
@@ -8149,7 +8190,7 @@ int kruskals(int nodes, vector<long>& from, vector<long>& to, vector<long>& weig
 // https://www.hackerrank.com/challenges/primsmstsub/problem
 // https://en.wikipedia.org/wiki/Prim%27s_algorithm
 // https://www.geeksforgeeks.org/prims-algorithm-using-priority_queue-stl/
-// 2 cases with 1000 vertices and 10,000 edges failed
+// 100%
 size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>>& edges, long start)
 {
 	Graph<long, long> graph;

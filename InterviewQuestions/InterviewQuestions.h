@@ -147,6 +147,7 @@ bool isPalindrome1(string const&);
 bool isPalindrome2(string const&);
 bool SherlockValidString(string const&);
 string FindBiggestPalindromeSubstring(string const&);
+void FindPalindromeSubstrings(string const&, set<string>&);
 size_t PalindromeAnagramCount(string const&);
 size_t PalindromeAnagramCount1(string const &);
 bool AreRotatedStrings(string const &, string const &, size_t);
