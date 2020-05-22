@@ -1655,6 +1655,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	a = { 43, 65, 1, 98, 99, 101 };
 	assert(AlmostSorted(a) == "no");
 	assert(cipher(4, string("1110101001")) == "1001011");
+	assert(DecryptPassword(string("43Ah*ck0rr0nk")) == "hAck3rr4nk");
+	assert(DecryptPassword(string("51Pa*0Lp*0e")) == "aP1pL5e");
 	/***** The End *****/
 	cout << endl;
 	cout << "Press ENTER to exit!";
@@ -8661,6 +8663,33 @@ string cipher(size_t k, string& s)
 		for (size_t j = 0; j < k; j++)
 			results[j].push_back(bit);
 		result.push_back((char)(bit + '0'));
+	}
+	return result;
+}
+// Encryption scheme:
+// If s[i] is lowercase and s[i+1] is uppercase, swap them and add an asterik '*' after them
+// If s[i] is a number, replace it with 0 and place the original number at the beginning.
+// 100%
+string DecryptPassword(string& s) 
+{
+	string result;
+	long numbers = -1;
+	for (size_t i = 0; i < s.size() && isdigit(s[i]) && s[i] != '0'; i++) {
+		if (isdigit(s[i]) && s[i] != '0')
+			numbers = i;
+	}
+	for (size_t i = numbers + 1; i < s.size(); ) {
+		if (i < s.size() - 2 && isupper(s[i]) && islower(s[i + 1]) && s[i + 2] == '*') {
+			result.push_back(s[i + 1]);
+			result.push_back(s[i]);
+			i += 3;
+		}
+		else if (s[i] == '0') {
+			result.push_back(s[numbers--]);
+			i++;
+		}
+		else
+			result.push_back(s[i++]);
 	}
 	return result;
 }
