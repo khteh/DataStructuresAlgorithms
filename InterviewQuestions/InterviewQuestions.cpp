@@ -1924,8 +1924,24 @@ size_t sherlockAndAnagrams(string const& s)
 	SuffixTree tree(s);
 	return tree.AnagramSubStrings();
 }
-// https://www.hackerrank.com/challenges/sherlock-and-cost/problem
-// 100%
+/*
+	https://www.hackerrank.com/challenges/sherlock-and-cost/problem
+	100%
+4 7 9
+i: 1
+hl = 4 - 1 = 3
+lh = 7 - 1 = 6
+hh = 7 - 4 = 3
+l = max(0, 0+3) = 3
+h = max(0+3, 0+6) = 6
+
+i: 2
+hl = 7 - 1 = 6
+lh = 9 - 1 = 8
+hh = 9 - 7 = 2
+l = max(3, 6+6) = 12
+h = max(6+2, 3+8) = 11
+*/
 size_t sherlockAndCost(vector<size_t>& data)
 {
 	size_t l = 0, h = 0, lh, hh, hl, newLow, newHigh;
