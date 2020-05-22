@@ -142,6 +142,7 @@ void RemoveDuplicateCharacters(string&);
 bool areAnagrams(string const&, string const &);
 void FindAnagrams(vector<string> const&, vector<vector<string>> &);
 size_t sherlockAndAnagrams(string const&);
+size_t sherlockAndCost(vector<size_t>&);
 bool isPalindrome(string const&);
 bool isPalindrome1(string const&);
 bool isPalindrome2(string const&);

@@ -1657,9 +1657,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(cipher(4, string("1110101001")) == "1001011");
 	assert(DecryptPassword(string("43Ah*ck0rr0nk")) == "hAck3rr4nk");
 	assert(DecryptPassword(string("51Pa*0Lp*0e")) == "aP1pL5e");
+	udata.clear();
+	udata = {1,2,3};
+	assert(sherlockAndCost(udata) == 2);
+	udata.clear();
+	udata = { 4,7,9 };
+	assert(sherlockAndCost(udata) == 12);
+	udata.clear();
+	udata = { 10, 1, 10, 1, 10 };
+	assert(sherlockAndCost(udata) == 36);
 	/***** The End *****/
-	cout << endl;
-	cout << "Press ENTER to exit!";
+	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
 	return 0;
 }
@@ -1915,6 +1923,24 @@ size_t sherlockAndAnagrams(string const& s)
 {
 	SuffixTree tree(s);
 	return tree.AnagramSubStrings();
+}
+// https://www.hackerrank.com/challenges/sherlock-and-cost/problem
+// 100%
+size_t sherlockAndCost(vector<size_t>& data)
+{
+	size_t l = 0, h = 0, lh, hh, hl, newLow, newHigh;
+	for (size_t i = 1; i < data.size(); i++) {
+		hl = abs((long)data[i - 1] - 1);
+		lh = abs((long)data[i] - 1);
+		hh = abs((long)data[i] - (long)data[i - 1]);
+
+		newLow = max(l, h + hl);
+		newHigh = max(h + hh, l + lh);
+
+		l = newLow;
+		h = newHigh;
+	}
+	return max(l, h);
 }
 void PalindromeTests()
 {
