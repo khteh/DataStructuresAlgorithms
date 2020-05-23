@@ -356,4 +356,4 @@ set<vector<size_t>> CoinChange(long, vector<size_t>&);
 set<vector<size_t>> Knapsack(long, vector<size_t>&);
 size_t UnboundedKnapsack(long, vector<size_t>&);
 string DecryptPassword(string&);
-size_t substrings(string&);
+unsigned long long substrings(string&);

@@ -125,13 +125,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "numeric_limits<int>::max(): " << numeric_limits<int>::max() << endl;
 	assert(1e5 == pow(10, 5));
 	assert(1e5 == 10e4);
-	assert(1e5 == 100000);
-	assert(pow(10, 5) == 100000);
+	assert(1e5 == 100'000);
+	assert(pow(10, 5) == 100'000);
 	assert(1e10 == 10e9);
 	assert(1e10 == pow(10, 10));
 	assert(1e6 == 10e5);
 	assert(1e6 == pow(10, 6));
-	assert(1e6 == 1000000);
+	assert(1e6 == 1'000'000);
+	assert(1e9 == 1'000'000'000ull);
 	assert(1e9 + 7 == 10e8 + 7);
 	assert(1e9 + 7 == pow(10,9) + 7);
 	cout << "1e9: "<< 1e9 << ", 10e9: " << 10e9 << endl;
@@ -1668,7 +1669,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(sherlockAndCost(udata) == 36);
 	assert(substrings(string("123")) == 164);
 	assert(substrings(string("1234")) == 1670);
-	//assert(substrings(string("972698438521")) == 445677619); Unfinished work!
+	assert(substrings(string("972698438521")) == 445677619);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -8758,32 +8759,26 @@ string DecryptPassword(string& s)
 	}
 	return result;
 }
-size_t substrings(string& n) 
+// https://www.hackerrank.com/challenges/sam-and-substrings/problem
+// 100 %
+unsigned long long substrings(string& s) 
 {
-#if 0
-	set<unsigned long long> numbers;
-	unsigned long long num;
-	istringstream(n) >> num;
-	numbers.insert(num);
-	for (unsigned long long i = 10; i <= num; i *= 10) {
-		for (unsigned long long j = num; j > 0; j /= i) {
-			numbers.insert(j / i);
-			numbers.insert(j % i);
-		}
-	}
-	size_t result = accumulate(numbers.begin(), numbers.end(), 0);
-	return result;
-#else
-	set<unsigned long long> numbers;
+	/* 
+	Example: "6789"
+ Frequency in substrings at positions
+Digit   Unit    Ten     Hundred     Thousand        Sum
+6       1       1       1           1           = 6*1*1111
+7       2       2       2                       = 7*2*111
+8       3       3                               = 8*3*11
+9       4                                       = 9*4*1
+		s[i] * n * 11..1 (s.size() - n + 1 times '1').
+	*/
 	unsigned long long sum = 0;
-	for (size_t i = 0; i < n.size(); i++)
-		for (size_t len = 1; len <= n.size() - i; len++) {
-			unsigned long long num;
-			istringstream(n.substr(i, len)) >> num;
-			numbers.insert(num);
-			sum += num;
-		}
-	size_t result = accumulate(numbers.begin(), numbers.end(), 0);
+	unsigned long long ones = 1;
+	for (int i = s.size() - 1; i >= 0; i--) {
+		sum += ((unsigned long long)s[i] - '0') * ones * (unsigned long long)(i + 1ull);
+		ones = (ones * 10 + 1) % (unsigned long long)(1e9 + 7);
+		sum %= (unsigned long long)(1e9 + 7);
+	}
 	return sum;
-#endif
 }
