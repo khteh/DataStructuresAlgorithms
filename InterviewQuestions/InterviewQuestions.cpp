@@ -1666,6 +1666,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	udata.clear();
 	udata = { 10, 1, 10, 1, 10 };
 	assert(sherlockAndCost(udata) == 36);
+	assert(substrings(string("123")) == 164);
+	assert(substrings(string("1234")) == 1670);
+	//assert(substrings(string("972698438521")) == 445677619); Unfinished work!
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -1906,7 +1909,7 @@ bool areAnagrams(string const &s1, string const &s2)
 	} else
 		return false;
 }
-void FindAnagrams(vector<string> const& s, vector<vector<string>> &result)
+size_t FindAnagrams(vector<string> const& s, vector<vector<string>> &result)
 {
 	map<string, vector<string>> anagrams;
 	for (vector<string>::const_iterator it = s.begin(); it != s.end(); it++) {
@@ -1914,15 +1917,30 @@ void FindAnagrams(vector<string> const& s, vector<vector<string>> &result)
 		sort(s1.begin(), s1.end());
 		anagrams[s1].push_back(*it);
 	}
-	for (map<string, vector<string>>::const_iterator it = anagrams.begin(); it != anagrams.end(); it++)
-		result.push_back(it->second);
+	size_t count = 0;
+	for (map<string, vector<string>>::const_iterator it = anagrams.begin(); it != anagrams.end(); it++) {
+		/*
+			2 elements: a a = [0,1] 1 pair of anagrams
+			3 elements: a a a = [0,1],[1,2],[0,2] 3 pairs of anagrams
+			4 elements: a a a a = [0,1],[1,2],[2,3],[0,2],[0,3] 5 pairs of anagrams
+			(n+1)*n/2 - n = ((n+1)*n - 2n) / 2 = (n^2 + n - 2n) / 2 = (n^2 - n) / 2 = (n * (n - 1)) / 2 (Note: Multiply BEFORE divide!)
+		*/
+		if (it->second.size() > 1)
+			result.push_back(it->second);
+		count += ((it->second.size() - 1) * it->second.size()) / 2;
+	}
+	return count;
 }
 // https://www.hackerrank.com/challenges/sherlock-and-anagrams/problem
-// Unfinished work!
+// 100%
 size_t sherlockAndAnagrams(string const& s)
 {
-	SuffixTree tree(s);
-	return tree.AnagramSubStrings();
+	vector<string> strings;
+	vector<vector<string>> anagrams;
+	for (size_t i = 0; i < s.size(); i++)
+		for (size_t len = 1; len <= s.size() - i; len++)
+			strings.push_back(s.substr(i, len));
+	return FindAnagrams(strings, anagrams);
 }
 /*
 	https://www.hackerrank.com/challenges/sherlock-and-cost/problem
@@ -1944,10 +1962,15 @@ h = max(6+2, 3+8) = 11
 */
 size_t sherlockAndCost(vector<size_t>& data)
 {
+	/*
+		lh: low to high from data[i - 1]=1 to data[i]
+		hl: high to low from data[i - 1] to data[i]=1
+		hh: hight to high from data[i - 1] to data[i]
+	*/
 	size_t l = 0, h = 0, lh, hh, hl, newLow, newHigh;
 	for (size_t i = 1; i < data.size(); i++) {
-		hl = abs((long)data[i - 1] - 1);
 		lh = abs((long)data[i] - 1);
+		hl = abs((long)data[i - 1] - 1);
 		hh = abs((long)data[i] - (long)data[i - 1]);
 
 		newLow = max(l, h + hl);
@@ -2122,7 +2145,7 @@ void FindPalindromeSubstrings(string const& s, set<string>& result)
 		long left = center / 2;
 		long right = left + center % 2;
 		string palindrome; // Keep the biggest palindrome around the current 'center'
-		while (left >= 0 && right < length && s[left] == s[right]) {
+		while (left >= 0 && right < (long)length && s[left] == s[right]) {
 			palindrome = s.substr(left, right - left + 1);
 			left--;
 			right++;
@@ -5035,12 +5058,13 @@ void AnagramTests()
 	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
 	strings.clear();
 	strings.push_back("star"); // "arst" : "star"
-	strings.push_back("dog");
+	strings.push_back("dog"); // "dgo" : "dog"
 	strings.push_back("car"); // "acr" : "car"
 	strings.push_back("rats"); // "arst" : rats
 	strings.push_back("arc"); // "acr" : "arc"
+	strings.push_back("god"); // "dgo" : "god"
 	vector<vector<string>> anagrams;
-	FindAnagrams(strings, anagrams);
+	assert(FindAnagrams(strings, anagrams) == 3);
 	for (vector<vector<string>>::const_iterator it = anagrams.begin(); it != anagrams.end(); it++) {
 		cout << "( ";
 		copy(it->begin(), it->end(), ostream_iterator<string>(cout, " "));
@@ -5049,12 +5073,11 @@ void AnagramTests()
 	assert(sherlockAndAnagrams("mom") == 2);
 	assert(sherlockAndAnagrams("abba") == 4);
 	assert(sherlockAndAnagrams("abcd") == 0);
-	cout << sherlockAndAnagrams("cdcd") << endl;
-	cout << sherlockAndAnagrams("kkkk") << endl;
-	cout << sherlockAndAnagrams("ifailuhkqq") << endl;
-	//assert(sherlockAndAnagrams("cdcd") == 5); //Unfinished work
-	//assert(sherlockAndAnagrams("kkkk") == 10); //Unfinished work
-	//assert(sherlockAndAnagrams("ifailuhkqq") == 3); //Unfinished work
+	assert(sherlockAndAnagrams("cdcd") == 5);
+	assert(sherlockAndAnagrams("kkkk") == 10);
+	assert(sherlockAndAnagrams("ifailuhkqq") == 3);
+	assert(sherlockAndAnagrams("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") == 166650);
+	assert(sherlockAndAnagrams("ifailuhkqqhucpoltgtyovarjsnrbfpvmupwjjjfiwwhrlkpekxxnebfrwibylcvkfealgonjkzwlyfhhkefuvgndgdnbelgruel") == 399);
 	cout << endl;
 }
 void StackTests()
@@ -8734,4 +8757,33 @@ string DecryptPassword(string& s)
 			result.push_back(s[i++]);
 	}
 	return result;
+}
+size_t substrings(string& n) 
+{
+#if 0
+	set<unsigned long long> numbers;
+	unsigned long long num;
+	istringstream(n) >> num;
+	numbers.insert(num);
+	for (unsigned long long i = 10; i <= num; i *= 10) {
+		for (unsigned long long j = num; j > 0; j /= i) {
+			numbers.insert(j / i);
+			numbers.insert(j % i);
+		}
+	}
+	size_t result = accumulate(numbers.begin(), numbers.end(), 0);
+	return result;
+#else
+	set<unsigned long long> numbers;
+	unsigned long long sum = 0;
+	for (size_t i = 0; i < n.size(); i++)
+		for (size_t len = 1; len <= n.size() - i; len++) {
+			unsigned long long num;
+			istringstream(n.substr(i, len)) >> num;
+			numbers.insert(num);
+			sum += num;
+		}
+	size_t result = accumulate(numbers.begin(), numbers.end(), 0);
+	return sum;
+#endif
 }
