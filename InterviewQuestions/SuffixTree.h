@@ -44,7 +44,6 @@ public:
 	const vector<size_t> GetIndexes(string const&);
 	const string LongestRepeatedSubstring();
 	const size_t LongestCommonSubstring(long);
-	const size_t AnagramSubStrings();
 	void Clear();
 	size_t Count();
 };
@@ -63,6 +62,5 @@ public:
 	const set<size_t> GetIndexes();
 	const set<size_t> GetIndexes(string const &);
 	const map<string, size_t> LongestRepeatedSubstring();
-	const map<size_t, string> AnagramSubStrings();
 	size_t Count();
 };

@@ -99,25 +99,6 @@ const string SuffixTree::LongestRepeatedSubstring()
 	}
 	return "";
 }
-const size_t SuffixTree::AnagramSubStrings()
-{
-	size_t count = 0;
-	map<size_t, string> result = m_root->AnagramSubStrings();
-	set<string> strings;
-	map<string, size_t> stringCount;
-	for (map<size_t, string>::iterator it = result.begin(); it != result.end(); it++) {
-		//set<string> strings;
-		splitString(it->first, it->second, ',', strings, stringCount);
-#if 0
-		if (!(it->first % 2))
-			count += strings.size();
-		else  if (!(strings.size() % 2))
-			count++; //+= strings.size();
-#endif
-	}							  
-	//return count;
-	return result.size() == 1 && result.find(1) != result.end() && strings.find(m_strings[0]) != strings.end() ? 0 : strings.size();
-}
 const size_t SuffixTree::LongestCommonSubstring(long n)
 {
 	size_t count = 0;
@@ -223,57 +204,6 @@ const set<size_t> SuffixTreeNode::GetIndexes(string const &str)
 		result = m_indices; // End of search string. Return indexes of this node.
 	if (m_children.find(str[0]) != m_children.end())
 		result = m_children[str[0]]->GetIndexes(str.substr(1));
-	return result;
-}
-const map<size_t, string> SuffixTreeNode::AnagramSubStrings()
-{
-	/*
-		 root ('\0')
-		m<2> o
-		o    m
-		m   <1>
-		<0>
-	*/
-	/*
-	       root
-		a<3> b
-		b    b   a
-		b    a  <2>
-		a   <1>
-	   <0>
-	*/
-	/*
-		   root
-		c       d <3>
-		d d<2>  c
-		c       d
-		d      <1>
-	   <0>
-	*/
-	string str;
-	ostringstream oss;
-	map<size_t, string> result;
-	if (m_char != '\0')
-		str = m_char;
-	bool isSplit = false;
-	for (map<char, unique_ptr<SuffixTreeNode>>::iterator it = m_children.begin(); it != m_children.end(); it++) {
-		map<size_t, string> tmp = it->second->AnagramSubStrings();
-		for (map<size_t, string>::iterator it1 = tmp.begin(); it1 != tmp.end(); it1++) {
-			isSplit = m_indices.size() != it1->first;
-			//oss << (it1->first == m_indices.size() ? str : "") << (result[it1->first] == it1->second ? "," : "") << it1->second;
-			oss << (it1->first == m_indices.size() ? str : "") << it1->second << (isSplit ? "," : "");
-			result[it1->first].append(oss.str());
-			oss.str("");
-		}
-	}
-	if ((m_char != '\0' && result.find(m_indices.size()) == result.end()) || m_children.empty())
-		result.emplace(m_indices.size(), str);
-#if 0
-	else if (result.find(m_indices.size()) != result.end()) {
-		oss << "," << str;
-		result[m_indices.size()].append(oss.str());
-	}
-#endif
 	return result;
 }
 const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
