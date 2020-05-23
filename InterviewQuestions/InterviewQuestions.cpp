@@ -8764,13 +8764,17 @@ string DecryptPassword(string& s)
 unsigned long long substrings(string& s) 
 {
 	/* 
-	Example: "6789"
+	Example: "6789". Substrings: 6, 7, 8, 9, 67, 78, 89, 678, 789, 6789.
  Frequency in substrings at positions
 Digit   Unit    Ten     Hundred     Thousand        Sum
 6       1       1       1           1           = 6*1*1111
 7       2       2       2                       = 7*2*111
 8       3       3                               = 8*3*11
 9       4                                       = 9*4*1
+
+7: 7 * 100 * 2 + 7 * 10 * 2 + 7 * 2 = (7 * 2)(100 + 10 + 1) = 7 * 2 * 111
+8: 8 * 10 * 3 + 8 * 3 = (8 * 3)(10 + 1) = 8 * 3 * 11
+
 		s[i] * n * 11..1 (s.size() - n + 1 times '1').
 	*/
 	unsigned long long sum = 0;
