@@ -28,7 +28,7 @@ Binary Search Tree:
 	-50	   10	75		150
 -100			60
 */
-template<class T>
+template<typename T>
 class Tree
 {
 protected:
