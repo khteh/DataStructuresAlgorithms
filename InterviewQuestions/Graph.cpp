@@ -110,10 +110,14 @@ void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex)
 			cout << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << " " << (*it)->GetTag() << "(" << (*it)->GetItem() << ") " << " [" << previous->GetCost(*it) << "] " << endl;
 	}
 }
-// https://www.hackerrank.com/challenges/primsmstsub/problem
-// https://en.wikipedia.org/wiki/Prim%27s_algorithm
-// https://www.geeksforgeeks.org/prims-algorithm-using-priority_queue-stl/
-// 100%
+/* https://www.hackerrank.com/challenges/primsmstsub/problem
+   https://en.wikipedia.org/wiki/Prim%27s_algorithm
+   https://www.geeksforgeeks.org/prims-algorithm-using-priority_queue-stl/
+   https://stackoverflow.com/questions/1195872/when-should-i-use-kruskal-as-opposed-to-prim-and-vice-versa
+   Use Prim's algorithm when you have a graph with lots of edges, i.e., if the number of edges to vertices is high.
+   Prim's algorithm is significantly faster in the limit when you've got a really dense graph with many more edges than vertices.
+   100%
+*/
 template<typename TTag, typename TItem>
 size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem>> start)
 {
@@ -128,7 +132,7 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 	// To keep track of vertices included in MST 
 	map<TTag, bool> inMST;
 
-	// Insert source itself in priority queue and initialize its key as 0. 
+	// Insert source itself in priority queue and initialize its cost as 0. 
 	priorityQueue.emplace(0, start);
 	costs.emplace(start->GetTag(), 0);
 	while (!priorityQueue.empty()) {
@@ -137,14 +141,14 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 		priorityQueue.erase(vertex);
 		inMST[u->GetTag()] = true; // Include vertex in MST
 		map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours = u->GetNeighboursWithCost();
-		for (map<shared_ptr<Vertex<TTag, TItem>>, long>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
-			//  If v is not in MST and weight of (u,v) is smaller than current key of v 
-			if (!inMST[it->first->GetTag()] && (costs.find(it->first->GetTag()) == costs.end() || costs[it->first->GetTag()] > it->second)) // it->second is edge cost from u to 'it'
+		for (map<shared_ptr<Vertex<TTag, TItem>>, long>::iterator v = neighbours.begin(); v != neighbours.end(); v++) {
+			//  If v is not in MST and weight of (u,v) is smaller than current cost of v 
+			if (!inMST[v->first->GetTag()] && (costs.find(v->first->GetTag()) == costs.end() || costs[v->first->GetTag()] > v->second)) // it->second is edge cost from u to 'it'
 			{
-				// Updating key of v 
-				costs[it->first->GetTag()] = it->second;
-				priorityQueue.emplace(it->second, it->first);
-				parents.emplace(it->first->GetTag(), u);
+				// Updating cost of v 
+				costs[v->first->GetTag()] = v->second;
+				priorityQueue.emplace(v->second, v->first);
+				parents.emplace(v->first->GetTag(), u);
 			}
 		}
 	}
@@ -152,19 +156,16 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 	cout << __FUNCTION__ << " edges of Minimum Spanning Tree: " << endl;
 	for (map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = parents.begin(); it != parents.end(); it++)
 		cout << it->second->GetTag() << " - " << it->first << endl;
-	size_t sum = accumulate(costs.begin(), costs.end(), 0, [](size_t value, const map<TTag, long>::value_type& p) { return value + p.second; });
-	return sum;
+	return accumulate(costs.begin(), costs.end(), 0, [](size_t value, const map<TTag, long>::value_type& p) { return value + p.second; });
 }
 template<typename TTag, typename TItem>
-void Graph<TTag, TItem>::Dijkstra(TTag source, set<shared_ptr<Vertex<TTag, TItem>>>& spt)// spt: Shortest Path Tree
+void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem>>, long>& costs)// spt: Shortest Path Tree
 {
-	//set<shared_ptr<Vertex<TTag, TItem>>> spt; 
+	set<shared_ptr<Vertex<TTag, TItem>>> spt; 
 	set<shared_ptr<Vertex<TTag, TItem>>> vertices;
 	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(source);
 	assert(vertex);
-	for (map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
-		it->second->ResetTotalCost();
-	vertex->SetTotalCost(0);
+	costs.emplace(vertex, 0);
 	for (; vertex;) {
 		spt.emplace(vertex);
 		// Update dist value of the adjacent vertices of the picked vertex. 
@@ -174,16 +175,18 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, set<shared_ptr<Vertex<TTag, TItem
 			// (1) is not in sptSet
 			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
 			// (3) and total weight of path from src to v through u is smaller than current value of dist[v]
-			if (spt.find(*it) == spt.end() && vertex->GetTotalCost() + vertex->GetCost(*it) < (*it)->GetTotalCost())
-				(*it)->SetTotalCost(vertex->GetTotalCost() + vertex->GetCost(*it));
-			if (spt.find(*it) == spt.end())
+			if (spt.find(*it) == spt.end()) {
+				long uCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
+				if (costs[vertex] + vertex->GetCost(*it) < uCost)
+					costs[*it] = costs[vertex] + vertex->GetCost(*it);
 				vertices.insert(*it);
+			}
 		}
 		vertex = nullptr;
 		long min = numeric_limits<long>::max();
 		for (set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
-			if ((*it)->GetTotalCost() < min) {
-				min = (*it)->GetTotalCost();
+			if (costs[*it] < min) {
+				min = costs[*it];
 				vertex = *it;
 			}
 		if (vertex)
@@ -199,9 +202,8 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 	shared_ptr<Vertex<TTag, TItem>> destination = GetVertex(dest);
 	assert(vertex);
 	assert(destination);
-	for (map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
-		it->second->ResetTotalCost();
-	vertex->SetTotalCost(0);
+	map<shared_ptr<Vertex<TTag, TItem>>, long> costs;
+	costs.emplace(vertex, 0);
 	for (; vertex && destination && vertex != destination;) {
 		spt.emplace(vertex);
 		// Update cost of the adjacent vertices of the picked vertex. 
@@ -212,22 +214,23 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
 			// (3) and total weight of path from src to v through u is smaller than current value of dist[v]
 			if (spt.find(*it) == spt.end()) {
-				if (vertex->GetTotalCost() + vertex->GetCost(*it) < (*it)->GetTotalCost())
-					(*it)->SetTotalCost(vertex->GetTotalCost() + vertex->GetCost(*it));
+				long uCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
+				if (costs[vertex] + vertex->GetCost(*it) < uCost)
+					costs[*it] = costs[vertex] + vertex->GetCost(*it);
 				vertices.insert(*it);
 			}
 		}
 		vertex = nullptr;
 		long min = numeric_limits<long>::max();
 		for (set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
-			if ((*it)->GetTotalCost() < min) {
-				min = (*it)->GetTotalCost();
+			if (costs[*it] < min) {
+				min = costs[*it];
 				vertex = *it;
 			}
 		if (vertex)
 			vertices.erase(vertex);
 	}
-	return vertex ? vertex->GetTotalCost() : -1;
+	return vertex ? costs[vertex] : -1;
 }
 // https://www.hackerrank.com/challenges/rust-murderer/problem
 // 3/7 test cases failed :(
@@ -299,7 +302,8 @@ template<typename TTag, typename TItem>
 long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>>& spt, shared_ptr<Vertex<TTag, TItem>> vertex, shared_ptr<Vertex<TTag, TItem>> destination)
 {
 	set<shared_ptr<Vertex<TTag, TItem>>> vertices;
-	vertex->SetTotalCost(0);
+	map<shared_ptr<Vertex<TTag, TItem>>, long> costs;
+	costs.emplace(vertex, 0);
 	for (; vertex && destination && vertex != destination;) {
 		spt.emplace(vertex);
 		// Update dist value of the adjacent vertices of the picked vertex. 
@@ -309,20 +313,21 @@ long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>>& spt
 			// (1) is not in sptSet
 			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
 			// (3) and total weight of path from src to v through u is smaller than current value of dist[v]
-			long cost = vertex->GetTotalCost();
 			long cost1 = vertex->GetCost(*it);
-			long nextHopCost = cost1 - cost;
-			long newTotalCost = nextHopCost > 0 ? cost + nextHopCost : cost;
-			if (spt.find(*it) == spt.end() && newTotalCost < (*it)->GetTotalCost())
-				(*it)->SetTotalCost(newTotalCost);
-			if (spt.find(*it) == spt.end())
+			long nextHopCost = cost1 - costs[vertex];
+			long newTotalCost = nextHopCost > 0 ? costs[vertex] + nextHopCost : costs[vertex];
+			if (spt.find(*it) == spt.end()) {
+				long uCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
+				if (newTotalCost < uCost)
+					costs[*it] = newTotalCost;
 				vertices.insert(*it);
+			}
 		}
 		vertex = nullptr;
 		long min = numeric_limits<long>::max();
 		for (set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
-			if ((*it)->GetTotalCost() < min) {
-				min = (*it)->GetTotalCost();
+			if (costs[*it] < min) {
+				min = costs[*it];
 				vertex = *it;
 			}
 		if (vertex)
@@ -330,7 +335,7 @@ long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>>& spt
 	}
 	if (vertex)
 		spt.emplace(vertex);
-	return vertex ? vertex->GetTotalCost() : -1;
+	return vertex ? costs[vertex] : -1;
 }
 template<typename TTag, typename TItem>
 TItem Graph<TTag, TItem>::MinSubTreesDifference(shared_ptr<Vertex<TTag, TItem>> node)

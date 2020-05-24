@@ -2863,17 +2863,17 @@ void GraphTests()
 			cout << (*it1)->GetItem() << " ";
 		cout << endl;
 	}
-	set<shared_ptr<Vertex<size_t, size_t>>> spt; // Shortest Path Tree
-	graph.Dijkstra(1, spt);
+	map<shared_ptr<Vertex<size_t, size_t>>, long> costs;
+	graph.Dijkstra(1, costs);
 	cout << "Vertex\tDistance from Source (1): " << endl;
-	for (set<shared_ptr<Vertex<size_t, size_t>>>::iterator it = spt.begin(); it != spt.end(); it++)
-		cout << (*it)->GetItem() << "\t" << (*it)->GetTotalCost() << endl;
+	for (map<shared_ptr<Vertex<size_t, size_t>>, long>::iterator it = costs.begin(); it != costs.end(); it++)
+		cout << it->first->GetItem() << "\t" << it->second << endl;
 	assert(graph.Dijkstra(1, 5) == 7);
 	graph.Remove(3);
 	assert(!graph.HasVertex(3));
 	assert(!v2->HasNeighbour(v3));
 	assert(!v5->HasNeighbour(v3));
-	spt.clear();
+	costs.clear();
 	graph.Clear();
 	assert(graph.Count() == 0);
 	v1 = graph.AddVertex(1);
@@ -2892,7 +2892,7 @@ void GraphTests()
 	assert(graph.Dijkstra(1, 3) == 3); // 1 + 2
 	assert(graph.Dijkstra(1, 4) == 3); // 1 + 2
 	assert(graph.Dijkstra(3, 4) == 4); // 2 + 2
-	spt.clear();
+	costs.clear();
 	graph.Clear();
 	data.clear();
 	data = {10,5,11};
@@ -8236,12 +8236,15 @@ vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int 
 	result.push_back(oss.str());
 	return result;
 }
-// https://www.hackerrank.com/challenges/kruskalmstrsub/problem
-// https://en.wikipedia.org/wiki/Kruskal%27s_algorithm
-// 100%
+/* https://www.hackerrank.com/challenges/kruskalmstrsub/problem
+   https://en.wikipedia.org/wiki/Kruskal%27s_algorithm
+   https://stackoverflow.com/questions/1195872/when-should-i-use-kruskal-as-opposed-to-prim-and-vice-versa
+   Kruskal can have better performance if the edges can be sorted in linear time, or are already sorted
+   100%
+*/
 int kruskals(int nodes, vector<long>& from, vector<long>& to, vector<long>& weight) 
 {
-	multiset<Edge> edges;
+	multiset<Edge> edges; // Sorted edges based on weights
 	int sum = 0;
 	for (size_t i = 0; i < weight.size(); i++)
 		edges.emplace(Edge(weight[i], from[i], to[i]));
@@ -8255,10 +8258,14 @@ int kruskals(int nodes, vector<long>& from, vector<long>& to, vector<long>& weig
 	}
 	return sum;
 }
-// https://www.hackerrank.com/challenges/primsmstsub/problem
-// https://en.wikipedia.org/wiki/Prim%27s_algorithm
-// https://www.geeksforgeeks.org/prims-algorithm-using-priority_queue-stl/
-// 100%
+/* https://www.hackerrank.com/challenges/primsmstsub/problem
+   https://en.wikipedia.org/wiki/Prim%27s_algorithm
+   https://www.geeksforgeeks.org/prims-algorithm-using-priority_queue-stl/
+   https://stackoverflow.com/questions/1195872/when-should-i-use-kruskal-as-opposed-to-prim-and-vice-versa
+   Use Prim's algorithm when you have a graph with lots of edges, i.e., if the number of edges to vertices is high.
+   Prim's algorithm is significantly faster in the limit when you've got a really dense graph with many more edges than vertices.
+   100%
+*/
 size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>>& edges, long start)
 {
 	Graph<long, long> graph;

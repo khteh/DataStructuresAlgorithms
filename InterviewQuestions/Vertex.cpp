@@ -106,11 +106,6 @@ long Vertex<TTag, TItem>::GetCost(shared_ptr<Vertex<TTag, TItem>> v)
 	return neighbours_.find(v) != neighbours_.end() ? neighbours_[v] : -1;
 }
 template<typename TTag, typename TItem>
-long Vertex<TTag, TItem>::GetTotalCost() const
-{
-	return cost_;
-}
-template<typename TTag, typename TItem>
 TItem Vertex<TTag, TItem>::GetSum(set<TTag> visited) const
 {
 	size_t sum = item_;
@@ -124,11 +119,6 @@ template<typename TTag, typename TItem>
 void Vertex<TTag, TItem>::ResetTotalCost()
 {
 	cost_ = numeric_limits<long>::max();
-}
-template<typename TTag, typename TItem>
-void Vertex<TTag, TItem>::SetTotalCost(long cost)
-{
-	cost_ = cost;
 }
 template<typename TTag, typename TItem>
 TItem Vertex<TTag, TItem>::MinSubGraphDifference(set<TTag> visited, TItem sum)
