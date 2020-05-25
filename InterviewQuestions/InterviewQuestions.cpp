@@ -298,6 +298,24 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(AreRotatedStrings(line, line1, 2));
 	if (AreRotatedStrings(line, line1, 2))
 		cout << line << " and " << line1 << " are rotated by 2 places" << endl;
+	udata.clear();
+	udata = {3,1,2};
+	assert(SolvabilityOfTheTilesGame(udata));
+	udata.clear();
+	udata = { 1,3,4,2 };
+	assert(SolvabilityOfTheTilesGame(udata));
+	udata.clear();
+	udata = { 1,2,3,5,4 };
+	assert(!SolvabilityOfTheTilesGame(udata));
+	udata.clear();
+	udata = { 4,1,3,2 };
+	assert(SolvabilityOfTheTilesGame(udata));
+	udata.clear();
+	udata = { 4,1,3,2 };
+	assert(SolvabilityOfTheTilesGame(udata));
+	udata.clear();
+	udata = { 1, 6, 5, 2, 3, 4 };
+	assert(!SolvabilityOfTheTilesGame(udata));
 	line = "abcdefcdbacd";
 	line1 = "abcd";
 	udata = FindSubString(line, line1);
@@ -8822,4 +8840,35 @@ Digit   Unit    Ten     Hundred     Thousand        Sum
 		sum %= (unsigned long long)(1e9 + 7);
 	}
 	return sum;
+}
+/* https://www.hackerrank.com/challenges/larrys-array/problem
+   https://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html
+Formula: ( (grid width odd) && (#inversions even) )  ||  ( (grid width even) && ((blank on odd row from bottom) == (#inversions even)) )
+   The given array can be then compared to a rectangle of width 3, and any height h, so that total number of tiles is (3*h)-1.
+   (Like it was (n*n)-1 in the original 15 tile puzzle)
+blank spaces for a grid with width 3 to satisfy (3*h)-1:
+0: add 2
+1: add 0
+2: add 1
+	100%
+*/
+bool SolvabilityOfTheTilesGame(vector<size_t>& data)
+{
+	size_t rows = data.size() / 3;
+	if (data.size() % 3)
+		rows++;
+	size_t blankSpaces = !(data.size() % 3) ? 0 : 3 * rows - data.size();
+	size_t inversions = 0;
+	size_t maxItem = *max_element(data.begin(), data.end());
+	if (blankSpaces == 0) {
+		data.push_back(++maxItem);
+		data.push_back(++maxItem);
+	} else if (blankSpaces == 2)
+		data.push_back(++maxItem);
+	for (size_t i = 0; i < data.size(); i++) {
+		size_t item = data[i];
+		size_t smallerCount = count_if(data.begin(), data.begin() + i, [&item](size_t i) {return i < item; });
+		inversions += item - 1 - smallerCount;
+	}
+	return !(inversions % 2);
 }

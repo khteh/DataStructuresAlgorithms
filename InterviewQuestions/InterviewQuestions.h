@@ -152,6 +152,7 @@ void FindPalindromeSubstrings(string const&, set<string>&);
 size_t PalindromeAnagramCount(string const&);
 size_t PalindromeAnagramCount1(string const &);
 bool AreRotatedStrings(string const &, string const &, size_t);
+bool SolvabilityOfTheTilesGame(vector<size_t>&);
 void RotateRightArray(vector<int>&, int);
 vector<int> RotateLeftArray(vector<int>&, int);
 vector<size_t> FindSubString(string const&, string const);
