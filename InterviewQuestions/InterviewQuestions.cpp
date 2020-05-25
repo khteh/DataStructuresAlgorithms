@@ -8850,25 +8850,16 @@ blank spaces for a grid with width 3 to satisfy (3*h)-1:
 0: add 2
 1: add 0
 2: add 1
+	Don't have to add anything to the input data to fulfil the (3*h)-1 tiles since the numbers to be added are, well, in sequence.
 	100%
 */
 bool SolvabilityOfTheTilesGame(vector<size_t>& data)
 {
-	size_t rows = data.size() / 3;
-	if (data.size() % 3)
-		rows++;
-	size_t blankSpaces = !(data.size() % 3) ? 0 : 3 * rows - data.size();
 	size_t inversions = 0;
-	size_t maxItem = *max_element(data.begin(), data.end());
-	if (blankSpaces == 0) {
-		data.push_back(++maxItem);
-		data.push_back(++maxItem);
-	} else if (blankSpaces == 2)
-		data.push_back(++maxItem);
 	for (size_t i = 0; i < data.size(); i++) {
 		size_t item = data[i];
-		size_t smallerCount = count_if(data.begin(), data.begin() + i, [&item](size_t i) {return i < item; });
-		inversions += item - 1 - smallerCount;
+		size_t smallerItems = count_if(data.begin(), data.begin() + i, [&item](size_t i) {return i < item; });
+		inversions += item - 1 - smallerItems;
 	}
 	return !(inversions % 2);
 }
