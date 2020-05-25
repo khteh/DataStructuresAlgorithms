@@ -8758,7 +8758,7 @@ Observation:
 string cipher(size_t n, size_t k, string& s) 
 {
 	string result;
-	if (!s.empty() && k <= s.size()) {
+	if (!s.empty() && k <= s.size() && s.size() >= n) {
 		result = s[0];
 		for (size_t i = 1; i < n; i++) {
 			if (i < k)
