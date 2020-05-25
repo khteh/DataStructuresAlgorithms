@@ -1655,7 +1655,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a = { 43, 65, 1, 98, 99, 101 };
 	assert(AlmostSorted(a) == "no");
-	assert(cipher(4, string("1110101001")) == "1001011");
+	assert(cipher(7, 4, string("1110101001")) == "1001011");
+	assert(cipher(4, 5, string("11000110")) == "1010");
 	assert(DecryptPassword(string("43Ah*ck0rr0nk")) == "hAck3rr4nk");
 	assert(DecryptPassword(string("51Pa*0Lp*0e")) == "aP1pL5e");
 	udata.clear();
@@ -8709,33 +8710,62 @@ size_t UnboundedKnapsack(long k, vector<size_t>& arr)
 		sums.insert(accumulate(it->begin(), it->end(), 0));
 	return sums.empty() ? 0 : *sums.rbegin();
 }
-/* https://www.hackerrank.com/challenges/cipher/problem
-1001011     shift 0
-01001011    shift 1
-001001011   shift 2
-0001001011  shift 3
-----------
-1110101001  <- XORed/encoded string s
-Times out with k >= 8868 and original decoded string length >= 100000
+/*
+  https://www.hackerrank.com/challenges/cipher/problem
+1001 011     shift 0
+0100 1011    shift 1
+0010 01011   shift 2
+0001 001011  shift 3
+-----------
+1110 101001  <- XORed/encoded string s
+
+1111 010     shift 0
+0111 1010    shift 1
+0011 11010   shift 2
+0001 111010  shift 3
+-----------
+1010 110110  <- XORed/encoded string s
+
+1101 101     shift 0
+0110 1101    shift 1
+0011 01101   shift 2
+0001 101101  shift 3
+-----------
+1001 101001  <- XORed/encoded string s
+
+0111 000     shift 0
+0011 1001    shift 1
+0001 11001   shift 2
+0000 111001  shift 3
+-----------
+0101 101001  <- XORed/encoded string s
+
+1010	  shift 0
+0101 0	  shift 1
+0010 10	  shift 2
+0001 010  shift 3
+0000 1010 shift 4
+-----------
+1100 0110
+
+Observation:
+	Result is derived from the encoded string s and the computed result so far. Intermediate shifted strings are distractions.
+	result[0] = s[0]
+	For i < k, result[i] = s[i - 1] == s[i] ? '0' : '1'
+	For i >= k, result[i] = s[i - 1] == s[i] ? result[i - k] : result[i - k] == '1' ? '0' : '1'
+100%
 */
-string cipher(size_t k, string& s) 
+string cipher(size_t n, size_t k, string& s) 
 {
 	string result;
-	vector<vector<size_t>> results(k);
-	for (size_t i = 0; i < k; i++) {
-		results[i] = vector<size_t>();
-		for (size_t j = 0; j < i; j++)
-			results[i].push_back(0);
-	}
-	for (size_t i = 0; i <= s.size() - k; i++) {
-		size_t bit = s[i] - '0';
-		for (size_t j = 0; j < k; j++) {
-			if (i && j)
-				bit ^= results[j][i];
+	if (!s.empty() && k <= s.size()) {
+		result = s[0];
+		for (size_t i = 1; i < n; i++) {
+			if (i < k)
+				result.push_back(s[i - 1] == s[i] ? '0' : '1');
+			else
+				result.push_back(s[i - 1] == s[i] ? result[i - k] : result[i - k] == '1' ? '0' : '1');
 		}
-		for (size_t j = 0; j < k; j++)
-			results[j].push_back(bit);
-		result.push_back((char)(bit + '0'));
 	}
 	return result;
 }
