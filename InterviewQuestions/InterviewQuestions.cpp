@@ -1711,6 +1711,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	a = absolutePermutation(10, 1);
 	b = { 2, 1, 4, 3, 6, 5, 8, 7, 10, 9 };
 	assert(a == b);
+	strings = {".......", "...O...", "....O..", ".......", "OO.....", "OO....."};
+	strings1 = {"OOO.OOO", "OO...OO", "OOO...O", "..OO.OO", "...OOOO", "...OOOO"};
+	assert(bomberMan(3, strings) == strings1);
 	strings.clear();
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
@@ -9035,4 +9038,68 @@ vector<long> absolutePermutation(size_t n, size_t k)
 	if (a == sequence)
 		return result;
 	return vector<long>(1, -1);
+}
+// https://www.hackerrank.com/challenges/bomber-man/problem
+// Times out!
+vector<string> bomberMan(size_t n, vector<string>& grid) 
+{
+	set<size_t> seconds;
+	ostringstream oss;
+	for (size_t second = 0; second <= n; second++) {
+		if (!second) {
+			// Initial state
+			for (size_t i = 0; i < grid.size(); i++)
+				for (size_t j = 0; j < grid[i].size(); j++) {
+					if (grid[i][j] == 'O')
+						grid[i][j] = '0'; // to detonate at third second. second % 3
+				}
+			seconds.insert(3);
+			continue;
+		}
+		// After one second, Bomberman does nothing.
+		if (second == 1)
+			continue;
+		if (seconds.find(second) != seconds.end()) { // Blow up!
+			oss.str("");
+			oss << second % 3;
+			char pattern = oss.str()[0];
+			for (size_t i = 0; i < grid.size(); i++)
+				for (size_t j = 0; j < grid[i].size(); j++) {
+					if (grid[i][j] == pattern) {
+						grid[i][j] = '.';
+						if (i > 0 && grid[i - 1][j] != pattern)
+							grid[i - 1][j] = '.';
+						if (i < grid.size() - 1 && grid[i + 1][j] != pattern)
+							grid[i + 1][j] = '.';
+						if (j > 0 && grid[i][j - 1] != pattern)
+							grid[i][j - 1] = '.';
+						if (j < grid[i].size() - 1 && grid[i][j + 1] != pattern)
+							grid[i][j + 1] = '.';
+					}
+				}
+			//cout << second << " (" << pattern << "): " << " blow up!" << endl;
+			//for (size_t i = 0; i < grid.size(); i++)
+			//    cout << grid[i] << endl;
+		}
+		else { // Plant bombs
+			oss.str("");
+			oss << second % 3;
+			char pattern = oss.str()[0];
+			for (size_t i = 0; i < grid.size(); i++)
+				for (size_t j = 0; j < grid[i].size(); j++) {
+					if (grid[i][j] == '.')
+						grid[i][j] = pattern; // to detonate at second + 2
+				}
+			seconds.insert(second + 3);
+			//cout << second << " (" << pattern << "): " << " plant bombs!" << endl;
+			//for (size_t i = 0; i < grid.size(); i++)
+			//    cout << grid[i] << endl;
+		}
+	}
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[i].size(); j++) {
+			if (grid[i][j] != '.')
+				grid[i][j] = 'O'; // to detonate at third second. second % 3
+		}
+	return grid;
 }

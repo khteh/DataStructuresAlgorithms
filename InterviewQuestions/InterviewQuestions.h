@@ -360,3 +360,4 @@ unsigned long long substrings(string&);
 size_t steadyGene(string&);
 size_t TwoCrosses(vector<string>&);
 vector<long> absolutePermutation(size_t, size_t);
+vector<string> bomberMan(size_t, vector<string>&);
