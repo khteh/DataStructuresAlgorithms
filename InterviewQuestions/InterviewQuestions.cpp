@@ -1474,12 +1474,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(leaderBoardResult[1] == 4);
 	assert(leaderBoardResult[2] == 2);
 	assert(leaderBoardResult[3] == 1);
-	a = absolutePermutation(10, 0);
-	for (size_t i = 0; i < a.size(); i++)
-		assert(a[i] == i + 1);
-	a = absolutePermutation(10, 1);
-	//for (int i = 0; i < a.size(); i++)
-	//	assert(abs(a[i] - i - 1) == 1); Unfinished work!
 	a.clear();
 	a = {3,1,5,4,2};
 	assert(calculateMedian(a) == 3);
@@ -1711,6 +1705,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(TwoCrosses(strings) == 25);
 	strings = { "BGBBGB", "GGGGGG", "BGBBGB"};
 	assert(TwoCrosses(strings) == 25);
+	a = absolutePermutation(10, 0);
+	b = { 1,2,3,4,5,6,7,8,9,10 };
+	assert(a == b);
+	a = absolutePermutation(10, 1);
+	b = { 2, 1, 4, 3, 6, 5, 8, 7, 10, 9 };
+	assert(a == b);
 	strings.clear();
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
@@ -7936,26 +7936,6 @@ vector<size_t> climbingLeaderboard(vector<long>& scores, vector<long>& alice)
 	}
 	return result;
 }
-// https://www.hackerrank.com/challenges/absolute-permutation/problem
-// Unfinished work!
-vector<long> absolutePermutation(long n, long k) 
-{
-	vector<long> result;
-	if (k == 0) {
-		result.resize(n);
-		generate(result.begin(), result.end(), [n = 1]()mutable{return n++; });
-		return result;
-	}
-	else if (n / 2 != k)
-		return vector<long>(1, -1);
-	// |result[i] - i| = k
-	result.resize(n);
-	generate(result.begin(), result.end(), [i = k + 1, n]()mutable {
-		int tmp = i++ % n;
-		return !(tmp % n) ? n : tmp % n;
-	});
-	return result;
-}
 long calculateMedian(vector<long>& data)
 {
 	const auto middleItr = data.begin() + data.size() / 2;// +data.size() % 2;
@@ -9030,4 +9010,29 @@ size_t TwoCrosses(vector<string>& grid)
 		}
 	}
 	return *max_element(products.begin(), products.end());
+}
+// https://www.hackerrank.com/challenges/absolute-permutation/problem
+// 100%
+vector<long> absolutePermutation(size_t n, size_t k) 
+{
+	vector<long> sequence(n, 0);
+	generate(sequence.begin(), sequence.end(), [i = 1]()mutable{return i++; });
+	// |sequence[i] - i| = k
+	vector<long> a, b;
+	set<long> exists;
+	for (size_t i = 1; i <= n; i++) {
+		if (i > k && exists.find(i - k) == exists.end()) {
+			a.push_back(i - k);
+			exists.insert(i - k);
+		} else if (exists.find(i + k) == exists.end()) {
+			a.push_back(i + k);
+			exists.insert(i + k);
+		} else
+			return vector<long>(1, -1);
+	}
+	vector<long> result(a);
+	sort(a.begin(), a.end());
+	if (a == sequence)
+		return result;
+	return vector<long>(1, -1);
 }
