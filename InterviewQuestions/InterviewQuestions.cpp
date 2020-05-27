@@ -8930,6 +8930,7 @@ size_t steadyGene(string& gene)
 size_t TwoCrosses(vector<string>& grid) 
 {
 	multimap<size_t, vector<size_t>> crosses;
+	// Firstly, record all the crosses with size > 1. A single cell is considered a valid cross
 	for (size_t i = 1; i < grid.size(); i++)
 		for (size_t j = 1; j < grid[i].size(); j++) {
 			if (grid[i][j] == 'G') {
@@ -8954,6 +8955,7 @@ size_t TwoCrosses(vector<string>& grid)
 						crosses.emplace(size * 4 + 1, vector<size_t>{i, j});
 			}
 		}
+	// If no crosses with size > 1 found, return if there is a 'G' cell in the grid
 	if (crosses.empty()) {
 		for (vector<string>::iterator it = grid.begin(); it != grid.end(); it++)
 			if (it->find("G") != string::npos)
@@ -8962,6 +8964,7 @@ size_t TwoCrosses(vector<string>& grid)
 	vector<size_t> crossCentre;
 	set<size_t> products;
 	size_t product = 0, firstWidth = 0;
+	// Go through all the crosses, check for overlap and get the products of the 2 crosses.
 	for (multimap<size_t, vector<size_t>>::iterator it1 = crosses.begin(); it1 != crosses.end(); it1++) {
 		product = it1->first;
 		crossCentre = it1->second;
