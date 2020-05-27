@@ -8950,9 +8950,8 @@ size_t TwoCrosses(vector<string>& grid)
 				size_t size = min(left, right);
 				size = min(size, up);
 				size = min(size, down);
-				if (size)
-					for (; size; size--)
-						crosses.emplace(size * 4 + 1, vector<size_t>{i, j});
+				for (; size; size--)
+					crosses.emplace(size * 4 + 1, vector<size_t>{i, j});
 			}
 		}
 	// If no crosses with size > 1 found, return if there is a 'G' cell in the grid
