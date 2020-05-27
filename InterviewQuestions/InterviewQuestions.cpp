@@ -8979,16 +8979,16 @@ size_t TwoCrosses(vector<string>& grid)
 				size_t x = it->second[1], y = it->second[0];
 				size_t width = (it->first - 1) / 4;
 				// Above at the same x position
-				if (x == crossCentre[1] && y < crossCentre[0] && y + width < crossCentre[0] && y + width < crossCentre[0] - firstWidth && y < crossCentre[0] - firstWidth)
+				if (x == crossCentre[1] && y < crossCentre[0] && y + width < crossCentre[0] - firstWidth)
 					products.insert(product * it->first);
 				// Below at the same x position
-				else if (x == crossCentre[1] && y > crossCentre[0] && y - width > crossCentre[0] && y - width > crossCentre[0] + firstWidth && y > crossCentre[0] + firstWidth)
+				else if (x == crossCentre[1] && y > crossCentre[0] && y - width > crossCentre[0] + firstWidth)
 					products.insert(product * it->first);
 				// Left at the same y position
-				else if (y == crossCentre[0] && x < crossCentre[1] && x + width < crossCentre[1] && x + width < crossCentre[1] - firstWidth && x < crossCentre[1] - firstWidth)
+				else if (y == crossCentre[0] && x < crossCentre[1] && x + width < crossCentre[1] - firstWidth)
 					products.insert(product * it->first);
 				// Right at the same y position
-				else if (y == crossCentre[0] && x > crossCentre[1] && x - width > crossCentre[1] && x - width > crossCentre[1] + firstWidth && x > crossCentre[1] + firstWidth)
+				else if (y == crossCentre[0] && x > crossCentre[1] && x - width > crossCentre[1] + firstWidth)
 					products.insert(product * it->first);
 				// Top left of crossCentre
 				else if (x < crossCentre[1] && y < crossCentre[0]) {
