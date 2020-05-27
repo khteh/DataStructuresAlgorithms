@@ -1707,6 +1707,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(TwoCrosses(strings) == 81);
 	strings = { "GGGGGGGGGGGG", "GGGGGGGGGGGG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG" };
 	assert(TwoCrosses(strings) == 189);
+	strings = { "BGB", "GGG", "BGB", "BGB", "GGG", "BGB"};
+	assert(TwoCrosses(strings) == 25);
+	strings = { "BGBBGB", "GGGGGG", "BGBBGB"};
+	assert(TwoCrosses(strings) == 25);
 	strings.clear();
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
@@ -8959,6 +8963,7 @@ size_t TwoCrosses(vector<string>& grid)
 		for (vector<string>::iterator it = grid.begin(); it != grid.end(); it++)
 			if (it->find("G") != string::npos)
 				return 1;
+		return 0;
 	}
 	vector<size_t> crossCentre;
 	set<size_t> products;
@@ -8970,12 +8975,23 @@ size_t TwoCrosses(vector<string>& grid)
 		firstWidth = (it1->first - 1) / 4;
 		products.insert(product);
 		for (multimap<size_t, vector<size_t>>::iterator it = it1; it != crosses.end(); it++) {
-			if (it->first > 1 && !(it->second[0] == crossCentre[0] || it->second[1] == crossCentre[1])) {
+			if (it->first > 1) {
 				size_t x = it->second[1], y = it->second[0];
 				size_t width = (it->first - 1) / 4;
-				size_t product1 = product * it->first;
+				// Above at the same x position
+				if (x == crossCentre[1] && y < crossCentre[0] && y + width < crossCentre[0] && y + width < crossCentre[0] - firstWidth && y < crossCentre[0] - firstWidth)
+					products.insert(product * it->first);
+				// Below at the same x position
+				else if (x == crossCentre[1] && y > crossCentre[0] && y - width > crossCentre[0] && y - width > crossCentre[0] + firstWidth && y > crossCentre[0] + firstWidth)
+					products.insert(product * it->first);
+				// Left at the same y position
+				else if (y == crossCentre[0] && x < crossCentre[1] && x + width < crossCentre[1] && x + width < crossCentre[1] - firstWidth && x < crossCentre[1] - firstWidth)
+					products.insert(product * it->first);
+				// Right at the same y position
+				else if (y == crossCentre[0] && x > crossCentre[1] && x - width > crossCentre[1] && x - width > crossCentre[1] + firstWidth && x > crossCentre[1] + firstWidth)
+					products.insert(product * it->first);
 				// Top left of crossCentre
-				if (x < crossCentre[1] && y < crossCentre[0]) {
+				else if (x < crossCentre[1] && y < crossCentre[0]) {
 					size_t right = x + width;
 					size_t down = y + width;
 					size_t top = crossCentre[0] - firstWidth;
