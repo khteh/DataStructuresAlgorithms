@@ -915,14 +915,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	set<string> ngrams = intersectionNgram(string("This is a dog"), string("This is a cat"), 3);
 	assert(ngrams.size() == 1);
 	assert(ngrams.find("This is a") != ngrams.end());
-	cout << "3-gram result: ";
-	copy(ngrams.begin(), ngrams.end(), ostream_iterator<string>(cout, ", "));
-	cout << endl;
-
 	ngrams = intersectionNgram(string("This is a dog"), string("This is a cat"), 4);
 	assert(ngrams.size() == 0);
-	cout << "4-gram result: ";
-	copy(ngrams.begin(), ngrams.end(), ostream_iterator<string>(cout, ", "));
 	cout << endl;
 	data.clear();
 	data.resize(4);
@@ -1689,6 +1683,31 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(substrings(string("123")) == 164);
 	assert(substrings(string("1234")) == 1670);
 	assert(substrings(string("972698438521")) == 445677619);
+	assert(steadyGene(string("ACGT")) == 0);
+	assert(steadyGene(string("AAAA")) == 3);
+	assert(steadyGene(string("ACAA")) == 2);
+	assert(steadyGene(string("ACTGAAAG")) == 2);
+	assert(steadyGene(string("GAAATAAA")) == 5);
+	assert(steadyGene(string("TGATGCCGTCCCCTCAACTTGAGTGCTCCTAATGCGTTGC")) == 5);
+	//assert(steadyGene(string("ACAAAAATAAACAAAAACAAAAAAAAAATAAATACAATAAAAAAAAAAAATGAAATACAACAACAAATAAAATAAAAACGACTAAAAAATAAAAAAAAAAAAAAAAAGAGTACTAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAACACAATCAAAATAAACAAAAAAAAAAAAACCAAAATAATCAACAAAAAAAAAAAAAACAAAAACAACAACAAACAAAAAAAAACACAAACAAAAAAAAAAAAAAAACAAAACAAACAAAAAAAAAAAAACAAAAAAACAAAAAAAAAAAAAAAAACAAAAAAAAAAATAAAAAAAAAAAAAAAAAAAAAACAAACAAAAAAAAAAAATACAAAAAGCTATAAAAAAAAAAAAATTAAAAAACAAAAAAAAATAAAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAAAAAAGAAAAACAAAAAAAAAAAAAAAAACAACCAAAAAACAAAAAAAAACTAAAAAAAAAAAAAAAAAAAAAAAAAAATAACAAAAAACACAAAAAAAAAAAAGAAAGAAAAAAAACACAAAAAAAAACAAACAAAAAAAAAAAAAAAAAAAGAAAACAAAAAAACAAAAAAAACAAAAAAAAAACAAAAATTGGACAAAAAAAAACAAAAAAAAAAAACAAAAAAAGTAAAACAAATAAAAAAACAAAAAAAACAAAAAAAAAAAAAAAAAACAAAAAAGAAACAAAAAACAAAAAAAAATAACAAAACCAAAAAACAAATAAAAAACAAAAAAAATAACACAAAAAAAAAAAGAAACAAAAAAAAAAAAAAAAAAAAAAATTATAAAAAAAAAAAAAAAACAAAAAAAAAAAAAACAAAAAAAAAAGGAAAAAAAAAAAAAAAAAAAAAAAAAAATAACTAAACAAAAAAAAACAAACAAAAAATCAAAAAAAAAAAAGAAAAAAGAATAAGCAACAAAAACACAAAAAAAAAAAAAAAAAAAAAAAACATAAACAATAATAAAAAAAAAACAAAAAAAACAAAAGAACAACAAAAAACAAAACTAAACAAATAAAAAAAAAAAAACAAAAACTACAAAAAAAAAAAGAAAAAAAAAGAAAAAAAAACAAATAAAAGAAAAAAAAAAAAAAAAAAAACACAAAAAAAAAAATAAAAAAAAAAAAAAAAACAAAATAAACAAAAACAAAGAAAAAAACAAACAAAAAAAAAAAACAAAAAACTAAAAACAAAAAAAAAACAAAACACAAAAAAAAAAAAAAATAAAAAAAAAACAAAAAAACAAAAAGGAAAAAAAAAAAAGAACAAAAAAAAAAACAACAGAAAAAAGAAAAGAAAAAAAAAAAAAGACCACAAAATAAAAAAAAACAACAAACAAAAAAAAACAAAACAAAAAAACGAACAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAAAAAAAGGCAAAAACAAAAAAAACAAAACAAAACAAAAAAACAAAAAAAAATTAAGATAAAGAACAAAAAAAGAAGAGAAAAAATTAACAAAAAAAAAAAAATAAAAAATACAAAAAGAAATAAAAAATACAACACACAACAAAAACGAAAAAAAAAAAAAAAACACAAAATAGAAAAAAAAAAAAAACAAAAAAAAAAAAAAGAAAAAAACAAAAAAAAAAAAATAAAAAAAAACGACACAGAAACAAAAAATAACAAAAAAAAAAAAAATAAAAAAAAAACAAAAAAAAAACAAAAAATAAAAAAAAAAACAAACAAAAAAAAAAAAAAAATAAAAAAAAAAAAAGCAAAACATAAACAAGAAAAAAAAAAAAAGTACAAATAACAAAACAAAAAAGACACTAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAACCACAAAACAAAAAAATAAAGCAAAAAAAAAAAAAAAAAAAAAAAAAAAATAAATGAAAAAAAAAAGAAAACCAAAAAAATAAAAGA")) == 1393); stack overflow!
+	strings.clear();
+	strings = { "GGGGGGGGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GGGGGGGGG" };
+	assert(TwoCrosses(strings) == 1);
+	strings = {"GGGGGGG", "BGBBBBG", "BGBBBBG", "GGGGGGG", "GGGGGGG", "BGBBBBG"};
+	assert(TwoCrosses(strings) == 5);
+	strings = { "GBGBGGB", "GBGBGGB", "GBGBGGB", "GGGGGGG", "GGGGGGG", "GBGBGGB", "GBGBGGB" };
+	assert(TwoCrosses(strings) == 45);
+	strings = { "GGGGGGGG", "GBGBGGBG", "GBGBGGBG", "GGGGGGGG", "GBGBGGBG", "GGGGGGGG", "GBGBGGBG", "GGGGGGGG" };
+	assert(TwoCrosses(strings) == 81);
+	strings = { "GGGGGGGGGG", "GBBBBBBGGG", "GGGGGGGGGG", "GGGGGGGGGG", "GBBBBBBGGG", "GGGGGGGGGG", "GBBBBBBGGG", "GBBBBBBGGG", "GGGGGGGGGG" };
+	assert(TwoCrosses(strings) == 45);
+	strings = { "BBBBBGGBGG", "GGGGGGGGGG", "GGGGGGGGGG", "BBBBBGGBGG", "BBBBBGGBGG", "GGGGGGGGGG", "BBBBBGGBGG", "GGGGGGGGGG", "BBBBBGGBGG", "GGGGGGGGGG" };
+	assert(TwoCrosses(strings) == 85);
+	strings = { "GGGGGGGGGGGG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GGGGGGGGGGGG", "GBGGBBBBBBBG" };
+	assert(TwoCrosses(strings) == 81);
+	strings = { "GGGGGGGGGGGG", "GGGGGGGGGGGG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG" };
+	assert(TwoCrosses(strings) == 189);
+	strings.clear();
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -6431,18 +6450,18 @@ void split(const string &s, char delim, vector<string> &elems)
 	while (getline(ss, item, delim))
 		elems.push_back(item);
 }
-//file: "This is a dog"
-//0: This is a
-//1: is a dog
+// file: "This is a dog"
+// 0: This is a
+// 1: is a dog
 set<string> process(string& file, int n)
 {
 	ostringstream oss;
 	vector<string> words;
 	set<string> ngrams;
 	split(file, ' ', words);
-	for (size_t i = 0; i <= words.size() - n; i++)
+	for (size_t i = 0; i <= words.size() - n; i++) // i: 0, 1
 	{
-		for (size_t j = i; j < (i + n); j++) {
+		for (size_t j = i; j < (i + n); j++) { // j: [0,2] [1,3]: "This is a", "is a dog"
 			oss << words[j];
 			if (j != i + n - 1)
 				oss << ' ';
@@ -8862,4 +8881,135 @@ bool SolvabilityOfTheTilesGame(vector<size_t>& data)
 		inversions += item - 1 - smallerItems;
 	}
 	return !(inversions % 2);
+}
+size_t steadyGene(string& gene)
+{
+	size_t count = gene.size() / 4;
+	map<char, size_t> counts;
+	for (string::iterator it = gene.begin(); it != gene.end(); it++) {
+		pair<map<char, size_t>::iterator, bool> tmp = counts.emplace(*it, 1);
+		if (!tmp.second)
+			counts[*it]++;
+	}
+	size_t shortage = 0;
+	if (counts.find('A') == counts.end())
+		shortage += count;
+	else if (counts['A'] < count)
+		shortage += count - counts['A'];
+	if (counts.find('C') == counts.end())
+		shortage += count;
+	else if (counts['C'] < count)
+		shortage += count - counts['C'];
+	if (counts.find('G') == counts.end())
+		shortage += count;
+	else if (counts['G'] < count)
+		shortage += count - counts['G'];
+	if (counts.find('T') == counts.end())
+		shortage += count;
+	else if (counts['T'] < count)
+		shortage += count - counts['T'];
+	if (shortage) {
+		SuffixTree stree(gene);
+		string repeat = stree.LongestRepeatedSubstring();
+		if (repeat.empty())
+			throw runtime_error("Invalid string input!");
+		set<char> repeatChars(repeat.begin(), repeat.end());
+		if (repeat.size() >= shortage || repeatChars.size() == 4)
+			return shortage;
+		else {
+			size_t tmp = repeat.size();
+			for (size_t i = 0; i < shortage - repeat.size(); i++)
+				repeat.push_back(repeat[0]);
+			return gene.find(repeat) != string::npos ? shortage : tmp + count;
+		}
+	}
+	return 0;
+}
+// https://www.hackerrank.com/challenges/two-pluses/problem
+// 100%
+size_t TwoCrosses(vector<string>& grid) 
+{
+	multimap<size_t, vector<size_t>> crosses;
+	for (size_t i = 1; i < grid.size(); i++)
+		for (size_t j = 1; j < grid[i].size(); j++) {
+			if (grid[i][j] == 'G') {
+				size_t up = 0, down = 0, left = 0, right = 0;
+				// UP
+				for (long k = i - 1; k >= 0 && grid[k][j] == 'G'; k--)
+					up++;
+				// DOWN
+				for (long k = i + 1; k < (long)grid.size() && grid[k][j] == 'G'; k++)
+					down++;
+				// LEFT
+				for (long k = j - 1; k >= 0 && grid[i][k] == 'G'; k--)
+					left++;
+				// RIGHT
+				for (long k = j + 1; k < (long)grid[i].size() && grid[i][k] == 'G'; k++)
+					right++;
+				size_t size = min(left, right);
+				size = min(size, up);
+				size = min(size, down);
+				if (size)
+					for (; size; size--)
+						crosses.emplace(size * 4 + 1, vector<size_t>{i, j});
+			}
+		}
+	if (crosses.empty()) {
+		for (vector<string>::iterator it = grid.begin(); it != grid.end(); it++)
+			if (it->find("G") != string::npos)
+				return 1;
+	}
+	vector<size_t> crossCentre;
+	set<size_t> products;
+	size_t product = 0, firstWidth = 0;
+	for (multimap<size_t, vector<size_t>>::iterator it1 = crosses.begin(); it1 != crosses.end(); it1++) {
+		product = it1->first;
+		crossCentre = it1->second;
+		firstWidth = (it1->first - 1) / 4;
+		products.insert(product);
+		for (multimap<size_t, vector<size_t>>::iterator it = it1; it != crosses.end(); it++) {
+			if (it->first > 1 && !(it->second[0] == crossCentre[0] || it->second[1] == crossCentre[1])) {
+				size_t x = it->second[1], y = it->second[0];
+				size_t width = (it->first - 1) / 4;
+				size_t product1 = product * it->first;
+				// Top left of crossCentre
+				if (x < crossCentre[1] && y < crossCentre[0]) {
+					size_t right = x + width;
+					size_t down = y + width;
+					size_t top = crossCentre[0] - firstWidth;
+					size_t left = crossCentre[1] - firstWidth;
+					if ((right < crossCentre[1] || top > y) && (left > x || down < crossCentre[0]))
+						products.insert(product * it->first);
+				}
+				// Bottom right of crossCentre
+				else if (x > crossCentre[1] && y > crossCentre[0]) {
+					size_t right = crossCentre[1] + firstWidth;
+					size_t down = crossCentre[0] + firstWidth;
+					size_t top = y - width;
+					size_t left = x - width;
+					if ((right < x || top > crossCentre[0]) && (left > crossCentre[1] || down < y))
+						products.insert(product * it->first);
+				}
+				// Top right of crossCentre
+				else if (x > crossCentre[1] && y < crossCentre[0]) {
+					size_t right = crossCentre[1] + firstWidth;
+					size_t top = crossCentre[0] - firstWidth;
+					size_t down = y + width;
+					size_t left = x - width;
+					if ((left > crossCentre[1] || top > y) && (down < crossCentre[1] || right < x))
+						products.insert(product * it->first);
+				}
+				// Bottom left of crossCentre
+				else if (x < crossCentre[1] && y > crossCentre[0]) {
+					size_t left = crossCentre[1] - firstWidth;
+					size_t down = crossCentre[0] + firstWidth;
+					size_t right = x + width;
+					size_t top = y - width;
+					if ((top > crossCentre[0] || left > x) && (right < crossCentre[1] || down < y))
+						products.insert(product * it->first);
+				}
+			}
+		}
+	}
+	return *max_element(products.begin(), products.end());
 }
