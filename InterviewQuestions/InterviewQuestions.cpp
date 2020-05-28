@@ -1714,6 +1714,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings = {".......", "...O...", "....O..", ".......", "OO.....", "OO....."};
 	strings1 = {"OOO.OOO", "OO...OO", "OOO...O", "..OO.OO", "...OOOO", "...OOOO"};
 	assert(bomberMan(3, strings) == strings1);
+	assert(FindSubsequenceRecursive(string("1221"), string("12")) == 2);
+	assert(FindSubsequenceRecursive(string("1234"), string("56")) == 0);
 	strings.clear();
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
@@ -7727,6 +7729,20 @@ size_t LongestIncreasingSubsequenceNlogN(vector<size_t>& data)
 		}
 	}
 	return tails.size();
+}
+// https://stackoverflow.com/questions/6877249/find-the-number-of-occurrences-of-a-subsequence-in-a-string
+size_t FindSubsequenceRecursive(string& str, string& tomatch)
+{
+	size_t result = 0;
+	if (tomatch.empty())
+		return 1;
+	else if (str.empty())
+		return 0;
+	if (str[0] == tomatch[0])
+		result += FindSubsequenceRecursive(str.substr(1), tomatch.substr(1)) + FindSubsequenceRecursive(str.substr(1), tomatch);
+	else
+		result += FindSubsequenceRecursive(str.substr(1), tomatch);
+	return result;
 }
 void cpluplus17()
 {
