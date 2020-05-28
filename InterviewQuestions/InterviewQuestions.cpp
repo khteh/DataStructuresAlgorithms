@@ -114,7 +114,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "sizeof(void*): " << sizeof(void*) << endl;
 	cout << "sizeof(int): " << (int)sizeof(int) << endl;
 	cout << "sizeof(long): " << (int)sizeof(long) << endl;
-	cout << "sizeof(size_t): " << (int)sizeof(size_t) << endl;
+	cout << "sizeof(size_t): " << (int)sizeof(size_t) << " max: " << numeric_limits<size_t>::max() << endl;
 	cout << "sizeof(long long): " << (int)sizeof(long long) << endl;
 	cout << "sizeof(unsigned long long): " << (int)sizeof(unsigned long long) << endl;
 	cout << "sizeof(double): " << (int)sizeof(double) << endl;
@@ -1716,8 +1716,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(bomberMan(3, strings) == strings1);
 	assert(FindSubsequenceRecursive(string("1221"), string("12")) == 2);
 	assert(FindSubsequenceRecursive(string("1234"), string("56")) == 0);
+	assert(FindSubsequenceRecursive(string("kkkkkkz"), string("kkkk")) == 15);
 	assert(FindSubsequenceDynamicProgramming(string("1221"), string("12")) == 2);
 	assert(FindSubsequenceDynamicProgramming(string("1234"), string("56")) == 0);
+	assert(FindSubsequenceDynamicProgramming(string("kkkkkkz"), string("kkkk")) == 15);
+	assert(shortPalindrome(string("kkkkkkz")) == 15);
+	assert(shortPalindrome(string("ghhggh")) == 4);
+	assert(shortPalindrome(string("cbbdcacccdaddbaabbaacbacacaaddaaacdbccccccbbadbbcdddddddaccbdbddcbacaaadbbdcbcbcdabdddbbcdccaacdccab")) == 242745);
 	strings.clear();
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
@@ -7752,16 +7757,14 @@ size_t FindSubsequenceDynamicProgramming(string& str, string& tomatch)
 		return 1;
 	else if (str.empty())
 		return 0;
-	str.push_back(0);
-	tomatch.push_back(0);
-	vector<vector<size_t>> counts(str.size(), vector<size_t>(tomatch.size()));
-	for (size_t i = 0; i < str.size(); i++)
-		for (size_t j = 0; j < tomatch.size(); j++) {
-			string str1 = str.substr(str.size() - i, i);
+	vector<vector<size_t>> counts(str.size() + 1, vector<size_t>(tomatch.size() + 1)); // Add one dimension for the empty element which is the base case
+	for (size_t i = 0; i <= str.size(); i++) {
+		string s = str.substr(str.size() - i, i);
+		for (size_t j = 0; j <= tomatch.size(); j++) {
 			string tomatch1 = tomatch.substr(tomatch.size() - j, j);
 			if (tomatch1.empty())
 				counts[i][j] = 1;
-			else if (str1.empty())
+			else if (s.empty())
 				counts[i][j] = 0;
 			else if (i > 0 && j > 0) {
 				/*
@@ -7769,11 +7772,53 @@ size_t FindSubsequenceDynamicProgramming(string& str, string& tomatch)
 					Intuitively this means "The number of matches for 221 / 2 includes all the matches for 21 / 2."
 				*/
 				counts[i][j] = counts[i - 1][j];
-				if (str1[0] == tomatch1[0])
+				if (s[0] == tomatch1[0])
 					counts[i][j] += counts[i - 1][j - 1];
 			}
 		}
-	return counts[str.size() - 1][tomatch.size() - 1];
+	}
+	return counts[str.size()][tomatch.size()];
+}
+// https://www.hackerrank.com/challenges/short-palindrome/problem
+// Times out!
+size_t shortPalindrome(string& s) 
+{
+	set<char> chars(s.begin(), s.end());
+	set<string> patterns;
+	string str(chars.begin(), chars.end());
+	string permutation;
+	for (size_t i = 0; i < str.size(); i++) {
+		permutation.clear();
+		permutation.push_back(str[i]);
+		permutation.push_back(str[i]);
+		permutation.push_back(str[i]);
+		permutation.push_back(str[i]);
+		patterns.insert(permutation);
+		for (size_t j = i + 1; j < str.size(); j++) {
+			permutation.clear();
+			permutation.push_back(str[j]);
+			permutation.push_back(str[j]);
+			permutation.push_back(str[j]);
+			permutation.push_back(str[j]);
+			patterns.insert(permutation);
+			permutation.clear();
+			permutation.push_back(str[i]);
+			permutation.push_back(str[j]);
+			permutation.push_back(str[j]);
+			permutation.push_back(str[i]);
+			patterns.insert(permutation);
+			permutation.clear();
+			permutation.push_back(str[j]);
+			permutation.push_back(str[i]);
+			permutation.push_back(str[i]);
+			permutation.push_back(str[j]);
+			patterns.insert(permutation);
+		}
+	}
+	size_t count = 0;
+	for (set<string>::iterator it = patterns.begin(); it != patterns.end(); it++)
+		count += FindSubsequenceDynamicProgramming(s, (string)(*it));
+	return count;
 }
 void cpluplus17()
 {
