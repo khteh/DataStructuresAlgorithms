@@ -320,6 +320,7 @@ size_t LongestIncreasingSubsequence(vector<size_t>&);
 size_t LongestIncreasingSubsequenceNlogN(vector<size_t>&);
 void IncreasingSequenceTests();
 size_t FindSubsequenceRecursive(string&, string&);
+size_t FindSubsequenceDynamicProgramming(string&, string&);
 void cpluplus17();
 long MaxProductOfThree(vector<long>&);
 size_t CountDiv(size_t, size_t, size_t);

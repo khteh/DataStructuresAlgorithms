@@ -1716,6 +1716,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(bomberMan(3, strings) == strings1);
 	assert(FindSubsequenceRecursive(string("1221"), string("12")) == 2);
 	assert(FindSubsequenceRecursive(string("1234"), string("56")) == 0);
+	assert(FindSubsequenceDynamicProgramming(string("1221"), string("12")) == 2);
+	assert(FindSubsequenceDynamicProgramming(string("1234"), string("56")) == 0);
 	strings.clear();
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
@@ -7743,6 +7745,35 @@ size_t FindSubsequenceRecursive(string& str, string& tomatch)
 	else
 		result += FindSubsequenceRecursive(str.substr(1), tomatch);
 	return result;
+}
+size_t FindSubsequenceDynamicProgramming(string& str, string& tomatch)
+{
+	if (tomatch.empty())
+		return 1;
+	else if (str.empty())
+		return 0;
+	str.push_back(0);
+	tomatch.push_back(0);
+	vector<vector<size_t>> counts(str.size(), vector<size_t>(tomatch.size()));
+	for (size_t i = 0; i < str.size(); i++)
+		for (size_t j = 0; j < tomatch.size(); j++) {
+			string str1 = str.substr(str.size() - i, i);
+			string tomatch1 = tomatch.substr(tomatch.size() - j, j);
+			if (tomatch1.empty())
+				counts[i][j] = 1;
+			else if (str1.empty())
+				counts[i][j] = 0;
+			else if (i > 0 && j > 0) {
+				/*
+					In cell [row][col] write the value found at [row-1][col].
+					Intuitively this means "The number of matches for 221 / 2 includes all the matches for 21 / 2."
+				*/
+				counts[i][j] = counts[i - 1][j];
+				if (str1[0] == tomatch1[0])
+					counts[i][j] += counts[i - 1][j - 1];
+			}
+		}
+	return counts[str.size() - 1][tomatch.size() - 1];
 }
 void cpluplus17()
 {
