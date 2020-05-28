@@ -1723,6 +1723,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(shortPalindrome(string("kkkkkkz")) == 15);
 	assert(shortPalindrome(string("ghhggh")) == 4);
 	assert(shortPalindrome(string("cbbdcacccdaddbaabbaacbacacaaddaaacdbccccccbbadbbcdddddddaccbdbddcbacaaadbbdcbcbcdabdddbbcdccaacdccab")) == 242745);
+	strings = {"123412", "561212", "123634", "781288"};
+	strings1 = {"12", "34"};
+	assert(gridSearch(strings, strings1));
 	strings.clear();
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
@@ -9194,4 +9197,48 @@ vector<string> bomberMan(size_t n, vector<string>& grid)
 				grid[i][j] = 'O'; // to detonate at third second. second % 3
 		}
 	return grid;
+}
+// https://www.hackerrank.com/challenges/the-grid-search/problem
+// 100%
+bool gridSearch(vector<string>& grid, vector<string>& pattern)
+{
+	size_t i = 0;
+	size_t found = 0;
+	set<size_t> locations;
+	for (size_t j = 0; j < grid.size() && i < pattern.size(); ) {
+		bool resetI = false;
+		set<size_t> locations1;
+		for (size_t offset = 0, tmp = 0; offset < grid[j].size() && tmp != string::npos; offset++) {
+			tmp = grid[j].find(pattern[i], offset);
+			if (tmp != string::npos)
+				locations1.insert(tmp);
+		}
+		if (locations1.empty() && !locations.empty()) {
+			locations.clear();
+			found = 0;
+			i = 0;
+			resetI = true;
+		}
+		else if (!locations1.empty() && locations.empty())
+			locations = locations1;
+		else if (!locations1.empty() && !locations.empty()) {
+			set<size_t> intersections;
+			set_intersection(locations1.begin(), locations1.end(), locations.begin(), locations.end(), inserter(intersections, intersections.begin()));
+			if (intersections.empty()) {
+				locations.clear();
+				found = 0;
+				i = 0;
+				resetI = true;
+			}
+			else
+				locations = intersections;
+		}
+		if (!locations.empty()) {
+			found++;
+			i++;
+		}
+		if (!resetI) // Do not advance row if we have to search for pattern from the start of the pattern block
+			j++;
+	}
+	return i == pattern.size() && found == pattern.size();
 }
