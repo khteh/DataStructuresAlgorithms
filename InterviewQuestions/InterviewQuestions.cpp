@@ -613,6 +613,27 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a = {1,3,5,8,6,4,2};
 	assert(diffpairs(a, 2) == 5);
+	a.clear();
+	a = {1,2,3,4,5,6};
+	assert(minDiffPairs(a, 0) == 3);
+	a.clear();
+	a = { 1,2,3,4,5,6 };
+	assert(minDiffPairs(a, 1) == 3);
+	a.clear();
+	a = { 1,2,3,4,5,6 };
+	assert(minDiffPairs(a, 4) == 2);
+	a.clear();
+	a = { 6,5,4,3,2,1 };
+	assert(minDiffPairs(a, 4) == 2);
+	a.clear();
+	a = { 3,5,1,6,2,4 };
+	assert(minDiffPairs(a, 4) == 2);
+	a.clear();
+	a = { 1,1,1,5,5,5,5 };
+	assert(minDiffPairs(a, 4) == 3);
+	a.clear();
+	a = { 1,1 };
+	assert(minDiffPairs(a, 1) == 0);
 	// 0 1 2 3 4 5 6 7 8 9
 	//         ^ (10 / 2 - 1)
 	// (0,9), (0,8)			2
@@ -3645,6 +3666,7 @@ void SortTests()
 	mt19937_64 engine(device());
 	uniform_int_distribution<long> uniformDistribution;
 	vector<long> a, b, sortData, buffer;
+	vector<size_t> udata;
 	sortData.clear();
 	sortData = {1,0,-1};
 	assert(sortData[0] == 1);
@@ -3898,6 +3920,12 @@ void SortTests()
 	assert(a[2] == 2);
 	assert(a[3] == 2);
 	assert(a[4] == 3);
+	udata.clear();
+	udata = { 2, 5, 3, 1 };
+	assert(SortSwapCount(udata) == 2);
+	udata.clear();
+	udata = { 3, 4, 2, 5, 1 };
+	assert(SortSwapCount(udata) == 2);
 }
 void BinarySearchTests()
 {
@@ -4218,6 +4246,52 @@ string CountingSort(vector<vector<string>>& data)
 		}
 	}
 	return oss.str();
+}
+/*
+   Count the minimum number of swaps needed to sort the data in either ascending or descending order
+data:         2 5 3 1
+sorted index: 1 3 2 0 <= 3 links (0:1 - 1:3 - 3:0) 2 swaps
+
+#index link #swaps
+	2		1
+	3		2
+	4		3
+	5		4
+Not optimized for big data input
+*/
+size_t SortSwapCount(vector<size_t>& data)
+{
+	size_t result = 0, resultDescend = 0;
+	set<size_t> visited, visitedDescend;
+	set<size_t> sorted(data.begin(), data.end());
+	set<size_t, greater<size_t>> sortedDescend(data.begin(), data.end());
+	for (size_t i = 0; i < data.size(); i++) {
+		if (distance(sorted.begin(), sorted.find(data[i])) != i) {
+			long offset = i;
+			size_t cnt = 0;
+			do {
+				offset = distance(sorted.begin(), sorted.find(data[offset]));
+				if (visited.find(offset) == visited.end()) {
+					cnt++;
+					visited.insert(offset);
+				}
+			} while (offset != i);
+			result += cnt > 0 ? cnt - 1 : 0;
+		}
+		if (distance(sortedDescend.begin(), sortedDescend.find(data[i])) != i) {
+			long offset = i;
+			size_t cnt = 0;
+			do {
+				offset = distance(sortedDescend.begin(), sortedDescend.find(data[offset]));
+				if (visitedDescend.find(offset) == visitedDescend.end()) {
+					cnt++;
+					visitedDescend.insert(offset);
+				}
+			} while (offset != i);
+			resultDescend += cnt > 0 ? cnt - 1 : 0;
+		}
+	}
+	return min(result, resultDescend);
 }
 void Swap(long &a, long &b)
 {
@@ -5649,6 +5723,32 @@ size_t diffpairs(set<long>& numbers, long diff)
 			//cout << *it << ", " << *srcIt << endl;
 	}
 	return count;
+}
+size_t minDiffPairs(vector<long>& numbers, long diff)
+{
+	size_t count = 0;
+	sort(numbers.begin(), numbers.end());
+	set<long> pairs;
+	if (numbers.size() < 2)
+		return 0;
+	size_t offset = 1;
+	for (size_t i = 0; i < numbers.size(); i++) {
+		if (pairs.find(i) != pairs.end())
+			continue;
+		int num = numbers[i];
+		for (size_t j = offset; j < numbers.size(); j++)
+		{
+			if (pairs.find(j) != pairs.end())
+				continue;
+			if (abs(numbers[i] - numbers[j]) >= diff) {
+				offset = j + 1;
+				pairs.insert(i);
+				pairs.insert(j);
+				break;
+			}
+		}
+	}
+	return pairs.size() / 2;
 }
 vector<char> AddVectors(vector<char>& a, vector<char>& b)
 {
