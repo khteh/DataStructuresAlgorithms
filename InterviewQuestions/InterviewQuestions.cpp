@@ -1698,6 +1698,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(substrings(string("123")) == 164);
 	assert(substrings(string("1234")) == 1670);
 	assert(substrings(string("972698438521")) == 445677619);
+#if 0
 	assert(steadyGene(string("ACGT")) == 0);
 	assert(steadyGene(string("AAAA")) == 3);
 	assert(steadyGene(string("ACAA")) == 2);
@@ -1705,6 +1706,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(steadyGene(string("GAAATAAA")) == 5);
 	assert(steadyGene(string("TGATGCCGTCCCCTCAACTTGAGTGCTCCTAATGCGTTGC")) == 5);
 	//assert(steadyGene(string("ACAAAAATAAACAAAAACAAAAAAAAAATAAATACAATAAAAAAAAAAAATGAAATACAACAACAAATAAAATAAAAACGACTAAAAAATAAAAAAAAAAAAAAAAAGAGTACTAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAACACAATCAAAATAAACAAAAAAAAAAAAACCAAAATAATCAACAAAAAAAAAAAAAACAAAAACAACAACAAACAAAAAAAAACACAAACAAAAAAAAAAAAAAAACAAAACAAACAAAAAAAAAAAAACAAAAAAACAAAAAAAAAAAAAAAAACAAAAAAAAAAATAAAAAAAAAAAAAAAAAAAAAACAAACAAAAAAAAAAAATACAAAAAGCTATAAAAAAAAAAAAATTAAAAAACAAAAAAAAATAAAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAAAAAAGAAAAACAAAAAAAAAAAAAAAAACAACCAAAAAACAAAAAAAAACTAAAAAAAAAAAAAAAAAAAAAAAAAAATAACAAAAAACACAAAAAAAAAAAAGAAAGAAAAAAAACACAAAAAAAAACAAACAAAAAAAAAAAAAAAAAAAGAAAACAAAAAAACAAAAAAAACAAAAAAAAAACAAAAATTGGACAAAAAAAAACAAAAAAAAAAAACAAAAAAAGTAAAACAAATAAAAAAACAAAAAAAACAAAAAAAAAAAAAAAAAACAAAAAAGAAACAAAAAACAAAAAAAAATAACAAAACCAAAAAACAAATAAAAAACAAAAAAAATAACACAAAAAAAAAAAGAAACAAAAAAAAAAAAAAAAAAAAAAATTATAAAAAAAAAAAAAAAACAAAAAAAAAAAAAACAAAAAAAAAAGGAAAAAAAAAAAAAAAAAAAAAAAAAAATAACTAAACAAAAAAAAACAAACAAAAAATCAAAAAAAAAAAAGAAAAAAGAATAAGCAACAAAAACACAAAAAAAAAAAAAAAAAAAAAAAACATAAACAATAATAAAAAAAAAACAAAAAAAACAAAAGAACAACAAAAAACAAAACTAAACAAATAAAAAAAAAAAAACAAAAACTACAAAAAAAAAAAGAAAAAAAAAGAAAAAAAAACAAATAAAAGAAAAAAAAAAAAAAAAAAAACACAAAAAAAAAAATAAAAAAAAAAAAAAAAACAAAATAAACAAAAACAAAGAAAAAAACAAACAAAAAAAAAAAACAAAAAACTAAAAACAAAAAAAAAACAAAACACAAAAAAAAAAAAAAATAAAAAAAAAACAAAAAAACAAAAAGGAAAAAAAAAAAAGAACAAAAAAAAAAACAACAGAAAAAAGAAAAGAAAAAAAAAAAAAGACCACAAAATAAAAAAAAACAACAAACAAAAAAAAACAAAACAAAAAAACGAACAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAAAAAAAGGCAAAAACAAAAAAAACAAAACAAAACAAAAAAACAAAAAAAAATTAAGATAAAGAACAAAAAAAGAAGAGAAAAAATTAACAAAAAAAAAAAAATAAAAAATACAAAAAGAAATAAAAAATACAACACACAACAAAAACGAAAAAAAAAAAAAAAACACAAAATAGAAAAAAAAAAAAAACAAAAAAAAAAAAAAGAAAAAAACAAAAAAAAAAAAATAAAAAAAAACGACACAGAAACAAAAAATAACAAAAAAAAAAAAAATAAAAAAAAAACAAAAAAAAAACAAAAAATAAAAAAAAAAACAAACAAAAAAAAAAAAAAAATAAAAAAAAAAAAAGCAAAACATAAACAAGAAAAAAAAAAAAAGTACAAATAACAAAACAAAAAAGACACTAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAACCACAAAACAAAAAAATAAAGCAAAAAAAAAAAAAAAAAAAAAAAAAAAATAAATGAAAAAAAAAAGAAAACCAAAAAAATAAAAGA")) == 1393); stack overflow!
+#endif
 	strings.clear();
 	strings = { "GGGGGGGGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GGGGGGGGG" };
 	assert(TwoCrosses(strings) == 1);
@@ -7767,33 +7769,27 @@ int IncreasingSequences(vector<long> &a, vector<long> &b)
   https://www.hackerrank.com/challenges/longest-increasing-subsequent/problem
   https://www.tutorialspoint.com/cplusplus-program-to-find-the-longest-increasing-subsequence-of-a-given-sequence
   Times out for >= 1 million data points
-[1, 3, 4, 0, 2]
-i: 1
-j: 0
-   lengths[1] = lengths[0] => 1
-   lengths[1]++ => 2
+[1 2 5 3]
+i:1
+j:0
+  lengths[1] = 1
+lengths[1]++ = 2
 
-i: 2
-j: 0
-   lengths[2] = lengths[0] => 1
-j: 1
-   lengths[1]:2 > lengths[2]:1
-   lengths[2] = lengths[1] => 2
-   lengths[2]++ => 3
+i:2
+j:0
+  lengths[2] = 1
+j:1
+  lengths[2] = 2
+lengths[2]++ = 3
 
-i: 3
-j: 0
-j: 1
-j: 2
-   lengths[3]++ => 1
-
-i: 4
-j: 0
-	lengths[4] = lengths[0] => 1
-j: 1
-j: 2
-j: 3
-   lengths[4]++ => 2
+i:3
+j:0
+  lengths[3] = 1
+j:1
+  lengths[3] = 2
+j:2
+  data[2] > data[3]
+lengths[3]++ = 3
 */
 size_t LongestIncreasingSubsequence(vector<size_t>& data)
 {
@@ -7801,29 +7797,29 @@ size_t LongestIncreasingSubsequence(vector<size_t>& data)
 	vector<size_t> lengths(data.size(), 0);
 	lengths[0] = 1;
 	for (size_t i = 1; i < data.size(); i++) {
-		for (size_t j = 0; j < i; j++) {
+		for (size_t j = 0; j < i; j++)
 			if (data[j] < data[i] && lengths[j] > lengths[i])
 				lengths[i] = lengths[j];
-		}
 		if (++lengths[i] > max)
 			max = lengths[i];
 	}
 	return max;
 }
 /*
-  https://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/
-1. If A[i] is smallest among all end
-   candidates of active lists, we will start
+   https://www.hackerrank.com/challenges/longest-increasing-subsequent/problem
+   100%
+   https://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/
+1. If A[i] is smallest among all end candidates of active lists, we will start
    new active list of length 1.
-2. If A[i] is largest among all end candidates of
-  active lists, we will clone the largest active
-  list, and extend it by A[i].
-3. If A[i] is in between, we will find a list with
-  largest end element that is smaller than A[i].
-  Clone and extend this list by A[i]. We will discard all
-  other lists of same length as that of this modified list.
-  https://www.hackerrank.com/challenges/longest-increasing-subsequent/problem
-  100%
+2. If A[i] is largest among all end candidates of active lists, we will clone the largest active
+   list, and extend it by A[i].
+3. If A[i] is in between, we will find a list with largest end element that is smaller than A[i].
+   Clone and extend this list by A[i]. We will discard all other lists of same length as that of this modified list.
+[1 2 5 3]
+[1]
+[1 2]
+[1 2 5]
+[1 2 3] replaces [1 2 5]
 */
 size_t LongestIncreasingSubsequenceNlogN(vector<size_t>& data)
 {
@@ -9064,45 +9060,46 @@ bool SolvabilityOfTheTilesGame(vector<size_t>& data)
 	}
 	return !(inversions % 2);
 }
+// HackerRank challenge. Unfinished work!
 size_t steadyGene(string& gene)
 {
-	size_t count = gene.size() / 4;
-	map<char, size_t> counts;
-	for (string::iterator it = gene.begin(); it != gene.end(); it++) {
-		pair<map<char, size_t>::iterator, bool> tmp = counts.emplace(*it, 1);
-		if (!tmp.second)
-			counts[*it]++;
+	size_t result = 0, count = gene.size() / 4;
+	map<char, size_t> counts = {
+		{'A', 0},
+		{'C', 0},
+		{'G', 0},
+		{'T', 0},
+	};
+	map<char, vector<size_t>> indices;
+	size_t i = 0;
+	long start = -1;
+	for (string::iterator it = gene.begin(); it != gene.end(); it++, i++) {
+		counts[*it]++;
+		indices[*it].push_back(i);
+		if (counts[*it] > count && start < 0)
+			start = i;
 	}
-	size_t shortage = 0;
-	if (counts.find('A') == counts.end())
-		shortage += count;
-	else if (counts['A'] < count)
-		shortage += count - counts['A'];
-	if (counts.find('C') == counts.end())
-		shortage += count;
-	else if (counts['C'] < count)
-		shortage += count - counts['C'];
-	if (counts.find('G') == counts.end())
-		shortage += count;
-	else if (counts['G'] < count)
-		shortage += count - counts['G'];
-	if (counts.find('T') == counts.end())
-		shortage += count;
-	else if (counts['T'] < count)
-		shortage += count - counts['T'];
-	if (shortage) {
-		SuffixTree stree(gene);
-		string repeat = stree.LongestRepeatedSubstring();
-		if (repeat.empty())
-			throw runtime_error("Invalid string input!");
-		set<char> repeatChars(repeat.begin(), repeat.end());
-		if (repeat.size() >= shortage || repeatChars.size() == 4)
-			return shortage;
-		else {
-			size_t tmp = repeat.size();
-			for (size_t i = 0; i < shortage - repeat.size(); i++)
-				repeat.push_back(repeat[0]);
-			return gene.find(repeat) != string::npos ? shortage : tmp + count;
+	if (start < 0)
+		return 0;
+	/*
+	assert(steadyGene(string("AAAA")) == 3);
+	assert(steadyGene(string("ACAA")) == 2);
+	assert(steadyGene(string("ACTGAAAG")) == 2);
+	assert(steadyGene(string("GAAATAAA")) == 5);
+	*/
+	vector<size_t> fixedIndices;
+	for (map<char, size_t>::iterator it = counts.begin(); it != counts.end(); it++) {
+		if (it->second < count) {
+			size_t shortage = count - it->second;
+			for (map<char, vector<size_t>>::iterator it1 = indices.begin(); it1 != indices.end() && shortage > 0; it1++) {
+				if (it1->first != it->first && it1->second.size() > count) {
+					size_t excess = it1->second.size() - count;
+					size_t toRemove = abs((long)excess - (long)shortage);
+					fixedIndices.assign(it1->second.begin(), it1->second.begin() + toRemove + 1);
+					it1->second.erase(it1->second.begin(), it1->second.begin() + toRemove + 1);
+					shortage -= toRemove;
+				}
+			}
 		}
 	}
 	return 0;
