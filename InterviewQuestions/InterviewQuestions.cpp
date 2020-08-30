@@ -8902,7 +8902,7 @@ set<vector<size_t>> Knapsack(long amount, vector<size_t>& numbers)
 								combinations.insert(change);
 							}
 						}
-					else if ((long)numbers[i] <= amount) {
+					else {
 						vector<size_t> change;
 						change.push_back(numbers[i]);
 						combinations.insert(change);
@@ -9335,4 +9335,13 @@ bool gridSearch(vector<string>& grid, vector<string>& pattern)
 			j++;
 	}
 	return i == pattern.size() && found == pattern.size();
+}
+/*
+* https://www.hackerrank.com/challenges/the-quickest-way-up/problem
+* http://theoryofprogramming.com/2014/12/25/snakes-and-ladders-game-code/
+*/
+size_t SnakesAndLaddersGame(vector<vector<size_t>>& ladders, vector<vector<size_t>>& snakes)
+{
+	vector<vector<size_t>> adjacency_list(100);
+	return 0;
 }

@@ -367,3 +367,4 @@ size_t TwoCrosses(vector<string>&);
 vector<long> absolutePermutation(size_t, size_t);
 vector<string> bomberMan(size_t, vector<string>&);
 bool gridSearch(vector<string>&, vector<string>&);
+size_t SnakesAndLaddersGame(vector<vector<size_t>>& ladders, vector<vector<size_t>>& snakes);
