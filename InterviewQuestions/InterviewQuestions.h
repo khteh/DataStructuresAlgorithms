@@ -336,7 +336,7 @@ vector<size_t> climbingLeaderboard(vector<long>&, vector<long>&);
 long calculateMedian(vector<long>&);
 string timeInWords(int, int);
 size_t beautifulQuadruples(int, int, int, int);
-int kruskals(int, vector<long>&, vector<long>&, vector<long>&);
+long kruskals(int, vector<long>&, vector<long>&, vector<long>&);
 size_t PrimMinimumSpanningTree(size_t, vector<vector<long>>&, long);
 void UnbeatenPaths(size_t, vector<vector<long>>&, long, vector<size_t>&);
 long getLowestPathCost(size_t g_nodes, vector<long>&, vector<long>&, vector<long>&);

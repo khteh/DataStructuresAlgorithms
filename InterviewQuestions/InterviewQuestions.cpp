@@ -311,9 +311,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	udata = { 4,1,3,2 };
 	assert(SolvabilityOfTheTilesGame(udata));
 	udata.clear();
-	udata = { 4,1,3,2 };
-	assert(SolvabilityOfTheTilesGame(udata));
-	udata.clear();
 	udata = { 1, 6, 5, 2, 3, 4 };
 	assert(!SolvabilityOfTheTilesGame(udata));
 	line = "abcdefcdbacd";
@@ -8458,13 +8455,13 @@ vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int 
    Kruskal can have better performance if the edges can be sorted in linear time, or are already sorted
    100%
 */
-int kruskals(int nodes, vector<long>& from, vector<long>& to, vector<long>& weight) 
+long kruskals(int nodes, vector<long>& from, vector<long>& to, vector<long>& weight) 
 {
 	multiset<Edge> edges; // Sorted edges based on weights
-	int sum = 0;
+	long sum = 0;
 	for (size_t i = 0; i < weight.size(); i++)
 		edges.emplace(Edge(weight[i], from[i], to[i]));
-	DisJointSet<long> disjointSet(from);
+	DisJointSet<long> disjointSet(from); // Every vertex is a disjoint set
 	disjointSet.MakeSet(to);
 	for (multiset<Edge>::iterator it = edges.begin(); it != edges.end(); it++) {
 		if (disjointSet.Find(it->node1) != disjointSet.Find(it->node2)) {
@@ -9042,12 +9039,12 @@ Digit   Unit    Ten     Hundred     Thousand        Sum
    https://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html
 Formula: ( (grid width odd) && (#inversions even) )  ||  ( (grid width even) && ((blank on odd row from bottom) == (#inversions even)) )
    The given array can be then compared to a rectangle of width 3, and any height h, so that total number of tiles is (3*h)-1.
-   (Like it was (n*n)-1 in the original 15 tile puzzle)
+   (Like it was (w*h)-1 in the original 15 tile puzzle)
 blank spaces for a grid with width 3 to satisfy (3*h)-1:
 0: add 2
 1: add 0
 2: add 1
-	Don't have to add anything to the input data to fulfil the (3*h)-1 tiles since the numbers to be added are, well, in sequence.
+	Don't have to add anything to the input data to fulfil the (3*h)-1 tiles since we can arbitrarily add the numbers which are in-sequence and bigger than the biggest number currently in the board.
 	100%
 */
 bool SolvabilityOfTheTilesGame(vector<size_t>& data)

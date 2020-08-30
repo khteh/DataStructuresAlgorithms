@@ -11,7 +11,7 @@ void DisJointSet<T>::MakeSet(vector<T>& data)
 {
 	//perform makeset operation	by creating n disjoint sets
 	for (vector<T>::iterator it = data.begin(); it != data.end(); it++)
-		_parent.emplace(*it, *it);
+		_parent.emplace(*it, *it); // Key: current item; Value: parent of the current item
 }
 template<class T>
 T DisJointSet<T>::Find(T item)
