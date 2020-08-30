@@ -7127,28 +7127,28 @@ void Knapsack_CoinChangeTests()
 	//assert(combinations.size() == 96190959);
 	numbers.clear();
 	numbers = { 2,3,4 };
-	assert(UnboundedKnapsack(9, numbers) == 9);
+	assert(UnboundedKnapsack(9, numbers) == 9); // [3,3,3]
 	numbers.clear();
 	numbers = { 3, 4, 10 };
-	assert(UnboundedKnapsack(12, numbers) == 12);
-	assert(UnboundedKnapsack(13, numbers) == 13);
-	assert(UnboundedKnapsack(16, numbers) == 16);
+	assert(UnboundedKnapsack(12, numbers) == 12); // [3,3,3,3] or [4,4,4]
+	assert(UnboundedKnapsack(13, numbers) == 13); // [3,10]
+	assert(UnboundedKnapsack(16, numbers) == 16); // [4,4,4,4s]
 	numbers.clear();
 	numbers = { 2000,2000,2000 };
-	assert(UnboundedKnapsack(2000, numbers) == 2000);
+	assert(UnboundedKnapsack(2000, numbers) == 2000); // 2000
 	numbers.clear();
 	numbers = { 9,9,9 };
-	assert(UnboundedKnapsack(9, numbers) == 9);
+	assert(UnboundedKnapsack(9, numbers) == 9); // 9
 	assert(UnboundedKnapsack(8, numbers) == 0);
 	numbers.clear();
 	numbers = { 1 };
-	assert(UnboundedKnapsack(2000, numbers) == 2000);
+	assert(UnboundedKnapsack(2000, numbers) == 2000); // 1 * 2000
 	numbers.clear();
 	numbers = { 1, 2 };
 	assert(UnboundedKnapsack(2000, numbers) == 2000);
 	numbers.clear();
 	numbers = { 5,9 };
-	assert(UnboundedKnapsack(10, numbers) == 10);
+	assert(UnboundedKnapsack(10, numbers) == 10); // [5,5]
 }
 string decimal_to_binary(int decimal)
 {
@@ -8913,6 +8913,8 @@ set<vector<size_t>> Knapsack(long amount, vector<size_t>& numbers)
 	}
 	return combinations;
 }
+// Bounded places an upper bound on the number of copies of each kind of item included in the knapsack
+// Unbounded places no upper bound on the number of copies of each kind of item included in the knapsack
 size_t UnboundedKnapsack(long k, vector<size_t>& arr) 
 {
 	knapsackCache.clear();
