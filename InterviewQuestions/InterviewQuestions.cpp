@@ -8916,9 +8916,9 @@ set<vector<size_t>> Knapsack(long amount, vector<size_t>& numbers)
 size_t UnboundedKnapsack(long k, vector<size_t>& arr) 
 {
 	knapsackCache.clear();
-	set<vector<size_t>> result = Knapsack(k, arr);
+	set<vector<size_t>> combinations = Knapsack(k, arr);
 	set<size_t> sums;
-	for (set<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
+	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
 		sums.insert(accumulate(it->begin(), it->end(), 0));
 	return sums.empty() ? 0 : *sums.rbegin();
 }
