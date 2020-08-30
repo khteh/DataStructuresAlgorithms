@@ -7142,13 +7142,14 @@ void Knapsack_CoinChangeTests()
 	assert(UnboundedKnapsack(8, numbers) == 0);
 	numbers.clear();
 	numbers = { 1 };
-	assert(UnboundedKnapsack(2000, numbers) == 2000); // 1 * 2000
+	assert(UnboundedKnapsack(9999, numbers) == 9999); // 1 * 9999
 	numbers.clear();
 	numbers = { 1, 2 };
-	assert(UnboundedKnapsack(2000, numbers) == 2000);
+	assert(UnboundedKnapsack(9999, numbers) == 9999);
 	numbers.clear();
 	numbers = { 5,9 };
 	assert(UnboundedKnapsack(10, numbers) == 10); // [5,5]
+	assert(UnboundedKnapsack(8, numbers) == 5); // [5]
 }
 string decimal_to_binary(int decimal)
 {
