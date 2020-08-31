@@ -1758,7 +1758,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(SnakesAndLaddersGame(ladders3, snakes3) == 3);
 	vector<vector<size_t>> ladders4 = { {5,6} };
 	vector<vector<size_t>> snakes4 = { {97,95} };
-	//assert(SnakesAndLaddersGame(ladders4, snakes4) == 17); Times out!!!
+	//assert(SnakesAndLaddersGame(ladders4, snakes4) == 17); //Times out!!!
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -9366,7 +9366,7 @@ size_t SnakesAndLaddersGame(vector<vector<size_t>>& ladders, vector<vector<size_
 	for (size_t i = 0; i < snakes.size(); i++)
 		snakemap.emplace(snakes[i][0], snakes[i][1]);
 	for (size_t i = 1; i <= 100; i++)
-		if (laddermap.find(i) == laddermap.end()) {// Skip the number if it is at the beginning of a ladder
+		if (laddermap.find(i) == laddermap.end() && snakemap.find(i) == snakemap.end()) {// Skip the number if it is at the beginning of a ladder
 			shared_ptr<Vertex<size_t, size_t>> parent = vertices.find(i) != vertices.end() ? vertices[i] : nullptr;
 			if (!parent) {
 				parent = make_shared<Vertex<size_t, size_t>>(i);
