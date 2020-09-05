@@ -3680,9 +3680,6 @@ void SortTests()
 	vector<size_t> udata;
 	sortData.clear();
 	sortData = {1,0,-1};
-	assert(sortData[0] == 1);
-	assert(sortData[1] == 0);
-	assert(sortData[2] == -1);
 	BubbleSort(sortData);
 	assert(sortData[0] == -1);
 	assert(sortData[1] == 0);
@@ -3699,9 +3696,6 @@ void SortTests()
 
 	sortData.clear();
 	sortData = { 1,0,-1 };
-	assert(sortData[0] == 1);
-	assert(sortData[1] == 0);
-	assert(sortData[2] == -1);
 	QuickSort(sortData, 0, sortData.size() - 1);
 	assert(sortData[0] == -1);
 	assert(sortData[1] == 0);
@@ -3718,9 +3712,6 @@ void SortTests()
 
 	sortData.clear();
 	sortData = {1,0,-1};
-	assert(sortData[0] == 1);
-	assert(sortData[1] == 0);
-	assert(sortData[2] == -1);
 	SelectionSort(sortData);
 	assert(sortData[0] == -1);
 	assert(sortData[1] == 0);
@@ -3737,9 +3728,6 @@ void SortTests()
 
 	sortData.clear();
 	sortData = { 1,0,-1 };
-	assert(sortData[0] == 1);
-	assert(sortData[1] == 0);
-	assert(sortData[2] == -1);
 	InsertionSort(sortData);
 	assert(sortData[0] == -1);
 	assert(sortData[1] == 0);
@@ -3756,9 +3744,6 @@ void SortTests()
 
 	sortData.clear();
 	sortData = { 1,0,-1 };
-	assert(sortData[0] == 1);
-	assert(sortData[1] == 0);
-	assert(sortData[2] == -1);
 	buffer = sortData;
 	TopDownMergeSort(buffer, sortData, 0, sortData.size());
 	assert(sortData[0] == -1);
@@ -3767,11 +3752,6 @@ void SortTests()
 
 	sortData.clear();
 	sortData = {2,1,3,1,2};
-	assert(sortData[0] == 2);
-	assert(sortData[1] == 1);
-	assert(sortData[2] == 3);
-	assert(sortData[3] == 1);
-	assert(sortData[4] == 2);
 	buffer = sortData;
 	TopDownMergeSort(buffer, sortData, 0, sortData.size());
 	assert(sortData[0] == 1);
@@ -3794,9 +3774,6 @@ void SortTests()
 
 	sortData.clear();
 	sortData = { 1,0,-1 };
-	assert(sortData[0] == 1);
-	assert(sortData[1] == 0);
-	assert(sortData[2] == -1);
 	buffer = sortData;
 	BottomUpMergeSort(sortData, buffer);
 	assert(sortData[0] == -1);
@@ -3815,18 +3792,12 @@ void SortTests()
 
 	sortData.clear();
 	sortData = { 1,0,-1 };
-	assert(sortData[0] == 1);
-	assert(sortData[1] == 0);
-	assert(sortData[2] == -1);
 	HeapSort(sortData);
 	assert(sortData[0] == -1);
 	assert(sortData[1] == 0);
 	assert(sortData[2] == 1);
 
 	vector<size_t> sortData1 { 1,0,2 };
-	assert(sortData1[0] == 1);
-	assert(sortData1[1] == 0);
-	assert(sortData1[2] == 2);
 	CountingSort(sortData1);
 	assert(sortData1[0] == 0);
 	assert(sortData1[1] == 1);
@@ -3834,9 +3805,6 @@ void SortTests()
 
 	sortData1.clear();
 	sortData1 = { 456,789,123 };
-	assert(sortData1[0] == 456);
-	assert(sortData1[1] == 789);
-	assert(sortData1[2] == 123);
 	CountingSort(sortData1);
 	assert(sortData1[0] == 123);
 	assert(sortData1[1] == 456);
@@ -4110,20 +4078,32 @@ void InsertionSort(vector<long> &data)
 		for (size_t j = i; j > 0 && data[j] < data[j - 1]; j--)
 			Swap(data[j], data[j - 1]);
 }
-// http://en.wikipedia.org/wiki/Merge_sort
-// top-down merge sort algorithm that recursively splits the list (called runs in this example) into sublists 
-// until sublist size is 1, then merges those sublists to produce a sorted list
-//  The copy back step is avoided with alternating the direction of the merge with each level of recursion (except for an initial one time copy)
-void TopDownMergeSort(vector<long>& B, vector<long>& A, size_t start, size_t end)
+/* http://en.wikipedia.org/wiki/Merge_sort
+ * top-down merge sort algorithm that recursively splits the list (called runs in this example) into sublists 
+ * until sublist size is 1, then merges those sublists to produce a sorted list
+ * The copy back step is avoided with alternating the direction of the merge with each level of recursion (except for an initial one time copy)
+ * start: inclusive; end: exclusive
+ * Example:
+ * [2,1]:  A,B
+ * [2] [1] B,A
+ * [1,2]   A,B <= Bottom of recursion. Merge into B
+ * 
+ * [2,1,4,3]:      A,B
+ * [2,1] [4,3]	   B,A
+ * [2] [1] [4] [3] A,B
+ * [1,2] [3,4]	   B,A <= Bottom of recurssion. Merge into A
+ * [1,2,3,4]	   A,B <= Next higher level, merge into B
+ */
+void TopDownMergeSort(vector<long>& A, vector<long>& B, size_t start, size_t end)
 {
-	if (end - start < 2)
-		return;
-	// recursively split runs into two halves until run size == 1,
-	// then merge them and return back up the call chain
-	size_t middle = start + (end - start) / 2 + (end - start) % 2;
-	TopDownMergeSort(A, B, start, middle);
-	TopDownMergeSort(A, B, middle, end);
-	Merge(B, A, start, middle, end);
+	if (end - start > 1) {// If run size == 1, consider it sorted
+		// recursively split runs into two halves until run size == 1,
+		// then merge them and return back up the call chain
+		size_t middle = start + (end - start) / 2 + (end - start) % 2;
+		TopDownMergeSort(B, A, start, middle);
+		TopDownMergeSort(B, A, middle, end);
+		Merge(A, B, start, middle, end);
+	}
 }
 // https://www.hackerrank.com/challenges/ctci-merge-sort/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=sorting
 // 100%
@@ -4157,33 +4137,58 @@ size_t MergeCountInversions(vector<long>& A, vector<long>& B, size_t start, size
 	}
 	return inversions;
 }
-// bottom-up merge sort algorithm which treats the list as an array of n sublists (called runs in this example) 
-// of size 1, and iteratively merges sub-lists back and forth between two buffers
+/* bottom-up merge sort algorithm which treats the list as an array of n sublists (called runs in this example) 
+ * of size 1, and iteratively merges sub-lists back and forth between two buffers
+ * array A[] has the items to sort; array B[] is a work array
+ */
 void BottomUpMergeSort(vector<long>& A, vector<long>& B)
 {
 	size_t n = A.size();
 	// Each 1-element run in data is already "sorted".
 	// Make successively longer sorted runs of length 2, 4, 8, 16... until whole array is sorted.
 	for (size_t width = 1; width < A.size(); width *= 2) {
-		// data is full of runs of length width.
+		// Array A is full of runs of length width.
+		// width: 1, i(+2): 0, 2, 4, 6, 8, 10
+		// width: 2, i(+4): 0, 4, 8, 12,16,20
 		for (size_t i = 0; i < A.size(); i += 2 * width)
+			/* Merge two runs: A[i:i+width-1] and A[i+width:i+2*width-1] to B[]
+			* width: 1
+			*   i:0 Merge two runs: A[0:0] and A[1:1] to B[] [start, middle, end] : [0,1,2]
+			*   i:2 Merge two runs: A[2:2] and A[3:3] to B[] [start, middle, end] : [2,3,4]
+			*   i:4 Merge two runs: A[4:4] and A[5:5] to B[] [start, middle, end] : [4,5,6]
+			*  width: 2
+			*   i:0 Merge two runs: A[0:1] and A[2:3] to B[] [start, middle, end] : [0,2,4]
+			*   i:2 Merge two runs: A[2:3] and A[4:5] to B[] [start, middle, end] : [2,4,6]
+			*   i:4 Merge two runs: A[4:5] and A[6:7] to B[] [start, middle, end] : [4,6,8]
+			*  or copy A[i:n-1] to B[] ( if(i+width >= n) )
+			*/
 			Merge(A, B, i, min(i + width, n), min(i + 2 * width, n));
 		// Now work array B is full of runs of length 2*width.
-				// Copy array B to array A for next iteration.
-				// A more efficient implementation would swap the roles of A and B.
+		// Copy array B to array A for next iteration.
+		// A more efficient implementation would swap the roles of A and B.
 		A = B;
 		// Now array A is full of runs of length 2*width.
 	}
 }
-void Merge(vector<long>& A, vector<long>& B, size_t start, size_t middle, size_t end)
+void Merge(vector<long>& source, vector<long>& dest, size_t start, size_t middle, size_t end)
 {
-	vector<long> buffer;
 	size_t left = start;
 	size_t right = middle;
 	// While there are elements in the left or right runs...
 	for (size_t i = start; i < end; i++)
-		// If left run head exists and is <= existing right run head.
-		B[i] = (left < middle && (right >= end || A[left] <= A[right])) ? A[left++] : A[right++];
+		/* If left run head exists (left < middle)
+		 * AND value is <= existing right run head.
+		 * OR  Right run is empty (right >= end)
+		 * Example:
+		 * source: [0,2,1] dest: [] [start, middle, end] = [0,1,2]
+		 * dest[0] = 0, left == middle == 1
+		 * dest[1] = 2
+		 * dest[2] = 1
+		 * source: [0,2,1] dest: [0,2,1] [start, middle, end] = [1,2,3]
+		 * dest[1] = 1, right == end == 3
+		 * dest[2] = 2, left == middle == 2
+		 */
+		dest[i] = (left < middle && (right >= end || source[left] <= source[right])) ? source[left++] : source[right++];
 }
 // https://en.wikipedia.org/wiki/Heapsort
 void HeapSort(vector<long>& data)
@@ -9387,18 +9392,17 @@ size_t SnakesAndLaddersGame(vector<vector<size_t>>& ladders, vector<vector<size_
 			}
 		}
 	long level = 0;
-	vector<shared_ptr<Vertex<size_t, size_t>>> vertices1;
 	map<size_t, vector<shared_ptr<Vertex<size_t, size_t>>>> result;
 	result.emplace(level, vector<shared_ptr<Vertex<size_t, size_t>>>{root});
 	for (; !result[level].empty(); level++) {
-		vertices1.clear();
+		vector<shared_ptr<Vertex<size_t, size_t>>> tmp;
 		for (vector<shared_ptr<Vertex<size_t, size_t>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++) {
 			if ((*it)->GetTag() == 100)
 				return level;
 			vector<shared_ptr<Vertex<size_t, size_t>>> neighbours = (*it)->GetNeighbours();
-			vertices1.insert(vertices1.end(), neighbours.begin(), neighbours.end());
+			tmp.insert(tmp.end(), neighbours.begin(), neighbours.end());
 		}
-		result.emplace(level + 1, vertices1);
+		result.emplace(level + 1, tmp);
 	}
 	return 0;
 }
