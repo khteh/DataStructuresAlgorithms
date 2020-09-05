@@ -4144,8 +4144,14 @@ size_t MergeCountInversions(vector<long>& source, vector<long>& dest, size_t sta
  * Example:
  * [2,1] => [1,2]
  * [0,2,1]
- *		[0,2,1]: width = 1, merge elements 0 and 1
- *		[0,1,2]: width = 2, merge elements 0,1,2
+ *		[0,2], [1]: width = 1 => [0,2,1]
+ *		[0,1,2]: width = 2.
+ *			[0,1,2] Inversion between index 1 & 2
+ * [0,3,1,2]
+ *		[0,3], [1,2]: width = 1 => [0,3,1,2]
+ *		[0,1,2,3]: width = 2.
+ *			[0,1,3,2] Inversion between index 1 & 2
+ *			[0,1,2,3] Inversion between index 2 & 3
  */
 void BottomUpMergeSort(vector<long>& A, vector<long>& B)
 {
@@ -4189,17 +4195,18 @@ void Merge(vector<long>& source, vector<long>& dest, size_t start, size_t middle
 		 * width: 1
 		 * source: [0,2,1] dest: [] [start, middle, end] = [0,1,2]
 		 * left:0, right: 1, middle: 1
-		 * dest[0] = 0, left == middle == 1
-		 * dest[1] = 2
+		 * dest[0] = 0, Take left. left == middle == 1
+		 * dest[1] = 2, Take right.
 		 * source: [0,2,1] dest: [0,2] [start, middle, end] = [2,3,3]
 		 * left:2, right: 3, middle: 3
-		 * dest[2] = 1, left == middle == 3
+		 * dest[2] = 1, Take left. left == middle == 3
+		 * 
 		 * width: 2
 		 * source: [0,2,1] dest: [0,2,1] [start, middle, end] = [0,2,3]
 		 * left:0, right: 2, middle: 2
-		 * dest[0] = 0, left = 1
-		 * dest[1] = 1, right = 3
-		 * dest[2] = 2, left = 2
+		 * dest[0] = 0, Take left. left = 1
+		 * dest[1] = 1, Take right. right = 3 [Inversion count = right - i = 2 - 1 = 1]
+		 * dest[2] = 2, Take left. left = 2
 		 */
 		dest[i] = (left < middle && (right >= end || source[left] <= source[right])) ? source[left++] : source[right++];
 }
