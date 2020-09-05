@@ -4110,17 +4110,17 @@ void TopDownMergeSort(vector<long>& A, vector<long>& B, size_t start, size_t end
 size_t TopDownMergeSortCountConversions(vector<long>& B, vector<long>& A, size_t start, size_t end)
 {
 	size_t inversions = 0;
-	if (end - start < 2)
-		return inversions;
-	// recursively split runs into two halves until run size == 1,
-	// then merge them and return back up the call chain
-	size_t middle = start + (end - start) / 2 + (end - start) % 2;
-	inversions += TopDownMergeSortCountConversions(A, B, start, middle);
-	inversions += TopDownMergeSortCountConversions(A, B, middle, end);
-	inversions += MergeCountInversions(B, A, start, middle, end);
+	if (end - start > 1) {// If run size == 1, consider it sorted
+		// recursively split runs into two halves until run size == 1,
+		// then merge them and return back up the call chain
+		size_t middle = start + (end - start) / 2 + (end - start) % 2;
+		inversions += TopDownMergeSortCountConversions(A, B, start, middle);
+		inversions += TopDownMergeSortCountConversions(A, B, middle, end);
+		inversions += MergeCountInversions(B, A, start, middle, end);
+	}
 	return inversions;
 }
-size_t MergeCountInversions(vector<long>& A, vector<long>& B, size_t start, size_t middle, size_t end)
+size_t MergeCountInversions(vector<long>& source, vector<long>& dest, size_t start, size_t middle, size_t end)
 {
 	size_t inversions = 0;
 	size_t left = start;
@@ -4128,11 +4128,12 @@ size_t MergeCountInversions(vector<long>& A, vector<long>& B, size_t start, size
 	// While there are elements in the left or right runs...
 	for (size_t i = start; i < end; i++) {
 		// If left run head exists and is <= existing right run head.
-		if (left < middle && (right >= end || A[left] <= A[right]))
-			B[i] = A[left++];
+		// dest[i] = (left < middle && (right >= end || source[left] <= source[right])) ? source[left++] : source[right++];
+		if (left < middle && (right >= end || source[left] <= source[right]))
+			dest[i] = source[left++];
 		else {
 			inversions += right - i;
-			B[i] = A[right++];
+			dest[i] = source[right++];
 		}
 	}
 	return inversions;
@@ -4140,6 +4141,11 @@ size_t MergeCountInversions(vector<long>& A, vector<long>& B, size_t start, size
 /* bottom-up merge sort algorithm which treats the list as an array of n sublists (called runs in this example) 
  * of size 1, and iteratively merges sub-lists back and forth between two buffers
  * array A[] has the items to sort; array B[] is a work array
+ * Example:
+ * [2,1] => [1,2]
+ * [0,2,1]
+ *		[0,2,1]: width = 1, merge elements 0 and 1
+ *		[0,1,2]: width = 2, merge elements 0,1,2
  */
 void BottomUpMergeSort(vector<long>& A, vector<long>& B)
 {
@@ -4180,13 +4186,20 @@ void Merge(vector<long>& source, vector<long>& dest, size_t start, size_t middle
 		 * AND value is <= existing right run head.
 		 * OR  Right run is empty (right >= end)
 		 * Example:
+		 * width: 1
 		 * source: [0,2,1] dest: [] [start, middle, end] = [0,1,2]
+		 * left:0, right: 1, middle: 1
 		 * dest[0] = 0, left == middle == 1
 		 * dest[1] = 2
-		 * dest[2] = 1
-		 * source: [0,2,1] dest: [0,2,1] [start, middle, end] = [1,2,3]
-		 * dest[1] = 1, right == end == 3
-		 * dest[2] = 2, left == middle == 2
+		 * source: [0,2,1] dest: [0,2] [start, middle, end] = [2,3,3]
+		 * left:2, right: 3, middle: 3
+		 * dest[2] = 1, left == middle == 3
+		 * width: 2
+		 * source: [0,2,1] dest: [0,2,1] [start, middle, end] = [0,2,3]
+		 * left:0, right: 2, middle: 2
+		 * dest[0] = 0, left = 1
+		 * dest[1] = 1, right = 3
+		 * dest[2] = 2, left = 2
 		 */
 		dest[i] = (left < middle && (right >= end || source[left] <= source[right])) ? source[left++] : source[right++];
 }
