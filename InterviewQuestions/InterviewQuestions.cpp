@@ -4105,7 +4105,7 @@ void TopDownMergeSort(vector<long>& A, vector<long>& B, size_t start, size_t end
 		Merge(A, B, start, middle, end);
 	}
 }
-// https://www.hackerrank.com/challenges/ctci-merge-sort/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=sorting
+// https://www.hackerrank.com/challenges/ctci-merge-sort/problem
 // 100%
 size_t TopDownMergeSortCountConversions(vector<long>& B, vector<long>& A, size_t start, size_t end)
 {
