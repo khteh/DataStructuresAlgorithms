@@ -4038,15 +4038,15 @@ void QuickSort(vector<long> &data, long left, long right)
 	if (left < right) {
 		pivot = left + (right - left) / 2 + (right - left) % 2; // This overcomes integer overflow
 		pivot = Partition(data, left, right, pivot);
-		// Worst case: N-1 calls. Each call processes the list from left to right-1. O(N^2)
-		// Average case: lg(N) calls. Each level of call tree processes half the original list. 2 calls processes N items. O(N*log(N)).
+		// Worst case: N-1 calls. Each call processes the list from left to right-1 (N) => O(N^2)
+		// Average case: lg(N) calls. Each level of call tree processes half the original list. Both calls processes N items => O(N*log(N)).
 		QuickSort(data, left, pivot - 1);  // Either this or the call below is used in worst-case scenario
 		QuickSort(data, pivot + 1, right); // Either this or the call above is used in worst-case scenario
 	}
 }
 /* Worst case: returns original list (newPivot = left || newPivot = right)
  * Average case: Divides the original list to half. newPivot = 1/2.
- * "newPivot" = First element with value >= value of the pivot element.
+ * newPivot = The final position of the pivot at the end of this partition operation.
  * Example:
  * [1,3,0,2]: left:0, right: 3, pivot: 2
  * pivotValue: 0
