@@ -3693,6 +3693,13 @@ void SortTests()
 	BubbleSort(sortData);
 	for (size_t i = 0; i < sortData.size(); i++)
 		assert(sortData[i] == buffer[i]);
+	sortData.clear();
+	sortData = { 1,3,0,2 };
+	QuickSort(sortData, 0, sortData.size() - 1);
+	assert(sortData[0] == 0);
+	assert(sortData[1] == 1);
+	assert(sortData[2] == 2);
+	assert(sortData[3] == 3);
 
 	sortData.clear();
 	sortData = { 1,0,-1 };
@@ -4037,20 +4044,43 @@ void QuickSort(vector<long> &data, long left, long right)
 		QuickSort(data, pivot + 1, right); // Either this or the call above is used in worst-case scenario
 	}
 }
-// Worst case: returns original list. newPivot = left || newPivot = right
-// Average case: Divides the original list to half. newPivot = 1/2.
+/* Worst case: returns original list (newPivot = left || newPivot = right)
+ * Average case: Divides the original list to half. newPivot = 1/2.
+ * "newPivot" = First element with value >= value of the pivot element.
+ * Example:
+ * [1,3,0,2]: left:0, right: 3, pivot: 2
+ * pivotValue: 0
+ * newPivot = 0
+ * [1,3,2,0]
+ * i:0
+ *		newPivot:0
+ * i:1
+ *		newPivot:0
+ * i:2
+ *		newPivot:0
+ * => [0,3,2,1]
+ * [0], [3,2,1] left:1, right: 3, pivot: 2
+ * pivotValue: 2
+ * newPivot = 1
+ * [0,3,1,2]
+ * i:1
+ *		newPivot: 1
+ * i:2
+ *		[0,1,3,2]
+ *		newPivot: 2
+ * => [0,1,2,3]
+ */
 size_t Partition(vector<long> &data, size_t left, size_t right, size_t pivot)
 {
 	size_t newPivot = left;
 	long pivotValue = data[pivot];
 	Swap(data[pivot], data[right]);
-	for (size_t i = left; i < right; i++) {
+	for (size_t i = left; i < right; i++)
 		if (data[i] < pivotValue) {
 			if (i != newPivot)
 				Swap(data[i], data[newPivot]);
 			newPivot++;
 		}
-	}
 	if (newPivot != right)
 		Swap(data[newPivot], data[right]);
 	return newPivot;
@@ -4088,9 +4118,9 @@ void InsertionSort(vector<long> &data)
  * [2] [1] B,A
  * [1,2]   A,B <= Bottom of recursion. Merge into B
  * 
- * [2,1,4,3]:      A,B
- * [2,1] [4,3]	   B,A
- * [2] [1] [4] [3] A,B
+ * [2,1,4,3]:      A,B [0:4]
+ * [2,1] [4,3]	   B,A [0:2], [2:4]
+ * [2] [1] [4] [3] A,B [0:1], [1,2]
  * [1,2] [3,4]	   B,A <= Bottom of recurssion. Merge into A
  * [1,2,3,4]	   A,B <= Next higher level, merge into B
  */
@@ -4144,10 +4174,16 @@ size_t MergeCountInversions(vector<long>& source, vector<long>& dest, size_t sta
  * Example:
  * [2,1] => [1,2]
  * [0,2,1]
+ * [0],[2],[1]
+ * => [0,2], [1] : width = 1
+ * => [0,1,2] : width = 2. 1 Inversion
  *		[0,2], [1]: width = 1 => [0,2,1]
  *		[0,1,2]: width = 2.
  *			[0,1,2] Inversion between index 1 & 2
  * [0,3,1,2]
+ * [0], [3], [1], [2]
+ * => [0,3], [1,2] : width = 1
+ * => [0,1,2,3] : width = 2. 2 Inversions: {1,2}, {2,3}
  *		[0,3], [1,2]: width = 1 => [0,3,1,2]
  *		[0,1,2,3]: width = 2.
  *			[0,1,3,2] Inversion between index 1 & 2
