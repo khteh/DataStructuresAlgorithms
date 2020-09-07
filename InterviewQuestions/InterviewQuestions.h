@@ -216,6 +216,8 @@ void BinarySearchTreeTests();
 void MinHeapTests();
 void MaxHeapTests();
 void MinMaxHeapTests();
+void MinHeapifyDown(vector<long>&, size_t);
+void MaxHeapifyDown(vector<long>&, size_t);
 void SparseNumberTests();
 void LongestCommonSubsequenceTests();
 template<class URNG>
@@ -368,3 +370,4 @@ vector<long> absolutePermutation(size_t, size_t);
 vector<string> bomberMan(size_t, vector<string>&);
 bool gridSearch(vector<string>&, vector<string>&);
 size_t SnakesAndLaddersGame(vector<vector<size_t>>&, vector<vector<size_t>>&);
+size_t lengthOfLongestSubstring(string&);

@@ -1759,6 +1759,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	vector<vector<size_t>> ladders4 = { {5,6} };
 	vector<vector<size_t>> snakes4 = { {97,95} };
 	//assert(SnakesAndLaddersGame(ladders4, snakes4) == 17); //Times out!!!
+	assert(lengthOfLongestSubstring(string("abcabc")) == 3);
+	assert(lengthOfLongestSubstring(string("aaa")) == 1);
+	assert(lengthOfLongestSubstring(string("abcdef")) == 6);
+	assert(lengthOfLongestSubstring(string("dvdf")) == 3);
+	assert(lengthOfLongestSubstring(string("abcabcbb")) == 3);
+	assert(lengthOfLongestSubstring(string("tmmzuxt")) == 5);
+	assert(lengthOfLongestSubstring(string("pwwkew")) == 3);
+	assert(lengthOfLongestSubstring(string("ohvhjdml")) == 6);
+	assert(lengthOfLongestSubstring(string("vqblqcb")) == 4);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -1850,15 +1859,15 @@ vector<string> findUnique(vector<string> const& a, vector<string>const& b)
 bool CanShuffleWithoutRepeat(string& str)
 {
 	map<char, size_t> repeats;
-	size_t max = 0;
+	size_t maxCount = 0;
 	for (string::iterator it = str.begin(); it != str.end(); it++) {
 		if (repeats.find(*it) == repeats.end())
 			repeats.emplace(*it, 1);
 		else
 			repeats[*it]++;
-		max = Max(max, repeats[*it]);
+		maxCount = max(maxCount, repeats[*it]);
 	}
-	return str.size() - max >= max - 1;
+	return str.size() - maxCount >= maxCount - 1;
 }
 // https://en.wikipedia.org/wiki/Maximum_subarray_problem
 // Kadane's algorithm
@@ -3648,7 +3657,7 @@ int BinarySearchCountLower(vector<long>& source, long toSearch, long start, long
 	else
 		return BinarySearchCountLower(source, toSearch, start, mid - 1);
 }
-int BinarySearch(vector<string> source, string toSearch)
+int BinarySearch(vector<string>& source, string& toSearch)
 {
 	int lower, middle, upper;
 	lower = 0;
@@ -4008,12 +4017,12 @@ void BinarySearchStringTests()
 	vector<string> str{ "abc", "ABC", "", "123", "789", "xyz", "XYZ", ""};
 	sort(str.begin(), str.end());
 
-	pos = BinarySearch(str, "123");
+	pos = BinarySearch(str, string("123"));
 	assert(pos == 2);
 	assert(str[pos] == "123");
 	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: \"123\" found at location: " << pos << ", " << str[pos] << endl;
 
-	pos = BinarySearch(str, "abc");
+	pos = BinarySearch(str, string("abc"));
 	assert(pos == 6);
 	assert(str[pos] == "abc");
 	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: \"abc\" found at location: " << pos << ", " << str[pos] << endl;
@@ -5734,6 +5743,46 @@ void MinMaxHeapTests()
 	}
 	cout << endl << endl;
 }
+/*
+* Perform a down-heap or heapify-down operation for a max-heap
+* Index start from 0
+*/
+void MaxHeapifyDown(vector<long>& data, size_t start)
+{
+	size_t left = 2 * start + 1;
+	size_t right = 2 * start + 2;
+	size_t max = start;
+	if (left < data.size() && data[left] > data[max])
+		max = left;
+	if (right < data.size() && data[right] > data[max])
+		max = right;
+	if (max != start) {
+		long tmp = data[start];
+		data[start] = data[max];
+		data[max] = tmp;
+		MaxHeapifyDown(data, max);
+	}
+}
+/*
+* Perform a down-heap or heapify-down operation for a min-heap
+* Index start from 0
+*/
+void MinHeapifyDown(vector<long>& data, size_t start)
+{
+	size_t left = 2 * start + 1;
+	size_t right = 2 * start + 2;
+	size_t min = start;
+	if (left < data.size() && data[left] < data[min])
+		min = left;
+	if (right < data.size() && data[right] < data[min])
+		min = right;
+	if (min != start) {
+		long tmp = data[start];
+		data[start] = data[min];
+		data[min] = tmp;
+		MaxHeapifyDown(data, min);
+	}
+}
 void trim(string &str)
 {
 	size_t i = 0, j = 0;
@@ -5908,7 +5957,7 @@ pathResult_t FindMaxPath(vector<vector<unsigned long>>& grid, size_t r, size_t c
 		oss << path1.path;
 	else
 		oss << path2.path;
-	result.sum = grid[r][c] + Max(path1.sum, path2.sum);
+	result.sum = grid[r][c] + max(path1.sum, path2.sum);
 	result.path = oss.str();
 	return result;
 }
@@ -9463,28 +9512,47 @@ size_t SnakesAndLaddersGame(vector<vector<size_t>>& ladders, vector<vector<size_
 	return 0;
 }
 /*
+* https://leetcode.com/problems/longest-substring-without-repeating-characters/submissions/
+* 100%
 * aaa -> 1
 * abcabc ->
 * dvdf -> vdf
 * abcabb
+* abcabcbb -> abc
+* pwwkew -> kew or wke
+* ohvhjdml ->
+* vqblqcb
 */
 size_t lengthOfLongestSubstring(string& s) 
 {
-	size_t count = 0, max = 0;
+	size_t maxLength = 0;
 	vector<char> data(s.begin(), s.end());
-	map<char, size_t> chars;
+	set<char> chars;
+	string str;
 	for (vector<char>::iterator it = data.begin(); it != data.end(); it++) {
 		if (chars.find(*it) == chars.end()) {
-			count++;
-//			chars.insert(*it);
+			str.append(1, *it);
+			chars.insert(*it);
+		} else {
+			if (str[0] == *it) {
+				str.erase(0, 1);
+				str.append(1, *it);
+			} else {
+				if (str.size() > maxLength)
+					maxLength = str.size();
+				chars.clear();
+				size_t offset = str.find_first_of(*it) + 1;
+				if (offset > str.size())
+					str.clear();
+				else {
+					for (size_t i = offset; i <= str.size(); i++)
+						chars.insert(str[i]);
+					str = str.substr(offset);
+				}
+				chars.insert(*it);
+				str.append(1, *it);
+			}
 		}
-		else {
-			chars.clear();
-//			chars.insert(*it);
-			count = 1;
-		}
-		if (count > max)
-			max = count;
 	}
-	return max;
+	return max(str.size(), maxLength);
 }

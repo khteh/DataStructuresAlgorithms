@@ -97,8 +97,7 @@ void Heap<T>::Serialize(vector<T>& result)
 template<class T>
 void Heap<T>::swap(shared_ptr<Node<T>> n, shared_ptr<Node<T>> m)
 {
-	T tmp;
-	tmp = n->Item();
+	T tmp(n->Item());
 	n->SetItem(m->Item());
 	m->SetItem(tmp);
 }
@@ -145,6 +144,7 @@ void Heap<T>::HeapifyUp(shared_ptr<Node<T>> node, unsigned long level)
 						swap(node, node->Next());
 						HeapifyUp(node->Next(), --level);
 					} else if (node->Next()) {
+						// Item is smaller than parent => Check with the Min levels.
 						if (node->Next()->Next())
 							grandparent = node->Next()->Next();
 						if (grandparent && *node < *grandparent) {
@@ -242,7 +242,7 @@ shared_ptr<Node<T>> Heap<T>::FindEmptyLeafParent() // Use Breath-First-Search to
 			assert(*it);
 			if (*it) {
 				if ((*it)->Right() && !(*it)->Left())
-					assert(false);
+					throw runtime_error("Cannot have right child without left child. This violates the Heap shape property!");
 				if (!(*it)->Left())
 					return *it;
 				nodes.push_back((*it)->Left());
@@ -270,12 +270,14 @@ shared_ptr<Node<T>> Heap<T>::FindLastLeaf() // Use Breadth-First-Search to find 
 		vector<shared_ptr<Node<T>>> nodes;
 		for (vector<shared_ptr<Node<T>>>::iterator it = levelNodes[level].begin(); it != levelNodes[level].end(); it++) {
 			if (*it) {
-				if ((*it)->Left())
+				if ((*it)->Left()) {
 					result = (*it)->Left();
-				nodes.push_back((*it)->Left());
-				if ((*it)->Right())
+					nodes.push_back((*it)->Left());
+				}
+				if ((*it)->Right()) {
 					result = (*it)->Right();
-				nodes.push_back((*it)->Right());
+					nodes.push_back((*it)->Right());
+				}
 			}
 		}
 		if (!nodes.empty())
