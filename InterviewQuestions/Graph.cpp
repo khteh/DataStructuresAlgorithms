@@ -267,11 +267,9 @@ void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, 
 {
 	if (start) {
 		unsigned long level = 0;
-		vector<shared_ptr<Vertex<TTag, TItem>>> vertices;
-		vertices.push_back(start);
-		result.emplace(level, vertices);
-		while (!vertices.empty()) {
-			vertices.clear();
+		result.emplace(level, vector<shared_ptr<Vertex<TTag, TItem>>>{start});
+		for (; !result[level].empty(); level++) {
+			vector<shared_ptr<Vertex<TTag, TItem>>> vertices;
 			for (vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++) {
 				if (*it) {
 					vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = (*it)->GetNeighbours();
@@ -290,9 +288,8 @@ void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, 
 						vertices.insert(vertices.end(), neighbours.begin(), neighbours.end());
 				}
 			}
-			level++;
 			if (!vertices.empty())
-				result.emplace(level, vertices);
+				result.emplace(level + 1, vertices);
 		}
 	}
 }

@@ -326,11 +326,9 @@ template<typename T>
 void Tree<T>::GetNodes(map<size_t, vector<shared_ptr<Node<T>>>>& result, long lvl) // Typical Breadth-First-Search algorithm
 {
 	long level = 0;
-	vector<shared_ptr<Node<T>>> nodes;
-	nodes.push_back(m_root);
-	result.emplace(level, nodes);
-	while (!nodes.empty() && (lvl == -1 || level <= lvl)) {
-		nodes.clear();
+	result.emplace(level, vector<shared_ptr<Node<T>>>{m_root});
+	for (; !result[level].empty() && (lvl == -1 || level <= lvl); level++) {
+		vector<shared_ptr<Node<T>>> nodes;
 		for (vector<shared_ptr<Node<T>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++) {
 			if (*it) {
 				if ((*it)->Left())
@@ -339,9 +337,8 @@ void Tree<T>::GetNodes(map<size_t, vector<shared_ptr<Node<T>>>>& result, long lv
 					nodes.push_back((*it)->Right());
 			}
 		}
-		level++;
 		if (!nodes.empty())
-			result.emplace(level, nodes);
+			result.emplace(level + 1, nodes);
 	}
 }
 // In-Order: Traverse left node, current node, then right [usually used for binary search trees]

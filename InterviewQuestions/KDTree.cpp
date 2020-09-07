@@ -89,12 +89,10 @@ void KDTree<T>::PrintTree()
 		return;
 	}
 	unsigned long level = 0;
-	vector<KDNode<T>*> nodes;
 	map<long, vector<KDNode<T>*>> levels;
-	nodes.push_back(m_root);
-	levels.emplace(level, nodes);
-	while (!nodes.empty()) {
-		nodes.clear();
+	levels.emplace(level, vector<KDNode<T>*>{m_root});
+	for (; !levels[level].empty(); level++) {
+		vector<KDNode<T>*> nodes;
 		for (vector<KDNode<T>*>::const_iterator it = levels[level].begin(); it != levels[level].end(); it++) {
 			if (*it) {
 				if ((*it)->Left())
@@ -103,9 +101,8 @@ void KDTree<T>::PrintTree()
 					nodes.push_back((*it)->Right());
 			}
 		}
-		level++;
 		if (!nodes.empty())
-			levels.emplace(level, nodes);
+			levels.emplace(level + 1, nodes);
 	}
 	bool printOnce = true;
 	for (map<long, vector<KDNode<T>*>>::const_iterator it = levels.begin(); it != levels.end(); it++) {

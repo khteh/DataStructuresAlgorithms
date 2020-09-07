@@ -9462,3 +9462,29 @@ size_t SnakesAndLaddersGame(vector<vector<size_t>>& ladders, vector<vector<size_
 	}
 	return 0;
 }
+/*
+* aaa -> 1
+* abcabc ->
+* dvdf -> vdf
+* abcabb
+*/
+size_t lengthOfLongestSubstring(string& s) 
+{
+	size_t count = 0, max = 0;
+	vector<char> data(s.begin(), s.end());
+	map<char, size_t> chars;
+	for (vector<char>::iterator it = data.begin(); it != data.end(); it++) {
+		if (chars.find(*it) == chars.end()) {
+			count++;
+//			chars.insert(*it);
+		}
+		else {
+			chars.clear();
+//			chars.insert(*it);
+			count = 1;
+		}
+		if (count > max)
+			max = count;
+	}
+	return max;
+}

@@ -232,14 +232,12 @@ template<class T>
 shared_ptr<Node<T>> Heap<T>::FindEmptyLeafParent() // Use Breath-First-Search to find empty leaf
 {
 	unsigned long level = 0;
-	vector<shared_ptr<Node<T>>> nodes;
 	map<unsigned long, vector<shared_ptr<Node<T>>>> levelNodes;
 	if (!m_root)
 		return m_root;
-	nodes.push_back(m_root);
-	levelNodes.emplace(0, nodes);
-	while (!nodes.empty()) {
-		nodes.clear();
+	levelNodes.emplace(0, vector<shared_ptr<Node<T>>>{m_root});
+	for (; !levelNodes[level].empty(); level++) {
+		vector<shared_ptr<Node<T>>> nodes;
 		for (vector<shared_ptr<Node<T>>>::iterator it = levelNodes[level].begin(); it != levelNodes[level].end(); it++) {
 			assert(*it);
 			if (*it) {
@@ -253,9 +251,8 @@ shared_ptr<Node<T>> Heap<T>::FindEmptyLeafParent() // Use Breath-First-Search to
 				nodes.push_back((*it)->Right());
 			}
 		}
-		level++;
 		if (!nodes.empty())
-			levelNodes.emplace(level, nodes);
+			levelNodes.emplace(level + 1, nodes);
 	}
 	return nullptr;
 }
@@ -265,14 +262,12 @@ shared_ptr<Node<T>> Heap<T>::FindLastLeaf() // Use Breadth-First-Search to find 
 {
 	shared_ptr<Node<T>> result(nullptr);
 	unsigned long level = 0;
-	vector<shared_ptr<Node<T>>> nodes;
 	map<unsigned long, vector<shared_ptr<Node<T>>>> levelNodes;
 	if (!m_root)
 		return m_root;
-	nodes.push_back(m_root);
-	levelNodes.emplace(0, nodes);
-	while (!nodes.empty()) {
-		nodes.clear();
+	levelNodes.emplace(0, vector<shared_ptr<Node<T>>>{m_root});
+	for (; !levelNodes[level].empty(); level++) {
+		vector<shared_ptr<Node<T>>> nodes;
 		for (vector<shared_ptr<Node<T>>>::iterator it = levelNodes[level].begin(); it != levelNodes[level].end(); it++) {
 			if (*it) {
 				if ((*it)->Left())
@@ -283,9 +278,8 @@ shared_ptr<Node<T>> Heap<T>::FindLastLeaf() // Use Breadth-First-Search to find 
 				nodes.push_back((*it)->Right());
 			}
 		}
-		level++;
 		if (!nodes.empty())
-			levelNodes.emplace(level, nodes);
+			levelNodes.emplace(level + 1, nodes);
 	}
 	return result;
 }
