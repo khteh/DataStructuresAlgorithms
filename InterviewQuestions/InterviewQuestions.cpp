@@ -2210,11 +2210,17 @@ bool SherlockValidString(string const& s)
 		return true;
 	return max - min > 1 ? false : result;
 }
+/*
+* "" -> ""
+* "a" -> "a"
+* "ab" -> "a"
+* "aa" -> "aa"
+*/
 string FindBiggestPalindromeSubstring(string const& s)
 {
 	string tmp, palindrome;
 	for (size_t i = 1; i < s.size() - 1; i++) {
-		if (s[i] == s[i + 1]) { // Even palindrome
+		if (s[i] == s[i + 1]) { // Even palindrome: abba
 			for (int j = i, k = i + 1; j >= 0; j--, k++) {
 				if (s[j] == s[k]) {
 					tmp = s.substr(j, k - j + 1);
@@ -2229,18 +2235,45 @@ string FindBiggestPalindromeSubstring(string const& s)
 					tmp = s.substr(j, k - j + 1);
 					if (tmp.size() > palindrome.size())
 						palindrome = tmp;
-				}
-				else
+				} else
 					break;
 			}
 		}
 	}
 	return palindrome;
 }
+/*
+"aa"
+center: [0,3]
+center:0 left: 0, right:0
+	p: ""
+center:1 left: 0, right: 1
+	p: "aa"
+center:2 left: 1, right: 1
+	p: ""
+center:3 left: 1, right: 2
+	p: ""
+---
+"aba"
+center: [0,5]
+center:0 left:0, right:0
+	p: ""
+center:1 left:0, right:1
+	p: ""
+center:2 left:1, right:1
+	p: ""
+	p: "aba" left:0, right:2
+center:3 left:1, right:2
+	p: ""
+center:4 left:2, right:2
+	p: ""
+center:5 left:2, right:3
+	p: ""
+*/
 void FindPalindromeSubstrings(string const& s, set<string>& result)
 {
 	size_t length = s.size();
-	for (size_t center = 0; center <= 2 * length - 1; center++) {
+	for (size_t center = 0; center < 2 * length; center++) {
 		long left = center / 2;
 		long right = left + center % 2;
 		string palindrome; // Keep the biggest palindrome around the current 'center'
