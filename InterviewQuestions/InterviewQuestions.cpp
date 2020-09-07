@@ -9526,32 +9526,26 @@ size_t SnakesAndLaddersGame(vector<vector<size_t>>& ladders, vector<vector<size_
 size_t lengthOfLongestSubstring(string& s) 
 {
 	size_t maxLength = 0;
-	vector<char> data(s.begin(), s.end());
 	set<char> chars;
 	string str;
-	for (vector<char>::iterator it = data.begin(); it != data.end(); it++) {
-		if (chars.find(*it) == chars.end()) {
-			str.append(1, *it);
-			chars.insert(*it);
+	for (size_t i = 0; i < s.size(); i++) {
+		if (chars.find(s[i]) == chars.end()) {
+			str.append(1, s[i]);
+			chars.insert(s[i]);
 		} else {
-			if (str[0] == *it) {
-				str.erase(0, 1);
-				str.append(1, *it);
-			} else {
-				if (str.size() > maxLength)
-					maxLength = str.size();
-				chars.clear();
-				size_t offset = str.find_first_of(*it) + 1;
-				if (offset > str.size())
-					str.clear();
-				else {
-					for (size_t i = offset; i <= str.size(); i++)
-						chars.insert(str[i]);
-					str = str.substr(offset);
-				}
-				chars.insert(*it);
-				str.append(1, *it);
+			if (str.size() > maxLength)
+				maxLength = str.size();
+			chars.clear();
+			size_t offset = str.find_first_of(s[i]) + 1;
+			if (offset > str.size())
+				str.clear();
+			else {
+				for (size_t j = offset; j <= str.size(); j++)
+					chars.insert(str[j]);
+				str = str.substr(offset);
 			}
+			chars.insert(s[i]);
+			str.append(1, s[i]);
 		}
 	}
 	return max(str.size(), maxLength);
