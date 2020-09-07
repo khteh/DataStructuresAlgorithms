@@ -122,7 +122,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "https://en.wikipedia.org/wiki/Machine_epsilon: Float: " << numeric_limits<float>::epsilon() << ", Double: " << numeric_limits<double>::epsilon() << endl;
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
-	cout << "numeric_limits<int>::max(): " << numeric_limits<int>::max() << endl;
+	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << ", numeric_limits<int>::max(): " << numeric_limits<int>::max() << endl;
 	assert(1e5 == pow(10, 5));
 	assert(1e5 == 10e4);
 	assert(1e5 == 100'000);
@@ -454,6 +454,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "atoi(\"0xabcd\"): " << hex << _atod("0xabcd", 10) << dec << endl;
 	cout << "atoi(\"11011110101011011011111011101111\"): " << hex << _atoull("11011110101011011011111011101111", 2) << dec << endl; // 0xDeadBeef
 	cout << "atof(\"1234.5678\"): " << _atod("1234.5678") << endl;
+	assert(_atoi("     -42") == -42);
+	assert(_atoi("-0-") == 0);
+	assert(_atoi("-+123-") == 0);
+	assert(_atoi("-123 456") == -123);
+	assert(_atoi("-123 Hello") == -123);
+	assert(_atoi("Hello -123") == 0);
+	assert(_atoi("+123 456") == 123);
+	assert(_atoi("+123 Hello") == 123);
 	double d;
 	assert(round(1234.5678, 1) == 1234.6);
 	assert(round(1234.5678, 2) == 1234.57);
@@ -1768,6 +1776,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(lengthOfLongestSubstring(string("pwwkew")) == 3);
 	assert(lengthOfLongestSubstring(string("ohvhjdml")) == 6);
 	assert(lengthOfLongestSubstring(string("vqblqcb")) == 4);
+	assert(zigzagconvert(string("PAYPALISHIRING"), 3) == "PAHNAPLSIIGYIR");
+	assert(zigzagconvert(string("AB"), 1) == "AB");
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -4812,6 +4822,57 @@ double _atod(string str, char base)
 		return quotient + remainder;
 	} else
 		return quotient;
+}
+/*
+* https://leetcode.com/problems/string-to-integer-atoi/
+* 100%
+*/
+long _atoi(string str)
+{
+	int result = 0;
+	bool isNegative = false, isPositive = false, foundNumber = false;
+	for (size_t i = 0; i < str.size(); i++) {
+		if (str[i] == '-') {
+			if (!isNegative && !isPositive && !foundNumber)
+				isNegative = true;
+			else if (foundNumber)
+				return isNegative ? result * -1 : result;
+			else
+				return 0;
+		}
+		else if (str[i] == '+') {
+			if (!isPositive && !isNegative && !foundNumber)
+				isPositive = true;
+			else if (foundNumber)
+				return isNegative ? result * -1 : result;
+			else
+				return 0;
+		}
+		else if (str[i] >= '0' && str[i] <= '9') {
+			long r = (long)result * 10;
+			r += str[i] - '0';
+			if (isNegative)
+				r *= -1;
+			if (r >= numeric_limits<int>::max())
+				return numeric_limits<int>::max();
+			else if (r <= numeric_limits<int>::min())
+				return numeric_limits<int>::min();
+			result *= 10;
+			result += str[i] - '0';
+			foundNumber = true;
+		}
+		else if (foundNumber || isNegative || isPositive) {
+			if (foundNumber)
+				return isNegative ? result * -1 : result;
+			else
+				return 0;
+		}
+		else if (str[i] != ' ')
+			return 0;
+	}
+	if (isNegative)
+		result *= -1;
+	return result;
 }
 // 1234.5678
 double round(double num , int n)
@@ -9582,4 +9643,32 @@ size_t lengthOfLongestSubstring(string& s)
 		}
 	}
 	return max(str.size(), maxLength);
+}
+/*
+* https://leetcode.com/problems/zigzag-conversion/
+* 100%
+*/
+string zigzagconvert(string& s, size_t numRows) 
+{
+	bool direction = false;
+	vector<string> str(numRows);
+	for (long i = 0, row = 0; i < (long)s.size(); i++) {
+		str[row].append(1, s[i]);
+		if (!direction)
+			row++;
+		else
+			row--;
+		if (row == numRows) {
+			row -= min((int)numRows, 2);
+			direction = !direction;
+		}
+		else if (row < 0) {
+			row += min((int)numRows, 2);
+			direction = !direction;
+		}
+	}
+	ostringstream oss;
+	for (size_t i = 0; i < numRows; i++)
+		oss << str[i];
+	return oss.str();
 }
