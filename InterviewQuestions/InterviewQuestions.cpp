@@ -3562,36 +3562,29 @@ template<typename type>
 //			                   L             M              U
 // 4 8 9 9 9 10 12 13 1 2 2 3
 // L            M           U
-int BinarySearch(vector<size_t>& source, size_t toSearch)
+int BinarySearch(vector<size_t>& data, size_t toSearch)
 {
-	int lower, middle, upper;
-	lower = 0;
-	upper = source.size() - 1;
-	while (lower <= upper) {
+	for (size_t lower = 0, middle = 0, upper = data.size() - 1; lower <= upper; ) {
 		middle = lower + (upper - lower) / 2 + (upper - lower) % 2;
-		if (toSearch == source[middle])
+		if (toSearch == data[middle])
 			return middle;
-		else if (toSearch == source[lower])
+		else if (toSearch == data[lower])
 			return lower;
-		else if (toSearch == source[upper])
+		else if (toSearch == data[upper])
 			return upper;
-		else if (source[lower] <= source[middle]) {
-			// 15 16 19 20 25 30 1 3 4 5 7 10 14
-			// L              M               U
-			// 4 8 9 9 9 10 12 13 1 2 2 3
-			// L            M           U
-			if (toSearch > source[lower] && toSearch < source[middle]) // Ex: toSearch=20; toSearch=9
+		else if (data[lower] <= data[middle]) {
+			// 5 6 7 8 1 2 3
+			// L     M     U
+			if (toSearch > data[lower] && toSearch < data[middle]) // Ex: toSearch=7
 				upper = middle - 1;
-			else							   // Ex: toSearch=5; toSearch=2
+			else							   // Ex: toSearch=2
 				lower = middle + 1;
-		} else { // Middle < Lower
-			// 15 16 19 20 25 30 1 3 4 5 7 10 11 14
-			// L			  	   M		      U
-			// 4 8 9 9 9 10 12 13 1 2 2 3
-			// L                  M     U
-			if (toSearch > source[middle] && toSearch < source[upper]) // Ex: toSearch=10; toSearch=2
+		} else { // Lower >= Middle
+			// 6 7 8 9 1 2 3 4 5
+			// L       M       U
+			if (toSearch > data[middle] && toSearch < data[upper]) // Ex: toSearch=3
 				lower = middle + 1;
-			else				// Ex: toSearch=20; toSearch=12
+			else				// Ex: toSearch=8
 				upper = middle - 1;
 		}
 	}
