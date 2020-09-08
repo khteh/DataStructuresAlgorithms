@@ -1693,6 +1693,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(lengthOfLongestSubstring(string("vqblqcb")) == 4);
 	assert(zigzagconvert(string("PAYPALISHIRING"), 3) == "PAHNAPLSIIGYIR");
 	assert(zigzagconvert(string("AB"), 1) == "AB");
+	assert(numberToRoman(4) == "IV");
+	assert(numberToRoman(9) == "IX");
+	assert(numberToRoman(40) == "XL");
+	assert(numberToRoman(90) == "XC");
+	assert(numberToRoman(400) == "CD");
+	assert(numberToRoman(900) == "CM");
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -9703,4 +9709,92 @@ string zigzagconvert(string& s, size_t numRows)
 	for (size_t i = 0; i < numRows; i++)
 		oss << str[i];
 	return oss.str();
+}
+/*
+* https://leetcode.com/problems/integer-to-roman/
+* 100%
+*/
+string numberToRoman(size_t num) 
+{
+	string roman;
+	size_t symbols;
+	// >= 1000
+	symbols = num / 1000;
+	for (size_t i = 0; i < symbols; i++)
+		roman.append(1, 'M');
+	if (num >= 1000)
+		num %= 1000;
+
+	// 900 - 1000
+	if (num >= 900) {
+		roman.append("CM");
+		num -= 900;
+	}
+
+	// 500 - 900
+	if (num >= 500) {
+		symbols = num / 500;
+		for (size_t i = 0; i < symbols; i++)
+			roman.append(1, 'D');
+		num %= 500;
+	}
+
+	// 400 - 499
+	if (num >= 400) {
+		roman.append("CD");
+		num -= 400;
+	}
+
+	// 100 -
+	if (num >= 100) {
+		symbols = num / 100;
+		for (size_t i = 0; i < symbols; i++)
+			roman.append(1, 'C');
+		num %= 100;
+	}
+
+	// 90 - 99
+	if (num >= 90) {
+		roman.append("XC");
+		num -= 90;
+	}
+
+	// 50 - 89
+	if (num >= 50) {
+		symbols = num / 50;
+		for (size_t i = 0; i < symbols; i++)
+			roman.append(1, 'L');
+		num %= 50;
+	}
+
+	// 40 - 49
+	if (num >= 40) {
+		roman.append("XL");
+		num -= 40;
+	}
+	symbols = num / 10;
+	for (size_t i = 0; i < symbols; i++)
+		roman.append(1, 'X');
+	if (num >= 10)
+		num %= 10;
+
+	if (num == 9) {
+		roman.append("IX");
+		num -= 9;
+	}
+
+	if (num == 4) {
+		roman.append("IV");
+		num -= 4;
+	}
+	symbols = num / 5;
+	for (size_t i = 0; i < symbols; i++)
+		roman.append(1, 'V');
+	if (num >= 5)
+		num %= 5;
+
+	symbols = num;
+	for (size_t i = 0; i < symbols; i++)
+		roman.append(1, 'I');
+	return roman;
 }
