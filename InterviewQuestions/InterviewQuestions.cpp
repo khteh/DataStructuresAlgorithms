@@ -3031,32 +3031,42 @@ void parentheses(vector<string> &result, size_t count)
 	str.resize(count * 2);
 	parentheses(result, str, 0, count, count);
 }
-//()
-//0: -1, 0
-//1 : -1, result = 2
-//
-//(()
-//0: -1, 0
-//1 : -1, 0, 1
-//2 : -1, 0 result = 2
-//
-//((
-//0: -1, 0
-//1 : -1, 1
-//result = 0
-//
-//((()
-//0: -1, 0
-//1 : -1, 0, 1
-//2 : -1, 0, 1, 2
-//3 : -1, 0, 1 result = 2
-//
-//((())
-//0: -1, 0
-//1 : -1, 0, 1
-//2 : -1, 0, 1, 2
-//3 : -1, 0, 1 result = 2
-//4 : -1, 0 result = 4
+/*
+* i - stack.peek()
+* ()
+* 0: -1, 0
+* 1 : -1, result = 2
+*
+* (()
+* 0: -1, 0
+* 1 : -1, 0, 1
+* 2 : -1, 0 result = 2
+*
+* ((
+* 0: -1, 0
+* 1 : -1, 1
+* result = 0
+* 
+* ((()
+* 0: -1, 0
+* 1 : -1, 0, 1
+* 2 : -1, 0, 1, 2
+* 3 : -1, 0, 1 result = 2
+*
+* ((())
+* 0: -1, 0
+* 1 : -1, 0, 1
+* 2 : -1, 0, 1, 2
+* 3 : -1, 0, 1 result = 2
+* 4 : -1, 0 result = 4
+* 
+* ())()
+* 0: -1, 0
+* 1: -1 result = 2
+* 2: 2			<= extra ')'
+* 3: 2, 3
+* 4: 2 result = 2
+*/
 long LongestValidParentheses(string& str)
 {
 	MyStack<long> stack;
@@ -3070,7 +3080,7 @@ long LongestValidParentheses(string& str)
 			if (!stack.isEmpty() && (long)(i - stack.peek()) > result)
 				result = i - stack.peek();
 			else if (stack.isEmpty())
-				stack.push(i);
+				stack.push(i); // This marks the next invalid extra ')' as base case
 		}
 	}
 	return result;
