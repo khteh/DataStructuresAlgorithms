@@ -3008,7 +3008,7 @@ void parentheses(vector<string> &result, string &str, size_t index, long left, l
 {
 	if (!left && !right)
 		result.push_back(str);
-	else if (left >= 0 && right >= left) {
+	else {
 		if (left > 0) {
 			str[index] = '(';
 			parentheses(result, str, index + 1, left - 1, right);
