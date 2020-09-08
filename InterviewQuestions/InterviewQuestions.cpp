@@ -42,6 +42,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	BinarySearchCountTests();
 	StackTests();
 	QueueTests();
+	LinkedListTests();
 	BinaryTreeTests();
 	BinarySearchTreeTests();
 	KDTreeTests();
@@ -1032,92 +1033,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings = {"ABCW", "BAZ", "FOO", "BAR", "XTFN", "ABCDEF"};
 	long max = MaxLengths(strings);
 	assert(max == 24);
-	a.clear();
-	a.resize(10);
-	generate(a.begin(), a.end(), [&] {return uniformDistribution(engine); });
-	LinkedList<long> lla1(a);
-	assert(lla1.Length() == 10);
-	b.clear();
-	lla1.ToVector(b);
-	assert(a.size() == b.size());
-	for (size_t i = 0; i < a.size(); i++)
-		assert(a[i] == b[i]);
-	shared_ptr<Node<long>> odd = nullptr, even = nullptr;
-	lla1.SplitList(even, odd);
-	assert(lla1.Length() == 10);
-	assert(odd);
-	assert(even);
-	shared_ptr<Node<long>> node = even;
-	for (size_t i = 0; node; node = node->Next(), i += 2)
-		assert(node->Item() == a[i]);
-	node = odd;
-	for (size_t i = 1; node; node = node->Next(), i += 2)
-		assert(node->Item() == a[i]);
-	lla1.Clear();
-	a.clear();
-	a.resize(10);
-	generate(a.begin(), a.end(), [n = 0]()mutable{return n++; });
-	LinkedList<long> lla2(a);
-	assert(lla2.Length() == 10);
-	// Implement an algorithm to find the nth to last element of a singly linked list.
-	shared_ptr<Node<long>> lptr = lla2.NthElementFromBack(3);
-	assert(lptr);
-	assert(lptr->Item() == 7);
-	lptr = lla2.NthElementFromBack(10);
-	assert(lptr);
-	assert(lptr->Item() == 0);
-	lptr = lla2.NthElementFromBack(11);
-	assert(!lptr);
-	lla2.Clear();
-	a.clear();
-	a.push_back(1); // LSB
-	a.push_back(2);
-	a.push_back(3); // MSB
-	LinkedList<long> lla3(a);
-	assert(lla3.Length() == 3);
-	lla3.Print();
-	a.clear();
-	a.push_back(7); // LSB
-	a.push_back(8);
-	a.push_back(9); // MSB
-	LinkedList<long> llb1(a);
-	assert(llb1.Length() == 3);
-	llb1.Print();
-	a.clear();
-	a.push_back(8); // LSB
-	a.push_back(0);
-	a.push_back(3);
-	a.push_back(1); // MSB
-	LinkedList<long> listAdditionResult = lla3.AddNumbers(lla3.Head(), llb1.Head()); // 987 + 321 = 1308 List in reverse order. Head points to LSB
-	assert(listAdditionResult.Length() == 4);
-	listAdditionResult.Print();
-	i = 0;
-	for (shared_ptr<Node<long>> n = listAdditionResult.Head(); n; n = n->Next())
-		assert(n->Item() == a[i++]);
-	vector<long> listAdditionResultVector;
-	listAdditionResult.ToVector(listAdditionResultVector);
-	assert(listAdditionResultVector.size() == 4);
-	assert(listAdditionResultVector[0] == 8);
-	assert(listAdditionResultVector[1] == 0);
-	assert(listAdditionResultVector[2] == 3);
-	assert(listAdditionResultVector[3] == 1);
-	listAdditionResult.Clear();
-	lla3.Clear();
-	llb1.Clear();
-	a.clear();
-	b.clear();
-	a.resize(10);
-	b.resize(10);
-	generate(a.begin(), a.end(), [&] {return uniformDistribution(engine); });
-	generate(b.begin(), b.end(), [&] {return uniformDistribution(engine); });
-	LinkedList<long> lla4(a), llb2(b);
-	assert(lla4.Length() == 10);
-	assert(llb2.Length() == 10);
-	lla4.Join(llb2);
-	assert(lla4.Length() == 20);
-	assert(llb2.Length() == 0);
-	lla4.Clear();
-	llb2.Clear();
 	Square square1(0, 0, 10, 10), square2(5, 5, 10, 10);
 	assert(square1.IsOverlappig(square2));
 	assert(square2.IsOverlappig(square1));
@@ -5428,6 +5343,123 @@ void QueueTests()
 	assert(myQueue.size() == 1);
 	assert(myQueue.front() == 10);
 	assert(myQueue.size() == 0);
+}
+void LinkedListTests()
+{
+	vector<long> a, b;
+	random_device device;
+	vector<unsigned int> seeds;
+	seeds.resize(mt19937_64::state_size);
+	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	seed_seq sequence(begin(seeds), end(seeds));
+	mt19937_64 engine(sequence);
+	uniform_int_distribution<long> uniformDistribution;
+	a.clear();
+	a.resize(10);
+	generate(a.begin(), a.end(), [&] {return uniformDistribution(engine); });
+	LinkedList<long> lla1(a);
+	assert(lla1.Length() == 10);
+	b.clear();
+	lla1.ToVector(b);
+	assert(a.size() == b.size());
+	for (size_t i = 0; i < a.size(); i++)
+		assert(a[i] == b[i]);
+	shared_ptr<Node<long>> odd = nullptr, even = nullptr;
+	lla1.SplitList(even, odd);
+	assert(lla1.Length() == 10);
+	assert(odd);
+	assert(even);
+	shared_ptr<Node<long>> node = even;
+	for (size_t i = 0; node; node = node->Next(), i += 2)
+		assert(node->Item() == a[i]);
+	node = odd;
+	for (size_t i = 1; node; node = node->Next(), i += 2)
+		assert(node->Item() == a[i]);
+	lla1.Clear();
+	a.clear();
+	a.resize(10);
+	generate(a.begin(), a.end(), [n = 0]()mutable{return n++; });
+	// 0->1->2->3->4->5->6->7->8->9
+	// 10 9  8  7  6  5  4  3  2  1
+	LinkedList<long> lla2(a);
+	assert(lla2.Length() == 10);
+	// Implement an algorithm to find the nth to last element of a singly linked list.
+	shared_ptr<Node<long>> lptr = lla2.NthElementFromBack(3);
+	assert(lptr);
+	assert(lptr->Item() == 7);
+	lptr = lla2.NthElementFromBack(10);
+	assert(lptr);
+	assert(lptr->Item() == 0);
+	lptr = lla2.NthElementFromBack(11);
+	assert(!lptr);
+	lptr = lla2.RemoveNthElementFromBack(4);
+	assert(lla2.Length() == 9);
+	a.clear();
+	a = {0,1,2,3,4,5,7,8,9};
+	for (size_t i = 0; i < lla2.Length(); i++) {
+		assert(lptr->Item() == a[i]);
+		lptr = lptr->Next();
+	}
+	// 0->1->2->3->4->5->7->8->9
+	// 9  8  7  6  5  4  3  2  1
+	lptr = lla2.RemoveNthElementFromBack(7);
+	assert(lla2.Length() == 8);
+	a.clear();
+	a = { 0,1,3,4,5,7,8,9 };
+	for (size_t i = 0; i < lla2.Length(); i++) {
+		assert(lptr->Item() == a[i]);
+		lptr = lptr->Next();
+	}
+	lla2.Clear();
+	a.clear();
+	a.push_back(1); // LSB
+	a.push_back(2);
+	a.push_back(3); // MSB
+	LinkedList<long> lla3(a);
+	assert(lla3.Length() == 3);
+	lla3.Print();
+	a.clear();
+	a.push_back(7); // LSB
+	a.push_back(8);
+	a.push_back(9); // MSB
+	LinkedList<long> llb1(a);
+	assert(llb1.Length() == 3);
+	llb1.Print();
+	a.clear();
+	a.push_back(8); // LSB
+	a.push_back(0);
+	a.push_back(3);
+	a.push_back(1); // MSB
+	LinkedList<long> listAdditionResult = lla3.AddNumbers(lla3.Head(), llb1.Head()); // 987 + 321 = 1308 List in reverse order. Head points to LSB
+	assert(listAdditionResult.Length() == 4);
+	listAdditionResult.Print();
+	size_t i = 0;
+	for (shared_ptr<Node<long>> n = listAdditionResult.Head(); n; n = n->Next())
+		assert(n->Item() == a[i++]);
+	vector<long> listAdditionResultVector;
+	listAdditionResult.ToVector(listAdditionResultVector);
+	assert(listAdditionResultVector.size() == 4);
+	assert(listAdditionResultVector[0] == 8);
+	assert(listAdditionResultVector[1] == 0);
+	assert(listAdditionResultVector[2] == 3);
+	assert(listAdditionResultVector[3] == 1);
+	listAdditionResult.Clear();
+	lla3.Clear();
+	llb1.Clear();
+	a.clear();
+	b.clear();
+	a.resize(10);
+	b.resize(10);
+	generate(a.begin(), a.end(), [&] {return uniformDistribution(engine); });
+	generate(b.begin(), b.end(), [&] {return uniformDistribution(engine); });
+	LinkedList<long> lla4(a), llb2(b);
+	assert(lla4.Length() == 10);
+	assert(llb2.Length() == 10);
+	lla4.Join(llb2);
+	assert(lla4.Length() == 20);
+	assert(llb2.Length() == 0);
+	lla4.Clear();
+	llb2.Clear();
 }
 void BinaryTreeTests()
 {

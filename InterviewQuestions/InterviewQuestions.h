@@ -201,6 +201,7 @@ void AnagramTests();
 void PalindromeTests();
 void StackTests();
 void QueueTests();
+void LinkedListTests();
 void BinarySearchTests();
 void BinarySearchStringTests();
 void BinarySearchCountTests();

@@ -5,7 +5,7 @@
 #include <variant>
 #include <memory>
 using namespace std;
-template<class T>
+template<typename T>
 class LinkedList
 {
 private:
@@ -29,6 +29,7 @@ public:
 	bool operator<(LinkedList<T>&);
 	bool operator>(LinkedList<T>&);
 	// Implement an algorithm to find the nth to last element of a singly linked list.
-	shared_ptr<Node<T>> NthElementFromBack(size_t);
+	shared_ptr<Node<T>> NthElementFromBack(long);
+	shared_ptr<Node<T>> RemoveNthElementFromBack(long);
 	shared_ptr<Node<T>> AddNumbers(shared_ptr<Node<T>>, shared_ptr<Node<T>>, T carry = 0);
 };
