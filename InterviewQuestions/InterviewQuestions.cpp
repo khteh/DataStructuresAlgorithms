@@ -3330,6 +3330,15 @@ void SortStack(MyStack<T> &src, MyStack<T> &dest, sort_order_t order)
 		dest.push(item);
 	}
 }
+/*
+* dest:  {1,3,5,7,9,11,13,15}
+* source:{6,8,10,12,14}
+* dest:  {1,3,5,[6],7,8,9,10,11 ,12 ,13 ,14 ,15 }
+* 
+* dest:  {6,8,10,12,14,16,18}
+* source:{1,3,5,7,9,11}
+* dest:  {1,3,5,[6],7,8,9,10 ,11 ,12 ,14 ,16 ,18 }
+*/
 void Merge(vector<long> &dest, vector<long> &source)
 {
 	int k = dest.size() + source.size() - 1;

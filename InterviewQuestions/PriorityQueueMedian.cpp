@@ -3,17 +3,17 @@
 
 template class PriorityQueueMedian<long>;
 
-template<class T>
+template<typename T>
 PriorityQueueMedian<T>::PriorityQueueMedian()
 {
 }
 
-template<class T>
+template<typename T>
 PriorityQueueMedian<T>::~PriorityQueueMedian()
 {
 	Clear();
 }
-template<class T>
+template<typename T>
 void PriorityQueueMedian<T>::Clear()
 {
 	while (!maxHeap.empty())
@@ -24,10 +24,10 @@ void PriorityQueueMedian<T>::Clear()
 /*
  maxHeap...Median...minHeap
  */
-template<class T>
+template<typename T>
 void PriorityQueueMedian<T>::Add(T item)
 {
-	if (!minHeap.size() && !maxHeap.size())
+	if (minHeap.empty() && maxHeap.empty())
 		maxHeap.push(item);
 	else {
 		if (item > maxHeap.top())
@@ -44,7 +44,7 @@ void PriorityQueueMedian<T>::Add(T item)
 	}
 }
 
-template<class T>
+template<typename T>
 double PriorityQueueMedian<T>::GetMedian()
 {
 	if (maxHeap.empty() && minHeap.empty())
