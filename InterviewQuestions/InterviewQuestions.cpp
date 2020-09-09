@@ -2774,8 +2774,7 @@ set<vector<long>> permute(vector<long>& data)
 	if (data.empty())
 		return permutations;
 	else if (data.size() == 1) {
-		vector<long> tmp { data[0] };
-		permutations.insert(tmp);
+		permutations.insert(vector<long>{data[0]});
 		return permutations;
 	}
 	long toInsert = data[0];
