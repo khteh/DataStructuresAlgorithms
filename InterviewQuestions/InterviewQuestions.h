@@ -375,3 +375,4 @@ size_t SnakesAndLaddersGame(vector<vector<size_t>>&, vector<vector<size_t>>&);
 size_t lengthOfLongestSubstring(string&);
 string zigzagconvert(string&, size_t);
 string numberToRoman(size_t);
+double median(vector<long>&, vector<long>&);

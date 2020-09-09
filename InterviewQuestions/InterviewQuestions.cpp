@@ -1719,6 +1719,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(numberToRoman(90) == "XC");
 	assert(numberToRoman(400) == "CD");
 	assert(numberToRoman(900) == "CM");
+	a.clear();
+	b.clear();
+	a = { 1,3,5,7,9 };
+	b = { 2,4,6,8,10 };
+	assert(median(a, b) == 11/2);
+	a.clear();
+	b.clear();
+	a = { 1,3,5,7,9 };
+	b = { 2,4,6,8,10,11 };
+	assert(median(a, b) == 6);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -9873,4 +9883,23 @@ string numberToRoman(size_t num)
 	for (size_t i = 0; i < symbols; i++)
 		roman.append(1, 'I');
 	return roman;
+}
+/*
+* Calculate the median of 2 sorted lists of numbers in O(log (m+n))
+* https://www.geeksforgeeks.org/median-two-sorted-arrays-different-sizes-ologminn-m/
+*/
+double median(vector<long>& a, vector<long>& b)
+{
+	size_t count = a.size() + b.size();
+	size_t minIndex = 0, maxIndex = min(a.size(), b.size());
+	size_t i = (minIndex + maxIndex) / 2, j = (count + 1) / 2 - i;
+	for (; (a[i - 1] > b[j]) || (b[j - 1] > a[i]); ) {
+		if (a[i - 1] > b[j]) // Work on the left
+			j++;
+		else if (b[j - 1] > a[i]) {// Work on the right
+			i++;
+			j = (count + 1) / 2 - i;
+		}
+	}
+	return (count % 2) ? max(a[i - 1], b[j - 1]) : (max(a[i - 1], b[j - 1]) + min(a[i], b[j])) / 2;
 }
