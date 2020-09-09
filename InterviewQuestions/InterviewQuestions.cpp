@@ -123,7 +123,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "https://en.wikipedia.org/wiki/Machine_epsilon: Float: " << numeric_limits<float>::epsilon() << ", Double: " << numeric_limits<double>::epsilon() << endl;
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
-	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << ", numeric_limits<int>::max(): " << numeric_limits<int>::max() << endl;
+	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << ", numeric_limits<int>::max(): " << numeric_limits<int>::max() << ", numeric_limits<int>::min() * -1 = " << numeric_limits<int>::min() * -1 << endl;
+	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
+	assert(numeric_limits<int>::min() / -1 == numeric_limits<int>::min());
+	assert(numeric_limits<int>::max() * -1 == numeric_limits<int>::min() + 1); // 0x7FFFF_FFFF * -1 = 0x8000_0001
 	assert(1e5 == pow(10, 5));
 	assert(1e5 == 10e4);
 	assert(1e5 == 100'000);
@@ -989,9 +992,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(XOR(4) == 4);
 	assert(XOR(5) == 1);
 	cout << dec;
-	assert(DifferentSigns(10, -20));
-	assert(!DifferentSigns(10, 20));
-	assert(!DifferentSigns(-10, -20));
 	assert(ToggleSign(-10) == 10);
 	assert(ToggleSign(10) == -10);
 	assert(absolute(-10) == 10);
@@ -1000,10 +1000,30 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(SubtractWithPlusSign(10, -5) == 15);
 	assert(MultiplyWithPlusSign(10, 5) == 50);
 	assert(MultiplyWithPlusSign(10, -5) == -50);
-	assert(DivideWithPlusSign(10, 5) == 2);
-	assert(DivideWithPlusSign(10, -5) == -2);
-	assert(DivideWithPlusSign(-10, 5) == -2);
-	assert(DivideWithPlusSign(-10, -5) == 2);
+	int quotient = numeric_limits<int>::min() / -1;
+	size_t uquotient = numeric_limits<int>::min() / -1;
+	cout << "numeric_limits<int>::min() / -1 = " << quotient << ", size_t: " << uquotient << endl;
+	assert(DivideWithPlusSign(10, 3) == 3);
+	assert(DivideWithPlusSign(10, -3) == -3);
+	assert(DivideWithPlusSign(-10, 3) == -3);
+	assert(DivideWithPlusSign(-10, -3) == 3);
+	assert(DivideWithPlusSign(-10, -1) == 10);
+	assert(DivideWithPlusSign(-1, 1) == -1);
+	assert(DivideWithPlusSign(1, -1) == -1);
+	assert(DivideWithPlusSign(-1, -1) == 1);
+	assert(DivideWithPlusSign(-2147483648, -1) == 2147483648);
+	assert(DivideWithPlusSign(-2147483648, 1) == -2147483648);
+	assert(DivideWithPlusSign(2147483648, -1) == -2147483648);
+	assert(divide(10, 3) == 3);
+	assert(divide(10, -3) == -3);
+	assert(divide(-10, 3) == -3);
+	assert(divide(-10, -3) == 3);
+	assert(divide(-1, 1) == -1);
+	assert(divide(1, -1) == -1);
+	assert(divide(-1, -1) == 1);
+	assert(divide(-2147483648, -1) == 2147483648);
+	assert(divide(-2147483648, 1) == -2147483648);
+	assert(divide(2147483648, -1) == -2147483648);
 	assert(KthNumberWith357PrimeFactors(1) == 1);
 	assert(KthNumberWith357PrimeFactors(2) == 3);
 	assert(KthNumberWith357PrimeFactors(3) == 5);
@@ -4826,6 +4846,17 @@ long ToggleSign(long a)
 	for (i = 0; a != 0; i += d, a += d);
 	return i;
 }
+long ToggleSign1(long a)
+{
+	int i = 0, d = a < 0 ? 1 : -1;
+	for (; a != 0; a += d) {
+		if (a > 0)
+			i--;
+		else
+			i++;
+	}
+	return i;
+}
 long SubtractWithPlusSign(long a, long b)
 {
 	return a + ToggleSign(b);
@@ -4838,19 +4869,53 @@ long MultiplyWithPlusSign(long a, long b)
 	for (long i = absolute(b); i > 0; i--, sum += a);
 	return b < 0 ? ToggleSign(sum) : sum;
 }
-bool DifferentSigns(long a, long b)
-{
-	return (a > 0 && b < 0) || (a < 0 && b > 0);
-}
 long DivideWithPlusSign(long a, long b)
 {
 	if (!b)
 		throw runtime_error("Divide by zero exception");
+	bool isNegative = (a < 0) ^ (b < 0);
+	if (b == 1 || b == -1) {
+		if (a == numeric_limits<int>::min())
+			return numeric_limits<int>::min();
+		else if (a == numeric_limits<int>::max())
+			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
+		if (a == numeric_limits<long>::min())
+			return numeric_limits<long>::min();
+		else if (a == numeric_limits<long>::max())
+			return isNegative ? numeric_limits<long>::min() + 1 : numeric_limits<long>::max();
+		if (isNegative) // result should be < 0
+			return a < 0 ? a : ToggleSign(a);
+		return a < 0 ? ToggleSign(a) : a;
+	}
 	long quotient;
 	long divisor = ToggleSign(absolute(b)); // * -1
 	long dividend = absolute(a);
 	for (quotient = 0; dividend >= absolute(divisor); dividend += divisor, quotient++);
-	return DifferentSigns(a, b) ? ToggleSign(quotient) : quotient;
+	return isNegative ? ToggleSign(quotient) : quotient;
+}
+long divide(long dividend, long divisor) 
+{
+	int quotient = 0;
+	bool isNegative = (dividend < 0) ^ (divisor < 0);
+	if (divisor == 1 || divisor == -1) {
+		if (dividend == numeric_limits<int>::min())
+			return numeric_limits<int>::min();
+		else if (dividend == numeric_limits<int>::max())
+			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
+		if (dividend == numeric_limits<long>::min())
+			return numeric_limits<long>::min();
+		else if (dividend == numeric_limits<long>::max())
+			return isNegative ? numeric_limits<long>::min() + 1 : numeric_limits<long>::max();
+		if (isNegative)
+			return dividend < 0 ? dividend : ToggleSign1(dividend);
+		return dividend < 0 ? ToggleSign1(dividend) : dividend;
+	}
+	if (divisor < 0)
+		divisor = ToggleSign1(divisor);
+	if (dividend < 0)
+		dividend = ToggleSign1(dividend);
+	for (; dividend >= divisor; quotient++, dividend -= divisor);
+	return isNegative ? ToggleSign1(quotient) : quotient;
 }
 long KthNumberWith357PrimeFactors(long n)
 {

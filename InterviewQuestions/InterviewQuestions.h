@@ -191,12 +191,12 @@ long LongestValidParentheses(string&);
 long LongestValidParenthesesWithFixes(string&, size_t k);
 template<class T>
 void SortStack(MyStack<T> &, MyStack<T> &, sort_order_t order);
-bool DifferentSigns(long a, long b);
 long ToggleSign(long);
 long absolute(long a);
 long SubtractWithPlusSign(long a, long b);
 long MultiplyWithPlusSign(long a, long b);
 long DivideWithPlusSign(long a, long b);
+long divide(long, long);
 void AnagramTests();
 void PalindromeTests();
 void StackTests();
