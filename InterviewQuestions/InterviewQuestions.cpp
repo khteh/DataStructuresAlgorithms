@@ -9887,6 +9887,39 @@ string numberToRoman(size_t num)
 /*
 * Calculate the median of 2 sorted lists of numbers in O(log (m+n))
 * https://www.geeksforgeeks.org/median-two-sorted-arrays-different-sizes-ologminn-m/
+Example (Even count):
+1 3 5 7 9
+2 4 6 8 10
+
+i: 5 / 2 = 2
+j: (10 + 1) / 2 - 2 = 11 / 2 - 2 = 5 - 2 = 3
+left: 5
+right: 5
+
+1 3		5 7 9
+2 4 6	8 10
+
+1 3 5   7 9
+2 4     6 8 10
+
+median: (5+6) / 2 = 5.5
+---------
+Example (Odd count):
+1 3 5 7 9
+2 4 6 8 10 11
+
+i: 5 / 2 = 2
+j: (11 + 1) / 2 - 2 = 12 / 2 - 2 = 6 - 2 = 4
+left: 6
+right: 5
+
+1 3			5  7  9
+2 4 6 8		10 11
+
+1 3 5	7 9
+2 4 6	8 10 11
+
+median: Max element in the LEFT (more counts compared to RIGHT): max(5,6) = 6
 */
 double median(vector<long>& a, vector<long>& b)
 {
