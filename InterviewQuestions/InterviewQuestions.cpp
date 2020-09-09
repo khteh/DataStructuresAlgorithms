@@ -9891,8 +9891,7 @@ string numberToRoman(size_t num)
 double median(vector<long>& a, vector<long>& b)
 {
 	size_t count = a.size() + b.size();
-	size_t minIndex = 0, maxIndex = min(a.size(), b.size());
-	size_t i = (minIndex + maxIndex) / 2, j = (count + 1) / 2 - i;
+	size_t i = min(a.size(), b.size()) / 2, j = (count + 1) / 2 - i;
 	for (; (a[i - 1] > b[j]) || (b[j - 1] > a[i]); ) {
 		if (a[i - 1] > b[j]) // Work on the left
 			j++;
