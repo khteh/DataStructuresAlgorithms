@@ -1723,12 +1723,32 @@ int _tmain(int argc, _TCHAR* argv[])
 	b.clear();
 	a = { 1,3,5,7,9 };
 	b = { 2,4,6,8,10 };
-	assert(median(a, b) == 11/2);
+	assert(median(a, b) == 11 / (double)2);
 	a.clear();
 	b.clear();
 	a = { 1,3,5,7,9 };
 	b = { 2,4,6,8,10,11 };
 	assert(median(a, b) == 6);
+	a.clear();
+	b.clear();
+	a = { 1,3,5 };
+	b = { 2,4,6,8,10,11 };
+	assert(median(a, b) == 5);
+	a.clear();
+	b.clear();
+	a = { 1,3,5 };
+	b = { 2,4,6,8,10,11,13 };
+	assert(median(a, b) == 11 / (double)2);
+	a.clear();
+	b.clear();
+	a = { 1,3,5,7,9,11,13 };
+	b = { 2,4,6,8 };
+	assert(median(a, b) == 6);
+	a.clear();
+	b.clear();
+	a = { 1,3,5,7,9,11,13,15 };
+	b = { 2,4,6,8 };
+	assert(median(a, b) == (6+7) / (double)2);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -5552,6 +5572,9 @@ void LinkedListTests()
 	assert(llb2.Length() == 0);
 	lla4.Clear();
 	llb2.Clear();
+	a.clear();
+	a = { -3, -2, -1, 0, 1, 2, 3, 4, 5, 0 }; // Loop starts at '0'
+	LinkedList<long> lla5(a);
 }
 void BinaryTreeTests()
 {
@@ -9887,7 +9910,7 @@ string numberToRoman(size_t num)
 /*
 * Calculate the median of 2 sorted lists of numbers in O(log (m+n))
 * https://www.geeksforgeeks.org/median-two-sorted-arrays-different-sizes-ologminn-m/
-Example (Even count):
+Example (Even number of elements):
 1 3 5 7 9
 2 4 6 8 10
 
@@ -9898,13 +9921,16 @@ right: 5
 
 1 3		5 7 9
 2 4 6	8 10
-
+     <-5 (Increase i)
+     6-> (Decrease j)
+i++: 3
+j: 11 / 2 - 3 = 5 - 3 = 2
 1 3 5   7 9
 2 4     6 8 10
 
 median: (5+6) / 2 = 5.5
----------
-Example (Odd count):
+=================================
+Example (Odd number of elements):
 1 3 5 7 9
 2 4 6 8 10 11
 
@@ -9912,26 +9938,67 @@ i: 5 / 2 = 2
 j: (11 + 1) / 2 - 2 = 12 / 2 - 2 = 6 - 2 = 4
 left: 6
 right: 5
+	left: 5
+	right: 6
 
-1 3			5  7  9
-2 4 6 8		10 11
-
+1 3		  5  7  9
+2 4 6 8	  10 11
+	    <-5
+		8->
+i++: 3
+j: 12/2 - 3 = 6 - 3 = 3
 1 3 5	7 9
 2 4 6	8 10 11
+left: 6
+right: 5
 
 median: Max element in the LEFT (more counts compared to RIGHT): max(5,6) = 6
 */
 double median(vector<long>& a, vector<long>& b)
 {
+	double result = 0;
+	size_t minIndex = 0, maxIndex = min(a.size(), b.size());
 	size_t count = a.size() + b.size();
-	size_t i = min(a.size(), b.size()) / 2, j = (count + 1) / 2 - i;
-	for (; (a[i - 1] > b[j]) || (b[j - 1] > a[i]); ) {
-		if (a[i - 1] > b[j]) // Work on the left
-			j++;
-		else if (b[j - 1] > a[i]) {// Work on the right
-			i++;
-			j = (count + 1) / 2 - i;
+	long i, j;
+	for (bool found = false; minIndex <= maxIndex && !found;) {
+		i = (minIndex + maxIndex) / 2;
+		/*
+		* For add number, if no 1 is added, integer division by 2 will result in floor integer value.
+		* If 1 is added, integer division by 2 will result in ceiling integer value.
+		* For even number, adding 1 to the count does not affect integer division by 2 as floor integer value is the result.
+		* This will affect the algorithm to decide which partition to take for the odd number of elements.
+		*/
+		j = ((count + 1) / 2) - i;
+		// If j < 0, adjust the number of elements from a included in the right partition
+		if (j < 0) {
+			maxIndex = i - 1;
+			continue;
 		}
-	}
-	return (count % 2) ? max(a[i - 1], b[j - 1]) : (max(a[i - 1], b[j - 1]) + min(a[i], b[j])) / 2;
+		/* If i == a.size(), no element from a is included in the right partition
+		* If j == 0, no element from b is included in the left partition
+		*/
+		if (i < (long)a.size() && j > 0 && b[j - 1] > a[i])
+			minIndex = i + 1; // i increases; j decreases
+		/* If i == 0, no element from a is included in the left partition
+		* If j == b.size(), no element from b is included in the right partition
+		*/
+		else if (i > 0 && j < (long)b.size() && a[i - 1] > b[j])
+			maxIndex = i - 1; // i decreases; j increases
+		else { // Found the desired partitions
+			if (!i) // No element from a is incuded in the left partition
+				result = b[j - 1];
+			else if (!j)
+				result = a[i - 1];
+			else
+				result = max(a[i - 1], b[j - 1]);
+			found = true;
+		}
+	} // for
+	if (count % 2) // Odd number of total elements in both the sorted list
+		return result;
+	else if (i == (long)a.size()) // No element from a is included in the right partition
+		return (result + b[j]) / 2;
+	else if (j == (long)b.size()) // No element from b is included in the right partition
+		return (result + a[i]) / 2;
+	return (result + min(a[i], b[j])) / 2;
 }

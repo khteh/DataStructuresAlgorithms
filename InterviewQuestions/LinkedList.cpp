@@ -64,6 +64,11 @@ shared_ptr<Node<T>> LinkedList<T>::Find(Node<T>& n)
 	return node;
 }
 template<typename T>
+shared_ptr<Node<T>> LinkedList<T>::LoopStart(shared_ptr<Node<T>>& n)
+{
+	return nullptr;
+}
+template<typename T>
 void LinkedList<T>::Print(shared_ptr<Node<T>>node)
 {
 	for (shared_ptr<Node<T>> n = node ? node : m_head; n; n = n->Next())

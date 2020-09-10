@@ -18,6 +18,7 @@ public:
 	shared_ptr<Node<T>> Head();
 	shared_ptr<Node<T>> Tail();
 	shared_ptr<Node<T>> Find(Node<T>&);
+	shared_ptr<Node<T>> LoopStart(shared_ptr<Node<T>>&);
 	size_t Join(LinkedList<T>&);
 	void Print(shared_ptr<Node<T>> n = nullptr);
 	void SplitList(shared_ptr<Node<T>>&, shared_ptr<Node<T>>&);
