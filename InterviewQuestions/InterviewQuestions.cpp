@@ -1763,6 +1763,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a = { 1,2,3,4,5,6,7,8,9,10 };
 	assert(median(a, b) == (5 + 6) / (double)2);
+	a.clear();
+	b.clear();
+	assert(median(a, b) == 0);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
