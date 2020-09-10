@@ -1749,6 +1749,20 @@ int _tmain(int argc, _TCHAR* argv[])
 	a = { 1,3,5,7,9,11,13,15 };
 	b = { 2,4,6,8 };
 	assert(median(a, b) == (6+7) / (double)2);
+	a.clear();
+	b.clear();
+	b = { 1,2,3,4,5,6,7,8,9 };
+	assert(median(a, b) == 5);
+	b.clear();
+	b = { 1,2,3,4,5,6,7,8,9,10 };
+	assert(median(a, b) == (5+6)/(double)2);
+	a.clear();
+	b.clear();
+	a = { 1,2,3,4,5,6,7,8,9 };
+	assert(median(a, b) == 5);
+	a.clear();
+	a = { 1,2,3,4,5,6,7,8,9,10 };
+	assert(median(a, b) == (5 + 6) / (double)2);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -5529,6 +5543,7 @@ void LinkedListTests()
 	a.push_back(3); // MSB
 	LinkedList<long> lla3(a);
 	assert(lla3.Length() == 3);
+	assert(lla3.Find(Node<long>(2)));
 	lla3.Print();
 	a.clear();
 	a.push_back(7); // LSB
@@ -5573,8 +5588,46 @@ void LinkedListTests()
 	lla4.Clear();
 	llb2.Clear();
 	a.clear();
+	a = { -1, 0, 1, 2, 3, 4, 5, 0 }; // Loop starts at '0'
+	CircularLinkedList<long> cll(a);
+	assert(cll.Length() == 7);
+	shared_ptr<Node<long>> head = cll.Find(Node<long>(-1));
+	assert(head);
+	shared_ptr<Node<long>> loopStart = cll.Find(Node<long>(0));
+	assert(loopStart);
+	cll.Print();
+	assert(cll.LoopStart(head) == loopStart);
+
+	a.clear();
+	a = { -2, -1, 0, 1, 2, 3, 4, 5, 0 }; // Loop starts at '0'
+	CircularLinkedList<long> cll1(a);
+	assert(cll1.Length() == 8);
+	head = cll1.Find(Node<long>(-2));
+	assert(head);
+	loopStart = cll1.Find(Node<long>(0));
+	assert(loopStart);
+	cll1.Print();
+	assert(cll1.LoopStart(head) == loopStart);
+
+	a.clear();
 	a = { -3, -2, -1, 0, 1, 2, 3, 4, 5, 0 }; // Loop starts at '0'
-	LinkedList<long> lla5(a);
+	CircularLinkedList<long> cll2(a);
+	assert(cll2.Length() == 9);
+	head = cll2.Find(Node<long>(-3));
+	assert(head);
+	loopStart = cll2.Find(Node<long>(0));
+	assert(loopStart);
+	cll2.Print();
+	assert(cll2.LoopStart(head) == loopStart);
+
+	a.clear();
+	a = { -3, -2, -1, 0, 1, 2, 3, 4, 5 }; // NO loop!
+	CircularLinkedList<long> cll3(a);
+	assert(cll3.Length() == 9);
+	head = cll3.Find(Node<long>(-3));
+	assert(head);
+	cll3.Print();
+	assert(!cll3.LoopStart(head));
 }
 void BinaryTreeTests()
 {
@@ -9960,6 +10013,12 @@ double median(vector<long>& a, vector<long>& b)
 	size_t minIndex = 0, maxIndex = min(a.size(), b.size());
 	size_t count = a.size() + b.size();
 	long i, j;
+	if (a.empty() && b.empty())
+		return result;
+	else if (a.empty() && !b.empty())
+		return b.size() % 2 ? b[b.size() / 2] : (b[(b.size() / 2) - 1] + b[b.size() / 2]) / (double)2;
+	else if (!a.empty() && b.empty())
+		return a.size() % 2 ? a[a.size() / 2] : (a[(a.size() / 2) - 1] + a[a.size() / 2]) / (double)2;
 	for (bool found = false; minIndex <= maxIndex && !found;) {
 		i = (minIndex + maxIndex) / 2;
 		/*
@@ -9969,9 +10028,9 @@ double median(vector<long>& a, vector<long>& b)
 		* This will affect the algorithm to decide which partition to take for the odd number of elements.
 		*/
 		j = ((count + 1) / 2) - i;
-		// If j < 0, adjust the number of elements from a included in the right partition
+		// If j < 0, adjust the number of elements from a included in the left partition
 		if (j < 0) {
-			maxIndex = i - 1;
+			maxIndex = i - 1; // Decreases i
 			continue;
 		}
 		/* If i == a.size(), no element from a is included in the right partition

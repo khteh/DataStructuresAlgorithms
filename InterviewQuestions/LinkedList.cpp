@@ -5,9 +5,14 @@ template class LinkedList<long>;
 template class LinkedList<string>;
 using Type = std::variant<int, long>;
 template<typename T>
-LinkedList<T>::LinkedList(shared_ptr<Node<T>> n)
+LinkedList<T>::LinkedList()
+	:m_head(nullptr)
 {
-	m_head = n;
+}
+template<typename T>
+LinkedList<T>::LinkedList(shared_ptr<Node<T>> n)
+	:m_head(n)
+{
 }
 
 template<typename T>
@@ -21,14 +26,13 @@ LinkedList<T>::LinkedList(vector<T>& data)
 			m_head = make_shared<Node<T>>(*it);
 			tail = m_head;
 		} else {
-			shared_ptr<Node<T>>n = make_shared<Node<T>>(*it);
-			tail->SetNext(n);
-			n->SetPrevious(tail);
+			shared_ptr<Node<T>> n = make_shared<Node<T>>(*it);
+			tail->SetNext(n); // Point the existing tail to this new node
+			n->SetPrevious(tail); // Point the new node to to existing tail as parent.
 			tail = n;
 		}
 	}
 }
-
 template<typename T>
 LinkedList<T>::~LinkedList()
 {
@@ -64,18 +68,12 @@ shared_ptr<Node<T>> LinkedList<T>::Find(Node<T>& n)
 	return node;
 }
 template<typename T>
-shared_ptr<Node<T>> LinkedList<T>::LoopStart(shared_ptr<Node<T>>& n)
-{
-	return nullptr;
-}
-template<typename T>
 void LinkedList<T>::Print(shared_ptr<Node<T>>node)
 {
 	for (shared_ptr<Node<T>> n = node ? node : m_head; n; n = n->Next())
 		cout << n->Item() << " ";
 	cout << endl;
 }
-
 template<typename T>
 void LinkedList<T>::ToVector(vector<T>& data)
 {

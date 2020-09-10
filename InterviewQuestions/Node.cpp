@@ -174,11 +174,7 @@ Node<T>& Node<T>::operator=(Node<T>& rhs)
 template<class T>
 bool Node<T>::operator==(Node<T>& rhs)
 {
-	return m_item == rhs.Item() &&
-		m_next == rhs.Next() &&
-		m_previous == rhs.Previous() &&
-		m_left == rhs.Left() &&
-		m_right == rhs.Right();
+	return m_item == rhs.Item();
 }
 
 template<class T>

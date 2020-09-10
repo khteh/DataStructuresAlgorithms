@@ -8,23 +8,23 @@ using namespace std;
 template<typename T>
 class LinkedList
 {
-private:
+protected:
 	shared_ptr<Node<T>> m_head;
 	void SetHead(shared_ptr<Node<T>>);
 public:
+	LinkedList();
 	LinkedList(shared_ptr<Node<T>>);
 	LinkedList(vector<T>&);
 	virtual ~LinkedList();
 	shared_ptr<Node<T>> Head();
 	shared_ptr<Node<T>> Tail();
-	shared_ptr<Node<T>> Find(Node<T>&);
-	shared_ptr<Node<T>> LoopStart(shared_ptr<Node<T>>&);
+	virtual shared_ptr<Node<T>> Find(Node<T>&);
 	size_t Join(LinkedList<T>&);
-	void Print(shared_ptr<Node<T>> n = nullptr);
+	virtual void Print(shared_ptr<Node<T>> n = nullptr);
 	void SplitList(shared_ptr<Node<T>>&, shared_ptr<Node<T>>&);
 	void ToVector(vector<T>&);
-	size_t Length() const;
-	void Clear();
+	virtual size_t Length() const;
+	virtual void Clear();
 	bool operator==(LinkedList<T>&);
 	bool operator!=(LinkedList<T>&);
 	bool operator<(LinkedList<T>&);

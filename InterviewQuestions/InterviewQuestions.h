@@ -39,6 +39,7 @@
 #include "DiamondProblem.h"
 #include "Error.h"
 #include "LinkedList.h"
+#include "CircularLinkedList.h"
 #include "Square.h"
 #include "TreasureGame.h"
 #include "FunctionObject.h"
