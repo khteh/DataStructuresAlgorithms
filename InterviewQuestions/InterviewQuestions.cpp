@@ -592,6 +592,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	a.clear();
 	a = {1,2,3,4,5,6,5};
+	// 1 2 3 4 5 6
+	//   6 5 4
 	assert(sumpairs(a, 8) == 2);
 
 	a.clear();
@@ -6093,8 +6095,9 @@ void trim(string &str)
 	for (; j < str.size(); j++)
 		str[j] = ' ';
 }
-/* 1 2 3 4 5 6 (sum: 8)
-*    6 5 4 3 2 => 3 pairs
+/*       1 2 3 4 5 6 (sum: 8)
+* diff:  7 6 5 4 3 2
+* pairs: 1 2 3 4	  <= 2 pairs: {[3,5], [2,6]}
 */
 size_t sumpairs(vector<long>& numbers, long sum)
 {
@@ -6115,8 +6118,9 @@ size_t sumpairs(vector<long>& numbers, long sum)
 }
 /* https://www.hackerrank.com/challenges/pairs/problem
 * 100%
-* 1 2 3 4 5 6 (diff: 1)
-* 2 3 4 5 6	  => 5 pairs
+*       1 2 3 4 5 6 (diff: 1)
+* tmp:  2 3 4 5 6 7
+* count:1 2	3 4	5  	=> 5 pairs
 */
 size_t diffpairs(vector<long>& numbers, long diff)
 {
@@ -7573,6 +7577,11 @@ void Knapsack_CoinChangeTests()
 	numbers = { 5,9 };
 	assert(UnboundedKnapsack(10, numbers) == 10); // [5,5]
 	assert(UnboundedKnapsack(8, numbers) == 5); // [5]
+	numbers.clear();
+	numbers = { 9 };
+	assert(UnboundedKnapsack(10, numbers) == 9); // [9]
+	assert(UnboundedKnapsack(9, numbers) == 9); // [9]
+	assert(UnboundedKnapsack(8, numbers) == 0); // [0]
 }
 string decimal_to_binary(int decimal)
 {
@@ -9284,12 +9293,9 @@ set<vector<size_t>> CoinChange(long amount, vector<size_t>& coins)
 						combinations.insert(change);
 					}
 				}
-			else if (coins[i] == amount) {
-				vector<size_t> change;
-				change.push_back(coins[i]);
-				combinations.insert(change);
-			}
-		}
+			else if (coins[i] == amount)
+				combinations.insert(vector<size_t>{coins[i]});
+		} // if (amount >= (long)coins[i]) {
 	}
 	return combinations;
 }
@@ -9299,15 +9305,11 @@ set<vector<size_t>> Knapsack(long amount, vector<size_t>& numbers)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0 && !numbers.empty()) {
-		if (numbers.size() == 1) {
-			vector<size_t> change;
-			change.push_back(amount - amount % numbers[0]);
-			combinations.insert(change);
-		} else if (find(numbers.begin(), numbers.end(), 1) != numbers.end()) {
-			vector<size_t> change;
-			change.push_back(amount);
-			combinations.insert(change);
-		} else {
+		if (numbers.size() == 1)
+			combinations.insert(vector<size_t> {(long)numbers[0] <= amount ? amount - amount % numbers[0] : 0} ); // Multiples of numbers[0] closest to amount
+		else if (find(numbers.begin(), numbers.end(), 1) != numbers.end())
+			combinations.insert(vector<size_t> {(size_t)amount});
+		else {
 			for (size_t i = 0; i < numbers.size(); i++) {
 				if (amount >= (long)numbers[i]) {
 					set<vector<size_t>> tmp;
@@ -9331,7 +9333,7 @@ set<vector<size_t>> Knapsack(long amount, vector<size_t>& numbers)
 						change.push_back(numbers[i]);
 						combinations.insert(change);
 					}
-				}
+				} // if (amount >= (long)numbers[i]) {
 			}
 		}
 	}
