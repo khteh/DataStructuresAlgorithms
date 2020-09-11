@@ -5,9 +5,8 @@ template class interval_map<unsigned int, char>;
 template<typename K, typename V>
 interval_map<K,V>::interval_map(V const& val)
 {
-	// constructor associates whole range of K with val by inserting (K_min, val)
-	// into the map
-	m_map.insert(m_map.end(), make_pair(numeric_limits<K>::lowest(), val));
+	// constructor associates whole range of K with val by inserting (K_min, val) into the map
+	m_map.emplace(numeric_limits<K>::lowest(), val);
 }
 
 template<typename K, typename V>
