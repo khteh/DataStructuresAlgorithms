@@ -6099,14 +6099,14 @@ void trim(string &str)
 size_t sumpairs(vector<long>& numbers, long sum)
 {
 	size_t count = 0;
-	long tmp;
+	long diff;
 	set<long> pairs;
 	set<long> exclude;
 	for (vector<long>::const_iterator it = numbers.begin(); it != numbers.end(); it++) {
-		tmp = sum - *it;
-		if (pairs.find(tmp) != pairs.end() && exclude.find(tmp) == exclude.end()) {
+		diff = sum - *it;
+		if (pairs.find(diff) != pairs.end() && exclude.find(diff) == exclude.end()) {
 			count++;
-			exclude.emplace(tmp);
+			exclude.emplace(diff);
 			//cout << *it << " + " << tmp << endl;
 		} else
 			pairs.emplace(*it);
