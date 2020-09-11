@@ -6093,27 +6093,31 @@ void trim(string &str)
 	for (; j < str.size(); j++)
 		str[j] = ' ';
 }
-// 1 2 3 4 5 6; sum: 8
-//   6 5 4 3 2 => 3 pairs
+/* 1 2 3 4 5 6 (sum: 8)
+*    6 5 4 3 2 => 3 pairs
+*/
 size_t sumpairs(vector<long>& numbers, long sum)
 {
 	size_t count = 0;
 	long tmp;
-	set<long> found;
+	set<long> pairs;
 	set<long> exclude;
 	for (vector<long>::const_iterator it = numbers.begin(); it != numbers.end(); it++) {
 		tmp = sum - *it;
-		if (found.find(tmp) != found.end() && exclude.find(tmp) == exclude.end()) {
+		if (pairs.find(tmp) != pairs.end() && exclude.find(tmp) == exclude.end()) {
 			count++;
 			exclude.emplace(tmp);
 			//cout << *it << " + " << tmp << endl;
 		} else
-			found.emplace(*it);
+			pairs.emplace(*it);
 	}
 	return count;
 }
-// https://www.hackerrank.com/challenges/pairs/problem
-// 100%
+/* https://www.hackerrank.com/challenges/pairs/problem
+* 100%
+* 1 2 3 4 5 6 (diff: 1)
+* 2 3 4 5 6	  => 5 pairs
+*/
 size_t diffpairs(vector<long>& numbers, long diff)
 {
 	size_t count = 0;
