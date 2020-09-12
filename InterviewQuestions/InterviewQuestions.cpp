@@ -6241,29 +6241,27 @@ size_t greaterthansumpairs(vector<long>& numbers, long sum)
 	}
 	return count;
 }
-// Given a 2-dimensional array with arbitrary sizes and contains random positive values, you are required to move from the first element [0][0] to the last 
-// element [n][n] using the path which will yield the maximum sum of all the elements traversed. You can only move right and down; NOT left and up.
+/* Given a 2-dimensional array with arbitrary sizes and contains random positive values, you are required to move from the first element [0][0] to the last 
+* element [n][n] using the path which will yield the maximum sum of all the elements traversed. You can only move right and down; NOT left and up.
+* 1 2
+*/
 pathResult_t FindMaxPath(vector<vector<unsigned long>>& grid, size_t r, size_t c)
 {
 	ostringstream oss;
 	pathResult_t result;
-	if (r >= grid.size() || c >= grid[r].size())
-		return result;
-	if (r == grid.size() - 1 && c == grid[r].size() - 1) {
-		result.sum = grid[r][c];
-		oss << "[" << r << "][" << c <<"]";
+	if (r < grid.size() && c < grid[r].size()) {
+		if (r == grid.size() - 1 && c == grid[r].size() - 1) {
+			result.sum = grid[r][c];
+			oss << "[" << r << "][" << c << "]";
+			result.path = oss.str();
+			return result;
+		}
+		pathResult_t path1 = FindMaxPath(grid, r, c + 1);
+		pathResult_t path2 = FindMaxPath(grid, r + 1, c);
+		oss << "[" << r << "][" << c << "] " << ((path1.sum >= path2.sum) ? path1.path : path2.path);
+		result.sum = grid[r][c] + max(path1.sum, path2.sum);
 		result.path = oss.str();
-		return result;
 	}
-	pathResult_t path1 = FindMaxPath(grid, r, c + 1);
-	pathResult_t path2 = FindMaxPath(grid, r + 1, c);
-	oss << "[" << r << "][" << c << "] ";
-	if (path1.sum >= path2.sum)
-		oss << path1.path;
-	else
-		oss << path2.path;
-	result.sum = grid[r][c] + max(path1.sum, path2.sum);
-	result.path = oss.str();
 	return result;
 }
 // S: Start; X: Obstacle E: Destination
