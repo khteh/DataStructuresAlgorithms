@@ -4039,6 +4039,18 @@ void BinarySearchTests()
 	//cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 12 found at location: " << pos << ", " << source[pos] << endl;
 	pos = BinarySearch(source, 0);
 	assert(pos < 0);
+
+	vector<vector<long>> a = { {1,3,5,7}, {10,11,16,20}, {23,30,34,50} };
+	assert(searchMatrix(a, 3));
+	assert(!searchMatrix(a, 13));
+	a.clear();
+	a = { {1} };
+	assert(!searchMatrix(a, 0));
+	assert(searchMatrix(a, 1));
+	a.clear();
+	a = { {1}, {3} };
+	assert(searchMatrix(a, 1));
+	assert(!searchMatrix(a, 0));
 }
 void BinarySearchCountTests()
 {
@@ -10067,4 +10079,54 @@ double median(vector<long>& a, vector<long>& b)
 	else if (j == (long)b.size()) // No element from b is included in the right partition
 		return (result + a[i]) / 2;
 	return (result + min(a[i], b[j])) / 2;
+}
+/* https://leetcode.com/problems/search-a-2d-matrix/
+* 100%
+*/
+bool searchMatrix(vector<vector<long>>& matrix, long target) 
+{
+	if (matrix.empty())
+		return false;
+	size_t rlower = 0, rupper = matrix.size() - 1, rmiddle = (rupper) / 2 + (rupper) % 2;
+	// First get the row
+	for (; rlower < rupper;) {
+		if (target == matrix[rlower][0] || target == matrix[rmiddle][0] || target == matrix[rupper][0])
+			return true;
+		else if (target > matrix[rlower][0] && target < matrix[rmiddle][0]) {
+			rupper = rmiddle - 1;
+			rmiddle = rlower + (rupper - rlower) / 2 + (rupper - rlower) % 2;
+		}
+		else if (target > matrix[rmiddle][0] && target < matrix[rupper][0]) {
+			rlower = rmiddle;
+			rupper--;
+			rmiddle = rlower + (rupper - rlower) / 2 + (rupper - rlower) % 2;
+		}
+		else if (target > matrix[rupper][0]) {
+			rlower = rupper;
+			rmiddle = rupper;
+		}
+		else if (target < matrix[rlower][0])
+			return false;
+	}
+	if (rlower == rmiddle || rlower == rupper) { // Found the row
+		size_t row = rlower;
+		if (matrix[row].empty())
+			return false;
+		size_t clower = 0, cupper = matrix[row].size() - 1, cmiddle = (cupper) / 2 + (cupper) % 2;
+		for (; clower <= cupper;) {
+			if (target == matrix[row][clower] || target == matrix[row][cmiddle] || target == matrix[row][cupper])
+				return true;
+			else if (target > matrix[row][clower] && target < matrix[row][cmiddle]) {
+				cupper = cmiddle - 1;
+				cmiddle = clower + (cupper - clower) / 2 + (cupper - clower) % 2;
+			}
+			else if (target > matrix[row][cmiddle] && target < matrix[row][cupper]) {
+				clower = cmiddle + 1;
+				cmiddle = clower + (cupper - clower) / 2 + (cupper - clower) % 2;
+			}
+			else if (target > matrix[row][cupper] || target < matrix[row][clower])
+				return false;
+		}
+	}
+	return false;
 }
