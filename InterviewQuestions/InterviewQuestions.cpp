@@ -3677,6 +3677,51 @@ int BinarySearch(vector<size_t>& data, size_t toSearch)
 	}
 	return -1;
 }
+/* https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
+* 100%
+*/
+vector<long> searchRange(vector<size_t>& nums, size_t target) 
+{
+	long start = 0, end = nums.size() - 1, middle = end / 2 + end % 2;
+	vector<long> result{ -1,-1 };
+	if (nums.empty())
+		return result;
+	for (; start <= end && (result[0] == -1 || result[1] == -1);) {
+		if (target > nums[start] && target < nums[middle]) {
+			size_t data = nums[middle - 1];
+			for (end = middle - 1; end >= start && nums[end] == data; end--);
+			if (start > end)
+				return result;
+			end++;
+			middle = start + (end - start) / 2 + (end - start) % 2;
+		}
+		else if (target > nums[middle] && target < nums[end]) {
+			size_t data = nums[middle + 1];
+			for (start = middle + 1; start <= end && nums[start] == data; start++);
+			if (start > end)
+				return result;
+			start--;
+			middle = start + (end - start) / 2 + (end - start) % 2;
+		}
+		else if (target < nums[start] || target > nums[end])
+			return result;
+		long index = -1;
+		if (target == nums[start])
+			index = start;
+		else if (target == nums[end])
+			index = end;
+		else if (target == nums[middle])
+			index = middle;
+		if (index > -1) {
+			for (start = index; start >= 0 && nums[start] == target; start--)
+				result[0] = start;
+			for (end = index; end < nums.size() && nums[end] == target; end++)
+				result[1] = end;
+		}
+	}
+	return result;
+}
+
 int BinarySearchCountUpper(vector<long>& source, long toSearch, long start, long end)
 {
 	int mid = start + (end - start) / 2 + (end - start) % 2;
@@ -4051,6 +4096,66 @@ void BinarySearchTests()
 	a = { {1}, {3} };
 	assert(searchMatrix(a, 1));
 	assert(!searchMatrix(a, 0));
+
+	source.clear();
+	source = {5,7,7,8,8,10};
+	vector<long> result = searchRange(source, 8);
+	assert(!result.empty());
+	assert(result.size() == 2);
+	assert(result[0] == 3);
+	assert(result[1] == 4);
+
+	source.clear();
+	result = searchRange(source, 0);
+	assert(!result.empty());
+	assert(result.size() == 2);
+	assert(result[0] == -1);
+	assert(result[1] == -1);
+
+	source.clear();
+	source = { 1 };
+	result = searchRange(source, 1);
+	assert(!result.empty());
+	assert(result.size() == 2);
+	assert(result[0] == 0);
+	assert(result[1] == 0);
+
+	source.clear();
+	source = { 1,3 };
+	result = searchRange(source, 1);
+	assert(!result.empty());
+	assert(result.size() == 2);
+	assert(result[0] == 0);
+	assert(result[1] == 0);
+	result = searchRange(source, 3);
+	assert(!result.empty());
+	assert(result.size() == 2);
+	assert(result[0] == 1);
+	assert(result[1] == 1);
+
+	source.clear();
+	source = {1,5};
+	result = searchRange(source, 4);
+	assert(!result.empty());
+	assert(result.size() == 2);
+	assert(result[0] == -1);
+	assert(result[1] == -1);
+
+	source.clear();
+	source = { 0,0,1,1,1,4,5,5 };
+	result = searchRange(source, 2);
+	assert(!result.empty());
+	assert(result.size() == 2);
+	assert(result[0] == -1);
+	assert(result[1] == -1);
+
+	source.clear();
+	source = { 0,1,2,3,4,4,4 };
+	result = searchRange(source, 2);
+	assert(!result.empty());
+	assert(result.size() == 2);
+	assert(result[0] == 2);
+	assert(result[1] == 2);
 }
 void BinarySearchCountTests()
 {

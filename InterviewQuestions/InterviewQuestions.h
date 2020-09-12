@@ -186,6 +186,7 @@ int BinarySearch(vector<size_t>&, size_t);
 int BinarySearchCountUpper(vector<long>&, long, long, long);
 int BinarySearchCountLower(vector<long>&, long, long, long);
 int BinarySearch(vector<string>&, string&);
+vector<long> searchRange(vector<size_t>&, size_t);
 bool searchMatrix(vector<vector<long>>&, long);
 void parentheses(vector<string>&, size_t);
 void parentheses(vector<string>&, string&, size_t, long, long);
