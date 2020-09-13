@@ -5828,6 +5828,104 @@ void LinkedListTests()
 	lla10.ToVector(c);
 	for (size_t i = 0; i < c.size(); i++)
 		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1,2,3,3,4,4,5 };
+	LinkedList<long> lla11(a);
+	assert(lla11.Length() == 7);
+	lla11.RemoveDuplicates();
+	assert(lla11.Length() == 3);
+	b.clear();
+	b = { 1,2,5 };
+	c.clear();
+	lla11.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1,1,2,3,3,4,4,5 };
+	LinkedList<long> lla12(a);
+	assert(lla12.Length() == 8);
+	lla12.RemoveDuplicates();
+	assert(lla12.Length() == 2);
+	b.clear();
+	b = { 2,5 };
+	c.clear();
+	lla12.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1 };
+	LinkedList<long> lla13(a);
+	assert(lla13.Length() == 1);
+	lla13.RemoveDuplicates();
+	assert(lla13.Length() == 1);
+	b.clear();
+	b = { 1 };
+	c.clear();
+	lla13.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1,1 };
+	LinkedList<long> lla14(a);
+	assert(lla14.Length() == 2);
+	lla14.RemoveDuplicates();
+	assert(lla14.Length() == 0);
+
+	a.clear();
+	a = { 1,2,2 };
+	LinkedList<long> lla15(a);
+	assert(lla15.Length() == 3);
+	lla15.RemoveDuplicates();
+	assert(lla15.Length() == 1);
+	b.clear();
+	b = { 1 };
+	c.clear();
+	lla15.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1,1,1,2 };
+	LinkedList<long> lla16(a);
+	assert(lla16.Length() == 4);
+	lla16.RemoveDuplicates();
+	assert(lla16.Length() == 1);
+	b.clear();
+	b = { 2 };
+	c.clear();
+	lla16.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1,1,1,2,3 };
+	LinkedList<long> lla17(a);
+	assert(lla17.Length() == 5);
+	lla17.RemoveDuplicates();
+	assert(lla17.Length() == 2);
+	b.clear();
+	b = { 2,3 };
+	c.clear();
+	lla17.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { -1,0,0,0,0,3,3 };
+	LinkedList<long> lla18(a);
+	assert(lla18.Length() == 7);
+	lla18.RemoveDuplicates();
+	assert(lla18.Length() == 1);
+	b.clear();
+	b = { -1 };
+	c.clear();
+	lla18.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
 }
 void BinaryTreeTests()
 {

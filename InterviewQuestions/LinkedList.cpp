@@ -204,6 +204,51 @@ void LinkedList<T>::Reverse(size_t start, size_t end)
 		}
 	}
 }
+/*
+* Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.
+* Return the linked list sorted as well.
+* Input: 1->2->3->3->4->4->5
+* Output: 1->2->5
+*/
+template<typename T>
+void LinkedList<T>::RemoveDuplicates()
+{
+	bool found = false;
+	shared_ptr<Node<T>> previous = nullptr, head = nullptr;
+	// 1,1,1,2,3
+	// 1,0,0,3,4
+	// 1,0,0,3,3
+	for (shared_ptr<Node<T>> it = m_head; it; it = it->Next()) {
+		if (it->Next() && it->Item() != it->Next()->Item()) {
+			if (found) {
+				found = false;
+//				if (previous)
+//					previous->SetNext(it->Next());
+			} else {
+				if (!head) {
+					head = make_shared<Node<T>>(it->Item());
+					m_head = head;
+					previous = head;
+				} else {
+					shared_ptr<Node<T>> tmp = previous;
+					previous = make_shared<Node<T>>(it->Item());
+					tmp->SetNext(previous);
+				}
+			}
+		} else if (it->Next())
+			found = true;
+		else if (!found && !it->Next()) { // Last unique Node
+			if (!head) {
+				head = make_shared<Node<T>>(it->Item());
+				m_head = head;
+				previous = head;
+			} else
+				previous->SetNext(it);
+		}
+	}
+	if (!head && found)
+		m_head = nullptr;
+}
 template<typename T>
 shared_ptr<Node<T>> LinkedList<T>::NthElementFromBack(long n) // n starts from 1
 {

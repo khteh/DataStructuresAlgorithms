@@ -26,6 +26,7 @@ public:
 	virtual size_t Length() const;
 	virtual void Clear();
 	void Reverse(size_t, size_t);
+	void RemoveDuplicates();
 	bool operator==(LinkedList<T>&);
 	bool operator!=(LinkedList<T>&);
 	bool operator<(LinkedList<T>&);
