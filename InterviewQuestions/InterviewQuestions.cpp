@@ -5750,6 +5750,84 @@ void LinkedListTests()
 	assert(head);
 	cll3.Print();
 	assert(!cll3.LoopStart(head));
+
+	a.clear();
+	a = {1,2,3,4,5};
+	LinkedList<long> lla5(a);
+	assert(lla5.Length() == 5);
+	lla5.Reverse(1, 3);
+	assert(lla5.Length() == 5);
+	b.clear();
+	b = {1,4,3,2,5};
+	vector<long> c;
+	lla5.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1,2,3,4,5 };
+	LinkedList<long> lla6(a);
+	assert(lla6.Length() == 5);
+	lla6.Reverse(0, 4);
+	assert(lla6.Length() == 5);
+	b.clear();
+	b = { 5,4,3,2,1 };
+	c.clear();
+	lla6.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1,2,3,4,5 };
+	LinkedList<long> lla7(a);
+	assert(lla7.Length() == 5);
+	lla7.Reverse(0, 3);
+	assert(lla7.Length() == 5);
+	b.clear();
+	b = { 4,3,2,1,5 };
+	c.clear();
+	lla7.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1,2,3,4,5 };
+	LinkedList<long> lla8(a);
+	assert(lla8.Length() == 5);
+	lla8.Reverse(1, 4);
+	assert(lla8.Length() == 5);
+	b.clear();
+	b = { 1,5,4,3,2 };
+	c.clear();
+	lla8.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1,2,3,4,5 };
+	LinkedList<long> lla9(a);
+	assert(lla9.Length() == 5);
+	lla9.Reverse(1, 1);
+	assert(lla9.Length() == 5);
+	b.clear();
+	b = { 1,2,3,4,5 };
+	c.clear();
+	lla9.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1,2 };
+	LinkedList<long> lla10(a);
+	assert(lla10.Length() == 2);
+	lla10.Reverse(0,1);
+	assert(lla10.Length() == 2);
+	b.clear();
+	b = { 2,1 };
+	c.clear();
+	lla10.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
 }
 void BinaryTreeTests()
 {

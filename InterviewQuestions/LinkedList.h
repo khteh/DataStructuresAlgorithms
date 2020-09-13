@@ -25,6 +25,7 @@ public:
 	void ToVector(vector<T>&);
 	virtual size_t Length() const;
 	virtual void Clear();
+	void Reverse(size_t, size_t);
 	bool operator==(LinkedList<T>&);
 	bool operator!=(LinkedList<T>&);
 	bool operator<(LinkedList<T>&);
