@@ -278,6 +278,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	line = "The house is blue";
 	reverseWords(line);
 	assert(line == "blue is house The");
+	line = "  The   house is    blue  ";
+	reverseWordsTrimmed(line);
+	assert(line == "blue is house The");
 
 	line = "Hello World!!!";
 	RemoveDuplicateCharacters(line);
@@ -1965,24 +1968,55 @@ void reverse(string& str)
 		str[i] = tmp;
 	}
 }
-// "Hello World!!!" -> "World!!! Hello"
-// 1: "Hello World!!!" -> "!!!dlroW olleH"
-// 2: "!!!dlroW olleH" -> World!!! Hello"
+/* 
+* "Hello World!!!" -> "World!!! Hello"
+* 1: "Hello World!!!" -> "!!!dlroW olleH"
+* 2: "!!!dlroW olleH" -> "World!!! Hello"
+*/
 void reverseWords(string &str)
 {
-	string tmp;
-	reverse(str); //1:
+	reverse(str);
 	for (size_t i = 0, j = 0; i != string::npos; j = i + 1) {
 		i = str.find(" ", j);
 		if (i != string::npos) {
-			tmp = str.substr(j, i - j);
+			string tmp = str.substr(j, i - j);
 			reverse(tmp);
 			str.replace(j, i - j, tmp);
 		} else {
-			tmp = str.substr(j);
+			string tmp = str.substr(j);
 			reverse(tmp);
 			str.replace(j, str.size() - j, tmp);
 		}
+	}
+}
+/* "  Hello World!!!  " -> "World!!! Hello"
+* 1: "Hello World!!!" -> "!!!dlroW olleH"
+* 2: "!!!dlroW olleH" -> World!!! Hello"
+*/
+void reverseWordsTrimmed(string& str)
+{
+	reverse(str);
+	for (size_t i = 0, j = 0; i != string::npos && j < str.size(); ) {
+		i = str.find(' ', j);
+		if (i != string::npos) {
+			size_t k = i;
+			for (; str[k] == ' '; k++);
+			if (!i) {// If str is prefixed with spaces
+				str = str.substr(k);
+				continue;
+			} else if (k == str.size()) // if str ends with spaces
+				str.erase(i, k - i);
+			else if ((k - i) > 1) // More than one space in between words
+				str.erase(i, k - i - 1);
+			string tmp = str.substr(j, i - j);
+			reverse(tmp);
+			str.replace(j, i - j, tmp);
+		} else {
+			string tmp = str.substr(j);
+			reverse(tmp);
+			str.replace(j, str.size() - j, tmp);
+		}
+		j = i + 1;
 	}
 }
 void RemoveDuplicateCharacters(string& str)
@@ -2132,6 +2166,9 @@ void PalindromeTests()
 	assert(palindromes.find("skeeggeeks") != palindromes.end());
 	assert(palindromes.find("aazaa") != palindromes.end());
 }
+/*
+* 1 2 3 2 1 Odd count; #odd = 1
+*/
 bool isPalindrome(string const& s)
 {
 	size_t odd = 0;
@@ -2144,6 +2181,12 @@ bool isPalindrome(string const& s)
 			return false;
 	return true;
 }
+/*
+* 12321 => 11223
+*   count: 12121 : true
+* 123421 => 112234
+*   count:  12121 : Even length -> false
+*/
 bool isPalindrome1(string const& s)
 {
 	size_t count = 1, odd = 0;
@@ -3715,7 +3758,7 @@ vector<long> searchRange(vector<size_t>& nums, size_t target)
 		if (index > -1) {
 			for (start = index; start >= 0 && nums[start] == target; start--)
 				result[0] = start;
-			for (end = index; end < nums.size() && nums[end] == target; end++)
+			for (end = index; end < (long)nums.size() && nums[end] == target; end++)
 				result[1] = end;
 		}
 	}

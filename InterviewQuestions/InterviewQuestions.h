@@ -140,6 +140,7 @@ void decimal_to_binary(int decimal, vector<bool>&, size_t width);
 size_t binary_gap(long);
 void reverse(string&);
 void reverseWords(string&);
+void reverseWordsTrimmed(string&);
 void RemoveDuplicateCharacters(string&);
 bool areAnagrams(string const&, string const &);
 size_t FindAnagrams(vector<string> const&, vector<vector<string>>&);
