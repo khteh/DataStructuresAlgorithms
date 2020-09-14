@@ -400,7 +400,7 @@ T Tree<T>::MinDiffInBST()
 template<typename T>
 T Tree<T>::MinDiffInBST(shared_ptr<Node<T>> current, shared_ptr<Node<T>> previous)
 {
-	T minimum = numeric_limits<T>::max();//LONG_MAX;
+	T minimum = numeric_limits<T>::max();
 	// Use In-Order traversal to find min diff between any 2 nodes
 	if (current) {
 		minimum = MinDiffInBST(current->Left(), current);

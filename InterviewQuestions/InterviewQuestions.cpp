@@ -3381,7 +3381,7 @@ string uncompress(string const& str)
 			char *end(nullptr);
 			errno = 0;
 			unsigned long repeat = strtoul(&str[i], &end, 10);
-			if (!errno && repeat > 0 && repeat < ULONG_MAX) {
+			if (!errno && repeat > 0 && repeat < numeric_limits<unsigned long>::max()) {
 				if (*end)
 					while (str[i] != end[0])
 						i++;
@@ -7975,7 +7975,7 @@ size_t binary_gap(long n)
 long MinAbsSum(vector<long>& data)
 {
 	long sum = 0;
-	long min = LONG_MAX;
+	long min = numeric_limits<long>::max();
 	for (size_t i = 0; i < ((size_t)1 << data.size()); i++) {
 		vector<bool> binary;
 		decimal_to_binary(i, binary, data.size());
@@ -8000,23 +8000,24 @@ long NumberSolitaire(vector<long>& data)
 			memo[i] = max(memo[i], data[i] + memo[i - j]);
 	return memo[data.size() - 1];
 }
-// A zero - indexed array A consisting of N integers is given.It contains daily prices of a stock share for a period of N consecutive days.
-// If a single share was bought on day P and sold on day Q, where 0 ≤ P ≤ Q < N, then the profit of such transaction is equal to A[Q] − A[P], provided that A[Q] ≥ A[P].
-// Otherwise, the transaction brings loss of A[P] − A[Q].
-// For example, consider the following array A consisting of six elements such that :
-// A[0] = 23171
-// A[1] = 21011
-// A[2] = 21123
-// A[3] = 21366
-// A[4] = 21013
-// A[5] = 21367
-// If a share was bought on day 0 and sold on day 2, a loss of 2048 would occur because A[2] − A[0] = 21123 − 23171 = −2048. 
-// If a share was bought on day 4 and sold on day 5, a profit of 354 would occur because A[5] − A[4] = 21367 − 21013 = 354. 
-// Maximum possible profit was 356. It would occur if a share was bought on day 1 and sold on day 5.
-// My score: 100%
+/* A zero - indexed array A consisting of N integers is given.It contains daily prices of a stock share for a period of N consecutive days.
+* If a single share was bought on day P and sold on day Q, where 0 ≤ P ≤ Q < N, then the profit of such transaction is equal to A[Q] − A[P], provided that A[Q] ≥ A[P].
+* Otherwise, the transaction brings loss of A[P] − A[Q].
+* For example, consider the following array A consisting of six elements such that :
+* A[0] = 23171
+* A[1] = 21011
+* A[2] = 21123
+* A[3] = 21366
+* A[4] = 21013
+* A[5] = 21367
+* If a share was bought on day 0 and sold on day 2, a loss of 2048 would occur because A[2] − A[0] = 21123 − 23171 = −2048. 
+* If a share was bought on day 4 and sold on day 5, a profit of 354 would occur because A[5] − A[4] = 21367 − 21013 = 354. 
+* Maximum possible profit was 356. It would occur if a share was bought on day 1 and sold on day 5.
+* 100%
+*/
 long MaxProfit(vector<long>& data)
 {
-	long min = LONG_MAX;
+	long min = numeric_limits<long>::max();
 	long delta = 0;
 	for (vector<long>::iterator it = data.begin(); it != data.end(); it++) {
 		if (*it < min)
