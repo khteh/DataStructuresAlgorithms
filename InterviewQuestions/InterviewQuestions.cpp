@@ -401,6 +401,107 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(b[4] == 5);
 	a.clear();
 	b.clear();
+	a = { 2,3,-6 };
+	lResult = ConsecutiveLargestSum(a, b);
+	assert(lResult == 5);
+	cout << "ConsecutiveLargestSum of ";
+	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	cout << ": " << lResult << " (";
+	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	cout << ")" << endl;
+	assert(b.size() == 2);
+	assert(b[0] == 2);
+	assert(b[1] == 3);
+	a.clear();
+	b.clear();
+	a = { 2,3,-6,4,5,6,-20 };
+	lResult = ConsecutiveLargestSum(a, b);
+	assert(lResult == 15);
+	cout << "ConsecutiveLargestSum of ";
+	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	cout << ": " << lResult << " (";
+	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	cout << ")" << endl;
+	assert(b.size() == 3);
+	assert(b[0] == 4);
+	assert(b[1] == 5);
+	assert(b[2] == 6);
+	a.clear();
+	b.clear();
+	a = { 2,3,-2,4 };
+	lResult = ConsecutiveLargestProduct(a, b);
+	assert(lResult == 6);
+	cout << "ConsecutiveLargestProduct of ";
+	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	cout << ": " << lResult << " (";
+	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	cout << ")" << endl;
+	assert(b.size() == 2);
+	assert(b[0] == 2);
+	assert(b[1] == 3);
+	a.clear();
+	b.clear();
+	a = { -2,0,-1 };
+	lResult = ConsecutiveLargestProduct(a, b);
+	assert(lResult == 0);
+	cout << "ConsecutiveLargestProduct of ";
+	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	cout << ": " << lResult << " (";
+	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	cout << ")" << endl;
+	assert(b.size() == 2);
+	assert(b[0] == -2);
+	assert(b[1] == 0);
+	a.clear();
+	b.clear();
+	a = { -2,-1,0 };
+	lResult = ConsecutiveLargestProduct(a, b);
+	assert(lResult == 2);
+	cout << "ConsecutiveLargestProduct of ";
+	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	cout << ": " << lResult << " (";
+	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	cout << ")" << endl;
+	assert(b.size() == 2);
+	assert(b[0] == -2);
+	assert(b[1] == -1);
+	a.clear();
+	b.clear();
+	a = { -3,-1,-1 };
+	lResult = ConsecutiveLargestProduct(a, b);
+	assert(lResult == 3);
+	cout << "ConsecutiveLargestProduct of ";
+	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	cout << ": " << lResult << " (";
+	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	cout << ")" << endl;
+	assert(b.size() == 2);
+	assert(b[0] == -3);
+	assert(b[1] == -1);
+	a.clear();
+	b.clear();
+	a = { 0,2 };
+	lResult = ConsecutiveLargestProduct(a, b);
+	assert(lResult == 2);
+	cout << "ConsecutiveLargestProduct of ";
+	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	cout << ": " << lResult << " (";
+	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	cout << ")" << endl;
+	assert(b.size() == 1);
+	assert(b[0] == 2);
+	a.clear();
+	b.clear();
+	a = { 3,-1,4 };
+	lResult = ConsecutiveLargestProduct(a, b);
+	assert(lResult == 4);
+	cout << "ConsecutiveLargestProduct of ";
+	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	cout << ": " << lResult << " (";
+	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	cout << ")" << endl;
+	assert(b.size() == 1);
+	assert(b[0] == 4);
 	//  [−1, −1, 1, −1, 1, 0, 1, −1, −1]: 2 to 8 = 7
 	a = { -1, -1, 1, -1, 1, 0, 1, -1, -1 };
 	assert(LongestNonNegativeSumSlice(a) == 7);
@@ -1876,23 +1977,59 @@ bool CanShuffleWithoutRepeat(string& str)
 // Kadane's algorithm
 long ConsecutiveLargestSum(vector<long>& data, vector<long>& result)
 {
-	long max_ending_here = 0, max_so_far = 0;
-	vector<long>::iterator start, end;
+	vector<long> tmp;
+	map<long, vector<long>> results;
+	long max_ending_here = 0, max_so_far = 0; // max_so_far = max of all max_ending_here's found
 	for (vector<long>::iterator it = data.begin(); it != data.end(); it++) {
 		max_ending_here += *it;
 		if (max_ending_here < 0) {
 			max_ending_here = 0;
-			start = end = data.end();
-		}
+			tmp.clear();
+		} else
+			tmp.push_back(*it);
 		if (max_so_far < max_ending_here) {
 			max_so_far = max_ending_here;
-			if (start == data.end())
-				start = it;
-			end = it;
+			results.emplace(max_so_far, tmp);
 		}
 	}
-	if (start != data.end() && end != data.end())
-		result.assign(start, end + 1);
+	result = results[max_so_far];
+	return max_so_far;
+}
+long ConsecutiveLargestProduct(vector<long>& data, vector<long>& result)
+{
+	vector<long> tmp;
+	map<long, vector<long>> results;
+	bool skip = false, start = true;
+	long max_ending_here = 1, max_so_far = numeric_limits<long>::min(), previous = numeric_limits<long>::min(); // max_so_far = max of all max_ending_here's found
+	for (vector<long>::iterator it = data.begin(); it != data.end(); it++) {
+		if (start) {
+			max_ending_here = *it;
+			tmp.clear();
+			start = false;
+		} 
+		else if (!max_ending_here && *it > 0) {
+			max_ending_here = *it;
+			tmp.clear();
+		} else
+			max_ending_here *= *it;
+		// -3,-1,-1
+		// 0, 2
+		// 3,-1,4
+		if (max_ending_here < previous) {
+			//max_ending_here = *it;
+			start = true;
+			tmp.clear();
+			skip = true;
+		} else
+			tmp.push_back(*it);
+		if (!skip && max_so_far < max_ending_here) {
+			max_so_far = max_ending_here;
+			results.emplace(max_so_far, tmp);
+		}
+		skip = false;
+		previous = max_ending_here;
+	}
+	result = results[max_so_far];
 	return max_so_far;
 }
 // https://app.codility.com/programmers/task/longest_nonnegative_sum_slice/
@@ -8032,16 +8169,16 @@ long MaxProfit(vector<long>& data)
 size_t StockMax(vector<long>& prices)
 {
 	size_t profit = 0;
-	size_t maxElement = 0;
+	size_t maxIndex = 0;
 	for (size_t i = 0; i < prices.size(); i++) {
-		if (maxElement <= i) {
+		if (maxIndex <= i) {
 			vector<long>::iterator peak = max_element(prices.begin() + i, prices.end());
 			if (peak != prices.end())
-				maxElement = peak - prices.begin();
+				maxIndex = peak - prices.begin();
 		}
-		if (maxElement > i) {
+		if (maxIndex > i) {
 			//cout << "Profit: " << *peak - prices[i] << endl;
-			profit += prices[maxElement] - prices[i];
+			profit += prices[maxIndex] - prices[i];
 		}
 	}
 	return profit;
