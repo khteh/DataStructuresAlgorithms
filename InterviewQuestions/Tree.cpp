@@ -54,7 +54,17 @@ template<typename T>
 Tree<T>::Tree(vector<T>& v, TreeType type)
 {
 	if (!v.empty()) {
-		m_root = type == TreeType::Binary ? AddToTree(v) : AddToTree(nullptr, v, 0, v.size() - 1);
+		switch (type) {
+		case TreeType::BinarySearch:
+			sort(v.begin(), v.end());
+			m_root = AddToTree(nullptr, v, 0, v.size() - 1);
+			break;
+		case TreeType::Binary:
+			m_root = AddToTree(v);
+			break;
+		default:
+			throw runtime_error("Invalid Tree type!");
+		}
 	}
 }
 template<typename T>

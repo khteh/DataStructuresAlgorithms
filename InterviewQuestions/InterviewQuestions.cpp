@@ -6365,7 +6365,6 @@ void BinarySearchTreeTests()
 
 	a.clear();
 	a = {50,-100,0,10,-50,60,100,75,150};
-	sort(a.begin(), a.end());
 	Tree<long> tree1(a, TreeType::BinarySearch);
 	assert(tree1.Count() == 9);
 	result.clear();
