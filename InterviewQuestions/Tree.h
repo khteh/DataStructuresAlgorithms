@@ -5,6 +5,7 @@
 #include <list>
 #include <sstream>
 #include <algorithm>
+#include <numeric>
 #include <stack>
 #include <limits.h>
 #include <memory>
@@ -42,6 +43,7 @@ protected:
 	shared_ptr<Node<T>> LeftMostChild(shared_ptr<Node<T>>);
 	bool covers(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
 	void FindSum(shared_ptr<Node<T>>, long, long, vector<long>, vector<string>&);
+	vector<string> GetRoot2LeafNumbers(shared_ptr<Node<T>>&);
 	size_t Count(shared_ptr<Node<T>>);
 public:
 	Tree();
@@ -63,6 +65,7 @@ public:
 	shared_ptr<Node<T>> InOrderSuccessor(shared_ptr<Node<T>>);
 	shared_ptr<Node<T>> CommonAncestor(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
 	void FindSum(shared_ptr<Node<T>>, long, vector<string>&);
+	T SumRoot2LeafNumbers();
 	bool SubTree(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
 	bool MatchTree(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
 	size_t MinDepth(shared_ptr<Node<T>>);

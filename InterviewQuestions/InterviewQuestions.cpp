@@ -6444,6 +6444,25 @@ void BinarySearchTreeTests()
 	assert(b.size() == a.size());
 	tree3.PrintTreeColumns();
 	cout << endl;
+
+	a.clear();
+	a = {1,2,3};
+	Tree<long> tree4(a, TreeType::Binary);
+	assert(tree4.Count() == 3);
+	assert(tree4.SumRoot2LeafNumbers() == 25);
+
+	a.clear();
+	a = { 4,9,0,5,1 };
+	Tree<long> tree5(a, TreeType::Binary);
+	assert(tree5.Count() == 5);
+	assert(tree5.SumRoot2LeafNumbers() == 1026);
+
+	a.clear();
+	a = { 5,3,2,7,0,6,numeric_limits<long>::min(),numeric_limits<long>::min(),numeric_limits<long>::min(), 0 };
+	Tree<long> tree6(a, TreeType::Binary);
+	tree6.PrintTree();
+	assert(tree6.Count() == 7);
+	assert(tree6.SumRoot2LeafNumbers() == 6363);
 }
 void KDTreeTests()
 {

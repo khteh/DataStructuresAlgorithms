@@ -79,24 +79,34 @@ shared_ptr<Node<T>> Tree<T>::AddToTree(shared_ptr<Node<T>>parent, vector<T>& v, 
 }
 /*
 * Use this to construct a Binary Tree where left child = 2i + 1 and right child = 2i + 2 (0-based index)
+* Use numeric_limit<T>::min() to indicate null child.
 */
 template<typename T>
 shared_ptr<Node<T>> Tree<T>::AddToTree(vector<T>& v)
 {
 	map<long, shared_ptr<Node<T>>> nodes;
-	long maxIndex = (v.size() - 1) / 2;
-	for (long i = 0; i < maxIndex; i++) {
-		if (nodes.find(i) == nodes.end())
-			nodes.emplace(i, make_shared<Node<T>>(v[i]));
-		long left = 2 * i + 1;
-		if (nodes.find(left) == nodes.end())
-			nodes.emplace(left, make_shared<Node<T>>(v[left]));
-		long right = 2 * i + 2;
-		if (nodes.find(right) == nodes.end())
-			nodes.emplace(right, make_shared<Node<T>>(v[right]));
-		nodes[i]->SetLeft(nodes[left]);
-		nodes[i]->SetRight(nodes[right]);
-		nodes[left]->SetNext(nodes[i]);
+	long maxIndex = (v.size() - 2) / 2;
+	for (long i = 0; i <= maxIndex; i++) {
+		if (v[i] != numeric_limits<T>::min()) {
+			if (nodes.find(i) == nodes.end())
+				nodes.emplace(i, make_shared<Node<T>>(v[i]));
+			long left = 2 * i + 1;
+			if (v[left] != numeric_limits<T>::min()) {
+				if (nodes.find(left) == nodes.end())
+					nodes.emplace(left, make_shared<Node<T>>(v[left]));
+				nodes[i]->SetLeft(nodes[left]);
+				nodes[left]->SetNext(nodes[i]);
+			}
+			long right = 2 * i + 2;
+			if (right < v.size()) {
+				if (v[right] != numeric_limits<T>::min()) {
+					if (nodes.find(right) == nodes.end())
+						nodes.emplace(right, make_shared<Node<T>>(v[right]));
+					nodes[i]->SetRight(nodes[right]);
+					nodes[right]->SetNext(nodes[i]);
+				}
+			}
+		}
 	}
 	return !v.empty() ? nodes[0] : nullptr;
 }
@@ -337,7 +347,48 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	FindSum(node->Left(), sum, level + 1, values, result);
 	FindSum(node->Right(), sum, level + 1, values, result);
 }
-
+/* https://leetcode.com/problems/sum-root-to-leaf-numbers/
+* 100%
+*/
+template<typename T>
+T Tree<T>::SumRoot2LeafNumbers()
+{
+	if (m_root) {
+		vector<string> result = GetRoot2LeafNumbers(m_root);
+		T sum = 0;
+		for (vector<string>::iterator it = result.begin(); it != result.end(); it++) {
+			T tmp;
+			istringstream (*it) >> tmp;
+			sum += tmp;
+		}
+		return sum;
+	}
+	return T();
+}
+template<typename T>
+vector<string> Tree<T>::GetRoot2LeafNumbers(shared_ptr<Node<T>>& node)
+{
+	vector<string> result;
+	if (node) {
+		vector<string> left = GetRoot2LeafNumbers(node->Left());
+		if (!left.empty()) {
+			for (vector<string>::iterator it = left.begin(); it != left.end(); it++) {
+				string str = to_string(node->Item());
+				result.push_back(str.append(*it));
+			}
+		}
+		vector<string> right = GetRoot2LeafNumbers(node->Right());
+		if (!right.empty()) {
+			for (vector<string>::iterator it = right.begin(); it != right.end(); it++) {
+				string str = to_string(node->Item());
+				result.push_back(str.append(*it));
+			}
+		}
+		if (left.empty() && right.empty())
+			result.push_back(to_string(node->Item()));
+	}
+	return result;
+}
 template<typename T>
 size_t Tree<T>::Count(shared_ptr<Node<T>>node)
 {
