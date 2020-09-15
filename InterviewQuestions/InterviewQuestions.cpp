@@ -3870,7 +3870,7 @@ template<typename type>
 //			                   L             M              U
 // 4 8 9 9 9 10 12 13 1 2 2 3
 // L            M           U
-int BinarySearch(vector<size_t>& data, size_t toSearch)
+size_t BinarySearch(vector<size_t>& data, size_t toSearch)
 {
 	for (size_t lower = 0, middle = 0, upper = data.size() - 1; lower <= upper; ) {
 		middle = lower + (upper - lower) / 2 + (upper - lower) % 2;
@@ -3898,13 +3898,30 @@ int BinarySearch(vector<size_t>& data, size_t toSearch)
 	}
 	return -1;
 }
+/* https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
+* 100%
+*/
+long BinarySearchMinimum(vector<long>& data, long start, long end)
+{
+	if (start == end)
+		return data[start];
+	else if (end - start == 1)
+		return min(data[start], data[end]);
+	else if (start < end) {
+		size_t middle = start + (end - start) / 2 + (end - start) % 2;
+		long data1 = BinarySearchMinimum(data, start, middle - 1);
+		long data2 = BinarySearchMinimum(data, middle + 1, end);
+		return min(data[middle], min(data1, data2));
+	}
+	return numeric_limits<long>::min();
+}
 /* https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
 * 100%
 */
 vector<long> searchRange(vector<size_t>& nums, size_t target) 
 {
 	long start = 0, end = nums.size() - 1, middle = end / 2 + end % 2;
-	vector<long> result{ -1,-1 };
+	vector<long> result{ -1,-1 }; // result[0] = start (inclusive); result[1] = end (exclusive)
 	if (nums.empty())
 		return result;
 	for (; start <= end && (result[0] == -1 || result[1] == -1);) {
@@ -3942,27 +3959,39 @@ vector<long> searchRange(vector<size_t>& nums, size_t target)
 	}
 	return result;
 }
-
+/*
+* Binary search for the upper bound of sorted list with duplicate items.
+* Returns the last index of the repeated items found in the sorted list
+*/
 int BinarySearchCountUpper(vector<long>& source, long toSearch, long start, long end)
 {
 	int mid = start + (end - start) / 2 + (end - start) % 2;
 	if (end < start)
 		return 0;
 	if (source[mid] == toSearch && (mid == end || source[mid + 1] != toSearch))
+		// 1 2 3 4 [4] 5
 		return mid;
 	else if (source[mid] <= toSearch)
+		// 1 2 3 [3] 4 4 4 (toSearch: 4)
 		return BinarySearchCountUpper(source, toSearch, mid + 1, end);
 	else
+		// 1 2 3 [4] 4 4 (toSearch: 3)
 		return BinarySearchCountUpper(source, toSearch, start, mid - 1);
 }
+/*
+* Binary search for the lower bound of sorted list with duplicate items.
+* Returns the first index of the repeated items found in the sorted list
+*/
 int BinarySearchCountLower(vector<long>& source, long toSearch, long start, long end)
 {
 	int mid = start + (end - start) / 2 + (end - start) % 2;
 	if (end < start)
 		return 0;
 	if (source[mid] == toSearch && (mid == start || source[mid - 1] != toSearch))
+		// 1 [2] 2 3 4 5
 		return mid;
 	else if (source[mid] < toSearch)
+		// 1 2 3 [3] 4 4 4 (toSearch: 4)
 		return BinarySearchCountLower(source, toSearch, mid + 1, end);
 	else
 		return BinarySearchCountLower(source, toSearch, start, mid - 1);
@@ -4377,11 +4406,15 @@ void BinarySearchTests()
 	assert(result.size() == 2);
 	assert(result[0] == 2);
 	assert(result[1] == 2);
+
+	vector<long> b {3,4,5,1};
+	assert(BinarySearchMinimum(b, 0, b.size() - 1) == 1);
 }
 void BinarySearchCountTests()
 {
 	vector<long> ages(50, 20);
 	ages.resize(100);
+	// 0:49 20, 50: 79 30, 80: 99 50
 	generate(ages.begin() + 50, ages.begin() + 80, [i = 30]()mutable{return i; });
 	generate(ages.begin() + 80, ages.end(), [i = 50]()mutable{return i; });
 	int count = BinarySearchCountUpper(ages, 18, 0, ages.size() - 1) - BinarySearchCountLower(ages, 18, 0, ages.size() - 1);
