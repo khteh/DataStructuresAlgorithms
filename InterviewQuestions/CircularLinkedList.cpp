@@ -128,11 +128,7 @@ shared_ptr<Node<T>> CircularLinkedList<T>::LoopStart(shared_ptr<Node<T>>& n)
 		}
 		if (!p2->Next())
 			return nullptr;
-		p1 = n;
-		for (; p1 != p2;) {
-			p1 = p1->Next();
-			p2 = p2->Next();
-		}
+		for (p1 = n; p1 != p2; p1 = p1->Next(), p2 = p2->Next());
 		return p2;
 	}
 	return nullptr;
