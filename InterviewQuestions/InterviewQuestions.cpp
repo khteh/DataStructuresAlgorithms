@@ -5973,6 +5973,35 @@ void LinkedListTests()
 	assert(!cll3.LoopStart(head));
 
 	a.clear();
+	a = { 1,2 }; // NO loop!
+	CircularLinkedList<long> cll4(a);
+	assert(cll4.Length() == 2);
+	head = cll4.Find(Node<long>(1));
+	assert(head);
+	cll4.Print();
+	assert(!cll4.LoopStart(head));
+
+	a.clear();
+	a = { 1,2,1 };  // Loop starts at '1'
+	CircularLinkedList<long> cll5(a);
+	assert(cll5.Length() == 2);
+	head = cll5.Find(Node<long>(1));
+	assert(head);
+	loopStart = cll5.Find(Node<long>(1));
+	assert(loopStart);
+	cll5.Print();
+	assert(cll5.LoopStart(head) == loopStart);
+
+	a.clear();
+	a = { 1 }; // NO loop!
+	CircularLinkedList<long> cll6(a);
+	assert(cll6.Length() == 1);
+	head = cll6.Find(Node<long>(1));
+	assert(head);
+	cll6.Print();
+	assert(!cll6.LoopStart(head));
+
+	a.clear();
 	a = {1,2,3,4,5};
 	LinkedList<long> lla5(a);
 	assert(lla5.Length() == 5);
