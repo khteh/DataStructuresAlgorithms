@@ -28,6 +28,7 @@ Binary Search Tree:
 	-50	   10	75		150
 -100			60
 */
+enum class TreeType { Binary, BinarySearch };
 template<typename T>
 class Tree
 {
@@ -46,7 +47,7 @@ public:
 	Tree();
 	Tree(Tree<T>&);
 	explicit Tree(T);
-	Tree(vector<T>&);
+	Tree(vector<T>&, TreeType);
 	Tree(shared_ptr<Node<T>>);
 	virtual ~Tree();
 	Tree<T> & operator=(Tree<T>&);
@@ -56,6 +57,7 @@ public:
 	void InsertItem(T);
 	virtual void InsertNode(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
 	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T>&, long, long);
+	shared_ptr<Node<T>> AddToTree(vector<T>&);
 	shared_ptr<Node<T>> FindNode(T);
 	void GetNodes(map<size_t, vector<shared_ptr<Node<T>>>>&, long level = -1/* Get nodes of all levels by default*/);
 	shared_ptr<Node<T>> InOrderSuccessor(shared_ptr<Node<T>>);

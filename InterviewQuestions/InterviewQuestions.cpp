@@ -2037,6 +2037,9 @@ long ConsecutiveLargestSum(vector<long>& data, vector<long>& result)
 	result = results[max_so_far];
 	return max_so_far;
 }
+/* https://leetcode.com/problems/maximum-product-subarray/
+* 100%
+*/
 long ConsecutiveLargestProduct(vector<long>& data, vector<long>& result)
 {
 	vector<long> tmp;
@@ -6334,7 +6337,7 @@ void BinarySearchTreeTests()
 	a.clear();
 	a = {50,-100,0,10,-50,60,100,75,150};
 	sort(a.begin(), a.end());
-	Tree<long> tree1(a);
+	Tree<long> tree1(a, TreeType::BinarySearch);
 	assert(tree1.Count() == 9);
 	result.clear();
 	tree1.Serialize(tree1.Root(), b);
@@ -6425,7 +6428,22 @@ void BinarySearchTreeTests()
 	assert(tree1 == tree2);
 	cout << "Tree2 content (= Tree1): " << endl;
 	tree2.PrintTree();
-	cout << endl << endl;
+	cout << endl;
+
+	a.clear();
+	b.clear();
+	a = { 1,2,3,4,5 };
+	Tree<long> tree3(a, TreeType::Binary);
+	assert(tree3.Count() == 5);
+	cout << "Binary Tree content: " << endl;
+	tree3.PrintTree();
+	cout << endl;
+	result.clear();
+	tree3.Serialize(tree3.Root(), b);
+	assert(!b.empty());
+	assert(b.size() == a.size());
+	tree3.PrintTreeColumns();
+	cout << endl;
 }
 void KDTreeTests()
 {

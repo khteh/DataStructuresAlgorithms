@@ -51,16 +51,20 @@ Tree<T>::Tree(Tree<T>& tree)
 }
 
 template<typename T>
-Tree<T>::Tree(vector<T>& v)
+Tree<T>::Tree(vector<T>& v, TreeType type)
 {
-	if (!v.empty())
-		m_root = AddToTree(nullptr, v, 0, v.size() - 1);
+	if (!v.empty()) {
+		m_root = type == TreeType::Binary ? AddToTree(v) : AddToTree(nullptr, v, 0, v.size() - 1);
+	}
 }
 template<typename T>
 Tree<T>::~Tree()
 {
 	Clear();
 }
+/*
+* Use this to construct BST
+*/
 template<typename T>
 shared_ptr<Node<T>> Tree<T>::AddToTree(shared_ptr<Node<T>>parent, vector<T>& v, long begin, long end)
 {
@@ -73,7 +77,29 @@ shared_ptr<Node<T>> Tree<T>::AddToTree(shared_ptr<Node<T>>parent, vector<T>& v, 
 	node->SetNext(parent);
 	return node;
 }
-
+/*
+* Use this to construct a Binary Tree where left child = 2i + 1 and right child = 2i + 2 (0-based index)
+*/
+template<typename T>
+shared_ptr<Node<T>> Tree<T>::AddToTree(vector<T>& v)
+{
+	map<long, shared_ptr<Node<T>>> nodes;
+	long maxIndex = (v.size() - 1) / 2;
+	for (long i = 0; i < maxIndex; i++) {
+		if (nodes.find(i) == nodes.end())
+			nodes.emplace(i, make_shared<Node<T>>(v[i]));
+		long left = 2 * i + 1;
+		if (nodes.find(left) == nodes.end())
+			nodes.emplace(left, make_shared<Node<T>>(v[left]));
+		long right = 2 * i + 2;
+		if (nodes.find(right) == nodes.end())
+			nodes.emplace(right, make_shared<Node<T>>(v[right]));
+		nodes[i]->SetLeft(nodes[left]);
+		nodes[i]->SetRight(nodes[right]);
+		nodes[left]->SetNext(nodes[i]);
+	}
+	return !v.empty() ? nodes[0] : nullptr;
+}
 template<typename T>
 Tree<T> &Tree<T>::operator=(Tree<T>& tree)
 {
