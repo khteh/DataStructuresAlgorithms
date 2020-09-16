@@ -6397,6 +6397,23 @@ void BinarySearchTreeTests()
 	subtree2.InsertItem(60);
 
 	a.clear();
+	b.clear();
+	a = { 0,1,2,3,4,5,6,7,8 };
+	Tree<long> tree0(a, TreeType::BinarySearch);
+	assert(tree0.Count() == 9);
+	result.clear();
+	tree0.Serialize(tree0.Root(), b);
+	assert(!b.empty());
+	assert(b.size() == a.size());
+	for (size_t i = 0; i < a.size(); i++)
+		assert(a[i] == b[i]);
+	cout << "Binary Search Tree content: " << endl;
+	tree0.PrintTree();
+	cout << endl;
+	tree0.PrintTreeColumns();
+
+	a.clear();
+	b.clear();
 	a = {50,-100,0,10,-50,60,100,75,150};
 	Tree<long> tree1(a, TreeType::BinarySearch);
 	assert(tree1.Count() == 9);
