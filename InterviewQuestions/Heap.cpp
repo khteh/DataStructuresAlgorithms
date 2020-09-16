@@ -20,7 +20,7 @@ Heap<T>::Heap(T item, HeapType t)
 }
 
 template<class T>
-Heap<T>::Heap(shared_ptr<Node<T>> node, HeapType t)
+Heap<T>::Heap(shared_ptr<Node<T>>& node, HeapType t)
 	: type_(t)
 	, Tree(node)
 {
@@ -33,7 +33,7 @@ Heap<T>::Heap(vector<T>& data, HeapType type)
 		InsertItem(*it);
 }
 template<class T>
-void Heap<T>::InsertNode(shared_ptr<Node<T>> root, shared_ptr<Node<T>> node)
+void Heap<T>::InsertNode(shared_ptr<Node<T>>& root, shared_ptr<Node<T>>& node)
 {
 	if (node) {
 		shared_ptr<Node<T>> p = FindEmptyLeafParent();
@@ -95,7 +95,7 @@ void Heap<T>::Serialize(vector<T>& result)
 }
 
 template<class T>
-void Heap<T>::swap(shared_ptr<Node<T>> n, shared_ptr<Node<T>> m)
+void Heap<T>::swap(shared_ptr<Node<T>>& n, shared_ptr<Node<T>>& m)
 {
 	T tmp(n->Item());
 	n->SetItem(m->Item());
@@ -103,7 +103,7 @@ void Heap<T>::swap(shared_ptr<Node<T>> n, shared_ptr<Node<T>> m)
 }
 
 template<class T>
-void Heap<T>::HeapifyUp(shared_ptr<Node<T>> node, unsigned long level)
+void Heap<T>::HeapifyUp(shared_ptr<Node<T>>& node, unsigned long level)
 {
 	if (node && level >= 0) {
 		switch (type_) {
@@ -169,7 +169,7 @@ void Heap<T>::HeapifyUp(shared_ptr<Node<T>> node, unsigned long level)
 }
 
 template<class T>
-void Heap<T>::HeapifyDown(shared_ptr<Node<T>> node)
+void Heap<T>::HeapifyDown(shared_ptr<Node<T>>& node)
 {
 	if (node) {
 		switch (type_) {
