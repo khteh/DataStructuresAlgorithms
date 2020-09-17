@@ -65,6 +65,7 @@ Tree<T>::Tree(vector<T>& v, TreeType type)
 		default:
 			throw runtime_error("Invalid Tree type!");
 		}
+		for (shared_ptr<Node<T>> n = m_root; n; m_nodes.push(n), n = n->Left());
 	}
 }
 template<typename T>
@@ -608,6 +609,23 @@ vector<size_t> Tree<T>::GetLevelNodeCount(shared_ptr<Node<T>>& n, size_t level)
 		GetLevelNodeCount(n->Right(), level + 1);
 	}
 	return levelNodeCount;
+}
+template<typename T>
+T Tree<T>::Next()
+{
+	shared_ptr<Node<T>> n = m_nodes.top();
+	if (n) {
+		m_nodes.pop();
+		T item = n->Item();
+		for (n = n->Right(); n; m_nodes.push(n), n = n->Left());
+		return item;
+	}
+	return numeric_limits<T>::min();
+}
+template<typename T>
+bool Tree<T>::HasNext()
+{
+	return !m_nodes.empty();
 }
 #if 0
 template<typename T>

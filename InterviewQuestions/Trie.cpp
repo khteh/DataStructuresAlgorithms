@@ -45,7 +45,7 @@ void Trie<T>::RemoveString(string const &str)
 template<typename T>
 T Trie<T>::Find(string const &key)
 {
-	return m_root ? m_root->Find(key) : T();
+	return m_root ? m_root->Find(key) : numeric_limits<T>::min();
 }
 
 template<typename T>
@@ -57,7 +57,7 @@ size_t Trie<T>::Count()
 template<typename T>
 TrieNode<T>::TrieNode()
 {
-	m_value = T();
+	m_value = numeric_limits<T>::min();
 	m_children.clear();
 }
 

@@ -36,6 +36,7 @@ class Tree
 protected:
 	vector<size_t> levelNodeCount;
 	shared_ptr<Node<T>> m_root;
+	stack<shared_ptr<Node<T>>> m_nodes;
 	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T>&, long, long);
 	shared_ptr<Node<T>> AddToTree(vector<T>&);
 	shared_ptr<Node<T>> FindNode(shared_ptr<Node<T>>&, T item);
@@ -73,6 +74,8 @@ public:
 	bool MatchTree(shared_ptr<Node<T>>&, shared_ptr<Node<T>>&);
 	size_t MinDepth(shared_ptr<Node<T>>&);
 	size_t MaxDepth(shared_ptr<Node<T>>&);
+	T Next();
+	bool HasNext();
 	T GetMin();
 	T MinSubTreesDifference();
 	bool IsBalancedTree();

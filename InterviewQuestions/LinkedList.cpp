@@ -224,11 +224,6 @@ shared_ptr<Node<T>> LinkedList<T>::RemoveHead()
 /* Reverse a linked list from position start to end. Do it in one-pass.
 * Input:  1->2->3->4->5->NULL, start = 1, end = 3
 * Output: 1->4->3->2->5->NULL
-*     1->2->3->4->5->NULL
-*     1->2->3->4->5->NULL
-* i:0 n
-* i:1    it->m  tmp
-*   	 it<-m  tmp
 * startNode: Node before the reversed sublist
 * tail: Tail of the reversed sublist
 * head: head of the reversed sublist
@@ -236,7 +231,7 @@ shared_ptr<Node<T>> LinkedList<T>::RemoveHead()
 template<typename T>
 void LinkedList<T>::Reverse(size_t start, size_t end)
 {
-	shared_ptr<Node<T>> it = m_head, head = nullptr, startNode, tail; // startNode is one before the
+	shared_ptr<Node<T>> it = m_head, head = nullptr, startNode, tail;
 	for (size_t i = 0; it && end > start && i <= end; i++, it = it->Next()) {
 		if (start > 0 && i == start - 1)
 			startNode = it;
@@ -248,6 +243,7 @@ void LinkedList<T>::Reverse(size_t start, size_t end)
 				shared_ptr<Node<T>> tmp = head;
 				head = make_shared<Node<T>>(it->Item());
 				head->SetNext(tmp);
+				tmp->SetPrevious(head);
 			}
 		}
 		if (i == end) {

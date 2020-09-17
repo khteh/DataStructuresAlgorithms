@@ -33,7 +33,7 @@ T MyQueue<T>::peek()
 		back2front();
 		return front_.peek();
 	}
-	return T();
+	return numeric_limits<T>::min();
 }
 
 template<typename T>
@@ -45,7 +45,7 @@ T MyQueue<T>::front()
 		back2front();
 		return front_.pop();
 	}
-	return T();
+	return numeric_limits<T>::min();
 }
 
 template<typename T>

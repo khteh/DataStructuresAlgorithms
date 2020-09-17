@@ -1671,7 +1671,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	disjointSet.Print(a);
 	// Put smaller ranked item under bigger ranked item if ranks are different 
 	assert(disjointSet.Union(1, 3) == 7); // 1, 3, 7 root: 7
-	assert(disjointSet.Union(1, 7) == 0); // Already joined!
+	assert(disjointSet.Union(1, 7) == numeric_limits<long>::min()); // Already joined!
 	assert(disjointSet.Rank(1) == 1);
 	assert(disjointSet.Rank(3) == 1);
 	assert(disjointSet.Rank(7) == 1);
@@ -5643,9 +5643,9 @@ void TrieTests()
 	assert(trie.Find("in") == 9);
 	assert(trie.Find("inn") == 10);
 	assert(trie.Find("intrinsics") == 11);
-	assert(trie.Find("ABC") == int()); // not found
-	assert(trie.Find("tee") == int()); // not found
-	assert(trie.Find("t") == int()); // not found
+	assert(trie.Find("ABC") == numeric_limits<int>::min()); // not found
+	assert(trie.Find("tee") == numeric_limits<int>::min()); // not found
+	assert(trie.Find("t") == numeric_limits<int>::min()); // not found
 	size_t count = trie.Count();
 	cout << "Trie has " << count << " nodes" << endl;
 	trie.RemoveString("Amy");
@@ -5653,12 +5653,12 @@ void TrieTests()
 	trie.RemoveString("Tom");
 	trie.RemoveString("Robert");
 	trie.RemoveString("Kristy");
-	assert(trie.Find("Amy") == int());
-	assert(trie.Find("Christine") == int());
-	assert(trie.Find("Tom") == int());
-	assert(trie.Find("Robert") == int());
-	assert(trie.Find("Kristy") == int());
-	assert(trie.Find("ABC") == int());
+	assert(trie.Find("Amy") == numeric_limits<int>::min());
+	assert(trie.Find("Christine") == numeric_limits<int>::min());
+	assert(trie.Find("Tom") == numeric_limits<int>::min());
+	assert(trie.Find("Robert") == numeric_limits<int>::min());
+	assert(trie.Find("Kristy") == numeric_limits<int>::min());
+	assert(trie.Find("ABC") == numeric_limits<int>::min());
 	cout << endl;
 }
 void PrefixTrieTests()
@@ -6451,6 +6451,16 @@ void BinarySearchTreeTests()
 	a = { 0,1,2,3,4,5,6,7,8 };
 	Tree<long> tree0(a, TreeType::BinarySearch);
 	assert(tree0.Count() == 9);
+	assert(tree0.Next() == 0);
+	assert(tree0.Next() == 1);
+	assert(tree0.Next() == 2);
+	assert(tree0.Next() == 3);
+	assert(tree0.Next() == 4);
+	assert(tree0.Next() == 5);
+	assert(tree0.Next() == 6);
+	assert(tree0.Next() == 7);
+	assert(tree0.Next() == 8);
+	assert(!tree0.HasNext());
 	result.clear();
 	assert(tree0.GetMin() == 0);
 	vector<size_t> levelNodeCount = tree0.GetLevelNodeCount();
@@ -6485,6 +6495,16 @@ void BinarySearchTreeTests()
 	assert(levelNodeCount[1] == 2); // 0 100
 	assert(levelNodeCount[2] == 4); // -50 10 75 150
 	assert(levelNodeCount[3] == 2); // -100 60
+	assert(tree1.Next() == -100);
+	assert(tree1.Next() == -50);
+	assert(tree1.Next() == 0);
+	assert(tree1.Next() == 10);
+	assert(tree1.Next() == 50);
+	assert(tree1.Next() == 60);
+	assert(tree1.Next() == 75);
+	assert(tree1.Next() == 100);
+	assert(tree1.Next() == 150);
+	assert(!tree1.HasNext());
 	assert(!b.empty());
 	assert(b.size() == a.size());
 	for (size_t i = 0; i < a.size(); i++)
@@ -7325,7 +7345,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 				if (i > 0 && j > 0 && grid[i - 1][j - 1] == 1) {
 					long neighbour = (i - 1) * width + j;
 					long root = disjointSet.Union(node, neighbour);
-					if (root != 0) {
+					if (root != numeric_limits<long>::min()) {
 						if (root != currentRoot && counts.find(currentRoot) != counts.end()) { // Existing disjoint set with more than one element
 							counts[root] += counts[currentRoot];
 							counts.erase(currentRoot);
@@ -7340,7 +7360,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 				if (i > 0 && grid[i - 1][j] == 1) {
 					long neighbour = (i - 1) * width + j + 1;
 					long root = disjointSet.Union(node, neighbour);
-					if (root != 0) {
+					if (root != numeric_limits<long>::min()) {
 						if (root != currentRoot && counts.find(currentRoot) != counts.end()) { // Existing disjoint set with more than one element
 							counts[root] += counts[currentRoot];
 							counts.erase(currentRoot);
@@ -7356,7 +7376,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 				if (i > 0 && j < grid[0].size() - 1 && grid[i - 1][j + 1] == 1) {
 					long neighbour = (i - 1) * width + j + 2;
 					long root = disjointSet.Union(node, neighbour);
-					if (root != 0) {
+					if (root != numeric_limits<long>::min()) {
 						if (root != currentRoot && counts.find(currentRoot) != counts.end()) { // Existing disjoint set with more than one element
 							counts[root] += counts[currentRoot];
 							counts.erase(currentRoot);
@@ -7372,7 +7392,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 				if (j > 0 && grid[i][j - 1] == 1) {
 					long neighbour = i * width + j;
 					long root = disjointSet.Union(node, neighbour);
-					if (root != 0) {
+					if (root != numeric_limits<long>::min()) {
 						if (root != currentRoot && counts.find(currentRoot) != counts.end()) { // Existing disjoint set with more than one element
 							counts[root] += counts[currentRoot];
 							counts.erase(currentRoot);
@@ -7388,7 +7408,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 				if (j < grid[0].size() - 1 && grid[i][j + 1] == 1) {
 					long neighbour = i * width + j + 2;
 					long root = disjointSet.Union(node, neighbour);
-					if (root != 0) {
+					if (root != numeric_limits<long>::min()) {
 						if (root != currentRoot && counts.find(currentRoot) != counts.end()) { // Existing disjoint set with more than one element
 							counts[root] += counts[currentRoot];
 							counts.erase(currentRoot);

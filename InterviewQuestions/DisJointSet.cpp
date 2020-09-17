@@ -46,12 +46,12 @@ T DisJointSet<T>::Union(T x, T y)
 	// and the set that includes y
 	T rootX = Find(x);
 	T rootY = Find(y);
-	if (rootX == T()) {
+	if (rootX == numeric_limits<T>::min()) {
 		ostringstream oss;
 		oss << x << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << x << ");";
 		throw runtime_error(oss.str());
 	}
-	if (rootY == T()) {
+	if (rootY == numeric_limits<T>::min()) {
 		ostringstream oss;
 		oss << y << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << y << ");";
 		throw runtime_error(oss.str());
@@ -75,7 +75,7 @@ T DisJointSet<T>::Union(T x, T y)
 		}
 	}
 	else
-		root = T(); // Already joined
+		root = numeric_limits<T>::min(); // Already joined
 	return root;
 }
 template<class T>
