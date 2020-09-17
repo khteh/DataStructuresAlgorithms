@@ -170,15 +170,13 @@ template<typename T>
 void LinkedList<T>::MoveHead2Tail()
 {
 	if (m_head) {
-		shared_ptr<Node<T>> n = m_head->Next();
+		shared_ptr<Node<T>> newHead = m_head->Next();
 		shared_ptr<Node<T>> tail = Tail();
-		if (n && tail) {
-			shared_ptr<Node<T>> newTail = make_shared<Node<T>>(m_head->Item());
-			newTail->SetNext(nullptr);
-			tail->SetNext(newTail);
-			newTail->SetPrevious(tail);
-			m_head = n;
-			m_head->SetPrevious(nullptr);
+		if (newHead && tail) {
+			tail->SetNext(m_head);
+			m_head->SetPrevious(tail);
+			m_head->SetNext(nullptr);
+			m_head = newHead;
 		}
 	}
 }
@@ -217,14 +215,10 @@ shared_ptr<Node<T>> LinkedList<T>::AddItem(T item)
 template<typename T>
 shared_ptr<Node<T>> LinkedList<T>::RemoveHead()
 {
-	shared_ptr<Node<T>> n = nullptr;
-	if (m_head) {
-		n = make_shared<Node<T>>(m_head->Item());
-		shared_ptr<Node<T>> next = m_head->Next();
-		if (next)
-			next->SetPrevious(nullptr);
-		m_head = next;
-	}
+	shared_ptr<Node<T>> n = m_head;
+	m_head = m_head->Next();
+	if (m_head)
+		m_head->SetPrevious(nullptr);
 	return n;
 }
 /* Reverse a linked list from position start to end. Do it in one-pass.
