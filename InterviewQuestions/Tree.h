@@ -34,6 +34,7 @@ template<typename T>
 class Tree
 {
 protected:
+	vector<size_t> levelNodeCount;
 	shared_ptr<Node<T>> m_root;
 	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T>&, long, long);
 	shared_ptr<Node<T>> AddToTree(vector<T>&);
@@ -47,6 +48,8 @@ protected:
 	void FindSum(shared_ptr<Node<T>>&, long, long, vector<long>, vector<string>&);
 	vector<string> GetRoot2LeafNumbers(shared_ptr<Node<T>>&);
 	size_t Count(shared_ptr<Node<T>>&);
+	T GetMin(shared_ptr<Node<T>>&);
+	vector<size_t> GetLevelNodeCount(shared_ptr<Node<T>>&, size_t);
 public:
 	Tree();
 	Tree(Tree<T>&);
@@ -70,6 +73,7 @@ public:
 	bool MatchTree(shared_ptr<Node<T>>&, shared_ptr<Node<T>>&);
 	size_t MinDepth(shared_ptr<Node<T>>&);
 	size_t MaxDepth(shared_ptr<Node<T>>&);
+	T GetMin();
 	T MinSubTreesDifference();
 	bool IsBalancedTree();
 	T MinDiffInBST();
@@ -78,4 +82,5 @@ public:
 	void Clear(shared_ptr<Node<T>>&);
 	virtual void PrintTree();
 	void PrintTreeColumns();
+	vector<size_t> GetLevelNodeCount();
 };

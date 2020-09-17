@@ -105,6 +105,17 @@ typedef struct ZigZagEscape {
 		return value < other.value;
 	}
 } zigzag_t;
+typedef struct {
+	bool operator()(string lhs, string rhs) const {
+		ostringstream oss1, oss2;
+		oss1 << lhs << rhs;
+		oss2 << rhs << lhs;
+		// True: lhs goes before rhs; False: lhs goes after rhs
+		// lhsrhs < rhslhs : lhs goes after rhs
+		// lhsrhs > rhslhs : lhs goes before rhs
+		return oss1.str() > oss2.str();
+	}
+} buildmax_comparator_t;
 float MachineEpsilon(float value);
 float FloatMachineEpsilonApproximation();
 double MachineEpsilon(double value);
@@ -309,7 +320,7 @@ void alignedFree(void **p);
 vector<string> numbersegments(vector<long>&);
 unsigned long long XOR(unsigned long long);
 long concat(vector<long>&);
-long buildmax(vector<long>&, vector<long>&, size_t);
+string buildmax(vector<size_t>&);
 bool JSONValidation(string);
 vector<char> AddVectors(vector<char>&, vector<char>&);
 long MaxLengths(vector<string>&);

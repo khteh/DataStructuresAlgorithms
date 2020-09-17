@@ -576,6 +576,39 @@ void Tree<T>::PrintTree()
 		}
 	}
 }
+template<typename T>
+T Tree<T>::GetMin()
+{
+	return m_root ? GetMin(m_root) : numeric_limits<T>::max();
+}
+template<typename T>
+T Tree<T>::GetMin(shared_ptr<Node<T>>& n)
+{
+	T minimum = numeric_limits<T>::max();
+	if (n) {
+		minimum = min(n->Item(), GetMin(n->Left()));
+		minimum = min(minimum, GetMin(n->Right()));
+	}
+	return minimum;
+}
+template<typename T>
+vector<size_t> Tree<T>::GetLevelNodeCount()
+{
+	return GetLevelNodeCount(m_root, 0);
+}
+template<typename T>
+vector<size_t> Tree<T>::GetLevelNodeCount(shared_ptr<Node<T>>& n, size_t level)
+{
+	if (n) {
+		if (levelNodeCount.empty() || levelNodeCount.size() - 1 < level)
+			levelNodeCount.push_back(1);
+		else
+			levelNodeCount[level]++;
+		GetLevelNodeCount(n->Left(), level + 1);
+		GetLevelNodeCount(n->Right(), level + 1);
+	}
+	return levelNodeCount;
+}
 #if 0
 template<typename T>
 void Tree<T>::PrintNodeIterative(shared_ptr<Node<T>>node)

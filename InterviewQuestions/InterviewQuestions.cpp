@@ -56,6 +56,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	ListPermutationTests();
 	GraphTests();
 	LongestCommonSubsequenceTests();
+	line = to_string(0);
+	istringstream(line) >> i;
+	assert(i == 0);
+	sort(line.begin(), line.end());
+	istringstream(*line.begin()) >> i;
+	assert(i == 0);
+	istringstream(*line.rbegin()) >> i;
+	assert(i == 0);
 	strings.clear();
 	strings = {"abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE"};
 	sort(strings.begin(), strings.end(), LexicographicSort);
@@ -1192,11 +1200,20 @@ int _tmain(int argc, _TCHAR* argv[])
 	a = {901,9015};
 	// 9019015, 9015901
 	assert(concat(a) == 9019015);
-	a.clear();
-	a = {3,4,6,5};
-	b.clear();
-	b = {9,1,2,5,8,3};
-	assert(buildmax(a, b, 5) == 98653);
+	udata.clear();
+	udata = { 10, 2 };
+	assert(buildmax(udata) == "210");
+	udata.clear();
+	udata = { 3,30,34,5,9 };
+	assert(buildmax(udata) == "9534330");
+	udata.clear();
+	udata = { 128,12,320,32 };
+	assert(buildmax(udata) == "3232012812");
+	udata.clear();
+	udata = { 0,0 };
+	assert(buildmax(udata) == "0");
+	udata.clear();
+	assert(buildmax(udata) == "0");
 	strings.clear();
 	strings = {"ABCW", "BAZ", "FOO", "BAR", "XTFN", "ABCDEF"};
 	long max = MaxLengths(strings);
@@ -6402,6 +6419,14 @@ void BinarySearchTreeTests()
 	Tree<long> tree0(a, TreeType::BinarySearch);
 	assert(tree0.Count() == 9);
 	result.clear();
+	assert(tree0.GetMin() == 0);
+	vector<size_t> levelNodeCount = tree0.GetLevelNodeCount();
+	assert(!levelNodeCount.empty());
+	assert(levelNodeCount.size() == 4);
+	assert(levelNodeCount[0] == 1); // 4
+	assert(levelNodeCount[1] == 2); // 2 7
+	assert(levelNodeCount[2] == 4); // 1 3 6 8
+	assert(levelNodeCount[3] == 2); // 0 5
 	tree0.Serialize(tree0.Root(), b);
 	assert(!b.empty());
 	assert(b.size() == a.size());
@@ -6417,8 +6442,16 @@ void BinarySearchTreeTests()
 	a = {50,-100,0,10,-50,60,100,75,150};
 	Tree<long> tree1(a, TreeType::BinarySearch);
 	assert(tree1.Count() == 9);
+	assert(tree1.GetMin() == -100);
 	result.clear();
 	tree1.Serialize(tree1.Root(), b);
+	levelNodeCount = tree1.GetLevelNodeCount();
+	assert(!levelNodeCount.empty());
+	assert(levelNodeCount.size() == 4);
+	assert(levelNodeCount[0] == 1); // 50
+	assert(levelNodeCount[1] == 2); // 0 100
+	assert(levelNodeCount[2] == 4); // -50 10 75 150
+	assert(levelNodeCount[3] == 2); // -100 60
 	assert(!b.empty());
 	assert(b.size() == a.size());
 	for (size_t i = 0; i < a.size(); i++)
@@ -7790,33 +7823,34 @@ long concat(vector<long>& data)
 	istringstream(oss.str()) >> result;
 	return result;
 }
-long buildmax(vector<long>& a, vector<long>& b, size_t size)
+/* https://leetcode.com/problems/largest-number/
+* {10, 2} => 210
+* {3,30,34,5,9} => 9534330
+* 
+* Use string comparator to decide which goes before the other:
+* lhs: 12
+* rhs: 10
+* lhsrhs = 1210
+* rhslhs = 1012
+* 
+* lhsrhs < rhslhs : lhs goes after rhs
+* lhsrhs > rhslhs : lhs goes before rhs
+* 
+* 100%
+*/
+string buildmax(vector<size_t>& a)
 {
-	long maxA = 0, maxB = 0, result = 0;
-	size_t indexA = 0, indexB = 0;
-	for (size_t i = 0; i < size; i++) {
-		result *= 10;
-		for (size_t i = indexA; i < a.size(); i++)
-			if (a[i] >= maxA) {
-				maxA = a[i];
-				indexA = i;
-			}
-		for (size_t i = indexB; i < b.size(); i++)
-			if (b[i] >= maxB) {
-				maxB = b[i];
-				indexB = i;
-			}
-		if (maxA > maxB) {
-			result += maxA;
-			indexA++;
-			maxA = 0;
-		} else {
-			result += maxB;
-			indexB++;
-			maxB = 0;
-		}
+	bool nonZero = false;
+	multiset<string, buildmax_comparator_t> data;
+	for (vector<size_t>::iterator it = a.begin(); it != a.end(); it++) {
+		if (*it > 0)
+			nonZero = true;
+		data.insert(to_string(*it));
 	}
-	return result;
+	ostringstream oss;
+	for (multiset<string, buildmax_comparator_t>::iterator it = data.begin(); it != data.end(); it++)
+		oss << *it;
+	return oss.str().empty() || !nonZero ? "0" : oss.str();
 }
 long MaxLengths(vector<string>& data)
 {
