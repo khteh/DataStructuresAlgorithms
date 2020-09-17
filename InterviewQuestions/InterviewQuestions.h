@@ -46,6 +46,7 @@
 #include "interval_map.h"
 #include "DisJointSet.h"
 #include "Edge.h"
+#include "LRUCache.h"
 using namespace std;
 using namespace concurrency;
 typedef enum class SortOrder { SORT_ASCENDING, SORT_DESCENDING } sort_order_t;

@@ -166,6 +166,67 @@ void LinkedList<T>::Clear()
 	}
 	m_head.reset();
 }
+template<typename T>
+void LinkedList<T>::MoveHead2Tail()
+{
+	if (m_head) {
+		shared_ptr<Node<T>> n = m_head->Next();
+		shared_ptr<Node<T>> tail = Tail();
+		if (n && tail) {
+			shared_ptr<Node<T>> newTail = make_shared<Node<T>>(m_head->Item());
+			newTail->SetNext(nullptr);
+			tail->SetNext(newTail);
+			newTail->SetPrevious(tail);
+			m_head = n;
+			m_head->SetPrevious(nullptr);
+		}
+	}
+}
+template<typename T>
+void LinkedList<T>::MoveItem2Tail(T item)
+{
+	shared_ptr<Node<T>> n = Find(Node<T>{item});
+	shared_ptr<Node<T>> tail = Tail();
+	if (tail && n != tail) {
+		shared_ptr<Node<T>> parent = n->Previous();
+		shared_ptr<Node<T>> next = n->Next();
+		n->SetNext(nullptr);
+		tail->SetNext(n);
+		n->SetPrevious(tail);
+		if (parent)
+			parent->SetNext(next);
+		if (next)
+			next->SetPrevious(parent);
+		if (m_head == n)
+			m_head = next;
+	}
+}
+template<typename T>
+shared_ptr<Node<T>> LinkedList<T>::AddItem(T item)
+{
+	shared_ptr<Node<T>> n = make_shared<Node<T>>(item);
+	if (!m_head)
+		m_head = n;
+	else {
+		shared_ptr<Node<T>> tail = Tail();
+		tail->SetNext(n);
+		n->SetPrevious(tail);
+	}
+	return n;
+}
+template<typename T>
+shared_ptr<Node<T>> LinkedList<T>::RemoveHead()
+{
+	shared_ptr<Node<T>> n = nullptr;
+	if (m_head) {
+		n = make_shared<Node<T>>(m_head->Item());
+		shared_ptr<Node<T>> next = m_head->Next();
+		if (next)
+			next->SetPrevious(nullptr);
+		m_head = next;
+	}
+	return n;
+}
 /* Reverse a linked list from position start to end. Do it in one-pass.
 * Input:  1->2->3->4->5->NULL, start = 1, end = 3
 * Output: 1->4->3->2->5->NULL

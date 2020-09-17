@@ -101,6 +101,7 @@
     <ClInclude Include="interval_map.h" />
     <ClInclude Include="KDTree.h" />
     <ClInclude Include="LinkedList.h" />
+    <ClInclude Include="LRUCache.h" />
     <ClInclude Include="Square.h" />
     <ClInclude Include="TreasureGame.h" />
     <ClInclude Include="Employee.h" />
@@ -136,6 +137,7 @@
     <ClCompile Include="interval_map.cpp" />
     <ClCompile Include="KDTree.cpp" />
     <ClCompile Include="LinkedList.cpp" />
+    <ClCompile Include="LRUCache.cpp" />
     <ClCompile Include="Square.cpp" />
     <ClCompile Include="TreasureGame.cpp" />
     <ClCompile Include="Employee.cpp" />

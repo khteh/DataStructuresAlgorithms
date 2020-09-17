@@ -27,6 +27,10 @@ public:
 	virtual void Clear();
 	void Reverse(size_t, size_t);
 	void RemoveDuplicates();
+	void MoveHead2Tail();
+	shared_ptr<Node<T>> AddItem(T);
+	shared_ptr<Node<T>> RemoveHead();
+	void MoveItem2Tail(T);
 	bool operator==(LinkedList<T>&);
 	bool operator!=(LinkedList<T>&);
 	bool operator<(LinkedList<T>&);
