@@ -627,6 +627,47 @@ bool Tree<T>::HasNext()
 {
 	return !m_nodes.empty();
 }
+template<typename T>
+void Tree<T>::ToLinkedList()
+{
+	ToLinkedList(m_root);
+}
+/* https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
+* 100%
+*/
+template<typename T>
+shared_ptr<Node<T>> Tree<T>::ToLinkedList(shared_ptr<Node<T>>& n)
+{
+	if (n) {
+		shared_ptr<Node<T>> left = ToLinkedList(n->Left());
+		shared_ptr<Node<T>> right = ToLinkedList(n->Right());
+		if (left && right) {
+			if (left->Left()) {
+				shared_ptr<Node<T>> leftMost = left;
+				for (; leftMost->Left(); leftMost = leftMost->Left());
+				leftMost->SetRight(right);
+				right->SetNext(leftMost);
+			}
+			else if (left->Right()) {
+				shared_ptr<Node<T>> rightMost = left;
+				for (; rightMost->Right(); rightMost = rightMost->Right());
+				rightMost->SetRight(right);
+				right->SetNext(rightMost);
+			} else {
+				left->SetRight(right);
+				right->SetNext(left);
+			}
+			n->SetRight(left);
+			left->SetNext(n);
+			n->SetLeft(nullptr);
+		}
+		else if (left && !right) {
+			n->SetRight(left);
+			n->SetLeft(nullptr);
+		}
+	}
+	return n;
+}
 #if 0
 template<typename T>
 void Tree<T>::PrintNodeIterative(shared_ptr<Node<T>>node)

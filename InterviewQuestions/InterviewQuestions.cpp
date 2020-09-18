@@ -6426,6 +6426,47 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	data = {10,5,20};
 	links = { {10,5}, {5,20} };
 	assert(cutTheTree(data, links) == 5);
+
+	vector<long> a, b;
+	a.clear();
+	b.clear();
+	a = { 1,2,3,4,5 };
+	Tree<long> tree2(a, TreeType::Binary);
+	assert(tree2.Count() == 5);
+	cout << "Binary Tree content: " << endl;
+	tree2.PrintTree();
+	cout << endl;
+	result.clear();
+	tree2.Serialize(tree2.Root(), b);
+	assert(!b.empty());
+	assert(b.size() == a.size());
+	tree2.PrintTreeColumns();
+	cout << endl;
+
+	a.clear();
+	a = { 1,2,3 };
+	Tree<long> tree3(a, TreeType::Binary);
+	assert(tree3.Count() == 3);
+	assert(tree3.SumRoot2LeafNumbers() == 25);
+
+	a.clear();
+	a = { 4,9,0,5,1 };
+	Tree<long> tree4(a, TreeType::Binary);
+	assert(tree4.Count() == 5);
+	assert(tree4.SumRoot2LeafNumbers() == 1026);
+
+	a.clear();
+	a = { 5,3,2,7,0,6,numeric_limits<long>::min(),numeric_limits<long>::min(),numeric_limits<long>::min(), 0 };
+	Tree<long> tree5(a, TreeType::Binary);
+	tree5.PrintTree();
+	assert(tree5.Count() == 7);
+	assert(tree5.SumRoot2LeafNumbers() == 6363);
+
+	a.clear();
+	a = {1,2,5,3,4,numeric_limits<long>::min(),6};
+	Tree<long> tree6(a, TreeType::Binary);
+	tree6.ToLinkedList();
+	tree6.PrintTree();
 	cout << endl;
 }
 void BinarySearchTreeTests()
@@ -6593,40 +6634,6 @@ void BinarySearchTreeTests()
 	cout << "Tree2 content (= Tree1): " << endl;
 	tree2.PrintTree();
 	cout << endl;
-
-	a.clear();
-	b.clear();
-	a = { 1,2,3,4,5 };
-	Tree<long> tree3(a, TreeType::Binary);
-	assert(tree3.Count() == 5);
-	cout << "Binary Tree content: " << endl;
-	tree3.PrintTree();
-	cout << endl;
-	result.clear();
-	tree3.Serialize(tree3.Root(), b);
-	assert(!b.empty());
-	assert(b.size() == a.size());
-	tree3.PrintTreeColumns();
-	cout << endl;
-
-	a.clear();
-	a = {1,2,3};
-	Tree<long> tree4(a, TreeType::Binary);
-	assert(tree4.Count() == 3);
-	assert(tree4.SumRoot2LeafNumbers() == 25);
-
-	a.clear();
-	a = { 4,9,0,5,1 };
-	Tree<long> tree5(a, TreeType::Binary);
-	assert(tree5.Count() == 5);
-	assert(tree5.SumRoot2LeafNumbers() == 1026);
-
-	a.clear();
-	a = { 5,3,2,7,0,6,numeric_limits<long>::min(),numeric_limits<long>::min(),numeric_limits<long>::min(), 0 };
-	Tree<long> tree6(a, TreeType::Binary);
-	tree6.PrintTree();
-	assert(tree6.Count() == 7);
-	assert(tree6.SumRoot2LeafNumbers() == 6363);
 }
 void KDTreeTests()
 {

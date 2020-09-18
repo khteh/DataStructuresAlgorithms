@@ -51,6 +51,7 @@ protected:
 	size_t Count(shared_ptr<Node<T>>&);
 	T GetMin(shared_ptr<Node<T>>&);
 	vector<size_t> GetLevelNodeCount(shared_ptr<Node<T>>&, size_t);
+	shared_ptr<Node<T>> ToLinkedList(shared_ptr<Node<T>>&);
 public:
 	Tree();
 	Tree(Tree<T>&);
@@ -86,4 +87,5 @@ public:
 	virtual void PrintTree();
 	void PrintTreeColumns();
 	vector<size_t> GetLevelNodeCount();
+	void ToLinkedList();
 };
