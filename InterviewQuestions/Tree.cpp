@@ -642,21 +642,16 @@ shared_ptr<Node<T>> Tree<T>::ToLinkedList(shared_ptr<Node<T>>& n)
 		shared_ptr<Node<T>> left = ToLinkedList(n->Left());
 		shared_ptr<Node<T>> right = ToLinkedList(n->Right());
 		if (left && right) {
-			if (left->Left()) {
-				shared_ptr<Node<T>> leftMost = left;
-				for (; leftMost->Left(); leftMost = leftMost->Left());
-				leftMost->SetRight(right);
-				right->SetNext(leftMost);
-			}
-			else if (left->Right()) {
+			if (left->Right()) { // Move the right subtree to the leaf of the right subtree. This condition is reached when the left node is already flattened to linked list.
 				shared_ptr<Node<T>> rightMost = left;
 				for (; rightMost->Right(); rightMost = rightMost->Right());
 				rightMost->SetRight(right);
 				right->SetNext(rightMost);
-			} else {
+			} else { // Simple case of adding right to the left node
 				left->SetRight(right);
 				right->SetNext(left);
 			}
+			// Now, move everything
 			n->SetRight(left);
 			left->SetNext(n);
 			n->SetLeft(nullptr);
