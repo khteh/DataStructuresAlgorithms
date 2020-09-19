@@ -6470,9 +6470,9 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 
 	a.clear();
 	b.clear();
-	a = { 3,1 };
-	b = { 1,3 };
-	Tree<long> tree7(a, b);
+	a = { 1,3 };
+	b = { 3,1 };
+	Tree<long> tree7(TraversalType::PreOrder, a, b);
 	assert(tree7.Count() == 2);
 	tree7.PrintTree();
 
@@ -6480,23 +6480,23 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	b.clear();
 	a = { 3,1 };
 	b = { 3,1 };
-	Tree<long> tree8(a, b);
+	Tree<long> tree8(TraversalType::PreOrder, a, b);
 	assert(tree8.Count() == 2);
 	tree8.PrintTree();
 
 	a.clear();
 	b.clear();
-	a = { 3,9,20,15,7 };
-	b = { 9,3,15,20,7 };
-	Tree<long> tree9(a, b);
+	a = { 9,3,15,20,7 };
+	b = { 3,9,20,15,7 };
+	Tree<long> tree9(TraversalType::PreOrder, a, b);
 	assert(tree9.Count() == 5);
 	tree9.PrintTree();
 
 	a.clear();
 	b.clear();
-	a = { 1,2,3 };
-	b = { 3,2,1 };
-	Tree<long> tree10(a, b);
+	a = { 3,2,1 };
+	b = { 1,2,3 };
+	Tree<long> tree10(TraversalType::PreOrder, a, b);
 	assert(tree10.Count() == 3);
 	tree10.PrintTree();
 
@@ -6504,33 +6504,49 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	b.clear();
 	a = { 1,2,3 };
 	b = { 1,2,3 };
-	Tree<long> tree11(a, b);
+	Tree<long> tree11(TraversalType::PreOrder, a, b);
 	assert(tree11.Count() == 3);
 	tree11.PrintTree();
 
 	a.clear();
 	b.clear();
-	a = { 1,2,3 };
-	b = { 2,3,1 };
-	Tree<long> tree12(a, b);
+	a = { 2,3,1 };
+	b = { 1,2,3 };
+	Tree<long> tree12(TraversalType::PreOrder, a, b);
 	assert(tree12.Count() == 3);
 	tree12.PrintTree();
 
 	a.clear();
 	b.clear();
-	a = { 4,3,1,2 };
-	b = { 1,2,3,4 };
-	Tree<long> tree13(a, b);
+	a = { 1,2,3,4 };
+	b = { 4,3,1,2 };
+	Tree<long> tree13(TraversalType::PreOrder, a, b);
 	assert(tree13.Count() == 4);
 	tree13.PrintTree();
 
 	a.clear();
 	b.clear();
-	a = { 4,3,1,2 };
-	b = { 4,2,1,3 };
-	Tree<long> tree14(a, b);
+	a = { 4,2,1,3 };
+	b = { 4,3,1,2 };
+	Tree<long> tree14(TraversalType::PreOrder, a, b);
 	assert(tree14.Count() == 4);
 	tree14.PrintTree();
+
+	a.clear();
+	b.clear();
+	a = { 9,3,15,20,7 };
+	b = { 9,15,7,20,3 };
+	Tree<long> tree15(TraversalType::PostOrder, a, b);
+	assert(tree15.Count() == 5);
+	tree15.PrintTree();
+
+	a.clear();
+	b.clear();
+	a = { 1,2,3,4 };
+	b = { 2,1,3,4 };
+	Tree<long> tree16(TraversalType::PostOrder, a, b);
+	tree16.PrintTree();
+	assert(tree16.Count() == 4);
 
 	cout << endl;
 }

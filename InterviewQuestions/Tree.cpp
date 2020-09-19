@@ -70,10 +70,21 @@ Tree<T>::Tree(vector<T>& v, TreeType type)
 	}
 }
 template<typename T>
-Tree<T>::Tree(vector<T>& preorder, vector<T>& inorder)
+Tree<T>::Tree(TraversalType type, vector<T>& inorder, vector<T>& otherorder)
 {
-	if (!preorder.empty() && !inorder.empty() && preorder.size() == inorder.size())
-		m_root = BuildTree(preorder, inorder, 0, 0, preorder.size() - 1);
+	if (!otherorder.empty() && !inorder.empty() && otherorder.size() == inorder.size()) {
+		switch (type) {
+		case TraversalType::PreOrder:
+			m_root = BuildTreePreOrder(inorder, otherorder, 0, 0, inorder.size() - 1);
+			break;
+		case TraversalType::PostOrder:
+			m_root = BuildTreePostOrder(inorder, otherorder, otherorder.size() - 1, 0, inorder.size() - 1);
+			break;
+		default:
+			throw runtime_error("Invalid traversal type!");
+			break;
+		}
+	}
 }
 template<typename T>
 Tree<T>::~Tree()
@@ -84,7 +95,7 @@ Tree<T>::~Tree()
 * 100%
 */
 template<typename T>
-shared_ptr<Node<T>> Tree<T>::BuildTree(vector<T>& preorder, vector<T>& inorder, long prestart, long instart, long inend)
+shared_ptr<Node<T>> Tree<T>::BuildTreePreOrder(vector<T>& inorder, vector<T>& preorder, long prestart, long instart, long inend)
 {
 	shared_ptr<Node<T>> root = nullptr;
 	if (instart == inend)
@@ -94,10 +105,67 @@ shared_ptr<Node<T>> Tree<T>::BuildTree(vector<T>& preorder, vector<T>& inorder, 
 		if (it == (inorder.begin() + instart + (inend - instart) + 1))
 			throw runtime_error("Invalid tree input parameters! No root found!");
 		root = make_shared<Node<T>>(preorder[prestart]);
-		size_t middle;
-		middle = distance(inorder.begin(), it);
-		shared_ptr<Node<T>> left = BuildTree(preorder, inorder, prestart + 1, instart, middle - 1);
-		shared_ptr<Node<T>> right = BuildTree(preorder, inorder, prestart + middle - instart + 1, middle + 1, inend);
+		size_t middle = distance(inorder.begin(), it);
+		/*
+		*             0   1   2  3  4   5  6
+		* preorder = [{3},<9>,5,10,<20>,15,7]
+		* inorder  = [5,  9, 10,{3},15,20, 7]
+		*		 3
+		*	<9>      <20>
+		* 5    10  15    7
+		*/
+		shared_ptr<Node<T>> left = BuildTreePreOrder(inorder, preorder, prestart + 1, instart, middle - 1);
+		shared_ptr<Node<T>> right = BuildTreePreOrder(inorder, preorder, prestart + middle - instart + 1, middle + 1, inend);
+		root->SetLeft(left);
+		root->SetRight(right);
+		if (left)
+			left->SetNext(root);
+		if (right)
+			right->SetNext(root);
+	}
+	return root;
+}
+/* https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+* 100%
+*/
+template<typename T>
+shared_ptr<Node<T>> Tree<T>::BuildTreePostOrder(vector<T>& inorder, vector<T>& postorder, long pstart, long instart, long inend)
+{
+	shared_ptr<Node<T>> root = nullptr;
+	if (instart == inend)
+		return make_shared<Node<T>>(inorder[instart]);
+	else if (pstart >= 0 && inend >= 0 && inend > instart) {
+		vector<T>::iterator it = find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, postorder[pstart]);
+		if (it == inorder.begin() + instart + (inend - instart) + 1)
+			throw runtime_error("Invalid tree input parameters! No root found!");
+		root = make_shared<Node<T>>(postorder[pstart]);
+		size_t middle = distance(inorder.begin(), it);
+		/*
+		*              0   1    2  3    4
+		* postorder = [<9>,15,  7,<20>,{3}] => left offset: 4 - 3 - 1 = 0
+		* inorder   = [9,  {3},15,20,   7]	=> right size: 5 - 1 -1 = 3
+		*       3
+		*   <9>   <20>
+		*       15   7
+		* 
+		*              0  1  2    3   4
+		* postorder = [7,15,<9>,<20>,{3}] => left offset: 4 - 1 - 1 = 2	 ;
+		* inorder   = [7,9, 15,  {3},20] => right size: 5 - 3 - 1 = 1    ; 0 -
+		*       3
+		*   <9>   <20>
+		* 7    15
+		*              0 1  2   3
+		* portorder = [2,1,<3>,{4}] => left offset: 3 - 2 = 2; 2 - 1 = 1
+		* inorder   = [1,2, 3, {4}]	=> right size: 4 - 3 = 1; 3 - 2 = 1
+		*        4
+		*    3
+		*  1
+		*    2
+		*/
+		size_t rightSize = inend - middle + 1;
+		size_t leftOffset = pstart - rightSize;
+		shared_ptr<Node<T>> left = BuildTreePostOrder(inorder, postorder, leftOffset, instart, middle - 1);
+		shared_ptr<Node<T>> right = BuildTreePostOrder(inorder, postorder, pstart - 1, middle + 1, inend);
 		root->SetLeft(left);
 		root->SetRight(right);
 		if (left)
@@ -210,7 +278,6 @@ void Tree<T>::Clear(shared_ptr<Node<T>>& node)
 		node.reset();
 	}
 }
-
 template<typename T>
 void Tree<T>::InsertItem(T item)
 {
@@ -695,21 +762,56 @@ shared_ptr<Node<T>> Tree<T>::ToLinkedList(shared_ptr<Node<T>>& n)
 		shared_ptr<Node<T>> left = ToLinkedList(n->Left());
 		shared_ptr<Node<T>> right = ToLinkedList(n->Right());
 		if (left && right) {
-			if (left->Right()) { // Move the right subtree to the leaf of the right subtree. This condition is reached when the left node is already flattened to linked list.
+			if (left->Right()) { // Move the right subtree to the right-most leaf of the left subtree. This condition is reached when the left node is already flattened to linked list.
+				/*
+				*       5(n)
+				*     3	    7
+				*  2    6(rightMost)
+				* 
+				*      5(n)
+				*    3     
+				*  2    6(rightMost)
+				*          7
+				*/
 				shared_ptr<Node<T>> rightMost = left;
 				for (; rightMost->Right(); rightMost = rightMost->Right());
 				rightMost->SetRight(right);
 				right->SetNext(rightMost);
 			} else { // Simple case of adding right to the left node
+				/*
+				*    3(n)
+				*  2   6
+				* 
+				*    3(n)
+				*  2
+				*    6
+				*/
 				left->SetRight(right);
 				right->SetNext(left);
 			}
-			// Now, move everything
+			/* Now, move everything:
+			*      5(n)
+			*    3     
+			*  2    6(rightMost)
+			*          7
+			* 
+			*      5(n)
+			*         3
+			*       2    6
+			*               7
+			* 
+			*     5(n)
+			*   3
+			* 2   6
+			* 
+			*     5(n)
+			*          3
+			*        2   6
+			*/
 			n->SetRight(left);
 			left->SetNext(n);
 			n->SetLeft(nullptr);
-		}
-		else if (left && !right) {
+		} else if (left && !right) {
 			n->SetRight(left);
 			n->SetLeft(nullptr);
 		}

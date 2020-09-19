@@ -30,6 +30,7 @@ Binary Search Tree:
 -100			60
 */
 enum class TreeType { Binary, BinarySearch };
+enum class TraversalType {PreOrder, PostOrder};
 template<typename T>
 class Tree
 {
@@ -37,6 +38,7 @@ protected:
 	vector<size_t> levelNodeCount;
 	shared_ptr<Node<T>> m_root;
 	stack<shared_ptr<Node<T>>> minStack, maxStack;
+	void Clear(shared_ptr<Node<T>>&);
 	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T>&, long, long);
 	shared_ptr<Node<T>> AddToTree(vector<T>&);
 	shared_ptr<Node<T>> FindNode(shared_ptr<Node<T>>&, T item);
@@ -52,15 +54,17 @@ protected:
 	T GetMin(shared_ptr<Node<T>>&);
 	vector<size_t> GetLevelNodeCount(shared_ptr<Node<T>>&, size_t);
 	shared_ptr<Node<T>> ToLinkedList(shared_ptr<Node<T>>&);
-	shared_ptr<Node<T>> BuildTree(vector<T>&, vector<T>&, long, long, long);
+	shared_ptr<Node<T>> BuildTreePreOrder(vector<T>&, vector<T>&, long, long, long);
+	shared_ptr<Node<T>> BuildTreePostOrder(vector<T>&, vector<T>&, long, long, long);
 public:
 	Tree();
 	Tree(Tree<T>&);
 	explicit Tree(T);
 	Tree(vector<T>&, TreeType);
-	Tree(vector<T>& preorder, vector<T>& inorder);
+	Tree(TraversalType, vector<T>& preorder, vector<T>& inorder);
 	Tree(shared_ptr<Node<T>>&);
 	virtual ~Tree();
+	void Clear();
 	Tree<T> & operator=(Tree<T>&);
 	bool operator==(Tree<T>&);
 	void Serialize(shared_ptr<Node<T>>&, vector<T>&);
@@ -86,8 +90,6 @@ public:
 	bool IsBalancedTree();
 	T MinDiffInBST();
 	size_t Count();
-	void Clear();
-	void Clear(shared_ptr<Node<T>>&);
 	virtual void PrintTree();
 	void PrintTreeColumns();
 	vector<size_t> GetLevelNodeCount();
