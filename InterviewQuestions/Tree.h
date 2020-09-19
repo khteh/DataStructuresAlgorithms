@@ -36,7 +36,7 @@ class Tree
 protected:
 	vector<size_t> levelNodeCount;
 	shared_ptr<Node<T>> m_root;
-	stack<shared_ptr<Node<T>>> m_nodes;
+	stack<shared_ptr<Node<T>>> minStack, maxStack;
 	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T>&, long, long);
 	shared_ptr<Node<T>> AddToTree(vector<T>&);
 	shared_ptr<Node<T>> FindNode(shared_ptr<Node<T>>&, T item);
@@ -52,11 +52,13 @@ protected:
 	T GetMin(shared_ptr<Node<T>>&);
 	vector<size_t> GetLevelNodeCount(shared_ptr<Node<T>>&, size_t);
 	shared_ptr<Node<T>> ToLinkedList(shared_ptr<Node<T>>&);
+	shared_ptr<Node<T>> BuildTree(vector<T>&, vector<T>&, long, long, long);
 public:
 	Tree();
 	Tree(Tree<T>&);
 	explicit Tree(T);
 	Tree(vector<T>&, TreeType);
+	Tree(vector<T>& preorder, vector<T>& inorder);
 	Tree(shared_ptr<Node<T>>&);
 	virtual ~Tree();
 	Tree<T> & operator=(Tree<T>&);
@@ -75,8 +77,10 @@ public:
 	bool MatchTree(shared_ptr<Node<T>>&, shared_ptr<Node<T>>&);
 	size_t MinDepth(shared_ptr<Node<T>>&);
 	size_t MaxDepth(shared_ptr<Node<T>>&);
-	T Next();
-	bool HasNext();
+	T NextMin();
+	T NextMax();
+	bool HasNextMin();
+	bool HasNextMax();
 	T GetMin();
 	T MinSubTreesDifference();
 	bool IsBalancedTree();

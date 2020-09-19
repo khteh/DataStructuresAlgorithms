@@ -65,13 +65,47 @@ Tree<T>::Tree(vector<T>& v, TreeType type)
 		default:
 			throw runtime_error("Invalid Tree type!");
 		}
-		for (shared_ptr<Node<T>> n = m_root; n; m_nodes.push(n), n = n->Left());
+		for (shared_ptr<Node<T>> n = m_root; n; minStack.push(n), n = n->Left());
+		for (shared_ptr<Node<T>> n = m_root; n; maxStack.push(n), n = n->Right());
 	}
+}
+template<typename T>
+Tree<T>::Tree(vector<T>& preorder, vector<T>& inorder)
+{
+	if (!preorder.empty() && !inorder.empty() && preorder.size() == inorder.size())
+		m_root = BuildTree(preorder, inorder, 0, 0, preorder.size() - 1);
 }
 template<typename T>
 Tree<T>::~Tree()
 {
 	Clear();
+}
+/* https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+* 100%
+*/
+template<typename T>
+shared_ptr<Node<T>> Tree<T>::BuildTree(vector<T>& preorder, vector<T>& inorder, long prestart, long instart, long inend)
+{
+	shared_ptr<Node<T>> root = nullptr;
+	if (instart == inend)
+		return make_shared<Node<T>>(inorder[instart]);
+	else if (prestart < preorder.size() && inend >= 0 && inend > instart) {
+		vector<T>::iterator it = find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, preorder[prestart]);
+		if (it == (inorder.begin() + instart + (inend - instart) + 1))
+			throw runtime_error("Invalid tree input parameters! No root found!");
+		root = make_shared<Node<T>>(preorder[prestart]);
+		size_t middle;
+		middle = distance(inorder.begin(), it);
+		shared_ptr<Node<T>> left = BuildTree(preorder, inorder, prestart + 1, instart, middle - 1);
+		shared_ptr<Node<T>> right = BuildTree(preorder, inorder, prestart + middle - instart + 1, middle + 1, inend);
+		root->SetLeft(left);
+		root->SetRight(right);
+		if (left)
+			left->SetNext(root);
+		if (right)
+			right->SetNext(root);
+	}
+	return root;
 }
 /*
 * Use this to construct BST using In-Order traversal.
@@ -159,6 +193,8 @@ shared_ptr<Node<T>> Tree<T>::Root()
 template<typename T>
 void Tree<T>::Clear()
 {
+	for (; !minStack.empty(); minStack.pop());
+	for (; !maxStack.empty(); maxStack.pop());
 	if (m_root) {
 		Clear(m_root->Left());
 		Clear(m_root->Right());
@@ -611,21 +647,38 @@ vector<size_t> Tree<T>::GetLevelNodeCount(shared_ptr<Node<T>>& n, size_t level)
 	return levelNodeCount;
 }
 template<typename T>
-T Tree<T>::Next()
+T Tree<T>::NextMin()
 {
-	shared_ptr<Node<T>> n = m_nodes.top();
+	shared_ptr<Node<T>> n = minStack.top();
 	if (n) {
-		m_nodes.pop();
+		minStack.pop();
 		T item = n->Item();
-		for (n = n->Right(); n; m_nodes.push(n), n = n->Left());
+		for (n = n->Right(); n; minStack.push(n), n = n->Left());
+		return item;
+	}
+	return numeric_limits<T>::max();
+}
+template<typename T>
+T Tree<T>::NextMax()
+{
+	shared_ptr<Node<T>> n = maxStack.top();
+	if (n) {
+		maxStack.pop();
+		T item = n->Item();
+		for (n = n->Left(); n; maxStack.push(n), n = n->Right());
 		return item;
 	}
 	return numeric_limits<T>::min();
 }
 template<typename T>
-bool Tree<T>::HasNext()
+bool Tree<T>::HasNextMin()
 {
-	return !m_nodes.empty();
+	return !minStack.empty();
+}
+template<typename T>
+bool Tree<T>::HasNextMax()
+{
+	return !maxStack.empty();
 }
 template<typename T>
 void Tree<T>::ToLinkedList()

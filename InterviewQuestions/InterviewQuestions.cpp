@@ -6467,6 +6467,71 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	Tree<long> tree6(a, TreeType::Binary);
 	tree6.ToLinkedList();
 	tree6.PrintTree();
+
+	a.clear();
+	b.clear();
+	a = { 3,1 };
+	b = { 1,3 };
+	Tree<long> tree7(a, b);
+	assert(tree7.Count() == 2);
+	tree7.PrintTree();
+
+	a.clear();
+	b.clear();
+	a = { 3,1 };
+	b = { 3,1 };
+	Tree<long> tree8(a, b);
+	assert(tree8.Count() == 2);
+	tree8.PrintTree();
+
+	a.clear();
+	b.clear();
+	a = { 3,9,20,15,7 };
+	b = { 9,3,15,20,7 };
+	Tree<long> tree9(a, b);
+	assert(tree9.Count() == 5);
+	tree9.PrintTree();
+
+	a.clear();
+	b.clear();
+	a = { 1,2,3 };
+	b = { 3,2,1 };
+	Tree<long> tree10(a, b);
+	assert(tree10.Count() == 3);
+	tree10.PrintTree();
+
+	a.clear();
+	b.clear();
+	a = { 1,2,3 };
+	b = { 1,2,3 };
+	Tree<long> tree11(a, b);
+	assert(tree11.Count() == 3);
+	tree11.PrintTree();
+
+	a.clear();
+	b.clear();
+	a = { 1,2,3 };
+	b = { 2,3,1 };
+	Tree<long> tree12(a, b);
+	assert(tree12.Count() == 3);
+	tree12.PrintTree();
+
+	a.clear();
+	b.clear();
+	a = { 4,3,1,2 };
+	b = { 1,2,3,4 };
+	Tree<long> tree13(a, b);
+	assert(tree13.Count() == 4);
+	tree13.PrintTree();
+
+	a.clear();
+	b.clear();
+	a = { 4,3,1,2 };
+	b = { 4,2,1,3 };
+	Tree<long> tree14(a, b);
+	assert(tree14.Count() == 4);
+	tree14.PrintTree();
+
 	cout << endl;
 }
 void BinarySearchTreeTests()
@@ -6492,16 +6557,26 @@ void BinarySearchTreeTests()
 	a = { 0,1,2,3,4,5,6,7,8 };
 	Tree<long> tree0(a, TreeType::BinarySearch);
 	assert(tree0.Count() == 9);
-	assert(tree0.Next() == 0);
-	assert(tree0.Next() == 1);
-	assert(tree0.Next() == 2);
-	assert(tree0.Next() == 3);
-	assert(tree0.Next() == 4);
-	assert(tree0.Next() == 5);
-	assert(tree0.Next() == 6);
-	assert(tree0.Next() == 7);
-	assert(tree0.Next() == 8);
-	assert(!tree0.HasNext());
+	assert(tree0.NextMin() == 0);
+	assert(tree0.NextMin() == 1);
+	assert(tree0.NextMin() == 2);
+	assert(tree0.NextMin() == 3);
+	assert(tree0.NextMin() == 4);
+	assert(tree0.NextMin() == 5);
+	assert(tree0.NextMin() == 6);
+	assert(tree0.NextMin() == 7);
+	assert(tree0.NextMin() == 8);
+	assert(!tree0.HasNextMin());
+	assert(tree0.NextMax() == 8);
+	assert(tree0.NextMax() == 7);
+	assert(tree0.NextMax() == 6);
+	assert(tree0.NextMax() == 5);
+	assert(tree0.NextMax() == 4);
+	assert(tree0.NextMax() == 3);
+	assert(tree0.NextMax() == 2);
+	assert(tree0.NextMax() == 1);
+	assert(tree0.NextMax() == 0);
+	assert(!tree0.HasNextMax());
 	result.clear();
 	assert(tree0.GetMin() == 0);
 	vector<size_t> levelNodeCount = tree0.GetLevelNodeCount();
@@ -6536,16 +6611,26 @@ void BinarySearchTreeTests()
 	assert(levelNodeCount[1] == 2); // 0 100
 	assert(levelNodeCount[2] == 4); // -50 10 75 150
 	assert(levelNodeCount[3] == 2); // -100 60
-	assert(tree1.Next() == -100);
-	assert(tree1.Next() == -50);
-	assert(tree1.Next() == 0);
-	assert(tree1.Next() == 10);
-	assert(tree1.Next() == 50);
-	assert(tree1.Next() == 60);
-	assert(tree1.Next() == 75);
-	assert(tree1.Next() == 100);
-	assert(tree1.Next() == 150);
-	assert(!tree1.HasNext());
+	assert(tree1.NextMin() == -100);
+	assert(tree1.NextMin() == -50);
+	assert(tree1.NextMin() == 0);
+	assert(tree1.NextMin() == 10);
+	assert(tree1.NextMin() == 50);
+	assert(tree1.NextMin() == 60);
+	assert(tree1.NextMin() == 75);
+	assert(tree1.NextMin() == 100);
+	assert(tree1.NextMin() == 150);
+	assert(!tree1.HasNextMin());
+	assert(tree1.NextMax() == 150);
+	assert(tree1.NextMax() == 100);
+	assert(tree1.NextMax() == 75);
+	assert(tree1.NextMax() == 60);
+	assert(tree1.NextMax() == 50);
+	assert(tree1.NextMax() == 10);
+	assert(tree1.NextMax() == 0);
+	assert(tree1.NextMax() == -50);
+	assert(tree1.NextMax() == -100);
+	assert(!tree1.HasNextMax());
 	assert(!b.empty());
 	assert(b.size() == a.size());
 	for (size_t i = 0; i < a.size(); i++)
