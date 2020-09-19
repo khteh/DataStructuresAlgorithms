@@ -142,27 +142,27 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePostOrder(vector<T>& inorder, vector<T>& p
 		size_t middle = distance(inorder.begin(), it);
 		/*
 		*              0   1    2  3    4
-		* postorder = [<9>,15,  7,<20>,{3}] => left offset: 4 - 3 - 1 = 0
-		* inorder   = [9,  {3},15,20,   7]	=> right size: 5 - 1 -1 = 3
+		* postorder = [<9>,15,  7,<20>,{3}] => left offset: 4 - 4 = 0
+		* inorder   = [9,  {3},15,20,   7]	=> right size: 4 - 1 + 1 = 4
 		*       3
 		*   <9>   <20>
 		*       15   7
 		* 
 		*              0  1  2    3   4
-		* postorder = [7,15,<9>,<20>,{3}] => left offset: 4 - 1 - 1 = 2	 ;
-		* inorder   = [7,9, 15,  {3},20] => right size: 5 - 3 - 1 = 1    ; 0 -
+		* postorder = [7,15,<9>,<20>,{3}] => left offset: 4 - 2 = 2
+		* inorder   = [7,9, 15,  {3},20] => right size: 4 - 3 + 1 = 2
 		*       3
 		*   <9>   <20>
 		* 7    15
 		*              0 1  2   3
-		* portorder = [2,1,<3>,{4}] => left offset: 3 - 2 = 2; 2 - 1 = 1
-		* inorder   = [1,2, 3, {4}]	=> right size: 4 - 3 = 1; 3 - 2 = 1
+		* portorder = [2,1,<3>,{4}] => left offset: 3 - 1 = 2
+		* inorder   = [1,2, 3, {4}]	=> right size: 4 - 4 + 1 = 1
 		*        4
 		*    3
 		*  1
 		*    2
 		*/
-		size_t rightSize = inend - middle + 1;
+		size_t rightSize = inend - middle + 1; // Include the root node itself
 		size_t leftOffset = pstart - rightSize;
 		shared_ptr<Node<T>> left = BuildTreePostOrder(inorder, postorder, leftOffset, instart, middle - 1);
 		shared_ptr<Node<T>> right = BuildTreePostOrder(inorder, postorder, pstart - 1, middle + 1, inend);
