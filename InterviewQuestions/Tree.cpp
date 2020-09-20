@@ -681,19 +681,24 @@ void Tree<T>::PrintTree()
 	}
 }
 template<typename T>
-T Tree<T>::GetMin()
+T Tree<T>::Min()
 {
-	return m_root ? GetMin(m_root) : numeric_limits<T>::max();
+	return m_root ? Min(m_root) : numeric_limits<T>::max();
 }
 template<typename T>
-T Tree<T>::GetMin(shared_ptr<Node<T>>& n)
+T Tree<T>::Max()
 {
-	T minimum = numeric_limits<T>::max();
-	if (n) {
-		minimum = min(n->Item(), GetMin(n->Left()));
-		minimum = min(minimum, GetMin(n->Right()));
-	}
-	return minimum;
+	return m_root ? Max(m_root) : numeric_limits<T>::min();
+}
+template<typename T>
+T Tree<T>::Min(shared_ptr<Node<T>>& n)
+{
+	return n ? min(n->Item(), min(Min(n->Left()), Min(n->Right()))) : numeric_limits<T>::max();
+}
+template<typename T>
+T Tree<T>::Max(shared_ptr<Node<T>>& n)
+{
+	return n ? max(n->Item(), max(Max(n->Left()), Max(n->Right()))) : numeric_limits<T>::min();
 }
 template<typename T>
 vector<size_t> Tree<T>::GetLevelNodeCount()
@@ -817,6 +822,25 @@ shared_ptr<Node<T>> Tree<T>::ToLinkedList(shared_ptr<Node<T>>& n)
 		}
 	}
 	return n;
+}
+template<typename T>
+bool Tree<T>::isValidBST(shared_ptr<Node<T>>& n)
+{
+	bool result = true;
+	if (n) {
+		result &= isValidBST(n->Left());
+		result &= isValidBST(n->Right());
+		if (n->Left())
+			result &= Max(n->Left()) < n->Item();
+		if (n->Right())
+			result &= Min(n->Right()) > n->Item();
+	}
+	return result;
+}
+template<typename T>
+bool Tree<T>::isValidBST()
+{
+	return isValidBST(m_root);
 }
 #if 0
 template<typename T>

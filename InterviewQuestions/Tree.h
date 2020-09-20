@@ -51,7 +51,9 @@ protected:
 	void FindSum(shared_ptr<Node<T>>&, long, long, vector<long>, vector<string>&);
 	vector<string> GetRoot2LeafNumbers(shared_ptr<Node<T>>&);
 	size_t Count(shared_ptr<Node<T>>&);
-	T GetMin(shared_ptr<Node<T>>&);
+	T Min(shared_ptr<Node<T>>&);
+	T Max(shared_ptr<Node<T>>&);
+	bool isValidBST(shared_ptr<Node<T>>&);
 	vector<size_t> GetLevelNodeCount(shared_ptr<Node<T>>&, size_t);
 	shared_ptr<Node<T>> ToLinkedList(shared_ptr<Node<T>>&);
 	shared_ptr<Node<T>> BuildTreePreOrder(vector<T>&, vector<T>&, long, long, long);
@@ -85,7 +87,8 @@ public:
 	T NextMax();
 	bool HasNextMin();
 	bool HasNextMax();
-	T GetMin();
+	T Min();
+	T Max();
 	T MinSubTreesDifference();
 	bool IsBalancedTree();
 	T MinDiffInBST();
@@ -94,4 +97,5 @@ public:
 	void PrintTreeColumns();
 	vector<size_t> GetLevelNodeCount();
 	void ToLinkedList();
+	bool isValidBST();
 };

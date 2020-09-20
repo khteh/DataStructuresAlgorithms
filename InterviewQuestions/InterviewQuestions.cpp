@@ -6488,66 +6488,118 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	b.clear();
 	a = { 9,3,15,20,7 };
 	b = { 3,9,20,15,7 };
+	/*
+	* 		3
+		 9     20
+			15     7
+	*/
 	Tree<long> tree9(TraversalType::PreOrder, a, b);
 	assert(tree9.Count() == 5);
+	assert(!tree9.isValidBST());
 	tree9.PrintTree();
 
 	a.clear();
 	b.clear();
 	a = { 3,2,1 };
 	b = { 1,2,3 };
+	/*
+	*    1
+	   2
+	 3
+	*/
 	Tree<long> tree10(TraversalType::PreOrder, a, b);
 	assert(tree10.Count() == 3);
+	assert(!tree10.isValidBST());
 	tree10.PrintTree();
 
 	a.clear();
 	b.clear();
 	a = { 1,2,3 };
 	b = { 1,2,3 };
+	/*
+	*    1
+		   2
+			 3
+	*/
 	Tree<long> tree11(TraversalType::PreOrder, a, b);
 	assert(tree11.Count() == 3);
+	assert(tree11.isValidBST());
 	tree11.PrintTree();
 
 	a.clear();
 	b.clear();
 	a = { 2,3,1 };
 	b = { 1,2,3 };
+	/*
+	*     1
+		2   
+		  3
+	*/
 	Tree<long> tree12(TraversalType::PreOrder, a, b);
 	assert(tree12.Count() == 3);
+	assert(!tree12.isValidBST());
 	tree12.PrintTree();
 
 	a.clear();
 	b.clear();
 	a = { 1,2,3,4 };
 	b = { 4,3,1,2 };
+	/*
+	*      4
+	    3
+		  1
+		     2
+	*/
 	Tree<long> tree13(TraversalType::PreOrder, a, b);
 	assert(tree13.Count() == 4);
+	assert(tree13.isValidBST());
 	tree13.PrintTree();
 
 	a.clear();
 	b.clear();
 	a = { 4,2,1,3 };
 	b = { 4,3,1,2 };
+	/*
+	*        4
+			 	 3
+			   1
+			 2
+	*/
 	Tree<long> tree14(TraversalType::PreOrder, a, b);
 	assert(tree14.Count() == 4);
+	assert(!tree14.isValidBST());
 	tree14.PrintTree();
 
 	a.clear();
 	b.clear();
 	a = { 9,3,15,20,7 };
 	b = { 9,15,7,20,3 };
+	/*
+	*     3
+  	     / \
+	    9  20
+		  /  \
+	     15   7
+	*/
 	Tree<long> tree15(TraversalType::PostOrder, a, b);
 	assert(tree15.Count() == 5);
+	assert(!tree15.isValidBST());
 	tree15.PrintTree();
 
 	a.clear();
 	b.clear();
 	a = { 1,2,3,4 };
 	b = { 2,1,3,4 };
+	/*
+	*      4
+		3
+	  1
+		 2
+	*/
 	Tree<long> tree16(TraversalType::PostOrder, a, b);
 	tree16.PrintTree();
 	assert(tree16.Count() == 4);
-
+	assert(tree16.isValidBST());
 	cout << endl;
 }
 void BinarySearchTreeTests()
@@ -6572,7 +6624,10 @@ void BinarySearchTreeTests()
 	b.clear();
 	a = { 0,1,2,3,4,5,6,7,8 };
 	Tree<long> tree0(a, TreeType::BinarySearch);
+	assert(tree0.isValidBST());
 	assert(tree0.Count() == 9);
+	assert(tree0.Min() == 0);
+	assert(tree0.Max() == 8);
 	assert(tree0.NextMin() == 0);
 	assert(tree0.NextMin() == 1);
 	assert(tree0.NextMin() == 2);
@@ -6594,7 +6649,6 @@ void BinarySearchTreeTests()
 	assert(tree0.NextMax() == 0);
 	assert(!tree0.HasNextMax());
 	result.clear();
-	assert(tree0.GetMin() == 0);
 	vector<size_t> levelNodeCount = tree0.GetLevelNodeCount();
 	assert(!levelNodeCount.empty());
 	assert(levelNodeCount.size() == 4);
@@ -6616,8 +6670,10 @@ void BinarySearchTreeTests()
 	b.clear();
 	a = {50,-100,0,10,-50,60,100,75,150};
 	Tree<long> tree1(a, TreeType::BinarySearch);
+	assert(tree1.isValidBST());
 	assert(tree1.Count() == 9);
-	assert(tree1.GetMin() == -100);
+	assert(tree1.Min() == -100);
+	assert(tree1.Max() == 150);
 	result.clear();
 	tree1.Serialize(tree1.Root(), b);
 	levelNodeCount = tree1.GetLevelNodeCount();
