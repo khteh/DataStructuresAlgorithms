@@ -4510,10 +4510,10 @@ void QuickSort(vector<long> &data, long left, long right)
 {
 	size_t pivot;
 	if (left < right) {
-		pivot = left + (right - left) / 2 + (right - left) % 2; // This overcomes integer overflow
-		pivot = Partition(data, left, right, pivot);
+		pivot = left + (right - left) / 2 + (right - left) % 2; // This overcomes integer overflow which happens if data.size() is large and naive approach of (lo + hi)/2 is used to index the middle element.
 		// Worst case: N-1 calls. Each call processes the list from left to right-1 (N) => O(N^2)
 		// Average case: lg(N) calls. Each level of call tree processes half the original list. Both calls processes N items => O(N*log(N)).
+		pivot = Partition(data, left, right, pivot);
 		QuickSort(data, left, pivot - 1);  // Either this or the call below is used in worst-case scenario
 		QuickSort(data, pivot + 1, right); // Either this or the call above is used in worst-case scenario
 	}
@@ -4522,10 +4522,10 @@ void QuickSort(vector<long> &data, long left, long right)
  * Average case: Divides the original list to half. newPivot = 1/2.
  * newPivot = The final position of the pivot at the end of this partition operation.
  * Example:
- * [1,3,0,2]: left:0, right: 3, pivot: 2
+ * [1,3,{0},2]: left:0, right: 3, pivot: 2
  * pivotValue: 0
  * newPivot = 0
- * [1,3,2,0]
+ * [1,3,2,{0}]
  * i:0
  *		newPivot:0
  * i:1
@@ -4546,9 +4546,10 @@ void QuickSort(vector<long> &data, long left, long right)
  */
 size_t Partition(vector<long> &data, size_t left, size_t right, size_t pivot)
 {
-	size_t newPivot = left;
+	size_t newPivot = left;	// This is used to find the final location for the pivot value
 	long pivotValue = data[pivot];
-	Swap(data[pivot], data[right]);
+	if (pivot != right)
+		Swap(data[pivot], data[right]);
 	for (size_t i = left; i < right; i++)
 		if (data[i] < pivotValue) {
 			if (i != newPivot)
