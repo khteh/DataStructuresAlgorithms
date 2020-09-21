@@ -4588,15 +4588,17 @@ void InsertionSort(vector<long> &data)
  * The copy back step is avoided with alternating the direction of the merge with each level of recursion (except for an initial one time copy)
  * start: inclusive; end: exclusive
  * Example:
- * [2,1]:  A,B
- * [2] [1] B,A
+ * [2,1]:  A,B [0,2)
+ * [2] [1] B,A [0,1), [1,2) <- Never gets into the if (end - start > 1) condition.
  * [1,2]   A,B <= Bottom of recursion. Merge into B
+ * Time complexity: 1 level (log(n)), 1 comparison. 2 items. => O(n*log(n))
  * 
- * [2,1,4,3]:      A,B [0:4]
- * [2,1] [4,3]	   B,A [0:2], [2:4]
- * [2] [1] [4] [3] A,B [0:1], [1,2]
- * [1,2] [3,4]	   B,A <= Bottom of recurssion. Merge into A
- * [1,2,3,4]	   A,B <= Next higher level, merge into B
+ * [2,1,4,3]:      A,B [0:4)
+ * [2,1] [4,3]	   B,A [0:2), [2:4)
+ * [2] [1] [4] [3] A,B [0:1), [1,2), [2,3), [3,4) <- Never gets into the if (end - start > 1) condition.
+ * [1,2] [3,4]	   B,A <= Bottom of recurssion. Merge into A. 2 comparisons. 4 items.
+ * [1,2,3,4]	   A,B <= Next higher level, merge into B. 1 comparison. 4 items.
+ * Time complexity: 2 levels (log(n)), 3 comparisons, 4 items. => O(n*log(n))
  */
 void TopDownMergeSort(vector<long>& A, vector<long>& B, size_t start, size_t end)
 {
@@ -4642,11 +4644,12 @@ size_t MergeCountInversions(vector<long>& source, vector<long>& dest, size_t sta
 	}
 	return inversions;
 }
-/* bottom-up merge sort algorithm which treats the list as an array of n sublists (called runs in this example) 
+/* bottom-up merge sort algorithm which treats the list consisting of n sublists (called runs in this example) 
  * of size 1, and iteratively merges sub-lists back and forth between two buffers
- * array A[] has the items to sort; array B[] is a work array
+ * List A[] has the items to sort; list B[] is a work buffer
  * Example:
  * [2,1] => [1,2]
+ * 
  * [0,2,1]
  * [0],[2],[1]
  * => [0,2], [1] : width = 1
@@ -4675,16 +4678,16 @@ void BottomUpMergeSort(vector<long>& A, vector<long>& B)
 		for (size_t i = 0; i < A.size(); i += 2 * width)
 			/* Merge two runs: A[i:i+width-1] and A[i+width:i+2*width-1] to B[]
 			* width: 1
-			*   i:0 Merge two runs: A[0:0] and A[1:1] to B[] [start, middle, end] : [0,1,2]
-			*   i:2 Merge two runs: A[2:2] and A[3:3] to B[] [start, middle, end] : [2,3,4]
-			*   i:4 Merge two runs: A[4:4] and A[5:5] to B[] [start, middle, end] : [4,5,6]
+			*   i:0 Merge two runs: A[0:0] and A[1:1] to B[] [start, middle, end] : [0,1,2)
+			*   i:2 Merge two runs: A[2:2] and A[3:3] to B[] [start, middle, end] : [2,3,4)
+			*   i:4 Merge two runs: A[4:4] and A[5:5] to B[] [start, middle, end] : [4,5,6)
 			*  width: 2
-			*   i:0 Merge two runs: A[0:1] and A[2:3] to B[] [start, middle, end] : [0,2,4]
-			*   i:2 Merge two runs: A[2:3] and A[4:5] to B[] [start, middle, end] : [2,4,6]
-			*   i:4 Merge two runs: A[4:5] and A[6:7] to B[] [start, middle, end] : [4,6,8]
-			*  or copy A[i:n-1] to B[] ( if(i+width >= n) )
+			*   i:0 Merge two runs: A[0:1] and A[2:3] to B[] [start, middle, end] : [0,2,4)
+			*   i:2 Merge two runs: A[2:3] and A[4:5] to B[] [start, middle, end] : [2,4,6)
+			*   i:4 Merge two runs: A[4:5] and A[6:7] to B[] [start, middle, end] : [4,6,8)
+			*  or copy A[i:n-1] to B[] ( if (i+width >= n) )
 			*/
-			Merge(A, B, i, min(i + width, n), min(i + 2 * width, n));
+				Merge(A, B, i, min(i + width, n), min(i + 2 * width, n));
 		// Now work array B is full of runs of length 2*width.
 		// Copy array B to array A for next iteration.
 		// A more efficient implementation would swap the roles of A and B.
@@ -4703,20 +4706,20 @@ void Merge(vector<long>& source, vector<long>& dest, size_t start, size_t middle
 		 * OR  Right run is empty (right >= end)
 		 * Example:
 		 * width: 1
-		 * source: [0,2,1] dest: [] [start, middle, end] = [0,1,2]
-		 * left:0, right: 1, middle: 1
+		 * source: [0,2(R),1] dest: [] [start, middle, end] = [0,1,2)
+		 * left:0, right: 1, middle: 1, end: 2
 		 * dest[0] = 0, Take left. left == middle == 1
-		 * dest[1] = 2, Take right.
-		 * source: [0,2,1] dest: [0,2] [start, middle, end] = [2,3,3]
-		 * left:2, right: 3, middle: 3
-		 * dest[2] = 1, Take left. left == middle == 3
+		 * dest[1] = 2 (left == middle), Take right.
+		 * source: [0,2,1] dest: [0,2] [start, middle, end] = [2,3,3)
+		 * left:2, right: 3, middle: 3, end: 3
+		 * dest[2] = 1 (right == end), Take left. left == middle == 3
 		 * 
 		 * width: 2
-		 * source: [0,2,1] dest: [0,2,1] [start, middle, end] = [0,2,3]
-		 * left:0, right: 2, middle: 2
+		 * source: [0,2,1(R)] dest: [0,2,1] [start, middle, end] = [0,2,3)
+		 * left:0, right: 2, middle: 2, end: 3
 		 * dest[0] = 0, Take left. left = 1
-		 * dest[1] = 1, Take right. right = 3 [Inversion count = right - i = 2 - 1 = 1]
-		 * dest[2] = 2, Take left. left = 2
+		 * dest[1] = 1, Take right (1 < 2). right = 3 == end [Inversion count = right - i = 2 - 1 = 1]
+		 * dest[2] = 2, Take left (right == end). left = 2
 		 */
 		dest[i] = (left < middle && (right >= end || source[left] <= source[right])) ? source[left++] : source[right++];
 }
@@ -6259,6 +6262,47 @@ void LinkedListTests()
 	lla18.ToVector(c);
 	for (size_t i = 0; i < c.size(); i++)
 		assert(b[i] == c[i]);
+
+	a.clear();
+	a = {2,1};
+	LinkedList<long> lla19(a);
+	assert(lla19.Length() == 2);
+	lla19.Sort();
+	assert(lla19.Length() == 2);
+	c.clear();
+	lla19.ToVector(c);
+	assert(c.size() == 2);
+	assert(c[0] == 1);
+	assert(c[1] == 2);
+
+	a.clear();
+	a = { 4,2,1,3 };
+	LinkedList<long> lla20(a);
+	assert(lla20.Length() == 4);
+	lla20.Sort();
+	assert(lla20.Length() == 4);
+	c.clear();
+	lla20.ToVector(c);
+	assert(c.size() == 4);
+	assert(c[0] == 1);
+	assert(c[1] == 2);
+	assert(c[2] == 3);
+	assert(c[3] == 4);
+
+	a.clear();
+	a = { -1,5,3,4,0 };
+	LinkedList<long> lla21(a);
+	assert(lla21.Length() == 5);
+	lla21.Sort();
+	assert(lla21.Length() == 5);
+	c.clear();
+	lla21.ToVector(c);
+	assert(c.size() == 5);
+	assert(c[0] == -1);
+	assert(c[1] == 0);
+	assert(c[2] == 3);
+	assert(c[3] == 4);
+	assert(c[4] == 5);
 }
 void BinaryTreeTests()
 {

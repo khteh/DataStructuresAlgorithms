@@ -12,6 +12,7 @@ protected:
 	shared_ptr<Node<T>> m_next, m_previous, m_left, m_right;
 	T MinSubTreesDifference(shared_ptr<Node<T>>, T, T);
 public:
+	Node();
 	explicit Node(T item);
 	Node(const Node &);
 	Node(const shared_ptr<Node>);

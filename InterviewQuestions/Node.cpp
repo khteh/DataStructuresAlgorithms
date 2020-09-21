@@ -9,11 +9,15 @@ template class Node<long>;
 template class Node<string>;
 template class Node<size_t>;
 template<class T>
+Node<T>::Node()
+	:m_item(T()), m_previous(nullptr), m_next(nullptr), m_left(nullptr), m_right(nullptr)
+{
+}
+template<class T>
 Node<T>::Node(T item)
 	:m_item(item), m_previous(nullptr), m_next(nullptr), m_left(nullptr), m_right(nullptr)
 {
 }
-
 template<class T>
 Node<T>::Node(const Node &node) // Shallow Copy !!! It will have runtime error with create/delete of objects
 	: m_item(node.m_item)

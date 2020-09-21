@@ -29,27 +29,23 @@ Tree<T>::Tree()
 	: m_root(nullptr)
 {
 }
-
 template<typename T>
 Tree<T>::Tree(T item)
 	: m_root(make_shared<Node<T>>(item))
 {
 }
-
 template<typename T>
 Tree<T>::Tree(shared_ptr<Node<T>>& node)
 {
 	map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> copied;
 	m_root = Copy(node, copied);
 }
-
 template<typename T>
 Tree<T>::Tree(Tree<T>& tree)
 {
 	map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> copied;
 	m_root = Copy(tree.Root(), copied);
 }
-
 template<typename T>
 Tree<T>::Tree(vector<T>& v, TreeType type)
 {
@@ -766,58 +762,24 @@ shared_ptr<Node<T>> Tree<T>::ToLinkedList(shared_ptr<Node<T>>& n)
 	if (n) {
 		shared_ptr<Node<T>> left = ToLinkedList(n->Left());
 		shared_ptr<Node<T>> right = ToLinkedList(n->Right());
-		if (left && right) {
-			if (left->Right()) { // Move the right subtree to the right-most leaf of the left subtree. This condition is reached when the left node is already flattened to linked list.
-				/*
-				*       5(n)
-				*     3	    7
-				*  2    6(rightMost)
-				* 
-				*      5(n)
-				*    3     
-				*  2    6(rightMost)
-				*          7
+		if (left && !right) {
+			n->SetRight(left);
+			n->SetLeft(nullptr);
+		} else if (left && right) {
+			if (left->Right()) { 
+				/* Move the right subtree to the right-most leaf of the left subtree. 
+				* This condition is reached when the left node is already flattened to linked list.
 				*/
 				shared_ptr<Node<T>> rightMost = left;
 				for (; rightMost->Right(); rightMost = rightMost->Right());
 				rightMost->SetRight(right);
 				right->SetNext(rightMost);
 			} else { // Simple case of adding right to the left node
-				/*
-				*    3(n)
-				*  2   6
-				* 
-				*    3(n)
-				*  2
-				*    6
-				*/
 				left->SetRight(right);
 				right->SetNext(left);
 			}
-			/* Now, move everything:
-			*      5(n)
-			*    3     
-			*  2    6(rightMost)
-			*          7
-			* 
-			*      5(n)
-			*         3
-			*       2    6
-			*               7
-			* 
-			*     5(n)
-			*   3
-			* 2   6
-			* 
-			*     5(n)
-			*          3
-			*        2   6
-			*/
 			n->SetRight(left);
 			left->SetNext(n);
-			n->SetLeft(nullptr);
-		} else if (left && !right) {
-			n->SetRight(left);
 			n->SetLeft(nullptr);
 		}
 	}

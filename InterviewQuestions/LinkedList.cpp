@@ -95,6 +95,7 @@ void LinkedList<T>::SplitList(shared_ptr<Node<T>>& even, shared_ptr<Node<T>>& od
 				evenTail = node;
 			} else {
 				evenTail->SetNext(node);
+				node->SetPrevious(evenTail);
 				evenTail = node;
 			}
 		} else {
@@ -103,6 +104,7 @@ void LinkedList<T>::SplitList(shared_ptr<Node<T>>& even, shared_ptr<Node<T>>& od
 				oddTail = node;
 			} else {
 				oddTail->SetNext(node);
+				node->SetPrevious(oddTail);
 				oddTail = node;
 			}
 		}
@@ -130,8 +132,7 @@ template<typename T>
 size_t LinkedList<T>::Length() const
 {
 	size_t length = 0;
-	for (shared_ptr<Node<T>> node = m_head; node; node = node->Next())
-		length++;
+	for (shared_ptr<Node<T>> node = m_head; node; node = node->Next(), length++);
 	return length;
 }
 template<typename T>
@@ -254,6 +255,79 @@ void LinkedList<T>::Reverse(size_t start, size_t end)
 				m_head = head;
 		}
 	}
+}
+/* https://leetcode.com/problems/sort-list/
+* 100%
+* Use bottom-up merge sort
+*/
+template<typename T>
+void LinkedList<T>::Sort()
+{
+	if (m_head && m_head->Next()) {
+		size_t size = Length();
+		shared_ptr<Node<T>> dummy = make_unique<Node<T>>(numeric_limits<T>::max());
+		dummy->SetNext(m_head);
+		shared_ptr<Node<T>> n, left, right, tail;
+		/*
+		* dummy->5->1->3->2
+		* width: 1
+		* (tail) l  r  n
+		* dummy->1->5(tail)
+		*       3->2
+		*  		l  r n=null
+		* dummy->1->5->2->3(tail)
+		* width: 2
+		* (tail) l  l  r  r n=null
+		* dummy->1->2->3->5(tail)
+		*/
+		for (size_t width = 1; width < size; width *= 2) {
+			n = dummy->Next();
+			tail = dummy;
+			while (n) {
+				left = n;
+				right = Split(left, width);
+				n = Split(right, width);
+				Merge(left, right, tail);
+			}
+		}
+		m_head = dummy->Next();
+		m_head->SetPrevious(nullptr);
+	}
+}
+/*
+* Splits the list into 2. First list contains size nodes.
+* Returns head of the second list.
+*/
+template<typename T>
+shared_ptr<Node<T>> LinkedList<T>::Split(shared_ptr<Node<T>> first, size_t size)
+{
+	shared_ptr<Node<T>> second = nullptr;
+	for (size_t i = 1; i < size && first; i++, first = first->Next());
+	if (first) {
+		second = first->Next();
+		first->SetNext(nullptr);
+	}
+	return second;
+}
+/*
+* Merge left and right lists into dest sorted list.
+*/
+template<typename T>
+void LinkedList<T>::Merge(shared_ptr<Node<T>>& left, shared_ptr<Node<T>>& right, shared_ptr<Node<T>>& dest)
+{
+	for (; left && right;) {
+		if (left->Item() < right->Item()) {
+			dest->SetNext(left);
+			dest = left;
+			left = left->Next();
+		} else {
+			dest->SetNext(right);
+			dest = right;
+			right = right->Next();
+		}
+	}
+	dest->SetNext(left ? left : right);
+	for (; dest->Next(); dest = dest->Next());
 }
 /*
 * Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.

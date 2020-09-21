@@ -11,6 +11,8 @@ class LinkedList
 protected:
 	shared_ptr<Node<T>> m_head;
 	void SetHead(shared_ptr<Node<T>>);
+	shared_ptr<Node<T>> Split(shared_ptr<Node<T>>, size_t);
+	void Merge(shared_ptr<Node<T>>&, shared_ptr<Node<T>>&, shared_ptr<Node<T>>&);
 public:
 	LinkedList();
 	LinkedList(shared_ptr<Node<T>>);
@@ -26,6 +28,7 @@ public:
 	virtual size_t Length() const;
 	virtual void Clear();
 	void Reverse(size_t, size_t);
+	void Sort();
 	void RemoveDuplicates();
 	void MoveHead2Tail();
 	shared_ptr<Node<T>> AddItem(T);
