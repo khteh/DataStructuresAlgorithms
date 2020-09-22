@@ -11057,19 +11057,13 @@ bool searchMatrix(vector<vector<long>>& matrix, long target)
 long ReversePolishNotation(vector<string>& tokens)
 {
 	stack<int> numbers;
-	map<string, char> operators = {
-		{"+", '+'},
-		{"-", '-'},
-		{"*", '*'},
-		{"/", '/'}
-	};
 	for (size_t i = 0; i < tokens.size(); i++) {
 		if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/") {
 			int num2 = numbers.top();
 			numbers.pop();
 			int num1 = numbers.top();
 			numbers.pop();
-			switch (operators[tokens[i]]) {
+			switch (tokens[i][0]) {
 			case '+':
 				num1 += num2;
 				break;
