@@ -1964,6 +1964,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	lruCache2.Put(3, 2);
 	assert(lruCache2.Get(2) == -1);
 	assert(lruCache2.Get(3) == 2);
+	strings.clear();
+	strings = { "2", "1", "+", "3", "*" };
+	assert(ReversePolishNotation(strings) == 9);
+	strings.clear();
+	strings = { "4", "13", "5", "/", "+" };
+	assert(ReversePolishNotation(strings) == 6);
+	strings.clear();
+	strings = { "10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+" };
+	assert(ReversePolishNotation(strings) == 22);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -2552,9 +2561,9 @@ void FindPalindromeSubstrings(string const& s, set<string>& result)
 			palindrome = s.substr(left, right - left + 1);
 			left--;
 			right++;
+			if (!palindrome.empty() && palindrome.size() > 1)
+				result.insert(palindrome);
 		}
-		if (!palindrome.empty() && palindrome.size() > 1)
-			result.insert(palindrome);
 	}
 }
 // https://app.codility.com/programmers/task/winter_lights/
@@ -11040,4 +11049,49 @@ bool searchMatrix(vector<vector<long>>& matrix, long target)
 		}
 	}
 	return false;
+}
+/*
+* https://leetcode.com/problems/evaluate-reverse-polish-notation/
+* 100%
+*/
+long ReversePolishNotation(vector<string>& tokens)
+{
+	stack<int> numbers;
+	map<string, char> operators = {
+		{"+", '+'},
+		{"-", '-'},
+		{"*", '*'},
+		{"/", '/'}
+	};
+	for (size_t i = 0; i < tokens.size(); i++) {
+		if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/") {
+			int num2 = numbers.top();
+			numbers.pop();
+			int num1 = numbers.top();
+			numbers.pop();
+			switch (operators[tokens[i]]) {
+			case '+':
+				num1 += num2;
+				break;
+			case '-':
+				num1 -= num2;
+				break;
+			case '*':
+				num1 *= num2;
+				break;
+			case '/':
+				num1 /= num2;
+				break;
+			default:
+				throw runtime_error("Invalid operator!");
+			}
+			numbers.push(num1);
+		}
+		else {
+			int num;
+			istringstream(tokens[i]) >> num;
+			numbers.push(num);
+		}
+	}
+	return !numbers.empty() ? numbers.top() : numeric_limits<int>::max();
 }
