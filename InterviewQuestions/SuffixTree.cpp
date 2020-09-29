@@ -202,7 +202,7 @@ const set<size_t> SuffixTreeNode::GetIndexes(string const &str)
 	set<size_t> result;
 	if (str.empty())
 		result = m_indices; // End of search string. Return indexes of this node.
-	if (m_children.find(str[0]) != m_children.end())
+	else if (m_children.find(str[0]) != m_children.end())
 		result = m_children[str[0]]->GetIndexes(str.substr(1));
 	return result;
 }

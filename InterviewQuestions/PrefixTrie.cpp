@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "PrefixTrie.h"
-
+PrefixTrie::PrefixTrie()
+	:m_root(nullptr)
+{}
 PrefixTrie::PrefixTrie(vector<string>& str)
 {
 	m_root = make_unique<PrefixTrieNode>();
@@ -21,9 +23,13 @@ void PrefixTrie::RemoveString(string const &str)
 	if (m_root)
 		m_root->RemoveString(str);
 }
-vector<string> PrefixTrie::Find(string const& prefix)
+bool PrefixTrie::Find(string const& prefix)
 {
-	return m_root && !prefix.empty() ? m_root->Find(prefix, 0) : vector<string>();
+	return m_root && !prefix.empty() ? m_root->Find(prefix, 0) : false;
+}
+vector<string> PrefixTrie::StartsWith(string const& prefix)
+{
+	return m_root ? m_root->StartsWith(prefix, 0) : vector<string>();
 }
 vector<string> PrefixTrie::GetNodes()
 {
@@ -39,10 +45,6 @@ string PrefixTrie::LongestCommonPrefix(string const& prefix)
 }
 PrefixTrieNode::PrefixTrieNode()
 {
-}
-PrefixTrieNode::PrefixTrieNode(string str)
-{
-	m_value = str;
 }
 PrefixTrieNode::~PrefixTrieNode()
 {
@@ -65,10 +67,10 @@ size_t PrefixTrieNode::Count()
 void PrefixTrieNode::InsertString(string str, size_t index)
 {
 	if (index < str.size()) {
-		pair<map<char, unique_ptr<PrefixTrieNode>>::iterator, bool> result = m_children.emplace(str[index], new PrefixTrieNode());
+		pair<map<char, unique_ptr<PrefixTrieNode>>::iterator, bool> result = m_children.emplace(str[index], make_unique<PrefixTrieNode>());
 		result.first->second->InsertString(str, index + 1);
 	} else
-		m_value = str;
+		m_value = str; // Store the prefix string at the leaf node.
 }
 void PrefixTrieNode::RemoveString(string str)
 {
@@ -95,16 +97,16 @@ vector<string> PrefixTrieNode::GetNodes()
 	}
 	return result;
 }
-vector<string> PrefixTrieNode::Find(string const& prefix, size_t index)
+vector<string> PrefixTrieNode::StartsWith(string const& prefix, size_t index)
 {
 	vector<string> result;
 	if (index < prefix.size() && m_children.find(prefix[index]) != m_children.end())
-		result = m_children[prefix[index]]->Find(prefix, index + 1); // Nodes with common prefix
-	else if (m_children.empty()) // Leaf node
+		result = m_children[prefix[index]]->StartsWith(prefix, index + 1); // Nodes with common prefix
+	else if (m_children.empty() && !m_value.empty() && m_value.find(prefix) != string::npos) // Leaf node
 		result.push_back(m_value);
 	else {
-		if (!m_value.empty())
-			result.push_back(m_value);
+		if (!m_value.empty() && m_value.find(prefix) != string::npos)
+			result.push_back(m_value); // All descendants of this node as common prefix of the string associated with with this node. Ex: "to", "topple"
 		/*
 			apple, appendix, appetite
 			prefix: app
@@ -113,11 +115,17 @@ vector<string> PrefixTrieNode::Find(string const& prefix, size_t index)
 		*/
 		for (map<char, unique_ptr<PrefixTrieNode>>::iterator it = m_children.begin(); it != m_children.end(); it++)
 		{
-			vector<string> tmp = it->second->Find(prefix, index + 1);
+			vector<string> tmp = it->second->StartsWith(prefix, index + 1);
 			result.insert(result.end(), tmp.begin(), tmp.end());
 		}
 	}
 	return result;
+}
+bool PrefixTrieNode::Find(string const& prefix, size_t index)
+{
+	return (index < prefix.size() && m_children.find(prefix[index]) != m_children.end()) ?
+		m_children[prefix[index]]->Find(prefix, index + 1) // Nodes with common prefix
+		: m_value == prefix; // Leaf node
 }
 PrefixTrieNode* PrefixTrieNode::GetNode(string const& prefix, size_t index)
 {

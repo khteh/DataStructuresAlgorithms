@@ -81,7 +81,7 @@ void TrieNode<T>::InsertString(string const &str, T value)
 		pair<map<char, shared_ptr<TrieNode<T>>>::iterator, bool> result = m_children.emplace(str[0], new TrieNode<T>());
 		result.first->second->InsertString(str.substr(1), value);
 	} else
-		m_value = value;
+		m_value = value; // Store the value at the leaf node.
 }
 
 template<typename T>

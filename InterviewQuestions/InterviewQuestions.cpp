@@ -56,6 +56,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	ListPermutationTests();
 	GraphTests();
 	LongestCommonSubsequenceTests();
+
 	line = to_string(0);
 	istringstream(line) >> i;
 	assert(i == 0);
@@ -5693,35 +5694,42 @@ void PrefixTrieTests()
 	PrefixTrie prefixTrie(strings);
 	size_t count = prefixTrie.Count();
 	cout << "PrefixTrieTests has " << count << " nodes" << endl;
-	result = prefixTrie.Find(string("apple"));
+	assert(prefixTrie.Find(string("apple")));
+	result = prefixTrie.StartsWith(string("apple"));
 	assert(result.size() == 1);
 	assert(result[0] == "apple");
 
-	result = prefixTrie.Find(string("app"));
+	assert(!prefixTrie.Find(string("app")));
+	result = prefixTrie.StartsWith(string("app"));
 	assert(result.size() == 3);
 	assert(result[0] == "appendix");
 	assert(result[1] == "appetite");
 	assert(result[2] == "apple");
 
-	result = prefixTrie.Find(string("to"));
+	assert(prefixTrie.Find(string("to")));
+	result = prefixTrie.StartsWith(string("to"));
 	assert(result.size() == 2);
 	
-	result = prefixTrie.Find(string("in"));
+	assert(prefixTrie.Find(string("in")));
+	result = prefixTrie.StartsWith(string("in"));
 	assert(result.size() == 3);
 
-	result = prefixTrie.Find(string("a"));
+	assert(!prefixTrie.Find(string("a")));
+	result = prefixTrie.StartsWith(string("a"));
 	assert(result.size() == 3); // appendix, appetite, apple
 	assert(result[0] == "appendix");
 	assert(result[1] == "appetite");
 	assert(result[2] == "apple");
 
-	result = prefixTrie.Find(string("i"));
+	assert(!prefixTrie.Find(string("i")));
+	result = prefixTrie.StartsWith(string("i"));
 	assert(result.size() == 3); // in inn intrinsics
 	assert(result[0] == "in");
 	assert(result[1] == "inn");
 	assert(result[2] == "intrinsics");
 
-	result = prefixTrie.Find(string("t"));
+	assert(!prefixTrie.Find(string("t")));
+	result = prefixTrie.StartsWith(string("t"));
 	assert(result.size() == 5); //  tea ted ten to topple
 	assert(result[0] == "tea");
 	assert(result[1] == "ted");
@@ -5729,7 +5737,8 @@ void PrefixTrieTests()
 	assert(result[3] == "to");
 	assert(result[4] == "topple");
 
-	result = prefixTrie.Find(string("te"));
+	assert(!prefixTrie.Find(string("te")));
+	result = prefixTrie.StartsWith(string("te"));
 	assert(result.size() == 3); // tea ted ten
 	assert(result[0] == "tea");
 	assert(result[1] == "ted");
@@ -5775,6 +5784,23 @@ void PrefixTrieTests()
 
 	longestCommonPrefix = prefixTrie.LongestCommonPrefix("i");
 	assert(longestCommonPrefix == "in");
+
+	PrefixTrie emptyPrefixTrie;
+	assert(!emptyPrefixTrie.Find(string("a")));
+	result = emptyPrefixTrie.StartsWith(string("a"));
+	assert(result.empty());
+
+	strings.clear();
+	strings.push_back("Hello");
+	PrefixTrie prefixTrie1(strings);
+	assert(prefixTrie1.Find("Hello"));
+	assert(!prefixTrie1.Find("Hell"));
+	result = prefixTrie1.StartsWith(string("Hel"));
+	assert(!result.empty());
+	result = prefixTrie1.StartsWith(string("Hello"));
+	assert(!result.empty());
+	result = prefixTrie1.StartsWith(string("Helloa"));
+	assert(result.empty());
 }
 void GetPermutations(string &w, set<string>& result)
 {
