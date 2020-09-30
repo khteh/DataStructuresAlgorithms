@@ -10250,9 +10250,8 @@ set<vector<size_t>> CoinChange(long amount, vector<size_t>& coins)
 				tmp = coinChangeCache[amount - coins[i]];
 			if (!tmp.empty())
 				for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
-					vector<size_t> change;
+					vector<size_t> change(*it);
 					change.push_back(coins[i]);
-					change.insert(change.end(), it->begin(), it->end());
 					if (accumulate(change.begin(), change.end(), 0) == amount) {
 						sort(change.begin(), change.end());
 						combinations.insert(change);
@@ -10285,9 +10284,8 @@ set<vector<size_t>> Knapsack(long amount, vector<size_t>& numbers)
 						tmp = knapsackCache[amount - numbers[i]];
 					if (!tmp.empty())
 						for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
-							vector<size_t> change;
+							vector<size_t> change(*it);
 							change.push_back(numbers[i]);
-							change.insert(change.end(), it->begin(), it->end());
 							if (accumulate(change.begin(), change.end(), 0) <= amount) {
 								sort(change.begin(), change.end());
 								combinations.insert(change);
