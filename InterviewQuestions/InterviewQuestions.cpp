@@ -33,6 +33,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	TestRandom();
 	GreedyAlgorithmTests();
 	Knapsack_CoinChangeTests();
+	Knapsack_CombinationSumTests();
 	AnagramTests();
 	PalindromeTests();
 	SparseNumberTests();
@@ -8523,7 +8524,7 @@ void Knapsack_CoinChangeTests()
 	numbers = { 3, 4, 10 };
 	assert(UnboundedKnapsack(12, numbers) == 12); // [3,3,3,3] or [4,4,4]
 	assert(UnboundedKnapsack(13, numbers) == 13); // [3,10]
-	assert(UnboundedKnapsack(16, numbers) == 16); // [4,4,4,4s]
+	assert(UnboundedKnapsack(16, numbers) == 16); // [4,4,4,4]
 	numbers.clear();
 	numbers = { 2000,2000,2000 };
 	assert(UnboundedKnapsack(2000, numbers) == 2000); // 2000
@@ -8546,6 +8547,23 @@ void Knapsack_CoinChangeTests()
 	assert(UnboundedKnapsack(10, numbers) == 9); // [9]
 	assert(UnboundedKnapsack(9, numbers) == 9); // [9]
 	assert(UnboundedKnapsack(8, numbers) == 0); // [0]
+}
+void Knapsack_CombinationSumTests()
+{
+	set<vector<size_t>> combinations = BoundedKnapsackCombinationSum(3, 7);
+	assert(combinations.size() == 1); // [[1,2,4]]
+	combinations = BoundedKnapsackCombinationSum(3, 9);
+	assert(combinations.size() == 3); // [[1,2,6],[1,3,5],[2,3,4]]
+	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
+		assert(it->size() == 3);
+	combinations = BoundedKnapsackCombinationSum(4, 1);
+	assert(combinations.empty());
+	combinations = BoundedKnapsackCombinationSum(3, 2);
+	assert(combinations.empty());
+	combinations = BoundedKnapsackCombinationSum(9, 45);
+	assert(combinations.size() == 1); // [[1,2,3,4,5,6,7,8,9]]
+	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
+		assert(it->size() == 9);
 }
 string decimal_to_binary(int decimal)
 {
@@ -10312,6 +10330,49 @@ size_t UnboundedKnapsack(long k, vector<size_t>& arr)
 	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
 		sums.insert(accumulate(it->begin(), it->end(), 0));
 	return sums.empty() ? 0 : *sums.rbegin();
+}
+/* https://leetcode.com/problems/combination-sum-iii/
+* 100%
+*/
+set<vector<size_t>> _BoundedKnapsackCombinationSum(size_t k, size_t sum)
+{
+	set<vector<size_t>> combinations;
+	for (size_t i = 1; i < 10; i++) {
+		if (sum >= i) {
+			set<vector<size_t>> tmp;
+			if (knapsackCache.find(sum - i) == knapsackCache.end()) {
+				tmp = _BoundedKnapsackCombinationSum(k, sum - i);
+				knapsackCache[sum - i] = tmp;
+			}
+			else
+				tmp = knapsackCache[sum - i];
+			if (!tmp.empty())
+				for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
+					if (it->size() < k && find(it->begin(), it->end(), i) == it->end()) {
+						vector<size_t> change(*it);
+						change.push_back(i);
+						if (accumulate(change.begin(), change.end(), 0) == sum) {
+							sort(change.begin(), change.end());
+							combinations.insert(change);
+						}
+					}
+				}
+			else if (i == sum)
+				combinations.insert(vector<size_t>{i});
+		}
+	} // for
+	return combinations;
+}
+set<vector<size_t>> BoundedKnapsackCombinationSum(size_t k, size_t sum)
+{
+	knapsackCache.clear();
+	set<vector<size_t>> combinations = _BoundedKnapsackCombinationSum(k, sum);
+	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); )
+		if (it->size() != k)
+			it = combinations.erase(it);
+		else
+			it++;
+	return combinations;
 }
 /*
   https://www.hackerrank.com/challenges/cipher/problem
