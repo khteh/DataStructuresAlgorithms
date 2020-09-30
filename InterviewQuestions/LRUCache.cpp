@@ -10,7 +10,9 @@ LRUCache<TKey, TValue>::LRUCache(size_t capacity)
 template<typename TKey, typename TValue>
 void LRUCache<TKey, TValue>::RefreshCacheLine(TKey key)
 {
-    _list.MoveItem2Tail(key);
+    _entries.erase(_cache[key].first);
+    _entries.push_front(key);
+    _cache[key].first = _entries.begin();
 }
 template<typename TKey, typename TValue>
 TValue LRUCache<TKey, TValue>::Get(TKey key)
@@ -19,24 +21,23 @@ TValue LRUCache<TKey, TValue>::Get(TKey key)
         return -1;
     else {
         RefreshCacheLine(key);
-        return _cache[key];
+        return _cache[key].second;
     }
 }
 template<typename TKey, typename TValue>
 void LRUCache<TKey, TValue>::Put(TKey key, TValue value)
 {
     if (_cache.find(key) != _cache.end()) {
-        _cache[key] = value;
+        _cache[key].second = value;
         RefreshCacheLine(key);
     } else {
         if (_cache.size() >= _capacity) {
             // Evicts cache line
-            shared_ptr<Node<TKey>> toRemove = _list.RemoveHead();
-            if (toRemove)
-                _cache.erase(toRemove->Item());
+            _cache.erase(_entries.back());
+            _entries.pop_back();
         }
-        shared_ptr<Node<TKey>> n = _list.AddItem(key);
-        _cache.emplace(key, value);
+        _entries.push_front(key);
+        _cache.emplace(key, make_pair(_entries.begin(), value));
     }
 }
 template<typename TKey, typename TValue>

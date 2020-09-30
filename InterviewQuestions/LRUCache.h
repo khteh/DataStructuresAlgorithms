@@ -1,14 +1,14 @@
 #pragma once
-#include <vector>
+#include <list>
 #include <map>
-#include "LinkedList.h"
+#include <utility>
 using namespace std;
 template<typename TKey, typename TValue>
 class LRUCache
 {
 private:
-	map<TKey, TValue> _cache;
-	LinkedList<TValue> _list;
+	map<TKey, pair<typename list<TKey>::iterator, TValue>> _cache;
+	list<TKey> _entries;
 	size_t _capacity;
 	void RefreshCacheLine(TKey);
 public:
