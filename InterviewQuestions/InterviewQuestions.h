@@ -138,6 +138,7 @@ bool CanShuffleWithoutRepeat(string&);
 long ConsecutiveLargestSum(vector<long>&, vector<long>&);
 long ConsecutiveLargestProduct(vector<long>&, vector<long>&);
 long ConsecutiveLargestSumOfFactors(vector<zerofactors_t>& data, vector<zerofactors_t>& result, int value);
+long ConsecutiveSumMinCount(long, vector<long>&);
 long LongestNonNegativeSumSlice(vector<long>&);
 size_t CountDistinctSlices(long m, vector<long>&);
 size_t CountTriangles(vector<long>&);

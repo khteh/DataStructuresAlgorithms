@@ -553,6 +553,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << ": " << lResult << " (";
 	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
 	cout << ")" << endl;
+	a.clear();
+	a = {2,3,1,2,4,3};
+	assert(ConsecutiveSumMinCount(7, a) == 2);
+	a.clear();
+	assert(ConsecutiveSumMinCount(1, a) == -1);
+	a.clear();
+	a = { 1,4,4 };
+	assert(ConsecutiveSumMinCount(5, a) == 2);
+	assert(ConsecutiveSumMinCount(4, a) == 1);
 	//  [−1, −1, 1, −1, 1, 0, 1, −1, −1]: 2 to 8 = 7
 	a = { -1, -1, 1, -1, 1, 0, 1, -1, -1 };
 	assert(LongestNonNegativeSumSlice(a) == 7);
@@ -11114,4 +11123,20 @@ long ReversePolishNotation(vector<string>& tokens)
 		}
 	}
 	return !numbers.empty() ? numbers.top() : numeric_limits<int>::max();
+}
+/* https://leetcode.com/problems/minimum-size-subarray-sum/
+*  100%
+*/
+long ConsecutiveSumMinCount(long target, vector<long>& data)
+{
+	size_t count = numeric_limits<size_t>::max();
+	long sum = 0;
+	for (size_t i = 0, j = 0; i < data.size(); i++) {
+		sum += data[i];
+		for (; sum >= target; j++) {
+			sum -= data[j];
+			count = min(count, i - j + 1);
+		}
+	}
+	return count == numeric_limits<size_t>::max() ? -1 : count;
 }
