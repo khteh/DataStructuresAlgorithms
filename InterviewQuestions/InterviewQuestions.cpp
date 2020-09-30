@@ -61,9 +61,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	istringstream(line) >> i;
 	assert(i == 0);
 	sort(line.begin(), line.end());
-	istringstream(*line.begin()) >> i;
+	istringstream(line.front()) >> i;
 	assert(i == 0);
-	istringstream(*line.rbegin()) >> i;
+	istringstream(line.back()) >> i;
 	assert(i == 0);
 	strings.clear();
 	strings = {"abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE"};
@@ -8291,9 +8291,9 @@ bool LexicographicSort(string s1, string s2)
 			s1It = order.end();
 			s2It = order.end();
 		} else
-			return s1It->second < s2It->second;
+			return s1It->second < s2It->second; // substring comparison
 	}
-	return (s1.size() - i) < (s2.size() - j);
+	return (s1.size() - i) < (s2.size() - j); // String length comparison.
 }
 // Count number of '1' bits
 size_t bitCount(long a)
