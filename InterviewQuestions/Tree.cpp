@@ -363,7 +363,28 @@ shared_ptr<Node<T>> Tree<T>::CommonAncestor(shared_ptr<Node<T>>& p, shared_ptr<N
 			return p;
 	return CommonAncestor(p->Next(), q->Next());
 }
-
+template<typename T>
+shared_ptr<Node<T>> Tree<T>::CommonAncestor(shared_ptr<Node<T>>& n, shared_ptr<Node<T>>& p, shared_ptr<Node<T>>& q)
+{
+	if (n == p || n == q)
+		return n;
+	if (n) {
+		shared_ptr<Node<T>> left = CommonAncestor(n->Left(), p, q);
+		shared_ptr<Node<T>> right = CommonAncestor(n->Right(), p, q);
+		if (left && right)
+			return n;
+		else if (!left && right)
+			return right;
+		else if (left && !right)
+			return left;
+	}
+	return nullptr;
+}
+template<typename T>
+shared_ptr<Node<T>> Tree<T>::CommonAncestor1(shared_ptr<Node<T>>& p, shared_ptr<Node<T>>& q)
+{
+	return CommonAncestor(m_root, p, q);
+}
 template<typename T>
 bool Tree<T>::covers(shared_ptr<Node<T>>& node, shared_ptr<Node<T>>& p)
 {

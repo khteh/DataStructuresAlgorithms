@@ -58,6 +58,7 @@ protected:
 	shared_ptr<Node<T>> ToLinkedList(shared_ptr<Node<T>>&);
 	shared_ptr<Node<T>> BuildTreePreOrder(vector<T>&, vector<T>&, long, long, long);
 	shared_ptr<Node<T>> BuildTreePostOrder(vector<T>&, vector<T>&, long, long, long);
+	shared_ptr<Node<T>> CommonAncestor(shared_ptr<Node<T>>&, shared_ptr<Node<T>>&, shared_ptr<Node<T>>&);
 public:
 	Tree();
 	Tree(Tree<T>&);
@@ -77,6 +78,7 @@ public:
 	void GetNodes(map<size_t, vector<shared_ptr<Node<T>>>>&, long level = -1/* Get nodes of all levels by default*/);
 	shared_ptr<Node<T>> InOrderSuccessor(shared_ptr<Node<T>>&);
 	shared_ptr<Node<T>> CommonAncestor(shared_ptr<Node<T>>&, shared_ptr<Node<T>>&);
+	shared_ptr<Node<T>> CommonAncestor1(shared_ptr<Node<T>>&, shared_ptr<Node<T>>&);
 	void FindSum(shared_ptr<Node<T>>&, long, vector<string>&);
 	T SumRoot2LeafNumbers();
 	bool SubTree(shared_ptr<Node<T>>&, shared_ptr<Node<T>>&);

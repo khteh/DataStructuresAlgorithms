@@ -6432,7 +6432,7 @@ Level 1:      -100(50)        60(50)
 Level 2:            0(-100)         100(60)
 Level 3:       -50(0)     10(0)  75(100)   150(100)
 	*/
-	shared_ptr<Node<long>> node = tree.FindNode(-50), node1, node2;
+	shared_ptr<Node<long>> node = tree.FindNode(-50), node1, node2, node3;
 	assert(node);
 	assert(tree.InOrderSuccessor(node)->Item() == 0);
 	node = tree.FindNode(50);
@@ -6447,22 +6447,31 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	node1 = tree.FindNode(10);
 	assert(node1);
 	node2 = tree.CommonAncestor(node, node1);
+	node3 = tree.CommonAncestor1(node, node1);
 	assert(node2);
+	assert(node3);
 	assert(node2->Item() == 0);
+	assert(node3->Item() == 0);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 	node1 = tree.FindNode(75);
 	assert(node1);
 	node2 = tree.CommonAncestor(node, node1);
+	node3 = tree.CommonAncestor1(node, node1);
 	assert(node2);
+	assert(node3);
 	assert(node2->Item() == 50);
+	assert(node3->Item() == 50);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 	node = tree.FindNode(60);
 	assert(node);
 	node1 = tree.FindNode(75);
 	assert(node1);
 	node2 = tree.CommonAncestor(node, node1);
+	node3 = tree.CommonAncestor1(node, node1);
 	assert(node2);
+	assert(node3);
 	assert(node2->Item() == 60);
+	assert(node3->Item() == 60);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 	
 	Tree<long> tree1(tree);
@@ -6845,7 +6854,7 @@ void BinarySearchTreeTests()
 			cout << (*it1)->Item() << " ";
 		cout << endl;
 	}
-	shared_ptr<Node<long>> node, node1, node2;
+	shared_ptr<Node<long>> node, node1, node2, node3;
 	node = tree1.FindNode(-50);
 	assert(node);
 	//assert(tree1.InOrderSuccessor(node)->Item() == 0);
@@ -6861,19 +6870,28 @@ void BinarySearchTreeTests()
 	node1 = tree1.FindNode(10);
 	assert(node1);
 	node2 = tree1.CommonAncestor(node, node1);
+	node3 = tree1.CommonAncestor1(node, node1);
 	assert(node2);
+	assert(node3);
+	assert(node2 == node3);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 	node1 = tree1.FindNode(75);
 	assert(node1);
 	node2 = tree1.CommonAncestor(node, node1);
+	node3 = tree1.CommonAncestor1(node, node1);
 	assert(node2);
+	assert(node3);
+	assert(node2 == node3);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 	node = tree1.FindNode(60);
 	assert(node);
 	node1 = tree1.FindNode(75);
 	assert(node1);
 	node2 = tree1.CommonAncestor(node, node1);
+	node3 = tree1.CommonAncestor1(node, node1);
 	assert(node2);
+	assert(node3);
+	assert(node2 == node3);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 
 	Tree<long> tree2(tree1);
