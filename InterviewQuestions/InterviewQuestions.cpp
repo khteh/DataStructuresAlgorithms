@@ -4416,7 +4416,22 @@ void BinarySearchTests()
 	a = { {1}, {3} };
 	assert(searchMatrix(a, 1));
 	assert(!searchMatrix(a, 0));
-
+	a.clear();
+	a = { {1, 4, 7, 11, 15},{2, 5, 8, 12, 19},{3, 6, 9, 16, 22},{10, 13, 14, 17, 24},{18, 21, 23, 26, 30} };
+	assert(searchMatrix1(a, 1));
+	assert(searchMatrix1(a, 5));
+	assert(searchMatrix1(a, 9));
+	assert(searchMatrix1(a, 17));
+	assert(searchMatrix1(a, 30));
+	assert(!searchMatrix1(a, 0));
+	a.clear();
+	a = { {1},{2},{3},{4},{5} };
+	assert(searchMatrix1(a, 2));
+	assert(!searchMatrix1(a, 0));
+	a.clear();
+	a = { {1,1} };
+	assert(searchMatrix1(a, 1));
+	assert(!searchMatrix1(a, 0));
 	source.clear();
 	source = {5,7,7,8,8,10};
 	vector<long> result = searchRange(source, 8);
@@ -11170,6 +11185,56 @@ bool searchMatrix(vector<vector<long>>& matrix, long target)
 	}
 	return false;
 }
+bool searchMatrixRow(vector<vector<long>>& matrix, long target, size_t row, long start, long end) 
+{
+	if (start >= 0 && end < matrix[row].size() && start <= end) {
+		if (matrix[row][start] == target || matrix[row][end] == target)
+			return true;
+		long middle = start + (end - start) / 2 + (end - start) % 2;
+		if (matrix[row][middle] == target)
+			return true;
+		else if (matrix[row][middle] > target)
+			return searchMatrixRow(matrix, target, row, start, middle - 1);
+		else
+			return searchMatrixRow(matrix, target, row, middle + 1, end);
+	}
+	return false;
+}
+bool searchMatrixCol(vector<vector<long>>& matrix, long target, size_t col, long start, long end) 
+{
+	if (start >= 0 && end < matrix.size() && start <= end) {
+		if (matrix[start][col] == target || matrix[end][col] == target)
+			return true;
+		long middle = start + (end - start) / 2 + (end - start) % 2;
+		if (matrix[middle][col] == target)
+			return true;
+		else if (matrix[middle][col] > target)
+			return searchMatrixCol(matrix, target, col, start, middle - 1);
+		else
+			return searchMatrixCol(matrix, target, col, middle + 1, end);
+	}
+	return false;
+}
+/* https://leetcode.com/problems/search-a-2d-matrix-ii/
+* 100%
+*/
+bool searchMatrix1(vector<vector<long>>& matrix, long target)
+{
+	if (matrix.empty())
+		return false;
+	for (size_t row = 0, col = 0; ; ) {
+		if ((row < matrix.size() && searchMatrixRow(matrix, target, row, col, matrix[row < matrix.size() ? row : row - 1].size() - 1)) ||
+			(col < matrix[row < matrix.size() ? row : row - 1].size() && searchMatrixCol(matrix, target, col, row, matrix.size() - 1)))
+			return true;
+		if (row < matrix.size())
+			row++; 
+		if (col < matrix[row < matrix.size() ? row : row - 1].size())
+			col++;
+		if (row >= matrix.size() && col >= matrix[row < matrix.size() ? row : row - 1].size())
+			break;
+	}
+	return false;
+}
 /*
 * https://leetcode.com/problems/evaluate-reverse-polish-notation/
 * 100%
@@ -11211,6 +11276,20 @@ long ReversePolishNotation(vector<string>& tokens)
 }
 /* https://leetcode.com/problems/minimum-size-subarray-sum/
 *  100%
+ 0 1 2 3 4 5
+[2,3,1,2,4,3]
+ j     i		sum: 8 - 2 = 6, count: 4
+   j   i		sum: 6
+   j     i		sum: 10 - 3 = 7 count: 4
+	 j   i		sum: 7 - 1 = 6
+	   j i		sum: 6
+	   j   i	sum: 9 - 2 = 7  count: 3
+		 j i	sum: 7 - 4 = 3	count: 2
+[1 4 4]
+ j i     sum: 5 - 1 = 4, count: 2
+   i,j   sum: 4, count: 1
+   j i   sum: 8 - 4
+	 i,j sum: 4, count: 1
 */
 long ConsecutiveSumMinCount(long target, vector<long>& data)
 {
