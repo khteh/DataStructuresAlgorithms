@@ -402,3 +402,4 @@ string zigzagconvert(string&, size_t);
 string numberToRoman(size_t);
 double median(vector<long>&, vector<long>&);
 long ReversePolishNotation(vector<string>&);
+vector<long> productExceptSelf(vector<long>&);

@@ -1984,6 +1984,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings.clear();
 	strings = { "10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+" };
 	assert(ReversePolishNotation(strings) == 22);
+	a.clear();
+	a = {1,2,3,4};
+	a = productExceptSelf(a);
+	assert(!a.empty());
+	assert(a.size() == 4);
+	assert(a[0] == 24);
+	assert(a[1] == 12);
+	assert(a[2] == 8);
+	assert(a[3] == 6);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -11187,7 +11196,7 @@ bool searchMatrix(vector<vector<long>>& matrix, long target)
 }
 bool searchMatrixRow(vector<vector<long>>& matrix, long target, size_t row, long start, long end) 
 {
-	if (start >= 0 && end < matrix[row].size() && start <= end) {
+	if (start >= 0 && end < (long)matrix[row].size() && start <= end) {
 		if (matrix[row][start] == target || matrix[row][end] == target)
 			return true;
 		long middle = start + (end - start) / 2 + (end - start) % 2;
@@ -11202,7 +11211,7 @@ bool searchMatrixRow(vector<vector<long>>& matrix, long target, size_t row, long
 }
 bool searchMatrixCol(vector<vector<long>>& matrix, long target, size_t col, long start, long end) 
 {
-	if (start >= 0 && end < matrix.size() && start <= end) {
+	if (start >= 0 && end < (long)matrix.size() && start <= end) {
 		if (matrix[start][col] == target || matrix[end][col] == target)
 			return true;
 		long middle = start + (end - start) / 2 + (end - start) % 2;
@@ -11303,4 +11312,27 @@ long ConsecutiveSumMinCount(long target, vector<long>& data)
 		}
 	}
 	return count == numeric_limits<size_t>::max() ? -1 : count;
+}
+/* https://leetcode.com/problems/product-of-array-except-self/
+* 100%
+*/
+vector<long> productExceptSelf(vector<long>& nums) 
+{
+	vector<long> result(nums.size(), 1);
+	/*
+		1 2 3 4
+		1 1 2 6 <- Accumulate forward
+	*/
+	for (size_t i = 0; i < nums.size() - 1; i++)
+		result[i + 1] = result[i] * nums[i];
+	/*
+	   1   2  3 4
+	   24 24 12 4 <- Accumulate backward
+	*/
+	long productSum = 1;
+	for (long i = nums.size() - 1; i >= 0; i--) {
+		result[i] *= productSum;
+		productSum *= nums[i];
+	}
+	return result;
 }
