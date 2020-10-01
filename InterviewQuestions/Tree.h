@@ -85,6 +85,8 @@ public:
 	size_t MaxDepth(shared_ptr<Node<T>>&);
 	T NextMin();
 	T NextMax();
+	T kthSmallest(size_t);
+	T kthLargest(size_t);
 	bool HasNextMin();
 	bool HasNextMax();
 	T Min();

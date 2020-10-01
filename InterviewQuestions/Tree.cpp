@@ -39,12 +39,16 @@ Tree<T>::Tree(shared_ptr<Node<T>>& node)
 {
 	map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> copied;
 	m_root = Copy(node, copied);
+	for (shared_ptr<Node<T>> n = m_root; n; minStack.push(n), n = n->Left());
+	for (shared_ptr<Node<T>> n = m_root; n; maxStack.push(n), n = n->Right());
 }
 template<typename T>
 Tree<T>::Tree(Tree<T>& tree)
 {
 	map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> copied;
 	m_root = Copy(tree.Root(), copied);
+	for (shared_ptr<Node<T>> n = m_root; n; minStack.push(n), n = n->Left());
+	for (shared_ptr<Node<T>> n = m_root; n; maxStack.push(n), n = n->Right());
 }
 template<typename T>
 Tree<T>::Tree(vector<T>& v, TreeType type)
@@ -737,6 +741,34 @@ T Tree<T>::NextMax()
 		return item;
 	}
 	return numeric_limits<T>::min();
+}
+template<typename T>
+T Tree<T>::kthSmallest(size_t k)
+{
+	T result = numeric_limits<T>::max();
+	for (size_t i = 0; i < k; i++) {
+		shared_ptr<Node<T>> n = minStack.top();
+		minStack.pop();
+		if (n) {
+			result = n->Item();
+			for (n = n->Right(); n; minStack.push(n), n = n->Left());
+		}
+	}
+	return result;
+}
+template<typename T>
+T Tree<T>::kthLargest(size_t k)
+{
+	T result = numeric_limits<T>::min();
+	for (size_t i = 0; i < k; i++) {
+		shared_ptr<Node<T>> n = maxStack.top();
+		maxStack.pop();
+		if (n) {
+			result = n->Item();
+			for (n = n->Left(); n; maxStack.push(n), n = n->Right());
+		}
+	}
+	return result;
 }
 template<typename T>
 bool Tree<T>::HasNextMin()

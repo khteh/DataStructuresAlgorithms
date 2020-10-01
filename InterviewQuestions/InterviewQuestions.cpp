@@ -6877,7 +6877,15 @@ void BinarySearchTreeTests()
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 
 	Tree<long> tree2(tree1);
-	assert(tree1 == tree2);
+	assert(tree2 == tree1);
+	assert(tree2.isValidBST());
+	assert(tree2.Count() == 9);
+	assert(tree2.Min() == -100);
+	assert(tree2.Max() == 150);
+	// 50,-100,0,10,-50,60,100,75,150
+	// -100,-50,0,10,50,60,75,100,150
+	assert(tree2.kthSmallest(3) == 0);
+	assert(tree2.kthLargest(3) == 75);
 	cout << "Tree2 content (= Tree1): " << endl;
 	tree2.PrintTree();
 	cout << endl;
