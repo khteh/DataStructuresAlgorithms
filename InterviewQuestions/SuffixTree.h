@@ -42,8 +42,8 @@ public:
 	void RemoveString(string const&);
 	const vector<size_t> GetIndexes();
 	const vector<size_t> GetIndexes(string const&);
-	const string LongestRepeatedSubstring();
-	const size_t LongestCommonSubstring(long);
+	const vector<string> LongestRepeatedSubstring();
+	const size_t LongestCommonSubstring(long); // Uses LongestRepeatedSubstring
 	void Clear();
 	size_t Count();
 };

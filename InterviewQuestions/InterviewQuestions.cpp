@@ -1993,6 +1993,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(a[1] == 12);
 	assert(a[2] == 8);
 	assert(a[3] == 6);
+	udata.clear();
+	udata = { 3,0,6,1,5 };
+	//assert(hIndex(udata) == 3);
+	udata.clear();
+	udata = { 0,1 };
+	//assert(hIndex(udata) == 1);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -5492,7 +5498,10 @@ void SuffixTreeTests()
 	assert(indices1.size() == 2); // ssissippi, ssippi
 	assert(indices1[0] == 2);
 	assert(indices1[1] == 5);
-	assert(sTree.LongestRepeatedSubstring() == "issi");
+	subStrings = sTree.LongestRepeatedSubstring();
+	assert(!subStrings.empty());
+	assert(subStrings.size() == 1);
+	assert(subStrings[0] == "issi");
 	sTree.InsertString("sister");
 	indices1 = sTree.GetIndexes("sis");
 	assert(indices1.size() == 2);
@@ -5554,31 +5563,70 @@ void SuffixTreeTests()
 	assert(indexes[1] == 22);
 	sTree.Clear();
 	sTree.InsertString("a");
-	assert(sTree.LongestRepeatedSubstring() == "");
+	subStrings = sTree.LongestRepeatedSubstring();
+	assert(subStrings.empty());
 	sTree.Clear();
 	sTree.InsertString("aa");
-	assert(sTree.LongestRepeatedSubstring() == "a");
+	subStrings = sTree.LongestRepeatedSubstring();
+	assert(!subStrings.empty());
+	assert(subStrings.size() == 1);
+	assert(subStrings[0] == "a");
 	sTree.Clear();
 	sTree.InsertString("aaa");
-	assert(sTree.LongestRepeatedSubstring() == "aa");
+	subStrings = sTree.LongestRepeatedSubstring();
+	assert(!subStrings.empty());
+	assert(subStrings.size() == 1);
+	assert(subStrings[0] == "aa");
 	sTree.Clear();
 	sTree.InsertString("ABABABA");
-	assert(sTree.LongestRepeatedSubstring() == "ABABA");
+	subStrings = sTree.LongestRepeatedSubstring();
+	assert(!subStrings.empty());
+	assert(subStrings.size() == 1);
+	assert(subStrings[0] == "ABABA");
 	sTree.Clear();
 	sTree.InsertString("abcd1234cd12");
-	assert(sTree.LongestRepeatedSubstring() == "cd12");
+	subStrings = sTree.LongestRepeatedSubstring();
+	assert(!subStrings.empty());
+	assert(subStrings.size() == 1);
+	assert(subStrings[0] == "cd12");
 	sTree.Clear();
 	sTree.InsertString("abcd1234abcd");
-	assert(sTree.LongestRepeatedSubstring() == "abcd");
+	subStrings = sTree.LongestRepeatedSubstring();
+	assert(!subStrings.empty());
+	assert(subStrings.size() == 1);
+	assert(subStrings[0] == "abcd");
 	sTree.Clear();
 	sTree.InsertString("abcdabcd1234");
-	assert(sTree.LongestRepeatedSubstring() == "abcd");
+	subStrings = sTree.LongestRepeatedSubstring();
+	assert(!subStrings.empty());
+	assert(subStrings.size() == 1);
+	assert(subStrings[0] == "abcd");
 	sTree.Clear();
 	sTree.InsertString("abcd12341234");
-	assert(sTree.LongestRepeatedSubstring() == "1234");
+	subStrings = sTree.LongestRepeatedSubstring();
+	assert(!subStrings.empty());
+	assert(subStrings.size() == 1);
+	assert(subStrings[0] == "1234");
 	sTree.Clear();
 	sTree.InsertString("aaaa_11111_bbbb");
-	assert(sTree.LongestRepeatedSubstring() == "1111");
+	subStrings = sTree.LongestRepeatedSubstring();
+	assert(!subStrings.empty());
+	assert(subStrings.size() == 1);
+	assert(subStrings[0] == "1111");
+	sTree.Clear();
+	sTree.InsertString("AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT");
+	subStrings = sTree.LongestRepeatedSubstring();
+	assert(!subStrings.empty());
+	assert(subStrings.size() == 2);
+	assert(subStrings[0] == "AAAAACCCCC");
+	assert(subStrings[1] == "CCCCCAAAAA");
+	sTree.Clear();
+	sTree.InsertString("GAGAGAGAGAGAG");
+	subStrings = sTree.LongestRepeatedSubstring();
+	assert(!subStrings.empty());
+	assert(subStrings.size() == 1);
+	assert(subStrings[0] == "GAGAGAGAGAG");
+
 	sTree.Clear();
 	size_t match;
 	sTree.InsertString("abcd");
@@ -11335,4 +11383,13 @@ vector<long> productExceptSelf(vector<long>& nums)
 		productSum *= nums[i];
 	}
 	return result;
+}
+size_t hIndex(vector<size_t>& citations) 
+{
+	if (!citations.empty()) {
+		double average = accumulate(citations.begin(), citations.end(), 0) / (double)citations.size();
+		size_t count = count_if(citations.begin(), citations.end(), [&average](size_t i) {return i >= average; });
+		return min(count, (size_t)ceil(average));
+	}
+	return 0;
 }

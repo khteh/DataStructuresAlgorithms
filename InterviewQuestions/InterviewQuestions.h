@@ -403,3 +403,4 @@ string numberToRoman(size_t);
 double median(vector<long>&, vector<long>&);
 long ReversePolishNotation(vector<string>&);
 vector<long> productExceptSelf(vector<long>&);
+size_t hIndex(vector<size_t>&);

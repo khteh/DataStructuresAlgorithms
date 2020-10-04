@@ -79,8 +79,9 @@ const vector<size_t> SuffixTree::GetIndexes(string const &s)
 	result.assign(tmp.begin(), tmp.end());
 	return result;
 }
-const string SuffixTree::LongestRepeatedSubstring()
+const vector<string> SuffixTree::LongestRepeatedSubstring()
 {
+	map<size_t, vector<string>> repeats;
 	if (!m_strings.empty()) {
 		string str;
 		str.resize(m_strings[0].size());
@@ -90,14 +91,18 @@ const string SuffixTree::LongestRepeatedSubstring()
 		for (map<string, size_t>::iterator it = result.begin(); it != result.end(); it++) {
 			vector<size_t> tmp;
 			split(it->first, ',', tmp);
-			if (it->second > count) {
+			if (it->second >= count) {
 				count = it->second;
 				index = tmp[0];
+				pair<map<size_t, vector<string>>::iterator, bool> status = repeats.emplace(count, vector<string>{m_strings[0].substr(index, count)});
+				if (!status.second)
+					status.first->second.push_back(m_strings[0].substr(index, count));
 			}
 		}
-		return index > -1 ? m_strings[0].substr(index, count) : "";
+		//return index > -1 ? m_strings[0].substr(index, count) : "";
 	}
-	return "";
+	//return "";
+	return repeats.empty() ? vector<string>() : repeats.rbegin()->second;
 }
 const size_t SuffixTree::LongestCommonSubstring(long n)
 {
