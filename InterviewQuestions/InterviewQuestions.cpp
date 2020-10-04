@@ -1995,10 +1995,28 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(a[3] == 6);
 	udata.clear();
 	udata = { 3,0,6,1,5 };
-	//assert(hIndex(udata) == 3);
+	assert(hIndex(udata) == 3);
 	udata.clear();
 	udata = { 0,1 };
-	//assert(hIndex(udata) == 1);
+	assert(hIndex(udata) == 1);
+	udata.clear();
+	udata = { 1,1 };
+	assert(hIndex(udata) == 1);
+	udata.clear();
+	udata = { 123 };
+	assert(hIndex(udata) == 1);
+	udata.clear();
+	udata = { 1,1,2 };
+	assert(hIndex(udata) == 1);
+	udata.clear();
+	udata = { 1,2,2 };
+	assert(hIndex(udata) == 2);
+	udata.clear();
+	udata = { 3,2,2 };
+	assert(hIndex(udata) == 2);
+	udata.clear();
+	udata = { 3,3,2 };
+	assert(hIndex(udata) == 2);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -11384,12 +11402,34 @@ vector<long> productExceptSelf(vector<long>& nums)
 	}
 	return result;
 }
+/* https://leetcode.com/problems/h-index/
+* 100%
+*/
 size_t hIndex(vector<size_t>& citations) 
 {
-	if (!citations.empty()) {
-		double average = accumulate(citations.begin(), citations.end(), 0) / (double)citations.size();
-		size_t count = count_if(citations.begin(), citations.end(), [&average](size_t i) {return i >= average; });
-		return min(count, (size_t)ceil(average));
+	size_t result = 0;
+	if (citations.size() == 1)
+		return citations[0] > 0 ? 1 : 0;
+	sort(citations.begin(), citations.end());
+	size_t previous = 0;
+	/*
+	* [1,1] => value: 1, count: 2 => h: 1
+	* [1,2] => value: 1,2; count: 1 => h: 1
+	* [1,1,2] => value: 1, count 2 => h: 1
+	* [1,2,2] => value: 2, count: 2 => h: 2
+	* [3,2,2] => value: 2, count: 2 => h: 2
+	* [3,3,2] => value: 3, count: 2
+	*/
+	for (vector<size_t>::reverse_iterator it = citations.rbegin(); it != citations.rend(); it++) {
+		if (*it != previous) {
+			size_t value = *it;
+			size_t count = count_if(citations.begin(), citations.end(), [&value](size_t i) {return i >= value; });
+			if (value < count && value > result)
+				result = value;
+			else if (value >= count && min(count, value) > result)
+				result = min(count, value);
+			previous = *it;
+		}
 	}
-	return 0;
+	return result;
 }
