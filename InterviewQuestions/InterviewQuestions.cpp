@@ -1109,7 +1109,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << iss2.str() << " - " << iss1.str() << " = " << subtract(iss2, iss1) << endl;
 
 	// N-Gram test
-	set<string> ngrams = intersectionNgram(string("This is a dog"), string("This is a cat"), 3);
+	set<string> ngrams = intersectionNgram(string("This is a dog"), string("This is a cat"), 2);
+	assert(ngrams.size() == 2);
+	assert(ngrams.find("This is") != ngrams.end());
+	assert(ngrams.find("is a") != ngrams.end());
+	ngrams = intersectionNgram(string("This is a dog"), string("This is a cat"), 3);
 	assert(ngrams.size() == 1);
 	assert(ngrams.find("This is a") != ngrams.end());
 	ngrams = intersectionNgram(string("This is a dog"), string("This is a cat"), 4);
@@ -8078,36 +8082,35 @@ void split(const string &s, char delim, vector<string> &elems)
 // file: "This is a dog"
 // 0: This is a
 // 1: is a dog
-set<string> process(string& file, int n)
+set<string> process(string& str, int n)
 {
-	ostringstream oss;
 	vector<string> words;
 	set<string> ngrams;
-	split(file, ' ', words);
+	split(str, ' ', words);
 	for (size_t i = 0; i <= words.size() - n; i++) // i: 0, 1
 	{
+		string s;
 		for (size_t j = i; j < (i + n); j++) { // j: [0,2] [1,3]: "This is a", "is a dog"
-			oss << words[j];
+			s.append(words[j]);
 			if (j != i + n - 1)
-				oss << ' ';
+				s.append(" ");
 		}
-		ngrams.emplace(oss.str());
-		oss.str("");
+		ngrams.emplace(s);
 	}
 	return ngrams;
 }
-set<string> intersectionNgram(string& file1, string& file2, int n)
+set<string> intersectionNgram(string& str1, string& str2, int n)
 {
 	set<string> result;
-	set<string> ngrams1 = process(file1, n);
-	if (!ngrams1.size())
+	set<string> ngrams1 = process(str1, n);
+	if (ngrams1.empty())
 		return result;
-	cout << "File1 " << n << "-grams: ";
+	cout << "str1 " << n << "-grams: ";
 	for (set<string>::const_iterator it = ngrams1.begin(); it != ngrams1.end(); it++)
 		cout << "\"" << *it << "\"" << ", ";
 	cout << endl;
-	set<string> ngrams2 = process(file2, n);
-	cout << "File2 " << n << "-grams: ";
+	set<string> ngrams2 = process(str2, n);
+	cout << "str2 " << n << "-grams: ";
 	for (set<string>::const_iterator it = ngrams2.begin(); it != ngrams2.end(); it++)
 		cout << "\"" << *it << "\"" << ", ";
 	cout << endl;
