@@ -2025,17 +2025,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	grid1 = { {1,2,3},{4,5,6},{7,8,9} };
 	a.clear();
 	a = { 1,2,3,6,9,8,7,4,5 };
-	assert(spiralOrder(grid1) == a);
+	assert(matrixSprialOrder(grid1) == a);
 	grid1.clear();
 	grid1 = { {1,2,3,4},{5,6,7,8},{9,10,11,12} };
 	a.clear();
 	a = { 1,2,3,4,8,12,11,10,9,5,6,7 };
-	assert(spiralOrder(grid1) == a);
+	assert(matrixSprialOrder(grid1) == a);
 	grid1.clear();
 	grid1 = { {1,2},{3,4} };
 	a.clear();
 	a = {1,2,4,3};
-	assert(spiralOrder(grid1) == a);
+	assert(matrixSprialOrder(grid1) == a);
+	grid1.clear();
+	grid1 = { {1,2,3}, {4,5,6}, {7,8,9} };
+	grid2 = { {7,4,1}, {8,5,2}, {9,6,3} };
+	rotateMatrix(grid1);
+	assert(grid1 == grid2);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -11311,7 +11316,7 @@ bool searchMatrixCol(vector<vector<long>>& matrix, long target, size_t col, long
 /* https://leetcode.com/problems/spiral-matrix/
 * 100%
 */
-vector<long> spiralOrder(vector<vector<long>>& matrix)
+vector<long> matrixSprialOrder(vector<vector<long>>& matrix)
 {
 	vector<long> result;
 	int row = 0, col = 0;
@@ -11349,6 +11354,31 @@ vector<long> spiralOrder(vector<vector<long>>& matrix)
 		col++;
 	}
 	return result;
+}
+/* https://leetcode.com/problems/rotate-image/
+* Rotate a NxN 2D matrix 90 degree clockwise in-place.
+* 100%
+* [1] 2 [3]	   7 [2]  1     7 4 1
+* 4   5  6  => 4  5  [6] => 8 5 2
+* 7  8   9     9  8   3     9 6 3
+*
+* [3] 2  1     7 [6] 1
+* 4   5  6     4  5  2
+* 7   8 [9]    9 [8] 3
+* 
+* [9] 2 1      7  [8] 1
+* 4   5 6      [4] 5  2
+* [7] 8 3      9   6  3
+*/
+void rotateMatrix(vector<vector<long>>& matrix)
+{
+	for (long i = 0, j = matrix.size() - 1; i < j; i++, j--) {
+		for (size_t k = 0; k < (size_t)(j - i); k++) {
+			swap(matrix[i][i + k], matrix[i + k][j]);
+			swap(matrix[i][i + k], matrix[j][j - k]);
+			swap(matrix[i][i + k], matrix[j - k][i]);
+		}
+	}
 }
 /* https://leetcode.com/problems/search-a-2d-matrix-ii/
 * 100%
