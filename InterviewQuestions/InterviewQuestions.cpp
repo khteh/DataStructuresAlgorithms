@@ -9270,9 +9270,34 @@ void IncreasingSequenceTests()
 	assert(LongestIncreasingSubsequence(c) == 6); // 0, 2, 6, 9, 13, 15
 	assert(LongestIncreasingSubsequenceNlogN(c) == 6); // 0, 2, 6, 9, 13, 15
 }
-// https://app.codility.com/demo/results/trainingCP4NRT-FE4/
-// https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/discuss/119835/Java-O(n)-DP-Solution
-// 100%
+/* https://app.codility.com/demo/results/trainingCP4NRT-FE4/
+* https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/discuss/119835/Java-O(n)-DP-Solution
+* 100%
+* index               0    1    2    3    4
+* A                   1    3    5    4    9
+* B                   1    2    3    7    10   
+* swapRecord          1    1    2    1    2
+* fixRecord           0    0    0    2    1
+* 
+* index               0    1    2    3    4
+* A                   1    3    5    4    9 (Impossible)
+* B                   1    2    3    10   8
+* swapRecord          1    1    2    1    2
+* fixRecord           0    0    0    2    2
+*
+* index               0    1    2    3    4
+* A                   1    3    5    10   9
+* B                   1    2    3    8    7 (Impossible)
+* swapRecord          1    1    2    1    2
+* fixRecord           0    0    0    0    0
+*
+* index               0    1    2
+* A                   1    3    5
+* B                   1    2    3
+* swapRecord          1    1    2
+* fixRecord           0    0    0
+*
+*/
 int IncreasingSequences(vector<long> &a, vector<long> &b)
 {
 	bool outOfSequence = false;
@@ -9285,7 +9310,7 @@ int IncreasingSequences(vector<long> &a, vector<long> &b)
 		return 0;
 	vector<long> A, B;
 	bool isSwap = true;
-	A.push_back(b[0]);
+	A.push_back(b[0]); // Records are initialized to swap. swapRecord = 1 and isSwap = true
 	B.push_back(a[0]);
 	for (size_t i = 1; i < a.size(); i++) {
 		if (a[i - 1] >= b[i] || b[i - 1] >= a[i]) {
@@ -9297,7 +9322,7 @@ int IncreasingSequences(vector<long> &a, vector<long> &b)
 			size_t temp = swapRecord;
 			swapRecord = fixRecord + 1;
 			fixRecord = temp;
-			isSwap = !isSwap;
+			isSwap = !isSwap; // Because "opposite"
 		} else {
 			// Either swap or fix is OK. Let's keep the minimum one
 			size_t minimum = min(swapRecord, fixRecord);
