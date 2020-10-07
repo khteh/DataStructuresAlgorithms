@@ -9282,13 +9282,13 @@ void IncreasingSequenceTests()
 * index               0    1    2    3    4
 * A                   1    3    5    4    9 (Impossible)
 * B                   1    2    3    10   8
-* swapRecord          1    1    2    1    2
+* swapRecord          0    1    2    1    2
 * fixRecord           0    0    0    2    2
 *
 * index               0    1    2    3    4
 * A                   1    3    5    10   9
 * B                   1    2    3    8    7 (Impossible)
-* swapRecord          1    1    2    1    2
+* swapRecord          0    1    2    1    2
 * fixRecord           0    0    0    0    0
 *
 * index               0    1    2
