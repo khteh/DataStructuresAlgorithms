@@ -207,6 +207,7 @@ bool searchMatrix(vector<vector<long>>&, long);
 bool searchMatrix1(vector<vector<long>>&, long);
 bool searchMatrixRow(vector<vector<long>>&, long, size_t, long, long);
 bool searchMatrixCol(vector<vector<long>>&, long, size_t, long, long);
+vector<long> spiralOrder(vector<vector<long>>&);
 void parentheses(vector<string>&, size_t);
 void parentheses(vector<string>&, string&, size_t, long, long);
 long LongestValidParentheses(string&);

@@ -2021,6 +2021,21 @@ int _tmain(int argc, _TCHAR* argv[])
 	udata.clear();
 	udata = { 3,3,2 };
 	assert(hIndex(udata) == 2);
+	grid1.clear();
+	grid1 = { {1,2,3},{4,5,6},{7,8,9} };
+	a.clear();
+	a = { 1,2,3,6,9,8,7,4,5 };
+	assert(spiralOrder(grid1) == a);
+	grid1.clear();
+	grid1 = { {1,2,3,4},{5,6,7,8},{9,10,11,12} };
+	a.clear();
+	a = { 1,2,3,4,8,12,11,10,9,5,6,7 };
+	assert(spiralOrder(grid1) == a);
+	grid1.clear();
+	grid1 = { {1,2},{3,4} };
+	a.clear();
+	a = {1,2,4,3};
+	assert(spiralOrder(grid1) == a);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -11292,6 +11307,48 @@ bool searchMatrixCol(vector<vector<long>>& matrix, long target, size_t col, long
 			return searchMatrixCol(matrix, target, col, middle + 1, end);
 	}
 	return false;
+}
+/* https://leetcode.com/problems/spiral-matrix/
+* 100%
+*/
+vector<long> spiralOrder(vector<vector<long>>& matrix)
+{
+	vector<long> result;
+	int row = 0, col = 0;
+	int left = 0, right = matrix[0].size() - 1, top = 0, bottom = matrix.size() - 1;
+	for (row = top, col = left; top <= bottom && left <= right;) {
+		// left to right
+		for (; col <= right; col++)
+			result.push_back(matrix[row][col]);
+		top++;
+		col--;
+		row++;
+		if (!(top <= bottom))
+			return result;
+		// top to bottom
+		for (; row <= bottom; row++)
+			result.push_back(matrix[row][col]);
+		right--;
+		bottom--;
+		row--;
+		col--;
+		if (!(left <= right))
+			return result;
+		// right to left
+		for (; col >= left; col--)
+			result.push_back(matrix[row][col]);
+		col++;
+		row--;
+		if (!(top <= bottom))
+			return result;
+		// bottom to top
+		for (; row >= top; row--)
+			result.push_back(matrix[row][col]);
+		left++;
+		row++;
+		col++;
+	}
+	return result;
 }
 /* https://leetcode.com/problems/search-a-2d-matrix-ii/
 * 100%
