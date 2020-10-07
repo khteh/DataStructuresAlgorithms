@@ -9276,8 +9276,8 @@ void IncreasingSequenceTests()
 * index               0    1    2    3    4
 * A                   1    3    5    4    9
 * B                   1    2    3    7    10   
-* swapRecord          1    1    2    1    2
-* fixRecord           0    0    0    2    1
+* swapRecord          0    1    2    1    2
+* fixRecord           0    0    0    2    1	(swap = 1)
 * 
 * index               0    1    2    3    4
 * A                   1    3    5    4    9 (Impossible)
@@ -9294,8 +9294,8 @@ void IncreasingSequenceTests()
 * index               0    1    2
 * A                   1    3    5
 * B                   1    2    3
-* swapRecord          1    1    2
-* fixRecord           0    0    0
+* swapRecord          0    1    2
+* fixRecord           0    0    0 (swap = 0)
 *
 */
 int IncreasingSequences(vector<long> &a, vector<long> &b)
@@ -9303,15 +9303,15 @@ int IncreasingSequences(vector<long> &a, vector<long> &b)
 	bool outOfSequence = false;
 	// swapRecord[i]: min swaps to make A[0:i] and B[0:i] increasing if we swap A[i] and B[i]
 	// fixRecord[i] : min swaps to make A[0:i] and B[0:i] increasing if we do not swap A[i] and B[i]
-	size_t swapRecord = 1, fixRecord = 0;
+	size_t swapRecord = 0, fixRecord = 0;
 	if (a.size() != b.size())
 		return -1;
 	if (a.size() == 1)
 		return 0;
 	vector<long> A, B;
-	bool isSwap = true;
-	A.push_back(b[0]); // Records are initialized to swap. swapRecord = 1 and isSwap = true
-	B.push_back(a[0]);
+	bool isSwap = false;
+	A.push_back(a[0]);
+	B.push_back(b[0]);
 	for (size_t i = 1; i < a.size(); i++) {
 		if (a[i - 1] >= b[i] || b[i - 1] >= a[i]) {
 			// In this case, the ith manipulation should be same as the i-1th manipulation
@@ -9325,10 +9325,10 @@ int IncreasingSequences(vector<long> &a, vector<long> &b)
 			isSwap = !isSwap; // Because "opposite"
 		} else {
 			// Either swap or fix is OK. Let's keep the minimum one
+			isSwap = swapRecord > fixRecord;
 			size_t minimum = min(swapRecord, fixRecord);
 			swapRecord = minimum + 1;
 			fixRecord = minimum;
-			isSwap = swapRecord < fixRecord; // Reverse-engineer from data
 		}
 		A.push_back(isSwap ? b[i] : a[i]);
 		B.push_back(isSwap ? a[i] : b[i]);
