@@ -268,7 +268,6 @@ size_t TopDownMergeSortCountConversions(vector<long>&, vector<long>&, size_t, si
 size_t MergeCountInversions(vector<long>&, vector<long>&, size_t, size_t, size_t);
 void Merge(vector<long>&, vector<long>&, size_t start, size_t middle, size_t end);
 size_t SortSwapCount(vector<size_t>&);
-void Swap(long &, long &);
 long** my2DAlloc(long, long);
 long*** my3DAlloc(long, long, long);
 long long AddWithoutArithmetic(long long, long long);

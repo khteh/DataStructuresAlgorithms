@@ -4641,15 +4641,15 @@ size_t Partition(vector<long> &data, size_t left, size_t right, size_t pivot)
 	size_t newPivot = left;	// This is used to find the final location for the pivot value
 	long pivotValue = data[pivot];
 	if (pivot != right)
-		Swap(data[pivot], data[right]);
+		swap(data[pivot], data[right]);
 	for (size_t i = left; i < right; i++)
 		if (data[i] < pivotValue) {
 			if (i != newPivot)
-				Swap(data[i], data[newPivot]);
+				swap(data[i], data[newPivot]);
 			newPivot++;
 		}
 	if (newPivot != right)
-		Swap(data[newPivot], data[right]);
+		swap(data[newPivot], data[right]);
 	return newPivot;
 }
 // Find the smallest element using a linear scan and move it to the front. 
@@ -4665,7 +4665,7 @@ void SelectionSort(vector<long> &data)
 				min = j;
 		}
 		if (min != i)
-			Swap(data[min], data[i]);
+			swap(data[min], data[i]);
 	}
 }
 void InsertionSort(vector<long> &data)
@@ -4673,7 +4673,7 @@ void InsertionSort(vector<long> &data)
 	if (data.size() > 1)
 	for (size_t i = 1; i < data.size(); i++)
 		for (size_t j = i; j > 0 && data[j] < data[j - 1]; j--)
-			Swap(data[j], data[j - 1]);
+			swap(data[j], data[j - 1]);
 }
 /* http://en.wikipedia.org/wiki/Merge_sort
  * top-down merge sort algorithm that recursively splits the list (called runs in this example) into sublists 
@@ -4823,7 +4823,7 @@ void HeapSort(vector<long>& data)
 	assert(heap.Count() == data.size());
 	for (long end = data.size() - 1; end >= 0; end--) {
 		long item = heap.pop()->Item();
-		Swap(data[end], item);
+		swap(data[end], item);
 	}
 }
 // https://en.wikipedia.org/wiki/Counting_sort
@@ -4934,12 +4934,6 @@ size_t SortSwapCount(vector<size_t>& data)
 		}
 	}
 	return min(result, resultDescend);
-}
-void Swap(long &a, long &b)
-{
-	long tmp = a;
-	a = b;
-	b = tmp;
 }
 long** my2DAlloc(long rows, long cols)
 {
