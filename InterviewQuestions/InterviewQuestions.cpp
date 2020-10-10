@@ -8081,14 +8081,14 @@ vector<vector<long>> MergeIntervals(vector<vector<long>>& intervals)
 	for (size_t i = 0; i < intervals.size(); i++) {
 		if (!i)
 			result.push_back(intervals[i]);
-		else if (intervals[i][1] < result[result.size() - 1][0] || intervals[i][0] > result[result.size() - 1][1])
+		else if (intervals[i][1] < result.back()[0] || intervals[i][0] > result.back()[1])
 			result.push_back(intervals[i]);
-		else if (intervals[i][0] <= result[result.size() - 1][0]) {
-			result[result.size() - 1][0] = intervals[i][0];
-			if (intervals[i][1] >= result[result.size() - 1][1])
-				result[result.size() - 1][1] = intervals[i][1];
-		} else if (intervals[i][0] <= result[result.size() - 1][1] && intervals[i][1] > result[result.size() - 1][1])
-			result[result.size() - 1][1] = intervals[i][1];
+		else if (intervals[i][0] <= result.back()[0]) {
+			result.back()[0] = intervals[i][0];
+			if (intervals[i][1] >= result.back()[1])
+				result.back()[1] = intervals[i][1];
+		} else if (intervals[i][0] <= result.back()[1] && intervals[i][1] > result.back()[1])
+			result.back()[1] = intervals[i][1];
 	}
 	return result;
 }
