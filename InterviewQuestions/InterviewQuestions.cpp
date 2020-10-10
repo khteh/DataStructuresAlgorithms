@@ -608,6 +608,28 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a = {0,1,2,7,10,11,12,20,25,26,27};
 	string strRange = GetRange(a);
+	grid1.clear();
+	grid1 = { {1,3}, {2,6}, {8,10}, {15,18} };
+	grid2 = MergeIntervals(grid1);
+	assert(grid2.size() == 3);
+	assert(grid2[0][0] == 1);
+	assert(grid2[0][1] == 6);
+	assert(grid2[1][0] == 8);
+	assert(grid2[1][1] == 10);
+	assert(grid2[2][0] == 15);
+	assert(grid2[2][1] == 18);
+	grid1.clear();
+	grid1 = { {1,4}, {4,5} };
+	grid2 = MergeIntervals(grid1);
+	assert(grid2.size() == 1);
+	assert(grid2[0][0] == 1);
+	assert(grid2[0][1] == 5);
+	grid1.clear();
+	grid1 = { {2,3}, {4,5}, {6,7}, {8,9}, {1,10} };
+	grid2 = MergeIntervals(grid1);
+	assert(grid2.size() == 1);
+	assert(grid2[0][0] == 1);
+	assert(grid2[0][1] == 10);
 	assert(strRange == "0 - 2, 7, 10 - 12, 20, 25 - 27");
 	cout << "GetRange(\"";
 	copy(a.begin(), a.end(), ostream_iterator<long>(cout, ", "));
@@ -8047,6 +8069,28 @@ string GetRange(vector<long>& input)
 			oss << " - " << numbers[numbers.size() - 1];
 	}
 	return oss.str();
+}
+/* https://leetcode.com/problems/merge-intervals/
+* 100%
+*/
+vector<vector<long>> MergeIntervals(vector<vector<long>>& intervals)
+{
+	vector<vector<long>> result;
+	// Sort the 2D vector in ascending order of the first element.
+	sort(intervals.begin(), intervals.end(), [](const vector<long>& a, const vector<long>& b) {return a[0] < b[0]; });
+	for (size_t i = 0; i < intervals.size(); i++) {
+		if (!i)
+			result.push_back(intervals[i]);
+		else if (intervals[i][1] < result[result.size() - 1][0] || intervals[i][0] > result[result.size() - 1][1])
+			result.push_back(intervals[i]);
+		else if (intervals[i][0] <= result[result.size() - 1][0]) {
+			result[result.size() - 1][0] = intervals[i][0];
+			if (intervals[i][1] >= result[result.size() - 1][1])
+				result[result.size() - 1][1] = intervals[i][1];
+		} else if (intervals[i][0] <= result[result.size() - 1][1] && intervals[i][1] > result[result.size() - 1][1])
+			result[result.size() - 1][1] = intervals[i][1];
+	}
+	return result;
 }
 bool isSparseNumber(long i)
 {

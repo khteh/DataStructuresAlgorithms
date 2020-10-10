@@ -287,6 +287,7 @@ size_t greaterthansumpairs(vector<long>&, long);
 string uncompress(string const&);
 size_t findLongestContiguousPattern(string&, char);
 string GetRange(vector<long>&);
+vector<vector<long>> MergeIntervals(vector<vector<long>>&);
 bool isSparseNumber(long);
 long NextSparseNumber(long);
 long KthNumberWith357PrimeFactors(long);
