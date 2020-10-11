@@ -4185,7 +4185,7 @@ void SortTests()
 	mt19937_64 engine(device());
 	uniform_int_distribution<long> uniformDistribution;
 	vector<long> a, b, sortData, buffer;
-	vector<size_t> udata;
+	vector<size_t> udata, udata1;
 	sortData.clear();
 	sortData = {1,0,-1};
 	BubbleSort(sortData);
@@ -4420,6 +4420,34 @@ void SortTests()
 	udata.clear();
 	udata = { 3, 4, 2, 5, 1 };
 	assert(SortSwapCount(udata) == 2);
+
+	udata.clear();
+	udata = { 2,0,2,1,1,0 };
+	DutchPartitioning(udata);
+	udata1.clear();
+	udata1 = {0,0,1,1,2,2};
+	assert(udata == udata1);
+
+	udata.clear();
+	udata = { 0 };
+	DutchPartitioning(udata);
+	udata1.clear();
+	udata1 = { 0 };
+	assert(udata == udata1);
+
+	udata.clear();
+	udata = { 1 };
+	DutchPartitioning(udata);
+	udata1.clear();
+	udata1 = { 1 };
+	assert(udata == udata1);
+
+	udata.clear();
+	udata = { 2 };
+	DutchPartitioning(udata);
+	udata1.clear();
+	udata1 = { 2 };
+	assert(udata == udata1);
 }
 void BinarySearchTests()
 {
@@ -4967,6 +4995,23 @@ size_t SortSwapCount(vector<size_t>& data)
 		}
 	}
 	return min(result, resultDescend);
+}
+/* https://en.wikipedia.org/wiki/Dutch_national_flag_problem
+* https://leetcode.com/problems/sort-colors/
+* 100%
+*/
+void DutchPartitioning(vector<size_t>& data)
+{
+	for (int i = 0, j = 0, k = data.size() - 1; !data.empty() && j <= k; ) {
+		if (data[j] == 0)
+			swap(data[i++], data[j++]);
+		else if (data[j] == 2)
+			swap(data[j], data[k--]);
+		else if (data[j] == 1)
+			j++;
+		else
+			throw runtime_error("Invalid numer in the data. This function only expects 3 possible values: 0, 1, 2 which represent Dutch national flag colours of Red, White and Blue.");
+	}
 }
 long** my2DAlloc(long rows, long cols)
 {
