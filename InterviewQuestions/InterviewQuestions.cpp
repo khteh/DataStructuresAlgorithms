@@ -5087,7 +5087,7 @@ string NumberStringMultiplication(string& num1, string& num2)
 		}
 
 		// store carry in next cell 
-		if (carry > 0)
+		if (carry)
 			result[i_n1 + i_n2] += carry;
 
 		// To shift position to left after every multiplication of a digit in num1. 
@@ -5095,8 +5095,7 @@ string NumberStringMultiplication(string& num1, string& num2)
 	}
 	// Ignore '0's from the right (MSBs in reversed order)
 	int i = result.size() - 1;
-	while (i >= 0 && result[i] == 0)
-		i--;
+	for (; i >= 0 && !result[i]; i--);
 	// If all were '0's - means either both or one of num1 or num2 were '0' 
 	if (i == -1)
 		return "0";
