@@ -5047,11 +5047,7 @@ string NumberStringSum(string& str1, string& str2)
 */
 string NumberStringMultiplication(string& num1, string& num2)
 {
-	if (num1.empty() && !num2.empty())
-		return "0";
-	else if (!num1.empty() && num2.empty())
-		return "0";
-	else if (num1.empty() && num2.empty())
+	if (num1.empty() || num2.empty())
 		return "0";
 	bool isNegative = (num1[0] == '-' && num2[0] != '-') || (num1[0] != '-' && num2[0] == '-');
 	if (num1[0] == '-')
@@ -5066,7 +5062,6 @@ string NumberStringMultiplication(string& num1, string& num2)
 	// will keep the result number in vector in reverse order 
 	vector<long> result(len1 + len2, 0);
 
-	// Below two indexes are used to find positions in result.  
 	size_t i_n1 = 0, i_n2 = 0;
 	// Go from right to left in num1 (bottom) 
 	for (int i = len1 - 1; i >= 0; i--)
@@ -5102,7 +5097,7 @@ string NumberStringMultiplication(string& num1, string& num2)
 		// To shift position to left after every multiplication of a digit in num1. 
 		i_n1++;
 	}
-	// ignore '0's from the right 
+	// Ignore '0's from the right (MSBs in reversed order)
 	int i = result.size() - 1;
 	while (i >= 0 && result[i] == 0)
 		i--;
@@ -11505,19 +11500,19 @@ long ReversePolishNotation(vector<string>& tokens)
 /* https://leetcode.com/problems/minimum-size-subarray-sum/
 *  100%
  0 1 2 3 4 5
-[2,3,1,2,4,3]
- j     i		sum: 8 - 2 = 6, count: 4
+[2,3,1,2,4,3] target: 7
+ j     i		sum: 8 count: 4
    j   i		sum: 6
-   j     i		sum: 10 - 3 = 7 count: 4
-	 j   i		sum: 7 - 1 = 6
+   j     i		sum: 10 count: 4
+	 j   i		sum: 7 count: 3
 	   j i		sum: 6
-	   j   i	sum: 9 - 2 = 7  count: 3
-		 j i	sum: 7 - 4 = 3	count: 2
+	   j   i	sum: 9 count: 3
+		 j i	sum: 7 count: 2
 [1 4 4]
- j i     sum: 5 - 1 = 4, count: 2
-   i,j   sum: 4, count: 1
-   j i   sum: 8 - 4
-	 i,j sum: 4, count: 1
+ j i     sum: 5 count: 2
+   i,j   sum: 4 count: 1
+   j i   sum: 8 count: 2
+	 i,j sum: 4 count: 1
 */
 long ConsecutiveSumMinCount(long target, vector<long>& data)
 {
