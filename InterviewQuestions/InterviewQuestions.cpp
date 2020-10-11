@@ -5097,7 +5097,7 @@ string NumberStringMultiplication(string& num1, string& num2)
 	int i = result.size() - 1;
 	for (; i >= 0 && !result[i]; i--);
 	// If all were '0's - means either both or one of num1 or num2 were '0' 
-	if (i == -1)
+	if (i < 0)
 		return "0";
 	// generate the result string 
 	ostringstream oss;
