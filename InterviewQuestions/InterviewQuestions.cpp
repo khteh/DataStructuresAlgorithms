@@ -6469,6 +6469,45 @@ void LinkedListTests()
 	assert(c[2] == 3);
 	assert(c[3] == 4);
 	assert(c[4] == 5);
+
+	a.clear();
+	a = { 1,2,3,4,5 };
+	LinkedList<long> lla22(a);
+	assert(lla22.Length() == 5);
+	lla22.RotateRight(2);
+	assert(lla22.Length() == 5);
+	b.clear();
+	b = { 4,5,1,2,3 };
+	c.clear();
+	lla22.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1,2,3 };
+	LinkedList<long> lla23(a);
+	assert(lla23.Length() == 3);
+	lla23.RotateRight(2000000000);
+	assert(lla23.Length() == 3);
+	b.clear();
+	b = { 2,3,1 };
+	c.clear();
+	lla23.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
+
+	a.clear();
+	a = { 1 };
+	LinkedList<long> lla24(a);
+	assert(lla24.Length() == 1);
+	lla24.RotateRight(1);
+	assert(lla24.Length() == 1);
+	b.clear();
+	b = { 1 };
+	c.clear();
+	lla24.ToVector(c);
+	for (size_t i = 0; i < c.size(); i++)
+		assert(b[i] == c[i]);
 }
 void BinaryTreeTests()
 {

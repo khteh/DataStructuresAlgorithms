@@ -28,6 +28,7 @@ public:
 	virtual size_t Length() const;
 	virtual void Clear();
 	void Reverse(size_t, size_t);
+	void RotateRight(size_t);
 	void Sort();
 	void RemoveDuplicates();
 	void MoveHead2Tail();

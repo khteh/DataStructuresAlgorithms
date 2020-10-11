@@ -256,6 +256,29 @@ void LinkedList<T>::Reverse(size_t start, size_t end)
 		}
 	}
 }
+/* https://leetcode.com/problems/rotate-list/
+* 100%
+*/
+template<typename T>
+void LinkedList<T>::RotateRight(size_t k)
+{
+	if (m_head) {
+		size_t count = 0;
+		// Count how many nodes in the list to eliminate loops
+		for (shared_ptr<Node<T>> n = m_head; n; n = n->Next(), count++);
+		if (count > 1) {
+			// Eliminate loops
+			k %= count;
+			for (; k > 0; k--) {
+				shared_ptr<Node<T>> n = m_head, prev = nullptr;
+				for (; n->Next(); prev = n, n = n->Next());
+				prev->SetNext(nullptr);
+				n->SetNext(m_head);
+				m_head = n;
+			}
+		}
+	}
+}
 /* https://leetcode.com/problems/sort-list/
 * 100%
 * Use bottom-up merge sort
