@@ -389,6 +389,8 @@ void LCSPrintDiff(vector<vector<size_t>>&, vector<T>&, vector<T>&, long, long);
 set<vector<size_t>> CoinChange(long, vector<size_t>&);
 set<vector<size_t>> Knapsack(long, vector<size_t>&);
 size_t UnboundedKnapsack(long, vector<size_t>&);
+set<vector<size_t>> _BoundedKnapsack(long, vector<size_t>&);
+vector<vector<size_t>> BoundedKnapsack(long, vector<size_t>&);
 set<vector<size_t>> _BoundedKnapsackCombinationSum(size_t, size_t);
 set<vector<size_t>> BoundedKnapsackCombinationSum(size_t, size_t);
 string DecryptPassword(string&);

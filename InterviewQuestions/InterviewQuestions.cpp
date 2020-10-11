@@ -8714,6 +8714,18 @@ void Knapsack_CoinChangeTests()
 	assert(UnboundedKnapsack(10, numbers) == 9); // [9]
 	assert(UnboundedKnapsack(9, numbers) == 9); // [9]
 	assert(UnboundedKnapsack(8, numbers) == 0); // [0]
+	numbers.clear();
+	numbers = {10,1,2,7,6,1,5};
+	vector<vector<size_t>> result = BoundedKnapsack(8, numbers);
+	assert(result.size() == 4);
+	cout << "BoundedKnapsack which sums to amount 8: ";
+	for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
+		copy(it->begin(), it->end(), ostream_iterator<size_t>(cout, " "));
+	cout << endl;
+	numbers.clear();
+	numbers = { 2,3,5 };
+	result = BoundedKnapsack(6, numbers);
+	assert(result.empty());
 }
 void Knapsack_CombinationSumTests()
 {
@@ -10501,11 +10513,8 @@ set<vector<size_t>> Knapsack(long amount, vector<size_t>& numbers)
 								combinations.insert(change);
 							}
 						}
-					else {
-						vector<size_t> change;
-						change.push_back(numbers[i]);
-						combinations.insert(change);
-					}
+					else
+						combinations.insert(vector<size_t>{numbers[i]});
 				} // if (amount >= (long)numbers[i]) {
 			}
 		}
@@ -10522,6 +10531,47 @@ size_t UnboundedKnapsack(long k, vector<size_t>& arr)
 	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
 		sums.insert(accumulate(it->begin(), it->end(), 0));
 	return sums.empty() ? 0 : *sums.rbegin();
+}
+set<vector<size_t>> _BoundedKnapsack(long amount, vector<size_t>& numbers) 
+{
+	set<vector<size_t>> combinations;
+	if (amount > 0 && !numbers.empty()) {
+		for (size_t i = 0; i < numbers.size(); i++) {
+			if (amount >= (long)numbers[i]) {
+				set<vector<size_t>> tmp;
+				if (knapsackCache.find(amount - numbers[i]) == knapsackCache.end()) {
+					tmp = _BoundedKnapsack(amount - numbers[i], numbers);
+					knapsackCache[amount - numbers[i]] = tmp;
+				} else
+					tmp = knapsackCache[amount - numbers[i]];
+				if (!tmp.empty()) {
+					for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
+						vector<size_t> tmp1(*it);
+						tmp1.push_back(numbers[i]);
+						if (accumulate(tmp1.begin(), tmp1.end(), 0) == amount) {
+							sort(tmp1.begin(), tmp1.end());
+							size_t cnt = count(tmp1.begin(), tmp1.end(), numbers[i]);
+							size_t cnt1 = count(numbers.begin(), numbers.end(), numbers[i]);
+							if (cnt <= cnt1) // The result must not contain more than the input as this is *Bounded* knapsack.
+								combinations.insert(tmp1);
+						}
+					}
+				} else
+					combinations.insert(vector<size_t>{numbers[i]});
+			}
+		}
+	}
+	return combinations;
+}
+vector<vector<size_t>> BoundedKnapsack(long amount, vector<size_t>& numbers) 
+{
+	vector<vector<size_t>> result;
+	knapsackCache.clear();
+	set<vector<size_t>> combinations = _BoundedKnapsack(amount, numbers);
+	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
+		if (accumulate(it->begin(), it->end(), 0) == amount)
+			result.push_back(*it);
+	return result;
 }
 /* https://leetcode.com/problems/combination-sum-iii/
 * 100%
