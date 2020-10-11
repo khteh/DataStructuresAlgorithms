@@ -382,6 +382,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	for (vector<long>::iterator it = a.begin(); it != a.end(); it++)
 		cout << bitset<4>(*it) << " ";
 	cout << endl;
+	udata.clear();
+	udata = grayCode(2);
+	assert(udata.size() == 4);
+	assert(udata[0] == 0);
+	assert(udata[1] == 1);
+	assert(udata[2] == 3);
+	assert(udata[3] == 2);
+	udata.clear();
+	udata = grayCode(0);
+	assert(udata.size() == 1);
+	assert(udata[0] == 0);
 	strings.clear();
 	strings = {"a", "b", "c", "d"};
 	strings1 = { "b","c" };
@@ -8511,12 +8522,36 @@ size_t bitCount(long a)
 			count++;
 	return count;
 }
+/* Returns a sequence of bit patterns with increasing number of '1' bits
+* k: total number of bits in the bit patterns
+*/
 void BitCombinations(size_t k, vector<long> &result)
 {
 	for (size_t i = 0; i <= k; i++)
 		for (long j = (1 << i) - 1; j < (1 << k); j++)
 			if (bitCount(j) == i)
 				result.push_back(j);
+}
+/* https://leetcode.com/problems/gray-code/
+* 100%
+*/
+vector<size_t> grayCode(size_t n)
+{
+	// 00, 01
+	// 10, 10
+	// 00 01 11 10
+
+	// 000, 001
+	// 010, 010
+	// 100, 100
+	// 000 001 011 010 110 111
+	size_t i = 1;
+	vector<size_t> result;
+	result.push_back(0);
+	for (; n > 0; n--, i <<= 1)
+		for (int j = result.size() - 1; j >= 0; j--)
+			result.push_back(result[j] | i);
+	return result;
 }
 void OrderedMergedCombinations(set<string>&result, string &s1, string &s2, string cur)
 {

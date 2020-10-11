@@ -188,6 +188,7 @@ void MaxZeroProductTests();
 set<string> permute(string const&);
 set<vector<long>> permute(vector<long>&);
 void BitCombinations(size_t, vector<long> &);
+vector<size_t> grayCode(size_t);
 void OrderedMergedCombinations(set<string>&, string&, string&, string);
 string insertCharAt(char, string, size_t);
 vector<long> insertItemAt(long, vector<long>&, size_t);
