@@ -3222,7 +3222,6 @@ void MaxZeroProductTests()
 	//long result2 = MaxZeroProduct(data);
 	//assert(result1 == result2);
 }
-// O(n!)
 set<string> permute(string const &str)
 {
 	set<string> permutations;
@@ -3288,6 +3287,12 @@ void StringPermutationTests()
 	copy(permutations.begin(), permutations.end(), ostream_iterator<string>(cout, " "));
 	cout << endl;
 	permutations.clear();
+	permutations = permute("abcdef");
+	cout << "permutations of \"abcdef\" are: ";
+	copy(permutations.begin(), permutations.end(), ostream_iterator<string>(cout, " "));
+	cout << endl;
+	permutations.clear();
+
 	OrderedMergedCombinations(permutations, string("Hey"), string("Bob"), string(""));
 	cout << "Ordered permutations of \"HeyBob\" are: ";
 	copy(permutations.begin(), permutations.end(), ostream_iterator<string>(cout, " "));
@@ -8010,16 +8015,16 @@ bool WordExistsInGrid(vector<vector<char>>& board, string& word)
 }
 bool WordExistsInGrid(vector<vector<char>>& board, string& word, long row, long col, size_t offset) 
 {
-	if (row < 0 || col < 0 || row >= board.size() || col >= board[row].size() || offset >= word.size() || word[offset] != board[row][col])
+	if (row < 0 || col < 0 || row >= (long)board.size() || col >= (long)board[row].size() || offset >= word.size() || word[offset] != board[row][col])
 		return false;
 	if (offset == word.size() - 1)
 		return true;
-	board[row][col] ^= 0x80;
+	board[row][col] ^= 0x80; // "visited" mark
 	bool flag = WordExistsInGrid(board, word, row, col + 1, offset + 1) ||
 		WordExistsInGrid(board, word, row + 1, col, offset + 1) ||
 		WordExistsInGrid(board, word, row, col - 1, offset + 1) ||
 		WordExistsInGrid(board, word, row - 1, col, offset + 1);
-	board[row][col] ^= 0x80;
+	board[row][col] ^= 0x80; // 
 	return flag;
 }
 // 0 0 1 0 1
