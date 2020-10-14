@@ -267,7 +267,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	// Test C++ *& "pointer reference" construct
 	iPtr = (int*)malloc(10 * sizeof(int));
-	cout << "Size of iPtr: " << sizeof (iPtr) << " Sizeof *iPtr: " << sizeof(*iPtr) << endl;
+	cout << "Size of iPtr: " << sizeof(iPtr) << " Sizeof *iPtr: " << sizeof(*iPtr) << endl;
 	memset(iPtr, 0xdeadbeef, 10 * sizeof(iPtr));
 	for (size_t i = 0; i < 10; i++)
 		assert(iPtr[i] == 0xefefefef);
@@ -320,7 +320,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	if (AreRotatedStrings(line, line1, 2))
 		cout << line << " and " << line1 << " are rotated by 2 places" << endl;
 	udata.clear();
-	udata = {3,1,2};
+	udata = { 3,1,2 };
 	assert(SolvabilityOfTheTilesGame(udata));
 	udata.clear();
 	udata = { 1,3,4,2 };
@@ -398,7 +398,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(udata.size() == 1);
 	assert(udata[0] == 0);
 	strings.clear();
-	strings = {"a", "b", "c", "d"};
+	strings = { "a", "b", "c", "d" };
 	strings1 = { "b","c" };
 	strings = findUnique(strings, strings1);
 	assert(strings.size() == 2); //  a d
@@ -409,7 +409,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(CanShuffleWithoutRepeat(string("aab")));
 	assert(CanShuffleWithoutRepeat(string("aaaabbcc")));
 	a.clear();
-	a = {-2, -3, 4, -1, -2, 1, 5, -3};
+	a = { -2, -3, 4, -1, -2, 1, 5, -3 };
 	b.clear();
 	long lResult = ConsecutiveLargestSum(a, b);
 	assert(lResult == 7);
@@ -570,7 +570,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
 	cout << ")" << endl;
 	a.clear();
-	a = {2,3,1,2,4,3};
+	a = { 2,3,1,2,4,3 };
 	assert(ConsecutiveSumMinCount(7, a) == 2);
 	a.clear();
 	assert(ConsecutiveSumMinCount(1, a) == -1);
@@ -598,7 +598,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	b.clear();
 	strings.clear();
-	strings = {"Angel", "legnA", "Hello World!!!", "World Hello!!!"};
+	strings = { "Angel", "legnA", "Hello World!!!", "World Hello!!!" };
 	cout << "strings without sorted: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
 	sort(strings.begin(), strings.end());
@@ -609,11 +609,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "strings sorted with default comparer: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
 	sort(strings.begin(), strings.end(), [&strings](string a, string b) -> bool {
-										sort(a.begin(), a.end());
-										sort(b.begin(), b.end());
-										return a < b;
-									}
-		);
+		sort(a.begin(), a.end());
+		sort(b.begin(), b.end());
+		return a < b;
+		}
+	);
 	assert(strings[0] == "Hello World!!!");
 	assert(strings[1] == "World Hello!!!");
 	assert(strings[2] == "Angel");
@@ -621,7 +621,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "strings sorted with anagrams next to each other: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
 	a.clear();
-	a = {0,1,2,7,10,11,12,20,25,26,27};
+	a = { 0,1,2,7,10,11,12,20,25,26,27 };
 	string strRange = GetRange(a);
 	grid1.clear();
 	grid1 = { {1,3}, {2,6}, {8,10}, {15,18} };
@@ -743,15 +743,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(a.size() == 8);
 	a.clear();
 	b.clear();
-	a = {15,10,3};
-	b = {75,30,5};
+	a = { 15,10,3 };
+	b = { 75,30,5 };
 	assert(CommonPrimeDivisors(a, b) == 1);
 	a.clear();
 	b.clear();
-	a = {7,17,5,3};
-	b = {7,11,5,2};
+	a = { 7,17,5,3 };
+	b = { 7,11,5,2 };
 	assert(CommonPrimeDivisors(a, b) == 2);
-	
+
 	assert(!isPrime(1));
 	assert(isPrime(2));
 	assert(isPrime(3));
@@ -776,12 +776,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
 	cout << endl;
 	ull.clear();
-	ull = {1,2,1,2};
+	ull = { 1,2,1,2 };
 	unsigned long long findMaxResult = findMax(ull);
 	assert(findMaxResult == 9);
 
 	ull.clear();
-	ull = {2,3,3,2};
+	ull = { 2,3,3,2 };
 	findMaxResult = findMax(ull);
 	assert(findMaxResult == 36);
 
@@ -793,13 +793,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << " trim(line): |" << line << "| size: " << line.size() << endl;
 
 	a.clear();
-	a = {1,2,3,4,5,6,5};
+	a = { 1,2,3,4,5,6,5 };
 	// 1 2 3 4 5 6
 	//   6 5 4
 	assert(sumpairs(a, 8) == 2);
 
 	a.clear();
-	a = {5,7,9,13,11,6,6,3,3};
+	a = { 5,7,9,13,11,6,6,3,3 };
 	assert(sumpairs(a, 12) == 3);
 
 	//long testData[] = { 92,407,1152,403,1419,689,1029,108,128,1307,300,775,622,730,978,526,943,127,566,869,715,983,820,1394,901,606,497,98,1222,843,600,1153,302,1450,1457,973,1431,217,936,958,1258,970,1155,1061,1341,657,333,1151,790,101,588,263,101,534,747,405,585,111,849,695,1256,1508,139,336,1430,615,1295,550,783,575,992,709,828,1447,1457,738,1024,529,406,164,994,1008,50,811,564,580,952,768,863,1225,251,1032,1460,1558 };
@@ -810,7 +810,26 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.resize(10);
 	iota(a.begin(), a.end(), 0);
 	assert(sumpairs(a, 10) == 4);
-	
+	a.clear();
+	a = { -1, 0, 1, 2, -1, -4 };
+	grid1 = {{ -1, -1, 2}, { -1, 0, 1 }};
+	grid2 = threeSum(a);
+	assert(grid1 == grid2);
+	a.clear();
+	a = { 0,0,0 };
+	grid1 = { { 0,0,0} };
+	grid2 = threeSum(a);
+	assert(grid1 == grid2);
+	a.clear();
+	a = { 1,0,-1,0,-2,2 };
+	grid1 = { {-2, -1, 1, 2}, {-2, 0, 0, 2}, {-1, 0, 0, 1} };
+	grid2 = fourSum(a, 0);
+	assert(grid1 == grid2);
+	a.clear();
+	a = { -3,-1,0,2,4,5 };
+	grid1 = { {-3,-1,2,4} };
+	grid2 = fourSum(a, 2);
+	assert(grid1 == grid2);
 	set<long> lSet {1,2,3,5,6,8,9,11,12,13};
 	assert(diffpairs(lSet, 3) == 6);
 	lSet.clear();
@@ -7326,6 +7345,57 @@ size_t sumpairs(vector<long>& numbers, long sum)
 			pairs.emplace(*it);
 	}
 	return count;
+}
+/* https://leetcode.com/problems/3sum/
+* 100%
+*/
+vector<vector<long>> threeSum(vector<long>& nums)
+{
+	set<vector<long>> result;
+	if (nums.empty() || nums.size() < 3)// || *min_element(nums.begin(), nums.end()) >= 0 || *max_element(nums.begin(), nums.end()) <= 0)
+		return vector<vector<long>>();
+	sort(nums.begin(), nums.end());
+	// -1,0,1,2,-1,-4 => -1, -1, 0, 1, 2, 4
+	// -4,-1,-1,0,1,2
+	for (size_t i = 0; i < nums.size(); i++) {
+		for (size_t j = i + 1, k = nums.size() - 1; j < k;) {
+			long sum = nums[i] + nums[j] + nums[k];
+			if (!sum)
+				result.insert(vector<long>{nums[i], nums[j++], nums[k--]});
+			else if (sum < 0)
+				j++;
+			else
+				k--;
+		}
+	}
+	vector<vector<long>> result1(result.begin(), result.end());
+	return result1;
+}
+/* https://leetcode.com/problems/4sum/
+* 100%
+*/
+vector<vector<long>> fourSum(vector<long>& nums, long target)
+{
+	set<vector<long>> result;
+	if (nums.empty() || nums.size() < 4)
+		return vector<vector<long>>();
+	sort(nums.begin(), nums.end());
+	// -1,0,1,2,-1,-4 => -1, -1, 0, 1, 2, 4
+	// -4,-1,-1,0,1,2
+	for (size_t i = 0; i < nums.size(); i++) {
+		for (size_t j = i + 1, k = nums.size() - 1; j < k; j++)
+			for (size_t l = j + 1, m = k; l < m;) {
+				long sum = nums[i] + nums[j] + nums[l] + nums[m];
+				if (sum == target)
+					result.insert(vector<long>{nums[i], nums[j], nums[l++], nums[m--]});
+				else if (sum < target)
+					l++;
+				else
+					m--;
+			}
+	}
+	vector<vector<long>> result1(result.begin(), result.end());
+	return result1;
 }
 /* https://www.hackerrank.com/challenges/pairs/problem
 * 100%

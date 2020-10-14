@@ -289,6 +289,8 @@ void Transform(string &, string&, set<string>&, queue<string>&);
 void GetPermutations(string &);
 void trim(string &);
 size_t sumpairs(vector<long>&, long);
+vector<vector<long>> threeSum(vector<long>&);
+vector<vector<long>> fourSum(vector<long>&, long);
 size_t diffpairs(vector<long>&, long);
 size_t diffpairs(set<long>&, long);
 size_t minDiffPairs(vector<long>&, long);
