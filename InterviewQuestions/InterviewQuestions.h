@@ -253,6 +253,13 @@ void TestRandom();
 void GreedyAlgorithmTests();
 void Knapsack_CoinChangeTests();
 void Knapsack_CombinationSumTests();
+set<vector<size_t>> CoinChange(long, vector<size_t>&);
+set<vector<size_t>> Knapsack(long, vector<size_t>&);
+size_t UnboundedKnapsack(long, vector<size_t>&);
+set<vector<size_t>> _BoundedKnapsack(long, vector<size_t>&);
+vector<vector<size_t>> BoundedKnapsack(long, vector<size_t>&);
+set<vector<size_t>> _BoundedKnapsackCombinationSum(size_t, size_t);
+set<vector<size_t>> BoundedKnapsackCombinationSum(size_t, size_t);
 void BubbleSort(vector<long>&);
 size_t minimumBribes(vector<long>&);
 size_t Partition(vector<long> &, size_t left, size_t right, size_t pivot);
@@ -308,6 +315,8 @@ long MatrixPatternCount(vector<vector<long>>&);
 void MatrixSortWithHeap(vector<vector<long>>&);
 size_t ConnectedCellsInAGridLinkedList(vector<vector<long>>&);
 size_t ConnectedCellsInAGrid(vector<vector<long>>&);
+bool WordExistsInGrid(vector<vector<char>>&, string&);
+bool WordExistsInGrid(vector<vector<char>>&, string&, long, long, size_t);
 // Start of Sort numbers into consecutive positive/negative numbers
 template<typename type>
 void sortNumbers(vector<long> &);
@@ -388,13 +397,6 @@ vector<T> LCSBackTrack(vector<vector<size_t>>&, vector<T>&, vector<T>&, size_t, 
 void LCSPrintDiff(vector<vector<size_t>>&, string&, string&, long, long);
 template<typename T>
 void LCSPrintDiff(vector<vector<size_t>>&, vector<T>&, vector<T>&, long, long);
-set<vector<size_t>> CoinChange(long, vector<size_t>&);
-set<vector<size_t>> Knapsack(long, vector<size_t>&);
-size_t UnboundedKnapsack(long, vector<size_t>&);
-set<vector<size_t>> _BoundedKnapsack(long, vector<size_t>&);
-vector<vector<size_t>> BoundedKnapsack(long, vector<size_t>&);
-set<vector<size_t>> _BoundedKnapsackCombinationSum(size_t, size_t);
-set<vector<size_t>> BoundedKnapsackCombinationSum(size_t, size_t);
 string DecryptPassword(string&);
 unsigned long long substrings(string&);
 size_t steadyGene(string&);

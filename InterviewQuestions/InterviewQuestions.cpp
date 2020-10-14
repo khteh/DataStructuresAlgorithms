@@ -15,7 +15,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	seed_seq sequence(begin(seeds), end(seeds));
 	mt19937_64 engine(sequence);
 	uniform_int_distribution<long> uniformDistribution;
-	int i, j, index, *iPtr;
+	int i, j, index, * iPtr;
 	unsigned long long mask = 0;
 	vector<string> strings, strings1;
 	set<string> stringset, stringset1;
@@ -67,7 +67,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	istringstream(line.back()) >> i;
 	assert(i == 0);
 	strings.clear();
-	strings = {"abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE"};
+	strings = { "abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE" };
 	sort(strings.begin(), strings.end(), LexicographicSort);
 	assert(strings[0] == "abcchcz");
 	assert(strings[1] == "ABCCHCZ");
@@ -75,7 +75,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(strings[3] == "ABCCZCH");
 	assert(strings[4] == "abcde");
 	assert(strings[5] == "ABCDE");
-	Singleton*singleton = Singleton::Instance();
+	Singleton* singleton = Singleton::Instance();
 	assert(singleton);
 	singleton->Print("Hello Singleton!!!");
 	unique_ptr<NameHidingExampleDerived> hide = make_unique<NameHidingExampleDerived>(0xdeadbeef);
@@ -148,19 +148,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(1e6 == 1'000'000);
 	assert(1e9 == 1'000'000'000ull);
 	assert(1e9 + 7 == 10e8 + 7);
-	assert(1e9 + 7 == pow(10,9) + 7);
-	cout << "1e9: "<< 1e9 << ", 10e9: " << 10e9 << endl;
+	assert(1e9 + 7 == pow(10, 9) + 7);
+	cout << "1e9: " << 1e9 << ", 10e9: " << 10e9 << endl;
 	cout << "1e5: " << 1e5 << ", pow(10, 5): " << pow(10, 5) << ", " << pow(2, pow(10, 5)) << endl;
 	i = 3;
 	assert(-i == -3);
 	assert(~i == -4);
-	cout << "int -" << hex << i <<": " << -i << dec << " " << -i << ", ~" << i << ": " << hex << ~i << " " << dec << ~i << endl;
+	cout << "int -" << hex << i << ": " << -i << dec << " " << -i << ", ~" << i << ": " << hex << ~i << " " << dec << ~i << endl;
 	unsigned int ui = 3;
 	cout << "uint -" << hex << ui << ": " << -ui << dec << " " << -ui << ", ~" << ui << ": " << hex << ~ui << " " << dec << ~ui << endl;
 	a.resize(10);
 	generate(a.begin(), a.end(), [n = 1]()mutable{return n++; });
 	for (size_t i = 0; i < a.size(); i++)
-		assert(a[i] == i+1);
+		assert(a[i] == i + 1);
 	grid = { {1,3,5}, {2,4,6}, {7,8,9} };
 	pathResult_t pathResult = FindMaxPath(grid, 0, 0);
 	assert(pathResult.sum == 27);
@@ -224,11 +224,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	grid1 = { { 0,0,1,1 },{ 0,0,1,0 },{ 0,1,1,0 },{0,1,0,0},{1,1,0,0} };
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 8);
 	assert(ConnectedCellsInAGrid(grid1) == 8);
-	
+
 	grid1 = { { 1, 1, 0, 0, 0 },{0, 1, 1, 0, 0 },{ 0, 0, 1, 0, 1 },{1, 0, 0, 0, 1},{0, 1, 0, 1, 1} };
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 5);
 	assert(ConnectedCellsInAGrid(grid1) == 5);
-	
+
 	grid1 = { { 0, 1, 1, 1, 1 },{1, 0, 0, 0, 1 },{ 1, 1, 0, 1, 0 },{0, 1, 0, 1, 1},{0, 1, 1, 1, 0} };
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 15);
 	assert(ConnectedCellsInAGrid(grid1) == 15);
@@ -241,9 +241,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(ConnectedCellsInAGridLinkedList(grid1) == 1);
 	assert(ConnectedCellsInAGrid(grid1) == 1);
 
-	maze = {{0,0,1,0,1},{0,0,0,0,0},{0,1,1,1,1},{0,1,1,0,0}};
+	maze = { {0,0,1,0,1},{0,0,0,0,0},{0,1,1,1,1},{0,1,1,0,0} };
 	queue<string> puzzleResult;
-	assert(PathExists(maze, 1,4, 0,3, puzzleResult, 1));
+	assert(PathExists(maze, 1, 4, 0, 3, puzzleResult, 1));
 	cout << "Puzzle path: ";
 	while (!puzzleResult.empty()) {
 		line = puzzleResult.front();
@@ -251,9 +251,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << line << " ";
 	}
 	cout << endl;
-	maze = {{0,0,1,1,1},{0,1,0,0,0},{1,1,1,1,1},{0,0,0,0,1}};
+	maze = { {0,0,1,1,1},{0,1,0,0,0},{1,1,1,1,1},{0,0,0,0,1} };
 	queue<string> puzzleResult1;
-	assert(!PathExists(maze, 0,0, 1,2, puzzleResult1, 1));
+	assert(!PathExists(maze, 0, 0, 1, 2, puzzleResult1, 1));
+	maze.clear();
+	maze = { {'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, { 'A', 'D', 'E', 'E' } };
+	assert(WordExistsInGrid(maze, string("ABCCED")));
+	assert(!WordExistsInGrid(maze, string("ABCB")));
 	line = "ab2c3";
 	assert(uncompress(line) == "ababcababcababc");
 	cout << "uncompress(\"ab2c3\"): " << uncompress(line) << endl;
@@ -7922,6 +7926,31 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 			max = it->second;
 	//disjointSet.Print(data, grid[0].size());
 	return max;
+}
+/* https://leetcode.com/problems/word-search/
+* 100%
+*/
+bool WordExistsInGrid(vector<vector<char>>& board, string& word) 
+{
+	for (size_t i = 0; i < board.size(); i++)
+		for (size_t j = 0; j < board[i].size(); j++)
+			if (WordExistsInGrid(board, word, i, j, 0))
+				return true;
+	return false;
+}
+bool WordExistsInGrid(vector<vector<char>>& board, string& word, long row, long col, size_t offset) 
+{
+	if (row < 0 || col < 0 || row >= board.size() || col >= board[row].size() || offset >= word.size() || word[offset] != board[row][col])
+		return false;
+	if (offset == word.size() - 1)
+		return true;
+	board[row][col] ^= 0x80;
+	bool flag = WordExistsInGrid(board, word, row, col + 1, offset + 1) ||
+		WordExistsInGrid(board, word, row + 1, col, offset + 1) ||
+		WordExistsInGrid(board, word, row, col - 1, offset + 1) ||
+		WordExistsInGrid(board, word, row - 1, col, offset + 1);
+	board[row][col] ^= 0x80;
+	return flag;
 }
 // 0 0 1 0 1
 // 0 0 0 0 0
