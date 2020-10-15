@@ -136,7 +136,7 @@ bool isUniqueString(string const&);
 vector<string> findUnique(vector<string> const&, vector<string>const&);
 bool CanShuffleWithoutRepeat(string&);
 long ConsecutiveLargestSum(vector<long>&, vector<long>&);
-long ConsecutiveLargestProduct(vector<long>&, vector<long>&);
+long ConsecutiveLargestProduct(vector<long>&);
 long ConsecutiveLargestSumOfFactors(vector<zerofactors_t>& data, vector<zerofactors_t>& result, int value);
 long ConsecutiveSumMinCount(long, vector<long>&);
 long LongestNonNegativeSumSlice(vector<long>&);

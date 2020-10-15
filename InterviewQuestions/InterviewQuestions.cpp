@@ -68,13 +68,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(i == 0);
 	strings.clear();
 	strings = { "abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE" };
+	strings1 = { "abcchcz", "ABCCHCZ", "abcczch", "ABCCZCH", "abcde", "ABCDE"};
 	sort(strings.begin(), strings.end(), LexicographicSort);
-	assert(strings[0] == "abcchcz");
-	assert(strings[1] == "ABCCHCZ");
-	assert(strings[2] == "abcczch");
-	assert(strings[3] == "ABCCZCH");
-	assert(strings[4] == "abcde");
-	assert(strings[5] == "ABCDE");
+	assert(strings1 == strings);
 	Singleton* singleton = Singleton::Instance();
 	assert(singleton);
 	singleton->Print("Hello Singleton!!!");
@@ -117,9 +113,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	string str = "m";
 	string str1 = str.substr(1);
-	assert(str1.size() == 0);
+	assert(str1.empty());
 	str1 = str.substr(0, 0);
-	assert(str1.size() == 0);
+	assert(str1.empty());
 	char cstr[8];
 	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;
 	cout << "sizeof(void*): " << sizeof(void*) << endl;
@@ -337,11 +333,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	line = "abcdefcdbacd";
 	line1 = "abcd";
 	udata = FindSubString(line, line1);
+	udata1 = {0,6,7,8};
 	assert(udata.size() == 4); // 0 6 7 8
-	assert(udata[0] == 0);
-	assert(udata[1] == 6);
-	assert(udata[2] == 7);
-	assert(udata[3] == 8);
+	assert(udata1 == udata);
 
 	//index = KMPSearch("ABC ABCDAB ABCDABCDABDE", "ABCDABD");
 	//assert(index == 15);
@@ -351,14 +345,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	BitCombinations(3, a); // 000 001 010 100 011 101 110 111
 	assert(a.size() == 8);
-	assert(a[0] == 0);
-	assert(a[1] == 1);
-	assert(a[2] == 2);
-	assert(a[3] == 4);
-	assert(a[4] == 3);
-	assert(a[5] == 5);
-	assert(a[6] == 6);
-	assert(a[7] == 7);
+	b.clear();
+	b = {0,1,2,4,3,5,6,7};
+	assert(b == a);
 	cout << "BitCombinations from 0 to 3 of '1' bits: ";
 	for (vector<long>::iterator it = a.begin(); it != a.end(); it++)
 		cout << bitset<3>(*it) << " ";
@@ -366,22 +355,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	BitCombinations(4, a); // 0000 0001 0010 0100 1000 0011 0101 0110 1001 1010 1100 0111 1011 1101 1110 1111
 	assert(a.size() == 16);
-	assert(a[0] == 0);
-	assert(a[1] == 1);
-	assert(a[2] == 2);
-	assert(a[3] == 4);
-	assert(a[4] == 8);
-	assert(a[5] == 3);
-	assert(a[6] == 5);
-	assert(a[7] == 6);
-	assert(a[8] == 9);
-	assert(a[9] == 10);
-	assert(a[10] == 12);
-	assert(a[11] == 7);
-	assert(a[12] == 11);
-	assert(a[13] == 13);
-	assert(a[14] == 14);
-	assert(a[15] == 15);
+	b.clear();
+	b = {0,1,2,4,8,3,5,6,9,10,12,7,11,13,14,15};
+	assert(b == a);
 	cout << "BitCombinations from 0 to 4 of '1' bits: ";
 	for (vector<long>::iterator it = a.begin(); it != a.end(); it++)
 		cout << bitset<4>(*it) << " ";
@@ -389,10 +365,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	udata.clear();
 	udata = grayCode(2);
 	assert(udata.size() == 4);
-	assert(udata[0] == 0);
-	assert(udata[1] == 1);
-	assert(udata[2] == 3);
-	assert(udata[3] == 2);
+	udata1.clear();
+	udata1 = {0,1,3,2};
+	assert(udata1 == udata);
 	udata.clear();
 	udata = grayCode(0);
 	assert(udata.size() == 1);
@@ -454,121 +429,43 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	b.clear();
 	a = { 2,3,-2,4 };
-	lResult = ConsecutiveLargestProduct(a, b);
-	assert(lResult == 6);
-	cout << "ConsecutiveLargestProduct of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
-	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
-	cout << ")" << endl;
-	//assert(b.size() == 2);
-	//assert(b[0] == 2);
-	//assert(b[1] == 3);
+	assert(6 == ConsecutiveLargestProduct(a));
 	a.clear();
 	b.clear();
 	a = { -2,0,-1 };
-	lResult = ConsecutiveLargestProduct(a, b);
-	assert(lResult == 0);
-	cout << "ConsecutiveLargestProduct of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
-	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
-	cout << ")" << endl;
-	//assert(b.size() == 2);
-	//assert(b[0] == -2);
-	//assert(b[1] == 0);
+	assert(0 == ConsecutiveLargestProduct(a));
 	a.clear();
 	b.clear();
 	a = { -2,-1,0 };
-	lResult = ConsecutiveLargestProduct(a, b);
-	assert(lResult == 2);
-	cout << "ConsecutiveLargestProduct of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
-	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
-	cout << ")" << endl;
-	//assert(b.size() == 2);
-	//assert(b[0] == -2);
-	//assert(b[1] == -1);
+	assert(2 == ConsecutiveLargestProduct(a));
 	a.clear();
 	b.clear();
 	a = { -3,-1,-1 };
-	lResult = ConsecutiveLargestProduct(a, b);
-	assert(lResult == 3);
-	cout << "ConsecutiveLargestProduct of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
-	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
-	cout << ")" << endl;
-	//assert(b.size() == 2);
-	//assert(b[0] == -3);
-	//assert(b[1] == -1);
+	assert(3 == ConsecutiveLargestProduct(a));
 	a.clear();
 	b.clear();
 	a = { 0,2 };
-	lResult = ConsecutiveLargestProduct(a, b);
-	assert(lResult == 2);
-	cout << "ConsecutiveLargestProduct of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
-	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
-	cout << ")" << endl;
-	//assert(b.size() == 1);
-	//assert(b[0] == 2);
+	assert(2 == ConsecutiveLargestProduct(a));
 	a.clear();
 	b.clear();
 	a = { 3,-1,4 };
-	lResult = ConsecutiveLargestProduct(a, b);
-	assert(lResult == 4);
-	cout << "ConsecutiveLargestProduct of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
-	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
-	cout << ")" << endl;
-	//assert(b.size() == 1);
-	//assert(b[0] == 4);
+	assert(4 == ConsecutiveLargestProduct(a));
 	a.clear();
 	b.clear();
 	a = { -1,-1 };
-	lResult = ConsecutiveLargestProduct(a, b);
-	assert(lResult == 1);
-	cout << "ConsecutiveLargestProduct of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
-	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
-	cout << ")" << endl;
-	//assert(b.size() == 1);
-	//assert(b[0] == 4);
+	assert(1 == ConsecutiveLargestProduct(a));
 	a.clear();
 	b.clear();
 	a = { 0,-2,-3 };
-	lResult = ConsecutiveLargestProduct(a, b);
-	assert(lResult == 6);
-	cout << "ConsecutiveLargestProduct of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
-	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
-	cout << ")" << endl;
+	assert(6 == ConsecutiveLargestProduct(a));
 	a.clear();
 	b.clear();
 	a = { 2,-5,-2,-4,3 };
-	lResult = ConsecutiveLargestProduct(a, b);
-	assert(lResult == 24);
-	cout << "ConsecutiveLargestProduct of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
-	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
-	cout << ")" << endl;
+	assert(24 == ConsecutiveLargestProduct(a));
 	a.clear();
 	b.clear();
 	a = { 2,0,-3,2,1,0,1,-2 };
-	lResult = ConsecutiveLargestProduct(a, b);
-	assert(lResult == 2);
-	cout << "ConsecutiveLargestProduct of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
-	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
-	cout << ")" << endl;
+	assert(2 == ConsecutiveLargestProduct(a));
 	a.clear();
 	a = { 2,3,1,2,4,3 };
 	assert(ConsecutiveSumMinCount(7, a) == 2);
@@ -588,13 +485,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a = { 0, -1, 0, 0, 1, 0, -1, -1 };
 	assert(LongestNonNegativeSumSlice(a) == 6);
-	lResult = ConsecutiveLargestSum(a, b);
-	assert(lResult == 1);
+	assert(1 == ConsecutiveLargestSum(a, b));
 	a.clear();
 	a = { -1, -1, -1, -1, -1, -1, 1, 1 };
 	assert(LongestNonNegativeSumSlice(a) == 4);
-	lResult = ConsecutiveLargestSum(a, b);
-	assert(lResult == 2);
+	assert(2 == ConsecutiveLargestSum(a, b));
 	a.clear();
 	b.clear();
 	strings.clear();
@@ -608,7 +503,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(strings[3] == "legnA");
 	cout << "strings sorted with default comparer: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
-	sort(strings.begin(), strings.end(), [&strings](string a, string b) -> bool {
+	sort(strings.begin(), strings.end(), [](string a, string b) -> bool {
 		sort(a.begin(), a.end());
 		sort(b.begin(), b.end());
 		return a < b;
@@ -906,18 +801,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	// Test Recursive algorithm
 	strings.clear();
 	parentheses(strings, 2);
+	strings1 = {"(())", "()()"};
 	assert(strings.size() == 2);
-	assert(strings[0] == "(())");
-	assert(strings[1] == "()()");
+	assert(strings1 == strings);
 
 	strings.clear();
 	parentheses(strings, 3);
-	assert(strings.size() == 5); // ((())) (()()) (())() ()(()) ()()()
-	assert(strings[0] == "((()))");
-	assert(strings[1] == "(()())");
-	assert(strings[2] == "(())()");
-	assert(strings[3] == "()(())");
-	assert(strings[4] == "()()()");
+	assert(strings.size() == 5);
+	strings1.clear();
+	strings1 = { "((()))", "(()())", "(())()", "()(())", "()()()" };
+	assert(strings1 == strings);
 	assert(LongestValidParentheses(string("(")) == 0);
 	assert(LongestValidParentheses(string("((()")) == 2);
 	assert(LongestValidParentheses(string("())()")) == 2);
@@ -1131,7 +1024,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	dictionary.insert("LAKE");
 	queue<string> result1;
 	Transform(string("DAMP"), string("LIKE"), dictionary, result1);
-	assert(result1.size() > 0);
+	assert(!result1.empty());
 	cout << "Single-character transformation from \"DAMP\" to \"LIKE\": ";
 	while (!result1.empty()) {
 		cout << result1.front() << " ";
@@ -1173,7 +1066,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(ngrams.size() == 1);
 	assert(ngrams.find("This is a") != ngrams.end());
 	ngrams = intersectionNgram(string("This is a dog"), string("This is a cat"), 4);
-	assert(ngrams.size() == 0);
+	assert(ngrams.empty());
 	cout << endl;
 	data.clear();
 	data.resize(4);
@@ -2047,12 +1940,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a = {1,2,3,4};
 	a = productExceptSelf(a);
+	b.clear();
+	b = {24,12,8,6};
 	assert(!a.empty());
 	assert(a.size() == 4);
-	assert(a[0] == 24);
-	assert(a[1] == 12);
-	assert(a[2] == 8);
-	assert(a[3] == 6);
+	assert(b == a);
 	udata.clear();
 	udata = { 3,0,6,1,5 };
 	assert(hIndex(udata) == 3);
@@ -2238,7 +2130,7 @@ long ConsecutiveLargestSum(vector<long>& data, vector<long>& result)
 /* https://leetcode.com/problems/maximum-product-subarray/
 * 100%
 */
-long ConsecutiveLargestProduct(vector<long>& data, vector<long>& result)
+long ConsecutiveLargestProduct(vector<long>& data)
 {
 	vector<long> tmp;
 	map<long, vector<long>> results;
@@ -4237,8 +4129,7 @@ void SortTests()
 	buffer.assign(sortData.begin(), sortData.end());
 	sort(buffer.begin(), buffer.end());
 	BubbleSort(sortData);
-	for (size_t i = 0; i < sortData.size(); i++)
-		assert(sortData[i] == buffer[i]);
+	assert(sortData == buffer);
 	sortData.clear();
 	sortData = { 1,3,0,2 };
 	QuickSort(sortData, 0, sortData.size() - 1);
@@ -4260,8 +4151,7 @@ void SortTests()
 	buffer.assign(sortData.begin(), sortData.end());
 	sort(buffer.begin(), buffer.end());
 	QuickSort(sortData, 0, sortData.size() - 1);
-	for (size_t i = 0; i < sortData.size(); i++)
-		assert(sortData[i] == buffer[i]);
+	assert(sortData == buffer);
 
 	sortData.clear();
 	sortData = {1,0,-1};
@@ -4276,8 +4166,7 @@ void SortTests()
 	buffer.assign(sortData.begin(), sortData.end());
 	sort(buffer.begin(), buffer.end());
 	SelectionSort(sortData);
-	for (size_t i = 0; i < sortData.size(); i++)
-		assert(sortData[i] == buffer[i]);
+	assert(sortData == buffer);
 
 	sortData.clear();
 	sortData = { 1,0,-1 };
@@ -4292,8 +4181,7 @@ void SortTests()
 	buffer.assign(sortData.begin(), sortData.end());
 	sort(buffer.begin(), buffer.end());
 	InsertionSort(sortData);
-	for (size_t i = 0; i < sortData.size(); i++)
-		assert(sortData[i] == buffer[i]);
+	assert(sortData == buffer);
 
 	sortData.clear();
 	sortData = { 1,0,-1 };
@@ -4322,8 +4210,7 @@ void SortTests()
 	buffer.clear();
 	buffer = sortData;
 	TopDownMergeSort(buffer, sortData, 0, sortData.size());
-	for (size_t i = 0; i < sortData.size(); i++)
-		assert(sortData[i] == a[i]);
+	assert(sortData == a);
 
 	sortData.clear();
 	sortData = { 1,0,-1 };
@@ -4340,8 +4227,7 @@ void SortTests()
 	sort(a.begin(), a.end());
 	buffer = sortData;
 	BottomUpMergeSort(sortData, buffer);
-	for (size_t i = 0; i < sortData.size(); i++)
-		assert(sortData[i] == a[i]);
+	assert(sortData == a);
 
 	sortData.clear();
 	sortData = { 1,0,-1 };
@@ -4389,8 +4275,7 @@ void SortTests()
 	buffer.assign(sortData.begin(), sortData.end());
 	sort(buffer.begin(), buffer.end());
 	HeapSort(sortData);
-	for (size_t i = 0; i < sortData.size(); i++)
-		assert(sortData[i] == buffer[i]);
+	assert(sortData == buffer);
 
 	a.clear();
 	a.resize(10);
@@ -6177,8 +6062,7 @@ void LinkedListTests()
 	b.clear();
 	lla1.ToVector(b);
 	assert(a.size() == b.size());
-	for (size_t i = 0; i < a.size(); i++)
-		assert(a[i] == b[i]);
+	assert(a == b);
 	shared_ptr<Node<long>> odd = nullptr, even = nullptr;
 	lla1.SplitList(even, odd);
 	assert(lla1.Length() == 10);
@@ -6357,8 +6241,7 @@ void LinkedListTests()
 	b = {1,4,3,2,5};
 	vector<long> c;
 	lla5.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1,2,3,4,5 };
@@ -6370,8 +6253,7 @@ void LinkedListTests()
 	b = { 5,4,3,2,1 };
 	c.clear();
 	lla6.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1,2,3,4,5 };
@@ -6383,8 +6265,7 @@ void LinkedListTests()
 	b = { 4,3,2,1,5 };
 	c.clear();
 	lla7.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1,2,3,4,5 };
@@ -6396,8 +6277,7 @@ void LinkedListTests()
 	b = { 1,5,4,3,2 };
 	c.clear();
 	lla8.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1,2,3,4,5 };
@@ -6409,8 +6289,7 @@ void LinkedListTests()
 	b = { 1,2,3,4,5 };
 	c.clear();
 	lla9.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1,2 };
@@ -6422,8 +6301,7 @@ void LinkedListTests()
 	b = { 2,1 };
 	c.clear();
 	lla10.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1,2,3,3,4,4,5 };
@@ -6435,8 +6313,7 @@ void LinkedListTests()
 	b = { 1,2,5 };
 	c.clear();
 	lla11.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1,1,2,3,3,4,4,5 };
@@ -6448,8 +6325,7 @@ void LinkedListTests()
 	b = { 2,5 };
 	c.clear();
 	lla12.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1 };
@@ -6461,8 +6337,7 @@ void LinkedListTests()
 	b = { 1 };
 	c.clear();
 	lla13.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1,1 };
@@ -6481,8 +6356,7 @@ void LinkedListTests()
 	b = { 1 };
 	c.clear();
 	lla15.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1,1,1,2 };
@@ -6494,8 +6368,7 @@ void LinkedListTests()
 	b = { 2 };
 	c.clear();
 	lla16.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1,1,1,2,3 };
@@ -6507,8 +6380,7 @@ void LinkedListTests()
 	b = { 2,3 };
 	c.clear();
 	lla17.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { -1,0,0,0,0,3,3 };
@@ -6520,8 +6392,7 @@ void LinkedListTests()
 	b = { -1 };
 	c.clear();
 	lla18.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = {2,1};
@@ -6574,8 +6445,7 @@ void LinkedListTests()
 	b = { 4,5,1,2,3 };
 	c.clear();
 	lla22.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1,2,3 };
@@ -6587,8 +6457,7 @@ void LinkedListTests()
 	b = { 2,3,1 };
 	c.clear();
 	lla23.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 
 	a.clear();
 	a = { 1 };
@@ -6600,8 +6469,7 @@ void LinkedListTests()
 	b = { 1 };
 	c.clear();
 	lla24.ToVector(c);
-	for (size_t i = 0; i < c.size(); i++)
-		assert(b[i] == c[i]);
+	assert(b == c);
 }
 void BinaryTreeTests()
 {
@@ -7011,8 +6879,7 @@ void BinarySearchTreeTests()
 	tree0.Serialize(tree0.Root(), b);
 	assert(!b.empty());
 	assert(b.size() == a.size());
-	for (size_t i = 0; i < a.size(); i++)
-		assert(a[i] == b[i]);
+	assert(b == a);
 	cout << "Binary Search Tree content: " << endl;
 	tree0.PrintTree();
 	cout << endl;
@@ -7057,8 +6924,7 @@ void BinarySearchTreeTests()
 	assert(!tree1.HasNextMax());
 	assert(!b.empty());
 	assert(b.size() == a.size());
-	for (size_t i = 0; i < a.size(); i++)
-		assert(a[i] == b[i]);
+	assert(b == a);
 	cout << "Binary Search Tree content: " << endl;
 	tree1.PrintTree();
 	cout << endl;
@@ -8638,7 +8504,7 @@ size_t LongestAlternatingSubSequence(const vector<long>& data, vector<long>& res
 			}
 		}
 	}
-	if (sequences.size() > 0)
+	if (!sequences.empty())
 		result = sequences.rbegin()->second;
 	return result.size();
 }
