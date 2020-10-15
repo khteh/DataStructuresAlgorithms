@@ -2097,6 +2097,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	grid2 = { {7,4,1}, {8,5,2}, {9,6,3} };
 	rotateMatrix(grid1);
 	assert(grid1 == grid2);
+	strings = PhoneKeyLetters(string("23"));
+	assert(strings.size() == 9);
+	strings1 = { "ad","ae","af","bd","be","bf","cd","ce","cf" };
+	assert(strings1 == strings);
+	strings = PhoneKeyLetters(string(""));
+	assert(strings.empty());
+	strings = PhoneKeyLetters(string("2"));
+	assert(strings.size() == 3);
+	strings1 = { "a", "b", "c" };
+	strings = PhoneKeyLetters(string("358"));
+	assert(strings.size() == 27);
+	strings1 = { "djt", "dkt", "dlt", "ejt", "ekt", "elt", "fjt", "fkt", "flt", "dju", "dku", "dlu", "eju", "eku", "elu", "fju", "fku", "flu", "djv", "dkv", "dlv", "ejv", "ekv", "elv", "fjv", "fkv", "flv" };
+	assert(strings1 == strings);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -3284,11 +3297,6 @@ void StringPermutationTests()
 	assert(permutations.find("cba") != permutations.end());
 	assert(permutations.find("cab") != permutations.end());
 	cout << "permutations of \"abc\" are: ";
-	copy(permutations.begin(), permutations.end(), ostream_iterator<string>(cout, " "));
-	cout << endl;
-	permutations.clear();
-	permutations = permute("abcdef");
-	cout << "permutations of \"abcdef\" are: ";
 	copy(permutations.begin(), permutations.end(), ostream_iterator<string>(cout, " "));
 	cout << endl;
 	permutations.clear();
@@ -8704,16 +8712,22 @@ vector<size_t> grayCode(size_t n)
 }
 void OrderedMergedCombinations(set<string>&result, string &s1, string &s2, string cur)
 {
-	if (s1 == "" && s2 == "") {
+	if (s1.empty() && s2.empty()) {
 		result.insert(cur);
 		return;
-	} else if (s1 == "") {
+	} else if (s1.empty()) {
 		result.insert(cur + s2);
 		return;
-	} else if (s2 == "") {
+	} else if (s2.empty()) {
 		result.insert(cur + s1);
 		return;
 	}
+	/*
+	*  i:       0  1 2 3
+	* s1: Hey, ey, y
+	* s2: Bob, ob, b
+	* cur: "",  H, 
+	*/
 	for (size_t i = 0; i <= s2.size(); i++) // Same result as below
 		OrderedMergedCombinations(result, s1.substr(1, s1.size() - 1), s2.substr(i, s2.size() - i), cur + s2.substr(0, i) + s1[0]);
 	//for (size_t i = 0; i <= s1.size(); i++) // Same result as above
@@ -11846,6 +11860,55 @@ size_t hIndex(vector<size_t>& citations)
 				result = min(count, value);
 			previous = *it;
 		}
+	}
+	return result;
+}
+/* https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+* 100%
+*/
+vector<string> PhoneKeyLetters(string& digits)
+{
+	map<char, string> letters{
+		{'1', ""},
+		{'2', "abc"},
+		{'3', "def"},
+		{'4', "ghi"},
+		{'5', "jkl"},
+		{'6', "mno"},
+		{'7', "pqrs"},
+		{'8', "tuv"},
+		{'9', "wxyz"}
+	};
+	vector<string> result;
+	if (digits.empty())
+		return result;
+	for (size_t i = 0; i < digits.size();) {
+		vector<string> tmp;
+		string str1 = letters[digits[i]];
+		if (!i) {
+			string str2 = i < digits.size() - 1 ? letters[digits[i + 1]] : "";
+			if (str2.empty()) {
+				for (size_t j = 0; j < str1.size(); j++)
+					tmp.push_back(string(1, str1[j]));
+			} else {
+				for (size_t j = 0; j < str1.size(); j++)
+					for (size_t k = 0; k < str2.size(); k++) {
+						ostringstream oss;
+						oss << str1[j] << str2[k];
+						tmp.push_back(oss.str());
+					}
+			}
+			i += 2;
+		} else {
+			for (size_t j = 0; j < str1.size(); j++)
+				for (vector<string>::iterator it = result.begin(); it != result.end(); it++) {
+					ostringstream oss;
+					oss << *it << str1[j];
+					tmp.push_back(oss.str());
+				}
+			i++;
+		}
+		result = tmp;
 	}
 	return result;
 }
