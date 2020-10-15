@@ -2110,6 +2110,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(strings.size() == 27);
 	strings1 = { "djt", "dkt", "dlt", "ejt", "ekt", "elt", "fjt", "fkt", "flt", "dju", "dku", "dlu", "eju", "eku", "elu", "fju", "fku", "flu", "djv", "dkv", "dlv", "ejv", "ekv", "elv", "fjv", "fkv", "flv" };
 	assert(strings1 == strings);
+	strings = PhoneKeyLetters(string("5678"));
+	assert(strings.size() == 108);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -8715,18 +8717,23 @@ void OrderedMergedCombinations(set<string>&result, string &s1, string &s2, strin
 	if (s1.empty() && s2.empty()) {
 		result.insert(cur);
 		return;
-	} else if (s1.empty()) {
-		result.insert(cur + s2);
-		return;
-	} else if (s2.empty()) {
-		result.insert(cur + s1);
+	} else if (s1.empty() || s2.empty()) {
+		result.insert(s1.empty() ? cur + s2 : cur + s1);
 		return;
 	}
 	/*
-	*  i:       0  1 2 3
-	* s1: Hey, ey, y
-	* s2: Bob, ob, b
-	* cur: "",  H, 
+	* s1: Hey, ey,    y,  ""
+	* s2: Bob, Bob, Bob, Bob
+	* cur: "",  H,   He, Hey  => HeyBob
+	*                     ""
+	*                     ob
+	*                    HeBy => HeByob
+	*                     ""
+	*                      b
+	*                  HeBoy  => HeBoyb
+	*                     ""
+	*                     ""
+	*                  HeBoby => HeBoby
 	*/
 	for (size_t i = 0; i <= s2.size(); i++) // Same result as below
 		OrderedMergedCombinations(result, s1.substr(1, s1.size() - 1), s2.substr(i, s2.size() - i), cur + s2.substr(0, i) + s1[0]);
