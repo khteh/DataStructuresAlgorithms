@@ -664,7 +664,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(count == 9);
 	assert(b.size() == 9);
 	assert(b[0] == 2);
-	assert(b[b.size() - 1] == 76);
+	assert(b.back() == 76);
 	cout << "Longest alternating subsequence of ";
 	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
 	cout << ": ";
@@ -1553,8 +1553,18 @@ int _tmain(int argc, _TCHAR* argv[])
 	data.clear();
 	data.resize(5);
 	generate(data.begin(), data.end(), [i = 0]()mutable{return i++; });
+	/* 0 1 2 3 4 => 2 3 4 0 1 (Rotate 3)
+	*/
 	RotateRightArray(data, 3);
-	for (size_t i = 0, j = 2; i < 5; i++, j = ++j % 5)
+	for (size_t i = 0, j = 2; i < data.size(); i++, j = ++j % data.size())
+		assert(data[i] == j);
+	data.clear();
+	data.resize(5);
+	generate(data.begin(), data.end(), [i = 0]()mutable{return i++; });
+	/* 0 1 2 3 4 => 2 3 4 0 1 (Rotate 13)
+	*/
+	RotateRightArray(data, 13);
+	for (size_t i = 0, j = 2; i < data.size(); i++, j = ++j % data.size())
 		assert(data[i] == j);
 	assert(CountDiv(6, 11, 2) == 3);
 	assert(CountDiv(6, 11, 6) == 1);
@@ -4874,7 +4884,7 @@ string CountingSort(vector<vector<string>>& data)
 	}
 	for (long i = min > 0 ? min : 1; i <= max; i++)
 		counts[i] += counts[i - 1];
-	result.resize(counts[counts.size() - 1]);
+	result.resize(counts.back());
 	// Use reverse_iterator for a stable sort
 	for (vector<vector<string>>::reverse_iterator it = data.rbegin(); it != data.rend(); it++) {
 		size_t key;
@@ -8152,7 +8162,7 @@ string GetRange(vector<long>& input)
 			}
 		oss << numbers[first];
 		if (first != numbers.size() - 1)
-			oss << " - " << numbers[numbers.size() - 1];
+			oss << " - " << numbers.back();
 	}
 	return oss.str();
 }
@@ -9689,25 +9699,23 @@ long MaxProductOfThree(vector<long> &data)
 	sort(data.begin(), data.end());
 	long tmp1 = data[0] * data[1];
 	long tmp2 = data[data.size() - 2] * data[data.size() - 3];
-	if (data[data.size() - 1] > 0)
-		return data[data.size() - 1] * (tmp1 > tmp2 ? tmp1 : tmp2);
+	if (data.back() > 0)
+		return data.back() * (tmp1 > tmp2 ? tmp1 : tmp2);
 	else
-		return data[data.size() - 1] * (tmp1 < tmp2 ? tmp1 : tmp2);
+		return data.back() * (tmp1 < tmp2 ? tmp1 : tmp2);
 }
+/*
+* 1 2 3 4 5, n = 2
+* 5 4 3 2 1, reverse the whole vector
+* 4 5 3 2 1, reverse 0:n-1
+* 4 5 1 2 3, reverse 2:data.size()-1
+*/
 void RotateRightArray(vector<int>& data, int n)
 {
-	int previous, current;
-	for (; n > 0; n--)
-		for (size_t i = 0; i < data.size(); i++) {
-			if (!i) {
-				previous = data[i];
-				data[i] = data[data.size() - 1];
-			} else {
-				current = data[i];
-				data[i] = previous;
-				previous = current;
-			}
-		}
+	n %= data.size();
+	reverse(data.begin(), data.end());
+	reverse(data.begin(), data.begin() + n);
+	reverse(data.begin() + n, data.end());
 }
 // https://www.hackerrank.com/challenges/ctci-array-left-rotation/problem?
 // 100%
