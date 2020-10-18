@@ -1015,21 +1015,40 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(!JSONValidation("{a}"));
 	assert(!JSONValidation("{{a}}"));
 	// Test single-character string permutations
-	set<string> dictionary;
-	dictionary.insert("DAMP");
-	dictionary.insert("LAMP");
-	dictionary.insert("LIMP");
-	dictionary.insert("LIME");
-	dictionary.insert("LIKE");
-	dictionary.insert("LAKE");
-	queue<string> result1;
-	Transform(string("DAMP"), string("LIKE"), dictionary, result1);
-	assert(!result1.empty());
+	set<string> dictionary = {"DAMP", "LAMP", "LIMP", "LIME", "LIKE", "LAKE"};
+	strings.clear();
+	Transform(string("DAMP"), string("LIKE"), dictionary, strings);
+	assert(!strings.empty());
 	cout << "Single-character transformation from \"DAMP\" to \"LIKE\": ";
-	while (!result1.empty()) {
-		cout << result1.front() << " ";
-		result1.pop();
-	}
+	// DAMP LAMP LIMP LIME LIKE
+	assert(strings.size() == 5);
+	assert(strings[0] == "LIKE");
+	assert(strings[1] == "LIME");
+	assert(strings[2] == "LIMP");
+	assert(strings[3] == "LAMP");
+	assert(strings[4] == "DAMP");
+	copy(strings.rbegin(), strings.rend(), ostream_iterator<string>(cout, " "));
+	cout << endl;
+	strings.clear();
+	Transform(string("DAMP"), string("LICK"), dictionary, strings);
+	assert(strings.empty()); // "LICK" is not in the dictionary
+	dictionary.clear();
+	strings.clear();
+	dictionary = { "HOT","DOT","DOG","LOT","LOG","COG" };
+	Transform(string("HIT"), string("COG"), dictionary, strings);
+	assert(!strings.empty());
+	assert(strings.size() == 5);
+	assert(strings[0] == "COG");
+	assert(strings[1] == "DOG");
+	assert(strings[2] == "DOT");
+	assert(strings[3] == "HOT");
+	assert(strings[4] == "HIT");
+	cout << "Single-character transformation from \"HIT\" to \"COG\": ";
+	copy(strings.rbegin(), strings.rend(), ostream_iterator<string>(cout, " "));
+	cout << endl;
+	strings.clear();
+	Transform(string("HIT"), string("HAT"), dictionary, strings);
+	assert(strings.empty()); // "HAT" is not in the dictionary
 	assert(match(string("abba"), string("redbluebluered")));
 	assert(match(string("aaaa"), string("asdasdasdasd")));
 	assert(match(string("aabb"), string("xyzxyzabcabc")));
@@ -5923,7 +5942,7 @@ void GetPermutations(string &w, set<string>& result)
 			}
 }
 // DAMP -> LAMP -> LIMP -> LIME -> LIKE
-void Transform(string &start, string &stop, set<string>& dictionary, queue<string>& result)
+void Transform(string &start, string &stop, set<string>& dictionary, vector<string>& result)
 {
 	transform(start.begin(), start.end(), start.begin(), toupper);
 	transform(stop.begin(), stop.end(), stop.begin(), toupper);
@@ -5938,20 +5957,21 @@ void Transform(string &start, string &stop, set<string>& dictionary, queue<strin
 		set<string> permutations;
 		GetPermutations(w, permutations);
 		for (set<string>::const_iterator it = permutations.begin(); it != permutations.end(); it++) {
-			if (*it == stop) { // LIKE
-				// Found our word! Now backtrack to record all the single-character change from 'start' to 'stop'
-				result.push(*it);
-				result.push(w);
-				while (backtrack.find(w) != backtrack.end()) {
-					w = backtrack[w];
-					result.push(w);
+			if (dictionary.find(*it) != dictionary.end())
+				if (*it == stop) { // LIKE
+					// Found our word! Now backtrack to record all the single-character change from 'start' to 'stop'
+					result.push_back(*it);
+					result.push_back(w);
+					while (backtrack.find(w) != backtrack.end()) {
+						w = backtrack[w];
+						result.push_back(w);
+					}
+					return;
+				} else if (visited.find(*it) == visited.end()) {
+					actionQ.push(*it);
+					visited.insert(*it);
+					backtrack[*it] = w; // Key: later; Value: earlier
 				}
-				return;
-			} else if (dictionary.find(*it) != dictionary.end() && visited.find(*it) == visited.end()) {
-				actionQ.push(*it);
-				visited.insert(*it);
-				backtrack[*it] = w; //Key: later; Value: earlier
-			}
 		}
 	}
 }

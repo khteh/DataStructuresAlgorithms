@@ -285,7 +285,7 @@ string NumberStringMultiplication(string&, string&);
 void shuffleCards(vector<long> &);
 void randomSubset(vector<long> &, size_t, vector<long> &);
 long countDigits(char digit, long n);
-void Transform(string &, string&, set<string>&, queue<string>&);
+void Transform(string &, string&, set<string>&, vector<string>&);
 void GetPermutations(string &);
 void trim(string &);
 size_t sumpairs(vector<long>&, long);
