@@ -1030,24 +1030,24 @@ int _tmain(int argc, _TCHAR* argv[])
 	copy(strings.rbegin(), strings.rend(), ostream_iterator<string>(cout, " "));
 	cout << endl;
 	strings.clear();
-	Transform(string("DAMP"), string("LICK"), dictionary, strings);
+	Transform(string("DAMP"), string("Like"), dictionary, strings);
 	assert(strings.empty()); // "LICK" is not in the dictionary
 	dictionary.clear();
 	strings.clear();
-	dictionary = { "HOT","DOT","DOG","LOT","LOG","COG" };
-	Transform(string("HIT"), string("COG"), dictionary, strings);
+	dictionary = { "Hot","Dot","Dog","Lot","Log","Cog" };
+	Transform(string("Hit"), string("Cog"), dictionary, strings);
 	assert(!strings.empty());
 	assert(strings.size() == 5);
-	assert(strings[0] == "COG");
-	assert(strings[1] == "DOG");
-	assert(strings[2] == "DOT");
-	assert(strings[3] == "HOT");
-	assert(strings[4] == "HIT");
-	cout << "Single-character transformation from \"HIT\" to \"COG\": ";
+	assert(strings[0] == "Cog");
+	assert(strings[1] == "Dog");
+	assert(strings[2] == "Dot");
+	assert(strings[3] == "Hot");
+	assert(strings[4] == "Hit");
+	cout << "Single-character transformation from \"Hit\" to \"Cog\": ";
 	copy(strings.rbegin(), strings.rend(), ostream_iterator<string>(cout, " "));
 	cout << endl;
 	strings.clear();
-	Transform(string("HIT"), string("HAT"), dictionary, strings);
+	Transform(string("Hit"), string("Hat"), dictionary, strings);
 	assert(strings.empty()); // "HAT" is not in the dictionary
 	assert(match(string("abba"), string("redbluebluered")));
 	assert(match(string("aaaa"), string("asdasdasdasd")));
@@ -5930,22 +5930,23 @@ void PrefixTrieTests()
 	result = prefixTrie1.StartsWith(string("Helloa"));
 	assert(result.empty());
 }
-void GetPermutations(string &w, set<string>& result)
+void GetPermutations(string &w, set<string>& dictionary, set<string>& result)
 {
-	string tmp;
-	for (size_t i = 0; i < w.size(); i++)
-		for (char c = 'A'; c <= 'Z'; c++)
-			if (w[i] != c) {
-				tmp = w;
-				tmp[i] = c;
-				result.insert(tmp);
-			}
+	for (set<string>::iterator it = dictionary.begin(); it != dictionary.end(); it++) {
+		string s = *it;
+		if (it->size() == w.size()) {
+			size_t count = 0;
+			for (size_t i = 0; i < w.size() && count < 2; i++)
+				if (s[i] != w[i])
+					count++;
+			if (count == 1)
+				result.insert(*it);
+		}
+	}
 }
 // DAMP -> LAMP -> LIMP -> LIME -> LIKE
 void Transform(string &start, string &stop, set<string>& dictionary, vector<string>& result)
 {
-	transform(start.begin(), start.end(), start.begin(), toupper);
-	transform(stop.begin(), stop.end(), stop.begin(), toupper);
 	queue<string> actionQ;
 	set<string> visited;
 	map<string, string> backtrack;
@@ -5955,7 +5956,7 @@ void Transform(string &start, string &stop, set<string>& dictionary, vector<stri
 		string w = actionQ.front(); // DAMP
 		actionQ.pop();
 		set<string> permutations;
-		GetPermutations(w, permutations);
+		GetPermutations(w, dictionary, permutations);
 		for (set<string>::const_iterator it = permutations.begin(); it != permutations.end(); it++) {
 			if (dictionary.find(*it) != dictionary.end())
 				if (*it == stop) { // LIKE
