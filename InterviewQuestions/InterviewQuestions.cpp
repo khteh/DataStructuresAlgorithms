@@ -29,6 +29,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	PriorityQueueMedian<long> pqueue;
 	vector<vector<unsigned long>> grid;
 	vector<vector<long>> grid1, grid2;
+	vector<vector<size_t>> ugrid;
 	ExceptionTest();
 	TestRandom();
 	GreedyAlgorithmTests();
@@ -2036,20 +2037,79 @@ int _tmain(int argc, _TCHAR* argv[])
 	stringset.clear();
 	stringset = {"Hello", "World"};
 	assert(wordBreakDynamicProgramming(string("HelloWorld"), stringset));
+	strings1.clear();
+	wordBreakDynamicProgramming(string("HelloWorld"), stringset, strings1);
+	assert(!strings1.empty());
+	assert(strings1.size() == 1);
+	assert(strings1[0] == "Hello World");
+	strings1 = wordBreakDFS(string("HelloWorld"), stringset);
+	assert(!strings1.empty());
+	assert(strings1.size() == 1);
+	assert(strings1[0] == "Hello World");
 	stringset.clear();
 	stringset = { "cats", "dog", "sand", "and", "cat" };
 	assert(!wordBreakDynamicProgramming(string("catsandog"), stringset));
 	assert(wordBreakDynamicProgramming(string("catsanddog"), stringset));
 	assert(wordBreakDynamicProgramming(string("catanddog"), stringset));
+	strings1.clear();
+	wordBreakDynamicProgramming(string("catsandog"), stringset, strings1);
+	assert(strings1.empty());
+	strings1.clear();
+	wordBreakDynamicProgramming(string("catsanddog"), stringset, strings1);
+	assert(!strings1.empty());
+	assert(strings1.size() == 2);
+	strings1.clear();
+	wordBreakDynamicProgramming(string("catanddog"), stringset, strings1);
+	assert(strings1.size() == 1);
+	assert(strings1[0] == "cat and dog");
+	strings1.clear();
+	strings1 = wordBreakDFS(string("catsandog"), stringset);
+	assert(strings1.empty());
+	strings1 = wordBreakDFS(string("catsanddog"), stringset);
+	assert(!strings1.empty());
+	assert(strings1.size() == 2);
+	strings1 = wordBreakDFS(string("catanddog"), stringset);
+	assert(!strings1.empty());
+	assert(strings1.size() == 1);
+
 	stringset.clear();
 	stringset = {"apple", "pen"};
 	assert(wordBreakDynamicProgramming(string("applepenapple"), stringset));
-	stringset.clear();
-	stringset = { "apple", "pen" };
-	assert(wordBreakDynamicProgramming(string("applepenapple"), stringset));
+	strings1.clear();
+	wordBreakDynamicProgramming(string("applepenapple"), stringset, strings1);
+	assert(!strings1.empty());
+	assert(strings1.size() == 1);
+	assert(strings1[0] == "apple pen apple");
+	strings1.clear();
+	strings1 = wordBreakDFS(string("applepenapple"), stringset);
+	assert(!strings1.empty());
+	assert(strings1.size() == 1);
+	assert(strings1[0] == "apple pen apple");
+
 	stringset.clear();
 	stringset = {"aaaa", "aaa"};
 	assert(wordBreakDynamicProgramming(string("aaaaaaa"), stringset));
+	strings1.clear();
+	wordBreakDynamicProgramming(string("aaaaaaa"), stringset, strings1);
+	assert(!strings1.empty());
+	assert(strings1.size() == 2);
+	strings1.clear();
+	strings1 = wordBreakDFS(string("aaaaaaa"), stringset);
+	assert(!strings1.empty());
+	assert(strings1.size() == 2);
+	ugrid = { {1,0} };
+	assert(canFinishCourse(2, ugrid));
+	ugrid.clear();
+	ugrid = { {1,0}, {0,1} };
+	assert(!canFinishCourse(2, ugrid));
+	ugrid.clear();
+	ugrid = { {1,0}, {2,0} };
+	assert(canFinishCourse(3, ugrid));
+	ugrid.push_back(vector<size_t>{0, 2});
+	assert(!canFinishCourse(3, ugrid));
+	ugrid.clear();
+	ugrid = {{1, 0}, {0, 2}, {2, 1}};
+	assert(!canFinishCourse(3, ugrid));
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -11874,12 +11934,94 @@ bool wordBreakDynamicProgramming(string& s, set<string>& words)
 {
 	vector<bool> valid(s.size() + 1, false); // flag to mark substring [0, end) validity
 	valid[0] = true; // empty substring is a valid string
-	for (size_t end = 1; end <= s.size(); end++)
-		for (size_t start = 0; start < end; start++) {
+	for (size_t end = 1; end <= s.size(); end++) // O(N)
+		for (size_t start = 0; start < end; start++) { // O(N) -> Time complexity: O(N^2)
 			if (valid[start] && words.find(s.substr(start, end - start)) != words.end()) {
 				valid[end] = true;
 				break;
 			}
 		}
 	return valid.back();
+}
+/* https://leetcode.com/problems/word-break-ii/
+*/
+void wordBreakDynamicProgramming(string& s, set<string>& words, vector<string>& result)
+{
+	map<size_t, vector<string>> strings;
+	vector<bool> valid(s.size() + 1, false); // flag to mark substring [0, end) validity
+	valid[0] = true; // empty substring is a valid string
+	strings.emplace(0, vector<string>{""});
+	for (size_t end = 1; end <= s.size(); end++)
+		for (size_t start = 0; start < end; start++) {
+			if (valid[start] && words.find(s.substr(start, end - start)) != words.end()) {
+				valid[end] = true;
+				for (vector<string>::iterator it = strings[start].begin(); it != strings[start].end(); it++) {
+					ostringstream oss;
+					oss << *it << (it->empty() ? "" : " ") << s.substr(start, end - start);
+					strings[end].push_back(oss.str());
+				}
+			}
+		}
+	if (strings.find(s.size()) != strings.end())
+		result.insert(result.end(), strings[s.size()].begin(), strings[s.size()].end());
+}
+vector<string> wordBreakDFS(string s, set<string>& words, map<string, vector<string>>& strings)
+{
+	vector<string> result;
+	if (s.empty())
+		return vector<string>{""};
+	else if (strings.find(s) != strings.end())
+		return strings[s];
+	for (set<string>::iterator it = words.begin(); it != words.end(); it++) {
+		size_t found = s.find(*it);
+		if (found == 0) {
+			vector<string> tmp = wordBreakDFS(s.substr(it->size()), words, strings);
+			for (vector<string>::iterator it1 = tmp.begin(); it1 != tmp.end(); it1++) {
+				ostringstream oss;
+				oss << *it << (it1->empty() ? "" : " ") << *it1;
+				result.push_back(oss.str());
+			}
+		}
+	}
+	if (!result.empty())
+		strings.emplace(s, result);
+	return result;
+}
+vector<string> wordBreakDFS(string& s, set<string>& words)
+{
+	map<string, vector<string>> strings;
+	return wordBreakDFS(s, words, strings);
+}
+/* https://leetcode.com/problems/course-schedule/
+* https://en.wikipedia.org/wiki/Topological_sorting
+* Use Kahn's algorithm
+* 100%
+*/
+bool canFinishCourse(size_t numCourses, vector<vector<size_t>>& courses)
+{
+	map<size_t, size_t> dependencies;
+	map<size_t, vector<size_t>> edges;
+	size_t edgeCount = courses.size();
+	for (size_t i = 0; i < edgeCount; i++) {
+		pair<map<size_t, vector<size_t>>::iterator, bool> status = edges.emplace(courses[i][1], vector<size_t>{courses[i][0]});
+		if (!status.second)
+			edges[courses[i][1]].push_back(courses[i][0]);
+		dependencies[courses[i][0]]++;
+	}
+	queue<size_t> nodesWithoutDependencies; // Set of all nodes with no incoming edge
+	for (size_t i = 0; i < numCourses; i++)
+		if (dependencies.find(i) == dependencies.end())
+			nodesWithoutDependencies.push(i);
+	for (; !nodesWithoutDependencies.empty(); ) {
+		size_t i = nodesWithoutDependencies.front();
+		nodesWithoutDependencies.pop();
+		if (edges.find(i) != edges.end()) {
+			for (vector<size_t>::iterator it = edges[i].begin(); it != edges[i].end(); it++) {
+				edgeCount--;
+				if (dependencies.find(*it) != dependencies.end() && !--dependencies[*it])
+					nodesWithoutDependencies.push(*it);
+			}
+		}
+	}
+	return !edgeCount;
 }

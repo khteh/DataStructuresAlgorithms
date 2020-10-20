@@ -416,3 +416,7 @@ vector<long> productExceptSelf(vector<long>&);
 size_t hIndex(vector<size_t>&);
 vector<string> PhoneKeyLetters(string&);
 bool wordBreakDynamicProgramming(string&, set<string>&);
+void wordBreakDynamicProgramming(string&, set<string>&, vector<string>&);
+vector<string> wordBreakDFS(string&, set<string>&);
+vector<string> wordBreakDFS(string, set<string>&, map<string, vector<string>>&);
+bool canFinishCourse(size_t, vector<vector<size_t>>&);
