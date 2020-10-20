@@ -415,3 +415,4 @@ long ReversePolishNotation(vector<string>&);
 vector<long> productExceptSelf(vector<long>&);
 size_t hIndex(vector<size_t>&);
 vector<string> PhoneKeyLetters(string&);
+bool wordBreakDynamicProgramming(string&, set<string>&);

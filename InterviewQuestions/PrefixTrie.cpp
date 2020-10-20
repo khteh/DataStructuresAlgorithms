@@ -106,7 +106,7 @@ vector<string> PrefixTrieNode::StartsWith(string const& prefix, size_t index)
 		result.push_back(m_value);
 	else {
 		if (!m_value.empty() && m_value.find(prefix) != string::npos)
-			result.push_back(m_value); // All descendants of this node as common prefix of the string associated with with this node. Ex: "to", "topple"
+			result.push_back(m_value); // All descendants of this node have common prefix of the string associated with this node. Ex: "to", "topple"
 		/*
 			apple, appendix, appetite
 			prefix: app

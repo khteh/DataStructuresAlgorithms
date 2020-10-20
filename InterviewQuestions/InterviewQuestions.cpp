@@ -2033,6 +2033,23 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(strings1 == strings);
 	strings = PhoneKeyLetters(string("5678"));
 	assert(strings.size() == 108);
+	stringset.clear();
+	stringset = {"Hello", "World"};
+	assert(wordBreakDynamicProgramming(string("HelloWorld"), stringset));
+	stringset.clear();
+	stringset = { "cats", "dog", "sand", "and", "cat" };
+	assert(!wordBreakDynamicProgramming(string("catsandog"), stringset));
+	assert(wordBreakDynamicProgramming(string("catsanddog"), stringset));
+	assert(wordBreakDynamicProgramming(string("catanddog"), stringset));
+	stringset.clear();
+	stringset = {"apple", "pen"};
+	assert(wordBreakDynamicProgramming(string("applepenapple"), stringset));
+	stringset.clear();
+	stringset = { "apple", "pen" };
+	assert(wordBreakDynamicProgramming(string("applepenapple"), stringset));
+	stringset.clear();
+	stringset = {"aaaa", "aaa"};
+	assert(wordBreakDynamicProgramming(string("aaaaaaa"), stringset));
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -9608,6 +9625,16 @@ size_t FindSubsequenceRecursive(string& str, string& tomatch)
 		result += FindSubsequenceRecursive(str.substr(1), tomatch);
 	return result;
 }
+/*
+* s1 is tomatch1
+* 				j:0	j:1(s1=2)	j:2(s1=12)
+				0	1			2
+i:0			0	1	0			0
+i:1(s=1)	1	1	0			0
+i:2(s=21)	2	1	1			0
+i:3(s=221)	2	1	2			0
+i:4(s=1221)	1	1	2			2
+*/
 size_t FindSubsequenceDynamicProgramming(string& str, string& tomatch)
 {
 	if (tomatch.empty())
@@ -10505,9 +10532,18 @@ string AlmostSorted(vector<long>& arr)
 	}
 	return oss.str().empty() ? "no" : oss.str();
 }
-// https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
-// https://www.hackerrank.com/challenges/common-child/problem
-// 100%
+/* https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
+* https://www.hackerrank.com/challenges/common-child/problem
+* 100%
+* 		j:0	j:1	j:2	j:3	j:4	j:5
+		\0'	H	A	R	R	Y
+i:0	\0'	0	0	0	0	0	0
+i:1	S	0	0	0	0	0	0
+i:2	A	0	0	1	1	1	1
+i:3	L	0	0	1	1	1	1
+i:4	L	0	0	1	1	1	1
+i:5	Y	0	0	1	1	1	2
+*/
 size_t LCSLength(string& s1, string& s2)
 {
 	s1.insert(0, 1, 0);
@@ -11813,4 +11849,37 @@ vector<string> PhoneKeyLetters(string& digits)
 		result = tmp;
 	}
 	return result;
+}
+/* https://leetcode.com/problems/word-break/
+* ["cats", "dog", "sand", "and", "cat"]
+* 012345678
+* catsandog
+* cats an dog
+* cat sand og
+*
+* 0123456789
+* catsanddog
+* cat sand dog
+* cats and dog
+*
+* Dynamic programming with tabulation (bottom-up) approach
+* if [0, end) is valid, all intermediate substrings which build up to [0, end) are also valid.
+* 0123456
+* catsand
+* [0,0) is valid -> [0,3) is valid -> [0,7) is valid
+* [0,0) is valid -> [0,4) is valid -> [0,7) is valid
+* 100%
+*/
+bool wordBreakDynamicProgramming(string& s, set<string>& words)
+{
+	vector<bool> valid(s.size() + 1, false); // flag to mark substring [0, end) validity
+	valid[0] = true; // empty substring is a valid string
+	for (size_t end = 1; end <= s.size(); end++)
+		for (size_t start = 0; start < end; start++) {
+			if (valid[start] && words.find(s.substr(start, end - start)) != words.end()) {
+				valid[end] = true;
+				break;
+			}
+		}
+	return valid.back();
 }
