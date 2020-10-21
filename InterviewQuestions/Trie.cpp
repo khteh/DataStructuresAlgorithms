@@ -4,14 +4,14 @@ template class Trie<int>;
 
 template<typename T>
 Trie<T>::Trie()
+	:m_root(make_shared<TrieNode<T>>())
 {
-	m_root = make_shared<TrieNode<T>>();
 }
 
 template<typename T>
 Trie<T>::Trie(string const &str, T value)
+	:Trie()
 {
-	m_root = make_shared<TrieNode<T>>();
 	Insert(str, value);
 }
 
@@ -56,15 +56,15 @@ size_t Trie<T>::Count()
 
 template<typename T>
 TrieNode<T>::TrieNode()
+	:m_value(numeric_limits<T>::min())
 {
-	m_value = numeric_limits<T>::min();
 	m_children.clear();
 }
 
 template<typename T>
 TrieNode<T>::TrieNode(T value)
+	: m_value(value)
 {
-	m_value = value;
 	m_children.clear();
 }
 

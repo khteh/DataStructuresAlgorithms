@@ -26,13 +26,13 @@ void splitString(size_t count, const string& s, char delim, set<string>& elems, 
 		}
 }
 SuffixTree::SuffixTree()
+	:m_root(make_unique<SuffixTreeNode>(0))
 {
-	m_root = make_unique<SuffixTreeNode>(0);
 }
 
 SuffixTree::SuffixTree(string const &str)
+	:SuffixTree()
 {
-	m_root = make_unique<SuffixTreeNode>(0);
 	InsertString(str);
 }
 
@@ -52,14 +52,16 @@ size_t SuffixTree::Count()
 }
 void SuffixTree::InsertString(string const &str)
 {
-	size_t index = 0;
-	for (vector<string>::iterator it = m_strings.begin(); it != m_strings.end(); it++)
-		index += it->size();
-	m_strings.push_back(str);
-	if (!m_root)
-		m_root = make_unique<SuffixTreeNode>(0);
-	for (size_t i = 0; i < str.size(); i++)
-		m_root->InsertString(str.substr(i), index + i);
+	if (!str.empty() && find(m_strings.begin(), m_strings.end(), str) == m_strings.end()) {
+		size_t index = 0;
+		for (vector<string>::iterator it = m_strings.begin(); it != m_strings.end(); it++)
+			index += it->size();
+		m_strings.push_back(str);
+		if (!m_root)
+			m_root = make_unique<SuffixTreeNode>(0);
+		for (size_t i = 0; i < str.size(); i++)
+			m_root->InsertString(str.substr(i), index + i);
+	}
 }
 void SuffixTree::RemoveString(string const &str)
 {

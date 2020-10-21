@@ -5839,6 +5839,16 @@ void SuffixTreeTests()
 	assert(match == 4);
 	match = sTree.LongestCommonSubstring(1);
 	assert(match == 5);
+
+	sTree.Clear();
+	sTree.InsertString("Mississippi");
+	assert(sTree.Count() == 53);
+	sTree.InsertString("Mississippi");
+	assert(sTree.Count() == 53); // Assert no duplicates!
+	indices1 = sTree.GetIndexes("is");
+	assert(indices1.size() == 2); // ississippi, issippi
+	assert(indices1[0] == 1);
+	assert(indices1[1] == 4);
 #if 0
 	Stack overflow!
 	string s1 = "gatezejttddpkmndtauvjcffiiafgzhkqgzliirdldbmqkdfpeadgjxcirgkmkcfxorthhpujbnenxansboejjrqfxoohuolsxgohukxmpzfukzvkduurvajrodlpxojzsihiqftrbkixbcxraqpiyadbkzqihmigunrzfzcgzfkeszcpkdotulkktfduekyqzkymqpeidhpyuhotynqaxknnsheiogrhobrajzkrekexvorlvlyhtgstjrtdgjzahvmjnprcumulnvftgoiyctjgtthleeunkgbemapsntmfdnuaydkrbyngbrbpsznfdftonfmbjahqrpgddbkokvdxfflzysneapnqvsqhilxabbjamkdhpktscxsczpoontmliozurkrvagnidnmcayiradtbacltouzacvseayrdzkkkqgbfrrnfydbnnxvctffgtfpbmfzsqjnclcnttztcvvpbmkovahvpdnjqghcafzcxhrxumhxxkdtyjqypljzsbidfpoydlumdrhokvmstydlmymldvimdduvzzcmiyxapbrrrndhjnhncpibdmiryjteyvcydxkthxcbgxshffuzevvfrcrpzaotcpbefqqppehgdlbfstralgzbtdfervuvejyvvocrabkiohjxjnnrshvyijyonzzioeakpbkgxybtlcbybgzvvvvhhkdfvpupxnlecqizvzhgigliotybprnnntqdsiquxvdxojripdlmzsyorhjandaqtjfptgebxbjmnokevncfxkkadrsqjvxuttokcabefxehmnhkcbgrdmnmmycflifrrkriggeplcfafpxsbfchbdzbvdgsbrcebgkgsdbdntfdbaltnsdzraafhobrsygkvetomeqvkrntyzeqimcaktnvfcehaeexqjnjfyvomfqlbdjxhhjojvytaovvprpfrdpgurzfhknsimnmhctbkzxfxjrzfjvjsigivmlxcgiginjitarxettzzcpceonufetlpdxupmpfmhzanufjxrkaapaaalaulebxizfjshbjsagmxmuesvecuoobuctngykkzsztzauquxxdgmjxuybkzvxsftzpqhmarlsbaeriaahlrcdgjadhbrizmnabcfadtnfdzobdhayhrxmdddycenimblnrlicasqhttekqyiafijoiykcmutzbjupsbqxbzeyqxbsshelvzieoiozylenrlaelpykdpvzhvpttmsyxsjbrfqchgrxcuvkgqinluzjrqlnzitvhlofjiznsxvbbhscsuoufodozsrmjecfdrkcslgmmrcletuvxcdfitpmgocjdcurrbfqpefxtndzkuuzxpaxfanxdxnteiapkzouvqiykxntmltdpmyzjveivnfuhzlrkseyhpbgrtcvnqmpqcgubjyourdrizixmoflmyzsskvfagtdopgthcdmmqhkmksxgeckagmjgauvz";
@@ -5854,21 +5864,21 @@ void TrieTests()
 	cout << "Trie tests..." << endl;
 	Trie<int> trie;					// Node count:
 	trie.Insert("Amy", 12);			// 3
-	trie.Insert("Christine", 34);	// 12
-	trie.Insert("Tom", 56);			// 15
-	trie.Insert("Robert", 78);		// 21
-	trie.Insert("Kristy", 90);		// 27
-	trie.Insert("apple", 1);		// 32
-	trie.Insert("appendix", 2);		// 40
-	trie.Insert("appetite", 3);		// 48
-	trie.Insert("to", 4);			// 50
-	trie.Insert("topple", 5);		// 56
-	trie.Insert("tea", 6);			// 59
-	trie.Insert("ted", 7);			// 62
-	trie.Insert("ten", 8);			// 65
-	trie.Insert("in", 9);			// 67
-	trie.Insert("inn", 10);			// 70
-	trie.Insert("intrinsics", 11);	// 80
+	trie.Insert("Christine", 34);	// 9
+	trie.Insert("Tom", 56);			// 3
+	trie.Insert("Robert", 78);		// 6
+	trie.Insert("Kristy", 90);		// 6
+	trie.Insert("apple", 1);		// 5
+	trie.Insert("appendix", 2);		// 5 ("app" common nodes)
+	trie.Insert("appetite", 3);		// 4 ("appe" common nodes)
+	trie.Insert("to", 4);			// 2
+	trie.Insert("topple", 5);		// 4 ("to" common nodes)
+	trie.Insert("tea", 6);			// 2 ("t" common node)
+	trie.Insert("ted", 7);			// 1 ("te" common nodes)
+	trie.Insert("ten", 8);			// 1 ("te" common nodes)
+	trie.Insert("in", 9);			// 2
+	trie.Insert("inn", 10);			// 1 ("in" common nodes)
+	trie.Insert("intrinsics", 11);	// 8 ("in" common nodes)
 	assert(trie.Find("Amy") == 12);
 	assert(trie.Find("Christine") == 34);
 	assert(trie.Find("Tom") == 56);
@@ -5877,6 +5887,7 @@ void TrieTests()
 	assert(trie.Find("apple") == 1);
 	assert(trie.Find("appendix") == 2);
 	assert(trie.Find("appetite") == 3);
+	assert(trie.Find("app") == numeric_limits<int>::min()); // not found
 	assert(trie.Find("to") == 4);
 	assert(trie.Find("topple") == 5);
 	assert(trie.Find("tea") == 6);
@@ -5889,7 +5900,11 @@ void TrieTests()
 	assert(trie.Find("tee") == numeric_limits<int>::min()); // not found
 	assert(trie.Find("t") == numeric_limits<int>::min()); // not found
 	size_t count = trie.Count();
+	assert(count == 62);
 	cout << "Trie has " << count << " nodes" << endl;
+	trie.Insert("intrinsics", 12);
+	assert(count == trie.Count()); // Assert no duplicates! Only the value changes
+	assert(trie.Find("intrinsics") == 12);
 	trie.RemoveString("Amy");
 	trie.RemoveString("Christine");
 	trie.RemoveString("Tom");
@@ -5905,23 +5920,21 @@ void TrieTests()
 }
 void PrefixTrieTests()
 {
-	vector<string> strings, result;
+	vector<string> result;
+	PrefixTrie prefixTrie;
 	cout << "Prefix-Trie tests..." << endl;
-	strings.push_back("apple");		// 5
-	strings.push_back("appendix");	// 8
-	strings.push_back("appetite");	// 8
-	strings.push_back("to");		// 2
-	strings.push_back("topple");	// 6
-	strings.push_back("tea");		// 3
-	strings.push_back("ted");		// 3
-	strings.push_back("ten");		// 3
-	strings.push_back("in");		// 2
-	strings.push_back("inn");		// 3
-	strings.push_back("intrinsics");// 10
-	sort(strings.begin(), strings.end());
-	PrefixTrie prefixTrie(strings);
-	size_t count = prefixTrie.Count();
-	cout << "PrefixTrieTests has " << count << " nodes" << endl;
+	prefixTrie.InsertString("apple");	// 5
+	prefixTrie.InsertString("appendix");// 5 ("app" common not included)
+	prefixTrie.InsertString("appetite");// 4 ("app" common not included)
+	prefixTrie.InsertString("to");		// 2
+	prefixTrie.InsertString("topple");	// 4 ("to" common not included)
+	prefixTrie.InsertString("tea");		// 2 ("t" common not included)
+	prefixTrie.InsertString("ted");		// 1 ("te" common not included)
+	prefixTrie.InsertString("ten");		// 1 ("te" common not included)
+	prefixTrie.InsertString("in");		// 2
+	prefixTrie.InsertString("inn");		// 1 ("in" common not included)
+	prefixTrie.InsertString("intrinsics");// 8 ("in" common not included)
+	assert(prefixTrie.Count() == 35);
 	assert(prefixTrie.Find(string("apple")));
 	result = prefixTrie.StartsWith(string("apple"));
 	assert(result.size() == 1);
@@ -6012,23 +6025,41 @@ void PrefixTrieTests()
 
 	longestCommonPrefix = prefixTrie.LongestCommonPrefix("i");
 	assert(longestCommonPrefix == "in");
+	prefixTrie.InsertString("intrinsics");
+	assert(prefixTrie.Count() == 35); // Assert no duplicate nodes
+	result = prefixTrie.StartsWith(string("apple"));
+	assert(result.size() == 1);
+	assert(result[0] == "apple");
 
 	PrefixTrie emptyPrefixTrie;
 	assert(!emptyPrefixTrie.Find(string("a")));
 	result = emptyPrefixTrie.StartsWith(string("a"));
 	assert(result.empty());
 
-	strings.clear();
-	strings.push_back("Hello");
-	PrefixTrie prefixTrie1(strings);
+	PrefixTrie prefixTrie1;
+	prefixTrie1.InsertString("Hello");
+	assert(prefixTrie1.Count() == 5);
 	assert(prefixTrie1.Find("Hello"));
 	assert(!prefixTrie1.Find("Hell"));
 	result = prefixTrie1.StartsWith(string("Hel"));
 	assert(!result.empty());
+	assert(result.size() == 1);
 	result = prefixTrie1.StartsWith(string("Hello"));
 	assert(!result.empty());
+	assert(result.size() == 1);
 	result = prefixTrie1.StartsWith(string("Helloa"));
 	assert(result.empty());
+	result = prefixTrie1.StartsWith(string("e"));
+	assert(result.empty());
+
+	prefixTrie1.InsertString("Hello"); // Assert no duplicates!
+	assert(prefixTrie1.Count() == 5);
+	result = prefixTrie1.StartsWith(string("Hel"));
+	assert(!result.empty());
+	assert(result.size() == 1);
+	result = prefixTrie1.StartsWith(string("Hello"));
+	assert(!result.empty());
+	assert(result.size() == 1);
 }
 void GetPermutations(string &w, set<string>& dictionary, set<string>& result)
 {

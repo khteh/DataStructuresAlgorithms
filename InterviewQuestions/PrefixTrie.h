@@ -1,4 +1,5 @@
 #pragma once
+#include <set>
 #include <map>
 #include <vector>
 #include <sstream>
@@ -15,6 +16,7 @@ public:
 	PrefixTrie();
 	PrefixTrie(vector<string>&);
 	~PrefixTrie();
+	void InsertString(string const&);
 	void RemoveString(string const &);
 	PrefixTrieNode* GetNode(string const&);
 	vector<string> GetNodes();
