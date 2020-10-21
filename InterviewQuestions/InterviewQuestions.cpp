@@ -2619,9 +2619,7 @@ bool SherlockValidString(string const& s)
 			max = it->second;
 		if (it->second < min)
 			min = it->second;
-		pair<map<size_t, size_t>::iterator, bool> result1 = countsCounts.emplace(it->second, 1);
-		if (!result1.second)
-			countsCounts[it->second]++;
+		countsCounts[it->second]++;
 	}
 	if (countsCounts.size() == 2 && countsCounts.find(1) != countsCounts.end() && countsCounts[1] == 1)
 		return true;
@@ -9903,12 +9901,8 @@ vector<int> freqQuery(vector<vector<int>>& queries)
 		switch (queries[i][0]) {
 		case 1: // Insert
 		{
-			pair<unordered_map<int, int>::iterator, bool> insert = frequency.emplace(queries[i][1], 1);
-			if (!insert.second)
-				frequency[queries[i][1]]++;
-			insert = frequencies.emplace(frequency[queries[i][1]], 1);
-			if (!insert.second)
-				frequencies[frequency[queries[i][1]]]++;
+			frequency[queries[i][1]]++;
+			frequencies[frequency[queries[i][1]]]++;
 		}
 		break;
 		case 2: // Remove
@@ -12003,9 +11997,7 @@ bool canFinishCourse(size_t numCourses, vector<vector<size_t>>& courses)
 	map<size_t, vector<size_t>> edges;
 	size_t edgeCount = courses.size();
 	for (size_t i = 0; i < edgeCount; i++) {
-		pair<map<size_t, vector<size_t>>::iterator, bool> status = edges.emplace(courses[i][1], vector<size_t>{courses[i][0]});
-		if (!status.second)
-			edges[courses[i][1]].push_back(courses[i][0]);
+		edges[courses[i][1]].push_back(courses[i][0]);
 		dependencies[courses[i][0]]++;
 	}
 	queue<size_t> nodesWithoutDependencies; // Set of all nodes with no incoming edge

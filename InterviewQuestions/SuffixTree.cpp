@@ -94,9 +94,7 @@ const vector<string> SuffixTree::LongestRepeatedSubstring()
 			if (it->second >= count) {
 				count = it->second;
 				index = tmp[0];
-				pair<map<size_t, vector<string>>::iterator, bool> status = repeats.emplace(count, vector<string>{m_strings[0].substr(index, count)});
-				if (!status.second)
-					status.first->second.push_back(m_strings[0].substr(index, count));
+				repeats[count].push_back(m_strings[0].substr(index, count));
 			}
 		}
 		//return index > -1 ? m_strings[0].substr(index, count) : "";
