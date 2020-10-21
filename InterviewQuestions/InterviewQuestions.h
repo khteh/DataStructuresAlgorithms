@@ -419,4 +419,4 @@ bool wordBreakDynamicProgramming(string&, set<string>&);
 void wordBreakDynamicProgramming(string&, set<string>&, vector<string>&);
 vector<string> wordBreakDFS(string&, set<string>&);
 vector<string> wordBreakDFS(string, set<string>&, map<string, vector<string>>&);
-bool canFinishCourse(size_t, vector<vector<size_t>>&);
+bool canFinishCourse(size_t, vector<vector<size_t>>&, vector<size_t>&);
