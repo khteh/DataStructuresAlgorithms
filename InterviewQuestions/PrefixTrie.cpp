@@ -125,11 +125,19 @@ vector<string> PrefixTrieNode::StartsWith(string const& prefix, size_t index)
 	}
 	return result;
 }
+/* Find exact string with '.' wildcard character
+*/
 bool PrefixTrieNode::Find(string const& prefix, size_t index)
 {
-	return (index < prefix.size() && m_children.find(prefix[index]) != m_children.end()) ?
-		m_children[prefix[index]]->Find(prefix, index + 1) // Nodes with common prefix
-		: m_value == prefix; // Leaf node
+	if (index < prefix.size())
+		if (prefix[index] == '.') {
+			for (map<char, unique_ptr<PrefixTrieNode>>::iterator it = m_children.begin(); it != m_children.end(); it++)
+				if (it->second->Find(prefix, index + 1))
+					return true;
+		} else // Nodes with common prefix
+			return m_children.find(prefix[index]) != m_children.end() ? m_children[prefix[index]]->Find(prefix, index + 1) : false;
+	// Either Leaf node (!m_value.empty()) or prefix not found
+	return m_value.size() == prefix.size();
 }
 PrefixTrieNode* PrefixTrieNode::GetNode(string const& prefix, size_t index)
 {

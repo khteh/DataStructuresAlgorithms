@@ -6060,6 +6060,13 @@ void PrefixTrieTests()
 	result = prefixTrie1.StartsWith(string("Hello"));
 	assert(!result.empty());
 	assert(result.size() == 1);
+	assert(prefixTrie1.Find("Hello"));
+	assert(!prefixTrie1.Find("Hell"));
+	assert(prefixTrie1.Find("Hell."));
+	assert(prefixTrie1.Find(".ello"));
+	assert(prefixTrie1.Find("....."));
+	assert(!prefixTrie1.Find("...."));
+	assert(!prefixTrie1.Find("Hell.."));
 }
 void GetPermutations(string &w, set<string>& dictionary, set<string>& result)
 {
