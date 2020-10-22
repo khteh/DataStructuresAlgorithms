@@ -5888,6 +5888,8 @@ void TrieTests()
 	assert(trie.Find("appendix") == 2);
 	assert(trie.Find("appetite") == 3);
 	assert(trie.Find("app") == numeric_limits<int>::min()); // not found
+	assert(trie.Find("ap..e") == 1);
+	assert(trie.Find("ap...") == 1);
 	assert(trie.Find("to") == 4);
 	assert(trie.Find("topple") == 5);
 	assert(trie.Find("tea") == 6);
@@ -5896,6 +5898,9 @@ void TrieTests()
 	assert(trie.Find("in") == 9);
 	assert(trie.Find("inn") == 10);
 	assert(trie.Find("intrinsics") == 11);
+	assert(trie.Find("in........") == 11);
+	assert(trie.Find("..........") == 11);
+	assert(trie.Find("in.........") == numeric_limits<int>::min());
 	assert(trie.Find("ABC") == numeric_limits<int>::min()); // not found
 	assert(trie.Find("tee") == numeric_limits<int>::min()); // not found
 	assert(trie.Find("t") == numeric_limits<int>::min()); // not found

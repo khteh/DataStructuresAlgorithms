@@ -14,7 +14,7 @@ template<typename T>
 class Trie
 {
 private:
-	shared_ptr<TrieNode<T>> m_root;
+	unique_ptr<TrieNode<T>> m_root;
 public:
 	Trie();
 	Trie(string const &, T);
@@ -31,7 +31,7 @@ class TrieNode
 {
 private:
 	T m_key;
-	map<char, shared_ptr<TrieNode<T>>> m_children;
+	map<char, unique_ptr<TrieNode<T>>> m_children;
 public:
 	TrieNode();
 	TrieNode(T value);
