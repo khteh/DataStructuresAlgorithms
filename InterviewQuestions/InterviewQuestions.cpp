@@ -5916,6 +5916,7 @@ void TrieTests()
 	assert(trie.Find("Robert") == numeric_limits<int>::min());
 	assert(trie.Find("Kristy") == numeric_limits<int>::min());
 	assert(trie.Find("ABC") == numeric_limits<int>::min());
+	trie.Clear();
 	cout << endl;
 }
 void PrefixTrieTests()
@@ -6031,42 +6032,43 @@ void PrefixTrieTests()
 	assert(result.size() == 1);
 	assert(result[0] == "apple");
 
-	PrefixTrie emptyPrefixTrie;
-	assert(!emptyPrefixTrie.Find(string("a")));
-	result = emptyPrefixTrie.StartsWith(string("a"));
+	prefixTrie.Clear();
+	assert(!prefixTrie.Find(string("a")));
+	result = prefixTrie.StartsWith(string("a"));
 	assert(result.empty());
 
-	PrefixTrie prefixTrie1;
-	prefixTrie1.InsertString("Hello");
-	assert(prefixTrie1.Count() == 5);
-	assert(prefixTrie1.Find("Hello"));
-	assert(!prefixTrie1.Find("Hell"));
-	result = prefixTrie1.StartsWith(string("Hel"));
+	prefixTrie.InsertString("Hello");
+	assert(prefixTrie.Count() == 5);
+	assert(prefixTrie.Find("Hello"));
+	assert(!prefixTrie.Find("Hell"));
+	result = prefixTrie.StartsWith(string("Hel"));
 	assert(!result.empty());
 	assert(result.size() == 1);
-	result = prefixTrie1.StartsWith(string("Hello"));
+	result = prefixTrie.StartsWith(string("Hello"));
 	assert(!result.empty());
 	assert(result.size() == 1);
-	result = prefixTrie1.StartsWith(string("Helloa"));
+	result = prefixTrie.StartsWith(string("Helloa"));
 	assert(result.empty());
-	result = prefixTrie1.StartsWith(string("e"));
+	result = prefixTrie.StartsWith(string("e"));
 	assert(result.empty());
+	assert(prefixTrie.Find("Hello"));
+	assert(!prefixTrie.Find("Hell"));
+	assert(prefixTrie.Find("Hell."));
+	assert(prefixTrie.Find(".ello"));
+	assert(prefixTrie.Find("....."));
+	assert(!prefixTrie.Find("...."));
+	assert(!prefixTrie.Find("......"));
+	assert(!prefixTrie.Find("Hell.."));
 
-	prefixTrie1.InsertString("Hello"); // Assert no duplicates!
-	assert(prefixTrie1.Count() == 5);
-	result = prefixTrie1.StartsWith(string("Hel"));
+	prefixTrie.InsertString("Hello"); // Assert no duplicates!
+	assert(prefixTrie.Count() == 5);
+	result = prefixTrie.StartsWith(string("Hel"));
 	assert(!result.empty());
 	assert(result.size() == 1);
-	result = prefixTrie1.StartsWith(string("Hello"));
+	result = prefixTrie.StartsWith(string("Hello"));
 	assert(!result.empty());
 	assert(result.size() == 1);
-	assert(prefixTrie1.Find("Hello"));
-	assert(!prefixTrie1.Find("Hell"));
-	assert(prefixTrie1.Find("Hell."));
-	assert(prefixTrie1.Find(".ello"));
-	assert(prefixTrie1.Find("....."));
-	assert(!prefixTrie1.Find("...."));
-	assert(!prefixTrie1.Find("Hell.."));
+	prefixTrie.Clear();
 }
 void GetPermutations(string &w, set<string>& dictionary, set<string>& result)
 {

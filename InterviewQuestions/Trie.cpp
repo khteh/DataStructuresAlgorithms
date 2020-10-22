@@ -56,14 +56,14 @@ size_t Trie<T>::Count()
 
 template<typename T>
 TrieNode<T>::TrieNode()
-	:m_value(numeric_limits<T>::min())
+	:m_key(numeric_limits<T>::min())
 {
 	m_children.clear();
 }
 
 template<typename T>
 TrieNode<T>::TrieNode(T value)
-	: m_value(value)
+	: m_key(value)
 {
 	m_children.clear();
 }
@@ -81,14 +81,14 @@ void TrieNode<T>::InsertString(string const &str, T value)
 		pair<map<char, shared_ptr<TrieNode<T>>>::iterator, bool> result = m_children.emplace(str[0], new TrieNode<T>());
 		result.first->second->InsertString(str.substr(1), value);
 	} else
-		m_value = value; // Store the value at the leaf node.
+		m_key = value; // Store the value at the leaf node.
 }
 
 template<typename T>
 T TrieNode<T>::Find(string const &str)
 {
 	return (!str.empty() && m_children.find(str[0]) != m_children.end()) ?
-		m_children[str[0]]->Find(str.substr(1)) : m_value;
+		m_children[str[0]]->Find(str.substr(1)) : m_key;
 }
 
 template<typename T>

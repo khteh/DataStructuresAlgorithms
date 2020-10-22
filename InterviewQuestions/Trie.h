@@ -30,7 +30,7 @@ template<typename T>
 class TrieNode
 {
 private:
-	T m_value;
+	T m_key;
 	map<char, shared_ptr<TrieNode<T>>> m_children;
 public:
 	TrieNode();

@@ -16,6 +16,7 @@ public:
 	PrefixTrie();
 	PrefixTrie(vector<string>&);
 	~PrefixTrie();
+	void Clear();
 	void InsertString(string const&);
 	void RemoveString(string const &);
 	PrefixTrieNode* GetNode(string const&);
@@ -29,7 +30,7 @@ public:
 class PrefixTrieNode
 {
 private:
-	string m_value;
+	string m_key;
 	map<char, unique_ptr<PrefixTrieNode>> m_children;
 	string ExtendPrefix();
 public:
@@ -41,7 +42,7 @@ public:
 	void RemoveString(string);
 	vector<string> GetNodes();
 	PrefixTrieNode* GetNode(string const&, size_t);
-	bool Find(string const&, size_t); // Exact match
+	bool Find(string const&); // Exact match
 	vector<string> StartsWith(string const&, size_t);
 	string LongestCommonPrefix(string const&);
 };

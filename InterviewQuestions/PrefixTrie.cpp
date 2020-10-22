@@ -12,7 +12,7 @@ PrefixTrie::PrefixTrie(vector<string>& str)
 
 PrefixTrie::~PrefixTrie()
 {
-	m_root.reset();
+	Clear();
 }
 size_t PrefixTrie::Count()
 {
@@ -20,6 +20,8 @@ size_t PrefixTrie::Count()
 }
 void PrefixTrie::InsertString(string const& str)
 {
+	if (!m_root)
+		m_root = make_unique<PrefixTrieNode>();
 	m_root->InsertString(str, 0);
 }
 void PrefixTrie::RemoveString(string const &str)
@@ -29,7 +31,7 @@ void PrefixTrie::RemoveString(string const &str)
 }
 bool PrefixTrie::Find(string const& prefix)
 {
-	return m_root && !prefix.empty() ? m_root->Find(prefix, 0) : false;
+	return m_root && !prefix.empty() ? m_root->Find(prefix) : false;
 }
 vector<string> PrefixTrie::StartsWith(string const& prefix)
 {
@@ -47,6 +49,10 @@ string PrefixTrie::LongestCommonPrefix(string const& prefix)
 {
 	return m_root && !prefix.empty() ? m_root->LongestCommonPrefix(prefix) : "";
 }
+void PrefixTrie::Clear()
+{
+	m_root.reset();
+}
 PrefixTrieNode::PrefixTrieNode()
 {
 }
@@ -56,7 +62,7 @@ PrefixTrieNode::~PrefixTrieNode()
 }
 string PrefixTrieNode::Value()
 {
-	return m_value;
+	return m_key;
 }
 size_t PrefixTrieNode::Count()
 {
@@ -74,7 +80,7 @@ void PrefixTrieNode::InsertString(string str, size_t index)
 		pair<map<char, unique_ptr<PrefixTrieNode>>::iterator, bool> result = m_children.emplace(str[index], make_unique<PrefixTrieNode>());
 		result.first->second->InsertString(str, index + 1);
 	} else
-		m_value = str; // Store the prefix string at the leaf node.
+		m_key = str; // Store the prefix string at the leaf node.
 }
 void PrefixTrieNode::RemoveString(string str)
 {
@@ -106,11 +112,11 @@ vector<string> PrefixTrieNode::StartsWith(string const& prefix, size_t index)
 	vector<string> result;
 	if (index < prefix.size() && m_children.find(prefix[index]) != m_children.end())
 		result = m_children[prefix[index]]->StartsWith(prefix, index + 1); // Nodes with common prefix
-	else if (m_children.empty() && !m_value.empty() && m_value.substr(0, prefix.size()) == prefix) // Leaf node
-		result.push_back(m_value);
+	else if (m_children.empty() && !m_key.empty() && m_key.substr(0, prefix.size()) == prefix) // Leaf node
+		result.push_back(m_key);
 	else {
-		if (!m_value.empty() && m_value.substr(0, prefix.size()) == prefix)
-			result.push_back(m_value); // All descendants of this node have common prefix of the string associated with this node. Ex: "to", "topple"
+		if (!m_key.empty() && m_key.substr(0, prefix.size()) == prefix)
+			result.push_back(m_key); // All descendants of this node have common prefix of the string associated with this node. Ex: "to", "topple"
 		/*
 			apple, appendix, appetite
 			prefix: app
@@ -127,17 +133,40 @@ vector<string> PrefixTrieNode::StartsWith(string const& prefix, size_t index)
 }
 /* Find exact string with '.' wildcard character
 */
-bool PrefixTrieNode::Find(string const& prefix, size_t index)
+bool PrefixTrieNode::Find(string const& prefix)
 {
-	if (index < prefix.size())
-		if (prefix[index] == '.') {
+	/* m_key = abc
+	* prefix = ab.
+	* root: ab.
+	* 'a': b.
+	* 'b': .
+	* 
+	* prefix = ab..
+	* root: ab..
+	* 'a': b..
+	* 'b': ..
+	* 'c': .
+	* 
+	* m_key = runner
+	* prefix = ru.n.e
+	* root: ru.n.e
+	* r: u.n.e
+	* u: .n.e
+	* *: n.e
+	* n: .e
+	* *: e
+	* 
+	*/
+	if (!prefix.empty())
+		if (prefix[0] == '.') {
 			for (map<char, unique_ptr<PrefixTrieNode>>::iterator it = m_children.begin(); it != m_children.end(); it++)
-				if (it->second->Find(prefix, index + 1))
+				if (it->second->Find(prefix.substr(1)))
 					return true;
+			return false; // prefix is longer than the current tree
 		} else // Nodes with common prefix
-			return m_children.find(prefix[index]) != m_children.end() ? m_children[prefix[index]]->Find(prefix, index + 1) : false;
-	// Either Leaf node (!m_value.empty()) or prefix not found
-	return m_value.size() == prefix.size();
+			return m_children.find(prefix[0]) != m_children.end() ? m_children[prefix[0]]->Find(prefix.substr(1)) : false;
+	// Either Leaf node (!m_key.empty()) or prefix not found
+	return !m_key.empty();
 }
 PrefixTrieNode* PrefixTrieNode::GetNode(string const& prefix, size_t index)
 {
@@ -150,7 +179,7 @@ PrefixTrieNode* PrefixTrieNode::GetNode(string const& prefix, size_t index)
 string PrefixTrieNode::ExtendPrefix()
 {
 	ostringstream oss;
-	if (m_value == "" && m_children.size() == 1)
+	if (m_key == "" && m_children.size() == 1)
 		oss << m_children.begin()->first << m_children.begin()->second->ExtendPrefix();
 	return oss.str();
 }
