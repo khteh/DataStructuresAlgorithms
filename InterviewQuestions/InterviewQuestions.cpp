@@ -338,8 +338,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(udata.size() == 4); // 0 6 7 8
 	assert(udata1 == udata);
 
-	//index = KMPSearch("ABC ABCDAB ABCDABCDABDE", "ABCDABD");
-	//assert(index == 15);
+	udata.clear();
+	KMPSearch("ABC ABCDAB ABCDABCDABDE", "ABCDABD", udata);
+	assert(!udata.empty());
+	assert(udata.size() == 1);
+	assert(udata[0] == 15);
 	assert(bitCount(10) == 2);
 	assert(bitCount(12) == 2);
 	assert(bitCount(7) == 3);
@@ -2796,52 +2799,46 @@ vector<size_t> FindSubString(string const &s1, string const s2)
 	}
 	return result;
 }
-// https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm
-// Unfinished work!
+/* https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm
+*/
 void KMPTable(string const& w, vector<long>& T)
 {
-	size_t pos = 2; // the current position we are computing in T
-	size_t cnd = 0;	//the zero-based index in W of the next character of the current candidate substring
 	// the first few values are fixed but different from what the algorithm might suggest
-	T.push_back(-1);
-	while (pos < w.size()) {
-		// first case: the substring continues
-		if (w[pos - 1] == w[cnd]) {
-			T.resize(pos + 1);
-			T[pos++] = ++cnd;
-			// second case: it doesn't, but we can fall back
-		} else if (cnd > 0)
-			cnd = T[cnd];
-		// third case: we have run out of candidates.  Note cnd = 0
+	T.resize(w.size() + 1);
+	T[0] = -1;
+	long pos = 1, cnd = 0;
+	for (; pos < (long)w.size(); pos++, cnd++) {
+		if (w[pos] == w[cnd])
+			T[pos] = T[cnd];
 		else {
-			T.resize(pos + 1);
-			T[pos++] = 0;
+			T[pos] = cnd;
+			cnd = T[cnd]; // To increase performance
+			for (; cnd >= 0 && w[pos] != w[cnd]; cnd = T[cnd]);
 		}
 	}
+	T[pos] = cnd; // (only needed when all word occurrences are searched)
 }
-size_t KMPSearch(string const& s, string const& w)
+void KMPSearch(string const& s, string const& w, vector<size_t>& result)
 {
-	size_t m = 0, i = 0;
 	vector<long> T;
 	KMPTable(w, T);
-	while ((m + 1) < s.size()) {
-		if (w[i] == s[m + 1]) {
-			if (i == (w.size() - 1))
-				return m;
-			i++;
-		}
-		else {
-			if (T[i] > -1) {
-				m = m + i - T[i];
-				i = T[i];
+	for (long j = 0, k = 0; j < (long)s.size(); ) {
+		if (w[k] == s[j]) {
+			j++;
+			k++;
+			if (k == w.size()) {
+				// (occurrence found, if only first occurrence is needed, m ← j - k  may be returned here)
+				result.push_back(j - k);
+				k = T[k]; // (T[length(W)] can't be -1)
 			}
-			else {
-				i = 0;
-				m++;
+		} else {
+			k = T[k];
+			if (k < 0) {
+				j++;
+				k++;
 			}
 		}
 	}
-	return s.size();
 }
 void copy_on_write_string()
 {

@@ -173,7 +173,7 @@ bool SolvabilityOfTheTilesGame(vector<size_t>&);
 void RotateRightArray(vector<int>&, int);
 vector<int> RotateLeftArray(vector<int>&, int);
 vector<size_t> FindSubString(string const&, string const);
-size_t KMPSearch(string const&, string const&);
+void KMPSearch(string const&, string const&, vector<size_t>&);
 void KMPTable(string const&, vector<long>&);
 void copy_on_write_string();
 long fibonacci(long);
