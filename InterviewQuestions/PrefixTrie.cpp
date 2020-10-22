@@ -135,12 +135,18 @@ vector<string> PrefixTrieNode::StartsWith(string const& prefix, size_t index)
 */
 bool PrefixTrieNode::Find(string const& prefix)
 {
-	/* m_key = abc
+	/* Worst case time complexity: O(26x26) 
+	* m_key = abc
 	* prefix = ab.
 	* root: ab.
 	* 'a': b.
 	* 'b': .
 	* 
+	* prefix = a.c
+	* root: a.c
+	* 'a': .c
+	* 'b': .
+
 	* prefix = ab..
 	* root: ab..
 	* 'a': b..
