@@ -148,6 +148,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(1e9 + 7 == pow(10, 9) + 7);
 	cout << "1e9: " << 1e9 << ", 10e9: " << 10e9 << endl;
 	cout << "1e5: " << 1e5 << ", pow(10, 5): " << pow(10, 5) << ", " << pow(2, pow(10, 5)) << endl;
+	/* (a/b)*b + a%b = a
+	* -3/2 = -1 => *b = -2 => -2 + a%b = -3 => a%b = -3 + 2 = -1
+	* 3/-2 = -1 => *b = 2 => 2 + a%b = 3 => a%b = 1
+	* -3/-2 = 1 => *b = -2 => -2 + a%b = -3 => a%b = -3 + 2 = -1
+	*/
+	assert(-3 % 2 == -1);
+	assert(3 % -2 == 1);
+	assert(-3 % -2 == -1);
 	i = 3;
 	assert(-i == -3);
 	assert(~i == -4);
@@ -7396,7 +7404,7 @@ size_t sumpairs(vector<long>& numbers, long sum)
 vector<vector<long>> threeSum(vector<long>& nums)
 {
 	set<vector<long>> result;
-	if (nums.empty() || nums.size() < 3)// || *min_element(nums.begin(), nums.end()) >= 0 || *max_element(nums.begin(), nums.end()) <= 0)
+	if (nums.empty() || nums.size() < 3)
 		return vector<vector<long>>();
 	sort(nums.begin(), nums.end());
 	// -1,0,1,2,-1,-4 => -1, -1, 0, 1, 2, 4
@@ -7526,7 +7534,7 @@ vector<char> AddVectors(vector<char>& a, vector<char>& b)
 }
 // 0 1 2 3 4 5 6 7 8 9
 //         ^ (10 / 2 - 1)
-// (0,9), (0,8)			2
+// (0,9), (0,8)	2
 // (1,9), (1,8), (1,7), 3
 // (2,9), (2,8), (2,7), (2,6), 4
 // (3,9), (3,8), (3,7), (3,6), (3,5) 5
@@ -7554,13 +7562,13 @@ vector<char> AddVectors(vector<char>& a, vector<char>& b)
 size_t greaterthansumpairs(vector<long>& numbers, long sum)
 {
 	size_t count = 0, count1;
-	for (size_t it = 0; it <= numbers.size()/2 - 1; it++) {
+	for (size_t i = 0; i <= numbers.size()/2 - 1; i++) {
 		count1 = 0;
-		for (size_t rit = numbers.size() - 1; rit >= 0 && numbers[it] + numbers[rit] >= sum && it <= rit; rit--)
+		for (size_t j = numbers.size() - 1; j >= 0 && numbers[i] + numbers[j] >= sum && i <= j; j--)
 			count1++;
-		if (it == 0 && count1 > 0)
+		if (!i && count1)
 			count += count1 - 1;
-		if (it != numbers.size() / 2 - 1)
+		if (i != numbers.size() / 2 - 1)
 			count1 *= 2;
 		count += count1;
 	}
@@ -9059,26 +9067,25 @@ size_t binary_gap(long n)
 	}
 	return max;
 }
-//For a given array A of N integers and a sequence S of N integers from the set{ −1, 1 }, we define val(A, S) as follows :
-//val(A, S) = | sum{ A[i] * S[i] for i = 0..N−1 } |
-//(Assume that the sum of zero elements equals zero.)
-//For a given array A, we are looking for such a sequence S that minimizes val(A, S).
-//Write a function :
-//class Solution { public int solution(int[] A); }
-//that, given an array A of N integers, computes the minimum value of val(A, S) from all possible values of val(A, S) for all possible sequences S of N integers from the set{ −1, 1 }.
-//For example, given array :
-//	A[0] = 1
-//	A[1] = 5
-//	A[2] = 2
-//	A[3] = -2
-//	your function should return 0, since for S = [−1, 1, −1, 1], val(A, S) = 0, which is the minimum possible value.
+/*
+* For a given array A of N integers and a sequence S of N integers from the set{ −1, 1 }, we define val(A, S) as follows :
+* val(A, S) = | sum{ A[i] * S[i] for i = 0..N−1 } |
+* (Assume that the sum of zero elements equals zero.)
+* For a given array A, we are looking for such a sequence S that minimizes val(A, S).
+* Write a function that, given an array A of N integers, computes the minimum value of val(A, S) from all possible values of val(A, S) for all possible sequences S of N integers from the set{ −1, 1 }.
+* For example, given array:
+* A = {1,5,2,-2}
+* S = {-1,1,-1,1}
+* val:{-1,4,2,0}
+* your function should return 0, since for S = [−1, 1, −1, 1], val(A, S) = 0, which is the minimum possible value.
+*/
 long MinAbsSum(vector<long>& data)
 {
 	long sum = 0;
 	long min = numeric_limits<long>::max();
 	for (size_t i = 0; i < ((size_t)1 << data.size()); i++) {
 		vector<bool> binary;
-		decimal_to_binary(i, binary, data.size());
+		decimal_to_binary(i, binary, data.size()); // Permutations of {-1,1} for all the bit patterns
 		for (size_t j = 0; j < binary.size(); j++)
 			sum += (binary[j] ? -1 : 1) * data[j];
 		if (abs(sum) < min)
