@@ -7,7 +7,7 @@ class LRUCache
 {
 private:
 	map<TKey, pair<typename list<TKey>::iterator, TValue>> _cache;
-	list<TKey> _entries;
+	list<TKey> _entries; // Front: Most recently used. Back: Least recently used
 	size_t _capacity;
 	void RefreshCacheLine(TKey);
 public:
