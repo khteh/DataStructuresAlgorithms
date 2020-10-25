@@ -2136,6 +2136,34 @@ int _tmain(int argc, _TCHAR* argv[])
 	udata.clear();
 	assert(!canFinishCourse(3, ugrid, udata));
 	assert(udata.empty());
+	a.clear();
+	a = {1,2,3,1};
+	assert(containsNearbyAlmostDuplicate(a, 3, 0));
+	a.clear();
+	a = { 1,0,1,1 };
+	assert(containsNearbyAlmostDuplicate(a, 1, 2));
+	a.clear();
+	a = { 1,5,9,1,5,9 };
+	assert(!containsNearbyAlmostDuplicate(a, 2, 3));
+	assert(!containsNearbyAlmostDuplicate(a, 0, 0)); // indices must be distinct
+	assert(!containsNearbyAlmostDuplicate(a, 0, 1));
+	assert(containsNearbyAlmostDuplicate(a, 3, 0));
+	assert(!containsNearbyAlmostDuplicate(a, 2, 0));
+	assert(!containsNearbyAlmostDuplicate(a, -1, -1));
+	a.clear();
+	assert(abs(2147483647 - -1) == 2147483648);
+	assert(abs(-1 - 2147483647) == 2147483648);
+	a = { 2147483647, -1, 2147483647 }; // 0x7FFFF_FFFF, 0x8000_0000
+	assert(!containsNearbyAlmostDuplicate(a, 1, 2147483647));
+	assert(!containsNearbyAlmostDuplicate(a, 1, 2147483648)); // 2147483648 is 0x8000_0000 = 0xFFFF_FFFF_8000_0000 < 0
+	a.clear();
+	assert(abs((long)2147483648 - (long)2147483647) == 1);
+	assert(abs((long)2147483647 - (long)2147483648) == 1);
+	a = { (long)2147483648, 2147483647 }; // 0xFFFF_FFFF_8000_0000, 0x7FFF_FFFF
+	assert(!containsNearbyAlmostDuplicate(a, 1, 1)); // 2147483648 = 0xFFFF_FFFF_8000_0000; 2147483647 = 0x7FFF_FFFF. One in negative bucket, another in positive bucket. Different from abs((long)2147483648 - (long)2147483647)
+	a.clear();
+	a = { 4, 1, -1, 6, 5 };
+	assert(containsNearbyAlmostDuplicate(a, 3, 1));
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -12081,4 +12109,74 @@ bool canFinishCourse(size_t numCourses, vector<vector<size_t>>& courses, vector<
 		}
 	}
 	return !edgeCount; // A topological ordering is possible if and only if the graph has no directed cycles, that is, if it is a directed acyclic graph (DAG)
+}
+/* https://leetcode.com/problems/contains-duplicate-iii/
+* Use bucket sort theory.
+* nums are distributed to bucket of size t. 
+* (1) All values within the same bucket will have a diff or distance <= t.
+* (2) Neighbouring buckets will have a diff or distance ranging from t to 2*t.
+* Observations:
+* (1) Positive values will have even distribution of size t
+* (2) Need to adjust the distribution of negative numbers
+* (3) t+1 to avoid division by zero
+ i i/w* desired**
+-7 -3	-4
+-6 -3	-3
+-5 -2   -3
+-4 -2   -2
+-3 -1   -2
+-2 -1   -1
+-1  0   -1 => (i - 1) / w
+ 0  0    0
+ 1  0    0
+ 2  1    1
+ 3  1    1
+ 4  2    2
+ 5  2    2
+ 6  3	 3
+ 7  3	 3
+ 8  4	 4
+
+t:2
+w = t+1 = 3
+i  i/w* desired**
+-6 -2	-2    -6 -2 / 3 = -2
+-5 -1   -2    -5 -2 / 3 = -2
+-4 -1   -2    -4 -2 / 3 = -2
+-3 -1   -1    -3 -2 / 3 = -1
+-2  0   -1    -2 -2 / 3 = -1
+-1  0   -1 => -1 -2 / 3 = -1
+ 0  0    0
+ 1  0    0
+ 2  0    0
+ 3  1    1
+ 4  1    1
+ 5  1    1
+ 6  2	 2
+ 7  2 	 2
+ 8  2	 2
+*/
+bool containsNearbyAlmostDuplicate(vector<long>& nums, long k, long t)
+{
+	map<long, long> buckets;
+	if (k > 0 && t >= 0) {// Absolute diff. t >= 0. k = 0 means diff is 0.
+		long w = t + 1;
+		for (size_t i = 0; i < nums.size(); i++) {
+			/* nums[i] 
+			*/
+			long bucket = nums[i] < 0 ? (nums[i] / w) - 1 : nums[i] / w; // Using (nums[i] - 1) / w) will result in overflow in buckets[bucket + 1] when 'w' is unsigned long
+			if (buckets.find(bucket) != buckets.end()) // (1) All values within the same bucket will have a diff or distance <= t.
+				return true;
+			if (buckets.find(bucket - 1) != buckets.end() && (unsigned long)abs(buckets[bucket - 1] - nums[i]) <= (unsigned long)t)
+				return true;
+			if (buckets.find(bucket + 1) != buckets.end() && (unsigned long)abs(buckets[bucket + 1] - nums[i]) <= (unsigned long)t)
+				return true;
+			buckets.emplace(bucket, nums[i]);
+			if ((long)i >= k) { // ">=" as i will be +1 in the next loop and i will be > k
+				long bucket = nums[i - k] < 0 ? (nums[i - k] - 1) / w : nums[i - k] / w;
+				buckets.erase(bucket);
+			}
+		}
+	}
+	return false;
 }
