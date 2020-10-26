@@ -100,7 +100,7 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePreOrder(vector<T>& inorder, vector<T>& pr
 	shared_ptr<Node<T>> root = nullptr;
 	if (instart == inend)
 		return make_shared<Node<T>>(inorder[instart]);
-	else if (prestart < preorder.size() && inend >= 0 && inend > instart) {
+	else if (prestart < (long)preorder.size() && inend >= 0 && inend > instart) {
 		vector<T>::iterator it = find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, preorder[prestart]);
 		if (it == (inorder.begin() + instart + (inend - instart) + 1))
 			throw runtime_error("Invalid tree input parameters! No root found!");
@@ -211,7 +211,7 @@ shared_ptr<Node<T>> Tree<T>::AddToTree(vector<T>& v)
 				nodes[left]->SetNext(nodes[i]);
 			}
 			long right = 2 * i + 2;
-			if (right < v.size()) {
+			if (right < (long)v.size()) {
 				if (v[right] != numeric_limits<T>::min()) {
 					if (nodes.find(right) == nodes.end())
 						nodes.emplace(right, make_shared<Node<T>>(v[right]));

@@ -122,8 +122,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "sizeof(void*): " << sizeof(void*) << endl;
 	cout << "sizeof(int): " << (int)sizeof(int) << endl;
 	cout << "sizeof(long): " << (int)sizeof(long) << endl;
+	assert(sizeof(int) == 4);
+	assert(sizeof(long) == 4);
 	cout << "sizeof(size_t): " << (int)sizeof(size_t) << " max: " << numeric_limits<size_t>::max() << endl;
 	cout << "sizeof(long long): " << (int)sizeof(long long) << endl;
+	assert(sizeof(long long) == 8);
 	cout << "sizeof(unsigned long long): " << (int)sizeof(unsigned long long) << endl;
 	cout << "sizeof(double): " << (int)sizeof(double) << endl;
 	cout << "sizeof(long double): " << (int)sizeof(long double) << endl;
@@ -159,6 +162,76 @@ int _tmain(int argc, _TCHAR* argv[])
 	i = 3;
 	assert(-i == -3);
 	assert(~i == -4);
+	i = 0x7FFFFFFF;
+	long long l = i;
+	i++;
+	l++;
+	assert(i == numeric_limits<int>::min());
+	assert(i < 0);
+	assert((long long)i == 0xFFFFFFFF80000000LL);
+	assert(l > 0);
+	assert(l == 0x80000000);
+	cout << "(int)0x7FFFFFFF + 1: " << i << ", long long: " << (long long)(i) << endl; // sign extended to 64-bit
+	cout << "(long long)0x7FFFFFFF + 1: " << l << endl;
+
+	i = 0x80000000;
+	l = i;
+	assert(l < 0); // sign extended to 64-bit
+	assert(l == 0xFFFFFFFF80000000LL);
+	i--;
+	l--;
+	assert(i > 0); // integer overflow
+	assert(i == numeric_limits<int>::max());
+	assert(l < 0); // sign extended to 64-bit
+	assert(l == 0xFFFFFFFF7FFFFFFFLL);
+	cout << "(int)0x80000000 - 1: " << i << ", long long: " << (long long)(i) << endl; // integer overflow
+	cout << "(long long)0x80000000 - 1: " << l << endl;
+	i = 0x80000000;
+	j = -0x80000000;
+	assert(i == j);
+	assert(i < 0);
+	assert(j < 0);
+	cout << "(int)-0x80000000: " << i << endl;
+	i = -0x80000000;
+	l = i;
+	assert(l < 0); // sign extended to 64-bit
+	assert(l == 0xFFFFFFFF80000000LL);
+	i--;
+	l--;
+	assert(i > 0); // integer overflow
+	assert(i == numeric_limits<int>::max());
+	assert(l < 0); // sign extended to 64-bit
+	assert(l == 0xFFFFFFFF7FFFFFFFLL);
+	cout << "(int)0x80000000 - 1: " << i << ", long long: " << (long long)(i) << endl; // integer overflow
+	cout << "(long long)0x80000000 - 1: " << l << endl;
+	i = 0x80000000;
+	assert(i < 0);
+	i /= 2;
+	assert(i < 0);
+	assert(i == -0x40000000);
+	i = -0x80000000;
+	assert(i < 0);
+	i /= 2;
+	assert(i < 0);
+	assert(i == -0x40000000);
+
+	l = 0x80000000LL;
+	assert(l > 0);
+	l--;
+	assert(l > 0);
+	assert(l == 0x7fffffffL);
+	l = -0x80000000LL;
+	assert(l == 0xFFFFFFFF80000000);
+	assert(l < 0);
+	l--;
+	assert(l < 0);
+	assert(l == 0xFFFFFFFF7FFFFFFFL);
+	
+	i = 0x80000000L;
+	assert(i - 0x7FFFFFFF == 1);
+	i = -0x80000000L;
+	assert(i - 0x7FFFFFFF == 1);
+
 	cout << "int -" << hex << i << ": " << -i << dec << " " << -i << ", ~" << i << ": " << hex << ~i << " " << dec << ~i << endl;
 	unsigned int ui = 3;
 	cout << "uint -" << hex << ui << ": " << -ui << dec << " " << -ui << ", ~" << ui << ": " << hex << ~ui << " " << dec << ~ui << endl;
@@ -2153,14 +2226,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	assert(abs(2147483647 - -1) == 2147483648);
 	assert(abs(-1 - 2147483647) == 2147483648);
-	a = { 2147483647, -1, 2147483647 }; // 0x7FFFF_FFFF, 0x8000_0000
+	a = { 2147483647, -1, 2147483647 }; // 0x7FFFF_FFFF, 0xFFFF_FFFF
 	assert(!containsNearbyAlmostDuplicate(a, 1, 2147483647));
 	assert(!containsNearbyAlmostDuplicate(a, 1, 2147483648)); // 2147483648 is 0x8000_0000 = 0xFFFF_FFFF_8000_0000 < 0
 	a.clear();
-	assert(abs((long)2147483648 - (long)2147483647) == 1);
-	assert(abs((long)2147483647 - (long)2147483648) == 1);
-	a = { (long)2147483648, 2147483647 }; // 0xFFFF_FFFF_8000_0000, 0x7FFF_FFFF
-	assert(!containsNearbyAlmostDuplicate(a, 1, 1)); // 2147483648 = 0xFFFF_FFFF_8000_0000; 2147483647 = 0x7FFF_FFFF. One in negative bucket, another in positive bucket. Different from abs((long)2147483648 - (long)2147483647)
+	assert(abs((long)-0x80000000 - (long)0x7FFFFFFF) == 1);
+	assert(abs((long)0x7FFFFFFF - (long)-0x80000000) == 1);
+	a = { (long)-2147483648, 2147483647 }; // 0xFFFF_FFFF_8000_0000, 0x7FFF_FFFF
+	assert(!containsNearbyAlmostDuplicate(a, 1, 1)); // -2147483648 = 0xFFFF_FFFF_8000_0000; 2147483647 = 0x7FFF_FFFF. One in negative bucket, another in positive bucket. Different from abs((long)2147483648 - (long)2147483647)
 	a.clear();
 	a = { 4, 1, -1, 6, 5 };
 	assert(containsNearbyAlmostDuplicate(a, 3, 1));
@@ -9066,13 +9139,11 @@ string decimal_to_binary(int decimal)
 }
 void decimal_to_binary(int decimal, vector<bool>& binary, size_t width)
 {
-	while (decimal) {
-		binary.push_back(decimal & 1);
+	binary.resize(width, false);
+	for (long i = width - 1; i >= 0 && decimal; i--) {
+		binary[i] = decimal & 1;
 		decimal >>= 1;
 	}
-	for (size_t i = binary.size(); i < width; i++)
-		binary.push_back(false);
-	reverse(binary.begin(), binary.end());
 }
 // Find longest sequence of zeros in binary representation of an integer.
 // 9: 1001 => 2
@@ -12155,6 +12226,32 @@ i  i/w* desired**
  6  2	 2
  7  2 	 2
  8  2	 2
+
+ Test cases:
+[2147483647,-1,2147483647]
+k: 1
+t: 2147483647
+w = t + 1 = 2147483648
+ i 			i/w*
+-1 			(-1 /2147483648) - 1 = -1
+2147483647  (2147483647)/2147483648 = 0;
+
+[10,-1,10]
+k: 1
+t: 10
+w: t+1 = 11
+ i i/w*
+-1 (-1 / 11) - 1 = -1
+10 (10) / 11 = 0;
+
+[-2147483648,2147483647] => [0x80000_000, 0x7FFF_FFFF]
+k: 1
+t: 1
+w: t+1 = 2
+
+ i 				i/w*
+-2147483648		(-2147483648 / 2) - 1 = -0x40000000 - 1 = -0x40000001 (<0)
+2147483647		(2147483647) / 2 > 0
 */
 bool containsNearbyAlmostDuplicate(vector<long>& nums, long k, long t)
 {
@@ -12162,9 +12259,7 @@ bool containsNearbyAlmostDuplicate(vector<long>& nums, long k, long t)
 	if (k > 0 && t >= 0) {// Absolute diff. t >= 0. k = 0 means diff is 0.
 		long w = t + 1;
 		for (size_t i = 0; i < nums.size(); i++) {
-			/* nums[i] 
-			*/
-			long bucket = nums[i] < 0 ? (nums[i] / w) - 1 : nums[i] / w; // Using (nums[i] - 1) / w) will result in overflow in buckets[bucket + 1] when 'w' is unsigned long
+			long bucket = nums[i] < 0 ? (nums[i] / w) - 1 : nums[i] / w;
 			if (buckets.find(bucket) != buckets.end()) // (1) All values within the same bucket will have a diff or distance <= t.
 				return true;
 			if (buckets.find(bucket - 1) != buckets.end() && (unsigned long)abs(buckets[bucket - 1] - nums[i]) <= (unsigned long)t)
