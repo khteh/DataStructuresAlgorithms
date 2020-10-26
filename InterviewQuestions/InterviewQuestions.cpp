@@ -2237,6 +2237,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a = { 4, 1, -1, 6, 5 };
 	assert(containsNearbyAlmostDuplicate(a, 3, 1));
+	a.clear();
+	a = diffWaysToCompute("2-1-1");
+	assert(!a.empty());
+	assert(a.size() == 2);
+	a.clear();
+	a = diffWaysToCompute("2*3-4*5");
+	assert(!a.empty());
+	assert(a.size() == 5);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -12274,4 +12282,36 @@ bool containsNearbyAlmostDuplicate(vector<long>& nums, long k, long t)
 		}
 	}
 	return false;
+}
+/* https://leetcode.com/problems/different-ways-to-add-parentheses/
+* 100%
+*/
+vector<long> diffWaysToCompute(string input)
+{
+	vector<long> result;
+	for (size_t i = 0; i < input.size(); i++) {
+		if (input[i] == '+' || input[i] == '-' || input[i] == '*') {
+			vector<long> left = diffWaysToCompute(input.substr(0, i));
+			vector<long> right = diffWaysToCompute(input.substr(i + 1));
+			for (vector<long>::iterator it = left.begin(); it != left.end(); it++)
+				for (vector<long>::iterator it1 = right.begin(); it1 != right.end(); it1++)
+					switch (input[i]) {
+					case '+':
+						result.push_back(*it + *it1);
+						break;
+					case '-':
+						result.push_back(*it - *it1);
+						break;
+					case '*':
+						result.push_back(*it * *it1);
+						break;
+					}
+		}
+	}
+	if (result.empty()) {
+		long i;
+		istringstream(input) >> i;
+		result.push_back(i);
+	}
+	return result;
 }

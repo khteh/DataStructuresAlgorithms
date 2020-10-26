@@ -214,6 +214,7 @@ void parentheses(vector<string>&, size_t);
 void parentheses(vector<string>&, string&, size_t, long, long);
 long LongestValidParentheses(string&);
 long LongestValidParenthesesWithFixes(string&, size_t k);
+vector<long> diffWaysToCompute(string);
 template<class T>
 void SortStack(MyStack<T> &, MyStack<T> &, sort_order_t order);
 long ToggleSign(long);
