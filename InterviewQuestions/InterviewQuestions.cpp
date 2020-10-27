@@ -124,6 +124,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "sizeof(long): " << (int)sizeof(long) << endl;
 	assert(sizeof(int) == 4);
 	assert(sizeof(long) == 4);
+	assert(numeric_limits<int>::min() == numeric_limits<long>::min());
+	assert(numeric_limits<int>::max() == numeric_limits<long>::max());
 	cout << "sizeof(size_t): " << (int)sizeof(size_t) << " max: " << numeric_limits<size_t>::max() << endl;
 	cout << "sizeof(long long): " << (int)sizeof(long long) << endl;
 	assert(sizeof(long long) == 8);
@@ -134,9 +136,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
 	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << ", numeric_limits<int>::max(): " << numeric_limits<int>::max() << ", numeric_limits<int>::min() * -1 = " << numeric_limits<int>::min() * -1 << endl;
+	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << ", numeric_limits<long>::max(): " << numeric_limits<long>::max() << ", numeric_limits<long>::min() * -1 = " << numeric_limits<long>::min() * -1 << endl;
 	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	assert(numeric_limits<int>::min() / -1 == numeric_limits<int>::min());
-	assert(numeric_limits<int>::max() * -1 == numeric_limits<int>::min() + 1); // 0x7FFFF_FFFF * -1 = 0x8000_0001
+	assert(numeric_limits<int>::max() * -1 == numeric_limits<int>::min() + 1); // 0x7FFFF_FFFF * -1 = -0x7FFF_FFFF = 0x8000_0001
+	assert(numeric_limits<long>::min() * -1 == numeric_limits<long>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
+	assert(numeric_limits<long>::min() / -1 == numeric_limits<long>::min());
+	assert(numeric_limits<long>::max() * -1 == numeric_limits<long>::min() + 1); // 0x7FFFF_FFFF * -1 = -0x7FFF_FFFF = 0x8000_0001
 	assert(1e5 == pow(10, 5));
 	assert(1e5 == 10e4);
 	assert(1e5 == 100'000);
@@ -2051,6 +2057,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings.clear();
 	strings = { "10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+" };
 	assert(ReversePolishNotation(strings) == 22);
+	assert(basicCalculator(string("3+2*2-1")) == 6);
+	assert(basicCalculator(string("3+2")) == 5);
+	assert(basicCalculator(string("3-2")) == 1);
+	assert(basicCalculator(string("3*2+2")) == 8);
+	assert(basicCalculator(string("3+2-4*5")) == -15);
+	assert(basicCalculator(string("3*2+5/4")) == 7);
 	a.clear();
 	a = {1,2,3,4};
 	a = productExceptSelf(a);
@@ -2245,6 +2257,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	a = diffWaysToCompute("2*3-4*5");
 	assert(!a.empty());
 	assert(a.size() == 5);
+	assert(getHint(string("6244988279"), string("3819888600")) == "2A2B");
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -11909,12 +11922,12 @@ bool searchMatrix1(vector<vector<long>>& matrix, long target)
 */
 long ReversePolishNotation(vector<string>& tokens)
 {
-	stack<int> numbers;
+	stack<long> numbers;
 	for (size_t i = 0; i < tokens.size(); i++) {
 		if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/") {
-			int num2 = numbers.top();
+			long num2 = numbers.top();
 			numbers.pop();
-			int num1 = numbers.top();
+			long num1 = numbers.top();
 			numbers.pop();
 			switch (tokens[i][0]) {
 			case '+':
@@ -11935,12 +11948,67 @@ long ReversePolishNotation(vector<string>& tokens)
 			numbers.push(num1);
 		}
 		else {
-			int num;
+			long num;
 			istringstream(tokens[i]) >> num;
 			numbers.push(num);
 		}
 	}
-	return !numbers.empty() ? numbers.top() : numeric_limits<int>::max();
+	return !numbers.empty() ? numbers.top() : numeric_limits<long>::max();
+}
+/*
+3+2*2-1
+sign:	+ + * -
+stack:   3 2 4 -1 <= 3+4-1 = 6
+3*2+2
+sign:	+ * +
+stack:	 3 6 2 <= 6+2 = 8
+3+2-4*5
+sign:	+ + -  *
+stack:   3 2 -4 -20 <= 3+2-20
+3*2+5/4
+sign:	+ * + /
+stack:   3 6 5 1 <= 6+1 = 7
+*/
+long basicCalculator(string& s)
+{
+	stack<long> numbers;
+	char sign = '+';
+	long num = 0;
+	for (size_t i = 0; i < s.size(); i++) {
+		if (isdigit(s[i]))
+			num = num * 10 + s[i] - '0';
+		if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/' || i == s.size() - 1) {
+			switch (sign) {
+			case '+':
+				numbers.push(num);
+				break;
+			case '-':
+				numbers.push(-num);
+				break;
+			case '*':
+			{
+				long n = numbers.top();
+				numbers.pop();
+				numbers.push(num * n);
+				break;
+			}
+			case '/':
+			{
+				long n = numbers.top();
+				numbers.pop();
+				numbers.push(n / num);
+				break;
+			}
+			default:
+				throw runtime_error("Invalid arithmetic sign!");
+			}
+			num = 0;
+			sign = s[i];
+		}
+	}
+	if (!numbers.empty())
+		for (; !numbers.empty(); num += numbers.top(), numbers.pop());
+	return num;
 }
 /* https://leetcode.com/problems/minimum-size-subarray-sum/
 *  100%
@@ -12314,4 +12382,27 @@ vector<long> diffWaysToCompute(string input)
 		result.push_back(i);
 	}
 	return result;
+}
+/* https://leetcode.com/problems/bulls-and-cows/
+* 100%
+*/
+string getHint(string& secret, string& guess) 
+{
+	map<char, long> counts;
+	size_t bulls = 0, cows = 0;
+	for (size_t i = 0; i < secret.size(); i++)
+		counts[secret[i]]++;
+	for (size_t i = 0; i < secret.size(); i++) {
+		if (secret[i] == guess[i]) {
+			bulls++;
+			if (--counts[secret[i]] < 0 && cows > 0)
+				cows--;
+		} else if (counts.find(guess[i]) != counts.end() && counts[guess[i]] > 0) {
+			counts[guess[i]]--;
+			cows++;
+		}
+	}
+	ostringstream oss;
+	oss << bulls << "A" << cows << "B";
+	return oss.str();
 }
