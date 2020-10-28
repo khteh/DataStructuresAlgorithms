@@ -10957,6 +10957,18 @@ set<vector<size_t>> CoinsChangeDynamicProgramming(long amount, vector<size_t>& c
 }
 /* https://www.hackerrank.com/challenges/coin-change/problem
 * 100%
+* coins: {2,3,5} amount: 5,6
+* coin 5:
+* 0 1 2 3 4 5 6 <= amounts
+* 1 0 0 0 0 1 0
+* 
+* coin 2:
+* 0 1 2 3 4 5 6 <= amounts
+* 1 0 1 0 1 1 1
+* 
+* coin 3:
+* 0 1 2 3 4 5 6 <= amounts
+* 1 0 1 1 1 2 2
 */
 size_t CoinsChangeCountDynamicProgramming(long amount, vector<size_t>& coins)
 {
