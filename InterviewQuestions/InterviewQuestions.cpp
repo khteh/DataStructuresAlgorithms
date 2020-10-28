@@ -10985,8 +10985,8 @@ size_t CoinsChangeWaysDynamicProgramming(long amount, vector<size_t>& coins)
 {
 	if (amount <= 0)
 		return 0;
-	vector<size_t> dp(amount + 1, 0); // Index: amount. Value: #combinations
-	dp[0] = 1;
+	vector<size_t> dp(amount + 1, 0); // Index: amount. Value: #ways or #posibilities
+	dp[0] = 1; // $0 is one possibility
 	for (size_t i = 0; i < coins.size(); i++)
 		for (size_t j = coins[i]; j <= (size_t)amount; j++)
 			dp[j] += dp[j - coins[i]];
@@ -11002,8 +11002,8 @@ long CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size_t>& coins
 {
 	if (amount <= 0)
 		return 0;
-	vector<size_t> dp(amount + 1, numeric_limits<size_t>::max()); // Index: amount. Value: #combinations
-	dp[0] = 0;
+	vector<size_t> dp(amount + 1, numeric_limits<size_t>::max()); // Index: amount. Value: #coins
+	dp[0] = 0; // $0 = 0 coins
 	for (size_t i = 1; i <= (size_t)amount; i++)
 		for (size_t j = 0; j < coins.size(); j++)
 			if (i >= coins[j] && dp[i - coins[j]] != numeric_limits<size_t>::max())
