@@ -9064,7 +9064,7 @@ void Knapsack_CoinChangeTests()
 	assert(combinations.empty());
 	set<vector<size_t>> combinations1 = CoinsChangeDynamicProgramming(0, numbers);
 	assert(combinations1.empty());
-	assert(CoinsChangeCountDynamicProgramming(0, numbers) == 0);
+	assert(CoinsChangeWaysDynamicProgramming(0, numbers) == 0);
 	coinChangeCache.clear();
 	combinations = CoinChange(1, numbers);
 	assert(combinations.size() == 1);
@@ -9072,14 +9072,14 @@ void Knapsack_CoinChangeTests()
 	assert(it->size() == 1);
 	assert((*it)[0] == 1);
 	combinations1 = CoinsChangeDynamicProgramming(1, numbers);
-	assert(CoinsChangeCountDynamicProgramming(1, numbers) == 1);
+	assert(CoinsChangeWaysDynamicProgramming(1, numbers) == 1);
 	assert(combinations1.size() == 1);
 	assert(combinations == combinations1);
 	coinChangeCache.clear();
 	combinations = CoinChange(2, numbers);
 	assert(combinations.size() == 2);
 	combinations1 = CoinsChangeDynamicProgramming(2, numbers);
-	assert(CoinsChangeCountDynamicProgramming(2, numbers) == 2);
+	assert(CoinsChangeWaysDynamicProgramming(2, numbers) == 2);
 	assert(combinations1.size() == 2);
 	assert(combinations == combinations1);
 	coinChangeCache.clear();
@@ -9088,12 +9088,12 @@ void Knapsack_CoinChangeTests()
 	combinations1 = CoinsChangeDynamicProgramming(3, numbers);
 	assert(combinations1.size() == 3);
 	assert(combinations == combinations1);
-	assert(CoinsChangeCountDynamicProgramming(3, numbers) == 3);
+	assert(CoinsChangeWaysDynamicProgramming(3, numbers) == 3);
 	coinChangeCache.clear();
 	combinations = CoinChange(4, numbers);
 	assert(combinations.size() == 4);
 	combinations1 = CoinsChangeDynamicProgramming(4, numbers);
-	assert(CoinsChangeCountDynamicProgramming(4, numbers) == 4);
+	assert(CoinsChangeWaysDynamicProgramming(4, numbers) == 4);
 	assert(combinations1.size() == 4);
 	assert(combinations == combinations1);
 	numbers.clear();
@@ -9102,29 +9102,29 @@ void Knapsack_CoinChangeTests()
 	combinations = CoinChange(10, numbers);
 	assert(combinations.size() == 5);
 	combinations1 = CoinsChangeDynamicProgramming(10, numbers);
-	assert(CoinsChangeCountDynamicProgramming(10, numbers) == 5);
+	assert(CoinsChangeWaysDynamicProgramming(10, numbers) == 5);
 	assert(combinations1.size() == 5);
 	assert(combinations == combinations1);
 	numbers.clear();
 	numbers = { 2,3,5 };
-	assert(CoinsChangeCountDynamicProgramming(5, numbers) == 2); // {{2,3}, {5}}
-	assert(CoinsChangeCountDynamicProgramming(6, numbers) == 2); // {{2,2,2}, {3,3}}
+	assert(CoinsChangeWaysDynamicProgramming(5, numbers) == 2); // {{2,3}, {5}}
+	assert(CoinsChangeWaysDynamicProgramming(6, numbers) == 2); // {{2,2,2}, {3,3}}
 	numbers.clear();
 	numbers = { 5, 37, 8, 39, 33, 17, 22, 32, 13, 7, 10, 35, 40, 2, 43, 49, 46, 19, 41, 1, 12, 11, 28 };
 	sort(numbers.begin(), numbers.end());
-	assert(CoinsChangeCountDynamicProgramming(166, numbers) == 96190959);
+	assert(CoinsChangeWaysDynamicProgramming(166, numbers) == 96190959);
 	coinChangeCache.clear();
 	numbers.clear();
 	numbers = {1,2,5};
-	assert(CoinsChangeMinCountDynamicProgramming(11, numbers) == 3);
+	assert(CoinsChangeFewestCoinsDynamicProgramming(11, numbers) == 3);
 	numbers.clear();
 	numbers = { 2 };
-	assert(CoinsChangeMinCountDynamicProgramming(3, numbers) == -1);
+	assert(CoinsChangeFewestCoinsDynamicProgramming(3, numbers) == -1);
 	numbers.clear();
 	numbers = { 1 };
-	assert(CoinsChangeMinCountDynamicProgramming(0, numbers) == 0);
-	assert(CoinsChangeMinCountDynamicProgramming(1, numbers) == 1);
-	assert(CoinsChangeMinCountDynamicProgramming(2, numbers) == 2);
+	assert(CoinsChangeFewestCoinsDynamicProgramming(0, numbers) == 0);
+	assert(CoinsChangeFewestCoinsDynamicProgramming(1, numbers) == 1);
+	assert(CoinsChangeFewestCoinsDynamicProgramming(2, numbers) == 2);
 	//combinations1 = CoinsChangeDynamicProgramming(166, numbers); Times out!
 	//assert(!combinations1.empty());
 	//combinations = CoinChange(166, numbers); //Times out!
@@ -10981,7 +10981,7 @@ set<vector<size_t>> CoinsChangeDynamicProgramming(long amount, vector<size_t>& c
 * 0 1 2 3 4 5 6 <= amounts
 * 1 0 1 1 1 2 2
 */
-size_t CoinsChangeCountDynamicProgramming(long amount, vector<size_t>& coins)
+size_t CoinsChangeWaysDynamicProgramming(long amount, vector<size_t>& coins)
 {
 	if (amount <= 0)
 		return 0;
@@ -10998,7 +10998,7 @@ size_t CoinsChangeCountDynamicProgramming(long amount, vector<size_t>& coins)
 * 0 1 2     3     4     5        6       7      8       9       10      11	   <= amounts
 * 0 1 {2,1}	{2,2} {3,2}	{3,3,1}	{2,3,2}	{3,2,2}	{3,3,3}	{4,3,3}	{4,4,2}	{3,4,3} <= #coins
 */
-long CoinsChangeMinCountDynamicProgramming(long amount, vector<size_t>& coins)
+long CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size_t>& coins)
 {
 	if (amount <= 0)
 		return 0;
