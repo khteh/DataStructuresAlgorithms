@@ -238,8 +238,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	i = -0x80000000L;
 	assert(i - 0x7FFFFFFF == 1);
 
+	size_t ui = numeric_limits<size_t>::max() + 1;
+	assert(!ui);
 	cout << "int -" << hex << i << ": " << -i << dec << " " << -i << ", ~" << i << ": " << hex << ~i << " " << dec << ~i << endl;
-	unsigned int ui = 3;
+	ui = 3;
 	cout << "uint -" << hex << ui << ": " << -ui << dec << " " << -ui << ", ~" << ui << ": " << hex << ~ui << " " << dec << ~ui << endl;
 	a.resize(10);
 	generate(a.begin(), a.end(), [n = 1]()mutable{return n++; });
@@ -9060,33 +9062,67 @@ void Knapsack_CoinChangeTests()
 	coinChangeCache.clear();
 	set<vector<size_t>> combinations = CoinChange(0, numbers);
 	assert(combinations.empty());
+	set<vector<size_t>> combinations1 = CoinsChangeDynamicProgramming(0, numbers);
+	assert(combinations1.empty());
+	assert(CoinsChangeCountDynamicProgramming(0, numbers) == 0);
 	coinChangeCache.clear();
 	combinations = CoinChange(1, numbers);
 	assert(combinations.size() == 1);
 	set<vector<size_t>>::iterator it = combinations.begin();
 	assert(it->size() == 1);
 	assert((*it)[0] == 1);
+	combinations1 = CoinsChangeDynamicProgramming(1, numbers);
+	assert(CoinsChangeCountDynamicProgramming(1, numbers) == 1);
+	assert(combinations1.size() == 1);
+	assert(combinations == combinations1);
 	coinChangeCache.clear();
 	combinations = CoinChange(2, numbers);
 	assert(combinations.size() == 2);
+	combinations1 = CoinsChangeDynamicProgramming(2, numbers);
+	assert(CoinsChangeCountDynamicProgramming(2, numbers) == 2);
+	assert(combinations1.size() == 2);
+	assert(combinations == combinations1);
 	coinChangeCache.clear();
 	combinations = CoinChange(3, numbers);
 	assert(combinations.size() == 3);
+	combinations1 = CoinsChangeDynamicProgramming(3, numbers);
+	assert(combinations1.size() == 3);
+	assert(combinations == combinations1);
+	assert(CoinsChangeCountDynamicProgramming(3, numbers) == 3);
 	coinChangeCache.clear();
 	combinations = CoinChange(4, numbers);
 	assert(combinations.size() == 4);
+	combinations1 = CoinsChangeDynamicProgramming(4, numbers);
+	assert(CoinsChangeCountDynamicProgramming(4, numbers) == 4);
+	assert(combinations1.size() == 4);
+	assert(combinations == combinations1);
 	numbers.clear();
 	numbers = { 6,5,3,2 };
 	coinChangeCache.clear();
 	combinations = CoinChange(10, numbers);
 	assert(combinations.size() == 5);
-	//indices.clear();
-	//indices = { 5, 37, 8, 39, 33, 17, 22, 32, 13, 7, 10, 35, 40, 2, 43, 49, 46, 19, 41, 1, 12, 11, 28 };
-	//sort(indices.begin(), indices.end(), greater<size_t>());
-	//sort(indices.begin(), indices.end());
-	//coinChangeCache.clear();
-	//combinations = CoinChange(166, indices); //Times out!
+	combinations1 = CoinsChangeDynamicProgramming(10, numbers);
+	assert(CoinsChangeCountDynamicProgramming(10, numbers) == 5);
+	assert(combinations1.size() == 5);
+	assert(combinations == combinations1);
+	numbers.clear();
+	numbers = { 2,3,5 };
+	assert(CoinsChangeCountDynamicProgramming(5, numbers) == 2); // {{2,3}, {5}}
+	assert(CoinsChangeCountDynamicProgramming(6, numbers) == 2); // {{2,2,2}, {3,3}}
+	numbers.clear();
+	numbers = { 5, 37, 8, 39, 33, 17, 22, 32, 13, 7, 10, 35, 40, 2, 43, 49, 46, 19, 41, 1, 12, 11, 28 };
+	sort(numbers.begin(), numbers.end());
+	assert(CoinsChangeCountDynamicProgramming(166, numbers) == 96190959);
+	coinChangeCache.clear();
+	//combinations1 = CoinsChangeDynamicProgramming(166, numbers); Times out!
+	//assert(!combinations1.empty());
+	//combinations = CoinChange(166, numbers); //Times out!
 	//assert(combinations.size() == 96190959);
+	numbers.clear();
+	numbers = { 3,7,405,436 };
+	coinChangeCache.clear();
+	//combinations1 = CoinsChangeDynamicProgramming(8839, numbers); // Stack overflow! using recursive CoinChange()
+	//assert(!combinations1.empty());
 	numbers.clear();
 	numbers = { 2,3,4 };
 	assert(UnboundedKnapsack(9, numbers) == 9); // [3,3,3]
@@ -10897,6 +10933,41 @@ set<vector<size_t>> CoinChange(long amount, vector<size_t>& coins)
 		} // if (amount >= (long)coins[i]) {
 	}
 	return combinations;
+}
+set<vector<size_t>> CoinsChangeDynamicProgramming(long amount, vector<size_t>& coins)
+{
+	map<size_t, set<vector<size_t>>> dp;
+	for (size_t i = 1; i <= (size_t)amount; i++) // Bottom-Up
+		for (size_t j = 0; j < coins.size(); j++) {
+			if (i == coins[j])
+				dp[i].insert(vector<size_t>{i});
+			else if (i > coins[j]) { //i:5 coins[j]:2 delta:3 dp[3] = {3}
+				size_t delta = i - coins[j];
+				if (dp.find(delta) != dp.end()) {
+					for (set<vector<size_t>>::iterator it = dp[delta].begin(); it != dp[delta].end(); it++) {
+						vector<size_t> tmp = *it;
+						tmp.push_back(coins[j]);
+						sort(tmp.begin(), tmp.end());
+						dp[i].insert(tmp);
+					}
+				}
+			}
+		}
+	return dp[amount];
+}
+/* https://www.hackerrank.com/challenges/coin-change/problem
+* 100%
+*/
+size_t CoinsChangeCountDynamicProgramming(long amount, vector<size_t>& coins)
+{
+	if (amount <= 0)
+		return 0;
+	vector<size_t> dp(amount + 1, 0); // Index: amount. Value: #combinations
+	dp[0] = 1;
+	for (size_t i = 0; i < coins.size(); i++)
+		for (size_t j = coins[i]; j <= (size_t)amount; j++)
+			dp[j] += dp[j - coins[i]];
+	return dp[amount];
 }
 // https://www.hackerrank.com/challenges/unbounded-knapsack/problem
 // 100%
