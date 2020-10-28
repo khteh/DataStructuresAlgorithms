@@ -9114,6 +9114,17 @@ void Knapsack_CoinChangeTests()
 	sort(numbers.begin(), numbers.end());
 	assert(CoinsChangeCountDynamicProgramming(166, numbers) == 96190959);
 	coinChangeCache.clear();
+	numbers.clear();
+	numbers = {1,2,5};
+	assert(CoinsChangeMinCountDynamicProgramming(11, numbers) == 3);
+	numbers.clear();
+	numbers = { 2 };
+	assert(CoinsChangeMinCountDynamicProgramming(3, numbers) == -1);
+	numbers.clear();
+	numbers = { 1 };
+	assert(CoinsChangeMinCountDynamicProgramming(0, numbers) == 0);
+	assert(CoinsChangeMinCountDynamicProgramming(1, numbers) == 1);
+	assert(CoinsChangeMinCountDynamicProgramming(2, numbers) == 2);
 	//combinations1 = CoinsChangeDynamicProgramming(166, numbers); Times out!
 	//assert(!combinations1.empty());
 	//combinations = CoinChange(166, numbers); //Times out!
@@ -10980,6 +10991,24 @@ size_t CoinsChangeCountDynamicProgramming(long amount, vector<size_t>& coins)
 		for (size_t j = coins[i]; j <= (size_t)amount; j++)
 			dp[j] += dp[j - coins[i]];
 	return dp[amount];
+}
+/* https://leetcode.com/problems/coin-change/
+* 100%
+* coins: {1,2,5}, amount: 11
+* 0 1 2     3     4     5        6       7      8       9       10      11	   <= amounts
+* 0 1 {2,1}	{2,2} {3,2}	{3,3,1}	{2,3,2}	{3,2,2}	{3,3,3}	{4,3,3}	{4,4,2}	{3,4,3} <= #coins
+*/
+long CoinsChangeMinCountDynamicProgramming(long amount, vector<size_t>& coins)
+{
+	if (amount <= 0)
+		return 0;
+	vector<size_t> dp(amount + 1, numeric_limits<size_t>::max()); // Index: amount. Value: #combinations
+	dp[0] = 0;
+	for (size_t i = 1; i <= (size_t)amount; i++)
+		for (size_t j = 0; j < coins.size(); j++)
+			if (i >= coins[j] && dp[i - coins[j]] != numeric_limits<size_t>::max())
+				dp[i] = min(dp[i], dp[i - coins[j]] + 1);
+	return dp[amount] == numeric_limits<size_t>::max() ? -1 : dp[amount];
 }
 // https://www.hackerrank.com/challenges/unbounded-knapsack/problem
 // 100%

@@ -257,6 +257,7 @@ void Knapsack_CombinationSumTests();
 set<vector<size_t>> CoinChange(long, vector<size_t>&);
 set<vector<size_t>> CoinsChangeDynamicProgramming(long, vector<size_t>&);
 size_t CoinsChangeCountDynamicProgramming(long, vector<size_t>&);
+long CoinsChangeMinCountDynamicProgramming(long, vector<size_t>&);
 set<vector<size_t>> Knapsack(long, vector<size_t>&);
 size_t UnboundedKnapsack(long, vector<size_t>&);
 set<vector<size_t>> _BoundedKnapsack(long, vector<size_t>&);
