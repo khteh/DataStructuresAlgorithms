@@ -3,6 +3,7 @@
 using namespace std;
 map<long, set<vector<size_t>>> coinChangeCache;
 map<long, set<vector<size_t>>> knapsackCache;
+map<long, size_t> dpMemoization;
 int _tmain(int argc, _TCHAR* argv[])
 {
 	string line, line1;
@@ -9125,6 +9126,10 @@ void Knapsack_CoinChangeTests()
 	assert(CoinsChangeFewestCoinsDynamicProgramming(0, numbers) == 0);
 	assert(CoinsChangeFewestCoinsDynamicProgramming(1, numbers) == 1);
 	assert(CoinsChangeFewestCoinsDynamicProgramming(2, numbers) == 2);
+	numbers.clear();
+	numbers = { 1,2 };
+	dpMemoization.clear();
+	assert(StairsClimbingDynamicProgramming(6, numbers) == 13);
 	//combinations1 = CoinsChangeDynamicProgramming(166, numbers); Times out!
 	//assert(!combinations1.empty());
 	//combinations = CoinChange(166, numbers); //Times out!
@@ -11009,6 +11014,27 @@ long CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size_t>& coins
 			if (i >= coins[j] && dp[i - coins[j]] != numeric_limits<size_t>::max())
 				dp[i] = min(dp[i], dp[i - coins[j]] + 1);
 	return dp[amount] == numeric_limits<size_t>::max() ? -1 : dp[amount];
+}
+/* The Recursive Staircase - Top Down Dynamic Programming
+*			6
+*       4        5
+*    2       3
+*  0(1)	1
+*     -1(0) 0(1)
+*/
+size_t StairsClimbingDynamicProgramming(long destination, vector<size_t>& steps)
+{
+	if (!destination) // 0 step = stays. So it is one possibility
+		return 1;
+	if (destination < 0) // Impossible
+		return 0;
+	size_t combinations = 0;
+	for (vector<size_t>::iterator it = steps.begin(); it != steps.end(); it++) {
+		if (dpMemoization.find(destination - *it) == dpMemoization.end())
+			dpMemoization[destination - *it] = StairsClimbingDynamicProgramming(destination - *it, steps);
+		combinations += dpMemoization[destination - *it];
+	}
+	return combinations;
 }
 // https://www.hackerrank.com/challenges/unbounded-knapsack/problem
 // 100%

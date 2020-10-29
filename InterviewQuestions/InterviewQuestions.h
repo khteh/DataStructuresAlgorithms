@@ -258,6 +258,7 @@ set<vector<size_t>> CoinChange(long, vector<size_t>&);
 set<vector<size_t>> CoinsChangeDynamicProgramming(long, vector<size_t>&);
 size_t CoinsChangeWaysDynamicProgramming(long, vector<size_t>&);
 long CoinsChangeFewestCoinsDynamicProgramming(long, vector<size_t>&);
+size_t StairsClimbingDynamicProgramming(long, vector<size_t>&);
 set<vector<size_t>> Knapsack(long, vector<size_t>&);
 size_t UnboundedKnapsack(long, vector<size_t>&);
 set<vector<size_t>> _BoundedKnapsack(long, vector<size_t>&);
