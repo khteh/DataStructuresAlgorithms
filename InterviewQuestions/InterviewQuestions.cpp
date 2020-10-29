@@ -248,6 +248,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	generate(a.begin(), a.end(), [n = 1]()mutable{return n++; });
 	for (size_t i = 0; i < a.size(); i++)
 		assert(a[i] == i + 1);
+	time_point timestamp = system_clock::now();
+	duration timespan = timestamp.time_since_epoch();
+	unsigned long long ticks = timespan.count();
+	cout << "Current timestamp (ticks since Epoch): " << ticks << endl;
 	grid = { {1,3,5}, {2,4,6}, {7,8,9} };
 	pathResult_t pathResult = FindMaxPath(grid, 0, 0);
 	assert(pathResult.sum == 27);
@@ -2261,6 +2265,78 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(!a.empty());
 	assert(a.size() == 5);
 	assert(getHint(string("6244988279"), string("3819888600")) == "2A2B");
+	Twitter<size_t, size_t> twitter;
+	twitter.PostTweet(1,5);
+	udata = twitter.GetNewsFeed(1);
+	assert(!udata.empty());
+	assert(udata.size() == 1);
+	twitter.Follow(1, 2);
+	twitter.PostTweet(2, 6);
+	udata = twitter.GetNewsFeed(1);
+	assert(!udata.empty());
+	assert(udata.size() == 2);
+	assert(udata[0] == 6);
+	assert(udata[1] == 5);
+	udata = twitter.GetNewsFeed(2);
+	assert(!udata.empty());
+	assert(udata.size() == 1);
+	twitter.UnFollow(1, 2);
+	udata = twitter.GetNewsFeed(1);
+	assert(!udata.empty());
+	assert(udata.size() == 1);
+	assert(udata[0] == 5);
+	udata = twitter.GetNewsFeed(2);
+	assert(!udata.empty());
+	assert(udata.size() == 1);
+	assert(udata[0] == 6);
+	twitter.Clear();
+	twitter.PostTweet(1, 5);
+	twitter.Follow(1, 2);
+	twitter.Follow(2, 1);
+	udata = twitter.GetNewsFeed(2);
+	assert(!udata.empty()); // 5
+	assert(udata[0] == 5);
+	twitter.PostTweet(2, 6);
+	udata = twitter.GetNewsFeed(1); // 5, 6(2)
+	udata1 = twitter.GetNewsFeed(2); // 5(1), 6
+	assert(!udata.empty());
+	assert(!udata1.empty());
+	assert(udata.size() == 2);
+	assert(udata1.size() == 2);
+	assert(udata == udata1);
+	twitter.UnFollow(2, 1); //1: 5, 6(2) 2: 6
+	udata = twitter.GetNewsFeed(1);
+	udata1 = twitter.GetNewsFeed(2);
+	assert(!udata.empty());
+	assert(!udata1.empty());
+	assert(udata.size() == 2);
+	assert(udata1.size() == 1);
+	twitter.Clear();
+	twitter.PostTweet(2, 5); // 2: 5
+	twitter.PostTweet(1, 3); // 1: 3
+	twitter.PostTweet(1, 101); // 1: {3, 101}
+	twitter.PostTweet(2, 13); // 2: {5, 13}
+	twitter.PostTweet(2, 10); // 2: {5, 13, 10}
+	twitter.PostTweet(1, 2); // 1: {3, 101, 2}
+	twitter.PostTweet(2, 94); // 2: {5, 13, 10, 94}
+	twitter.PostTweet(2, 505); // 2: {5, 13, 10, 94, 505}
+	twitter.PostTweet(1, 333); // 1: {3, 101, 2, 333}
+	twitter.PostTweet(1, 22);  // 1: {3, 101, 2, 333, 22}
+	udata = twitter.GetNewsFeed(2);
+	assert(!udata.empty());
+	assert(udata.size() == 5);
+	udata1 = { 505, 94, 10, 13, 5 };
+	assert(udata1 == udata);
+	twitter.Follow(2, 1); //2: {5, 13, 10, 94, 505, 3, 101, 2, 133, 22}
+	/* [22,333,505,94,2,10,13,101,3,5]
+	1: {3, 101, 2, 333, 22}
+	2: {5, 13, 10, 94, 505}
+	*/
+	udata = twitter.GetNewsFeed(2);
+	assert(!udata.empty());
+	assert(udata.size() == 10);
+	udata1 = { 22,333,505,94,2,10,13,101,3,5 };
+	assert(udata1 == udata);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -7912,8 +7988,7 @@ template<typename A, typename B>
 multimap<B, A> flip_map(const map<A, B>& src)
 {
 	multimap<B, A> dst;
-	transform(src.begin(), src.end(), inserter(dst, dst.begin()),
-		flip_pair<A, B>);
+	transform(src.begin(), src.end(), inserter(dst, dst.begin()), flip_pair<A, B>);
 	return dst;
 }
 // https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
