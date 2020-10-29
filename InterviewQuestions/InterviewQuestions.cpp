@@ -9838,27 +9838,21 @@ int IncreasingSequences(vector<long> &a, vector<long> &b)
   https://www.hackerrank.com/challenges/longest-increasing-subsequent/problem
   https://www.tutorialspoint.com/cplusplus-program-to-find-the-longest-increasing-subsequence-of-a-given-sequence
   Times out for >= 1 million data points
-[1 2 5 3]
-i:1
-j:0
-  lengths[1] = 1
-lengths[1]++ = 2
-
-i:2
-j:0
-  lengths[2] = 1
-j:1
-  lengths[2] = 2
-lengths[2]++ = 3
-
-i:3
-j:0
-  lengths[3] = 1
-j:1
-  lengths[3] = 2
-j:2
-  data[2] > data[3]
-lengths[3]++ = 3
+		1 2 5 3
+		  i
+lengths:1 2		<= max = 2
+		    i
+lengths:1 2 3	<= max = 3
+			  i
+lengths:1 2 3 3
+----
+		5 2 3 1
+		  i
+lengths:1 1		<= max = 1
+			i
+lengths:1 1 2	<= max = 2
+			  i
+lengths:1 1 2 1
 */
 size_t LongestIncreasingSubsequence(vector<size_t>& data)
 {
