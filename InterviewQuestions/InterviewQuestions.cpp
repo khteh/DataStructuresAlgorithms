@@ -683,6 +683,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(factorial(3) == 6);
 	assert(factorial(4) == 24);
 	assert(factorial(5) == 120);
+	assert(factorial(20) == 2432902008176640000);
+	assert(factorialDynamicProgramming(1) == 1);
+	assert(factorialDynamicProgramming(2) == 2);
+	assert(factorialDynamicProgramming(3) == 6);
+	assert(factorialDynamicProgramming(4) == 24);
+	assert(factorialDynamicProgramming(5) == 120);
+	assert(factorialDynamicProgramming(20) == 2432902008176640000);
 	assert(SequenceSum(0) == 0);
 	assert(SequenceSum(1) == 1);
 	assert(SequenceSum(5) == 15);
@@ -697,6 +704,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(fibonacci(7) == 13);
 	assert(fibonacci(8) == 21);
 	assert(fibonacci(9) == 34);
+	//assert(fibonacci(90) == 2880067194370816120ULL); Times out!!!
+	assert(fibonacciDynamicProgramming(-1) == -1);
+	assert(fibonacciDynamicProgramming(0) == 0);
+	assert(fibonacciDynamicProgramming(1) == 1);
+	assert(fibonacciDynamicProgramming(2) == 1);
+	assert(fibonacciDynamicProgramming(3) == 2);
+	assert(fibonacciDynamicProgramming(4) == 3);
+	assert(fibonacciDynamicProgramming(5) == 5);
+	assert(fibonacciDynamicProgramming(6) == 8);
+	assert(fibonacciDynamicProgramming(7) == 13);
+	assert(fibonacciDynamicProgramming(8) == 21);
+	assert(fibonacciDynamicProgramming(9) == 34);
+	assert(fibonacciDynamicProgramming(90) == 2880067194370816120ULL);
 	assert(fibonacciModified(0, 1, 4) == "5");
 	assert(fibonacciModified(0, 1, 5) == "27");
 	assert(fibonacciModified(0, 1, 6) == "734");
@@ -711,6 +731,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(fibonacciModified(2, 0, 6) == "107602");
 	assert(fibonacciModified(2, 0, 7) == "11578190732");
 	assert(fibonacciModified(2, 0, 11) == "104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308");
+
+	assert(fibonacciModifiedDynamicProgramming(0, 1, 4) == "5");
+	assert(fibonacciModifiedDynamicProgramming(0, 1, 5) == "27");
+	assert(fibonacciModifiedDynamicProgramming(0, 1, 6) == "734");
+	assert(fibonacciModifiedDynamicProgramming(0, 1, 7) == "538783");
+	assert(fibonacciModifiedDynamicProgramming(0, 1, 8) == "290287121823");
+	assert(fibonacciModifiedDynamicProgramming(2, 0, 0) == "2");
+	assert(fibonacciModifiedDynamicProgramming(2, 0, 1) == "0");
+	assert(fibonacciModifiedDynamicProgramming(2, 0, 2) == "2");
+	assert(fibonacciModifiedDynamicProgramming(2, 0, 3) == "4");
+	assert(fibonacciModifiedDynamicProgramming(2, 0, 4) == "18");
+	assert(fibonacciModifiedDynamicProgramming(2, 0, 5) == "328");
+	assert(fibonacciModifiedDynamicProgramming(2, 0, 6) == "107602");
+	assert(fibonacciModifiedDynamicProgramming(2, 0, 7) == "11578190732");
+	assert(fibonacciModifiedDynamicProgramming(2, 0, 11) == "104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308");
+
 	ostringstream oss;
 	unsigned long long factorialResult = factorial(26);
 	cout << "26!: " << setiosflags(ios::fixed) << factorialResult << endl;
@@ -3064,19 +3100,34 @@ void copy_on_write_string()
 	cout << hex << "s1 @ " << (void*)(cptr) << endl;
 	cout << "s2 @ " << (void*)(cptr1) << endl;
 }
-long fibonacci(long n)
+unsigned long long fibonacci(long n)
 {
-	// Index: 0 1 2 3
-	// Value: 0 1 1 2
+	// {0 1 1 2 ...}
 	return (n <= 1) ? n : fibonacci(n - 2) + fibonacci(n - 1);
 }
-// https://www.hackerrank.com/challenges/fibonacci-modified/problem
-// Timeout for n >= 20
+/* Bottom-up Dynamic Programming
+*/
+unsigned long long fibonacciDynamicProgramming(long n)
+{
+	/* 0 1 2 3 
+	* {0 1 1 2 3 5 8}
+	* {0, 1}, {1, 1}, {1, 2}, {3, 2}, {3, 5}
+	*/
+	vector<unsigned long long> result = {0, 1};
+	if (n <= 1)
+		return n;
+	for (size_t i = 2; i <= (size_t)n; i++)
+		result[i % 2] = result[(i - 2) % 2] + result[(i - 1) % 2];
+	return result[n % 2];
+}
+/* https://www.hackerrank.com/challenges/fibonacci-modified/problem
+* Timeout for n >= 20
+*/
 string fibonacciModified(long t1, long t2, long n)
 {
 	// Index: 0 1 2 3 4 5  6   7	  8
 	// Value: 0 1 1 2 5 27 734 538783 ...
-	if (n == 0)
+	if (!n)
 		return to_string(t1);
 	else if (n == 1)
 		return to_string(t2);
@@ -3085,12 +3136,37 @@ string fibonacciModified(long t1, long t2, long n)
 	string s3 = NumberStringMultiplication(s2, s2);
 	return NumberStringSum(s1, s3);
 }
+string fibonacciModifiedDynamicProgramming(long t1, long t2, long n)
+{
+	// Index: 0 1 2 3 4 5  6   7	  8
+	// Value: 0 1 1 2 5 27 734 538783 ...
+	if (!n)
+		return to_string(t1);
+	else if (n == 1)
+		return to_string(t2);
+	vector<string> result = { to_string(t1), to_string(t2) };
+	for (size_t i = 2; i <= (size_t)n; i++)
+		result[i % 2] = NumberStringSum(result[(i - 2) % 2], NumberStringMultiplication(result[(i - 1) % 2], result[(i - 1) % 2]));
+	return result[n % 2];
+}
 // http://web2.0calc.com/
 // 64-bit max is 18446744073709551615
 // Overflow happens at 21!
 unsigned long long factorial(long n)
 {
 	return (n <= 0) ? 1 : n * factorial(n - 1);
+}
+unsigned long long factorialDynamicProgramming(long n)
+{
+	/* 0 1 2 3 4 
+	* {1 1 2 6 24 ...}
+	* result = 1, 
+	*/
+	unsigned long long result = 1;
+	if (n <= 0)
+		return 1;
+	for (size_t i = 1; i <= (size_t)n; result *= i++);
+	return result;
 }
 long SequenceSum(long n)
 {
@@ -9205,6 +9281,12 @@ void Knapsack_CoinChangeTests()
 	numbers = { 1,2 };
 	dpMemoization.clear();
 	assert(StairsClimbingDynamicProgramming(6, numbers) == 13);
+	assert(StairsClimbingDynamicProgrammingBottomUp(6, numbers) == 13);
+	numbers.clear();
+	numbers = { 1,2,3 };
+	dpMemoization.clear();
+	assert(StairsClimbingDynamicProgramming(6, numbers) == 24);
+	assert(StairsClimbingDynamicProgrammingBottomUp(6, numbers) == 24);
 	//combinations1 = CoinsChangeDynamicProgramming(166, numbers); Times out!
 	//assert(!combinations1.empty());
 	//combinations = CoinChange(166, numbers); //Times out!
@@ -11093,7 +11175,7 @@ long CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size_t>& coins
 */
 size_t StairsClimbingDynamicProgramming(long destination, vector<size_t>& steps)
 {
-	if (!destination) // 0 step = stays. So it is one possibility
+	if (!destination) // 0 step = stays. So it is one possibility.
 		return 1;
 	if (destination < 0) // Impossible
 		return 0;
@@ -11104,6 +11186,25 @@ size_t StairsClimbingDynamicProgramming(long destination, vector<size_t>& steps)
 		combinations += dpMemoization[destination - *it];
 	}
 	return combinations;
+}
+/* The Recursive Staircase - Bottom Up Dynamic Programming
+* Steps: {1,2} Destination: 6
+*  0 1 2 3 4 5 6
+* {1,1,2,3,5,8,13} <= [i] = [i-1] + [i-2]
+* {1,0}, {1,1}, {2,1}, {2,3}, {5,3}, {5,8}, {13,8} => [N%2] = 13
+* 
+* Steps: {1,2,3} Destination: 6
+*  0 1 2 3 4 5  6
+* {1,1,2,4,7,13,24} <= [i] = [i-1] + [i-2] + [i-3]
+* {1,0,0}, {1,1,0}, {1,1,2}, {4,1,2}, {4,7,2}, {4,7,13}, {24,7,13} => [n%3] = 24
+*/
+size_t StairsClimbingDynamicProgrammingBottomUp(long destination, vector<size_t>& steps)
+{
+	vector<size_t> combinations(steps.size(), 0);
+	combinations[0] = 1;
+	for (size_t i = 1; i <= (size_t)destination; i++)
+		combinations[i % combinations.size()] = accumulate(combinations.begin(), combinations.end(), 0);
+	return combinations[destination % combinations.size()];
 }
 // https://www.hackerrank.com/challenges/unbounded-knapsack/problem
 // 100%
