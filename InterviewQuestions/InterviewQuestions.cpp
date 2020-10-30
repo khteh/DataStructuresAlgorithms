@@ -678,6 +678,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	d = round(0.1234, 2);
 	d = round(0.1234, 3);
 	d = round(0.1234, 4);
+	assert(NumberStringSum(string("1234567890"), string("9876543210")) == "11111111100");
+	assert(NumberStringSum(string("123"), string("45")) == "168");
+	assert(NumberStringMultiplication(string("-4"), string("5")) == "-20");
+	assert(NumberStringMultiplication(string("3"), string("-4")) == "-12");
+	assert(NumberStringMultiplication(string("-7"), string("-8")) == "56");
+	assert(NumberStringMultiplication(string("123456"), string("654321")) == "80779853376");
+	assert(NumberStringMultiplication(string("456789"), string("987654")) == "451149483006");
+
 	assert(factorial(1) == 1);
 	assert(factorial(2) == 2);
 	assert(factorial(3) == 6);
@@ -1044,12 +1052,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(AddWithoutArithmetic(0xdeadbeef, 0) == 0xdeadbeef);
 	assert(AddWithoutArithmetic(0, 0xfeedbeef) ==  0xfeedbeef);
 
-	assert(NumberStringSum(string("1234567890"), string("9876543210")) == "11111111100");
-	assert(NumberStringMultiplication(string("-4"), string("5")) == "-20");
-	assert(NumberStringMultiplication(string("3"), string("-4")) == "-12");
-	assert(NumberStringMultiplication(string("-7"), string("-8")) == "56");
-	assert(NumberStringMultiplication(string("123456"), string("654321")) == "80779853376");
-	assert(NumberStringMultiplication(string("456789"), string("987654")) == "451149483006");
 	for (i = 0; i < 64; i++)
 		mask |= ((unsigned long long)1 << i);
 	cout << "mask: " << hex << mask << dec << endl << endl;
@@ -5382,16 +5384,12 @@ string NumberStringSum(string& str1, string& str2)
 		return str1;
 	else if (str1.empty() && str2.empty())
 		return "";
-
-	ostringstream oss;
-	// Calculate length of both string 
-	int n1 = str1.length(), n2 = str2.length();
-	int diff = n2 - n1;
-
 	// Initially take carry zero 
 	int carry = 0;
 	string::reverse_iterator it1 = str1.rbegin();
 	string::reverse_iterator it2 = str2.rbegin();
+	vector<char> result(max(str1.size(), str2.size()) + 1, '0');
+	vector<char>::reverse_iterator it3 = result.rbegin();
 	for (; !(it1 == str1.rend() && it2 == str2.rend()); ) {
 		// Do school mathematics, compute sum of current digits and carry
 		int sum = carry;
@@ -5399,7 +5397,7 @@ string NumberStringSum(string& str1, string& str2)
 			sum += *it1 - '0';
 		if (it2 != str2.rend())
 			sum += *it2 - '0';
-		oss << sum % 10;
+		*it3++ = (sum % 10) + '0';
 		carry = sum / 10;
 		if (it1 != str1.rend())
 			it1++;
@@ -5408,12 +5406,9 @@ string NumberStringSum(string& str1, string& str2)
 	}
 	// Add remaining carry 
 	if (carry)
-		oss << carry;
-
-	// reverse resultant string
-	string str = oss.str();
-	reverse(str.begin(), str.end());
-	return str;
+		*it3 = carry + '0';
+	string str = string(result.begin(), result.end());
+	return carry ? str : str.substr(1);
 }
 /*
   Multiplies str1 and str2, and prints result.
