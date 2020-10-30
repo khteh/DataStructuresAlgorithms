@@ -5407,7 +5407,7 @@ string NumberStringSum(string& str1, string& str2)
 	// Add remaining carry 
 	if (carry)
 		*it3 = carry + '0';
-	string str = string(result.begin(), result.end());
+	string str(result.begin(), result.end());
 	return carry ? str : str.substr(1);
 }
 /*
