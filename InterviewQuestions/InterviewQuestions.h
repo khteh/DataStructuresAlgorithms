@@ -152,6 +152,7 @@ long MinAbsSum(vector<long>&);
 long NumberSolitaire(vector<long>&);
 long MaxProfit(vector<long>&);
 size_t StockMax(vector<long>&);
+long StockMaxProfit(vector<long>&);
 string decimal_to_binary(int);
 void decimal_to_binary(int decimal, vector<bool>&, size_t width);
 size_t binary_gap(long);

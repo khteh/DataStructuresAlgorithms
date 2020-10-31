@@ -1438,10 +1438,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(StockMax(a) == 0);
 	a.clear();
 	a = { 1, 2, 100 };
-	assert(StockMax(a) == 197);
+	assert(StockMax(a) == 197);	// (100 - 1 = 99) + (100 - 2 = 98) = 197
 	a.clear();
 	a = { 1, 3, 1, 2 };
 	assert(StockMax(a) == 3);
+	a.clear();
+	a = { 1, 2, 3, 0, 2, 5 };
+	assert(StockMaxProfit(a) == 6);
+	a.clear();
+	a = { 1, 2, 3, 0, 1, 5 };
+	assert(StockMaxProfit(a) == 6);
+	a.clear();
+	a = { 1, 2, 6, 0, 1, 5 };
+	assert(StockMaxProfit(a) == 9);
 	a.clear();
 	a = {1,-2,0,9,-1,-2};
 	assert(NumberSolitaire(a) == 8);
@@ -9458,8 +9467,10 @@ long MaxProfit(vector<long>& data)
 	}
 	return delta;
 }
-// https://www.hackerrank.com/challenges/stockmax/problem
-// 100%
+/* https://www.hackerrank.com/challenges/stockmax/problem
+* 100%
+* { 1, 2, 100 } : (100 - 1 = 99) + (100 - 2 = 98) = 197
+*/
 size_t StockMax(vector<long>& prices)
 {
 	size_t profit = 0;
@@ -9468,7 +9479,7 @@ size_t StockMax(vector<long>& prices)
 		if (maxIndex <= i) {
 			vector<long>::iterator peak = max_element(prices.begin() + i, prices.end());
 			if (peak != prices.end())
-				maxIndex = peak - prices.begin();
+				maxIndex = distance(prices.begin(), peak);
 		}
 		if (maxIndex > i) {
 			//cout << "Profit: " << *peak - prices[i] << endl;
@@ -9476,6 +9487,43 @@ size_t StockMax(vector<long>& prices)
 		}
 	}
 	return profit;
+}
+/* https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
+* 100%
+* State machine of 3 states: (stay, bought, sold). Keep track of amount of profit at every state.
+* stay -> bought -> sold -> stay
+* stay -> stay
+* bought -> bought
+* sold -> stay
+* 
+* state[i] = max profit:
+* stay[i] = max(stay[i - 1], sold[i - 1]); // Stay put, or rest from sold state
+* bought[i] = max(bought[i - 1], stay[i - 1] - prices[i]); // Stay put, or buy again (Cannot buy immediately after sell)
+* sold[i] = bought[i - 1] + prices[i]; // Sell
+* stay[0] = 0; // At the start, you don't have any stock if you just rest
+* bought[0] = -prices[0]; // After buy, you should have -prices[0] profit. Be positive!
+* sold[0] = 0;
+
+	    1  2  3	 0 2
+stay:   0  0  1  2 2
+bought: -1 -1 -1 1 1
+sold:   0  1  2 -1 3
+*/
+long StockMaxProfit(vector<long>& prices)
+{
+	if (prices.size() < 2)
+		return 0;
+	long profit = 0;
+	vector<long> stay(prices.size(), 0), bought(prices.size(), 0), sold(prices.size(), 0);
+	stay[0] = 0;
+	bought[0] = -prices[0];
+	sold[0] = 0;
+	for (size_t i = 1; i < prices.size(); i++) {
+		stay[i] = max(stay[i - 1], sold[i - 1]);
+		bought[i] = max(bought[i - 1], stay[i - 1] - prices[i]);
+		sold[i] = bought[i - 1] + prices[i];
+	}
+	return max(stay.back(), sold.back());
 }
 // You are a game developer working on a game that randomly generates levels. A level is an undirected graph of rooms, each connected by doors. 
 // The player starts in one room, and there is a treasure in another room. Some doors are locked, and each lock is opened by a unique key. 
