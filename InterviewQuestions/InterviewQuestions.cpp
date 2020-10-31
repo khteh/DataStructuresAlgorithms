@@ -423,7 +423,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	line = "cdadabcc";
 	RemoveDuplicateCharactersLexicographicalOrder(line);
 	assert(line == "adbc");
-
+	assert(isAdditiveNumber(string("123")));
+	assert(isAdditiveNumber(string("123581321")));
+	assert(isAdditiveNumber(string("199100199")));
+	assert(!isAdditiveNumber(string("1203")));
+	assert(!isAdditiveNumber(string("1023")));
+	assert(!isAdditiveNumber(string("0123")));
 	line = "Hello World!!!";
 	line1 = "llo World!!!He";
 	assert(AreRotatedStrings(line, line1, 2));
@@ -2739,6 +2744,42 @@ void RemoveDuplicateCharactersLexicographicalOrder(string& str)
 		counts[c]--;
 	}
 	str = result;
+}
+/* https://leetcode.com/problems/additive-number/
+* 100%
+*/
+bool isAdditiveNumber(string& str)
+{
+	for (size_t i = 1; i <= str.size() / 2; i++) // The length of sum is the max of the operands. So the length of the operands cannot be longer than half the string.
+		for (size_t j = 1; max(i, j) <= str.size() - i - j; j++)
+			if (checkIfAdditiveSequence(i, j, str))
+				return true;
+	return false;
+}
+/*
+* 123581321
+* 1 2 3
+*   2 3 5
+*     3 5 8
+*       5 8 13
+*         8 13 21
+*/
+bool checkIfAdditiveSequence(size_t i, size_t j, string& str)
+{
+	if ((str[0] == '0' && i > 1) || (str[i] == '0' && j > 1))
+		return false;
+	unsigned long long first, second;
+	string sum;
+	istringstream(str.substr(0, i)) >> first;
+	istringstream(str.substr(i, j)) >> second;
+	for (size_t k = i + j; k < str.size(); k += sum.size()) {
+		second = first + second;
+		first = second - first;
+		sum = to_string(second);
+		if (str.substr(k, sum.size()) != sum)
+			return false;
+	}
+	return true;
 }
 bool areAnagrams(string const &s1, string const &s2)
 {

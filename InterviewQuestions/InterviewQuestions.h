@@ -161,6 +161,8 @@ void reverseWords(string&);
 void reverseWordsTrimmed(string&);
 void RemoveDuplicateCharacters(string&);
 void RemoveDuplicateCharactersLexicographicalOrder(string&);
+bool isAdditiveNumber(string&);
+bool checkIfAdditiveSequence(size_t, size_t, string&);
 bool areAnagrams(string const&, string const &);
 size_t FindAnagrams(vector<string> const&, vector<vector<string>>&);
 bool SherlockValidString(string const&);
