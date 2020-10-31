@@ -405,6 +405,25 @@ int _tmain(int argc, _TCHAR* argv[])
 	line = "abababab";
 	RemoveDuplicateCharacters(line);
 	assert(line == "ab");
+	line = "bcabc";
+	RemoveDuplicateCharactersLexicographicalOrder(line);
+	assert(line == "abc");
+	line = "abacb";
+	RemoveDuplicateCharactersLexicographicalOrder(line);
+	assert(line == "abc");
+	line = "cbacdcbc";
+	RemoveDuplicateCharactersLexicographicalOrder(line);
+	assert(line == "acdb");
+	line = "cbacdbcd";
+	RemoveDuplicateCharactersLexicographicalOrder(line);
+	assert(line == "abcd");
+	line = "cbaidbcj";
+	RemoveDuplicateCharactersLexicographicalOrder(line);
+	assert(line == "aidbcj");
+	line = "cdadabcc";
+	RemoveDuplicateCharactersLexicographicalOrder(line);
+	assert(line == "adbc");
+
 	line = "Hello World!!!";
 	line1 = "llo World!!!He";
 	assert(AreRotatedStrings(line, line1, 2));
@@ -2679,6 +2698,47 @@ void RemoveDuplicateCharacters(string& str)
 		str[tail] = 0;
 		str.resize(tail);
 	}
+}
+/* https://leetcode.com/problems/remove-duplicate-letters/
+* 100%
+bcabc
+bc
+  abc
+
+abacb
+ab
+  acb <= abc
+
+cbacdcbc
+c
+ b
+  acd c b
+
+cbacdbcd
+c
+ b
+  acd b
+	abcd
+
+cbaidbcj
+c
+ b
+  aidbcj
+*/
+void RemoveDuplicateCharactersLexicographicalOrder(string& str)
+{
+	string result;
+	map<char, long> counts;
+	for (size_t i = 0; i < str.size(); i++)
+		counts[str[i]]++;
+	for (size_t i = 0; i < str.size(); i++) {
+		char c = str[i];
+		for (; !result.empty() && c < result.back() && counts[result.back()] && result.find(c) == string::npos; result.pop_back());
+		if (result.find(c) == string::npos)
+			result.push_back(c);
+		counts[c]--;
+	}
+	str = result;
 }
 bool areAnagrams(string const &s1, string const &s2)
 {
