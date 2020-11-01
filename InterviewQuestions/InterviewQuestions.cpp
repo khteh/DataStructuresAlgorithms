@@ -5472,6 +5472,41 @@ size_t SortSwapCount(vector<size_t>& data)
 /* https://en.wikipedia.org/wiki/Dutch_national_flag_problem
 * https://leetcode.com/problems/sort-colors/
 * 100%
+* i: index for the next 0
+* j: index for the next 1
+* k: index for the next 2
+0  i   j   k  n-1
+<mid mid ??? >mid
+
+2 1 0 1 2 0 1 2
+i,j           k
+
+2 1 0 1 2 0 1 2
+i,j         k
+
+1 1 0 1 2 0 2 2
+i,j       k
+
+1 1 0 1 2 0 2 2
+i j       k
+
+1 1 0 1 2 0 2 2
+i   j     k
+
+0 1 1 1 2 0 2 2
+  i   j     k
+
+0 1 1 1 2 0 2 2
+  i     j   k
+
+0 1 1 1 2 0 2 2
+  i     j k
+
+0 1 1 1 0 2 2 2
+  i     j,k
+
+0 0 1 1 1 2 2 2
+	i   k j		<= j > k base case
 */
 void DutchPartitioning(vector<size_t>& data)
 {
