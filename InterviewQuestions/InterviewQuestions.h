@@ -49,6 +49,7 @@
 #include "Edge.h"
 #include "LRUCache.h"
 #include "Twitter.h"
+#include "CMatrix.h"
 using namespace std;
 using namespace concurrency;
 using namespace chrono;

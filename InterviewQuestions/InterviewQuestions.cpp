@@ -253,6 +253,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	unsigned long long ticks = timespan.count();
 	cout << "Current timestamp (ticks since Epoch): " << ticks << endl;
 	grid = { {1,3,5}, {2,4,6}, {7,8,9} };
+	// grid.back() = {7,8,9}
+	assert(grid.back().back() == 9);
+	grid.clear();
+	grid = { {1,3,5}, {2,4,6}, {7,8,9} };
 	pathResult_t pathResult = FindMaxPath(grid, 0, 0);
 	assert(pathResult.sum == 27);
 	cout << "Grid traversal which yields maximum sum " << pathResult.sum << ": " << pathResult.path << endl;
@@ -2408,6 +2412,24 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(udata.size() == 10);
 	udata1 = { 22,333,505,94,2,10,13,101,3,5 };
 	assert(udata1 == udata);
+	grid1.clear();
+	grid1 = { {2,0,-3,4}, {6,3,2,-1},{5,4,7,3},{2,-6,8,1} };
+	CMatrix<long> matrix(grid1);
+	ugrid.clear();
+	ugrid = { {1,1}, {3,2} };
+	assert(matrix.Sum(ugrid) == 18);
+	ugrid.clear();
+	ugrid = { {0,2}, {3,3} };
+	assert(matrix.Sum(ugrid) == 21);
+	grid1.clear();
+	grid1 = { {-4, -5} };
+	CMatrix<long> matrix1(grid1);
+	ugrid.clear();
+	ugrid = { {0,0}, {0,0} };
+	assert(matrix1.Sum(ugrid) == -4);
+	ugrid.clear();
+	ugrid = { {0,0}, {0,1} };
+	assert(matrix1.Sum(ugrid) == -9);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -2747,10 +2769,13 @@ void RemoveDuplicateCharactersLexicographicalOrder(string& str)
 }
 /* https://leetcode.com/problems/additive-number/
 * 100%
+* i: width of the first operand
+* j: width of the second operand
+* width of sum is max(i, j). So i must be <= half the input string size
 */
 bool isAdditiveNumber(string& str)
 {
-	for (size_t i = 1; i <= str.size() / 2; i++) // The length of sum is the max of the operands. So the length of the operands cannot be longer than half the string.
+	for (size_t i = 1; i <= str.size() / 2; i++)
 		for (size_t j = 1; max(i, j) <= str.size() - i - j; j++)
 			if (checkIfAdditiveSequence(i, j, str))
 				return true;
