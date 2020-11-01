@@ -2,6 +2,7 @@
 #include "CMatrix.h"
 template class CMatrix<long>;
 /*
+* Matrix area sum using bottom-up dynamic programming
 * 	0	1	2	3
 0	2	0	-3	4
 1	6	3	2	-1
