@@ -4896,28 +4896,28 @@ void SortTests()
 
 	udata.clear();
 	udata = { 2,0,2,1,1,0 };
-	DutchPartitioning(udata);
+	DutchPartitioning(udata, 1);
 	udata1.clear();
 	udata1 = {0,0,1,1,2,2};
 	assert(udata == udata1);
 
 	udata.clear();
 	udata = { 0 };
-	DutchPartitioning(udata);
+	DutchPartitioning(udata, 1);
 	udata1.clear();
 	udata1 = { 0 };
 	assert(udata == udata1);
 
 	udata.clear();
 	udata = { 1 };
-	DutchPartitioning(udata);
+	DutchPartitioning(udata, 1);
 	udata1.clear();
 	udata1 = { 1 };
 	assert(udata == udata1);
 
 	udata.clear();
 	udata = { 2 };
-	DutchPartitioning(udata);
+	DutchPartitioning(udata, 1);
 	udata1.clear();
 	udata1 = { 2 };
 	assert(udata == udata1);
@@ -5479,46 +5479,44 @@ size_t SortSwapCount(vector<size_t>& data)
 <mid mid ??? >mid
 
 2 1 0 1 2 0 1 2
-i,j           k
+i,j           k (>mid)
 
 2 1 0 1 2 0 1 2
-i,j         k
+i,j         k   (>mid)
 
 1 1 0 1 2 0 2 2
-i,j       k
+i,j       k     (==mid)
 
 1 1 0 1 2 0 2 2
-i j       k
+i j       k    (==mid)
 
 1 1 0 1 2 0 2 2
-i   j     k
+i   j     k    (<mid)
 
 0 1 1 1 2 0 2 2
-  i   j     k
+  i   j     k  (==mid)
 
 0 1 1 1 2 0 2 2
-  i     j   k
+  i     j   k  (>mid)
 
 0 1 1 1 2 0 2 2
-  i     j k
+  i     j k    (>mid)
 
 0 1 1 1 0 2 2 2
-  i     j,k
+  i     j,k    (<mid)
 
 0 0 1 1 1 2 2 2
 	i   k j		<= j > k base case
 */
-void DutchPartitioning(vector<size_t>& data)
+void DutchPartitioning(vector<size_t>& data, size_t mid)
 {
 	for (int i = 0, j = 0, k = data.size() - 1; !data.empty() && j <= k; ) {
-		if (data[j] == 0)
+		if (data[j] < mid)
 			swap(data[i++], data[j++]);
-		else if (data[j] == 2)
+		else if (data[j] > mid)
 			swap(data[j], data[k--]);
-		else if (data[j] == 1)
+		else // if (data[j] == mid)
 			j++;
-		else
-			throw runtime_error("Invalid numer in the data. This function only expects 3 possible values: 0, 1, 2 which represent Dutch national flag colours of Red, White and Blue.");
 	}
 }
 long** my2DAlloc(long rows, long cols)
