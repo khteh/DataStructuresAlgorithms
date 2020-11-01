@@ -50,6 +50,7 @@
 #include "LRUCache.h"
 #include "Twitter.h"
 #include "CMatrix.h"
+#include "ListRangeSum.h"
 using namespace std;
 using namespace concurrency;
 using namespace chrono;

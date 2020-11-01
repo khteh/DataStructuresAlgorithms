@@ -123,6 +123,9 @@
     <ClInclude Include="CMatrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ListRangeSum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Call.cpp">
@@ -228,6 +231,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CMatrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ListRangeSum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

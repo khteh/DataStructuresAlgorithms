@@ -2430,6 +2430,18 @@ int _tmain(int argc, _TCHAR* argv[])
 	ugrid.clear();
 	ugrid = { {0,0}, {0,1} };
 	assert(matrix1.Sum(ugrid) == -9);
+	a.clear();
+	a = { 1,3,5 };
+	ListRangeSum<long> listSum(a);
+	assert(listSum.Sum(0, 2) == 9);
+	listSum.Update(1,2);
+	assert(listSum.Sum(0, 2) == 8);
+	a.clear();
+	a = { -1 };
+	ListRangeSum<long> listSum1(a);
+	assert(listSum1.Sum(0, 0) == -1);
+	listSum1.Update(0, 1);
+	assert(listSum1.Sum(0, 0) == 1);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
