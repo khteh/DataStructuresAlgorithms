@@ -23,6 +23,7 @@ public:
 	TUserID UserID() const;
 	unsigned long long TimeStamp() const;
 	bool operator<(const TweetItem<TUserID, TTweetID>&) const;
+	bool operator>(const TweetItem<TUserID, TTweetID>&) const;
 	bool operator==(const TweetItem<TUserID, TTweetID>&) const;
 	bool operator!=(const TweetItem<TUserID, TTweetID>&) const;
 };
@@ -31,8 +32,8 @@ class Twitter
 {
 private:
 	map<TUserID, set<TUserID>> _follows;
-	map<TUserID, set<TweetItem<TUserID, TTweetID>>> _tweets; // Key: timestamp. Does not guarantee uniqueness based on User and Tweet IDs.
-	map<TUserID, map<TTweetID, typename set<TweetItem<TUserID, TTweetID>>::iterator>> _tweetsMap; // Used to locate tweet in _tweets
+	map<TUserID, set<TweetItem<TUserID, TTweetID>, greater<TweetItem<TUserID, TTweetID>>>> _tweets; // Key: timestamp. Does not guarantee uniqueness based on User and Tweet IDs.
+	map<TUserID, map<TTweetID, typename set<TweetItem<TUserID, TTweetID>, greater<TweetItem<TUserID, TTweetID>>>::iterator>> _tweetsMap; // Used to locate tweet in _tweets
 public:
 	virtual ~Twitter();
 	void PostTweet(TUserID, TTweetID);

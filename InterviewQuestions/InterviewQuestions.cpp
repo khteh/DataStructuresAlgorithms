@@ -9664,6 +9664,8 @@ void TweeterAPITests()
 	assert(feeds.size() == 5);
 	feeds1 = { 10,9,8,7,6 };
 	assert(feeds1 == feeds);
+	feeds = twitter.GetFromLastNewsFeed(1, 10);
+	assert(feeds.empty());
 }
 string decimal_to_binary(int decimal)
 {
