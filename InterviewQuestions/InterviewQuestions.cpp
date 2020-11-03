@@ -2370,6 +2370,24 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(listSum1.Sum(0, 0) == -1);
 	listSum1.Update(0, 1);
 	assert(listSum1.Sum(0, 0) == 1);
+	a.clear();
+	a = { 1,7,4,9,2,5 };
+	assert(wiggleMaxLength(a) == 6);
+	a.clear();
+	a = { 0 };
+	assert(wiggleMaxLength(a) == 1);
+	a.clear();
+	a = { 0, 0 };
+	assert(wiggleMaxLength(a) == 1);
+	a.clear();
+	a = { 1,17,5,10,13,15,10,5,16,8 };
+	assert(wiggleMaxLength(a) == 7);
+	a.clear();
+	a = { 1,17,5,10,13,15,12,5,16,8 };
+	assert(wiggleMaxLength(a) == 7);
+	a.clear();
+	a = { 1,17,5,10,13,11,12,5,16,8 };
+	assert(wiggleMaxLength(a) == 9);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -13068,4 +13086,44 @@ string getHint(string& secret, string& guess)
 	ostringstream oss;
 	oss << bulls << "A" << cows << "B";
 	return oss.str();
+}
+/* https://leetcode.com/problems/wiggle-subsequence/
+* 100%
+*/
+size_t wiggleMaxLength(vector<long>& nums) 
+{
+	size_t result = 0, count = 0;
+	long diff = 0, previous = 0;
+	if (nums.empty())
+		return 0;
+	if (nums.size() == 1)
+		return 1;
+	for (size_t i = 1; i < nums.size(); i++) {
+		if (i == 1) {
+			diff = nums[i] - nums[i - 1];
+			count = diff ? 2 : 1;
+			previous = nums[i];
+		}
+		else if (diff >= 0 && nums[i] - previous < 0) {
+			count++;
+			diff = nums[i] - previous;
+			previous = nums[i];
+		}
+		else if (diff <= 0 && nums[i] - previous > 0) {
+			count++;
+			diff = nums[i] - previous;
+			previous = nums[i];
+		}
+		else if (diff >= 0 && nums[i] - previous > 0) {
+			diff += nums[i] - previous;
+			previous = nums[i];
+		}
+		else if (diff <= 0 && nums[i] - previous < 0) {
+			diff += nums[i] - previous;
+			previous = nums[i];
+		}
+		if (count > result)
+			result = count;
+	}
+	return result;
 }
