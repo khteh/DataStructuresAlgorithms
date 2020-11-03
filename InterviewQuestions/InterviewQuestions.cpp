@@ -13092,7 +13092,7 @@ string getHint(string& secret, string& guess)
 */
 size_t wiggleMaxLength(vector<long>& nums) 
 {
-	size_t result = 0, count = 0;
+	size_t count = 0;
 	long diff = 0, previous = 0;
 	if (nums.empty())
 		return 0;
@@ -13122,8 +13122,6 @@ size_t wiggleMaxLength(vector<long>& nums)
 			diff += nums[i] - previous;
 			previous = nums[i];
 		}
-		if (count > result)
-			result = count;
 	}
-	return result;
+	return count;
 }
