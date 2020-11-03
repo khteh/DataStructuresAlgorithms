@@ -20,7 +20,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	unsigned long long mask = 0;
 	vector<string> strings, strings1;
 	set<string> stringset, stringset1;
-	stringset.erase("Does not exist");
 	vector<long> a, b, sortData;
 	vector<int> data, data1;
 	vector<size_t> udata, udata1;
@@ -59,7 +58,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	ListPermutationTests();
 	GraphTests();
 	LongestCommonSubsequenceTests();
-
+	TweeterAPITests();
+	stringset.erase("Does not exist");
 	line = to_string(0);
 	istringstream(line) >> i;
 	assert(i == 0);
@@ -123,16 +123,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "sizeof(void*): " << sizeof(void*) << endl;
 	cout << "sizeof(int): " << (int)sizeof(int) << endl;
 	cout << "sizeof(long): " << (int)sizeof(long) << endl;
+	assert(sizeof(char) == 1);
+	assert(sizeof(short) == 2);
 	assert(sizeof(int) == 4);
 	assert(sizeof(long) == 4);
+	assert(sizeof(float) == 4);
+	assert(sizeof(long long) == 8);
+	assert(sizeof(double) == 8);
+	assert(sizeof(long double) == 8);
 	assert(numeric_limits<int>::min() == numeric_limits<long>::min());
 	assert(numeric_limits<int>::max() == numeric_limits<long>::max());
-	cout << "sizeof(size_t): " << (int)sizeof(size_t) << " max: " << numeric_limits<size_t>::max() << endl;
-	cout << "sizeof(long long): " << (int)sizeof(long long) << endl;
-	assert(sizeof(long long) == 8);
-	cout << "sizeof(unsigned long long): " << (int)sizeof(unsigned long long) << endl;
-	cout << "sizeof(double): " << (int)sizeof(double) << endl;
-	cout << "sizeof(long double): " << (int)sizeof(long double) << endl;
 	cout << "https://en.wikipedia.org/wiki/Machine_epsilon: Float: " << numeric_limits<float>::epsilon() << ", Double: " << numeric_limits<double>::epsilon() << endl;
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
@@ -2340,78 +2340,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(!a.empty());
 	assert(a.size() == 5);
 	assert(getHint(string("6244988279"), string("3819888600")) == "2A2B");
-	Twitter<size_t, size_t> twitter;
-	twitter.PostTweet(1,5);
-	udata = twitter.GetNewsFeed(1);
-	assert(!udata.empty());
-	assert(udata.size() == 1);
-	twitter.Follow(1, 2);
-	twitter.PostTweet(2, 6);
-	udata = twitter.GetNewsFeed(1);
-	assert(!udata.empty());
-	assert(udata.size() == 2);
-	assert(udata[0] == 6);
-	assert(udata[1] == 5);
-	udata = twitter.GetNewsFeed(2);
-	assert(!udata.empty());
-	assert(udata.size() == 1);
-	twitter.UnFollow(1, 2);
-	udata = twitter.GetNewsFeed(1);
-	assert(!udata.empty());
-	assert(udata.size() == 1);
-	assert(udata[0] == 5);
-	udata = twitter.GetNewsFeed(2);
-	assert(!udata.empty());
-	assert(udata.size() == 1);
-	assert(udata[0] == 6);
-	twitter.Clear();
-	twitter.PostTweet(1, 5);
-	twitter.Follow(1, 2);
-	twitter.Follow(2, 1);
-	udata = twitter.GetNewsFeed(2);
-	assert(!udata.empty()); // 5
-	assert(udata[0] == 5);
-	twitter.PostTweet(2, 6);
-	udata = twitter.GetNewsFeed(1); // 5, 6(2)
-	udata1 = twitter.GetNewsFeed(2); // 5(1), 6
-	assert(!udata.empty());
-	assert(!udata1.empty());
-	assert(udata.size() == 2);
-	assert(udata1.size() == 2);
-	assert(udata == udata1);
-	twitter.UnFollow(2, 1); //1: 5, 6(2) 2: 6
-	udata = twitter.GetNewsFeed(1);
-	udata1 = twitter.GetNewsFeed(2);
-	assert(!udata.empty());
-	assert(!udata1.empty());
-	assert(udata.size() == 2);
-	assert(udata1.size() == 1);
-	twitter.Clear();
-	twitter.PostTweet(2, 5); // 2: 5
-	twitter.PostTweet(1, 3); // 1: 3
-	twitter.PostTweet(1, 101); // 1: {3, 101}
-	twitter.PostTweet(2, 13); // 2: {5, 13}
-	twitter.PostTweet(2, 10); // 2: {5, 13, 10}
-	twitter.PostTweet(1, 2); // 1: {3, 101, 2}
-	twitter.PostTweet(2, 94); // 2: {5, 13, 10, 94}
-	twitter.PostTweet(2, 505); // 2: {5, 13, 10, 94, 505}
-	twitter.PostTweet(1, 333); // 1: {3, 101, 2, 333}
-	twitter.PostTweet(1, 22);  // 1: {3, 101, 2, 333, 22}
-	udata = twitter.GetNewsFeed(2);
-	assert(!udata.empty());
-	assert(udata.size() == 5);
-	udata1 = { 505, 94, 10, 13, 5 };
-	assert(udata1 == udata);
-	twitter.Follow(2, 1); //2: {5, 13, 10, 94, 505, 3, 101, 2, 133, 22}
-	/* [22,333,505,94,2,10,13,101,3,5]
-	1: {3, 101, 2, 333, 22}
-	2: {5, 13, 10, 94, 505}
-	*/
-	udata = twitter.GetNewsFeed(2);
-	assert(!udata.empty());
-	assert(udata.size() == 10);
-	udata1 = { 22,333,505,94,2,10,13,101,3,5 };
-	assert(udata1 == udata);
 	grid1.clear();
 	grid1 = { {2,0,-3,4}, {6,3,2,-1},{5,4,7,3},{2,-6,8,1} };
 	CMatrix<long> matrix(grid1);
@@ -9530,6 +9458,212 @@ void Knapsack_CombinationSumTests()
 	assert(combinations.size() == 1); // [[1,2,3,4,5,6,7,8,9]]
 	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
 		assert(it->size() == 9);
+}
+void TweeterAPITests()
+{
+	vector<size_t> feeds, feeds1;
+	Twitter<size_t, size_t> twitter;
+	twitter.PostTweet(1, 5);
+	feeds = twitter.GetNewsFeed(1);
+	assert(!feeds.empty());
+	assert(feeds.size() == 1);
+	twitter.Follow(1, 2);
+	twitter.PostTweet(2, 6);
+	feeds = twitter.GetNewsFeed(1);
+	assert(!feeds.empty());
+	assert(feeds.size() == 2);
+	assert(feeds[0] == 6);
+	assert(feeds[1] == 5);
+	feeds = twitter.GetNewsFeed(2);
+	assert(!feeds.empty());
+	assert(feeds.size() == 1);
+	twitter.UnFollow(1, 2);
+	feeds = twitter.GetNewsFeed(1);
+	assert(!feeds.empty());
+	assert(feeds.size() == 1);
+	assert(feeds[0] == 5);
+	feeds = twitter.GetNewsFeed(2);
+	assert(!feeds.empty());
+	assert(feeds.size() == 1);
+	assert(feeds[0] == 6);
+	twitter.Clear();
+	twitter.PostTweet(1, 5);
+	twitter.Follow(1, 2);
+	twitter.Follow(2, 1);
+	feeds = twitter.GetNewsFeed(2);
+	assert(!feeds.empty()); // 5
+	assert(feeds[0] == 5);
+	twitter.PostTweet(2, 6);
+	feeds = twitter.GetNewsFeed(1); // 5, 6(2)
+	feeds1 = twitter.GetNewsFeed(2); // 5(1), 6
+	assert(!feeds.empty());
+	assert(!feeds1.empty());
+	assert(feeds.size() == 2);
+	assert(feeds1.size() == 2);
+	assert(feeds == feeds1);
+	twitter.UnFollow(2, 1); //1: 5, 6(2) 2: 6
+	feeds = twitter.GetNewsFeed(1);
+	feeds1 = twitter.GetNewsFeed(2);
+	assert(!feeds.empty());
+	assert(!feeds1.empty());
+	assert(feeds.size() == 2);
+	assert(feeds1.size() == 1);
+	twitter.Clear();
+	twitter.PostTweet(2, 5); // 2: 5
+	twitter.PostTweet(1, 3); // 1: 3
+	twitter.PostTweet(1, 101); // 1: {3, 101}
+	twitter.PostTweet(2, 13); // 2: {5, 13}
+	twitter.PostTweet(2, 10); // 2: {5, 13, 10}
+	twitter.PostTweet(1, 2); // 1: {3, 101, 2}
+	twitter.PostTweet(2, 94); // 2: {5, 13, 10, 94}
+	twitter.PostTweet(2, 505); // 2: {5, 13, 10, 94, 505}
+	twitter.PostTweet(1, 333); // 1: {3, 101, 2, 333}
+	twitter.PostTweet(1, 22);  // 1: {3, 101, 2, 333, 22}
+	feeds = twitter.GetNewsFeed(2);
+	assert(!feeds.empty());
+	assert(feeds.size() == 5);
+	feeds1 = { 505, 94, 10, 13, 5 };
+	assert(feeds1 == feeds);
+	twitter.Follow(2, 1); //2: {5, 13, 10, 94, 505, 3, 101, 2, 133, 22}
+	/* [22,333,505,94,2,10,13,101,3,5]
+	1: {3, 101, 2, 333, 22}
+	2: {5, 13, 10, 94, 505}
+	*/
+	feeds = twitter.GetNewsFeed(2);
+	assert(!feeds.empty());
+	assert(feeds.size() == 10);
+	feeds1 = { 22,333,505,94,2,10,13,101,3,5 };
+	assert(feeds1 == feeds);
+	twitter.Clear();
+	twitter.PostTweet(1, 6765);// 1: {6765}
+	twitter.PostTweet(5, 671); // 5: {671}
+	twitter.PostTweet(3, 2868);// 3: {2868}
+	twitter.PostTweet(4, 8148);// 4: {8148}
+	twitter.PostTweet(4, 386); // 4: {8148, 386}
+	twitter.PostTweet(3, 6673);// 3: {2868, 6673}
+	twitter.PostTweet(3, 7946);// 3: {2868, 6673, 7946}
+	twitter.PostTweet(3, 1445);// 3: {2868, 6673, 7946, 1445}
+	twitter.PostTweet(4, 4822);// 4: {8148, 386, 4822}
+	twitter.PostTweet(1, 3781);// 1: {6765, 3781}
+	twitter.PostTweet(4, 9038);// 4: {8148, 386, 4822, 9038}
+	twitter.PostTweet(1, 9643);// 1: {6765, 3781, 9643}
+	twitter.PostTweet(3, 5917);// 3: {2868, 6673, 7946, 1445, 5917}
+	twitter.PostTweet(2, 8847);// 2: {8847}
+	feeds = twitter.GetNewsFeed(1);
+	feeds1 = { 9643, 3781, 6765 };
+	assert(!feeds.empty());
+	assert(feeds1 == feeds);
+	feeds = twitter.GetNewsFeed(2);
+	feeds1 = { 8847 };
+	assert(!feeds.empty());
+	assert(feeds1 == feeds);
+	feeds = twitter.GetNewsFeed(3);
+	feeds1 = { 5917, 1445, 7946, 6673, 2868 };
+	assert(!feeds.empty());
+	assert(feeds1 == feeds);
+	feeds = twitter.GetNewsFeed(4);
+	feeds1 = { 9038, 4822, 386, 8148 };
+	assert(!feeds.empty());
+	assert(feeds1 == feeds);
+	feeds = twitter.GetNewsFeed(5);
+	feeds1 = { 671 };
+	assert(!feeds.empty());
+	assert(feeds1 == feeds);
+
+	twitter.Follow(1, 3); // 1: {6765, 3781, 9643} 3: {2868, 6673, 7946, 1445, 5917}
+	feeds = twitter.GetNewsFeed(1);
+	assert(!feeds.empty());
+	assert(feeds.size() == 8);
+	twitter.Follow(1, 4);// 1: {6765, 3781, 9643} 3: {2868, 6673, 7946, 1445, 5917} 4: {8148, 386, 4822, 9038}
+	feeds = twitter.GetNewsFeed(1);
+	assert(!feeds.empty());
+	assert(feeds.size() == 10); // Limit to 10 items. Actual result is 12.
+	feeds = twitter.GetNewsFeed(1, 20);
+	assert(!feeds.empty());
+	assert(feeds.size() == 12); // Limit to 10 items. Actual result is 12.
+	twitter.Follow(4, 2); // 4: {8148, 386, 4822, 9038} 2: {8847}
+	feeds = twitter.GetNewsFeed(4);
+	assert(!feeds.empty());
+	assert(feeds.size() == 5);
+	twitter.Follow(4, 1);// 4: {8148, 386, 4822, 9038} 2: {8847} 1: {6765, 3781, 9643}
+	feeds = twitter.GetNewsFeed(4);
+	assert(!feeds.empty());
+	assert(feeds.size() == 8);
+	twitter.Follow(3, 2); // 3: {2868, 6673, 7946, 1445, 5917} 2: {8847}
+	feeds = twitter.GetNewsFeed(3);
+	assert(!feeds.empty());
+	assert(feeds.size() == 6);
+	twitter.Follow(3, 5); // 3: {2868, 6673, 7946, 1445, 5917} 2: {8847} 5: {671}
+	feeds = twitter.GetNewsFeed(3);
+	assert(!feeds.empty());
+	assert(feeds.size() == 7);
+	twitter.Follow(3, 1); // 3: {2868, 6673, 7946, 1445, 5917} 2: {8847} 5: {671} 1: {6765, 3781, 9643}
+	feeds = twitter.GetNewsFeed(3);
+	assert(!feeds.empty());
+	assert(feeds.size() == 10);
+	twitter.Follow(2, 3); // 2: {8847} 3: {2868, 6673, 7946, 1445, 5917}
+	feeds = twitter.GetNewsFeed(2);
+	assert(!feeds.empty());
+	assert(feeds.size() == 6);
+	twitter.Follow(2, 1); // 2: {8847} 3: {2868, 6673, 7946, 1445, 5917} 1: {6765, 3781, 9643}
+	feeds = twitter.GetNewsFeed(2);
+	assert(!feeds.empty());
+	assert(feeds.size() == 9);
+	twitter.Follow(2, 5);// 2: {8847} 3: {2868, 6673, 7946, 1445, 5917} 1: {6765, 3781, 9643} 5: {671}
+	feeds = twitter.GetNewsFeed(2);
+	assert(!feeds.empty());
+	assert(feeds.size() == 10);
+	twitter.Follow(5, 1); // 5: {671} 1: {6765, 3781, 9643}
+	feeds = twitter.GetNewsFeed(5);
+	assert(!feeds.empty());
+	assert(feeds.size() == 4);
+	twitter.Follow(5, 2);// 5: {671} 1: {6765, 3781, 9643} 2: {8847}
+	feeds = twitter.GetNewsFeed(5);
+	assert(!feeds.empty());
+	assert(feeds.size() == 5);
+
+	feeds = twitter.GetNewsFeed(1);
+	feeds1 = { 5917,9643,9038,3781,4822,1445,7946,6673,386,8148 };
+	assert(!feeds.empty());
+	assert(feeds1 == feeds);
+	feeds = twitter.GetNewsFeed(2);
+	feeds1 = { 8847,5917,9643,3781,1445,7946,6673,2868,671,6765 };
+	assert(!feeds.empty());
+	assert(feeds1 == feeds);
+	feeds = twitter.GetNewsFeed(3);
+	feeds1 = { 8847,5917,9643,3781,1445,7946,6673,2868,671,6765 };
+	assert(!feeds.empty());
+	assert(feeds1 == feeds);
+	feeds = twitter.GetNewsFeed(4);
+	feeds1 = { 8847,9643,9038,3781,4822,386,8148,6765 };
+	assert(!feeds.empty());
+	assert(feeds1 == feeds);
+	feeds = twitter.GetNewsFeed(5);
+	feeds1 = { 8847,9643,3781,671,6765 };
+	assert(!feeds.empty());
+	assert(feeds1 == feeds);
+
+	twitter.Clear();
+	twitter.PostTweet(1, 1);
+	twitter.PostTweet(1, 2);
+	twitter.PostTweet(1, 3);
+	twitter.PostTweet(1, 4);
+	twitter.PostTweet(1, 5);
+	twitter.PostTweet(1, 6);
+	twitter.PostTweet(1, 7);
+	twitter.PostTweet(1, 8);
+	twitter.PostTweet(1, 9);
+	twitter.PostTweet(1, 10);
+	feeds = twitter.GetNewsFeed(1);
+	assert(!feeds.empty());
+	assert(feeds.size() == 10);
+	feeds1 = {10,9,8,7,6,5,4,3,2,1};
+	assert(feeds1 == feeds);
+	feeds = twitter.GetFromLastNewsFeed(1, 5);
+	assert(!feeds.empty());
+	assert(feeds.size() == 5);
+	feeds1 = { 10,9,8,7,6 };
+	assert(feeds1 == feeds);
 }
 string decimal_to_binary(int decimal)
 {

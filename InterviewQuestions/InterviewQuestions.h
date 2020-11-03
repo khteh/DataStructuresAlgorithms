@@ -111,7 +111,7 @@ typedef struct ZigZagEscape {
 		return value < other.value;
 	}
 } zigzag_t;
-typedef struct {
+typedef struct buildmax_comparator {
 	bool operator()(string lhs, string rhs) const {
 		ostringstream oss1, oss2;
 		oss1 << lhs << rhs;
@@ -256,8 +256,6 @@ void BinarySearchTreeTests();
 void MinHeapTests();
 void MaxHeapTests();
 void MinMaxHeapTests();
-void MinHeapifyDown(vector<long>&, size_t);
-void MaxHeapifyDown(vector<long>&, size_t);
 void SparseNumberTests();
 void LongestCommonSubsequenceTests();
 template<class URNG>
@@ -266,6 +264,9 @@ void TestRandom();
 void GreedyAlgorithmTests();
 void Knapsack_CoinChangeTests();
 void Knapsack_CombinationSumTests();
+void TweeterAPITests();
+void MinHeapifyDown(vector<long>&, size_t);
+void MaxHeapifyDown(vector<long>&, size_t);
 set<vector<size_t>> CoinChange(long, vector<size_t>&);
 set<vector<size_t>> CoinsChangeDynamicProgramming(long, vector<size_t>&);
 size_t CoinsChangeWaysDynamicProgramming(long, vector<size_t>&);

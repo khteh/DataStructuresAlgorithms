@@ -21,22 +21,22 @@ TTweetID TweetItem<TUserID, TTweetID>::ID() const
     return _id;
 }
 template<typename TUserID, typename TTweetID>
-long TweetItem<TUserID, TTweetID>::TimeStamp() const
+unsigned long long TweetItem<TUserID, TTweetID>::TimeStamp() const
 {
     return _timestamp;
 }
 template<typename TUserID, typename TTweetID>
-bool TweetItem<TUserID, TTweetID>::operator<(const TweetItem& other) const
+bool TweetItem<TUserID, TTweetID>::operator<(const TweetItem<TUserID, TTweetID>& other) const
 {
     return _timestamp < other._timestamp;
 }
 template<typename TUserID, typename TTweetID>
-bool TweetItem<TUserID, TTweetID>::operator==(const TweetItem& other) const
+bool TweetItem<TUserID, TTweetID>::operator==(const TweetItem<TUserID, TTweetID>& other) const
 {
     return _id == other._id && _user == other._user && _timestamp == other._timestamp;
 }
 template<typename TUserID, typename TTweetID>
-bool TweetItem<TUserID, TTweetID>::operator!=(const TweetItem& other) const
+bool TweetItem<TUserID, TTweetID>::operator!=(const TweetItem<TUserID, TTweetID>& other) const
 {
     return _id != other._id || _user != other._user || _timestamp != other._timestamp;
 }
@@ -50,43 +50,72 @@ void Twitter<TUserID, TTweetID>::Clear()
 {
     _follows.clear();
     _tweets.clear();
+    _tweetsMap.clear();
 }
 template<typename TUserID, typename TTweetID>
 void Twitter<TUserID, TTweetID>::PostTweet(TUserID userId, TTweetID tweetId)
 {
-    TweetItem<TUserID, TTweetID> tweet = TweetItem<TUserID, TTweetID>(userId, tweetId);
-    _tweets[userId].push_back(tweet);
+    set<TweetItem<TUserID, TTweetID>>::iterator newFeed = _tweets[userId].emplace(userId, tweetId).first;
+    _tweetsMap[userId][tweetId] = newFeed;
     for (map<TUserID, set<TUserID>>::iterator it = _follows.begin(); it != _follows.end(); it++)
-        if (it->second.find(userId) != it->second.end())
-            _tweets[it->first].push_back(tweet);
+        if (it->second.find(userId) != it->second.end()) {
+            _tweets[it->first].insert(*newFeed);
+            _tweetsMap[it->first][tweetId] = _tweets[it->first].find(*newFeed);
+        }
 }
 template<typename TUserID, typename TTweetID>
 vector<TTweetID> Twitter<TUserID, TTweetID>::GetNewsFeed(TUserID userId, size_t size)
 {
     vector<TTweetID> result;
-    transform(_tweets[userId].rbegin(), 
-        _tweets[userId].rbegin() + min((long)size, (long)_tweets[userId].size()), 
+    set<TweetItem<TUserID, TTweetID>>::reverse_iterator start = _tweets[userId].rbegin(), end = start;
+    advance(end, min((long)size, (long)_tweets[userId].size()));
+    transform(start, 
+        end, 
         back_inserter(result),
         [](const TweetItem<TUserID, TTweetID>& tweet) { return tweet.ID(); });
     return result;
 }
 template<typename TUserID, typename TTweetID>
+vector<TTweetID> Twitter<TUserID, TTweetID>::GetFromLastNewsFeed(TUserID userId, TTweetID tweetId, size_t size)
+{
+    vector<TTweetID> result;
+    if (_tweetsMap[userId].find(tweetId) != _tweetsMap[userId].end()) {
+        set<TweetItem<TUserID, TTweetID>>::iterator start = _tweetsMap[userId][tweetId], end = start;
+        if (start != _tweets[userId].end()) {
+            start++;
+            end++;
+        }
+        advance(end, min((long)size, (long)distance(start, _tweets[userId].end())));
+        set<TweetItem<TUserID, TTweetID>>::reverse_iterator rstart = make_reverse_iterator(end), rend = make_reverse_iterator(start);
+        transform(rstart,
+            rend,
+            back_inserter(result),
+            [](const TweetItem<TUserID, TTweetID>& tweet) { return tweet.ID(); });
+    }
+    return result;
+}
+template<typename TUserID, typename TTweetID>
 void Twitter<TUserID, TTweetID>::Follow(TUserID user, TUserID followed)
 {
-    if (user != followed) {
+    if (user != followed && _follows[user].find(followed) == _follows[user].end()) {
         _follows[user].insert(followed);
-        set<TweetItem<TUserID, TTweetID>> userTweets(_tweets[user].begin(), _tweets[user].end());
-        copy_if(_tweets[followed].cbegin(), _tweets[followed].cend(), back_inserter(_tweets[user]), [&userTweets, &followed](const TweetItem<TUserID, TTweetID> &tweet) {
-            return tweet.UserID() == followed && userTweets.find(tweet) == userTweets.end();
-        });
-        sort(_tweets[user].begin(), _tweets[user].end());
+        for (set<TweetItem<TUserID, TTweetID>>::const_iterator it = _tweets[followed].cbegin(); it != _tweets[followed].cend(); it++)
+            if (it->UserID() == followed && _tweetsMap[user].find(it->ID()) == _tweetsMap[user].end()) {
+                _tweets[user].insert(*it);
+                _tweetsMap[user].emplace(it->ID(), _tweets[user].find(*it));
+            }
     }
 }
 template<typename TUserID, typename TTweetID>
 void Twitter<TUserID, TTweetID>::UnFollow(TUserID user, TUserID followed)
 {
-    if (user != followed) {
+    if (user != followed && _follows[user].find(followed) != _follows[user].end()) {
         _follows[user].erase(followed);
-        _tweets[user].erase(remove_if(_tweets[user].begin(), _tweets[user].end(), [&followed](const TweetItem<TUserID, TTweetID>& tweet) {return tweet.UserID() == followed; }), _tweets[user].end());
+        for (set<TweetItem<TUserID, TTweetID>>::const_iterator it = _tweets[user].cbegin(); it != _tweets[user].cend(); )
+            if (it->UserID() == followed) {
+                _tweetsMap[user].erase(it->ID());
+                it = _tweets[user].erase(it);
+            } else
+                it++;
     }
 }
