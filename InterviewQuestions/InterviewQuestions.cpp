@@ -1076,6 +1076,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	free(my3Dbuffer);
 	cout << "Test addition without using arithmetic symbol: " << endl;
 	assert(AddWithoutArithmetic(0, 0) == 0);
+	assert(AddWithoutArithmetic(-1, 1) == 0);
 	assert(AddWithoutArithmetic(0xdeadbeef, 0xfeedbeef) == 0x1dd9b7dde);
 	assert(AddWithoutArithmetic(0xdeadbeef, 0) == 0xdeadbeef);
 	assert(AddWithoutArithmetic(0, 0xfeedbeef) ==  0xfeedbeef);
@@ -5489,17 +5490,15 @@ long*** my3DAlloc(long rows, long cols, long heights)
 	}
 	return ptrs;
 }
+/* https://leetcode.com/problems/sum-of-two-integers/			   1
+* 1 + 1 = 10b, 1 + 0 = 1b, 0 + 0 = 0b
+* Only 1 1 has carry
+* https://stackoverflow.com/questions/55615186/c-left-shift-overflow-for-negative-numbers
+* Left-shifting a negative value results in undefined behaviour. Cast to unsigned for bit manipulations.
+*/
 long long AddWithoutArithmetic(long long sum, long long carry)
 {
-	if (!carry)
-		return sum;
-	if (!sum)
-		return carry;
-	if (!sum && !carry)
-		return 0;
-	long long sum1 = sum ^ carry;
-	long long carry1 = (sum & carry) << 1;
-	return AddWithoutArithmetic(sum1, carry1);
+	return !carry ? sum : AddWithoutArithmetic(sum ^ carry, (unsigned long long)(sum & carry) << 1);
 }
 // Function for finding sum of larger numbers 
 string NumberStringSum(string& str1, string& str2)
