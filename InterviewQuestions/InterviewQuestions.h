@@ -290,6 +290,7 @@ void CountingSort(vector<size_t> &);
 string CountingSort(vector<vector<string>>&);
 void TopDownMergeSort(vector<long>&, vector<long>&, size_t, size_t);
 void BottomUpMergeSort(vector<long>&, vector<long>&);
+void WiggleSort(vector<long>&);
 long countInversions(vector<long>&);
 size_t TopDownMergeSortCountConversions(vector<long>&, vector<long>&, size_t, size_t);
 size_t MergeCountInversions(vector<long>&, vector<long>&, size_t, size_t, size_t);

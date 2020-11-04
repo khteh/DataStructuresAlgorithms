@@ -4653,7 +4653,7 @@ void SortTests()
 	vector<long> a, b, sortData, buffer;
 	vector<size_t> udata, udata1;
 	sortData.clear();
-	sortData = {1,0,-1};
+	sortData = { 1,0,-1 };
 	BubbleSort(sortData);
 	assert(sortData[0] == -1);
 	assert(sortData[1] == 0);
@@ -4690,7 +4690,7 @@ void SortTests()
 	assert(sortData == buffer);
 
 	sortData.clear();
-	sortData = {1,0,-1};
+	sortData = { 1,0,-1 };
 	SelectionSort(sortData);
 	assert(sortData[0] == -1);
 	assert(sortData[1] == 0);
@@ -4728,7 +4728,7 @@ void SortTests()
 	assert(sortData[2] == 1);
 
 	sortData.clear();
-	sortData = {2,1,3,1,2};
+	sortData = { 2,1,3,1,2 };
 	buffer = sortData;
 	TopDownMergeSort(buffer, sortData, 0, sortData.size());
 	assert(sortData[0] == 1);
@@ -4772,7 +4772,7 @@ void SortTests()
 	assert(sortData[1] == 0);
 	assert(sortData[2] == 1);
 
-	vector<size_t> sortData1 { 1,0,2 };
+	vector<size_t> sortData1{ 1,0,2 };
 	CountingSort(sortData1);
 	assert(sortData1[0] == 0);
 	assert(sortData1[1] == 1);
@@ -4785,16 +4785,16 @@ void SortTests()
 	assert(sortData1[1] == 456);
 	assert(sortData1[2] == 789);
 
-	vector<vector<string>> strSort{ 
-		{"400", "not"}, 
-		{"1500", "question"}, 
-		{"550", "to"}, 
-		{"100", "to"}, 
-		{"650", "be"}, 
-		{"1100", "-"}, 
-		{"200", "be"}, 
-		{"1234", "is"}, 
-		{"1100", "that"}, 
+	vector<vector<string>> strSort{
+		{"400", "not"},
+		{"1500", "question"},
+		{"550", "to"},
+		{"100", "to"},
+		{"650", "be"},
+		{"1100", "-"},
+		{"200", "be"},
+		{"1234", "is"},
+		{"1100", "that"},
 		{"300", "or"},
 		{"1250", "the"}
 	};
@@ -4845,7 +4845,7 @@ void SortTests()
 	}
 	a.clear();
 	b.clear();
-	a = {1,5,3,7};
+	a = { 1,5,3,7 };
 	b = a;
 	assert(TopDownMergeSortCountConversions(b, a, 0, a.size()) == 1);
 	assert(a[0] == 1);
@@ -4865,7 +4865,7 @@ void SortTests()
 
 	a.clear();
 	b.clear();
-	a = {2,1,3,1,2};
+	a = { 2,1,3,1,2 };
 	b = a;
 	assert(TopDownMergeSortCountConversions(b, a, 0, a.size()) == 4);
 	assert(a[0] == 1);
@@ -4884,7 +4884,7 @@ void SortTests()
 	udata = { 2,0,2,1,1,0 };
 	DutchPartitioning(udata, 1);
 	udata1.clear();
-	udata1 = {0,0,1,1,2,2};
+	udata1 = { 0,0,1,1,2,2 };
 	assert(udata == udata1);
 
 	udata.clear();
@@ -4907,6 +4907,34 @@ void SortTests()
 	udata1.clear();
 	udata1 = { 2 };
 	assert(udata == udata1);
+
+	a.clear();
+	a = { 1, 5, 1, 1, 6, 4 };
+	WiggleSort(a);
+	b.clear();
+	b = { 1,6,1,5,1,4 };
+	assert(a == b);
+
+	a.clear();
+	a = { 1, 3, 2, 2, 3, 1 };
+	WiggleSort(a);
+	b.clear();
+	b = { 2, 3, 1, 3, 1, 2 };
+	assert(a == b);
+
+	a.clear();
+	a = { 1, 1, 2, 1, 2, 2, 1 };
+	b.clear();
+	b = { 1, 2, 1, 2, 1, 2, 1 };
+	WiggleSort(a);
+	assert(b == a);
+
+	a.clear();
+	a = { 5, 3, 1, 2, 6, 7, 8, 5, 5 };
+	b.clear();
+	b = { 5, 8, 5, 7, 3, 6, 2, 5, 1 };
+	WiggleSort(a);
+	assert(b == a);
 }
 void BinarySearchTests()
 {
@@ -5307,6 +5335,39 @@ void BottomUpMergeSort(vector<long>& A, vector<long>& B)
 		A = B;
 		// Now array A is full of runs of length 2*width.
 	}
+}
+/* https://leetcode.com/problems/wiggle-sort-ii/
+* 100%
+* 1 5 1 1 6 4
+* 1 1 1 [4] 5 6
+*     i  M    j
+* 1 6 1 5 1 4
+* 
+* 1 3 2 2 3 1
+* 1 1 2 [2] 3 3
+*     i  M    j
+* 2 3 1 3 1 2
+* 
+* 5 3 1 2 6 7 8 5 5
+* 1 2 3 5 5 [5] 6 7 8
+* 		  i  M      j
+* 5 8 5 7 3 6 2 5 1
+*/
+void WiggleSort(vector<long>& data)
+{
+	sort(data.begin(), data.end());
+	vector<long> result;
+	size_t middle = data.size() / 2 + data.size() % 2;
+	int i = middle - 1, j = data.size() - 1;
+	for (; i >= 0 && j >= middle; i--, j--) {
+		result.push_back(data[i]);
+		result.push_back(data[j]);
+	}
+	if (i >= 0)
+		result.push_back(data[i]);
+	else if (j > middle)
+		result.push_back(data[j]);
+	data = result;
 }
 void Merge(vector<long>& source, vector<long>& dest, size_t start, size_t middle, size_t end)
 {
