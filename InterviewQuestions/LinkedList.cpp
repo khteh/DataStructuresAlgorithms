@@ -90,23 +90,21 @@ void LinkedList<T>::SplitList(shared_ptr<Node<T>>& even, shared_ptr<Node<T>>& od
 	for (shared_ptr<Node<T>> n = m_head; n; n = n->Next(), i++) {
 		shared_ptr<Node<T>> node = make_shared<Node<T>>(n);
 		if (!(i % 2)) {
-			if (!even) {
+			if (!even)
 				even = node;
-				evenTail = node;
-			} else {
+			else {
 				evenTail->SetNext(node);
 				node->SetPrevious(evenTail);
-				evenTail = node;
 			}
+			evenTail = node;
 		} else {
-			if (!odd) {
+			if (!odd)
 				odd = node;
-				oddTail = node;
-			} else {
+			else {
 				oddTail->SetNext(node);
 				node->SetPrevious(oddTail);
-				oddTail = node;
 			}
+			oddTail = node;
 		}
 	}
 	if (evenTail)
