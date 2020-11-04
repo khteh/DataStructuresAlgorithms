@@ -100,12 +100,7 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePreOrder(vector<T>& inorder, vector<T>& pr
 	shared_ptr<Node<T>> root = nullptr;
 	if (instart == inend)
 		return make_shared<Node<T>>(inorder[instart]);
-	else if (prestart < (long)preorder.size() && inend >= 0 && inend > instart) {
-		vector<T>::iterator it = find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, preorder[prestart]);
-		if (it == (inorder.begin() + instart + (inend - instart) + 1))
-			throw runtime_error("Invalid tree input parameters! No root found!");
-		root = make_shared<Node<T>>(preorder[prestart]);
-		size_t middle = distance(inorder.begin(), it);
+	else if (prestart < (long)preorder.size() && inend >= 0 && instart < inend) {
 		/*
 		*             0   1   2  3  4   5  6
 		* preorder = [{3},<9>,5,10,<20>,15,7]
@@ -114,8 +109,13 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePreOrder(vector<T>& inorder, vector<T>& pr
 		*	<9>      <20>
 		* 5    10  15    7
 		*/
-		shared_ptr<Node<T>> left = BuildTreePreOrder(inorder, preorder, prestart + 1, instart, middle - 1);
-		shared_ptr<Node<T>> right = BuildTreePreOrder(inorder, preorder, prestart + middle - instart + 1, middle + 1, inend);
+		vector<T>::iterator inOrderRoot = find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, preorder[prestart]);
+		if (inOrderRoot == (inorder.begin() + instart + (inend - instart) + 1))
+			throw runtime_error("Invalid tree input parameters! No root found!");
+		root = make_shared<Node<T>>(preorder[prestart]);
+		size_t middle = distance(inorder.begin(), inOrderRoot);
+		shared_ptr<Node<T>> left = BuildTreePreOrder(inorder, preorder, prestart + 1/*Root of pre-order left tree*/, instart, middle - 1/*In-order left tree*/);
+		shared_ptr<Node<T>> right = BuildTreePreOrder(inorder, preorder, prestart + middle - instart + 1/*Root of pre-order right tree*/, middle + 1/*In-order right tree*/, inend);
 		root->SetLeft(left);
 		root->SetRight(right);
 		if (left)
@@ -134,38 +134,38 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePostOrder(vector<T>& inorder, vector<T>& p
 	shared_ptr<Node<T>> root = nullptr;
 	if (instart == inend)
 		return make_shared<Node<T>>(inorder[instart]);
-	else if (pstart >= 0 && inend >= 0 && inend > instart) {
-		vector<T>::iterator it = find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, postorder[pstart]);
-		if (it == inorder.begin() + instart + (inend - instart) + 1)
-			throw runtime_error("Invalid tree input parameters! No root found!");
-		root = make_shared<Node<T>>(postorder[pstart]);
-		size_t middle = distance(inorder.begin(), it);
+	else if (pstart >= 0 && inend >= 0 && instart < inend) {
 		/*
 		*              0   1    2  3    4
 		* postorder = [<9>,15,  7,<20>,{3}] => left offset: 4 - 4 = 0
-		* inorder   = [9,  {3},15,20,   7]	=> right size: 4 - 1 + 1 = 4
+		* inorder   = [9,  {3},15,20,   7]	=> right tree size: 4 - 1 + 1 = 4
 		*       3
 		*   <9>   <20>
 		*       15   7
-		* 
+		*
 		*              0  1  2    3   4
 		* postorder = [7,15,<9>,<20>,{3}] => left offset: 4 - 2 = 2
-		* inorder   = [7,9, 15,  {3},20] => right size: 4 - 3 + 1 = 2
+		* inorder   = [7,9, 15,  {3},20] => right tree size: 4 - 3 + 1 = 2
 		*       3
 		*   <9>   <20>
 		* 7    15
 		*              0 1  2   3
 		* portorder = [2,1,<3>,{4}] => left offset: 3 - 1 = 2
-		* inorder   = [1,2, 3, {4}]	=> right size: 4 - 4 + 1 = 1
+		* inorder   = [1,2, 3, {4}]	=> right tree size: 4 - 4 + 1 = 1
 		*        4
 		*    3
 		*  1
 		*    2
 		*/
+		vector<T>::iterator inOrderRoot = find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, postorder[pstart]);
+		if (inOrderRoot == inorder.begin() + instart + (inend - instart) + 1)
+			throw runtime_error("Invalid tree input parameters! No root found!");
+		root = make_shared<Node<T>>(postorder[pstart]);
+		size_t middle = distance(inorder.begin(), inOrderRoot);
 		size_t rightSize = inend - middle + 1; // Include the root node itself
 		size_t leftOffset = pstart - rightSize;
-		shared_ptr<Node<T>> left = BuildTreePostOrder(inorder, postorder, leftOffset, instart, middle - 1);
-		shared_ptr<Node<T>> right = BuildTreePostOrder(inorder, postorder, pstart - 1, middle + 1, inend);
+		shared_ptr<Node<T>> left = BuildTreePostOrder(inorder, postorder, leftOffset, instart, middle - 1/*In-order left tree*/);
+		shared_ptr<Node<T>> right = BuildTreePostOrder(inorder, postorder, pstart - 1, middle + 1/*In-order right tree*/, inend);
 		root->SetLeft(left);
 		root->SetRight(right);
 		if (left)
@@ -175,6 +175,22 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePostOrder(vector<T>& inorder, vector<T>& p
 	}
 	return root;
 }
+/* It is NOT possible to construct the tree from pre-order and post-order traversals and here is why:
+*         4
+    3
+  1
+    2
+preorder: 4 3 1 2 <= same as the tree below
+postorder:2 1 3 4 <= same as the tree below
+inorder:  1 2 3 4 <= Different from the tree below 
+    4
+       3
+     1
+       2
+preorder: 4 3 1 2 <= same as the tree above
+postorder:2 1 3 4 <= same as the tree above
+inorder:  4 1 2 3 <= Different from the tree above
+*/
 /*
 * Use this to construct BST using In-Order traversal.
 */
