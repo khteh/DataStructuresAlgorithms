@@ -2373,22 +2373,61 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(listSum1.Sum(0, 0) == 1);
 	a.clear();
 	a = { 1,7,4,9,2,5 };
-	assert(wiggleMaxLength(a) == 6);
+	b.clear();
+	wiggleMaxLength(a, b);
+	assert(!b.empty());
+	assert(b.size() == 6);
+	assert(a == b);
 	a.clear();
 	a = { 0 };
-	assert(wiggleMaxLength(a) == 1);
+	b.clear();
+	wiggleMaxLength(a, b);
+	assert(!b.empty());
+	assert(b.size() == 1);
+	assert(b.back() == 0);
 	a.clear();
 	a = { 0, 0 };
-	assert(wiggleMaxLength(a) == 1);
+	b.clear();
+	wiggleMaxLength(a, b);
+	assert(!b.empty());
+	assert(b.size() == 1);
+	assert(b.back() == 0);
+	a.clear();
+	b.clear();
+	a = { 3,3,3,2,5 };
+	wiggleMaxLength(a, b);
+	assert(!b.empty());
+	assert(b.size() == 3);
+	a.clear();
+	a = { 3,2,5 };
+	assert(b == a);
 	a.clear();
 	a = { 1,17,5,10,13,15,10,5,16,8 };
-	assert(wiggleMaxLength(a) == 7);
+	b.clear();
+	wiggleMaxLength(a, b);
+	assert(!b.empty());
+	assert(b.size() == 7);
+	a.clear();
+	a = { 1,17,5,15,5,16,8 };
+	assert(a == b);
 	a.clear();
 	a = { 1,17,5,10,13,15,12,5,16,8 };
-	assert(wiggleMaxLength(a) == 7);
+	b.clear();
+	wiggleMaxLength(a, b);
+	assert(!b.empty());
+	assert(b.size() == 7);
 	a.clear();
+	a = {1,17,5,15,5,16,8};
+	assert(a == b);
+	a.clear();
+	b.clear();
 	a = { 1,17,5,10,13,11,12,5,16,8 };
-	assert(wiggleMaxLength(a) == 9);
+	wiggleMaxLength(a, b);
+	assert(!b.empty());
+	assert(b.size() == 9);
+	a.clear();
+	a = {1,17,5,13,11,12,5,16,8};
+	assert(a == b);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -5494,7 +5533,7 @@ long*** my3DAlloc(long rows, long cols, long heights)
 * 1 + 1 = 10b, 1 + 0 = 1b, 0 + 0 = 0b
 * Only 1 1 has carry
 * https://stackoverflow.com/questions/55615186/c-left-shift-overflow-for-negative-numbers
-* Left-shifting a negative value results in undefined behaviour. Cast to unsigned for bit manipulations.
+* Left-shifting a negative value results in undefined behaviour. Use unsigned for bit manipulations.
 */
 long long AddWithoutArithmetic(long long sum, long long carry)
 {
@@ -13088,39 +13127,33 @@ string getHint(string& secret, string& guess)
 }
 /* https://leetcode.com/problems/wiggle-subsequence/
 * 100%
+* 1 17 5 10 13 15 10 5 16 8
+* 1 17 5 15 5 16 8
+* 
+* 1 17 5 10 13 15 12 5 16 8
+* 1 17 5 15 5 16 8
+* 
+* 1 17 5 10 13 11 12 5 16 8
+* 1 17 5 13 11 12 5 16 8
 */
-size_t wiggleMaxLength(vector<long>& nums) 
+void wiggleMaxLength(vector<long>& nums, vector<long>& result) 
 {
-	size_t count = 0;
-	long diff = 0, previous = 0;
-	if (nums.empty())
-		return 0;
-	if (nums.size() == 1)
-		return 1;
-	for (size_t i = 1; i < nums.size(); i++) {
-		if (i == 1) {
-			diff = nums[i] - nums[i - 1];
-			count = diff ? 2 : 1;
-			previous = nums[i];
-		}
-		else if (diff >= 0 && nums[i] - previous < 0) {
-			count++;
-			diff = nums[i] - previous;
-			previous = nums[i];
-		}
-		else if (diff <= 0 && nums[i] - previous > 0) {
-			count++;
-			diff = nums[i] - previous;
-			previous = nums[i];
-		}
-		else if (diff >= 0 && nums[i] - previous > 0) {
-			diff += nums[i] - previous;
-			previous = nums[i];
-		}
-		else if (diff <= 0 && nums[i] - previous < 0) {
-			diff += nums[i] - previous;
-			previous = nums[i];
+	bool direction = false; // false: down. true: up
+	for (size_t i = 0; i < nums.size(); i++) {
+		if (!i)
+			result.push_back(nums[i]);
+		else if (nums[i] < result.back()) {
+			if (result.size() == 1 || direction)
+				result.push_back(nums[i]);
+			else if (!direction && nums[i] < result.back())
+				result.back() = nums[i];
+			direction = false;
+		} else if (nums[i] > result.back()) {
+			if (result.size() == 1 || !direction)
+				result.push_back(nums[i]);
+			else if (direction && nums[i] > result.back())
+				result.back() = nums[i];
+			direction = true;
 		}
 	}
-	return count;
 }
