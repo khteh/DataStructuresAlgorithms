@@ -5356,13 +5356,13 @@ void WiggleSort(vector<long>& data)
 	vector<long> result;
 	size_t middle = data.size() / 2 + data.size() % 2;
 	int i = middle - 1, j = data.size() - 1;
-	for (; i >= 0 && j >= middle; i--, j--) {
+	for (; i >= 0 && j >= (int)middle; i--, j--) {
 		result.push_back(data[i]);
 		result.push_back(data[j]);
 	}
 	if (i >= 0)
 		result.push_back(data[i]);
-	else if (j > middle)
+	else if (j > (int)middle)
 		result.push_back(data[j]);
 	data = result;
 }
@@ -5713,13 +5713,13 @@ string NumberStringMultiplication(string& num1, string& num2)
 */
 void shuffleCards(vector<long> &cards)
 {
-	unsigned long long mask = 0;
+	unsigned long long mask = 0; // bitmask of 52 cards.
 	int tmp, index;
 	random_device device;
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
 	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
-	seed_seq sequence(begin(seeds), end(seeds));
+	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
 	if (!cards.empty() && cards.size() <= 52)
 	{
@@ -5754,12 +5754,12 @@ void randomSubset(vector<long> &source, size_t count, vector<long>& result)
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
 	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
-	seed_seq sequence(begin(seeds), end(seeds));
+	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
 	for (size_t i = 0; i < count; i++) {
 		//index = (rand() % (source.size() - i)) + i;
-		uniform_int_distribution<long> dist(0, source.size() - i - 1);
-		index = dist(engine) + i;
+		uniform_int_distribution<long> dist(i, source.size() - 1);
+		index = dist(engine);
 		//cout << "source[" << index << "]: " << source[index] << endl;
 		assert(masks.find(source[index]) == masks.end());
 		masks.emplace(source[index]);
