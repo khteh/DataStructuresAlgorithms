@@ -2521,10 +2521,7 @@ bool CanShuffleWithoutRepeat(string& str)
 	map<char, size_t> repeats;
 	size_t maxCount = 0;
 	for (string::iterator it = str.begin(); it != str.end(); it++) {
-		if (repeats.find(*it) == repeats.end())
-			repeats.emplace(*it, 1);
-		else
-			repeats[*it]++;
+		repeats[*it]++;
 		maxCount = max(maxCount, repeats[*it]);
 	}
 	return str.size() - maxCount >= maxCount - 1;
@@ -5707,12 +5704,13 @@ string NumberStringMultiplication(string& num1, string& num2)
 		oss << result[i--];
 	return oss.str();
 }
-// http://www.cplusplus.com/reference/cstdlib/rand/
-// A typical way to generate trivial pseudo-random numbers in a determined range using rand is to use 
-// the modulo of the returned value by the range span and add the initial value of the range:
-// v1 = rand() % 100;         // v1 in the range 0 to 99
-// v2 = rand() % 100 + 1;     // v2 in the range 1 to 100
-// v3 = rand() % 30 + 1985;   // v3 in the range 1985 to 2014
+/* http://www.cplusplus.com/reference/cstdlib/rand/
+* A typical way to generate trivial pseudo-random numbers in a determined range using rand is to use 
+* the modulo of the returned value by the range span and add the initial value of the range:
+* v1 = rand() % 100;         // v1 in the range 0 to 99
+* v2 = rand() % 100 + 1;     // v2 in the range 1 to 100
+* v3 = rand() % 30 + 1985;   // v3 in the range 1985 to 2014
+*/
 void shuffleCards(vector<long> &cards)
 {
 	unsigned long long mask = 0;
@@ -5726,15 +5724,16 @@ void shuffleCards(vector<long> &cards)
 	if (!cards.empty() && cards.size() <= 52)
 	{
 		for (size_t i = 0; i < 52; i++) {
-			// index = (rand() % (52 - i)) + i;
-			// i: n  random from n to 51
-			// i: 0  random from 0  to 51
-			// i: 1  (rand() % 51) + 1  = 1  to 51
-			// i: 2  (rand() % 50) + 2  = 2  to 51
-			// i: 10 (rand() % 42) + 10 = 10 to 51
-			// i: 26 (rand() % 26) + 26 = 26 to 51
-			// i: 50 (rand() % 2) + 50  = 50 to 51
-			// i: 51 (rand() % 1) + 51  = 51 (Last card left)
+			/* index = (rand() % (52 - i)) + i;
+			* i: n  random from n to 51
+			* i: 0  (rand() % 52) + 0  = 0  to 51
+			* i: 1  (rand() % 51) + 1  = 1  to 51
+			* i: 2  (rand() % 50) + 2  = 2  to 51
+			* i: 10 (rand() % 42) + 10 = 10 to 51
+			* i: 26 (rand() % 26) + 26 = 26 to 51
+			* i: 50 (rand() % 2) + 50  = 50 to 51
+			* i: 51 (rand() % 1) + 51  = 51 (Last card left)
+			*/
 			uniform_int_distribution<int> dist(i, 51);
 			index = dist(engine);
 			assert(!(mask & ((unsigned long long)1 << cards[index])));
