@@ -465,9 +465,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(!udata.empty());
 	assert(udata.size() == 1);
 	assert(udata[0] == 15);
-	assert(bitCount(10) == 2);
-	assert(bitCount(12) == 2);
-	assert(bitCount(7) == 3);
+	assert(Count1Bits(10) == 2);
+	assert(Count1Bits(12) == 2);
+	assert(Count1Bits(7) == 3);
 	a.clear();
 	BitCombinations(3, a); // 000 001 010 100 011 101 110 111
 	assert(a.size() == 8);
@@ -5812,9 +5812,9 @@ void randomSubset(vector<long> &source, size_t count, vector<long>& result)
 * Between 0 and 299, we have 3x twos from the last two digits, and another 100 2s from the first digit.
 * 
 */
-long countDigits(char digit, size_t n)
+size_t countDigits(char digit, size_t n)
 {
-	long power = 1, MSBs = 0;
+	unsigned long power = 1, MSBs = 0;
 	if (digit < 0 || digit > 9)
 		throw runtime_error("digit must be between 0 and 9!");
 	if (!n)
@@ -5824,7 +5824,7 @@ long countDigits(char digit, size_t n)
 	* 123: power = 100. '1' appears in 100-123
 	* 223: power = 100. '1' appears in 100-199
 	*/
-	if ((n / power) > digit)
+	if ((char)(n / power) > digit)
 		MSBs = power;
 	else if ((n / power) == digit)
 		MSBs = (n % power) + 1;
@@ -9189,7 +9189,7 @@ bool LexicographicSort(string s1, string s2)
 	return (s1.size() - i) < (s2.size() - j); // String length comparison.
 }
 // Count number of '1' bits
-size_t bitCount(long a)
+size_t Count1Bits(long a)
 {
 	size_t count = 0;
 	for (long i = 1; i <= a; i <<= 1)
@@ -9204,7 +9204,7 @@ void BitCombinations(size_t k, vector<long> &result)
 {
 	for (size_t i = 0; i <= k; i++)
 		for (long j = (1 << i) - 1; j < (1 << k); j++)
-			if (bitCount(j) == i)
+			if (Count1Bits(j) == i)
 				result.push_back(j);
 }
 /* https://leetcode.com/problems/gray-code/
