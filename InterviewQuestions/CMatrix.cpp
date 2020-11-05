@@ -23,7 +23,7 @@ https://www.youtube.com/watch?v=PwDqpOMwg6U
 */
 template<typename T>
 CMatrix<T>::CMatrix(vector<vector<T>>& matrix)
-	:_matrix(matrix.size(), vector<T>(matrix.empty() ? 0 : matrix[0].size())) // Defaults to zero initial value
+	:_matrix(matrix.size(), vector<T>(matrix.empty() ? 0 : matrix[0].size()))// Defaults to zero initial value
 {
 	for (size_t i = 0; i < matrix.size(); i++)
 		for (size_t j = 0; j < matrix[i].size(); j++) {
@@ -51,5 +51,22 @@ T CMatrix<T>::Sum(vector<vector<size_t>>& area)
 		sum -= _matrix[r2][c1 - 1];
 	if (r1 > 0 && c1 > 0)
 		sum += _matrix[r1 - 1][c1 - 1];
+	return sum;
+}
+template<typename T>
+T CMatrix<T>::LargestSumSubmatrix(vector<vector<size_t>>& matrix)
+{
+	T sum = numeric_limits<T>::min();
+	for (size_t r1 = 0; r1 < _matrix.size(); r1++)
+		for (size_t r2 = r1; r2 < _matrix.size(); r2++)
+			for (size_t c1 = 0; c1 < _matrix[r1].size(); c1++)
+				for (size_t c2 = c1; c2 < _matrix[r2].size(); c2++) {
+					vector<vector<size_t>> area = vector<vector<size_t>>{ {r1, c1}, { r2,c2 }};
+					T tmp = Sum(area);
+					if (tmp > sum) {
+						sum = tmp;
+						matrix = area;
+					}
+				}
 	return sum;
 }

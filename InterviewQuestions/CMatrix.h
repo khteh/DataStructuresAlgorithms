@@ -9,4 +9,5 @@ private:
 public:
 	CMatrix(vector<vector<T>>&);
 	T Sum(vector<vector<size_t>>&);
+	T LargestSumSubmatrix(vector<vector<size_t>>&);
 };
