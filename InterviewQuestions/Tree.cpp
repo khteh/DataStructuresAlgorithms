@@ -20,6 +20,11 @@ using namespace std;
 				0			100
 			-50	   10	75		150
 		-100			60
+
+#Nodes = 2*height + 1 (at least); 2^(h+1) - 1 (at most)
+#nodes + 1 = 2^(h+1)
+ln(#nodes + 1) = h + 1
+h = ln(#nodes + 1) - 1
  */
 template class Tree<int>;
 template class Tree<long>;

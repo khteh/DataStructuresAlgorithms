@@ -1117,8 +1117,19 @@ int _tmain(int argc, _TCHAR* argv[])
 		assert(minHeap.top() == i);
 		minHeap.pop();
 	}
-
+	pqueue.Clear();
+	pqueue.Add(6);
+	pqueue.Add(5);
+	pqueue.Add(1);
+	pqueue.Add(3);
+	pqueue.Add(2);
+	pqueue.Add(7);
+	assert(pqueue.GetMedian() == 4);
+	pqueue.Add(8);
+	assert(pqueue.GetMedian() == 5);
+	pqueue.Clear();
 	// Test Priority Queue which returns median value
+	// -10 -9 -8 -7 -6 -5 -4 -3 -2 -1 0 1 2 3 4 5 6 7 8 9
 	for (i = -10; i < 10; i++) // 20 numbers. Median = (10th + 11th) / 2
 		pqueue.Add(i);
 	assert(pqueue.GetMedian() == -0.5);
@@ -5769,84 +5780,30 @@ void randomSubset(vector<long> &source, size_t count, vector<long>& result)
 		source[index] = tmp;
 	}
 }
-/*
------ Algo for 0...n (n < 10):  -----
-first-digit: (power=1, remainder=0)
-if (remainder > 2): 1
-
-other-digits:
-n/power * F(0) + F(0) = 0
-
------ Algo for 0...n (n < 100): -----
-15: (power=10, remainder=9)
-last-digit: 1(2) + 1(12)
-first-digit: 0
-
-25:
-last-digit: 2 (2 x 1) + 1(22)
-first-digit: 6 (20...25)
-
-35:
-last-digit: 3 (3 x 1) + 1(32)
-first-figit: 10
-
-65:
-last-digit: 6 (6 x 1) + 1(62)
-first-digit: 10 (20...29)
-
-first-digit:
-if (n/power == 2): remainder + 1
-if (n/power > 2): power(10)
-
-other digits:
-n/power * F(9) + F(remainder) = 10 <== KEY
-
-first-digit + other-digits = 20
-
------ Algo for 0...n (n < 200): -----
-0...199: (power=100, remainder=99)
-First-digit: 0
-if (n/power == 2): remainder + 1
-if (n/power > 2): power(100)
-
-Other digits:
-n/power * F(99) + F(99) = 20 + 20 = 40
-
------ Algo for 0...n (n < 1000): -----
-0...345: (power=100, remainder=45)
-3 x 20(0...99) + 100(200...299) + remainder(45)
-First-digit:
-if (n/power == 2): remainder + 1
-if (n/power > 2): power(100)
-
-other-digit:
-n/power * F(99) + F(45) = 3 * 20 + 15
- */
-/*
-0 - 99: 10 + 10 = 20
-100 - 199: 2 * 20
-200 - 299: 3 * 20 + 100 = 160
-300 - 345: 5 + 10 = 15
-total: 160 + 15 = 175
- */
-long countDigits(char digit, long n)
+/* The last digit will be repeated every 10 numbers, the last two digits will be repeated every 10^2 numbers, the last 3 digits will be repeated every 10^3 numbers, etc.
+* So, if there are X 2s between 0 and 99, then we know there are 2x twos between 0 and 199. 
+* Between 0 and 299, we have 3x twos from the last two digits, and another 100 2s from the first digit.
+* 
+*/
+long countDigits(char digit, size_t n)
 {
-	long power = 1, firstDigits = 0;
+	long power = 1, MSBs = 0;
 	if (digit < 0 || digit > 9)
 		throw runtime_error("digit must be between 0 and 9!");
 	if (!n)
 		return 0;
-
-	while ((power * 10) < n)
-		power *= 10;
-	// Count digit from the first digit in the number
+	for (; (power * 10) < n; power *= 10);
+	/* Count digit from the MSB digit in the number
+	* 123: power = 100. '1' appears in 100-123
+	* 223: power = 100. '1' appears in 100-199
+	*/
 	if ((n / power) > digit)
-		firstDigits = power;
+		MSBs = power;
 	else if ((n / power) == digit)
-		firstDigits = (n % power) + 1;
+		MSBs = (n % power) + 1;
 
 	// Count digit from all other digits
-	return (n / power) * countDigits(digit, power - 1) + countDigits(digit, n % power) + firstDigits;
+	return (n / power) * countDigits(digit, power - 1) + countDigits(digit, n % power) + MSBs;
 }
 /* http://en.wikipedia.org/wiki/Greatest_common_divisor */
 /* the largest positive integer that divides the numbers without a remainder */

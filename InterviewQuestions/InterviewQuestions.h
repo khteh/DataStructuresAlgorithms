@@ -304,7 +304,7 @@ string NumberStringSum(string&, string&);
 string NumberStringMultiplication(string&, string&);
 void shuffleCards(vector<long> &);
 void randomSubset(vector<long> &, size_t, vector<long> &);
-long countDigits(char digit, long n);
+long countDigits(char, size_t);
 void Transform(string &, string&, set<string>&, vector<string>&);
 void GetPermutations(string &);
 void trim(string &);

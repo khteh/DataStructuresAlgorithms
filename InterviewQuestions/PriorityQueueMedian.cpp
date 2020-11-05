@@ -23,17 +23,32 @@ void PriorityQueueMedian<T>::Clear()
 }
 /*
  maxHeap...Median...minHeap
- */
+	pqueue.Add(6);
+	pqueue.Add(5);
+	pqueue.Add(1);
+	pqueue.Add(3);
+	pqueue.Add(2);
+	pqueue.Add(7);
+Min     Max
+6		5
+6		5 1
+6		5 3 1
+5 6		3 1
+5 6		3 2 1
+5 6 7	3 2 1 <= Median: 8
+	pqueue.Add(8)
+5 6 7 8	3 2 1 <= Median: 5
+*/
 template<typename T>
 void PriorityQueueMedian<T>::Add(T item)
 {
 	if (minHeap.empty() && maxHeap.empty())
-		maxHeap.push(item);
+		minHeap.push(item); // If start with maxHeap, the logic below has to toggle.
 	else {
-		if (item > maxHeap.top())
-			minHeap.push(item);
-		else
+		if (item < minHeap.top())
 			maxHeap.push(item);
+		else
+			minHeap.push(item);
 		if ((int)(maxHeap.size() - minHeap.size()) > 1) {
 			minHeap.push(maxHeap.top());
 			maxHeap.pop();
