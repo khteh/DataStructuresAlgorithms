@@ -444,3 +444,4 @@ bool canFinishCourse(size_t, vector<vector<size_t>>&, vector<size_t>&);
 bool containsNearbyAlmostDuplicate(vector<long>&, long, long);
 string getHint(string&, string&);
 void wiggleMaxLength(vector<long>&, vector<long>&);
+bool isValidPreOrderTreeSerialization(string&);

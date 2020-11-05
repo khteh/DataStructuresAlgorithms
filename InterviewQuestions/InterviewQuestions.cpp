@@ -2457,6 +2457,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	a.clear();
 	a = {1,17,5,13,11,12,5,16,8};
 	assert(a == b);
+	assert(!isValidPreOrderTreeSerialization(string("1")));
+	assert(isValidPreOrderTreeSerialization(string("#")));
+	assert(isValidPreOrderTreeSerialization(string("1,#,#")));
+	assert(isValidPreOrderTreeSerialization(string("9,3,4,#,#,1,#,#,2,#,6,#,#")));
+	assert(isValidPreOrderTreeSerialization(string("9,#,93,#,9,9,#,#,#")));
+	assert(isValidPreOrderTreeSerialization(string("9,9,9,19,#,9,#,#,#,9,#,69,#,#,#")));
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -5171,7 +5177,10 @@ void BubbleSort(vector<long> &data)
 		}
 	}
 }
-/* Quick Sort (http://en.wikipedia.org/wiki/Quicksort) */
+/* Quick Sort (http://en.wikipedia.org/wiki/Quicksort) 
+* 4 1 2 3
+* 
+*/
 void QuickSort(vector<long> &data, long left, long right)
 {
 	size_t pivot;
@@ -13191,4 +13200,23 @@ void wiggleMaxLength(vector<long>& nums, vector<long>& result)
 			direction = true;
 		}
 	}
+}
+/* https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/
+* If we treat null's as leaves, then the binary tree will always be full. A full binary tree has a good property that # of leaves = # of nonleaves + 1. 
+* Since we are given a pre-order serialization, we just need to find the shortest prefix of the serialization sequence satisfying the property above. 
+* If such prefix does not exist, then the serialization is definitely invalid; otherwise, the serialization is valid if and only if the prefix is the entire sequence.
+* 100%
+*/
+bool isValidPreOrderTreeSerialization(string& preorder)
+{
+	vector<string> tokens;
+	split(preorder, ',', tokens);
+	size_t leaves = 0, nonLeaves = 0, i = 0;
+	for (; i < tokens.size() && leaves != nonLeaves + 1; i++) {
+		if (tokens[i][0] == '#')
+			leaves++;
+		else
+			nonLeaves++;
+	}
+	return leaves == nonLeaves + 1 && i == tokens.size();
 }
