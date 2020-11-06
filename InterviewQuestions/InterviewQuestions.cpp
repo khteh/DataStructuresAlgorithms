@@ -11561,26 +11561,26 @@ set<vector<size_t>> CoinChange(long amount, vector<size_t>& coins)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0)
-	for (size_t i = 0; i < coins.size(); i++) {
-		if (amount >= (long)coins[i]) {
+		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end(); coin++) {
+		if (amount >= (long)*coin) {
 			set<vector<size_t>> tmp;
-			if (coinChangeCache.find(amount - coins[i]) == coinChangeCache.end()) {
-				tmp = CoinChange(amount - coins[i], coins);
+			if (coinChangeCache.find(amount - *coin) == coinChangeCache.end()) {
+				tmp = CoinChange(amount - *coin, coins);
 				if (!tmp.empty())
-					coinChangeCache[amount - coins[i]] = tmp;
+					coinChangeCache[amount - *coin] = tmp;
 			} else
-				tmp = coinChangeCache[amount - coins[i]];
+				tmp = coinChangeCache[amount - *coin];
 			if (!tmp.empty())
 				for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
 					vector<size_t> change(*it);
-					if (accumulate(change.begin(), change.end(), coins[i]) == amount) {
-						change.push_back(coins[i]);
+					if (accumulate(change.begin(), change.end(), *coin) == amount) {
+						change.push_back(*coin);
 						sort(change.begin(), change.end());
 						combinations.insert(change);
 					}
 				}
-			else if (coins[i] == amount)
-				combinations.insert(vector<size_t>{coins[i]});
+			else if (*coin == amount)
+				combinations.insert(vector<size_t>{*coin});
 		} // if (amount >= (long)coins[i]) {
 	}
 	return combinations;
@@ -11588,16 +11588,17 @@ set<vector<size_t>> CoinChange(long amount, vector<size_t>& coins)
 set<vector<size_t>> CoinsChangeDynamicProgramming(long amount, vector<size_t>& coins)
 {
 	map<size_t, set<vector<size_t>>> dp;
-	for (size_t i = 1; i <= (size_t)amount; i++) // Bottom-Up
-		for (size_t j = 0; j < coins.size(); j++) {
-			if (i == coins[j])
+	sort(coins.begin(), coins.end());
+	for (size_t i = coins[0]; i <= (size_t)amount; i++) // Bottom-Up
+		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end(); coin++) {
+			if (i == *coin)
 				dp[i].insert(vector<size_t>{i});
-			else if (i > coins[j]) { //i:5 coins[j]:2 delta:3 dp[3] = {3}
-				size_t delta = i - coins[j];
+			else if (i > *coin) { //i:5 coins[j]:2 delta:3 dp[3] = {3}
+				size_t delta = i - *coin;
 				if (dp.find(delta) != dp.end()) {
 					for (set<vector<size_t>>::iterator it = dp[delta].begin(); it != dp[delta].end(); it++) {
 						vector<size_t> tmp = *it;
-						tmp.push_back(coins[j]);
+						tmp.push_back(*coin);
 						sort(tmp.begin(), tmp.end());
 						dp[i].insert(tmp);
 					}
@@ -11648,7 +11649,7 @@ size_t CoinsChangeDuplicateWaysDynamicProgramming(long amount, vector<size_t>& c
 	dp[0] = 1; // $0 is one possibility
 	for (size_t i = coins[0]; i <= amount; i++)
 		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end() && i >= *coin; coin++)
-				dp[i] += dp[i - *coin];
+			dp[i] += dp[i - *coin];
 	return dp[amount];
 }
 /* https://leetcode.com/problems/coin-change/
@@ -11681,7 +11682,7 @@ size_t StairsClimbingDynamicProgramming(long destination, vector<size_t>& steps)
 {
 	if (!destination) // 0 step = stays. So it is one possibility.
 		return 1;
-	if (destination < 0) // Impossible
+	else if (destination < 0) // Impossible
 		return 0;
 	size_t combinations = 0;
 	for (vector<size_t>::iterator it = steps.begin(); it != steps.end(); it++) {
@@ -11721,26 +11722,26 @@ set<vector<size_t>> Knapsack(long amount, vector<size_t>& numbers)
 		else if (find(numbers.begin(), numbers.end(), 1) != numbers.end())
 			combinations.insert(vector<size_t> {(size_t)amount});
 		else {
-			for (size_t i = 0; i < numbers.size(); i++) {
-				if (amount >= (long)numbers[i]) {
+			for (vector<size_t>::iterator number = numbers.begin(); number != numbers.end(); number++) {
+				if (amount >= (long)*number) {
 					set<vector<size_t>> tmp;
-					if (knapsackCache.find(amount - numbers[i]) == knapsackCache.end()) {
-						tmp = Knapsack(amount - numbers[i], numbers);
+					if (knapsackCache.find(amount - *number) == knapsackCache.end()) {
+						tmp = Knapsack(amount - *number, numbers);
 						if (!tmp.empty())
-							knapsackCache[amount - numbers[i]] = tmp;
+							knapsackCache[amount - *number] = tmp;
 					} else
-						tmp = knapsackCache[amount - numbers[i]];
+						tmp = knapsackCache[amount - *number];
 					if (!tmp.empty())
 						for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
 							vector<size_t> change(*it);
-							if (accumulate(change.begin(), change.end(), numbers[i]) <= (size_t)amount) {
-								change.push_back(numbers[i]);
+							if (accumulate(change.begin(), change.end(), *number) <= (size_t)amount) {
+								change.push_back(*number);
 								sort(change.begin(), change.end());
 								combinations.insert(change);
 							}
 						}
 					else
-						combinations.insert(vector<size_t>{numbers[i]});
+						combinations.insert(vector<size_t>{*number});
 				} // if (amount >= (long)numbers[i]) {
 			}
 		}
@@ -11762,28 +11763,28 @@ set<vector<size_t>> _BoundedKnapsack(long amount, vector<size_t>& numbers)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0 && !numbers.empty()) {
-		for (size_t i = 0; i < numbers.size(); i++) {
-			if (amount >= (long)numbers[i]) {
+		for (vector<size_t>::iterator number = numbers.begin(); number != numbers.end(); number++) {
+			if (amount >= (long)*number) {
 				set<vector<size_t>> tmp;
-				if (knapsackCache.find(amount - numbers[i]) == knapsackCache.end()) {
-					tmp = _BoundedKnapsack(amount - numbers[i], numbers);
-					knapsackCache[amount - numbers[i]] = tmp;
+				if (knapsackCache.find(amount - *number) == knapsackCache.end()) {
+					tmp = _BoundedKnapsack(amount - *number, numbers);
+					knapsackCache[amount - *number] = tmp;
 				} else
-					tmp = knapsackCache[amount - numbers[i]];
+					tmp = knapsackCache[amount - *number];
 				if (!tmp.empty()) {
 					for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
 						vector<size_t> tmp1(*it);
-						if (accumulate(tmp1.begin(), tmp1.end(), numbers[i]) == amount) {
-							tmp1.push_back(numbers[i]);
+						if (accumulate(tmp1.begin(), tmp1.end(), *number) == amount) {
+							tmp1.push_back(*number);
 							sort(tmp1.begin(), tmp1.end());
-							size_t cnt = count(tmp1.begin(), tmp1.end(), numbers[i]);
-							size_t cnt1 = count(numbers.begin(), numbers.end(), numbers[i]);
+							size_t cnt = count(tmp1.begin(), tmp1.end(), *number);
+							size_t cnt1 = count(numbers.begin(), numbers.end(), *number);
 							if (cnt <= cnt1) // The result must not contain more than the input as this is *Bounded* knapsack.
 								combinations.insert(tmp1);
 						}
 					}
 				} else
-					combinations.insert(vector<size_t>{numbers[i]});
+					combinations.insert(vector<size_t>{*number});
 			}
 		}
 	}
