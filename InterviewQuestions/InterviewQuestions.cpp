@@ -2463,6 +2463,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(isValidPreOrderTreeSerialization(string("9,3,4,#,#,1,#,#,2,#,6,#,#")));
 	assert(isValidPreOrderTreeSerialization(string("9,#,93,#,9,9,#,#,#")));
 	assert(isValidPreOrderTreeSerialization(string("9,9,9,19,#,9,#,#,#,9,#,69,#,#,#")));
+	assert(LargestNumberCompositionProductWithDynamicProgramming(2) == 1);
+	assert(LargestNumberCompositionProductWithDynamicProgramming(10) == 36);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -11647,7 +11649,7 @@ size_t CoinsChangeDuplicateWaysDynamicProgramming(long amount, vector<size_t>& c
 	sort(coins.begin(), coins.end());
 	vector<size_t> dp(amount + 1, 0); // Index: amount. Value: #ways or #posibilities
 	dp[0] = 1; // $0 is one possibility
-	for (size_t i = coins[0]; i <= amount; i++)
+	for (size_t i = coins[0]; (long)i <= amount; i++)
 		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end() && i >= *coin; coin++)
 			dp[i] += dp[i - *coin];
 	return dp[amount];
@@ -12278,7 +12280,7 @@ size_t SnakesAndLaddersGame(vector<vector<size_t>>& ladders, vector<vector<size_
 				parent = make_shared<Vertex<size_t, size_t>>(i);
 				vertices.emplace(i, parent);
 			}
-			for (size_t j = min((long)6,(long)(100-i)); j > 0; j--) {
+			for (size_t j = min((long)6, (long)(100-i)); j > 0; j--) {
 				size_t next = i + j;
 				if (laddermap.find(next) != laddermap.end())
 					next = laddermap[next];
@@ -13270,4 +13272,16 @@ bool isValidPreOrderTreeSerialization(string& preorder)
 			nonLeaves++;
 	}
 	return leaves == nonLeaves + 1 && i == tokens.size();
+}
+/* https://leetcode.com/problems/integer-break/
+* 100%
+*/
+size_t LargestNumberCompositionProductWithDynamicProgramming(size_t n)
+{
+	vector<size_t> dp(n + 1, 0);
+	dp[1] = 1;
+	for (size_t i = 2; i <= n; i++)
+		for (size_t j = 1; j < i; j++)
+			dp[i] = max(dp[i], max(j, dp[j]) * max(i - j, dp[i - j]));
+	return dp[n];
 }

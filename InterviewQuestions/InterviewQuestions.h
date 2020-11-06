@@ -446,3 +446,4 @@ bool containsNearbyAlmostDuplicate(vector<long>&, long, long);
 string getHint(string&, string&);
 void wiggleMaxLength(vector<long>&, vector<long>&);
 bool isValidPreOrderTreeSerialization(string&);
+size_t LargestNumberCompositionProductWithDynamicProgramming(size_t);
