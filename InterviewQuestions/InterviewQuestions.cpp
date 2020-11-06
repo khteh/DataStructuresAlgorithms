@@ -5832,8 +5832,9 @@ size_t countDigits(char digit, size_t n)
 	// Count digit from all other digits
 	return (n / power) * countDigits(digit, power - 1) + countDigits(digit, n % power) + MSBs;
 }
-/* http://en.wikipedia.org/wiki/Greatest_common_divisor */
-/* the largest positive integer that divides the numbers without a remainder */
+/* http://en.wikipedia.org/wiki/Greatest_common_divisor
+* the largest positive integer that divides the numbers without a remainder 
+*/
 long gcd_euclidean(long a, long b)
 {
 	return !(a % b) ? b : gcd_euclidean(b, a % b);
@@ -9419,7 +9420,8 @@ void Knapsack_CoinChangeTests()
 	assert(combinations.empty());
 	set<vector<size_t>> combinations1 = CoinsChangeDynamicProgramming(0, numbers);
 	assert(combinations1.empty());
-	assert(CoinsChangeWaysDynamicProgramming(0, numbers) == 0);
+	assert(CoinsChangeUniqueWaysDynamicProgramming(0, numbers) == 0);
+	assert(CoinsChangeDuplicateWaysDynamicProgramming(0, numbers) == 0);
 	coinChangeCache.clear();
 	combinations = CoinChange(1, numbers);
 	assert(combinations.size() == 1);
@@ -9427,28 +9429,32 @@ void Knapsack_CoinChangeTests()
 	assert(it->size() == 1);
 	assert((*it)[0] == 1);
 	combinations1 = CoinsChangeDynamicProgramming(1, numbers);
-	assert(CoinsChangeWaysDynamicProgramming(1, numbers) == 1);
 	assert(combinations1.size() == 1);
 	assert(combinations == combinations1);
+	assert(CoinsChangeUniqueWaysDynamicProgramming(1, numbers) == 1);
+	assert(CoinsChangeDuplicateWaysDynamicProgramming(1, numbers) == 1);
 	coinChangeCache.clear();
 	combinations = CoinChange(2, numbers);
 	assert(combinations.size() == 2);
 	combinations1 = CoinsChangeDynamicProgramming(2, numbers);
-	assert(CoinsChangeWaysDynamicProgramming(2, numbers) == 2);
 	assert(combinations1.size() == 2);
 	assert(combinations == combinations1);
+	assert(CoinsChangeUniqueWaysDynamicProgramming(2, numbers) == 2);
+	assert(CoinsChangeDuplicateWaysDynamicProgramming(2, numbers) == 2);
 	coinChangeCache.clear();
 	combinations = CoinChange(3, numbers);
 	assert(combinations.size() == 3);
 	combinations1 = CoinsChangeDynamicProgramming(3, numbers);
 	assert(combinations1.size() == 3);
 	assert(combinations == combinations1);
-	assert(CoinsChangeWaysDynamicProgramming(3, numbers) == 3);
+	assert(CoinsChangeUniqueWaysDynamicProgramming(3, numbers) == 3);
+	assert(CoinsChangeDuplicateWaysDynamicProgramming(3, numbers) == 4); // {3},{1,2},{2,1},{1,1,1}
 	coinChangeCache.clear();
 	combinations = CoinChange(4, numbers);
 	assert(combinations.size() == 4);
 	combinations1 = CoinsChangeDynamicProgramming(4, numbers);
-	assert(CoinsChangeWaysDynamicProgramming(4, numbers) == 4);
+	assert(CoinsChangeUniqueWaysDynamicProgramming(4, numbers) == 4);
+	assert(CoinsChangeDuplicateWaysDynamicProgramming(4, numbers) == 7); // {3,1},{3,1},{1,1,2},{1,2,1},{2,1,1},{2,2},{1,1,1,1}
 	assert(combinations1.size() == 4);
 	assert(combinations == combinations1);
 	numbers.clear();
@@ -9457,21 +9463,43 @@ void Knapsack_CoinChangeTests()
 	combinations = CoinChange(10, numbers);
 	assert(combinations.size() == 5);
 	combinations1 = CoinsChangeDynamicProgramming(10, numbers);
-	assert(CoinsChangeWaysDynamicProgramming(10, numbers) == 5);
 	assert(combinations1.size() == 5);
 	assert(combinations == combinations1);
+	assert(CoinsChangeUniqueWaysDynamicProgramming(10, numbers) == 5);
+	assert(CoinsChangeDuplicateWaysDynamicProgramming(10, numbers) == 17);
+	coinChangeCache.clear();
+	numbers.clear();
+	numbers = { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 };
+	combinations = CoinChange(10, numbers);
+	assert(combinations.size() == 5);
+	combinations1 = CoinsChangeDynamicProgramming(10, numbers);
+	assert(combinations1.size() == 5);
+	assert(combinations == combinations1);
+	coinChangeCache.clear();
+	numbers.clear();
+	numbers = { 1, 50 };
+	combinations = CoinChange(200, numbers);
+	assert(combinations.size() == 5);
+	combinations1 = CoinsChangeDynamicProgramming(200, numbers);
+	assert(combinations1.size() == 5);
+	assert(combinations == combinations1);
+	coinChangeCache.clear();
 	numbers.clear();
 	numbers = { 2,3,5 };
-	assert(CoinsChangeWaysDynamicProgramming(5, numbers) == 2); // {{2,3}, {5}}
-	assert(CoinsChangeWaysDynamicProgramming(6, numbers) == 2); // {{2,2,2}, {3,3}}
+	assert(CoinsChangeUniqueWaysDynamicProgramming(5, numbers) == 2); // {{2,3}, {5}}
+	assert(CoinsChangeDuplicateWaysDynamicProgramming(5, numbers) == 3); //{2,3},{3,2},{5}
+	assert(CoinsChangeUniqueWaysDynamicProgramming(6, numbers) == 2); // {{2,2,2}, {3,3}}
+	assert(CoinsChangeDuplicateWaysDynamicProgramming(6, numbers) == 2); //
 	numbers.clear();
 	numbers = { 5, 37, 8, 39, 33, 17, 22, 32, 13, 7, 10, 35, 40, 2, 43, 49, 46, 19, 41, 1, 12, 11, 28 };
 	sort(numbers.begin(), numbers.end());
-	assert(CoinsChangeWaysDynamicProgramming(166, numbers) == 96190959);
+	assert(CoinsChangeUniqueWaysDynamicProgramming(166, numbers) ==      96190959);
+	assert(CoinsChangeDuplicateWaysDynamicProgramming(166, numbers) == 2259754041); //
 	coinChangeCache.clear();
 	numbers.clear();
 	numbers = {1,2,5};
 	assert(CoinsChangeFewestCoinsDynamicProgramming(11, numbers) == 3);
+	assert(CoinsChangeFewestCoinsDynamicProgramming(10, numbers) == 2);
 	numbers.clear();
 	numbers = { 2 };
 	assert(CoinsChangeFewestCoinsDynamicProgramming(3, numbers) == -1);
@@ -11538,14 +11566,15 @@ set<vector<size_t>> CoinChange(long amount, vector<size_t>& coins)
 			set<vector<size_t>> tmp;
 			if (coinChangeCache.find(amount - coins[i]) == coinChangeCache.end()) {
 				tmp = CoinChange(amount - coins[i], coins);
-				coinChangeCache[amount - coins[i]] = tmp;
+				if (!tmp.empty())
+					coinChangeCache[amount - coins[i]] = tmp;
 			} else
 				tmp = coinChangeCache[amount - coins[i]];
 			if (!tmp.empty())
 				for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
 					vector<size_t> change(*it);
-					change.push_back(coins[i]);
-					if (accumulate(change.begin(), change.end(), 0) == amount) {
+					if (accumulate(change.begin(), change.end(), coins[i]) == amount) {
+						change.push_back(coins[i]);
 						sort(change.begin(), change.end());
 						combinations.insert(change);
 					}
@@ -11578,47 +11607,67 @@ set<vector<size_t>> CoinsChangeDynamicProgramming(long amount, vector<size_t>& c
 	return dp[amount];
 }
 /* https://www.hackerrank.com/challenges/coin-change/problem
+* https://leetcode.com/problems/coin-change-2/
 * 100%
-* coins: {2,3,5} amount: 5,6
-* coin 5:
-* 0 1 2 3 4 5 6 <= amounts
-* 1 0 0 0 0 1 0
+* coins: {2,3,5} amount: 10
+* coin = 2; i = starts from 2
+* ways: 1 0 1 0 1 0 1 0 1 0 1
+* i:    0 1 2 3 4 5 6 7 8 9 10
 * 
-* coin 2:
-* 0 1 2 3 4 5 6 <= amounts
-* 1 0 1 0 1 1 1
+* coin = 3; i = starts from 3
+* ways: 1 0 1 1 1 1 2 1 2 2 2
+* i:    0 1 2 3 4 5 6 7 8 9 10
 * 
-* coin 3:
-* 0 1 2 3 4 5 6 <= amounts
-* 1 0 1 1 1 2 2
+* coin = 5; i = starts from 5
+* ways: 1 0 1 1 1 2 2 2 3 3 4
+* i:    0 1 2 3 4 5 6 7 8 9 10 {5,5},{5,2,3},{2,2,3,3},{2,2,2,2,2}
 */
-size_t CoinsChangeWaysDynamicProgramming(long amount, vector<size_t>& coins)
+size_t CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<size_t>& coins)
 {
-	if (amount <= 0)
+	if (amount <= 0 || coins.empty())
 		return 0;
 	vector<size_t> dp(amount + 1, 0); // Index: amount. Value: #ways or #posibilities
 	dp[0] = 1; // $0 is one possibility
-	for (size_t i = 0; i < coins.size(); i++)
-		for (size_t j = coins[i]; j <= (size_t)amount; j++)
-			dp[j] += dp[j - coins[i]];
+	for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end(); coin++)
+		for (size_t i = *coin; i <= (size_t)amount; i++)
+			dp[i] += dp[i - *coin];
+	return dp[amount];
+}
+/* https://leetcode.com/problems/combination-sum-iv/
+* 100%
+* coins: {2,3,5} amount: 10
+* ways: 1 0 1 1 1 3 2 5 6 8 14
+* i:    0 1 2 3 4 5 6 7 8 9 10
+*/
+size_t CoinsChangeDuplicateWaysDynamicProgramming(long amount, vector<size_t>& coins)
+{
+	if (amount <= 0 || coins.empty())
+		return 0;
+	sort(coins.begin(), coins.end());
+	vector<size_t> dp(amount + 1, 0); // Index: amount. Value: #ways or #posibilities
+	dp[0] = 1; // $0 is one possibility
+	for (size_t i = coins[0]; i <= amount; i++)
+		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end() && i >= *coin; coin++)
+				dp[i] += dp[i - *coin];
 	return dp[amount];
 }
 /* https://leetcode.com/problems/coin-change/
 * 100%
-* coins: {1,2,5}, amount: 11
-* 0 1 2     3     4     5        6       7      8       9       10      11	   <= amounts
-* 0 1 {2,1}	{2,2} {3,2}	{3,3,1}	{2,3,2}	{3,2,2}	{3,3,3}	{4,3,3}	{4,4,2}	{3,4,3} <= #coins
+* coins: {1,2,5}, amount: 10
+* i:    0 1 2     3     4     5        6       7      8       9       10
+* ways: 0 1 {2,1} {2,2} {3,2} {3,3,1} {2,3,2} {3,2,2} {3,3,3} {4,3,3} {4,4,2}
 */
 long CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size_t>& coins)
 {
-	if (amount <= 0)
+	if (amount <= 0 || coins.empty())
 		return 0;
+	sort(coins.begin(), coins.end());
 	vector<size_t> dp(amount + 1, numeric_limits<size_t>::max()); // Index: amount. Value: #coins
 	dp[0] = 0; // $0 = 0 coins
-	for (size_t i = 1; i <= (size_t)amount; i++)
-		for (size_t j = 0; j < coins.size(); j++)
-			if (i >= coins[j] && dp[i - coins[j]] != numeric_limits<size_t>::max())
-				dp[i] = min(dp[i], dp[i - coins[j]] + 1);
+	for (size_t i = coins[0]; i <= (size_t)amount; i++)
+		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end() && i >= *coin; coin++)
+			if (dp[i - *coin] != numeric_limits<size_t>::max())
+				dp[i] = min(dp[i], dp[i - *coin] + 1);
 	return dp[amount] == numeric_limits<size_t>::max() ? -1 : dp[amount];
 }
 /* The Recursive Staircase - Top Down Dynamic Programming
@@ -11667,8 +11716,8 @@ set<vector<size_t>> Knapsack(long amount, vector<size_t>& numbers)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0 && !numbers.empty()) {
-		if (numbers.size() == 1)
-			combinations.insert(vector<size_t> {(long)numbers[0] <= amount ? amount - amount % numbers[0] : 0} ); // Multiples of numbers[0] closest to amount
+		if (numbers.size() == 1 && (long)numbers[0] <= amount)
+			combinations.insert(vector<size_t> {amount - amount % numbers[0]} ); // Multiples of numbers[0] closest to amount
 		else if (find(numbers.begin(), numbers.end(), 1) != numbers.end())
 			combinations.insert(vector<size_t> {(size_t)amount});
 		else {
@@ -11677,14 +11726,15 @@ set<vector<size_t>> Knapsack(long amount, vector<size_t>& numbers)
 					set<vector<size_t>> tmp;
 					if (knapsackCache.find(amount - numbers[i]) == knapsackCache.end()) {
 						tmp = Knapsack(amount - numbers[i], numbers);
-						knapsackCache[amount - numbers[i]] = tmp;
+						if (!tmp.empty())
+							knapsackCache[amount - numbers[i]] = tmp;
 					} else
 						tmp = knapsackCache[amount - numbers[i]];
 					if (!tmp.empty())
 						for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
 							vector<size_t> change(*it);
-							change.push_back(numbers[i]);
-							if (accumulate(change.begin(), change.end(), 0) <= amount) {
+							if (accumulate(change.begin(), change.end(), numbers[i]) <= (size_t)amount) {
+								change.push_back(numbers[i]);
 								sort(change.begin(), change.end());
 								combinations.insert(change);
 							}
@@ -11723,8 +11773,8 @@ set<vector<size_t>> _BoundedKnapsack(long amount, vector<size_t>& numbers)
 				if (!tmp.empty()) {
 					for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
 						vector<size_t> tmp1(*it);
-						tmp1.push_back(numbers[i]);
-						if (accumulate(tmp1.begin(), tmp1.end(), 0) == amount) {
+						if (accumulate(tmp1.begin(), tmp1.end(), numbers[i]) == amount) {
+							tmp1.push_back(numbers[i]);
 							sort(tmp1.begin(), tmp1.end());
 							size_t cnt = count(tmp1.begin(), tmp1.end(), numbers[i]);
 							size_t cnt1 = count(numbers.begin(), numbers.end(), numbers[i]);
