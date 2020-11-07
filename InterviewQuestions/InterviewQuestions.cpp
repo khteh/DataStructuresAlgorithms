@@ -5899,15 +5899,32 @@ size_t countDigits(char digit, size_t n)
 * i:		 0 1 2 3 4 5 6 7 8 9 10
 * lastCount: 9 9 8 7 6 5 4 3 2 1 0(-1)
 * 
+* MSB cannot have '0' digit
+* 
 * n: 1 [0,10) 0-9
 * 10
 * 
 * n: 2 [0,100) 0-99
-* 9*9 = 81
+* Start from LSB:
+* LSB: 10 numbers
+* next: 10 - LSB's digit - '0' = 8 => 80 numbers
+* 
+* Start from MSB:
+* MSB: 10 - '0' = 9
+* next: 10 - MSB's digit = 9 => 81 numbers
 * 
 * n: 3 [0,1000) 0-999
-* 9x9x8 = 648
+* Start from LSB:
+* LSB: 10 numbers
+* next: 10 - LSB's digit = 9
+* next: 10 - 1 ('0') - 2 = 7 => 7 * 9 * 10 = 630
 * 
+* Start from MSB:
+* MSB: 10 - '0' = 9 digits
+* next: 10 - MSB's digit = 9
+* next: 8 => 8 * 9 * 9 = 648
+* 
+* Starting from MSB will give more unique numbers
 */
 size_t countNumbersWithUniqueDigits(size_t n)
 {
