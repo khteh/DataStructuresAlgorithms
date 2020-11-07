@@ -306,6 +306,7 @@ string NumberStringMultiplication(string&, string&);
 void shuffleCards(vector<long> &);
 void randomSubset(vector<long> &, size_t, vector<long> &);
 size_t countDigits(char, size_t);
+size_t countNumbersWithUniqueDigits(size_t);
 size_t Count1Bits(long);
 void Transform(string &, string&, set<string>&, vector<string>&);
 void GetPermutations(string &);

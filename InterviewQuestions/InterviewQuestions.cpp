@@ -1145,9 +1145,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	//total: 160 + 15 = 175
 	assert(countDigits(2, 345) == 175);
 	assert(countDigits(0, 345) == 175);
-	cout << "Number of '2' in 345 is: " << countDigits(2, 345) << endl;
-	cout << "Number of '0' in 345 is: " << countDigits(0, 345) << endl;
-
+	assert(countDigits(3, 35) == 10); // {3,13,23},30,31,32,{3}3,34,35
+	assert(countNumbersWithUniqueDigits(0) == 1);
+	assert(countNumbersWithUniqueDigits(1) == 10);
+	assert(countNumbersWithUniqueDigits(2) == 91); // [0,100)
+	assert(countNumbersWithUniqueDigits(3) == 739); // [0,1000)
+	assert(countNumbersWithUniqueDigits(11) == 0);
 	a.clear();
 	b.clear();
 	a = {1,7,15,29,11,9};
@@ -5817,10 +5820,53 @@ void randomSubset(vector<long> &source, size_t count, vector<long>& result)
 		source[index] = tmp;
 	}
 }
-/* The last digit will be repeated every 10 numbers, the last two digits will be repeated every 10^2 numbers, the last 3 digits will be repeated every 10^3 numbers, etc.
+/*
+*  0  1  2  3  4  5  6  7  8  9
+* 10 11 12 13 14 15 16 17 18 19
+* 20 21 22 23 24 25 26 27 28 29
+* 30 31 32 33 34 35 36 37 38 39
+* ...
+* 100 101 102 103 104 105 106 107 108 109
+* 110 111 112 113 114 115 116 117 118 119
+* 
+* The last digit will repeat every 10 numbers, the last two digits will repeat every 10^2 numbers, the last 3 digits will repeat every 10^3 numbers, etc.
+*
+* So, if there are X 3s between 0 and 9, then we know there are 2x '3' between 0 and 19.
+* Between 0 and 39, we have 4x '3' from the last digit, and another 10 '3's from the first digit.
+* 
+* sequence of last m digits (power-1) repeats n/power times.
+* 
+* n: 235 digit: 3
+* 
+* f(9):
+* power=1
+* repeats (last digit): 1 {3}
+* 
+* if f(9) has x * '3', f(99) will have y * f(9). y = 99 / 10
+* 
+* f(99):	The last digit will repeat every 10 numbers
+* power=10
+* repeats (last digit): 99/10=9: 13,23,33,43,53,63,73,83,93 (within the power of 10)
+* MSBs: 10
+*
+* f(235):  The last two digits will repeat every 10^2 numbers
+* power:100
+* repeats (last 2 digits): 235/100=2 (133)
+* 
+* repeats = n / power
+* Total(n=235, digit=3) = n/power * f(power-1) + f(n % power) + MSBs
+* 
+* MSBs: n / power > digit ? power : (n % power) == digit ? (n % power) + 1 : 0
+* 
+* Example:
+* digit:3, n: 35
+* {3,13,23},{30,31,32,3{3},34,35}
+* first digit repeats n/10= 3 times => 3 * f(power - 1) : {3,13,23}
+* + MSBs = 6 {30,31,32,33,34,35}
+* + f(5) {3'3'}
+* 
 * So, if there are X 2s between 0 and 99, then we know there are 2x twos between 0 and 199. 
 * Between 0 and 299, we have 3x twos from the last two digits, and another 100 2s from the first digit.
-* 
 */
 size_t countDigits(char digit, size_t n)
 {
@@ -5830,7 +5876,7 @@ size_t countDigits(char digit, size_t n)
 	if (!n)
 		return 0;
 	for (; (power * 10) < n; power *= 10);
-	/* Count digit from the MSB digit in the number
+	/* Count MSB digits in the number
 	* 123: power = 100. '1' appears in 100-123
 	* 223: power = 100. '1' appears in 100-199
 	*/
@@ -5841,6 +5887,43 @@ size_t countDigits(char digit, size_t n)
 
 	// Count digit from all other digits
 	return (n / power) * countDigits(digit, power - 1) + countDigits(digit, n % power) + MSBs;
+}
+/* https://leetcode.com/problems/count-numbers-with-unique-digits/
+* 100%
+* Given a non-negative integer n, count all numbers with unique digits, x, where 0 ≤ x < 10^n. 0 <= n <= 8
+* MSB: 1-9 count=9
+* next: 0-9 exclude MSB count=9
+* next: 0-9 count = 10 - 2 = 8
+* count: 9,9,8,7,6,5,4,3,2,1,0
+* 
+* i:		 0 1 2 3 4 5 6 7 8 9 10
+* lastCount: 9 9 8 7 6 5 4 3 2 1 0(-1)
+* 
+* n: 1 [0,10) 0-9
+* 10
+* 
+* n: 2 [0,100) 0-99
+* 9*9 = 81
+* 
+* n: 3 [0,1000) 0-999
+* 9x9x8 = 648
+* 
+*/
+size_t countNumbersWithUniqueDigits(size_t n)
+{
+	size_t count = 1;
+	if (n >= 0 && n <= 1) 
+		return pow(10, n);
+	else if (n <= 10) {
+		long lastCount = 9;
+		for (size_t i = 0; i < n; i++) {
+			count *= lastCount;
+			if (i >= 1)
+				lastCount--;
+		}
+		return count + countNumbersWithUniqueDigits(n - 1);
+	}
+	return 0;
 }
 /* http://en.wikipedia.org/wiki/Greatest_common_divisor
 * the largest positive integer that divides the numbers without a remainder 
