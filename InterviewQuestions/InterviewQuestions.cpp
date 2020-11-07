@@ -2033,18 +2033,26 @@ int _tmain(int argc, _TCHAR* argv[])
 	vector<vector<size_t>> ladders = { {32,62}, {42, 68}, {12,98} };
 	vector<vector<size_t>> snakes = { {95,13}, {97, 25}, {93,37}, {79,27}, {75,19}, {49,47}, {67,17} };
 	assert(SnakesAndLaddersGame(ladders, snakes) == 3);
+	assert(SnakesAndLaddersGameFast(ladders, snakes) == 3);
 	vector<vector<size_t>> ladders1 = { {8,52}, {6,80}, {26,42}, {2,72} };
 	vector<vector<size_t>> snakes1 = { {51,19}, {39,11}, {37,29}, {81,3}, {59,5}, {79,23}, {53,7}, {43,33}, {77,21} };
 	assert(SnakesAndLaddersGame(ladders1, snakes1) == 5);
+	assert(SnakesAndLaddersGameFast(ladders1, snakes1) == 5);
 	vector<vector<size_t>> ladders2 = { {3,5}, {7,8}, {44,56}, {36,54}, {88,91}, {77,83}, {2,4}, {9,99}, {45,78}, {31,75} };
 	vector<vector<size_t>> snakes2 = { {10,6}, {95,90}, {96,30}, {97,52}, {98,86} };
 	assert(SnakesAndLaddersGame(ladders2, snakes2) == 3);
+	assert(SnakesAndLaddersGameFast(ladders2, snakes2) == 3);
 	vector<vector<size_t>> ladders3 = { {3,54}, {37,100} };
 	vector<vector<size_t>> snakes3 = { {56,33} };
 	assert(SnakesAndLaddersGame(ladders3, snakes3) == 3);
+	assert(SnakesAndLaddersGameFast(ladders3, snakes3) == 3);
 	vector<vector<size_t>> ladders4 = { {5,6} };
 	vector<vector<size_t>> snakes4 = { {97,95} };
-	//assert(SnakesAndLaddersGame(ladders4, snakes4) == 17); //Times out!!!
+	assert(SnakesAndLaddersGameFast(ladders4, snakes4) == 17);
+	vector<vector<size_t>> ladders5 = { {3,90} };
+	vector<vector<size_t>> snakes5 = { {99,10},{97,20},{98,30},{96,40},{95,50},{94,60},{93,70} };
+	//assert(SnakesAndLaddersGame(ladders5, snakes5) == 0); // Impossible. Times out!
+	assert(SnakesAndLaddersGameFast(ladders5, snakes5) == 0); // Impossible
 	assert(lengthOfLongestSubstring(string("abcabc")) == 3);
 	assert(lengthOfLongestSubstring(string("aaa")) == 1);
 	assert(lengthOfLongestSubstring(string("abcdef")) == 6);
@@ -12262,6 +12270,7 @@ bool gridSearch(vector<string>& grid, vector<string>& pattern)
 /*
 * https://www.hackerrank.com/challenges/the-quickest-way-up/problem
 * http://theoryofprogramming.com/2014/12/25/snakes-and-ladders-game-code/
+* Times out!
 */
 size_t SnakesAndLaddersGame(vector<vector<size_t>>& ladders, vector<vector<size_t>>& snakes)
 {
@@ -12294,7 +12303,7 @@ size_t SnakesAndLaddersGame(vector<vector<size_t>>& ladders, vector<vector<size_
 				parent->AddNeighbour(vertex, 0);
 			}
 		}
-	long level = 0;
+	size_t level = 0;
 	map<size_t, vector<shared_ptr<Vertex<size_t, size_t>>>> result;
 	result.emplace(level, vector<shared_ptr<Vertex<size_t, size_t>>>{root});
 	for (; !result[level].empty(); level++) {
@@ -12304,6 +12313,49 @@ size_t SnakesAndLaddersGame(vector<vector<size_t>>& ladders, vector<vector<size_
 				return level;
 			vector<shared_ptr<Vertex<size_t, size_t>>> neighbours = (*it)->GetNeighbours();
 			tmp.insert(tmp.end(), neighbours.begin(), neighbours.end());
+		}
+		result.emplace(level + 1, tmp);
+	}
+	return 0;
+}
+/*
+* https://www.hackerrank.com/challenges/the-quickest-way-up/problem
+* http://theoryofprogramming.com/2014/12/25/snakes-and-ladders-game-code/
+* 100%
+*/
+size_t SnakesAndLaddersGameFast(vector<vector<size_t>>& ladders, vector<vector<size_t>>& snakes)
+{
+	map<size_t, vector<size_t>> adjacency_list;
+	map<size_t, size_t> laddermap, snakemap;
+	for (size_t i = 0; i < ladders.size(); i++)
+		laddermap.emplace(ladders[i][0], ladders[i][1]);
+	for (size_t i = 0; i < snakes.size(); i++)
+		snakemap.emplace(snakes[i][0], snakes[i][1]);
+	for (size_t i = 1; i <= 100; i++)
+		if (laddermap.find(i) == laddermap.end() && snakemap.find(i) == snakemap.end()) {// Skip the number if it is at the beginning of a ladder
+			for (size_t j = min((long)6, (long)(100 - i)); j > 0; j--) {
+				size_t next = i + j;
+				if (laddermap.find(next) != laddermap.end())
+					next = laddermap[next];
+				if (snakemap.find(next) != snakemap.end())
+					next = snakemap[next];
+				adjacency_list[i].push_back(next);
+			}
+		}
+	size_t level = 0;
+	map<size_t, vector<size_t>> result;
+	result.emplace(level, vector<size_t>{1});
+	set<size_t> visited;
+	for (; !result[level].empty(); level++) {
+		vector<size_t> tmp;
+		for (vector<size_t>::const_iterator it = result[level].begin(); it != result[level].end(); it++) {
+			if (visited.find(*it) == visited.end()) {
+				if (*it == 100)
+					return level;
+				if (adjacency_list.find(*it) != adjacency_list.end())
+					tmp.insert(tmp.end(), adjacency_list[*it].begin(), adjacency_list[*it].end());
+				visited.insert(*it);
+			}
 		}
 		result.emplace(level + 1, tmp);
 	}
