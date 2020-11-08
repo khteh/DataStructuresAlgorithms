@@ -121,8 +121,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	char cstr[8];
 	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;
 	cout << "sizeof(void*): " << sizeof(void*) << endl;
-	cout << "sizeof(int): " << (int)sizeof(int) << endl;
-	cout << "sizeof(long): " << (int)sizeof(long) << endl;
 	assert(sizeof(char) == 1);
 	assert(sizeof(short) == 2);
 	assert(sizeof(int) == 4);
@@ -244,6 +242,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "int -" << hex << i << ": " << -i << dec << " " << -i << ", ~" << i << ": " << hex << ~i << " " << dec << ~i << endl;
 	ui = 3;
 	cout << "uint -" << hex << ui << ": " << -ui << dec << " " << -ui << ", ~" << ui << ": " << hex << ~ui << " " << dec << ~ui << endl;
+
+	/*
+	* 0x8000_0000 + 1 = -0x7FFF_FFFF = 0x8000_0001
+	* 0x8000_0000 - 1 = -0x8000_0001 = 0x7FFF_FFFF
+	*/
+	i = 0x80000000;
+	j = i + 1;
+	assert(j == 0x80000001);
+	cout << i << " 0x" << hex << i << " + 1 = 0x" << j << dec << " " << j << endl;
+	i = 0x80000000;
+	j = i - 1;
+	assert(j == 0x7FFFFFFF);
+	cout << i << " 0x" << hex << i << " - 1 = 0x" << j << dec << " " << j << endl;
 	a.resize(10);
 	generate(a.begin(), a.end(), [n = 1]()mutable{return n++; });
 	for (size_t i = 0; i < a.size(); i++)
@@ -251,7 +262,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	time_point timestamp = system_clock::now();
 	duration timespan = timestamp.time_since_epoch();
 	unsigned long long ticks = timespan.count();
-	cout << "Current timestamp (ticks since Epoch): " << ticks << endl;
+	long long signedTicks = timespan.count();
+	assert(std::chrono::system_clock::duration::min().count() == numeric_limits<long long>::min());
+	assert(std::chrono::system_clock::duration::max().count() == numeric_limits<long long>::max());
+	assert(signedTicks == ticks);
+	cout << "Current timestamp (ticks since Epoch): " << ticks << ", signed ticks: " << signedTicks << endl;
 	grid = { {1,3,5}, {2,4,6}, {7,8,9} };
 	// grid.back() = {7,8,9}
 	assert(grid.back().back() == 9);
