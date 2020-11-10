@@ -10553,6 +10553,14 @@ void IncreasingSequenceTests()
 	vector<size_t> c = { 0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15 };
 	assert(LongestIncreasingSubsequence(c) == 6); // 0, 2, 6, 9, 13, 15
 	assert(LongestIncreasingSubsequenceNlogN(c) == 6); // 0, 2, 6, 9, 13, 15
+	c.clear();
+	c = {3,2,4,1,5};
+	assert(increasingTriplet(c));
+	assert(LongestIncreasingSubsequenceNlogN(c) == 3); // 3,4,5
+	c.clear();
+	c = { 1,1,1,1,1 };
+	assert(!increasingTriplet(c));
+	assert(LongestIncreasingSubsequenceNlogN(c) == 1); // 1
 }
 /* https://app.codility.com/demo/results/trainingCP4NRT-FE4/
 * https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/discuss/119835/Java-O(n)-DP-Solution
@@ -10675,15 +10683,29 @@ size_t LongestIncreasingSubsequenceNlogN(vector<size_t>& data)
 	vector<size_t> tails;
 	if (!data.empty()) {
 		tails.push_back(data[0]);
-		for (size_t i = 1; i < data.size(); i++) {
-			vector<size_t>::iterator it = lower_bound(tails.begin(), tails.end(), data[i]); // Look for element >= data[i]
-			if (it == tails.end()) // If not present change the tail element to v[i]
-				tails.push_back(data[i]);
+		for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++) {
+			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), *it); // Look for element >= data[i]
+			if (it1 == tails.end()) // If not present change the tail element to v[i]
+				tails.push_back(*it);
 			else
-				*it = data[i];
+				*it1 = *it;
 		}
 	}
 	return tails.size();
+}
+bool increasingTriplet(vector<size_t>& data) 
+{
+	vector<size_t> tails;
+	if (!data.empty()) {
+		for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++) {
+			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), *it); // >= data[i]
+			if (it1 == tails.end())
+				tails.push_back(*it);
+			else
+				*it1 = *it;
+		}
+	}
+	return tails.size() >= 3;
 }
 // https://stackoverflow.com/questions/6877249/find-the-number-of-occurrences-of-a-subsequence-in-a-string
 size_t FindSubsequenceRecursive(string& str, string& tomatch)
