@@ -13495,15 +13495,15 @@ size_t maxProductOfNonOverlappingWordLengths(vector<string>& words)
 		}
 	Times out!
 #endif
-	vector<size_t> patterns;
+	map<size_t, size_t> patterns;
 	for (size_t i = 0; i < words.size(); i++) {
 		int pattern = 0;
 		for (size_t c = 0; c < words[i].size(); c++)
 			pattern |= 1 << (words[i][c] - 'a');
-		patterns.push_back(pattern);
-		for (size_t j = 0; j < i; j++)
-			if (!(patterns[j] & pattern))
-				result = max(result, words[i].size() * words[j].size());
+		patterns[pattern] = max(patterns[pattern], words[i].size());
+		for (map<size_t, size_t>::iterator it = patterns.begin(); it != patterns.end(); it++)
+			if (!(it->first & pattern))
+				result = max(result, it->second * words[i].size());
 	}
 	return result;
 }
