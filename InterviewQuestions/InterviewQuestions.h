@@ -449,3 +449,4 @@ string getHint(string&, string&);
 void wiggleMaxLength(vector<long>&, vector<long>&);
 bool isValidPreOrderTreeSerialization(string&);
 size_t LargestNumberCompositionProductWithDynamicProgramming(size_t);
+size_t maxProductOfNonOverlappingWordLengths(vector<string>&);

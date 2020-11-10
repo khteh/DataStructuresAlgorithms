@@ -2491,6 +2491,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(isValidPreOrderTreeSerialization(string("9,9,9,19,#,9,#,#,#,9,#,69,#,#,#")));
 	assert(LargestNumberCompositionProductWithDynamicProgramming(2) == 1);
 	assert(LargestNumberCompositionProductWithDynamicProgramming(10) == 36);
+	strings.clear();
+	strings = { "abcw","baz","foo","bar","xtfn","abcdef" };
+	assert(maxProductOfNonOverlappingWordLengths(strings) == 16); // "abcw", "xtfn"
+	strings.clear();
+	strings = { "a","ab","abc","d","cd","bcd","abcd" };
+	assert(maxProductOfNonOverlappingWordLengths(strings) == 4); // "ab", "cd"
+	strings.clear();
+	strings = { "a","aa","aaa","aaaa" };
+	assert(maxProductOfNonOverlappingWordLengths(strings) == 0);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -2771,10 +2780,22 @@ void reverseWordsTrimmed(string& str)
 		j = i + 1;
 	}
 }
+/* 0 1   2   3
+*  a b   b   c
+*    i,t
+*    j
+*  a b   b   c
+*        i,t
+*    j
+*  a b   b   c
+*        t   i
+*        j
+*  a b   c
+*/
 void RemoveDuplicateCharacters(string& str)
 {
-	size_t tail = 1, j;
 	if (str.size() > 1) {
+		size_t tail = 1, j;
 		for (size_t i = tail; i < str.size(); i++) {
 			for (j = 0; j < tail && str[j] != str[i]; j++);
 			if (j == tail) // str[i] is not a duplicate character. So copy it to str[tail]
@@ -12103,7 +12124,9 @@ bool SolvabilityOfTheTilesGame(vector<size_t>& data)
 	}
 	return !(inversions % 2);
 }
-// HackerRank challenge. Unfinished work!
+/* https://www.hackerrank.com/challenges/bear-and-steady-gene/problem
+* Unfinished work!
+*/
 size_t steadyGene(string& gene)
 {
 	size_t result = 0, count = gene.size() / 4;
@@ -13451,4 +13474,36 @@ size_t LargestNumberCompositionProductWithDynamicProgramming(size_t n)
 		for (size_t j = 1; j < i; j++)
 			dp[i] = max(dp[i], max(j, dp[j]) * max(i - j, dp[i - j]));
 	return dp[n];
+}
+/* https://leetcode.com/problems/maximum-product-of-word-lengths/
+* 100%
+*/
+size_t maxProductOfNonOverlappingWordLengths(vector<string>& words) 
+{
+	size_t result = 0;
+#if 0
+	set<char> intersection;
+	vector<set<char>> strings;
+	for (vector<string>::iterator it = words.begin(); it != words.end(); it++)
+		strings.push_back(set<char>(it->begin(), it->end()));
+	for (size_t i = 0; i < strings.size(); i++)
+		for (size_t j = i + 1; j < strings.size(); j++) {
+			intersection.clear();
+			set_intersection(strings[i].begin(), strings[i].end(), strings[j].begin(), strings[j].end(), inserter(intersection, intersection.begin()));
+			if (intersection.empty() && words[i].size() * words[j].size() > result)
+				result = words[i].size() * words[j].size();
+		}
+	Times out!
+#endif
+	vector<size_t> patterns;
+	for (size_t i = 0; i < words.size(); i++) {
+		int pattern = 0;
+		for (size_t c = 0; c < words[i].size(); c++)
+			pattern |= 1 << (words[i][c] - 'a');
+		patterns.push_back(pattern);
+		for (size_t j = 0; j < i; j++)
+			if (!(patterns[j] & pattern))
+				result = max(result, words[i].size() * words[j].size());
+	}
+	return result;
 }
