@@ -2315,7 +2315,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(strings1.size() == 2);
 	ugrid = { {1,0} };
 	udata.clear();
-	assert(canFinishCourse(2, ugrid, udata));
+	assert(canFinishCourseTopologicalSort(2, ugrid, udata));
 	assert(!udata.empty());
 	assert(udata.size() == 2);
 	assert(udata[0] == 0);
@@ -2323,23 +2323,23 @@ int _tmain(int argc, _TCHAR* argv[])
 	ugrid.clear();
 	ugrid = { {1,0}, {0,1} };
 	udata.clear();
-	assert(!canFinishCourse(2, ugrid, udata));
+	assert(!canFinishCourseTopologicalSort(2, ugrid, udata));
 	assert(udata.empty());
 	ugrid.clear();
 	ugrid = { {1,0}, {2,0} };
 	udata.clear();
-	assert(canFinishCourse(3, ugrid, udata));
+	assert(canFinishCourseTopologicalSort(3, ugrid, udata));
 	assert(!udata.empty());
 	assert(udata.size() == 3);
 	assert(udata[0] == 0);
 	ugrid.push_back(vector<size_t>{0, 2});
 	udata.clear();
-	assert(!canFinishCourse(3, ugrid, udata));
+	assert(!canFinishCourseTopologicalSort(3, ugrid, udata));
 	assert(udata.empty());
 	ugrid.clear();
 	ugrid = {{1, 0}, {0, 2}, {2, 1}};
 	udata.clear();
-	assert(!canFinishCourse(3, ugrid, udata));
+	assert(!canFinishCourseTopologicalSort(3, ugrid, udata));
 	assert(udata.empty());
 	a.clear();
 	a = {1,2,3,1};
@@ -13270,7 +13270,7 @@ vector<string> wordBreakDFS(string& s, set<string>& words)
 * Use Kahn's algorithm
 * 100%
 */
-bool canFinishCourse(size_t numCourses, vector<vector<size_t>>& courses, vector<size_t>& sequence) // First element depends on second element in each row
+bool canFinishCourseTopologicalSort(size_t numCourses, vector<vector<size_t>>& courses, vector<size_t>& sequence) // First element depends on second element in each row
 {
 	map<size_t, size_t> dependencies;
 	map<size_t, vector<size_t>> edges; // Key: Independent; Value: Dependent
@@ -13279,19 +13279,19 @@ bool canFinishCourse(size_t numCourses, vector<vector<size_t>>& courses, vector<
 		edges[courses[i][1]].push_back(courses[i][0]);
 		dependencies[courses[i][0]]++;
 	}
-	queue<size_t> nodesWithoutDependencies; // Set of all nodes with no incoming edge
+	queue<size_t> independentNodes; // Set of all nodes with no incoming edge
 	for (size_t i = 0; i < numCourses; i++)
 		if (dependencies.find(i) == dependencies.end())
-			nodesWithoutDependencies.push(i);
-	for (; !nodesWithoutDependencies.empty(); ) {
-		size_t i = nodesWithoutDependencies.front();
-		nodesWithoutDependencies.pop();
+			independentNodes.push(i);
+	for (; !independentNodes.empty(); ) {
+		size_t i = independentNodes.front();
+		independentNodes.pop();
 		sequence.push_back(i);
 		if (edges.find(i) != edges.end()) {
 			for (vector<size_t>::iterator it = edges[i].begin(); it != edges[i].end(); it++) {
 				edgeCount--; // remove edge e from the graph
 				if (dependencies.find(*it) == dependencies.end() || !--dependencies[*it])
-					nodesWithoutDependencies.push(*it);
+					independentNodes.push(*it);
 			}
 		}
 	}

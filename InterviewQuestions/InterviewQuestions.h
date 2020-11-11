@@ -444,7 +444,7 @@ bool wordBreakDynamicProgramming(string&, set<string>&);
 void wordBreakDynamicProgramming(string&, set<string>&, vector<string>&);
 vector<string> wordBreakDFS(string&, set<string>&);
 vector<string> wordBreakDFS(string, set<string>&, map<string, vector<string>>&);
-bool canFinishCourse(size_t, vector<vector<size_t>>&, vector<size_t>&);
+bool canFinishCourseTopologicalSort(size_t, vector<vector<size_t>>&, vector<size_t>&);
 bool containsNearbyAlmostDuplicate(vector<long>&, long, long);
 string getHint(string&, string&);
 void wiggleMaxLength(vector<long>&, vector<long>&);
