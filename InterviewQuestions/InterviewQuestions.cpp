@@ -9403,16 +9403,18 @@ void OrderedMergedCombinations(set<string>&result, string &s1, string &s2, strin
 	//for (size_t i = 0; i <= s1.size(); i++) // Same result as above
 	//	OrderedMergedCombinations(result, s1.substr(i, s1.size() - i), s2.substr(1, s2.size() - 1), cur + s1.substr(0, i) + s2[0]);
 }
-//A zero - indexed array A consisting of N integers is given.A triplet(P, Q, R) is triangular if it is possible to build a triangle with sides of lengths A[P], A[Q] and A[R].In other words, triplet(P, Q, R) is triangular if 0 ≤ P < Q < R < N and:
-//
-//•A[P] + A[Q] > A[R],
-//•A[Q] + A[R] > A[P],
-//•A[R] + A[P] > A[Q].
-//
-//For example, consider array A such that :
-//A[0] = 10    A[1] = 2    A[2] = 5
-//A[3] = 1     A[4] = 8    A[5] = 12
-//There are four triangular triplets that can be constructed from elements of this array, namely(0, 2, 4), (0, 2, 5), (0, 4, 5), and (2, 4, 5).
+/*A zero-indexed array A consisting of N integers is given. A triplet(P, Q, R) is triangular if it is possible to build a triangle with sides of lengths A[P], A[Q] and A[R].
+* In other words, triplet(P, Q, R) is triangular if 0 ≤ P < Q < R < N and:
+*
+* A[P] + A[Q] > A[R],
+* A[Q] + A[R] > A[P],
+* A[R] + A[P] > A[Q].
+*
+* For example, consider array A such that :
+* A[0] = 10    A[1] = 2    A[2] = 5
+* A[3] = 1     A[4] = 8    A[5] = 12
+* There are four triangular triplets that can be constructed from elements of this array, namely(0, 2, 4), (0, 2, 5), (0, 4, 5), and (2, 4, 5).
+*/
 size_t CountTriangles(vector<long>& data)
 {
 	size_t result = 0;
