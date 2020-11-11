@@ -13287,13 +13287,12 @@ bool canFinishCourseTopologicalSort(size_t numCourses, vector<vector<size_t>>& c
 		size_t i = independentNodes.front();
 		independentNodes.pop();
 		sequence.push_back(i);
-		if (edges.find(i) != edges.end()) {
+		if (edges.find(i) != edges.end())
 			for (vector<size_t>::iterator it = edges[i].begin(); it != edges[i].end(); it++) {
 				edgeCount--; // remove edge e from the graph
 				if (dependencies.find(*it) == dependencies.end() || !--dependencies[*it])
 					independentNodes.push(*it);
 			}
-		}
 	}
 	return !edgeCount; // A topological ordering is possible if and only if the graph has no directed cycles, that is, if it is a directed acyclic graph (DAG)
 }
