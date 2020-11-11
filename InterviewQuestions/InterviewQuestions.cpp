@@ -12744,9 +12744,9 @@ double median(vector<long>& a, vector<long>& b)
 	if (a.empty() && b.empty())
 		return result;
 	else if (a.empty() && !b.empty())
-		return b.size() % 2 ? b[b.size() / 2] : (b[(b.size() / 2) - 1] + b[b.size() / 2]) / (double)2;
+		return b.size() % 2 ? b[b.size() / 2] : ((double)b[(b.size() / 2) - 1] + (double)b[b.size() / 2]) / (double)2;
 	else if (!a.empty() && b.empty())
-		return a.size() % 2 ? a[a.size() / 2] : (a[(a.size() / 2) - 1] + a[a.size() / 2]) / (double)2;
+		return a.size() % 2 ? a[a.size() / 2] : ((double)a[(a.size() / 2) - 1] + (double)a[a.size() / 2]) / (double)2;
 	for (bool found = false; minIndex <= maxIndex && !found;) {
 		i = (minIndex + maxIndex) / 2;
 		/*
