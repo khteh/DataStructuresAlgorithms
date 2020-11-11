@@ -9430,16 +9430,17 @@ size_t CountTriangles(vector<long>& data)
 	}
 	return result;
 }
-// https://app.codility.com/programmers/lessons/16-greedy_algorithms/max_nonoverlapping_segments/
-// 100%
-size_t MaxNonOverlappingSegments(vector<long>& head, vector<long>& tail)
+/* https://app.codility.com/programmers/lessons/16-greedy_algorithms/max_nonoverlapping_segments/
+* 100%
+*/
+size_t MaxNonOverlappingSegments(vector<size_t>& head, vector<size_t>& tail)
 {
 	size_t count = 0, last_nonoverlapping_tail;
 	if (!head.empty() && !tail.empty() && head.size() == tail.size()) {
 		last_nonoverlapping_tail = tail[0];
 		count++;
 		for (size_t i = 1; i < head.size(); i++) {
-			if (head[i] > (long)last_nonoverlapping_tail) {
+			if (head[i] > last_nonoverlapping_tail) {
 				last_nonoverlapping_tail = tail[i];
 				count++;
 			}
@@ -9447,15 +9448,24 @@ size_t MaxNonOverlappingSegments(vector<long>& head, vector<long>& tail)
 	}
 	return count;
 }
-// https://app.codility.com/programmers/lessons/16-greedy_algorithms/tie_ropes/
-// 100%
-size_t TieRopes(vector<long>& data, size_t n)
+/* https://app.codility.com/programmers/lessons/16-greedy_algorithms/tie_ropes/
+* 100%
+* A[0] = 1
+* A[1] = 2
+* A[2] = 3
+* A[3] = 4
+* A[4] = 1
+* A[5] = 1
+* A[6] = 3
+* n: 4
+* {0,1,2},{3},{4,5,6}
+*/
+size_t TieRopes(vector<size_t>& data, size_t n)
 {
 	size_t result = 0;
-	for (size_t i = 0, sum = 0; i < data.size(); ) {
-		sum = 0;
-		for (; sum < n && i < data.size();)
-			sum += data[i++];
+	for (vector<size_t>::iterator it = data.begin(); it != data.end(); ) {
+		size_t sum = 0;
+		for (; sum < n && it != data.end(); sum += *it++);
 		if (sum >= n)
 			result++;
 	}
@@ -9469,12 +9479,12 @@ size_t TieRopes(vector<long>& data, size_t n)
 // 1 3 5 7 9 : 1..2 [2]
 // 5 3
 // 1 3 5 7 9
-long getMinimumCost(long k, vector<long>& c) 
+size_t getMinimumCost(size_t k, vector<size_t>& c) 
 {
-	long price = 0;
+	size_t price = 0;
 	if (!c.empty()) {
 		size_t flowers = c.size();
-		if ((long)flowers > k) {
+		if (flowers > k) {
 			size_t solos = 0;
 			while ((flowers - solos) % k) {
 				solos++;
@@ -9483,7 +9493,7 @@ long getMinimumCost(long k, vector<long>& c)
 			size_t perperson = (c.size() - solos) / k;
 			sort(c.begin(), c.end());
 			size_t soloCnt = 0;
-			for (vector<long>::reverse_iterator it = c.rbegin(); it != c.rend() && soloCnt < solos; it++, soloCnt++)
+			for (vector<size_t>::reverse_iterator it = c.rbegin(); it != c.rend() && soloCnt < solos; it++, soloCnt++)
 				price += *it;
 			for (size_t firstflower = c.size() - 1 - solos; k > 0; k--, firstflower--) {
 				price += c[firstflower];
@@ -9501,15 +9511,15 @@ long getMinimumCost(long k, vector<long>& c)
 }
 // https://www.hackerrank.com/challenges/angry-children/problem
 // 100%
-long maxMin(long k, vector<long>& arr) 
+size_t maxMin(size_t k, vector<size_t>& arr)
 {
 	sort(arr.begin(), arr.end());
-	long unfair = numeric_limits<long>::max();
+	size_t unfair = numeric_limits<size_t>::max();
 	size_t max = 0;
 	for (size_t i = 0; i < arr.size() && max < arr.size() - 1; i++) {
 		for (max = i + k - 1; max >= arr.size(); max--);
 		if (i != max) {
-			long diff = abs(abs(arr[max]) - abs(arr[i]));
+			size_t diff = abs(abs((long)arr[max]) - abs((long)arr[i]));
 			if (diff < unfair)
 				unfair = diff;
 		}
@@ -9518,7 +9528,7 @@ long maxMin(long k, vector<long>& arr)
 }
 void GreedyAlgorithmTests()
 {
-	vector<long> a, b;
+	vector<size_t> a, b;
 	a.clear();
 	a = {1,3,7,9,9};
 	b.clear();
