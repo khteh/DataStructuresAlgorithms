@@ -13552,7 +13552,6 @@ size_t maxProductOfNonOverlappingWordLengths(vector<string>& words)
 			if (intersection.empty() && words[i].size() * words[j].size() > result)
 				result = words[i].size() * words[j].size();
 		}
-	Times out!
 #endif
 	map<size_t, size_t> patterns;
 	for (size_t i = 0; i < words.size(); i++) {
