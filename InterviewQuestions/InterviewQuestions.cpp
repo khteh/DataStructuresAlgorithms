@@ -29,6 +29,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	PriorityQueueMedian<long> pqueue;
 	vector<vector<unsigned long>> grid;
 	vector<vector<long>> grid1, grid2;
+	vector<vector<string>> sgrid;
 	vector<vector<size_t>> ugrid, ugrid1;
 	ExceptionTest();
 	TestRandom();
@@ -2500,6 +2501,30 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings.clear();
 	strings = { "a","aa","aaa","aaaa" };
 	assert(maxProductOfNonOverlappingWordLengths(strings) == 0);
+	sgrid.clear();
+	sgrid = { {"MUC", "LHR"}, {"JFK", "MUC"}, {"SFO", "SJC"}, {"LHR", "SFO"} };
+	strings = findItinerary(sgrid, string("JFK"));
+	assert(!strings.empty());
+	assert(strings.size() == 5);
+	strings1.clear();
+	strings1 = { "JFK", "MUC", "LHR", "SFO", "SJC" };
+	assert(strings1 == strings);
+	sgrid.clear();
+	sgrid = { {"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"} };
+	strings = findItinerary(sgrid, string("JFK"));
+	assert(!strings.empty());
+	assert(strings.size() == 6);
+	strings1.clear();
+	strings1 = { "JFK","ATL","JFK","SFO","ATL","SFO" };
+	assert(strings1 == strings);
+	sgrid.clear();
+	sgrid = { {"EZE", "AXA"}, {"TIA", "ANU"}, {"ANU", "JFK"}, {"JFK", "ANU"}, {"ANU", "EZE"}, {"TIA", "ANU"}, {"AXA", "TIA"}, {"TIA", "JFK"}, {"ANU", "TIA"}, {"JFK", "TIA"} };
+	strings = findItinerary(sgrid, string("JFK"));
+	assert(!strings.empty());
+	assert(strings.size() == 11);
+	strings1.clear();
+	strings1 = {"JFK", "ANU", "EZE", "AXA", "TIA", "ANU", "JFK", "TIA", "ANU", "TIA", "JFK"};
+	assert(strings1 == strings);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -13539,4 +13564,34 @@ size_t maxProductOfNonOverlappingWordLengths(vector<string>& words)
 				result = max(result, it->second * words[i].size());
 	}
 	return result;
+}
+/* https://leetcode.com/problems/reconstruct-itinerary/
+* https://en.wikipedia.org/wiki/Eulerian_path
+* { {"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"} }
+* (1) JFK -> ATL
+* (2) ATL -> JFK
+* (3) JFK -> SFO
+* (4) SFO -> ATL
+* (5) ATL -> SFO
+* JFK -> ATL -> JFK -> SFO -> ATL -> SFO
+*/
+vector<string> findItinerary(vector<vector<string>>& tickets, string& start)
+{
+	map<string, multiset<string>> vertices;
+	vector<string> itinerary;
+	for (vector<vector<string>>::iterator it = tickets.begin(); it != tickets.end(); it++)
+		vertices[it->front()].insert(it->back());
+	if (vertices.find(start) != vertices.end())
+		EulerianPath(start, vertices, itinerary);
+	reverse(itinerary.begin(), itinerary.end());
+	return itinerary;
+}
+void EulerianPath(string vertex, map<string, multiset<string>>& vertices, vector<string>& path)
+{
+	for (; !vertices[vertex].empty(); ) {
+		string next = *vertices[vertex].begin();
+		vertices[vertex].erase(vertices[vertex].begin());
+		EulerianPath(next, vertices, path);
+	}
+	path.push_back(vertex);
 }

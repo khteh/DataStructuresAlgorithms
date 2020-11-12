@@ -451,3 +451,5 @@ void wiggleMaxLength(vector<long>&, vector<long>&);
 bool isValidPreOrderTreeSerialization(string&);
 size_t LargestNumberCompositionProductWithDynamicProgramming(size_t);
 size_t maxProductOfNonOverlappingWordLengths(vector<string>&);
+vector<string> findItinerary(vector<vector<string>>&, string&);
+void EulerianPath(string, map<string, multiset<string>>&, vector<string>&);
