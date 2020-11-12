@@ -13540,6 +13540,7 @@ size_t maxProductOfNonOverlappingWordLengths(vector<string>& words)
 {
 	size_t result = 0;
 #if 0
+	Times out!
 	set<char> intersection;
 	vector<set<char>> strings;
 	for (vector<string>::iterator it = words.begin(); it != words.end(); it++)
