@@ -6775,21 +6775,20 @@ void WordLadder(string &start, string &stop, set<string>& dictionary, vector<str
 		dictionary.erase(w);
 		GetPermutations(w, dictionary, permutations);
 		for (set<string>::const_iterator it = permutations.begin(); it != permutations.end(); it++) {
-			if (dictionary.find(*it) != dictionary.end())
-				if (*it == stop) { // LIKE
-					// Found our word! Now backtrack to record all the single-character change from 'start' to 'stop'
-					result.push_back(*it);
+			if (*it == stop) { // LIKE
+				// Found our word! Now backtrack to record all the single-character change from 'start' to 'stop'
+				result.push_back(*it);
+				result.push_back(w);
+				while (backtrack.find(w) != backtrack.end()) {
+					w = backtrack[w];
 					result.push_back(w);
-					while (backtrack.find(w) != backtrack.end()) {
-						w = backtrack[w];
-						result.push_back(w);
-					}
-					return;
-				} else if (visited.find(*it) == visited.end()) {
-					actionQ.push(*it);
-					visited.insert(*it);
-					backtrack[*it] = w; // Key: later; Value: earlier
 				}
+				return;
+			} else if (visited.find(*it) == visited.end()) {
+				actionQ.push(*it);
+				visited.insert(*it);
+				backtrack[*it] = w; // Key: later; Value: earlier
+			}
 		}
 	}
 }
@@ -9454,13 +9453,20 @@ C=1, L: O(count), Other: O(n*m) n: range, m: result set size
 #nodes = O(count). 
 TC = O(count * n * m)
 */
+map<size_t, set<set<size_t>>> numberCombinationsCache;
 set<set<size_t>> numberCombinations1(size_t start, size_t end, size_t count)
 {
 	set<set<size_t>> result;
-	if (count) {
-		for (size_t i = start; i <= end; i++) {
+	if (start <= end) {
+		for (size_t i = start; i <= min(start + count, end); i++) {
 			result.insert(set<size_t>{i});
-			set<set<size_t>> tmp = numberCombinations1(i + 1, end, count - 1);
+			set<set<size_t>> tmp;
+			if (numberCombinationsCache.find(i + 1) != numberCombinationsCache.end())
+				tmp = numberCombinationsCache[i + 1];
+			else {
+				tmp = numberCombinations1(i + 1, end, count);
+				numberCombinationsCache[i + 1] = tmp;
+			}
 			if (!tmp.empty()) {
 				for (set<set<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
 					if (it->size() < count) {
