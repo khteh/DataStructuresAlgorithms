@@ -1212,7 +1212,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	// Test single-character string permutations
 	set<string> dictionary = {"DAMP", "LAMP", "LIMP", "LIME", "LIKE", "LAKE"};
 	strings.clear();
-	Transform(string("DAMP"), string("LIKE"), dictionary, strings);
+	WordLadder(string("DAMP"), string("LIKE"), dictionary, strings);
 	assert(!strings.empty());
 	cout << "Single-character transformation from \"DAMP\" to \"LIKE\": ";
 	// DAMP LAMP LIMP LIME LIKE
@@ -1225,12 +1225,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	copy(strings.rbegin(), strings.rend(), ostream_iterator<string>(cout, " "));
 	cout << endl;
 	strings.clear();
-	Transform(string("DAMP"), string("Like"), dictionary, strings);
+	WordLadder(string("DAMP"), string("Like"), dictionary, strings);
 	assert(strings.empty()); // "LICK" is not in the dictionary
 	dictionary.clear();
 	strings.clear();
 	dictionary = { "Hot","Dot","Dog","Lot","Log","Cog" };
-	Transform(string("Hit"), string("Cog"), dictionary, strings);
+	WordLadder(string("Hit"), string("Cog"), dictionary, strings);
 	assert(!strings.empty());
 	assert(strings.size() == 5);
 	assert(strings[0] == "Cog");
@@ -1242,7 +1242,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	copy(strings.rbegin(), strings.rend(), ostream_iterator<string>(cout, " "));
 	cout << endl;
 	strings.clear();
-	Transform(string("Hit"), string("Hat"), dictionary, strings);
+	WordLadder(string("Hit"), string("Hat"), dictionary, strings);
 	assert(strings.empty()); // "HAT" is not in the dictionary
 	assert(match(string("abba"), string("redbluebluered")));
 	assert(match(string("aaaa"), string("asdasdasdasd")));
@@ -2525,6 +2525,20 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings1.clear();
 	strings1 = {"JFK", "ANU", "EZE", "AXA", "TIA", "ANU", "JFK", "TIA", "ANU", "TIA", "JFK"};
 	assert(strings1 == strings);
+	set<set<size_t>> combinations = numberCombinations(4, 2);
+	assert(!combinations.empty());
+	assert(combinations.size() == 6);
+	for (set<set<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
+		assert(it->size() == 2);
+	assert(combinations.find(set<size_t>{1, 2}) != combinations.end());
+	assert(combinations.find(set<size_t>{1, 3}) != combinations.end());
+	assert(combinations.find(set<size_t>{1, 4}) != combinations.end());
+	assert(combinations.find(set<size_t>{2, 3}) != combinations.end());
+	assert(combinations.find(set<size_t>{2, 4}) != combinations.end());
+	assert(combinations.find(set<size_t>{3, 4}) != combinations.end());
+	combinations = numberCombinations(20, 16);
+	assert(!combinations.empty());
+	assert(combinations.size() == 6);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -6747,7 +6761,7 @@ void GetPermutations(string &w, set<string>& dictionary, set<string>& result)
 	}
 }
 // DAMP -> LAMP -> LIMP -> LIME -> LIKE
-void Transform(string &start, string &stop, set<string>& dictionary, vector<string>& result)
+void WordLadder(string &start, string &stop, set<string>& dictionary, vector<string>& result)
 {
 	queue<string> actionQ;
 	set<string> visited;
@@ -6758,6 +6772,7 @@ void Transform(string &start, string &stop, set<string>& dictionary, vector<stri
 		string w = actionQ.front(); // DAMP
 		actionQ.pop();
 		set<string> permutations;
+		dictionary.erase(w);
 		GetPermutations(w, dictionary, permutations);
 		for (set<string>::const_iterator it = permutations.begin(); it != permutations.end(); it++) {
 			if (dictionary.find(*it) != dictionary.end())
@@ -9427,6 +9442,48 @@ void OrderedMergedCombinations(set<string>&result, string &s1, string &s2, strin
 		OrderedMergedCombinations(result, s1.substr(1, s1.size() - 1), s2.substr(i, s2.size() - i), cur + s2.substr(0, i) + s1[0]);
 	//for (size_t i = 0; i <= s1.size(); i++) // Same result as above
 	//	OrderedMergedCombinations(result, s1.substr(i, s1.size() - i), s2.substr(1, s2.size() - 1), cur + s1.substr(0, i) + s2[0]);
+}
+/* 
+1 2 3 4, k=2
+1 2 3 4
+    {3},{3,4},{4}
+  {2},{2,3},{3},{3,4},{2,4}
+{1,2},{1,3},{1,4}
+
+C=1, L: O(count), Other: O(n*m) n: range, m: result set size
+#nodes = O(count). 
+TC = O(count * n * m)
+*/
+set<set<size_t>> numberCombinations1(size_t start, size_t end, size_t count)
+{
+	set<set<size_t>> result;
+	if (count) {
+		for (size_t i = start; i <= end; i++) {
+			result.insert(set<size_t>{i});
+			set<set<size_t>> tmp = numberCombinations1(i + 1, end, count - 1);
+			if (!tmp.empty()) {
+				for (set<set<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
+					if (it->size() < count) {
+						set<size_t> tmp1 = *it;
+						tmp1.insert(i);
+						result.insert(tmp1);
+					} else
+						result.insert(*it);
+				}
+			}
+		}
+	}
+	return result;
+}
+set<set<size_t>> numberCombinations(size_t range, size_t count)
+{
+	set<set<size_t>> result = numberCombinations1(1, range, count);
+	for (set<set<size_t>>::iterator it = result.begin(); it != result.end(); )
+		if (it->size() != count)
+			it = result.erase(it);
+		else
+			it++;
+	return result;
 }
 /*A zero-indexed array A consisting of N integers is given. A triplet(P, Q, R) is triangular if it is possible to build a triangle with sides of lengths A[P], A[Q] and A[R].
 * In other words, triplet(P, Q, R) is triangular if 0 ≤ P < Q < R < N and:
