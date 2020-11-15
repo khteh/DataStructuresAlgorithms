@@ -2525,20 +2525,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	strings1.clear();
 	strings1 = {"JFK", "ANU", "EZE", "AXA", "TIA", "ANU", "JFK", "TIA", "ANU", "TIA", "JFK"};
 	assert(strings1 == strings);
-	set<set<size_t>> combinations = numberCombinations(4, 2);
-	assert(!combinations.empty());
-	assert(combinations.size() == 6);
-	for (set<set<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
+	ugrid.clear();
+	numberCombinations(4, 2, ugrid);
+	assert(!ugrid.empty());
+	assert(ugrid.size() == 6);
+	for (vector<vector<size_t>>::iterator it = ugrid.begin(); it != ugrid.end(); it++)
 		assert(it->size() == 2);
-	assert(combinations.find(set<size_t>{1, 2}) != combinations.end());
-	assert(combinations.find(set<size_t>{1, 3}) != combinations.end());
-	assert(combinations.find(set<size_t>{1, 4}) != combinations.end());
-	assert(combinations.find(set<size_t>{2, 3}) != combinations.end());
-	assert(combinations.find(set<size_t>{2, 4}) != combinations.end());
-	assert(combinations.find(set<size_t>{3, 4}) != combinations.end());
-	combinations = numberCombinations(20, 16);
-	assert(!combinations.empty());
-	assert(combinations.size() == 6);
+	ugrid1.clear();
+	ugrid1 = { {1,2}, {1,3}, {1,4}, {2,3}, {2,4}, {3,4} };
+	assert(ugrid1 == ugrid);
+	ugrid.clear();
+	numberCombinations(20, 16, ugrid);
+	assert(!ugrid.empty());
+	assert(ugrid.size() == 4845);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -6746,16 +6745,15 @@ void PrefixTrieTests()
 	assert(result.size() == 1);
 	prefixTrie.Clear();
 }
-void GetPermutations(string &w, set<string>& dictionary, set<string>& result)
+void GetPermutations(string& w, set<string>& dictionary, set<string>& result)
 {
 	for (set<string>::iterator it = dictionary.begin(); it != dictionary.end(); it++) {
-		string s = *it;
-		if (it->size() == w.size()) {
+		if (it->size() == w.size() && *it != w) {
 			size_t count = 0;
-			for (size_t i = 0; i < w.size() && count < 2; i++)
-				if (s[i] != w[i])
+			for (size_t i = 0; i < it->size() && count < 2; i++)
+				if ((*it)[i] != w[i])
 					count++;
-			if (count == 1)
+			if (count < 2)
 				result.insert(*it);
 		}
 	}
@@ -9442,54 +9440,73 @@ void OrderedMergedCombinations(set<string>&result, string &s1, string &s2, strin
 	//for (size_t i = 0; i <= s1.size(); i++) // Same result as above
 	//	OrderedMergedCombinations(result, s1.substr(i, s1.size() - i), s2.substr(1, s2.size() - 1), cur + s1.substr(0, i) + s2[0]);
 }
-/* 
-1 2 3 4, k=2
-1 2 3 4
-    {3},{3,4},{4}
-  {2},{2,3},{3},{3,4},{2,4}
-{1,2},{1,3},{1,4}
+/*
+k: 2
+i: 1
+comb: 1
 
-C=1, L: O(count), Other: O(n*m) n: range, m: result set size
-#nodes = O(count). 
-TC = O(count * n * m)
+k: 1
+i: 2
+comb: 1,2 combs: {{1,2}}
+comb: 1
+i: 3
+comb: 1,3 combs: {{1,2}, {1,3}}
+comb: 1
+i: 4
+comb: 1,4 combs: {{1,2}, {1,3}, {1,4}}
+comb: 1
+
+k: 2
+i: 2
+comb: 2
+
+k: 1
+i: 3
+comb: 2,3 combs: {{1,2}, {1,3}, {1,4}, {2,3}}
+comb: 2
+i: 4
+comb: 2,4 combs: {{1,2}, {1,3}, {1,4}, {2,3}, {2,4}}
+comb: 2
+
+k: 2
+i: 3
+comb: 3
+
+k: 1
+i: 4
+comb: 3,4 combs: {{1,2}, {1,3}, {1,4}, {2,3}, {2,4}, {3,4}}
+comb: 3
+
+k: 2
+i: 4
+comb: 4
+
+k: 1
+i: 4
+comb: 4 combs: {{1,2}, {1,3}, {1,4}, {2,3}, {2,4}, {3,4}}
+comb: {}
+* C=1, L: O(count), Other: O(n) n: end-start
+* #nodes = O(count). 
+* TC = O(count * n)
 */
-map<size_t, set<set<size_t>>> numberCombinationsCache;
-set<set<size_t>> numberCombinations1(size_t start, size_t end, size_t count)
+void numberCombinations1(size_t start, size_t end, size_t count, vector<size_t>& comb, vector<vector<size_t>>& result)
 {
-	set<set<size_t>> result;
-	if (start <= end) {
-		for (size_t i = start; i <= min(start + count, end); i++) {
-			result.insert(set<size_t>{i});
-			set<set<size_t>> tmp;
-			if (numberCombinationsCache.find(i + 1) != numberCombinationsCache.end())
-				tmp = numberCombinationsCache[i + 1];
-			else {
-				tmp = numberCombinations1(i + 1, end, count);
-				numberCombinationsCache[i + 1] = tmp;
-			}
-			if (!tmp.empty()) {
-				for (set<set<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++) {
-					if (it->size() < count) {
-						set<size_t> tmp1 = *it;
-						tmp1.insert(i);
-						result.insert(tmp1);
-					} else
-						result.insert(*it);
-				}
-			}
+	if (!count)
+		result.push_back(comb);
+	else {
+		for (size_t i = start; i <= end; i++) {
+			comb.push_back(i);
+			numberCombinations1(i + 1, end, count - 1, comb, result);
+			comb.pop_back();
 		}
 	}
-	return result;
 }
-set<set<size_t>> numberCombinations(size_t range, size_t count)
+/* https://leetcode.com/problems/combinations/
+* 100%
+*/
+void numberCombinations(size_t n, size_t k, vector<vector<size_t>>& result)
 {
-	set<set<size_t>> result = numberCombinations1(1, range, count);
-	for (set<set<size_t>>::iterator it = result.begin(); it != result.end(); )
-		if (it->size() != count)
-			it = result.erase(it);
-		else
-			it++;
-	return result;
+	numberCombinations1(1, n, k, vector<size_t>(), result);
 }
 /*A zero-indexed array A consisting of N integers is given. A triplet(P, Q, R) is triangular if it is possible to build a triangle with sides of lengths A[P], A[Q] and A[R].
 * In other words, triplet(P, Q, R) is triangular if 0 ≤ P < Q < R < N and:
