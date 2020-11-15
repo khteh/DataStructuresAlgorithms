@@ -5264,14 +5264,19 @@ void BubbleSort(vector<long> &data)
 		}
 	}
 }
-/* Quick Sort (http://en.wikipedia.org/wiki/Quicksort) 
-* 4 1 2 3
-* 
+/* Quick Sort (http://en.wikipedia.org/wiki/Quicksort)
+* C=2, L=lg(N), Other: N
+* #nodes = (C^L - 1) / (C - 1) = 2^lg(N) - 1
+* TC: (2^lg(N) - 1) * N = N^2
+* Mathematics: 2^lg(N)
+* N: 8
+* ln(N) = 3 => 2^3 = 8
+* So, 2^lg(N) = N
 */
 void QuickSort(vector<long> &data, long left, long right)
 {
 	size_t pivot;
-	if (left < right) {
+	if (left >= 0 && right < data.size() && left < right) {
 		pivot = left + (right - left) / 2 + (right - left) % 2; // This overcomes integer overflow which happens if data.size() is large and naive approach of (lo + hi)/2 is used to index the middle element.
 		// Worst case: N-1 calls. Each call processes the list from left to right-1 (N) => O(N^2)
 		// Average case: lg(N) calls. Each level of call tree processes half the original list. Both calls processes N items => O(N*log(N)).
