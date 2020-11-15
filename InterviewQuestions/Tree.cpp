@@ -25,6 +25,9 @@ using namespace std;
 #nodes + 1 = 2^(h+1)
 ln(#nodes + 1) = h + 1
 h = ln(#nodes + 1) - 1
+Left child: 2i + 1
+Right child: 2i + 2
+Parent: |(i - 1)/2|, assuming root at i=0
  */
 template class Tree<int>;
 template class Tree<long>;

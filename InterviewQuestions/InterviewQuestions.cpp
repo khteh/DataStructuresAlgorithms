@@ -5367,6 +5367,9 @@ void InsertionSort(vector<long> &data)
  * [1,2] [3,4]	   B,A <= Bottom of recurssion. Merge into A. 2 comparisons. 4 items.
  * [1,2,3,4]	   A,B <= Next higher level, merge into B. 1 comparison. 4 items.
  * Time complexity: 2 levels (log(n)), 3 comparisons, 4 items. => O(n*log(n))
+ * C: 2, L: lg(N), Others: N
+ * #nodes = (C^L - 1) / (C - 1) = 2^lg(N) = N
+ * TC = N*lg((N)
  */
 void TopDownMergeSort(vector<long>& A, vector<long>& B, size_t start, size_t end)
 {
@@ -5433,17 +5436,18 @@ size_t MergeCountInversions(vector<long>& source, vector<long>& dest, size_t sta
  *		[0,1,2,3]: width = 2.
  *			[0,1,3,2] Inversion between index 1 & 2
  *			[0,1,2,3] Inversion between index 2 & 3
+ * O(lg(N) * lg(N/2) * N) = O(N * lg(N)^2)
  */
 void BottomUpMergeSort(vector<long>& A, vector<long>& B)
 {
 	size_t n = A.size();
 	// Each 1-element run in data is already "sorted".
 	// Make successively longer sorted runs of length 2, 4, 8, 16... until whole array is sorted.
-	for (size_t width = 1; width < A.size(); width *= 2) {
+	for (size_t width = 1; width < A.size(); width *= 2) { // O(lg(N))
 		// Array A is full of runs of length width.
 		// width: 1, i(+2): 0, 2, 4, 6, 8, 10
 		// width: 2, i(+4): 0, 4, 8, 12,16,20
-		for (size_t i = 0; i < A.size(); i += 2 * width)
+		for (size_t i = 0; i < A.size(); i += 2 * width) // O(N/2)
 			/* Merge two runs: A[i:i+width-1] and A[i+width:i+2*width-1] to B[]
 			* width: 1
 			*   i:0 Merge two runs: A[0:0] and A[1:1] to B[] [start, middle, end] : [0,1,2)
@@ -5455,7 +5459,7 @@ void BottomUpMergeSort(vector<long>& A, vector<long>& B)
 			*   i:4 Merge two runs: A[4:5] and A[6:7] to B[] [start, middle, end] : [4,6,8)
 			*  or copy A[i:n-1] to B[] ( if (i+width >= n) )
 			*/
-				Merge(A, B, i, min(i + width, n), min(i + 2 * width, n));
+				Merge(A, B, i, min(i + width, n), min(i + 2 * width, n)); // O(N)
 		// Now work array B is full of runs of length 2*width.
 		// Copy array B to array A for next iteration.
 		// A more efficient implementation would swap the roles of A and B.
