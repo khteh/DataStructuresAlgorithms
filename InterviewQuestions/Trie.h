@@ -14,30 +14,40 @@ template<typename T>
 class Trie
 {
 private:
-	unique_ptr<TrieNode<T>> m_root;
+	shared_ptr<TrieNode<T>> m_root;
+	T FindFast(string const&, shared_ptr<TrieNode<T>>&);
 public:
 	Trie();
 	Trie(string const &, T);
 	~Trie();
 	void Insert(string const &, T);
-	void RemoveString(string const &str);
+	void InsertFast(string const&, T);
+	void RemoveString(string const &);
 	T Find(string const &);
+	T FindFast(string const&);
 	void Clear();
 	size_t Count();
 };
 
 template<typename T>
-class TrieNode
+class TrieNode : enable_shared_from_this<TrieNode<T>>
 {
 private:
 	T m_key;
-	map<char, unique_ptr<TrieNode<T>>> m_children;
+	map<char, shared_ptr<TrieNode<T>>> m_children;
 public:
+	typedef typename map<char, shared_ptr<TrieNode<T>>>::const_iterator IteratorType;
 	TrieNode();
-	TrieNode(T value);
+	TrieNode(T);
 	~TrieNode<T>();
-	void InsertString(string const &str, T value);
-	void RemoveString(string const &str);
-	T Find(string const &str);
+	T Key() const;
+	void SetKey(T);
+	void InsertString(string const &, T);
+	void RemoveString(string const &);
+	T Find(string const &);
+	shared_ptr<TrieNode<T>> Node(char);
+	shared_ptr<TrieNode<T>> AddNode(char);
+	IteratorType ChildrenStart() const;
+	IteratorType ChildrenEnd() const;
 	size_t Count();
 };

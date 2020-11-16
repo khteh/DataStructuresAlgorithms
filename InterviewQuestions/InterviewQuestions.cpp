@@ -5276,7 +5276,7 @@ void BubbleSort(vector<long> &data)
 void QuickSort(vector<long> &data, long left, long right)
 {
 	size_t pivot;
-	if (left >= 0 && right < data.size() && left < right) {
+	if (left >= 0 && right < (long)data.size() && left < right) {
 		pivot = left + (right - left) / 2 + (right - left) % 2; // This overcomes integer overflow which happens if data.size() is large and naive approach of (lo + hi)/2 is used to index the middle element.
 		// Worst case: N-1 calls. Each call processes the list from left to right-1 (N) => O(N^2)
 		// Average case: lg(N) calls. Each level of call tree processes half the original list. Both calls processes N items => O(N*log(N)).
@@ -6542,53 +6542,53 @@ void TrieTests()
 {
 	cout << "Trie tests..." << endl;
 	Trie<int> trie;					// Node count:
-	trie.Insert("Amy", 12);			// 3
-	trie.Insert("Christine", 34);	// 9
-	trie.Insert("Tom", 56);			// 3
-	trie.Insert("Robert", 78);		// 6
-	trie.Insert("Kristy", 90);		// 6
-	trie.Insert("apple", 1);		// 5
-	trie.Insert("appendix", 2);		// 5 ("app" common nodes)
-	trie.Insert("appetite", 3);		// 4 ("appe" common nodes)
-	trie.Insert("to", 4);			// 2
-	trie.Insert("topple", 5);		// 4 ("to" common nodes)
-	trie.Insert("tea", 6);			// 2 ("t" common node)
-	trie.Insert("ted", 7);			// 1 ("te" common nodes)
-	trie.Insert("ten", 8);			// 1 ("te" common nodes)
-	trie.Insert("in", 9);			// 2
-	trie.Insert("inn", 10);			// 1 ("in" common nodes)
-	trie.Insert("intrinsics", 11);	// 8 ("in" common nodes)
-	assert(trie.Find("Amy") == 12);
-	assert(trie.Find("Christine") == 34);
-	assert(trie.Find("Tom") == 56);
-	assert(trie.Find("Robert") == 78);
-	assert(trie.Find("Kristy") == 90);
-	assert(trie.Find("apple") == 1);
-	assert(trie.Find("appendix") == 2);
-	assert(trie.Find("appetite") == 3);
-	assert(trie.Find("app") == numeric_limits<int>::min()); // not found
-	assert(trie.Find("ap..e") == 1);
-	assert(trie.Find("ap...") == 1);
-	assert(trie.Find("to") == 4);
-	assert(trie.Find("topple") == 5);
-	assert(trie.Find("tea") == 6);
-	assert(trie.Find("ted") == 7);
-	assert(trie.Find("ten") == 8);
-	assert(trie.Find("in") == 9);
-	assert(trie.Find("inn") == 10);
-	assert(trie.Find("intrinsics") == 11);
-	assert(trie.Find("in........") == 11);
-	assert(trie.Find("..........") == 11);
-	assert(trie.Find("in.........") == numeric_limits<int>::min());
-	assert(trie.Find("ABC") == numeric_limits<int>::min()); // not found
-	assert(trie.Find("tee") == numeric_limits<int>::min()); // not found
-	assert(trie.Find("t") == numeric_limits<int>::min()); // not found
+	trie.InsertFast("Amy", 12);			// 3
+	trie.InsertFast("Christine", 34);	// 9
+	trie.InsertFast("Tom", 56);			// 3
+	trie.InsertFast("Robert", 78);		// 6
+	trie.InsertFast("Kristy", 90);		// 6
+	trie.InsertFast("apple", 1);		// 5
+	trie.InsertFast("appendix", 2);		// 5 ("app" common nodes)
+	trie.InsertFast("appetite", 3);		// 4 ("appe" common nodes)
+	trie.InsertFast("to", 4);			// 2
+	trie.InsertFast("topple", 5);		// 4 ("to" common nodes)
+	trie.InsertFast("tea", 6);			// 2 ("t" common node)
+	trie.InsertFast("ted", 7);			// 1 ("te" common nodes)
+	trie.InsertFast("ten", 8);			// 1 ("te" common nodes)
+	trie.InsertFast("in", 9);			// 2
+	trie.InsertFast("inn", 10);			// 1 ("in" common nodes)
+	trie.InsertFast("intrinsics", 11);	// 8 ("in" common nodes)
+	assert(trie.Find("Amy") == 12); assert(trie.FindFast("Amy") == 12);
+	assert(trie.Find("Christine") == 34); assert(trie.FindFast("Christine") == 34);
+	assert(trie.Find("Tom") == 56); assert(trie.FindFast("Tom") == 56);
+	assert(trie.Find("Robert") == 78); assert(trie.FindFast("Robert") == 78);
+	assert(trie.Find("Kristy") == 90); assert(trie.FindFast("Kristy") == 90);
+	assert(trie.Find("apple") == 1); assert(trie.FindFast("apple") == 1);
+	assert(trie.Find("appendix") == 2); assert(trie.FindFast("appendix") == 2);
+	assert(trie.Find("appetite") == 3); assert(trie.FindFast("appetite") == 3);
+	assert(trie.Find("app") == numeric_limits<int>::min()); assert(trie.FindFast("app") == numeric_limits<int>::min()); // not found
+	assert(trie.Find("ap..e") == 1); assert(trie.FindFast("ap..e") == 1);
+	assert(trie.Find("ap...") == 1); assert(trie.FindFast("ap...") == 1);
+	assert(trie.Find("to") == 4); assert(trie.FindFast("to") == 4);
+	assert(trie.Find("topple") == 5); assert(trie.FindFast("topple") == 5);
+	assert(trie.Find("tea") == 6); assert(trie.FindFast("tea") == 6);
+	assert(trie.Find("ted") == 7); assert(trie.FindFast("ted") == 7);
+	assert(trie.Find("ten") == 8); assert(trie.FindFast("ten") == 8);
+	assert(trie.Find("in") == 9); assert(trie.FindFast("in") == 9);
+	assert(trie.Find("inn") == 10); assert(trie.FindFast("inn") == 10);
+	assert(trie.Find("intrinsics") == 11); assert(trie.FindFast("intrinsics") == 11);
+	assert(trie.Find("in........") == 11); assert(trie.FindFast("in........") == 11);
+	assert(trie.Find("..........") == 11); assert(trie.FindFast("..........") == 11);
+	assert(trie.Find("in.........") == numeric_limits<int>::min()); assert(trie.FindFast("in.........") == numeric_limits<int>::min());
+	assert(trie.Find("ABC") == numeric_limits<int>::min()); assert(trie.FindFast("ABC") == numeric_limits<int>::min());
+	assert(trie.Find("tee") == numeric_limits<int>::min()); assert(trie.FindFast("tee") == numeric_limits<int>::min());
+	assert(trie.Find("t") == numeric_limits<int>::min()); assert(trie.FindFast("t") == numeric_limits<int>::min());
 	size_t count = trie.Count();
 	assert(count == 62);
 	cout << "Trie has " << count << " nodes" << endl;
-	trie.Insert("intrinsics", 12);
+	trie.InsertFast("intrinsics", 12);
 	assert(count == trie.Count()); // Assert no duplicates! Only the value changes
-	assert(trie.Find("intrinsics") == 12);
+	assert(trie.Find("intrinsics") == 12); assert(trie.FindFast("intrinsics") == 12);
 	trie.RemoveString("Amy");
 	trie.RemoveString("Christine");
 	trie.RemoveString("Tom");
@@ -6600,6 +6600,13 @@ void TrieTests()
 	assert(trie.Find("Robert") == numeric_limits<int>::min());
 	assert(trie.Find("Kristy") == numeric_limits<int>::min());
 	assert(trie.Find("ABC") == numeric_limits<int>::min());
+
+	assert(trie.FindFast("Amy") == numeric_limits<int>::min());
+	assert(trie.FindFast("Christine") == numeric_limits<int>::min());
+	assert(trie.FindFast("Tom") == numeric_limits<int>::min());
+	assert(trie.FindFast("Robert") == numeric_limits<int>::min());
+	assert(trie.FindFast("Kristy") == numeric_limits<int>::min());
+	assert(trie.FindFast("ABC") == numeric_limits<int>::min());
 	trie.Clear();
 	cout << endl;
 }
