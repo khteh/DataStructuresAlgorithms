@@ -2538,6 +2538,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	numberCombinations(20, 16, ugrid);
 	assert(!ugrid.empty());
 	assert(ugrid.size() == 4845);
+	assert(eggDrops(123, 0) == 0);
+	assert(eggDrops(123, 1) == 1);
+	assert(eggDrops(1, 123) == 123);
+	assert(eggDrops(2, 2) == 2);
+	assert(eggDrops(3, 6) == 3);
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -5436,7 +5441,7 @@ size_t MergeCountInversions(vector<long>& source, vector<long>& dest, size_t sta
  *		[0,1,2,3]: width = 2.
  *			[0,1,3,2] Inversion between index 1 & 2
  *			[0,1,2,3] Inversion between index 2 & 3
- * O(lg(N) * lg(N/2) * N) = O(N * lg(N)^2)
+ * O(lg(N) * N) = O(N * lg(N))
  */
 void BottomUpMergeSort(vector<long>& A, vector<long>& B)
 {
@@ -5447,7 +5452,7 @@ void BottomUpMergeSort(vector<long>& A, vector<long>& B)
 		// Array A is full of runs of length width.
 		// width: 1, i(+2): 0, 2, 4, 6, 8, 10
 		// width: 2, i(+4): 0, 4, 8, 12,16,20
-		for (size_t i = 0; i < A.size(); i += 2 * width) // O(N/2)
+		for (size_t i = 0; i < A.size(); i += 2 * width) // Range of each Merge call. Total is O(N).
 			/* Merge two runs: A[i:i+width-1] and A[i+width:i+2*width-1] to B[]
 			* width: 1
 			*   i:0 Merge two runs: A[0:0] and A[1:1] to B[] [start, middle, end] : [0,1,2)
@@ -13691,4 +13696,53 @@ void EulerianPath(string vertex, map<string, multiset<string>>& vertices, vector
 		EulerianPath(next, vertices, path);
 	}
 	path.push_back(vertex);
+}
+/* The minimum amount of attempts to determine the pivot floor at and above which the egg breaks when dropped.
+* Base case:
+* 1 egg: conservatively try every single floor from bottom to top.
+* 0 floor: 0 attempt
+* 1 floor: 1 attempt
+* 
+* 2 possibilities:
+* Egg broken: 1 egg less, #floors = #floors - 1
+* Egg not broken: Same eggs, #floors = #floors - floors tried so far
+* 
+*		2 Eggs, 4 floors					<= for (size_t floor = 2; floor <= floors; floor++)
+*    f=1		f=2			f=3		  f=4	<= for (size_t i = 2; i <= floor; i++)
+* (1,0)(2,3) (1,1)(2,2) (1,2)(2,1) (1,3)(2,0)
+*
+* (2,3): f=1       f=2			f=3			<= for (size_t i = 2; i <= floor; i++)
+*       (1,0)(2,2) (1,1)(2,1)  (1,2)(2,0)
+* 
+* (2,2): f=1       f=2						<= for (size_t i = 2; i <= floor; i++)
+*       (1,0)(2,1) (1,1)(2,0)
+* 
+* (1,2): f=1       f=2						<= for (size_t i = 2; i <= floor; i++)
+*       (0,0)(1,1) (0,1)(1,0)
+* 
+* (1,3): f=1       f=2			f=3			<= for (size_t i = 2; i <= floor; i++)
+*       (0,0)(1,2) (0,1)(1,1)  (0,2)(1,0)
+* https://medium.com/@parv51199/egg-drop-problem-using-dynamic-programming-e22f67a1a7c3
+Eggs\Floors	0	1	2	3	4	5	6
+		1	0	1	2	3	4	5	6
+		2	0	1					
+		3	0	1					
+*/
+size_t eggDrops(size_t eggs, size_t floors)
+{
+	vector<vector<size_t>> dp(eggs, vector<size_t>(floors + 1, numeric_limits<size_t>::max()));
+	// Base case for Floor-0 and Floor-1
+	for (size_t i = 0; i < eggs; i++) {
+		dp[i][0] = 0;
+		if (floors > 0)
+			dp[i][1] = 1;
+	}
+	// Base case for 1 egg
+	generate(dp[0].begin(), dp[0].end(), [n = 0]()mutable{return n++; });
+	//size_t attempts = eggDropsDynamicProgramming(eggs, floors, dp);
+	for (size_t egg = 1; egg < eggs; egg++)
+		for (size_t floor = 2; floor <= floors; floor++)
+			for (size_t i = 2; i <= floor; i++)
+				dp[egg][floor] = min((size_t)dp[egg][floor], 1 + max((size_t)dp[egg - 1][i - 1], (size_t)dp[egg][floor - i]));
+	return dp[eggs - 1][floors];
 }
