@@ -14,22 +14,20 @@ Heap<T>::Heap(HeapType t)
 
 template<class T>
 Heap<T>::Heap(T item, HeapType t)
-	: type_(t)
-	, Tree(item)
+	: type_(t), Tree<T>::Tree(item)
 {
 }
 
 template<class T>
 Heap<T>::Heap(shared_ptr<Node<T>>& node, HeapType t)
-	: type_(t)
-	, Tree(node)
+	: type_(t), Tree<T>::Tree(node)
 {
 }
 template<class T>
 Heap<T>::Heap(vector<T>& data, HeapType type)
 	: type_(type)
 {
-	for (vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
+	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
 		InsertItem(*it);
 }
 template<class T>
@@ -109,14 +107,18 @@ void Heap<T>::HeapifyUp(shared_ptr<Node<T>>& node, unsigned long level)
 		switch (type_) {
 		case HeapType::MinHeap:
 			if (node->Next() && *node < *node->Next()) {
-				swap(node, node->Next());
-				HeapifyUp(node->Next());
+				shared_ptr<Node<T>> n(node->Next());
+				swap(node, n);
+				n = node->Next();
+				HeapifyUp(n);
 			}
 			break;
 		case HeapType::MaxHeap:
 			if (node->Next() && *node > *node->Next()) {
-				swap(node, node->Next());
-				HeapifyUp(node->Next());
+				shared_ptr<Node<T>> n(node->Next());
+				swap(node, n);
+				n = node->Next();
+				HeapifyUp(n);
 			}
 			break;
 		case HeapType::MinMaxHeap: // http://en.wikipedia.org/wiki/Min-max_heap
@@ -126,8 +128,10 @@ void Heap<T>::HeapifyUp(shared_ptr<Node<T>>& node, unsigned long level)
 				if (isMaxLevel) { // parent is at Min Level
 					if (node->Next() && *node < *node->Next()) {
 						// Item is smaller than parent(Min) and all items at Max levels. Only need to check the Min levels
-						swap(node, node->Next());
-						HeapifyUp(node->Next(), --level);
+						shared_ptr<Node<T>> n(node->Next());
+						swap(node, n);
+						n = node->Next();
+						HeapifyUp(n, --level);
 					} else if (node->Next()) {
 						// Item is greater than parent => Check with Max levels
 						if (node->Next()->Next())
@@ -141,8 +145,10 @@ void Heap<T>::HeapifyUp(shared_ptr<Node<T>>& node, unsigned long level)
 				} else { // Min Level. Parent at Max Level.
 					if (node->Next() && *node > *node->Next()) {
 						// Item is greater than parent and all items at Min levels. Only need to check the Max levels
-						swap(node, node->Next());
-						HeapifyUp(node->Next(), --level);
+						shared_ptr<Node<T>> n(node->Next());
+						swap(node, n);
+						n = node->Next();
+						HeapifyUp(n, --level);
 					} else if (node->Next()) {
 						// Item is smaller than parent => Check with the Min levels.
 						if (node->Next()->Next())
@@ -153,10 +159,13 @@ void Heap<T>::HeapifyUp(shared_ptr<Node<T>>& node, unsigned long level)
 							HeapifyUp(grandparent, level);
 						}
 					} else { // Root of the tree (Min level) in a Min-Max Heap
-						if (node->Left() && *node > *node->Left())
-							swap(node, node->Left());
-						else if (node->Right() && *node > *node->Right())
-							swap(node, node->Right());
+						if (node->Left() && *node > *node->Left()) {
+							shared_ptr<Node<T>> n(node->Left());
+							swap(node, n);
+						} else if (node->Right() && *node > *node->Right()) {
+							shared_ptr<Node<T>> n(node->Right());
+							swap(node, n);
+						}
 					}
 				}
 			}
@@ -175,22 +184,30 @@ void Heap<T>::HeapifyDown(shared_ptr<Node<T>>& node)
 		switch (type_) {
 		case HeapType::MinHeap:
 			if (node->Left() && *node > *node->Left()) { // Next minimum must come from the left branch since the tree is filled from left to right
-				swap(node, node->Left());
-				HeapifyDown(node->Left());
+				shared_ptr<Node<T>> n(node->Left());
+				swap(node, n);
+				n = node->Left();
+				HeapifyDown(n);
 			}
 			if (node->Right() && *node > *node->Right()) { // Next minimum must come from the left branch since the tree is filled from left to right
-				swap(node, node->Right());
-				HeapifyDown(node->Right());
+				shared_ptr<Node<T>> n(node->Right());
+				swap(node, n);
+				n = node->Right();
+				HeapifyDown(n);
 			}
 			break;
 		case HeapType::MaxHeap:
 			if (node->Left() && *node < *node->Left()) { // Next minimum must come from the left branch since the tree is filled from left to right
-				swap(node, node->Left());
-				HeapifyDown(node->Left());
+				shared_ptr<Node<T>> n(node->Left());
+				swap(node, n);
+				n = node->Left();
+				HeapifyDown(n);
 			} 
 			if (node->Right() && *node < *node->Right()) { // Next minimum must come from the left branch since the tree is filled from left to right
-				swap(node, node->Right());
-				HeapifyDown(node->Right());
+				shared_ptr<Node<T>> n(node->Right());
+				swap(node, n);
+				n = node->Right();
+				HeapifyDown(n);
 			}
 			break;
 		case HeapType::MinMaxHeap: // http://en.wikipedia.org/wiki/Min-max_heap
@@ -199,16 +216,20 @@ void Heap<T>::HeapifyDown(shared_ptr<Node<T>>& node)
 			//2. x.key > h[m].key and m is child of the root.since m is in max level, it has no descendants.So the element h[m] is moved to the root and x is inserted into node m.
 			//3. x.key > h[m].key and m is grandchild of the root.So the element h[m] is moved to the root.Let p be parent of m. if x.key > h[p].key then h[p] and x are interchanged.
 			if (MaxDepth(node) == 2) { // Condition 2
-				if (node->Left() && *node > *node->Left())
-					swap(node, node->Left());
-				if (node->Right() && *node > *node->Right())
-					swap(node, node->Right());
+				if (node->Left() && *node > *node->Left()) {
+					shared_ptr<Node<T>> n(node->Left());
+					swap(node, n);
+				}
+				if (node->Right() && *node > *node->Right()) {
+					shared_ptr<Node<T>> n(node->Right());
+					swap(node, n);
+				}
 			} else if (MaxDepth(node) > 2) { // Condition 3
 				shared_ptr<Node<T>> min(node);
 				map<size_t, vector<shared_ptr<Node<T>>>> nodes;
 				GetNodes(nodes, 2);
 				assert(!nodes[2].empty());
-				for (vector<shared_ptr<Node<T>>>::iterator it = nodes[2].begin(); it != nodes[2].end(); it++) {
+				for (typename vector<shared_ptr<Node<T>>>::iterator it = nodes[2].begin(); it != nodes[2].end(); it++) {
 					if (*min > *(*it))
 						min = *it;
 				}
@@ -238,7 +259,7 @@ shared_ptr<Node<T>> Heap<T>::FindEmptyLeafParent() // Use Breath-First-Search to
 	levelNodes.emplace(0, vector<shared_ptr<Node<T>>>{m_root});
 	for (; !levelNodes[level].empty(); level++) {
 		vector<shared_ptr<Node<T>>> nodes;
-		for (vector<shared_ptr<Node<T>>>::iterator it = levelNodes[level].begin(); it != levelNodes[level].end(); it++) {
+		for (typename vector<shared_ptr<Node<T>>>::iterator it = levelNodes[level].begin(); it != levelNodes[level].end(); it++) {
 			assert(*it);
 			if (*it) {
 				if ((*it)->Right() && !(*it)->Left())
@@ -268,7 +289,7 @@ shared_ptr<Node<T>> Heap<T>::FindLastLeaf() // Use Breadth-First-Search to find 
 	levelNodes.emplace(0, vector<shared_ptr<Node<T>>>{m_root});
 	for (; !levelNodes[level].empty(); level++) {
 		vector<shared_ptr<Node<T>>> nodes;
-		for (vector<shared_ptr<Node<T>>>::iterator it = levelNodes[level].begin(); it != levelNodes[level].end(); it++) {
+		for (typename vector<shared_ptr<Node<T>>>::iterator it = levelNodes[level].begin(); it != levelNodes[level].end(); it++) {
 			if (*it) {
 				if ((*it)->Left()) {
 					result = (*it)->Left();

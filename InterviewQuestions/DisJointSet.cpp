@@ -10,7 +10,7 @@ template<class T>
 void DisJointSet<T>::MakeSet(vector<T>& data)
 {
 	//perform makeset operation	by creating n disjoint sets
-	for (vector<T>::iterator it = data.begin(); it != data.end(); it++)
+	for (typename vector<T>::iterator it = data.begin(); it != data.end(); it++)
 		_parent.emplace(*it, *it); // Key: current item; Value: parent of the current item
 }
 template<class T>
@@ -82,7 +82,7 @@ template<class T>
 void DisJointSet<T>::Print(vector<T> const& data, size_t linesize)
 {
 	size_t i = 1;
-	for (vector<T>::const_iterator it = data.begin(); it != data.end(); it++, i++) {
+	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++, i++) {
 		cout << Find(*it);
 		if (!(i % linesize))
 			cout << endl;

@@ -13,7 +13,7 @@ Graph<TTag, TItem>::Graph()
 template<typename TTag, typename TItem>
 Graph<TTag, TItem>::Graph(vector<TItem>& data)
 {
-	for (vector<TItem>::iterator it = data.begin(); it != data.end(); it++)
+	for (typename vector<TItem>::iterator it = data.begin(); it != data.end(); it++)
 		AddVertex(*it, *it); // tag = item
 }
 template<typename TTag, typename TItem>
@@ -85,7 +85,7 @@ bool Graph<TTag, TItem>::Remove(TTag tag)
 		return false;
 	vertex = vertices_[tag];
 	vertices_.erase(tag);
-	for (map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
+	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
 		if (it->second->HasNeighbour(tag))
 			it->second->RemoveNeighbour(vertex);
 	return true;
@@ -103,7 +103,7 @@ void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex)
 		cout << endl;
 	shared_ptr<Vertex<TTag, TItem>> previous = vertex;
 	bool space = false;
-	for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); *it++, space = true) {
+	for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); *it++, space = true) {
 		if (space)
 			cout << setw(oss.str().size()) << " " << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << " " << (*it)->GetTag() << "(" << (*it)->GetItem() << ") " << " [" << previous->GetCost(*it) << "] " << endl;
 		else
@@ -136,12 +136,12 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 	priorityQueue.emplace(0, start);
 	costs.emplace(start->GetTag(), 0);
 	while (!priorityQueue.empty()) {
-		multimap<long, shared_ptr<Vertex<TTag, TItem>>>::iterator vertex = priorityQueue.begin();
+		typename multimap<long, shared_ptr<Vertex<TTag, TItem>>>::iterator vertex = priorityQueue.begin();
 		shared_ptr<Vertex<TTag, TItem>> u = vertex->second;
 		priorityQueue.erase(vertex);
 		inMST[u->GetTag()] = true; // Include vertex in MST
 		map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours = u->GetNeighboursWithCost();
-		for (map<shared_ptr<Vertex<TTag, TItem>>, long>::iterator v = neighbours.begin(); v != neighbours.end(); v++) {
+		for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::iterator v = neighbours.begin(); v != neighbours.end(); v++) {
 			//  If v is not in MST and weight of (u,v) is smaller than current cost of v 
 			if (!inMST[v->first->GetTag()] && (costs.find(v->first->GetTag()) == costs.end() || costs[v->first->GetTag()] > v->second)) // it->second is edge cost from u to 'it'
 			{
@@ -154,7 +154,7 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 	}
 	// Print edges of MST using parent array
 	cout << __FUNCTION__ << " edges of Minimum Spanning Tree: " << endl;
-	for (map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = parents.begin(); it != parents.end(); it++)
+	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = parents.begin(); it != parents.end(); it++)
 		cout << it->second->GetTag() << " - " << it->first << endl;
 	return accumulate(costs.begin(), costs.end(), 0, [](size_t value, const map<TTag, long>::value_type& p) { return value + p.second; });
 }
@@ -170,7 +170,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 		spt.emplace(vertex);
 		// Update dist value of the adjacent vertices of the picked vertex. 
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
-		for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
 			// Update dist[v] only if it:
 			// (1) is not in sptSet
 			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
@@ -184,7 +184,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 		}
 		vertex = nullptr;
 		long min = numeric_limits<long>::max();
-		for (set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
+		for (typename set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
 			if (costs[*it] < min) {
 				min = costs[*it];
 				vertex = *it;
@@ -208,7 +208,7 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 		spt.emplace(vertex);
 		// Update cost of the adjacent vertices of the picked vertex. 
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
-		for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
 			// Update cost[v] only if it:
 			// (1) is not in sptSet
 			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
@@ -222,7 +222,7 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 		}
 		vertex = nullptr;
 		long min = numeric_limits<long>::max();
-		for (set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
+		for (typename set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
 			if (costs[*it] < min) {
 				min = costs[*it];
 				vertex = *it;
@@ -270,13 +270,13 @@ void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, 
 		result.emplace(level, vector<shared_ptr<Vertex<TTag, TItem>>>{start});
 		for (; !result[level].empty(); level++) {
 			vector<shared_ptr<Vertex<TTag, TItem>>> vertices;
-			for (vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++) {
+			for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++) {
 				if (*it) {
 					vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = (*it)->GetNeighbours();
 					if (level > 0) { // Don't insert the parents. This happens for UnDirected Graph
-						for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it1 = neighbours.begin(); it1 != neighbours.end(); it1++) {
+						for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it1 = neighbours.begin(); it1 != neighbours.end(); it1++) {
 							bool isBackPointer = false;
-							for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it2 = result[level - 1].begin(); it2 != result[level - 1].end(); it2++)
+							for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it2 = result[level - 1].begin(); it2 != result[level - 1].end(); it2++)
 								if (*it2 == *it1) {
 									isBackPointer = true;
 									break;
@@ -305,7 +305,7 @@ long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>>& spt
 		spt.emplace(vertex);
 		// Update dist value of the adjacent vertices of the picked vertex. 
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
-		for (vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
+		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++) {
 			// Update dist[v] only if it:
 			// (1) is not in sptSet
 			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
@@ -322,7 +322,7 @@ long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>>& spt
 		}
 		vertex = nullptr;
 		long min = numeric_limits<long>::max();
-		for (set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
+		for (typename set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
 			if (costs[*it] < min) {
 				min = costs[*it];
 				vertex = *it;

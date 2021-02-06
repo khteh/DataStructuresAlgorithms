@@ -60,9 +60,9 @@ void Twitter<TUserID, TTweetID>::Clear()
 template<typename TUserID, typename TTweetID>
 void Twitter<TUserID, TTweetID>::PostTweet(TUserID userId, TTweetID tweetId)
 {
-    set<TweetItem<TUserID, TTweetID>>::iterator newFeed = _tweets[userId].emplace(userId, tweetId).first;
+    typename set<TweetItem<TUserID, TTweetID>>::iterator newFeed = _tweets[userId].emplace(userId, tweetId).first;
     _tweetsMap[userId][tweetId] = newFeed;
-    for (map<TUserID, set<TUserID>>::iterator it = _follows.begin(); it != _follows.end(); it++)
+    for (typename map<TUserID, set<TUserID>>::iterator it = _follows.begin(); it != _follows.end(); it++)
         if (it->second.find(userId) != it->second.end()) {
             _tweets[it->first].insert(*newFeed);
             _tweetsMap[it->first][tweetId] = _tweets[it->first].find(*newFeed);
@@ -72,7 +72,7 @@ template<typename TUserID, typename TTweetID>
 vector<TTweetID> Twitter<TUserID, TTweetID>::GetNewsFeed(TUserID userId, size_t size)
 {
     vector<TTweetID> result;
-    set<TweetItem<TUserID, TTweetID>, greater<TweetItem<TUserID, TTweetID>>>::iterator start = _tweets[userId].begin(), end = start;
+    typename set<TweetItem<TUserID, TTweetID>, greater<TweetItem<TUserID, TTweetID>>>::iterator start = _tweets[userId].begin(), end = start;
     advance(end, min((long)size, (long)_tweets[userId].size()));
     transform(start, 
         end, 
@@ -85,7 +85,7 @@ vector<TTweetID> Twitter<TUserID, TTweetID>::GetFromLastNewsFeed(TUserID userId,
 {
     vector<TTweetID> result;
     if (_tweetsMap[userId].find(tweetId) != _tweetsMap[userId].end() && _tweetsMap[userId][tweetId] != _tweets[userId].begin()) {
-        set<TweetItem<TUserID, TTweetID>, greater<TweetItem<TUserID, TTweetID>>>::iterator start = _tweets[userId].begin(), end = _tweetsMap[userId][tweetId];
+        typename set<TweetItem<TUserID, TTweetID>, greater<TweetItem<TUserID, TTweetID>>>::iterator start = _tweets[userId].begin(), end = _tweetsMap[userId][tweetId];
         size_t counts = distance(_tweets[userId].begin(), _tweetsMap[userId][tweetId]);
         if (counts > size)
             advance(start, counts - size);
@@ -101,7 +101,7 @@ void Twitter<TUserID, TTweetID>::Follow(TUserID user, TUserID followed)
 {
     if (user != followed && _follows[user].find(followed) == _follows[user].end()) {
         _follows[user].insert(followed);
-        for (set<TweetItem<TUserID, TTweetID>, greater<TweetItem<TUserID, TTweetID>>>::const_iterator it = _tweets[followed].cbegin(); it != _tweets[followed].cend(); it++)
+        for (typename set<TweetItem<TUserID, TTweetID>, greater<TweetItem<TUserID, TTweetID>>>::const_iterator it = _tweets[followed].cbegin(); it != _tweets[followed].cend(); it++)
             if (it->UserID() == followed && _tweetsMap[user].find(it->ID()) == _tweetsMap[user].end()) {
                 _tweets[user].insert(*it);
                 _tweetsMap[user].emplace(it->ID(), _tweets[user].find(*it));
@@ -113,7 +113,7 @@ void Twitter<TUserID, TTweetID>::UnFollow(TUserID user, TUserID followed)
 {
     if (user != followed && _follows[user].find(followed) != _follows[user].end()) {
         _follows[user].erase(followed);
-        for (set<TweetItem<TUserID, TTweetID>, greater<TweetItem<TUserID, TTweetID>>>::const_iterator it = _tweets[user].cbegin(); it != _tweets[user].cend(); )
+        for (typename set<TweetItem<TUserID, TTweetID>, greater<TweetItem<TUserID, TTweetID>>>::const_iterator it = _tweets[user].cbegin(); it != _tweets[user].cend(); )
             if (it->UserID() == followed) {
                 _tweetsMap[user].erase(it->ID());
                 it = _tweets[user].erase(it);

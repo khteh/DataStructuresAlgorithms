@@ -20,7 +20,7 @@ LinkedList<T>::LinkedList(vector<T>& data)
 {
 	m_head.reset();
 	shared_ptr<Node<T>> tail = nullptr;
-	for (vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
+	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
 		if (!m_head) {
 			m_head = make_shared<Node<T>>(*it);
@@ -59,11 +59,11 @@ shared_ptr<Node<T>> LinkedList<T>::Tail()
 	return node;
 }
 template<typename T>
-shared_ptr<Node<T>> LinkedList<T>::Find(Node<T>& n)
+shared_ptr<Node<T>> LinkedList<T>::Find(const Node<T>& n)
 {
 	shared_ptr<Node<T>> node = nullptr;
 	for (node = m_head; node; node = node->Next())
-		if (*node == n)
+		if (*node == (Node<T>)n)
 			break;
 	return node;
 }

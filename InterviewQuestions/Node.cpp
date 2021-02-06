@@ -142,7 +142,7 @@ void Node<T>::SetNext(shared_ptr<Node<T>> node)
 {
 	m_next = node;
 	if (node)
-		node->SetPrevious(shared_from_this());
+		node->SetPrevious(this->shared_from_this());
 	m_adjacents.insert(node);
 }
 

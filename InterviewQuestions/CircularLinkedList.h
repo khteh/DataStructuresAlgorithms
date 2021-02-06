@@ -4,6 +4,8 @@
 template<typename T>
 class CircularLinkedList : public LinkedList<T>
 {
+private:
+	using LinkedList<T>::m_head;
 public:
 	CircularLinkedList(vector<T>&);
 	~CircularLinkedList();

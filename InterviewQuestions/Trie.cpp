@@ -67,7 +67,7 @@ T Trie<T>::FindFast(string const& key, shared_ptr<TrieNode<T>>& n)
 		if (key[i] != '.')
 			n = n->Node(key[i]);
 		else {
-			for (TrieNode<T>::IteratorType it = n->ChildrenStart(); it != n->ChildrenEnd(); it++) {
+			for (typename TrieNode<T>::IteratorType it = n->ChildrenStart(); it != n->ChildrenEnd(); it++) {
 				string str = key.substr(i + 1);
 				shared_ptr<TrieNode<T>> next = it->second;
 				T key = FindFast(str, next);
@@ -119,7 +119,7 @@ T TrieNode<T>::Find(string const &prefix)
 {
 	if (!prefix.empty())
 		if (prefix[0] == '.') {
-			for (map<char, shared_ptr<TrieNode<T>>>::iterator it = m_children.begin(); it != m_children.end(); it++) {
+			for (typename map<char, shared_ptr<TrieNode<T>>>::iterator it = m_children.begin(); it != m_children.end(); it++) {
 				T key = it->second->Find(prefix.substr(1));
 				if (key != numeric_limits<T>::min())
 					return key;
@@ -174,7 +174,7 @@ template<typename T>
 size_t TrieNode<T>::Count()
 {
 	size_t count = m_children.size();
-	for (map<char, shared_ptr<TrieNode<T>>>::iterator it = m_children.begin(); it != m_children.end(); it++)
+	for (typename map<char, shared_ptr<TrieNode<T>>>::iterator it = m_children.begin(); it != m_children.end(); it++)
 		if (it->second)
 			count += it->second->Count();
 		else

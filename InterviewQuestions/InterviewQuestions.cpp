@@ -13,10 +13,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
 	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
-	seed_seq sequence(begin(seeds), end(seeds));
+	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
-	uniform_int_distribution<long> uniformDistribution;
-	int i, j, index, * iPtr;
+	int i, j, index, *iPtr;
 	unsigned long long mask = 0;
 	vector<string> strings, strings1;
 	set<string> stringset, stringset1;
@@ -125,6 +124,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(sizeof(char) == 1);
 	assert(sizeof(short) == 2);
 	assert(sizeof(int) == 4);
+	assert(sizeof(int*) == 8);
 	assert(sizeof(long) == 4);
 	assert(sizeof(float) == 4);
 	assert(sizeof(long long) == 8);
@@ -138,10 +138,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << ", numeric_limits<int>::max(): " << numeric_limits<int>::max() << ", numeric_limits<int>::min() * -1 = " << numeric_limits<int>::min() * -1 << endl;
 	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << ", numeric_limits<long>::max(): " << numeric_limits<long>::max() << ", numeric_limits<long>::min() * -1 = " << numeric_limits<long>::min() * -1 << endl;
 	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
-	assert(numeric_limits<int>::min() / -1 == numeric_limits<int>::min());
+	//assert(numeric_limits<int>::min() / -1 == numeric_limits<int>::min()); Integer overflow as 0x8000_0000 positive is > numeric_limits<int>::max()
 	assert(numeric_limits<int>::max() * -1 == numeric_limits<int>::min() + 1); // 0x7FFFF_FFFF * -1 = -0x7FFF_FFFF = 0x8000_0001
 	assert(numeric_limits<long>::min() * -1 == numeric_limits<long>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
-	assert(numeric_limits<long>::min() / -1 == numeric_limits<long>::min());
+	// assert(numeric_limits<long>::min() / -1 == numeric_limits<long>::min()); Integer overflow as 0x8000_0000_0000_0000 positive is > numeric_limits<long>::max()
 	assert(numeric_limits<long>::max() * -1 == numeric_limits<long>::min() + 1); // 0x7FFFF_FFFF * -1 = -0x7FFF_FFFF = 0x8000_0001
 	assert(1e5 == pow(10, 5));
 	assert(1e5 == 10e4);
@@ -193,12 +193,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "(int)0x80000000 - 1: " << i << ", long long: " << (long long)(i) << endl; // integer overflow
 	cout << "(long long)0x80000000 - 1: " << l << endl;
 	i = 0x80000000;
-	j = -0x80000000;
+	j = -INT_MIN; // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4146?view=msvc-160
 	assert(i == j);
 	assert(i < 0);
 	assert(j < 0);
 	cout << "(int)-0x80000000: " << i << endl;
-	i = -0x80000000;
+	i = -INT_MIN; // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4146?view=msvc-160
 	l = i;
 	assert(l < 0); // sign extended to 64-bit
 	assert(l == 0xFFFFFFFF80000000LL);
@@ -215,7 +215,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	i /= 2;
 	assert(i < 0);
 	assert(i == -0x40000000);
-	i = -0x80000000;
+	i = -INT_MIN; // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4146?view=msvc-160
 	assert(i < 0);
 	i /= 2;
 	assert(i < 0);
@@ -235,14 +235,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	i = 0x80000000L;
 	assert(i - 0x7FFFFFFF == 1);
-	i = -0x80000000L;
+	i = -INT_MIN; // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4146?view=msvc-160
 	assert(i - 0x7FFFFFFF == 1);
 
 	size_t ui = numeric_limits<size_t>::max() + 1;
 	assert(!ui);
 	cout << "int -" << hex << i << ": " << -i << dec << " " << -i << ", ~" << i << ": " << hex << ~i << " " << dec << ~i << endl;
 	ui = 3;
-	cout << "uint -" << hex << ui << ": " << -ui << dec << " " << -ui << ", ~" << ui << ": " << hex << ~ui << " " << dec << ~ui << endl;
+	//cout << "uint -" << hex << ui << ": " << -ui << dec << " " << -ui << ", ~" << ui << ": " << hex << ~ui << " " << dec << ~ui << endl;
 
 	/*
 	* 0x8000_0000 + 1 = -0x7FFF_FFFF = 0x8000_0001
@@ -379,7 +379,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	// Test C++ *& "pointer reference" construct
 	iPtr = (int*)malloc(10 * sizeof(int));
 	cout << "Size of iPtr: " << sizeof(iPtr) << " Sizeof *iPtr: " << sizeof(*iPtr) << endl;
-	memset(iPtr, 0xdeadbeef, 10 * sizeof(iPtr));
+	memset(iPtr, 0xdeadbeef, 10 * sizeof(int));
 	for (size_t i = 0; i < 10; i++)
 		assert(iPtr[i] == 0xefefefef);
 	cout << "iPtr @: " << iPtr << ", Size of iPtr: " << sizeof(iPtr) << ", Size of *iPtr: " << sizeof(*iPtr) << ", iPtr[0]: " << hex << iPtr[0] << dec << endl;
@@ -521,10 +521,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(strings.size() == 2); //  a d
 	assert(strings[0] == "a");
 	assert(strings[1] == "d");
-	assert(CanShuffleWithoutRepeat(string("a")));
-	assert(!CanShuffleWithoutRepeat(string("aa")));
-	assert(CanShuffleWithoutRepeat(string("aab")));
-	assert(CanShuffleWithoutRepeat(string("aaaabbcc")));
+	line = "a";
+	assert(CanShuffleWithoutRepeat(line));
+	line = "aa";
+	assert(!CanShuffleWithoutRepeat(line));
+	line = "aab";
+	assert(CanShuffleWithoutRepeat(line));
+	line = "aaaabbcc";
+	assert(CanShuffleWithoutRepeat(line));
 	a.clear();
 	a = { -2, -3, 4, -1, -2, 1, 5, -3 };
 	b.clear();
@@ -724,11 +728,21 @@ int _tmain(int argc, _TCHAR* argv[])
 	d = round(0.1234, 4);
 	assert(NumberStringSum(string("1234567890"), string("9876543210")) == "11111111100");
 	assert(NumberStringSum(string("123"), string("45")) == "168");
-	assert(NumberStringMultiplication(string("-4"), string("5")) == "-20");
-	assert(NumberStringMultiplication(string("3"), string("-4")) == "-12");
-	assert(NumberStringMultiplication(string("-7"), string("-8")) == "56");
-	assert(NumberStringMultiplication(string("123456"), string("654321")) == "80779853376");
-	assert(NumberStringMultiplication(string("456789"), string("987654")) == "451149483006");
+	line = "-4";
+	line1 = "5";
+	assert(NumberStringMultiplication(line, line1) == "-20");
+	line = "3";
+	line1 = "-4";
+	assert(NumberStringMultiplication(line, line1) == "-12");
+	line = "-7";
+	line1 = "-8";
+	assert(NumberStringMultiplication(line, line1) == "56");
+	line = "123456";
+	line1 = "654321";
+	assert(NumberStringMultiplication(line, line1) == "80779853376");
+	line = "456789";
+	line1 = "987654";
+	assert(NumberStringMultiplication(line, line1) == "451149483006");
 
 	assert(factorial(1) == 1);
 	assert(factorial(2) == 2);
@@ -1334,9 +1348,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(SubtractWithPlusSign(10, -5) == 15);
 	assert(MultiplyWithPlusSign(10, 5) == 50);
 	assert(MultiplyWithPlusSign(10, -5) == -50);
-	int quotient = numeric_limits<int>::min() / -1;
-	size_t uquotient = numeric_limits<int>::min() / -1;
-	cout << "numeric_limits<int>::min() / -1 = " << quotient << ", size_t: " << uquotient << endl;
 	assert(DivideWithPlusSign(10, 3) == 3);
 	assert(DivideWithPlusSign(10, -3) == -3);
 	assert(DivideWithPlusSign(-10, 3) == -3);
@@ -1345,7 +1356,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(DivideWithPlusSign(-1, 1) == -1);
 	assert(DivideWithPlusSign(1, -1) == -1);
 	assert(DivideWithPlusSign(-1, -1) == 1);
-	assert(DivideWithPlusSign(-2147483648, -1) == 2147483648);
+	assert(DivideWithPlusSign(-2147483648, -1) == (long)2147483648);
 	assert(DivideWithPlusSign(-2147483648, 1) == -2147483648);
 	assert(DivideWithPlusSign(2147483648, -1) == -2147483648);
 	assert(divide(10, 3) == 3);
@@ -1355,7 +1366,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(divide(-1, 1) == -1);
 	assert(divide(1, -1) == -1);
 	assert(divide(-1, -1) == 1);
-	assert(divide(-2147483648, -1) == 2147483648);
+	assert(divide(-2147483648, -1) == (long)2147483648);
 	assert(divide(-2147483648, 1) == -2147483648);
 	assert(divide(2147483648, -1) == -2147483648);
 	assert(KthNumberWith357PrimeFactors(1) == 1);
@@ -2357,14 +2368,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(!containsNearbyAlmostDuplicate(a, 2, 0));
 	assert(!containsNearbyAlmostDuplicate(a, -1, -1));
 	a.clear();
-	assert(abs(2147483647 - -1) == 2147483648);
-	assert(abs(-1 - 2147483647) == 2147483648);
+	assert(abs(2147483647 - -1) == (long)2147483648);
+	assert(abs(-1 - 2147483647) == (long)-2147483648);
 	a = { 2147483647, -1, 2147483647 }; // 0x7FFFF_FFFF, 0xFFFF_FFFF
 	assert(!containsNearbyAlmostDuplicate(a, 1, 2147483647));
 	assert(!containsNearbyAlmostDuplicate(a, 1, 2147483648)); // 2147483648 is 0x8000_0000 = 0xFFFF_FFFF_8000_0000 < 0
 	a.clear();
-	assert(abs((long)-0x80000000 - (long)0x7FFFFFFF) == 1);
-	assert(abs((long)0x7FFFFFFF - (long)-0x80000000) == 1);
+	assert(abs((long)-INT_MIN - (long)0x7FFFFFFF) == 1);
+	assert(abs((long)0x7FFFFFFF - (long)-INT_MIN) == 1);
 	a = { (long)-2147483648, 2147483647 }; // 0xFFFF_FFFF_8000_0000, 0x7FFF_FFFF
 	assert(!containsNearbyAlmostDuplicate(a, 1, 1)); // -2147483648 = 0xFFFF_FFFF_8000_0000; 2147483647 = 0x7FFF_FFFF. One in negative bucket, another in positive bucket. Different from abs((long)2147483648 - (long)2147483647)
 	a.clear();
@@ -2552,7 +2563,7 @@ void testPointerReference(int *& ptr)
 {
 	free(ptr);
 	ptr = (int*)malloc(101 * sizeof(int));
-	memset(ptr, 0xabababab, 101 * sizeof(ptr));
+	memset(ptr, 0xabababab, 101 * sizeof(int));  // XXX: sizeof(int*) is 8 bytes on x64!!!
 }
 long Min(long a, long b)
 {
@@ -2895,7 +2906,7 @@ void RemoveDuplicateCharactersLexicographicalOrder(string& str)
 * j: width of the second operand
 * width of sum is max(i, j). So i must be <= half the input string size
 */
-bool isAdditiveNumber(string& str)
+bool isAdditiveNumber(const string& str)
 {
 	for (size_t i = 1; i <= str.size() / 2; i++)
 		for (size_t j = 1; max(i, j) <= str.size() - i - j; j++)
@@ -2911,7 +2922,7 @@ bool isAdditiveNumber(string& str)
 *       5 8 13
 *         8 13 21
 */
-bool checkIfAdditiveSequence(size_t i, size_t j, string& str)
+bool checkIfAdditiveSequence(size_t i, size_t j, const string& str)
 {
 	if ((str[0] == '0' && i > 1) || (str[i] == '0' && j > 1))
 		return false;
@@ -4106,7 +4117,7 @@ void parentheses(vector<string> &result, size_t count)
 * 3: 2, 3
 * 4: 2 result = 2
 */
-long LongestValidParentheses(string& str)
+long LongestValidParentheses(const string& str)
 {
 	MyStack<long> stack;
 	stack.push(-1); // The first element of stack is used to provide base for next valid string
@@ -4126,7 +4137,7 @@ long LongestValidParentheses(string& str)
 }
 // https://app.codility.com/programmers/task/brackets_rotation/
 // Unfinished work!
-long LongestValidParenthesesWithFixes(string& str, size_t k)
+long LongestValidParenthesesWithFixes(const string& str, size_t k)
 {
 	stack<long> stack;
 	long start = -1, end = -1;
@@ -4477,15 +4488,23 @@ template<typename type>
 	 vector<char> chars1, chars2;
 	 vector<size_t> num1, num2, result;
 	 string s1, s2;
-	 assert(LCSLength(string("HARRY"), string("SALLY")) == 2);
+	 s1 = "HARRY";
+	 s2 = "SALLY";
+	 assert(LCSLength(s1, s2) == 2);
 	 s1 = "HARRY";
 	 s2 = "SALLY";
 	 chars1.insert(chars1.end(), s1.begin(), s1.end());
 	 chars2.insert(chars2.end(), s2.begin(), s2.end());
 	 assert(LCSLength<char>(chars1, chars2) == 2);
-	 assert(LCSLength(string("SHINCHAN"), string("NOHARAAA")) == 3);
-	 assert(LCSLength(string("ABCDEF"), string("FBDAMN")) == 2);
-	 assert(LCSLength(string("WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS"), string("FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC")) == 15);
+	 s1 = "SHINCHAN";
+	 s2 = "NOHARAAA";
+	 assert(LCSLength(s1, s2) == 3);
+	 s1 = "ABCDEF";
+	 s2 = "FBDAMN";
+	 assert(LCSLength(s1, s2) == 2);
+	 s1 = "WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS";
+	 s2 = "FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC";
+	 assert(LCSLength(s1, s2) == 15);
 	 s1 = "HARRY";
 	 s2 = "SALLY";
 	 s1.insert(0, 1, 0);
@@ -4746,7 +4765,7 @@ int BinarySearchCountLower(vector<long>& source, long toSearch, long start, long
 	else
 		return BinarySearchCountLower(source, toSearch, start, mid - 1);
 }
-int BinarySearch(vector<string>& source, string& toSearch)
+int BinarySearch(vector<string>& source, const string& toSearch)
 {
 	int lower, middle, upper;
 	lower = 0;
@@ -5737,7 +5756,7 @@ long long AddWithoutArithmetic(long long sum, long long carry)
 	return !carry ? sum : AddWithoutArithmetic(sum ^ carry, (unsigned long long)(sum & carry) << 1);
 }
 // Function for finding sum of larger numbers 
-string NumberStringSum(string& str1, string& str2)
+string NumberStringSum(const string& str1, const string& str2)
 {
 	if (str1.empty() && !str2.empty())
 		return str2;
@@ -5747,8 +5766,8 @@ string NumberStringSum(string& str1, string& str2)
 		return "";
 	// Initially take carry zero 
 	int carry = 0;
-	string::reverse_iterator it1 = str1.rbegin();
-	string::reverse_iterator it2 = str2.rbegin();
+	string::const_reverse_iterator it1 = str1.rbegin();
+	string::const_reverse_iterator it2 = str2.rbegin();
 	vector<char> result(max(str1.size(), str2.size()) + 1, '0');
 	vector<char>::reverse_iterator it3 = result.rbegin();
 	for (; !(it1 == str1.rend() && it2 == str2.rend()); ) {
@@ -6200,17 +6219,6 @@ long ToggleSign(long a)
 	for (i = 0; a != 0; i += d, a += d);
 	return i;
 }
-long ToggleSign1(long a)
-{
-	int i = 0, d = a < 0 ? 1 : -1;
-	for (; a != 0; a += d) {
-		if (a > 0)
-			i--;
-		else
-			i++;
-	}
-	return i;
-}
 long SubtractWithPlusSign(long a, long b)
 {
 	return a + ToggleSign(b);
@@ -6249,6 +6257,8 @@ long DivideWithPlusSign(long a, long b)
 }
 long divide(long dividend, long divisor) 
 {
+	if (!divisor)
+		throw runtime_error("Divide by zero exception");
 	int quotient = 0;
 	bool isNegative = (dividend < 0) ^ (divisor < 0);
 	if (divisor == 1 || divisor == -1) {
@@ -6261,15 +6271,15 @@ long divide(long dividend, long divisor)
 		else if (dividend == numeric_limits<long>::max())
 			return isNegative ? numeric_limits<long>::min() + 1 : numeric_limits<long>::max();
 		if (isNegative)
-			return dividend < 0 ? dividend : ToggleSign1(dividend);
-		return dividend < 0 ? ToggleSign1(dividend) : dividend;
+			return dividend < 0 ? dividend : ToggleSign(dividend);
+		return dividend < 0 ? ToggleSign(dividend) : dividend;
 	}
 	if (divisor < 0)
-		divisor = ToggleSign1(divisor);
+		divisor = ToggleSign(divisor);
 	if (dividend < 0)
-		dividend = ToggleSign1(dividend);
+		dividend = ToggleSign(dividend);
 	for (; dividend >= divisor; quotient++, dividend -= divisor);
-	return isNegative ? ToggleSign1(quotient) : quotient;
+	return isNegative ? ToggleSign(quotient) : quotient;
 }
 long KthNumberWith357PrimeFactors(long n)
 {
@@ -6780,7 +6790,7 @@ void GetPermutations(string& w, set<string>& dictionary, set<string>& result)
 	}
 }
 // DAMP -> LAMP -> LIMP -> LIME -> LIKE
-void WordLadder(string &start, string &stop, set<string>& dictionary, vector<string>& result)
+void WordLadder(const string &start, const string &stop, set<string>& dictionary, vector<string>& result)
 {
 	queue<string> actionQ;
 	set<string> visited;
@@ -6907,7 +6917,7 @@ void LinkedListTests()
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
 	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
-	seed_seq sequence(begin(seeds), end(seeds));
+	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
 	uniform_int_distribution<long> uniformDistribution;
 	a.clear();
@@ -7020,9 +7030,11 @@ void LinkedListTests()
 	a = { -1, 0, 1, 2, 3, 4, 5, 0 }; // Loop starts at '0'
 	CircularLinkedList<long> cll(a);
 	assert(cll.Length() == 7);
-	shared_ptr<Node<long>> head = cll.Find(Node<long>(-1));
+	Node<long> lNode(-1);
+	shared_ptr<Node<long>> head = cll.Find(lNode);
 	assert(head);
-	shared_ptr<Node<long>> loopStart = cll.Find(Node<long>(0));
+	lNode.SetItem(0);
+	shared_ptr<Node<long>> loopStart = cll.Find(lNode);
 	assert(loopStart);
 	cll.Print();
 	assert(cll.LoopStart(head) == loopStart);
@@ -7031,9 +7043,11 @@ void LinkedListTests()
 	a = { -2, -1, 0, 1, 2, 3, 4, 5, 0 }; // Loop starts at '0'
 	CircularLinkedList<long> cll1(a);
 	assert(cll1.Length() == 8);
-	head = cll1.Find(Node<long>(-2));
+	lNode.SetItem(-2);
+	head = cll1.Find(lNode);
 	assert(head);
-	loopStart = cll1.Find(Node<long>(0));
+	lNode.SetItem(0);
+	loopStart = cll1.Find(lNode);
 	assert(loopStart);
 	cll1.Print();
 	assert(cll1.LoopStart(head) == loopStart);
@@ -7042,9 +7056,11 @@ void LinkedListTests()
 	a = { -3, -2, -1, 0, 1, 2, 3, 4, 5, 0 }; // Loop starts at '0'
 	CircularLinkedList<long> cll2(a);
 	assert(cll2.Length() == 9);
-	head = cll2.Find(Node<long>(-3));
+	lNode.SetItem(-3);
+	head = cll2.Find(lNode);
 	assert(head);
-	loopStart = cll2.Find(Node<long>(0));
+	lNode.SetItem(0);
+	loopStart = cll2.Find(lNode);
 	assert(loopStart);
 	cll2.Print();
 	assert(cll2.LoopStart(head) == loopStart);
@@ -7053,7 +7069,8 @@ void LinkedListTests()
 	a = { -3, -2, -1, 0, 1, 2, 3, 4, 5 }; // NO loop!
 	CircularLinkedList<long> cll3(a);
 	assert(cll3.Length() == 9);
-	head = cll3.Find(Node<long>(-3));
+	lNode.SetItem(-3);
+	head = cll3.Find(lNode);
 	assert(head);
 	cll3.Print();
 	assert(!cll3.LoopStart(head));
@@ -7062,7 +7079,8 @@ void LinkedListTests()
 	a = { 1,2 }; // NO loop!
 	CircularLinkedList<long> cll4(a);
 	assert(cll4.Length() == 2);
-	head = cll4.Find(Node<long>(1));
+	lNode.SetItem(1);
+	head = cll4.Find(lNode);
 	assert(head);
 	cll4.Print();
 	assert(!cll4.LoopStart(head));
@@ -7071,9 +7089,10 @@ void LinkedListTests()
 	a = { 1,2,1 };  // Loop starts at '1'
 	CircularLinkedList<long> cll5(a);
 	assert(cll5.Length() == 2);
-	head = cll5.Find(Node<long>(1));
+	lNode.SetItem(1);
+	head = cll5.Find(lNode);
 	assert(head);
-	loopStart = cll5.Find(Node<long>(1));
+	loopStart = cll5.Find(lNode);
 	assert(loopStart);
 	cll5.Print();
 	assert(cll5.LoopStart(head) == loopStart);
@@ -7082,7 +7101,7 @@ void LinkedListTests()
 	a = { 1 }; // NO loop!
 	CircularLinkedList<long> cll6(a);
 	assert(cll6.Length() == 1);
-	head = cll6.Find(Node<long>(1));
+	head = cll6.Find(lNode);
 	assert(head);
 	cll6.Print();
 	assert(!cll6.LoopStart(head));
@@ -8736,7 +8755,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>>& grid)
 /* https://leetcode.com/problems/word-search/
 * 100%
 */
-bool WordExistsInGrid(vector<vector<char>>& board, string& word) 
+bool WordExistsInGrid(vector<vector<char>>& board, const string& word) 
 {
 	for (size_t i = 0; i < board.size(); i++)
 		for (size_t j = 0; j < board[i].size(); j++)
@@ -8744,7 +8763,7 @@ bool WordExistsInGrid(vector<vector<char>>& board, string& word)
 				return true;
 	return false;
 }
-bool WordExistsInGrid(vector<vector<char>>& board, string& word, long row, long col, size_t offset) 
+bool WordExistsInGrid(vector<vector<char>>& board, const string& word, long row, long col, size_t offset) 
 {
 	if (row < 0 || col < 0 || row >= (long)board.size() || col >= (long)board[row].size() || offset >= word.size() || word[offset] != board[row][col])
 		return false;
@@ -8928,7 +8947,7 @@ bool GetSum(vector<long> &data, size_t K, long P, size_t index, vector<long>& le
 //2) Pattern: "aaaa" (.+)\\1\\1\\1  input : "asdasdasdasd" should return 1.
 //3) Pattern: "aabb" (.+)\\1(.+)\\2 input : "xyzabcxyzabc" should return 0.
 //3) Pattern: "abab" (.+)(.+)\\1\\2 input : "xyzabcxyzabc" should return 1.
-bool match(string& pattern, string& input)
+bool match(const string& pattern, const string& input)
 {
 	map<char, long> patternCount;
 	ostringstream regexStr;
@@ -9060,7 +9079,7 @@ void split(const string &s, char delim, vector<string> &elems)
 // file: "This is a dog"
 // 0: This is a
 // 1: is a dog
-set<string> process(string& str, int n)
+set<string> process(const string& str, int n)
 {
 	vector<string> words;
 	set<string> ngrams;
@@ -9077,7 +9096,7 @@ set<string> process(string& str, int n)
 	}
 	return ngrams;
 }
-set<string> intersectionNgram(string& str1, string& str2, int n)
+set<string> intersectionNgram(const string& str1, const string& str2, int n)
 {
 	set<string> result;
 	set<string> ngrams1 = process(str1, n);
@@ -9191,16 +9210,23 @@ void TestRandom()
 	// Slower but crypto-secure and non-repeatable.
 	random_device device;
 	cout << "Using random_device URNG:" << endl;
+	uniform_int_distribution<long> dist(-5, 5);
+	vector<long> v;
+	v.resize(20);
+	generate(v.begin(), v.end(), [&] { return dist(device); });
+
 	TestURNG(device);
 
 	// Second run: simple integer seed. Repeatable results
 	cout << "Using constant-seed mersene twister engine URNG:" << endl;
-	TestURNG(mt19937_64(12345));
+	mt19937_64 constant_seed_mersene_twister_engine{ mt19937_64(12345) };
+	TestURNG(constant_seed_mersene_twister_engine);
 
 	// Third run: random_device as seed; different each run.
 	// Desirable for most purposes
 	cout << "Using non-deterministic-seed mersene twister engine URNG:" << endl;
-	TestURNG(mt19937_64(device()));
+	mt19937_64 non_deterministic_seed_mersene_twister_engine{ mt19937_64(device()) };
+	TestURNG(non_deterministic_seed_mersene_twister_engine);
 
 	// Fourth run: "warm-up" sequence as as seed; different each run.
 	// Advanced uses. Allows more than 32 bits of randomness.
@@ -9209,8 +9235,9 @@ void TestRandom()
 	cout << "mt19937_64::state_size: " << mt19937_64::state_size << endl;
 	seeds.resize(mt19937_64::state_size);
 	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
-	seed_seq sequence(begin(seeds), end(seeds));
-	TestURNG(mt19937_64(sequence));
+	seed_seq sequence(seeds.begin(), seeds.end());
+	mt19937_64 non_deterministic_seed_sequence_mersene_twister_engine{ mt19937_64(sequence) };
+	TestURNG(non_deterministic_seed_sequence_mersene_twister_engine);
 }
 long concat(vector<long>& data)
 {
@@ -9433,7 +9460,7 @@ vector<size_t> grayCode(size_t n)
 			result.push_back(result[j] | i);
 	return result;
 }
-void OrderedMergedCombinations(set<string>&result, string &s1, string &s2, string cur)
+void OrderedMergedCombinations(set<string>&result, const string &s1, const string &s2, string cur)
 {
 	if (s1.empty() && s2.empty()) {
 		result.insert(cur);
@@ -9527,7 +9554,8 @@ void numberCombinations1(size_t start, size_t end, size_t count, vector<size_t>&
 */
 void numberCombinations(size_t n, size_t k, vector<vector<size_t>>& result)
 {
-	numberCombinations1(1, n, k, vector<size_t>(), result);
+	vector<size_t> comb;
+	numberCombinations1(1, n, k, comb, result);
 }
 /*A zero-indexed array A consisting of N integers is given. A triplet(P, Q, R) is triangular if it is possible to build a triangle with sides of lengths A[P], A[Q] and A[R].
 * In other words, triplet(P, Q, R) is triangular if 0 ≤ P < Q < R < N and:
@@ -9778,7 +9806,6 @@ void Knapsack_CoinChangeTests()
 	numbers = { 5, 37, 8, 39, 33, 17, 22, 32, 13, 7, 10, 35, 40, 2, 43, 49, 46, 19, 41, 1, 12, 11, 28 };
 	sort(numbers.begin(), numbers.end());
 	assert(CoinsChangeUniqueWaysDynamicProgramming(166, numbers) ==      96190959);
-	assert(CoinsChangeDuplicateWaysDynamicProgramming(166, numbers) == 2259754041); //
 	coinChangeCache.clear();
 	numbers.clear();
 	numbers = {1,2,5};
@@ -10846,7 +10873,7 @@ bool increasingTriplet(vector<size_t>& data)
 	return tails.size() >= 3;
 }
 // https://stackoverflow.com/questions/6877249/find-the-number-of-occurrences-of-a-subsequence-in-a-string
-size_t FindSubsequenceRecursive(string& str, string& tomatch)
+size_t FindSubsequenceRecursive(const string& str, const string& tomatch)
 {
 	size_t result = 0;
 	if (tomatch.empty())
@@ -10869,7 +10896,7 @@ i:2(s=21)	2	1	1			0
 i:3(s=221)	2	1	2			0
 i:4(s=1221)	1	1	2			2
 */
-size_t FindSubsequenceDynamicProgramming(string& str, string& tomatch)
+size_t FindSubsequenceDynamicProgramming(const string& str, const string& tomatch)
 {
 	if (tomatch.empty())
 		return 1;
@@ -10899,7 +10926,7 @@ size_t FindSubsequenceDynamicProgramming(string& str, string& tomatch)
 }
 // https://www.hackerrank.com/challenges/short-palindrome/problem
 // Times out!
-size_t shortPalindrome(string& s) 
+size_t shortPalindrome(const string& s) 
 {
 	set<char> chars(s.begin(), s.end());
 	set<string> patterns;
@@ -11946,14 +11973,14 @@ size_t CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<size_t>& coin
 * ways: 1 0 1 1 1 3 2 5 6 8 14
 * i:    0 1 2 3 4 5 6 7 8 9 10
 */
-size_t CoinsChangeDuplicateWaysDynamicProgramming(long amount, vector<size_t>& coins)
+size_t CoinsChangeDuplicateWaysDynamicProgramming(size_t amount, vector<size_t>& coins)
 {
 	if (amount <= 0 || coins.empty())
 		return 0;
 	sort(coins.begin(), coins.end());
 	vector<size_t> dp(amount + 1, 0); // Index: amount. Value: #ways or #posibilities
 	dp[0] = 1; // $0 is one possibility
-	for (size_t i = coins[0]; (long)i <= amount; i++)
+	for (size_t i = coins[0]; i <= amount; i++)
 		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end() && i >= *coin; coin++)
 			dp[i] += dp[i - *coin];
 	return dp[amount];
@@ -12194,7 +12221,7 @@ Observation:
 	For i >= k, result[i] = s[i - 1] == s[i] ? result[i - k] : result[i - k] == '1' ? '0' : '1'
 100%
 */
-string cipher(size_t n, size_t k, string& s) 
+string cipher(size_t n, size_t k, const string& s) 
 {
 	string result;
 	if (!s.empty() && k <= s.size() && s.size() >= n) {
@@ -12212,7 +12239,7 @@ string cipher(size_t n, size_t k, string& s)
 // If s[i] is lowercase and s[i+1] is uppercase, swap them and add an asterik '*' after them
 // If s[i] is a number, replace it with 0 and place the original number at the beginning.
 // 100%
-string DecryptPassword(string& s) 
+string DecryptPassword(const string& s) 
 {
 	string result;
 	long numbers = -1;
@@ -12237,7 +12264,7 @@ string DecryptPassword(string& s)
 }
 // https://www.hackerrank.com/challenges/sam-and-substrings/problem
 // 100 %
-unsigned long long substrings(string& s) 
+unsigned long long substrings(const string& s) 
 {
 	/* 
 	Example: "6789". Substrings: 6, 7, 8, 9, 67, 78, 89, 678, 789, 6789.
@@ -12671,7 +12698,7 @@ size_t SnakesAndLaddersGameFast(vector<vector<size_t>>& ladders, vector<vector<s
 * ohvhjdml ->
 * vqblqcb
 */
-size_t lengthOfLongestSubstring(string& s) 
+size_t lengthOfLongestSubstring(const string& s) 
 {
 	size_t maxLength = 0;
 	set<char> chars;
@@ -12702,7 +12729,7 @@ size_t lengthOfLongestSubstring(string& s)
 * https://leetcode.com/problems/zigzag-conversion/
 * 100%
 */
-string zigzagconvert(string& s, size_t numRows) 
+string zigzagconvert(const string& s, size_t numRows) 
 {
 	bool direction = false;
 	vector<string> str(numRows);
@@ -13135,7 +13162,7 @@ stack:   3 2 -4 -20 <= 3+2-20
 sign:	+ * + /
 stack:   3 6 5 1 <= 6+1 = 7
 */
-long basicCalculator(string& s)
+long basicCalculator(const string& s)
 {
 	stack<long> numbers;
 	char sign = '+';
@@ -13263,7 +13290,7 @@ size_t hIndex(vector<size_t>& citations)
 /* https://leetcode.com/problems/letter-combinations-of-a-phone-number/
 * 100%
 */
-vector<string> PhoneKeyLetters(string& digits)
+vector<string> PhoneKeyLetters(const string& digits)
 {
 	map<char, string> letters{
 		{'1', ""},
@@ -13329,7 +13356,7 @@ vector<string> PhoneKeyLetters(string& digits)
 * [0,0) is valid -> [0,4) is valid -> [0,7) is valid
 * 100%
 */
-bool wordBreakDynamicProgramming(string& s, set<string>& words)
+bool wordBreakDynamicProgramming(const string& s, set<string>& words)
 {
 	vector<bool> valid(s.size() + 1, false); // flag to mark substring [0, end) validity
 	valid[0] = true; // empty substring is a valid string
@@ -13344,7 +13371,7 @@ bool wordBreakDynamicProgramming(string& s, set<string>& words)
 }
 /* https://leetcode.com/problems/word-break-ii/
 */
-void wordBreakDynamicProgramming(string& s, set<string>& words, vector<string>& result)
+void wordBreakDynamicProgramming(const string& s, set<string>& words, vector<string>& result)
 {
 	map<size_t, vector<string>> strings;
 	vector<bool> valid(s.size() + 1, false); // flag to mark substring [0, end) validity
@@ -13386,7 +13413,7 @@ vector<string> wordBreakDFS(string s, set<string>& words, map<string, vector<str
 		strings.emplace(s, result);
 	return result;
 }
-vector<string> wordBreakDFS(string& s, set<string>& words)
+vector<string> wordBreakDFS(const string& s, set<string>& words)
 {
 	map<string, vector<string>> strings;
 	return wordBreakDFS(s, words, strings);
@@ -13551,7 +13578,7 @@ vector<long> diffWaysToCompute(string input)
 /* https://leetcode.com/problems/bulls-and-cows/
 * 100%
 */
-string getHint(string& secret, string& guess) 
+string getHint(const string& secret, const string& guess) 
 {
 	map<char, long> counts;
 	size_t bulls = 0, cows = 0;
@@ -13609,7 +13636,7 @@ void wiggleMaxLength(vector<long>& nums, vector<long>& result)
 * If such prefix does not exist, then the serialization is definitely invalid; otherwise, the serialization is valid if and only if the prefix is the entire sequence.
 * 100%
 */
-bool isValidPreOrderTreeSerialization(string& preorder)
+bool isValidPreOrderTreeSerialization(const string& preorder)
 {
 	vector<string> tokens;
 	split(preorder, ',', tokens);
@@ -13677,7 +13704,7 @@ size_t maxProductOfNonOverlappingWordLengths(vector<string>& words)
 * (5) ATL -> SFO
 * JFK -> ATL -> JFK -> SFO -> ATL -> SFO
 */
-vector<string> findItinerary(vector<vector<string>>& tickets, string& start)
+vector<string> findItinerary(vector<vector<string>>& tickets, const string& start)
 {
 	map<string, multiset<string>> vertices;
 	vector<string> itinerary;

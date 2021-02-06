@@ -93,7 +93,7 @@ void KDTree<T>::PrintTree()
 	levels.emplace(level, vector<KDNode<T>*>{m_root});
 	for (; !levels[level].empty(); level++) {
 		vector<KDNode<T>*> nodes;
-		for (vector<KDNode<T>*>::const_iterator it = levels[level].begin(); it != levels[level].end(); it++) {
+		for (typename vector<KDNode<T>*>::const_iterator it = levels[level].begin(); it != levels[level].end(); it++) {
 			if (*it) {
 				if ((*it)->Left())
 					nodes.push_back((*it)->Left());
@@ -105,9 +105,9 @@ void KDTree<T>::PrintTree()
 			levels.emplace(level + 1, nodes);
 	}
 	bool printOnce = true;
-	for (map<long, vector<KDNode<T>*>>::const_iterator it = levels.begin(); it != levels.end(); it++) {
+	for (typename map<long, vector<KDNode<T>*>>::const_iterator it = levels.begin(); it != levels.end(); it++) {
 		printOnce = true;
-		for (vector<KDNode<T>*>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++) {
+		for (typename vector<KDNode<T>*>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++) {
 			if (printOnce) {
 				cout << "Axis " << (*it1)->Axis() << ": ";
 				for (size_t i = 0; i < level; i++)

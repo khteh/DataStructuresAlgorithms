@@ -34,7 +34,7 @@ template<typename K, typename V>
 void interval_map<K, V>::assign(K const& keyBegin, K const& keyEnd, V const& val)
 {
 	if (keyBegin < keyEnd && keyBegin >= numeric_limits<K>::lowest() && keyEnd <= numeric_limits<K>::max()) {
-		map<K, V>::const_iterator it;
+		typename map<K, V>::const_iterator it;
 		it = m_map.find(keyBegin);
 		if (it == m_map.end()) {
 			if (!m_map.empty()) {

@@ -20,7 +20,7 @@ public:
 	virtual ~LinkedList();
 	shared_ptr<Node<T>> Head();
 	shared_ptr<Node<T>> Tail();
-	virtual shared_ptr<Node<T>> Find(Node<T>&);
+	virtual shared_ptr<Node<T>> Find(const Node<T>&);
 	size_t Join(LinkedList<T>&);
 	virtual void Print(shared_ptr<Node<T>> n = nullptr);
 	void SplitList(shared_ptr<Node<T>>&, shared_ptr<Node<T>>&);

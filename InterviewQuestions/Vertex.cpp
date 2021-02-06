@@ -75,7 +75,7 @@ bool Vertex<TTag, TItem>::HasNeighbours() const
 template<typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::HasNeighbour(TTag tag) const
 {
-	for (map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
+	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
 		if (it->first->GetTag() == tag)
 			return true;
 	return false;
@@ -83,7 +83,7 @@ bool Vertex<TTag, TItem>::HasNeighbour(TTag tag) const
 template<typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::HasNeighbour(TTag tag, TItem item) const
 {
-	for (map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
+	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
 		if (it->first->GetTag() == tag && it->first->GetItem() == item)
 			return true;
 	return false;
@@ -110,7 +110,7 @@ TItem Vertex<TTag, TItem>::GetSum(set<TTag> visited) const
 {
 	size_t sum = item_;
 	visited.insert(tag_);
-	for (map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
+	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
 		if (visited.find(it->first->GetTag()) == visited.end())
 			sum += it->first->GetSum(visited);
 	return sum;
