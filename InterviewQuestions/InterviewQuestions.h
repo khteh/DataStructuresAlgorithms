@@ -456,3 +456,4 @@ size_t maxProductOfNonOverlappingWordLengths(vector<string>&);
 vector<string> findItinerary(vector<vector<string>>&, const string&);
 void EulerianPath(string, map<string, multiset<string>>&, vector<string>&);
 size_t eggDrops(size_t, size_t);
+vector<string> fizzBuzz(size_t);

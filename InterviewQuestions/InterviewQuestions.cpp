@@ -2554,6 +2554,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(eggDrops(1, 123) == 123);
 	assert(eggDrops(2, 2) == 2);
 	assert(eggDrops(3, 6) == 3);
+	assert(fizzBuzz(3) == vector<string>({"1", "2", "Fizz"}));
+	assert(fizzBuzz(5) == vector<string>({"1", "2", "Fizz", "4", "Buzz"}));
+	assert(fizzBuzz(10) == vector<string>({ "1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz" }));
+	assert(fizzBuzz(15) == vector<string>({ "1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz" }));
 	/***** The End *****/
 	cout << endl << "Press ENTER to exit!";
 	getline(cin, line);
@@ -13774,4 +13778,25 @@ size_t eggDrops(size_t eggs, size_t floors)
 			for (size_t i = 2; i <= floor; i++)
 				dp[egg][floor] = min((size_t)dp[egg][floor], 1 + max((size_t)dp[egg - 1][i - 1], (size_t)dp[egg][floor - i]));
 	return dp[eggs - 1][floors];
+}
+/* 
+* https://en.wikipedia.org/wiki/Fizz_buzz
+* https://leetcode.com/problems/fizz-buzz/submissions/
+* 100%
+*/
+vector<string> fizzBuzz(size_t n)
+{
+	vector<string> result;
+	for (size_t i = 1; i <= n; i++) {
+		ostringstream oss;
+		if (!(i % 3))
+			oss << "Fizz";
+		if (!(i % 5))
+			oss << "Buzz";
+		string str = oss.str();
+		if (str.empty())
+			str = to_string(i);
+		result.push_back(str);
+	}
+	return result;
 }
