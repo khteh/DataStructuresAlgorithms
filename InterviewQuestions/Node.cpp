@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "Node.h"
 #include <iostream>
 #include <set>

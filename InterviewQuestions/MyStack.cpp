@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MyStack.h"
 #include <iostream>
 #include <string>

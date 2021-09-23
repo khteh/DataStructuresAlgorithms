@@ -156,7 +156,10 @@ elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         "_UNICODE"
     )
 endif()
-
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+  message("-- Setting GNU options")
+#  include_directories(${Your_path})
+endif()
 ################################################################################
 # Compile and link options
 ################################################################################
@@ -184,6 +187,7 @@ if(MSVC)
             ${DEFAULT_CXX_EXCEPTION_HANDLING}
         )
     elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+    message("-- x64 --")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
                 /permissive-;

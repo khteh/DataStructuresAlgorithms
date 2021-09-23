@@ -1,5 +1,5 @@
 #pragma once
-#include "tree.h"
+#include "Tree.h"
 enum class HeapType {MinHeap, MaxHeap, MinMaxHeap};
 
 template<class T>

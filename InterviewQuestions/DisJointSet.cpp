@@ -27,7 +27,7 @@ T DisJointSet<T>::Find(T item)
 		return item;
 	else {
 		T root = Find(_parent[item]);
-		// We cache the result by moving i’s node 
+		// We cache the result by moving iï¿½s node 
 		// directly under the representative of this
 		// set
 		_parent[item] = root;

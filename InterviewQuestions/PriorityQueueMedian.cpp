@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "PriorityQueueMedian.h"
 
 template class PriorityQueueMedian<long>;
