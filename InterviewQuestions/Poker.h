@@ -1,5 +1,5 @@
 #pragma once
-#include "card.h"
+#include "Card.h"
 
 class Poker :	public Card
 {

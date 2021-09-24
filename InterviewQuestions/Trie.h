@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <assert.h>
+#include <limits>
 #include <memory>
 #include <stdexcept>
 using namespace std;

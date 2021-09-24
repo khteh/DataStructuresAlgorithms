@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <limits>
 using namespace std;
 template<typename T>
 class CMatrix

@@ -1,3 +1,7 @@
+#include <limits>
+#include <memory>
+#include <utility>
+#include <thread>
 #include <assert.h>
 #include <fstream>
 #include <iostream>
@@ -19,7 +23,9 @@
 #include <iomanip>
 #include <regex>
 #include <exception>
+#ifdef _MSC_VER
 #include <ppl.h>
+#endif
 #include <limits.h>
 #include <cmath>
 #include <chrono>
@@ -52,7 +58,9 @@
 #include "CMatrix.h"
 #include "ListRangeSum.h"
 using namespace std;
+#ifdef _MSC_VER
 using namespace concurrency;
+#endif
 using namespace chrono;
 typedef enum class SortOrder { SORT_ASCENDING, SORT_DESCENDING } sort_order_t;
 typedef union {

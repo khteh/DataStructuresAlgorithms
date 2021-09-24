@@ -107,6 +107,7 @@ if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
     )
 elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+    message("=== x64 Platform ===")
     set_target_properties(${PROJECT_NAME} PROPERTIES
         INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
     )
@@ -158,7 +159,7 @@ elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
 endif()
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
   message("-- Setting GNU options")
-#  include_directories(${Your_path})
+  #include_directories("InterviewQuestions")
 endif()
 ################################################################################
 # Compile and link options
@@ -168,7 +169,7 @@ if(MSVC)
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
                 /MP;
-                /std:c++latest;
+                /std:c++20;
                 /Od;
                 /GT;
                 /arch:AVX;
@@ -191,7 +192,7 @@ if(MSVC)
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
                 /permissive-;
-                /std:c++latest;
+                /std:c++20;
                 /sdl;
                 /arch:AVX;
                 /Y-

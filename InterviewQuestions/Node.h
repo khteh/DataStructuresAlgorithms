@@ -2,6 +2,7 @@
 #include <set>
 #include <memory>
 #include <sstream>
+#include <limits>
 using namespace std;
 
 template<class T>
