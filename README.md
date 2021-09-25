@@ -5,7 +5,7 @@ C++ Algorithms and data structures using only standard libraries. This answers m
 * It uses Visual Studio 2019 IDE, latest Windows SDK and ISO C++17 Standard.
 
 ## Ubuntu
-* Visual Studio Code with the following extensions from:
+* Visual Studio Code with the following extensions:
   - C/C++
   - CMake Tools extension for VS Code
 
