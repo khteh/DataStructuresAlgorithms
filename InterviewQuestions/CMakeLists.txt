@@ -159,7 +159,9 @@ elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
 endif()
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
   message("-- Setting GNU options")
-  #include_directories("InterviewQuestions")
+  include_directories("/usr/include/tbb")
+  link_directories(${CMAKE_SOURCE_DIR}/lib/x86_64-linux-gnu)
+  target_link_libraries(${PROJECT_NAME} tbb)
 endif()
 ################################################################################
 # Compile and link options

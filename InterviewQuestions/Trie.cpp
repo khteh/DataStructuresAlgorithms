@@ -109,7 +109,7 @@ template<typename T>
 void TrieNode<T>::InsertString(string const &str, T value)
 {
 	if (!str.empty()) {
-		pair<map<char, shared_ptr<TrieNode<T>>>::iterator, bool> result = m_children.emplace(str[0], make_shared<TrieNode<T>>());
+		pair<typename map<char, shared_ptr<TrieNode<T>>>::iterator, bool> result = m_children.emplace(str[0], make_shared<TrieNode<T>>());
 		result.first->second->InsertString(str.substr(1), value);
 	} else
 		m_key = value; // Store the value at the leaf node.

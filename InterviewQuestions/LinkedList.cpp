@@ -63,7 +63,7 @@ shared_ptr<Node<T>> LinkedList<T>::Find(const Node<T>& n)
 {
 	shared_ptr<Node<T>> node = nullptr;
 	for (node = m_head; node; node = node->Next())
-		if (*node == (Node<T>)n)
+		if (*node == (Node<T>&)n)
 			break;
 	return node;
 }

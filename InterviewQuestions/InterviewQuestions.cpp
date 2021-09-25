@@ -1,10 +1,13 @@
 ﻿#include "stdafx.h"
 #include "InterviewQuestions.h"
 using namespace std;
+#if defined(__GNUC__) || defined(__GNUG__)
+using namespace tbb;
+#endif
 map<long, set<vector<size_t>>> coinChangeCache;
 map<long, set<vector<size_t>>> knapsackCache;
 map<long, size_t> dpMemoization;
-int _tmain(int argc, _TCHAR* argv[])
+int main(int argc, char* argv[])
 {
 	string line, line1;
 	random_device device;
@@ -63,11 +66,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	line = to_string(0);
 	istringstream(line) >> i;
 	assert(i == 0);
-	sort(line.begin(), line.end());
-	istringstream(line.front()) >> i;
-	assert(i == 0);
-	istringstream(line.back()) >> i;
-	assert(i == 0);
 	strings.clear();
 	strings = { "abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE" };
 	strings1 = { "abcchcz", "ABCCHCZ", "abcczch", "ABCCZCH", "abcde", "ABCDE"};
@@ -121,17 +119,18 @@ int _tmain(int argc, _TCHAR* argv[])
 	char cstr[8];
 	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;
 	cout << "sizeof(void*): " << sizeof(void*) << endl;
+	cout << "sizeof(long double): " << sizeof(long double) << endl;
 	assert(sizeof(char) == 1);
 	assert(sizeof(short) == 2);
 	assert(sizeof(int) == 4);
 	assert(sizeof(int*) == 8);
-	assert(sizeof(long) == 4);
+	assert(sizeof(long) == 8);
 	assert(sizeof(float) == 4);
 	assert(sizeof(long long) == 8);
 	assert(sizeof(double) == 8);
-	assert(sizeof(long double) == 8);
-	assert(numeric_limits<int>::min() == numeric_limits<long>::min());
-	assert(numeric_limits<int>::max() == numeric_limits<long>::max());
+	assert(sizeof(long double) == 16);
+	assert(numeric_limits<int>::min() > numeric_limits<long>::min());
+	assert(numeric_limits<int>::max() < numeric_limits<long>::max());
 	cout << "https://en.wikipedia.org/wiki/Machine_epsilon: Float: " << numeric_limits<float>::epsilon() << ", Double: " << numeric_limits<double>::epsilon() << endl;
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
@@ -234,9 +233,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(l == 0xFFFFFFFF7FFFFFFFL);
 	
 	i = 0x80000000L;
-	assert(i - 0x7FFFFFFF == 1);
+	j = 1;
+	assert(j == (i - 0x7FFFFFFF));
 	i = -INT_MIN; // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4146?view=msvc-160
-	assert(i - 0x7FFFFFFF == 1);
+	assert(j == (i - 0x7FFFFFFF));
 
 	size_t ui = numeric_limits<size_t>::max() + 1;
 	assert(!ui);
@@ -1187,7 +1187,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	EqualAverageDivide(a, b);
 	assert(b.size() == 2);
 	cout << "Left part: ";
+	#ifdef _MSC_VER
 	long sum = parallel_reduce(b.begin(), b.end(), 0);
+	#elif defined(__GNUC__) || defined(__GNUG__)
+	long sum = parallel_reduce(blocked_range<long>(0, b.size()), 0, 
+                    [&](tbb::blocked_range<long> r, long running_total)
+                    {
+                        for (int i=r.begin(); i<r.end(); ++i)
+                            running_total += b[i];
+                        return running_total;
+                    }, std::plus<long>() );	
+	#endif
 	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
 	assert(sum == 24);
 	cout << "sum: " << sum << endl;
@@ -1316,7 +1326,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	void *addr = alignedMalloc(1000, 64);
 	assert(addr);
-	int alignment = (unsigned)addr % (64 / 8);
+	int alignment = (unsigned long)addr % (64 / 8);
 	assert(!alignment);
 	memset(addr, 'a', 1000);
 	alignedFree(&addr);
@@ -1324,7 +1334,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	addr = alignedMalloc(1000, 32);
 	assert(addr);
-	alignment = (unsigned)addr % (32 / 8);
+	alignment = (unsigned long)addr % (32 / 8);
 	assert(!alignment);
 	alignedFree(&addr);
 	assert(!addr);
@@ -1356,7 +1366,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(DivideWithPlusSign(-1, 1) == -1);
 	assert(DivideWithPlusSign(1, -1) == -1);
 	assert(DivideWithPlusSign(-1, -1) == 1);
-	assert(DivideWithPlusSign(-2147483648, -1) == (long)2147483648);
+	assert(DivideWithPlusSign(-2147483648, -1) == 2147483648);
 	assert(DivideWithPlusSign(-2147483648, 1) == -2147483648);
 	assert(DivideWithPlusSign(2147483648, -1) == -2147483648);
 	assert(divide(10, 3) == 3);
@@ -1366,7 +1376,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(divide(-1, 1) == -1);
 	assert(divide(1, -1) == -1);
 	assert(divide(-1, -1) == 1);
-	assert(divide(-2147483648, -1) == (long)2147483648);
+	assert(divide(-2147483648, -1) == 2147483648);
 	assert(divide(-2147483648, 1) == -2147483648);
 	assert(divide(2147483648, -1) == -2147483648);
 	assert(KthNumberWith357PrimeFactors(1) == 1);
@@ -2368,14 +2378,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	assert(!containsNearbyAlmostDuplicate(a, 2, 0));
 	assert(!containsNearbyAlmostDuplicate(a, -1, -1));
 	a.clear();
-	assert(abs(2147483647 - -1) == (long)2147483648);
-	assert(abs(-1 - 2147483647) == (long)-2147483648);
+	assert(abs(2147483647L - -1) == 2147483648L);
+	assert(abs(-1 - 2147483647L) == 2147483648L);
 	a = { 2147483647, -1, 2147483647 }; // 0x7FFFF_FFFF, 0xFFFF_FFFF
 	assert(!containsNearbyAlmostDuplicate(a, 1, 2147483647));
-	assert(!containsNearbyAlmostDuplicate(a, 1, 2147483648)); // 2147483648 is 0x8000_0000 = 0xFFFF_FFFF_8000_0000 < 0
+	assert(!containsNearbyAlmostDuplicate(a, 1, -2147483648L)); // 2147483648 is 0x8000_0000 = 0xFFFF_FFFF_8000_0000 < 0
 	a.clear();
-	assert(abs((long)-INT_MIN - (long)0x7FFFFFFF) == 1);
-	assert(abs((long)0x7FFFFFFF - (long)-INT_MIN) == 1);
+	assert(abs(-INT_MIN - 0x7FFFFFFF) == 1);
+	assert(abs(0x7FFFFFFF - -INT_MIN) == 1);
 	a = { (long)-2147483648, 2147483647 }; // 0xFFFF_FFFF_8000_0000, 0x7FFF_FFFF
 	assert(!containsNearbyAlmostDuplicate(a, 1, 1)); // -2147483648 = 0xFFFF_FFFF_8000_0000; 2147483647 = 0x7FFF_FFFF. One in negative bucket, another in positive bucket. Different from abs((long)2147483648 - (long)2147483647)
 	a.clear();
@@ -6242,7 +6252,7 @@ long DivideWithPlusSign(long a, long b)
 	bool isNegative = (a < 0) ^ (b < 0);
 	if (b == 1 || b == -1) {
 		if (a == numeric_limits<int>::min())
-			return numeric_limits<int>::min();
+			return isNegative ? numeric_limits<int>::min() : ToggleSign(a);
 		else if (a == numeric_limits<int>::max())
 			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
 		if (a == numeric_limits<long>::min())
@@ -6267,7 +6277,7 @@ long divide(long dividend, long divisor)
 	bool isNegative = (dividend < 0) ^ (divisor < 0);
 	if (divisor == 1 || divisor == -1) {
 		if (dividend == numeric_limits<int>::min())
-			return numeric_limits<int>::min();
+			return isNegative ? numeric_limits<int>::min() : ToggleSign(dividend);
 		else if (dividend == numeric_limits<int>::max())
 			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
 		if (dividend == numeric_limits<long>::min())
@@ -8919,7 +8929,18 @@ void EqualAverageDivide(vector<long>& data, vector<long> &left)
 	size_t N = data.size(), K;
 	// Sort the data
 	sort(data.begin(), data.end());
+	#ifdef _MSC_VER
 	sum = parallel_reduce(data.begin(), data.end(), 0);
+	#elif defined(__GNUC__) || defined(__GNUG__)
+	sum = parallel_reduce(blocked_range<long>(0, data.size()), 0, 
+                    [&](tbb::blocked_range<long> r, long running_total)
+                    {
+                        for (int i=r.begin(); i<r.end(); ++i)
+                            running_total += data[i];
+                        return running_total;
+                    }, std::plus<long>() );	
+	#endif
+
 	for (K = 1; K < (N - K); K++) {
 		if (((K * sum) % N)) //  check if such P can be integer (we operate with array of integers).
 			continue;
@@ -9087,7 +9108,7 @@ set<string> process(const string& str, int n)
 {
 	vector<string> words;
 	set<string> ngrams;
-	split(str, ' ', words);
+	::split(str, ' ', words);
 	for (size_t i = 0; i <= words.size() - n; i++) // i: 0, 1
 	{
 		string s;
@@ -13643,7 +13664,7 @@ void wiggleMaxLength(vector<long>& nums, vector<long>& result)
 bool isValidPreOrderTreeSerialization(const string& preorder)
 {
 	vector<string> tokens;
-	split(preorder, ',', tokens);
+	::split(preorder, ',', tokens);
 	size_t leaves = 0, nonLeaves = 0, i = 0;
 	for (; i < tokens.size() && leaves != nonLeaves + 1; i++) {
 		if (tokens[i][0] == '#')

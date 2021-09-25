@@ -59,7 +59,7 @@ vector<shared_ptr<Vertex<TTag, TItem>>> Vertex<TTag, TItem>::GetNeighbours()
 		neighbours_.begin(),
 		neighbours_.end(),
 		back_inserter(vertices),
-		[](const map<shared_ptr<Vertex<TTag, TItem>>, long>::value_type& pair) {return pair.first; });
+		[](const typename map<shared_ptr<Vertex<TTag, TItem>>, long>::value_type& pair) {return pair.first; });
 	return vertices;
 }
 template<typename TTag, typename TItem>

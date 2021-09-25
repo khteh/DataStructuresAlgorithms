@@ -25,6 +25,9 @@
 #include <exception>
 #ifdef _MSC_VER
 #include <ppl.h>
+#elif defined(__GNUC__) || defined(__GNUG__)
+#include "tbb/parallel_reduce.h"
+#include "tbb/blocked_range.h"
 #endif
 #include <limits.h>
 #include <cmath>
