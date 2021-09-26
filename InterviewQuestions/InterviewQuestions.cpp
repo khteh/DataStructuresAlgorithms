@@ -1368,7 +1368,7 @@ int main(int argc, char* argv[])
 	assert(DivideWithPlusSign(-1, -1) == 1);
 	assert(DivideWithPlusSign(-2147483648, -1) == 2147483648);
 	assert(DivideWithPlusSign(-2147483648, 1) == -2147483648);
-	assert(DivideWithPlusSign(2147483648, -1) == -2147483648);
+	assert(DivideWithPlusSign(2147483648, -1) == -2147483648); // Takes very long time to ToggleSign of 64-bit value
 	assert(divide(10, 3) == 3);
 	assert(divide(10, -3) == -3);
 	assert(divide(-10, 3) == -3);
@@ -1378,7 +1378,7 @@ int main(int argc, char* argv[])
 	assert(divide(-1, -1) == 1);
 	assert(divide(-2147483648, -1) == 2147483648);
 	assert(divide(-2147483648, 1) == -2147483648);
-	assert(divide(2147483648, -1) == -2147483648);
+	assert(divide(2147483648, -1) == -2147483648); // Takes very long time to ToggleSign of 64-bit value
 	assert(KthNumberWith357PrimeFactors(1) == 1);
 	assert(KthNumberWith357PrimeFactors(2) == 3);
 	assert(KthNumberWith357PrimeFactors(3) == 5);
@@ -6252,7 +6252,7 @@ long DivideWithPlusSign(long a, long b)
 	bool isNegative = (a < 0) ^ (b < 0);
 	if (b == 1 || b == -1) {
 		if (a == numeric_limits<int>::min())
-			return isNegative ? numeric_limits<int>::min() : ToggleSign(a);
+			return isNegative ? numeric_limits<int>::min() : -a; // Takes very long time to ToggleSign of 64-bit value
 		else if (a == numeric_limits<int>::max())
 			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
 		if (a == numeric_limits<long>::min())
@@ -6277,7 +6277,7 @@ long divide(long dividend, long divisor)
 	bool isNegative = (dividend < 0) ^ (divisor < 0);
 	if (divisor == 1 || divisor == -1) {
 		if (dividend == numeric_limits<int>::min())
-			return isNegative ? numeric_limits<int>::min() : ToggleSign(dividend);
+			return isNegative ? numeric_limits<int>::min() : -dividend; // Takes very long time to ToggleSign of 64-bit value
 		else if (dividend == numeric_limits<int>::max())
 			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
 		if (dividend == numeric_limits<long>::min())
