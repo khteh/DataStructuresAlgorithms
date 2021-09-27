@@ -6252,7 +6252,7 @@ long DivideWithPlusSign(long a, long b)
 	bool isNegative = (a < 0) ^ (b < 0);
 	if (b == 1 || b == -1) {
 		if (a == numeric_limits<int>::min())
-			return isNegative ? numeric_limits<int>::min() : -a; // Takes very long time to ToggleSign of 64-bit value
+			return isNegative ? numeric_limits<int>::min() : -a; // ToggleSign of 64-bit value takes very long time
 		else if (a == numeric_limits<int>::max())
 			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
 		if (a == numeric_limits<long>::min())
@@ -6260,14 +6260,14 @@ long DivideWithPlusSign(long a, long b)
 		else if (a == numeric_limits<long>::max())
 			return isNegative ? numeric_limits<long>::min() + 1 : numeric_limits<long>::max();
 		if (isNegative) // result should be < 0
-			return a < 0 ? a : ToggleSign(a);
-		return a < 0 ? ToggleSign(a) : a;
+			return a < 0 ? a : -a;
+		return a < 0 ? -a : a;
 	}
 	long quotient;
 	long divisor = ToggleSign(absolute(b)); // * -1
 	long dividend = absolute(a);
 	for (quotient = 0; dividend >= absolute(divisor); dividend += divisor, quotient++);
-	return isNegative ? ToggleSign(quotient) : quotient;
+	return isNegative ? -quotient : quotient;
 }
 long divide(long dividend, long divisor) 
 {
@@ -6277,7 +6277,7 @@ long divide(long dividend, long divisor)
 	bool isNegative = (dividend < 0) ^ (divisor < 0);
 	if (divisor == 1 || divisor == -1) {
 		if (dividend == numeric_limits<int>::min())
-			return isNegative ? numeric_limits<int>::min() : -dividend; // Takes very long time to ToggleSign of 64-bit value
+			return isNegative ? numeric_limits<int>::min() : -dividend; // ToggleSign of 64-bit value takes very long time
 		else if (dividend == numeric_limits<int>::max())
 			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
 		if (dividend == numeric_limits<long>::min())
@@ -6285,15 +6285,15 @@ long divide(long dividend, long divisor)
 		else if (dividend == numeric_limits<long>::max())
 			return isNegative ? numeric_limits<long>::min() + 1 : numeric_limits<long>::max();
 		if (isNegative)
-			return dividend < 0 ? dividend : ToggleSign(dividend);
-		return dividend < 0 ? ToggleSign(dividend) : dividend;
+			return dividend < 0 ? dividend : -dividend;
+		return dividend < 0 ? -dividend : dividend;
 	}
 	if (divisor < 0)
-		divisor = ToggleSign(divisor);
+		divisor = -divisor;
 	if (dividend < 0)
-		dividend = ToggleSign(dividend);
+		dividend = -dividend;
 	for (; dividend >= divisor; quotient++, dividend -= divisor);
-	return isNegative ? ToggleSign(quotient) : quotient;
+	return isNegative ? -quotient : quotient;
 }
 long KthNumberWith357PrimeFactors(long n)
 {
