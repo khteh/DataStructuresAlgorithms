@@ -6260,7 +6260,7 @@ long DivideWithPlusSign(long a, long b)
 		else if (a == numeric_limits<long>::max())
 			return isNegative ? numeric_limits<long>::min() + 1 : numeric_limits<long>::max();
 		if (isNegative) // result should be < 0
-			return a < 0 ? a : -a;
+			return a < 0 ? a : -a; // ToggleSign of 64-bit value takes very long time
 		return a < 0 ? -a : a;
 	}
 	long quotient;
@@ -6285,7 +6285,7 @@ long divide(long dividend, long divisor)
 		else if (dividend == numeric_limits<long>::max())
 			return isNegative ? numeric_limits<long>::min() + 1 : numeric_limits<long>::max();
 		if (isNegative)
-			return dividend < 0 ? dividend : -dividend;
+			return dividend < 0 ? dividend : -dividend; // ToggleSign of 64-bit value takes very long time
 		return dividend < 0 ? -dividend : dividend;
 	}
 	if (divisor < 0)
