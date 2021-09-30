@@ -661,32 +661,32 @@ T Tree<T>::MinSubTreesDifference()
 template<typename T>
 void Tree<T>::PrintTreeColumns()
 {
-	map<long, vector<T>*> columns;
+	map<long, shared_ptr<vector<T>>> columns;
 	// Use In-Order traversal to print node values
 	if (m_root) {
 		vector<T>* list = new vector<T>();
 		list->push_back(m_root->Item());
 		columns.emplace(0, list);
 		PrintColumns(m_root, 0, columns);
-		for (typename map<long, vector<T>*>::iterator it = columns.begin(); it != columns.end(); it++)
+		for (typename map<long, shared_ptr<vector<T>>>::iterator it = columns.begin(); it != columns.end(); it++)
 			for (typename vector<T>::iterator it1 = it->second->begin(); it1 != it->second->end(); it1++)
 				cout << *it1 << ", ";
 		cout << endl;
 	}
 }
 template<typename T>
-void Tree<T>::AddToColumn(T value, long column, map<long, vector<T>*>& columns)
+void Tree<T>::AddToColumn(T value, long column, map<long, shared_ptr<vector<T>>>& columns)
 {
 	if (columns.find(column) == columns.end())
 	{
-		vector<T>* list = new vector<T>();
+		shared_ptr<vector<T>> list = make_shared<vector<T>>();
 		list->push_back(value);
 		columns.emplace(column, list);
 	} else
 		columns[column]->push_back(value);
 }
 template<typename T>
-void Tree<T>::PrintColumns(const shared_ptr<Node<T>>& node, long column, map<long, vector<T>*>& columns)
+void Tree<T>::PrintColumns(const shared_ptr<Node<T>>& node, long column, map<long, shared_ptr<vector<T>>>& columns)
 {
 	// Use Pre-Order traversal
 	if (node) {

@@ -43,8 +43,8 @@ protected:
 	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T>&, long, long);
 	shared_ptr<Node<T>> AddToTree(vector<T>&);
 	shared_ptr<Node<T>> FindNode(const shared_ptr<Node<T>>&, T item);
-	void PrintColumns(const shared_ptr<Node<T>>&, long, map<long, vector<T>*>&);
-	void AddToColumn(T, long, map<long, vector<T>*>&);
+	void PrintColumns(const shared_ptr<Node<T>>&, long, map<long, shared_ptr<vector<T>>>&);
+	void AddToColumn(T, long, map<long, shared_ptr<vector<T>>>&);
 	T MinDiffInBST(shared_ptr<Node<T>>, shared_ptr<Node<T>>);
 	shared_ptr<Node<T>> Copy(const shared_ptr<Node<T>>&, map<shared_ptr<Node<T>>, shared_ptr<Node<T>>>&);
 	shared_ptr<Node<T>> LeftMostChild(shared_ptr<Node<T>>&);
