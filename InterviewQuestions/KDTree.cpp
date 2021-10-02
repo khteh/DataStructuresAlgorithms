@@ -16,7 +16,7 @@ bool KDTreeCompare<T>::operator()(const vector<T>& lhs, const vector<T>& rhs) co
 	return lhs[dimension_] < rhs[dimension_];
 }
 template<class T>
-KDNode<T>::KDNode(vector<T>& location, long axis, long depth, KDNode<T>*left, KDNode<T>*right)
+KDNode<T>::KDNode(vector<T>& location, long axis, long depth, shared_ptr<KDNode<T>> left, shared_ptr<KDNode<T>> right)
 	:location_(location)
 	,axis_(axis)
 	,depth_(depth)
@@ -42,12 +42,12 @@ void KDNode<T>::PrintLocation()
 	cout << ")";
 }
 template<class T>
-KDNode<T> *KDNode<T>::Left()
+shared_ptr<KDNode<T>> KDNode<T>::Left()
 {
 	return left_;
 }
 template<class T>
-KDNode<T> *KDNode<T>::Right()
+shared_ptr<KDNode<T>> KDNode<T>::Right()
 {
 	return right_;
 }
@@ -64,7 +64,7 @@ KDTree<T>::~KDTree()
 }
 
 template<class T>
-KDNode<T>* KDTree<T>::Construct(vector<vector<T>> data, long depth)
+shared_ptr<KDNode<T>> KDTree<T>::Construct(vector<vector<T>> data, long depth)
 {
 	if (!data.size())
 		return nullptr;
@@ -78,7 +78,7 @@ KDNode<T>* KDTree<T>::Construct(vector<vector<T>> data, long depth)
 		left.assign(data.begin(), data.begin() + median);
 	if ((data.size() - (median + 1)) > 0)
 		right.assign(data.begin() + median + 1, data.end());
-	return new KDNode<T>(data[median], axis, depth, Construct(left, depth + 1), Construct(right, depth + 1));
+	return make_shared<KDNode<T>>(data[median], axis, depth, Construct(left, depth + 1), Construct(right, depth + 1));
 }
 template<class T>
 void KDTree<T>::PrintTree()
@@ -89,11 +89,11 @@ void KDTree<T>::PrintTree()
 		return;
 	}
 	unsigned long level = 0;
-	map<long, vector<KDNode<T>*>> levels;
-	levels.emplace(level, vector<KDNode<T>*>{m_root});
+	map<long, vector<shared_ptr<KDNode<T>>>> levels;
+	levels.emplace(level, vector<shared_ptr<KDNode<T>>>{m_root});
 	for (; !levels[level].empty(); level++) {
-		vector<KDNode<T>*> nodes;
-		for (typename vector<KDNode<T>*>::const_iterator it = levels[level].begin(); it != levels[level].end(); it++) {
+		vector<shared_ptr<KDNode<T>>> nodes;
+		for (typename vector<shared_ptr<KDNode<T>>>::const_iterator it = levels[level].begin(); it != levels[level].end(); it++) {
 			if (*it) {
 				if ((*it)->Left())
 					nodes.push_back((*it)->Left());
@@ -105,9 +105,9 @@ void KDTree<T>::PrintTree()
 			levels.emplace(level + 1, nodes);
 	}
 	bool printOnce = true;
-	for (typename map<long, vector<KDNode<T>*>>::const_iterator it = levels.begin(); it != levels.end(); it++) {
+	for (typename map<long, vector<shared_ptr<KDNode<T>>>>::const_iterator it = levels.begin(); it != levels.end(); it++) {
 		printOnce = true;
-		for (typename vector<KDNode<T>*>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++) {
+		for (typename vector<shared_ptr<KDNode<T>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++) {
 			if (printOnce) {
 				cout << "Axis " << (*it1)->Axis() << ": ";
 				for (size_t i = 0; i < level; i++)
