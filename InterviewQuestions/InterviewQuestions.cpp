@@ -124,13 +124,26 @@ int main(int argc, char* argv[])
 	assert(sizeof(short) == 2);
 	assert(sizeof(int) == 4);
 	assert(sizeof(int*) == 8);
+#if defined(__GNUC__) || defined(__GNUG__)
 	assert(sizeof(long) == 8);
+#else
+	assert(sizeof(long) == 4);
+#endif
 	assert(sizeof(float) == 4);
 	assert(sizeof(long long) == 8);
 	assert(sizeof(double) == 8);
+#if defined(__GNUC__) || defined(__GNUG__)
 	assert(sizeof(long double) == 16);
+#else
+	assert(sizeof(long double) == 8);
+#endif
+#if defined(__GNUC__) || defined(__GNUG__)
 	assert(numeric_limits<int>::min() > numeric_limits<long>::min());
 	assert(numeric_limits<int>::max() < numeric_limits<long>::max());
+#else
+	assert(numeric_limits<int>::min() == numeric_limits<long>::min());
+	assert(numeric_limits<int>::max() == numeric_limits<long>::max());
+#endif
 	cout << "https://en.wikipedia.org/wiki/Machine_epsilon: Float: " << numeric_limits<float>::epsilon() << ", Double: " << numeric_limits<double>::epsilon() << endl;
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
@@ -1366,7 +1379,7 @@ int main(int argc, char* argv[])
 	assert(DivideWithPlusSign(-1, 1) == -1);
 	assert(DivideWithPlusSign(1, -1) == -1);
 	assert(DivideWithPlusSign(-1, -1) == 1);
-	assert(DivideWithPlusSign(-2147483648, -1) == 2147483648);
+	assert(DivideWithPlusSign(-2147483648, -1) == (long)2147483648);
 	assert(DivideWithPlusSign(-2147483648, 1) == -2147483648);
 	assert(DivideWithPlusSign(2147483648, -1) == -2147483648); // Takes very long time to ToggleSign of 64-bit value
 	assert(divide(10, 3) == 3);
@@ -1376,7 +1389,7 @@ int main(int argc, char* argv[])
 	assert(divide(-1, 1) == -1);
 	assert(divide(1, -1) == -1);
 	assert(divide(-1, -1) == 1);
-	assert(divide(-2147483648, -1) == 2147483648);
+	assert(divide(-2147483648, -1) == (long)2147483648);
 	assert(divide(-2147483648, 1) == -2147483648);
 	assert(divide(2147483648, -1) == -2147483648); // Takes very long time to ToggleSign of 64-bit value
 	assert(KthNumberWith357PrimeFactors(1) == 1);
@@ -2378,8 +2391,8 @@ int main(int argc, char* argv[])
 	assert(!containsNearbyAlmostDuplicate(a, 2, 0));
 	assert(!containsNearbyAlmostDuplicate(a, -1, -1));
 	a.clear();
-	assert(abs(2147483647L - -1) == 2147483648L);
-	assert(abs(-1 - 2147483647L) == 2147483648L);
+	assert(abs(2147483647L - -1) == (long)2147483648);
+	assert(abs(-1 - 2147483647L) == (long)2147483648);
 	a = { 2147483647, -1, 2147483647 }; // 0x7FFFF_FFFF, 0xFFFF_FFFF
 	assert(!containsNearbyAlmostDuplicate(a, 1, 2147483647));
 	assert(!containsNearbyAlmostDuplicate(a, 1, -2147483648L)); // 2147483648 is 0x8000_0000 = 0xFFFF_FFFF_8000_0000 < 0
@@ -2569,8 +2582,8 @@ int main(int argc, char* argv[])
 	assert(fizzBuzz(10) == vector<string>({ "1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz" }));
 	assert(fizzBuzz(15) == vector<string>({ "1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz" }));
 	/***** The End *****/
-	cout << endl << "Press ENTER to exit!";
-	getline(cin, line);
+	//cout << endl << "Press ENTER to exit!";
+	//getline(cin, line);
 	return 0;
 }
 void testPointerReference(int *& ptr)
@@ -6252,7 +6265,11 @@ long DivideWithPlusSign(long a, long b)
 	bool isNegative = (a < 0) ^ (b < 0);
 	if (b == 1 || b == -1) {
 		if (a == numeric_limits<int>::min())
+#if defined(__GNUC__) || defined(__GNUG__)
 			return isNegative ? numeric_limits<int>::min() : -a; // ToggleSign of 64-bit value takes very long time
+#else
+			return numeric_limits<int>::min();
+#endif
 		else if (a == numeric_limits<int>::max())
 			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
 		if (a == numeric_limits<long>::min())
