@@ -3140,6 +3140,8 @@ void PalindromeTests()
 	assert(isPalindrome1("mmo"));
 	assert(isPalindrome1("yakak"));
 	assert(!isPalindrome1("travel"));
+	assert(isPalindrome1("12121"));
+	assert(!isPalindrome1("121212"));
 	// https://en.wikipedia.org/wiki/Palindrome
 	assert(isPalindrome2("A man, a plan, a canal, Panama!"));
 	assert(isPalindrome2("Amor, Roma"));
@@ -3196,6 +3198,10 @@ bool isPalindrome(string const &s)
  *   count: 12121 : true
  * 123421 => 112234
  *   count:  12121 : Even length -> false
+ * 12121 => 11122
+ *   count: 12312 : true
+ * 121212 => 111222
+ *   count:  123 : Even length -> false
  */
 bool isPalindrome1(string const &s)
 {
