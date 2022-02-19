@@ -3140,8 +3140,15 @@ void PalindromeTests()
 	assert(isPalindrome1("mmo"));
 	assert(isPalindrome1("yakak"));
 	assert(!isPalindrome1("travel"));
+	assert(isPalindrome("12121"));
+	assert(!isPalindrome("121212"));
+	assert(!isPalindrome("123421"));
 	assert(isPalindrome1("12121"));
 	assert(!isPalindrome1("121212"));
+	assert(!isPalindrome1("123421"));
+	assert(isPalindrome2("12121"));
+	assert(!isPalindrome2("121212"));
+	assert(!isPalindrome2("123421"));
 	// https://en.wikipedia.org/wiki/Palindrome
 	assert(isPalindrome2("A man, a plan, a canal, Panama!"));
 	assert(isPalindrome2("Amor, Roma"));
