@@ -7340,6 +7340,17 @@ void LinkedListTests()
 		assert(lptr->Item() == a[i]);
 		lptr = lptr->Next();
 	}
+	// 0->1->3->4->5->7->8->9
+	// 8  7  6  5  4  3  2  1
+	lptr = lla2.RemoveNthElementFromBack(8);
+	assert(lla2.Length() == 7);
+	a.clear();
+	a = {1, 3, 4, 5, 7, 8, 9};
+	for (size_t i = 0; i < lla2.Length(); i++)
+	{
+		assert(lptr->Item() == a[i]);
+		lptr = lptr->Next();
+	}
 	lla2.Clear();
 	a.clear();
 	a.push_back(1); // LSB
