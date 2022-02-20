@@ -461,9 +461,15 @@ int main(int argc, char *argv[])
 	line = "bcabc";
 	RemoveDuplicateCharactersLexicographicalOrder(line);
 	assert(line == "abc");
+	line = "abdcb";
+	RemoveDuplicateCharactersLexicographicalOrder(line);
+	assert(line == "abdc");
 	line = "abacb";
 	RemoveDuplicateCharactersLexicographicalOrder(line);
 	assert(line == "abc");
+	line = "adcba";
+	RemoveDuplicateCharactersLexicographicalOrder(line);
+	assert(line == "adcb");
 	line = "cbacdcbc";
 	RemoveDuplicateCharactersLexicographicalOrder(line);
 	assert(line == "acdb");
@@ -2987,6 +2993,7 @@ cbaidbcj
 c
  b
   aidbcj
+WITHOUT reorder the original character sequence!
 */
 void RemoveDuplicateCharactersLexicographicalOrder(string &str)
 {
@@ -3149,12 +3156,18 @@ void PalindromeTests()
 	assert(isPalindrome1("yakak"));
 	assert(!isPalindrome1("travel"));
 	assert(isPalindrome("12121"));
+	assert(isPalindrome("12321"));
+	assert(isPalindrome("123321"));
 	assert(!isPalindrome("121212"));
 	assert(!isPalindrome("123421"));
 	assert(isPalindrome1("12121"));
+	assert(isPalindrome1("12321"));
+	assert(isPalindrome1("123321"));
 	assert(!isPalindrome1("121212"));
 	assert(!isPalindrome1("123421"));
 	assert(isPalindrome2("12121"));
+	assert(isPalindrome2("12321"));
+	assert(isPalindrome2("123321"));
 	assert(!isPalindrome2("121212"));
 	assert(!isPalindrome2("123421"));
 	// https://en.wikipedia.org/wiki/Palindrome
