@@ -9288,13 +9288,13 @@ bool WordExistsInGrid(vector<vector<char>> &board, const string &word, long row,
 // 0 0 0 0 0
 // 0 1 1 1 1
 // 0 1 1 0 0
-// Start: y:1 x:4 End: x: 3 y: 0 => true
+// Start: y:1 x:4 End: y: 0 x: 3=> true
 
 // 0 0 1 1 1
 // 0 1 0 0 0
 // 1 1 1 1 1
 // 0 0 0 0 1
-// Start: y:0 x:0 End: x: 1 y: 2 => false
+// Start: y:0 x:0 End: y: 2 x: 1  => false
 bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t x, queue<string> &result, char obstacle)
 {
 	string pos, origin;
