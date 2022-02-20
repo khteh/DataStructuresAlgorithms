@@ -10,6 +10,7 @@ map<long, size_t> dpMemoization;
 int main(int argc, char *argv[])
 {
 	string line, line1;
+	size_t size;
 	random_device device;
 	// Fourth run: "warm-up" sequence as as seed; different each run.
 	// Advanced uses. Allows more than 32 bits of randomness.
@@ -398,8 +399,15 @@ int main(int argc, char *argv[])
 	assert(uncompress(line) == "ababcababcababc");
 	cout << "uncompress(\"ab2c3\"): " << uncompress(line) << endl;
 	line = "0010110100";
-	index = findLongestContiguousPattern(line, '1');
-	cout << "findLongestContiguousPattern(\"0010110100\", \'0\'): " << line << " flip location: " << index << endl;
+	size = findLongestContiguousPattern(line, '1');
+	assert(size == 4);
+	assert(line == "0010111100");
+	cout << "findLongestContiguousPattern(\"0010110100\", \'1\'): " << line << " size: " << size << endl;
+	line = "00101101100";
+	size = findLongestContiguousPattern(line, '1');
+	assert(size == 5);
+	assert(line == "00101111100");
+	cout << "findLongestContiguousPattern(\"00101101100\", \'1\'): " << line << " size: " << size << endl;
 
 	// Test C++ *& "pointer reference" construct
 	iPtr = (int *)malloc(10 * sizeof(int));
@@ -4553,7 +4561,10 @@ string uncompress(string const &str)
 	}
 	return oss.str();
 }
-// "0010110100" => 6
+/*
+ "0010110100" => Length: 4
+ "0010110110" => Length: 5
+ */
 size_t findLongestContiguousPattern(string &str, char c)
 {
 	size_t max = 0;
@@ -4568,14 +4579,17 @@ size_t findLongestContiguousPattern(string &str, char c)
 			{
 				max = count;
 				if (i > 0 && str[i - 1] == c && str[i + 1] == c)
+				{
+					count = (index != -1) ? i - index : count + 1;
 					index = i;
+				}
 			}
 			else
 				count = 0;
 		}
 	if (index > 0)
 		str[index] = c;
-	return index;
+	return max;
 }
 
 template <class T>
