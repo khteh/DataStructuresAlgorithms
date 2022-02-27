@@ -389,12 +389,38 @@ void LinkedList<T>::Merge(shared_ptr<Node<T>> &left, shared_ptr<Node<T>> &right,
  * Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.
  * Return the linked list sorted as well.
  * Input: 1->2->3->3->4->4->5
- * Output: 1->2->5
+ * Output: 1->2->3->4->5
  */
 template <typename T>
 void LinkedList<T>::RemoveDuplicates()
 {
-	bool found = false;
+	for (shared_ptr<Node<T>> c = m_head; c; c = c->Next())
+	{
+		for (shared_ptr<Node<T>> prev = c, it = c->Next(); it; it = it->Next())
+		{
+			// 1(c,prev) 1(it) 1
+			if (it->Item() == c->Item())
+			{
+				prev->SetNext(it->Next());
+				// 1(c, prev) 1 1(it)
+			}
+			else
+			{
+				prev = prev->Next();
+			}
+		}
+	}
+}
+/*
+ * Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.
+ * Return the linked list sorted as well.
+ * Input: 1->2->3->3->4->4->5
+ * Output: 1->2->5
+ */
+template <typename T>
+void LinkedList<T>::RemoveAllDuplicates()
+{
+	bool foundDuplicate = false;
 	shared_ptr<Node<T>> previous = nullptr, head = nullptr;
 	// 1,1,1,2,3
 	// 1,0,0,3,4
@@ -403,11 +429,9 @@ void LinkedList<T>::RemoveDuplicates()
 	{
 		if (it->Next() && it->Item() != it->Next()->Item())
 		{
-			if (found)
+			if (foundDuplicate)
 			{
-				found = false;
-				//				if (previous)
-				//					previous->SetNext(it->Next());
+				foundDuplicate = false;
 			}
 			else
 			{
@@ -426,8 +450,8 @@ void LinkedList<T>::RemoveDuplicates()
 			}
 		}
 		else if (it->Next())
-			found = true;
-		else if (!found && !it->Next())
+			foundDuplicate = true;
+		else if (!foundDuplicate && !it->Next())
 		{ // Last unique Node
 			if (!head)
 			{
@@ -439,7 +463,7 @@ void LinkedList<T>::RemoveDuplicates()
 				previous->SetNext(it);
 		}
 	}
-	if (!head && found)
+	if (!head && foundDuplicate)
 		m_head = nullptr;
 }
 template <typename T>

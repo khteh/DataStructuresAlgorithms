@@ -3468,11 +3468,12 @@ bool AreRotatedStrings(string const &s1, string const &s2, size_t n)
 vector<size_t> FindSubString(string const &s1, string const s2)
 {
 	vector<size_t> result;
-	for (size_t i = 0; i < s1.size(); i++)
-	{
-		if (areAnagrams(s1.substr(i, s2.size()), s2))
-			result.push_back(i);
-	}
+	if (s1.size() >= s2.size())
+		for (size_t i = 0; i < s1.size(); i++)
+		{
+			if (areAnagrams(s1.substr(i, s2.size()), s2))
+				result.push_back(i);
+		}
 	return result;
 }
 /* https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm
@@ -6273,8 +6274,6 @@ void randomSubset(vector<long> &source, size_t count, vector<long> &result)
  * power=1
  * repeats (last digit): 1 {3}
  *
- * if f(9) has x * '3', f(99) will have y * f(9). y = 99 / 10
- *
  * f(99):	The last digit will repeat every 10 numbers
  * power=10
  * repeats (last digit): 99/10=9: 13,23,33,43,53,63,73,83,93 (within the power of 10)
@@ -6282,7 +6281,7 @@ void randomSubset(vector<long> &source, size_t count, vector<long> &result)
  *
  * f(235):  The last two digits will repeat every 10^2 numbers
  * power:100
- * repeats (last 2 digits): 235/100=2 (133)
+ * repeats (last 2 digits): 235/100=2 Example: 134, 234
  *
  * repeats = n / power
  * Total(n=235, digit=3) = n/power * f(power-1) + f(n % power) + MSBs
@@ -7601,48 +7600,53 @@ void LinkedListTests()
 	LinkedList<long> lla11(a);
 	assert(lla11.Length() == 7);
 	lla11.RemoveDuplicates();
-	assert(lla11.Length() == 3);
+	assert(lla11.Length() == 5);
 	b.clear();
-	b = {1, 2, 5};
+	b = {1, 2, 3, 4, 5};
 	c.clear();
 	lla11.ToVector(c);
 	assert(b == c);
 
 	a.clear();
-	a = {1, 1, 2, 3, 3, 4, 4, 5};
+	a = {1, 2, 3, 3, 4, 4, 5};
 	LinkedList<long> lla12(a);
-	assert(lla12.Length() == 8);
-	lla12.RemoveDuplicates();
-	assert(lla12.Length() == 2);
+	assert(lla12.Length() == 7);
+	lla12.RemoveAllDuplicates();
+	assert(lla12.Length() == 3);
 	b.clear();
-	b = {2, 5};
+	b = {1, 2, 5};
 	c.clear();
 	lla12.ToVector(c);
 	assert(b == c);
 
 	a.clear();
-	a = {1};
+	a = {1, 1, 2, 3, 3, 4, 4, 5};
 	LinkedList<long> lla13(a);
-	assert(lla13.Length() == 1);
+	assert(lla13.Length() == 8);
 	lla13.RemoveDuplicates();
-	assert(lla13.Length() == 1);
+	assert(lla13.Length() == 5);
 	b.clear();
-	b = {1};
+	b = {1, 2, 3, 4, 5};
 	c.clear();
 	lla13.ToVector(c);
 	assert(b == c);
 
 	a.clear();
-	a = {1, 1};
+	a = {1, 1, 2, 3, 3, 4, 4, 5};
 	LinkedList<long> lla14(a);
+	assert(lla14.Length() == 8);
+	lla14.RemoveAllDuplicates();
 	assert(lla14.Length() == 2);
-	lla14.RemoveDuplicates();
-	assert(lla14.Length() == 0);
+	b.clear();
+	b = {2, 5};
+	c.clear();
+	lla14.ToVector(c);
+	assert(b == c);
 
 	a.clear();
-	a = {1, 2, 2};
+	a = {1};
 	LinkedList<long> lla15(a);
-	assert(lla15.Length() == 3);
+	assert(lla15.Length() == 1);
 	lla15.RemoveDuplicates();
 	assert(lla15.Length() == 1);
 	b.clear();
@@ -7652,61 +7656,152 @@ void LinkedListTests()
 	assert(b == c);
 
 	a.clear();
-	a = {1, 1, 1, 2};
+	a = {1};
 	LinkedList<long> lla16(a);
-	assert(lla16.Length() == 4);
-	lla16.RemoveDuplicates();
+	assert(lla16.Length() == 1);
+	lla16.RemoveAllDuplicates();
 	assert(lla16.Length() == 1);
 	b.clear();
-	b = {2};
+	b = {1};
 	c.clear();
 	lla16.ToVector(c);
 	assert(b == c);
 
 	a.clear();
-	a = {1, 1, 1, 2, 3};
-	LinkedList<long> lla17(a);
-	assert(lla17.Length() == 5);
-	lla17.RemoveDuplicates();
-	assert(lla17.Length() == 2);
-	b.clear();
-	b = {2, 3};
-	c.clear();
-	lla17.ToVector(c);
-	assert(b == c);
-
-	a.clear();
-	a = {-1, 0, 0, 0, 0, 3, 3};
+	a = {1, 1};
 	LinkedList<long> lla18(a);
-	assert(lla18.Length() == 7);
+	assert(lla18.Length() == 2);
 	lla18.RemoveDuplicates();
 	assert(lla18.Length() == 1);
 	b.clear();
-	b = {-1};
+	b = {1};
 	c.clear();
 	lla18.ToVector(c);
 	assert(b == c);
 
 	a.clear();
-	a = {2, 1};
+	a = {1, 1};
 	LinkedList<long> lla19(a);
 	assert(lla19.Length() == 2);
-	lla19.Sort();
-	assert(lla19.Length() == 2);
+	lla19.RemoveAllDuplicates();
+	assert(lla19.Length() == 0);
+
+	a.clear();
+	a = {1, 2, 2};
+	LinkedList<long> lla20(a);
+	assert(lla20.Length() == 3);
+	lla20.RemoveDuplicates();
+	assert(lla20.Length() == 2);
+	b.clear();
+	b = {1, 2};
 	c.clear();
-	lla19.ToVector(c);
+	lla20.ToVector(c);
+	assert(b == c);
+
+	a.clear();
+	a = {1, 2, 2};
+	LinkedList<long> lla21(a);
+	assert(lla21.Length() == 3);
+	lla21.RemoveAllDuplicates();
+	assert(lla21.Length() == 1);
+	b.clear();
+	b = {1};
+	c.clear();
+	lla21.ToVector(c);
+	assert(b == c);
+
+	a.clear();
+	a = {1, 1, 1, 2};
+	LinkedList<long> lla22(a);
+	assert(lla22.Length() == 4);
+	lla22.RemoveDuplicates();
+	assert(lla22.Length() == 2);
+	b.clear();
+	b = {1, 2};
+	c.clear();
+	lla22.ToVector(c);
+	assert(b == c);
+
+	a.clear();
+	a = {1, 1, 1, 2};
+	LinkedList<long> lla23(a);
+	assert(lla23.Length() == 4);
+	lla23.RemoveAllDuplicates();
+	assert(lla23.Length() == 1);
+	b.clear();
+	b = {2};
+	c.clear();
+	lla23.ToVector(c);
+	assert(b == c);
+
+	a.clear();
+	a = {1, 1, 1, 2, 3};
+	LinkedList<long> lla24(a);
+	assert(lla24.Length() == 5);
+	lla24.RemoveDuplicates();
+	assert(lla24.Length() == 3);
+	b.clear();
+	b = {1, 2, 3};
+	c.clear();
+	lla24.ToVector(c);
+	assert(b == c);
+
+	a.clear();
+	a = {1, 1, 1, 2, 3};
+	LinkedList<long> lla25(a);
+	assert(lla25.Length() == 5);
+	lla25.RemoveAllDuplicates();
+	assert(lla25.Length() == 2);
+	b.clear();
+	b = {2, 3};
+	c.clear();
+	lla25.ToVector(c);
+	assert(b == c);
+
+	a.clear();
+	a = {-1, 0, 0, 0, 0, 3, 3};
+	LinkedList<long> lla26(a);
+	assert(lla26.Length() == 7);
+	lla26.RemoveDuplicates();
+	assert(lla26.Length() == 3);
+	b.clear();
+	b = {-1, 0, 3};
+	c.clear();
+	lla26.ToVector(c);
+	assert(b == c);
+
+	a.clear();
+	a = {-1, 0, 0, 0, 0, 3, 3};
+	LinkedList<long> lla27(a);
+	assert(lla27.Length() == 7);
+	lla27.RemoveAllDuplicates();
+	assert(lla27.Length() == 1);
+	b.clear();
+	b = {-1};
+	c.clear();
+	lla27.ToVector(c);
+	assert(b == c);
+
+	a.clear();
+	a = {2, 1};
+	LinkedList<long> lla28(a);
+	assert(lla28.Length() == 2);
+	lla28.Sort();
+	assert(lla28.Length() == 2);
+	c.clear();
+	lla28.ToVector(c);
 	assert(c.size() == 2);
 	assert(c[0] == 1);
 	assert(c[1] == 2);
 
 	a.clear();
 	a = {4, 2, 1, 3};
-	LinkedList<long> lla20(a);
-	assert(lla20.Length() == 4);
-	lla20.Sort();
-	assert(lla20.Length() == 4);
+	LinkedList<long> lla29(a);
+	assert(lla29.Length() == 4);
+	lla29.Sort();
+	assert(lla29.Length() == 4);
 	c.clear();
-	lla20.ToVector(c);
+	lla29.ToVector(c);
 	assert(c.size() == 4);
 	assert(c[0] == 1);
 	assert(c[1] == 2);
@@ -7715,12 +7810,12 @@ void LinkedListTests()
 
 	a.clear();
 	a = {-1, 5, 3, 4, 0};
-	LinkedList<long> lla21(a);
-	assert(lla21.Length() == 5);
-	lla21.Sort();
-	assert(lla21.Length() == 5);
+	LinkedList<long> lla30(a);
+	assert(lla30.Length() == 5);
+	lla30.Sort();
+	assert(lla30.Length() == 5);
 	c.clear();
-	lla21.ToVector(c);
+	lla30.ToVector(c);
 	assert(c.size() == 5);
 	assert(c[0] == -1);
 	assert(c[1] == 0);
@@ -7730,38 +7825,38 @@ void LinkedListTests()
 
 	a.clear();
 	a = {1, 2, 3, 4, 5};
-	LinkedList<long> lla22(a);
-	assert(lla22.Length() == 5);
-	lla22.RotateRight(2);
-	assert(lla22.Length() == 5);
+	LinkedList<long> lla31(a);
+	assert(lla31.Length() == 5);
+	lla31.RotateRight(2);
+	assert(lla31.Length() == 5);
 	b.clear();
 	b = {4, 5, 1, 2, 3};
 	c.clear();
-	lla22.ToVector(c);
+	lla31.ToVector(c);
 	assert(b == c);
 
 	a.clear();
 	a = {1, 2, 3};
-	LinkedList<long> lla23(a);
-	assert(lla23.Length() == 3);
-	lla23.RotateRight(2000000000);
-	assert(lla23.Length() == 3);
+	LinkedList<long> lla32(a);
+	assert(lla32.Length() == 3);
+	lla32.RotateRight(2000000000);
+	assert(lla32.Length() == 3);
 	b.clear();
 	b = {2, 3, 1};
 	c.clear();
-	lla23.ToVector(c);
+	lla32.ToVector(c);
 	assert(b == c);
 
 	a.clear();
 	a = {1};
-	LinkedList<long> lla24(a);
-	assert(lla24.Length() == 1);
-	lla24.RotateRight(1);
-	assert(lla24.Length() == 1);
+	LinkedList<long> lla33(a);
+	assert(lla33.Length() == 1);
+	lla33.RotateRight(1);
+	assert(lla33.Length() == 1);
 	b.clear();
 	b = {1};
 	c.clear();
-	lla24.ToVector(c);
+	lla33.ToVector(c);
 	assert(b == c);
 }
 void BinaryTreeTests()
