@@ -3,14 +3,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
-template<class T ...  Types>
+template <class T... Types>
 class InterleavingIterator : public IIterator<T>
 {
 private:
-	std::vector<std::vector<T>>& containers_;
+	std::vector<std::vector<T>> &containers_;
 	size_t current_;
 	size_t size_;
+
 public:
-	InterleavingIterator(std::vector<std::vector<T>>&);
+	InterleavingIterator(std::vector<std::vector<T>> &);
 	virtual ~InterleavingIterator();
 };
