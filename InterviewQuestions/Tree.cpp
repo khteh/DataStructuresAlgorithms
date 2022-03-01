@@ -841,6 +841,7 @@ void Tree<T>::ToLinkedList()
 * Given the root of a binary tree, flatten the tree into a "linked list":
 * The "linked list" should use the same TreeNode class where the right child pointer points to the next node in the list and the left child pointer is always null.
 * The "linked list" should be in the same order as a pre-order traversal of the binary tree.
+* Pre-Order traversal: root -> Left -> Right. So if the current node has right child, move it to the left.
 * 100%
 */
 template<typename T>
