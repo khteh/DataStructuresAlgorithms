@@ -794,6 +794,7 @@ int main(int argc, char *argv[])
 	assert(factorialDynamicProgramming(4) == 24);
 	assert(factorialDynamicProgramming(5) == 120);
 	assert(factorialDynamicProgramming(20) == 2432902008176640000);
+	assert(factorialDynamicProgramming(25) == 15511210043330985984000000);
 	assert(SequenceSum(0) == 0);
 	assert(SequenceSum(1) == 1);
 	assert(SequenceSum(5) == 15);
