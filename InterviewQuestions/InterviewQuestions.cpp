@@ -2311,8 +2311,92 @@ int main(int argc, char *argv[])
 	grid1.clear();
 	grid1 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 	grid2 = {{7, 4, 1}, {8, 5, 2}, {9, 6, 3}};
-	rotateMatrix(grid1);
+	rotateMatrix90DegressClockwise(grid1);
 	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	rotateMatrixRTimesAntiClockwise(grid1, 1);
+	assert(grid1 == grid2);
+	grid1 = {{1}};
+	grid2 = {{1}};
+	rotateMatrixRTimesAntiClockwise(grid1, 1);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	grid1 = {{}};
+	grid2 = {{}};
+	rotateMatrixRTimesAntiClockwise(grid1, 1);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	grid1 = {{1, 2}, {3, 4}};
+	grid2 = {{2, 4}, {1, 3}};
+	rotateMatrixRTimesAntiClockwise(grid1, 1);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	grid1 = {{1, 2}, {3, 4}};
+	grid2 = {{4, 3}, {2, 1}};
+	rotateMatrixRTimesAntiClockwise(grid1, 2);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	grid1 = {{1, 2}, {3, 4}};
+	grid2 = {{3, 1}, {4, 2}};
+	rotateMatrixRTimesAntiClockwise(grid1, 3);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	grid1 = {{1, 2}, {3, 4}};
+	grid2 = {{1, 2}, {3, 4}};
+	rotateMatrixRTimesAntiClockwise(grid1, 0);
+	assert(grid1 == grid2);
+	rotateMatrixRTimesAntiClockwise(grid1, 4);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	grid1 = {{1, 2}, {3, 4}};
+	grid2 = {{2, 4}, {1, 3}};
+	rotateMatrixRTimesAntiClockwise(grid1, 5);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	grid1 = {{1, 2}, {3, 4}};
+	grid2 = {{4, 3}, {2, 1}};
+	rotateMatrixRTimesAntiClockwise(grid1, 6);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	grid1 = {{1, 2}, {3, 4}};
+	grid2 = {{3, 1}, {4, 2}};
+	rotateMatrixRTimesAntiClockwise(grid1, 7);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	grid1 = {{1, 2, 3, 4}, {12, 1, 2, 5}, {11, 4, 3, 6}, {10, 9, 8, 7}};
+	grid2 = {{3, 4, 5, 6}, {2, 3, 4, 7}, {1, 2, 1, 8}, {12, 11, 10, 9}};
+	rotateMatrixRTimesAntiClockwise(grid1, 2);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	grid1 = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
+	grid2 = {{3, 4, 8, 12}, {2, 11, 10, 16}, {1, 7, 6, 15}, {5, 9, 13, 14}};
+	rotateMatrixRTimesAntiClockwise(grid1, 2);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	grid1 = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
+	grid2 = {{2, 3, 4, 8}, {1, 7, 11, 12}, {5, 6, 10, 16}, {9, 13, 14, 15}};
+	rotateMatrixRTimesAntiClockwise(grid1, 1);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
+	grid1 = {{1, 2, 3, 4}, {7, 8, 9, 10}, {13, 14, 15, 16}, {19, 20, 21, 22}, {25, 26, 27, 28}};
+	grid2 = {{28, 27, 26, 25}, {22, 9, 15, 19}, {16, 8, 21, 13}, {10, 14, 20, 7}, {4, 3, 2, 1}};
+	rotateMatrixRTimesAntiClockwise(grid1, 7);
+	assert(grid1 == grid2);
+	grid1.clear();
+	grid2.clear();
 	strings = PhoneKeyLetters(string("23"));
 	assert(strings.size() == 9);
 	strings1 = {"ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"};
@@ -3209,6 +3293,7 @@ void PalindromeTests()
 }
 /*
  * 1 2 3 2 1 Odd count; #odd = 1
+ * XXX This will return true but NOT palindrome: "13221"
  */
 bool isPalindrome(string const &s)
 {
@@ -14101,7 +14186,7 @@ vector<long> matrixSprialOrder(vector<vector<long>> &matrix)
 /* https://leetcode.com/problems/rotate-image/
  * Rotate a NxN 2D matrix 90 degree clockwise in-place.
  * 100%
- * [1] 2 [3]	   7 [2]  1     7 4 1
+ * [1] 2 [3]	7 [2]  1     7 4 1
  * 4   5  6  => 4  5  [6] => 8 5 2
  * 7  8   9     9  8   3     9 6 3
  *
@@ -14113,7 +14198,7 @@ vector<long> matrixSprialOrder(vector<vector<long>> &matrix)
  * 4   5 6      [4] 5  2
  * [7] 8 3      9   6  3
  */
-void rotateMatrix(vector<vector<long>> &matrix)
+void rotateMatrix90DegressClockwise(vector<vector<long>> &matrix)
 {
 	for (long i = 0, j = matrix.size() - 1; i < j; i++, j--)
 	{
@@ -14123,6 +14208,68 @@ void rotateMatrix(vector<vector<long>> &matrix)
 			swap(matrix[i][i + k], matrix[j][j - k]);
 			swap(matrix[i][i + k], matrix[j - k][i]);
 		}
+	}
+}
+size_t matrixDistance(size_t x1, size_t y1, size_t x2, size_t y2)
+{
+	size_t distance = 0;
+	distance += x1 <= x2 ? x2 - x1 : x1 - x2;
+	distance += y1 <= y2 ? y2 - y1 : y1 - y2;
+	return distance;
+}
+/*
+ * https://www.hackerrank.com/challenges/matrix-rotation-algo/problem
+ * 100%
+ * 1 2  r: 3
+ * 3 4
+
+ * 2 4
+ * 1 3
+
+ * 4 3
+ * 2 1
+
+ * 3 1
+ * 4 2
+
+1 2 4 3
+r1: 2 4 3 1
+r2: 4 3 1 2
+r3: 3 1 2 4
+ */
+void rotateMatrixRTimesAntiClockwise(vector<vector<long>> &matrix, size_t rotation)
+{
+	long bottom = matrix.size() - 1, right = matrix[0].size() - 1, top = 0, left = 0;
+	vector<long> items;
+	for (; left < right && top < bottom; top++, left++, bottom--, right--)
+	{
+		size_t rowCount = right - left + 1, colCount = bottom - top - 1;
+		size_t count = 2 * rowCount + 2 * (bottom - top - 1);
+		if (!count)
+			return;
+		items.clear();
+		size_t r = rotation % count;
+		// Copy top row
+		items.insert(items.end(), matrix[top].begin() + left, matrix[top].begin() + left + rowCount);
+		// Copy right column
+		for (size_t y = top + 1; y < bottom; y++)
+			items.push_back(matrix[y][right]);
+		// Copy bottom row in reverse order
+		items.insert(items.end(), matrix[bottom].rbegin() + left, matrix[bottom].rbegin() + left + rowCount); // left here is offset from the right which is the same both left and right
+		// Copy left column in reverse order
+		for (long y = bottom - 1; y > top; y--)
+			items.push_back(matrix[y][left]);
+		rotate(items.begin(), items.begin() + rotation % count, items.end());
+		// Copy back top row
+		copy(items.begin(), items.begin() + rowCount, matrix[top].begin() + left);
+		// Copy back right column
+		for (size_t y = top + 1, i = rowCount; y < bottom && i < rowCount + colCount; y++, i++)
+			matrix[y][right] = items[i];
+		// Copy back bottom row in reverse order
+		copy(items.begin() + rowCount + colCount, items.begin() + 2 * rowCount + colCount, matrix[bottom].rbegin() + left);
+		// Copy back left column
+		for (long y = bottom - 1, i = 2 * rowCount + colCount; y > top && i < 2 * rowCount + 2 * colCount; y--, i++)
+			matrix[y][left] = items[i];
 	}
 }
 /* https://leetcode.com/problems/search-a-2d-matrix-ii/
