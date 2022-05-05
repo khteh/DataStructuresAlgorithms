@@ -8,14 +8,15 @@ using namespace std;
 class Tower
 {
 private:
-	int m_index;
-	MyStack<int> m_disks;
+	size_t m_index;
+	MyStack<size_t> m_disks;
 	void MoveTopTo(Tower *);
+
 public:
-	Tower(int index);
+	Tower(size_t);
 	~Tower();
 	int Index();
-	void Add(int disk);
+	void Add(size_t);
 	void print();
-	void MoveDisks(int, Tower*, Tower*);
+	void MoveDisks(size_t, Tower *, Tower *);
 };
