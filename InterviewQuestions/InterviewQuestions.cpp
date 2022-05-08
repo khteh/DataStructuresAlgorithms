@@ -1082,36 +1082,35 @@ int main(int argc, char *argv[])
 	assert(LongestValidParenthesesWithFixes(string(")("), 2) == 2);
 	assert(LongestValidParenthesesWithFixes(string("((("), 0) == 0);
 	assert(LongestValidParenthesesWithFixes(string("((("), 1) == 2);
-#if 0
-	stringset.clear();
-	StringCombinations(stringset, string("1234"), "", 1);
-	assert(stringset.size() == 8);
-	assert(stringset.find("(1)(2)(3)(4)") != stringset.end());
-	assert(stringset.find("(1)(2)(34)") != stringset.end());
-	assert(stringset.find("(1)(23)(4)") != stringset.end());
-	assert(stringset.find("(12)(3)(4)") != stringset.end());
-	assert(stringset.find("(12)(34)") != stringset.end());
-	assert(stringset.find("(1)(234)") != stringset.end());
-	assert(stringset.find("(123)(4)") != stringset.end());
-	assert(stringset.find("(1234)") != stringset.end());
-	cout << "\"1234\" combinations: ";
-	copy(stringset.begin(), stringset.end(), ostream_iterator<string>(cout, " "));
-	cout << endl;
-#endif
 	// Tower of Hanoi
 	cout << "Tower Of Hanoi recursive solution: " << endl;
-	unique_ptr<Tower> towers[3];
+	unique_ptr<Tower<size_t>> towers[3];
 	for (i = 0; i < 3; i++)
-		towers[i] = make_unique<Tower>(i);
-	for (i = 10; i > 0; i--)
+		towers[i] = make_unique<Tower<size_t>>(i);
+	for (i = 2; i > 0; i--) // Smallest disk is "1"
+	{
 		towers[0]->Add(i);
+		assert(towers[0]->TopDisk() == i);
+	}
+	size = towers[0]->MoveDisks(2, towers[2].get(), towers[1].get());
+	assert(size == 3); // size = #moves
+	for (i = 0; i < 3; i++)
+		towers[i]->Clear();
+	for (i = 10; i > 0; i--) // Smallest disk is "1"
+	{
+		towers[0]->Add(i);
+		assert(towers[0]->TopDisk() == i);
+	}
 	cout << "Tower 0 before move: " << endl;
 	towers[0]->print();
-	towers[0]->MoveDisks(5, towers[2].get(), towers[1].get());
-	cout << "Tower 0,1,2 after move: " << endl;
+	size = towers[0]->MoveDisks(5, towers[2].get(), towers[1].get());
+	cout << "Tower 0,1,2 after " << size << " moves: " << endl;
 	towers[0]->print();
+	assert(towers[0]->TopDisk() == 6);
 	towers[1]->print();
+	assert(towers[1]->TopDisk() == numeric_limits<size_t>::max());
 	towers[2]->print();
+	assert(towers[2]->TopDisk() == 1);
 
 	// Test 2D memory buffer allocation
 	cout << "Test 2D memory buffer allocation...." << endl;

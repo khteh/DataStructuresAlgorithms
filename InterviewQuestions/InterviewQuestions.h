@@ -23,6 +23,7 @@
 #include <iomanip>
 #include <regex>
 #include <exception>
+#include <cstring>
 #ifdef _MSC_VER
 #include <ppl.h>
 #elif defined(__GNUC__) || defined(__GNUG__)
