@@ -55,7 +55,7 @@ void MyStack<T>::push(T item)
 template <class T>
 T MyStack<T>::peek()
 {
-	return !isEmpty() ? m_top->Item() : numeric_limits<T>::min();
+	return !isEmpty() ? m_top->Item() : numeric_limits<T>::max();
 }
 
 template <class T>

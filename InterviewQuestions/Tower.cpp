@@ -1,21 +1,41 @@
 ﻿#include "stdafx.h"
 #include "Tower.h"
+template class Tower<size_t>;
 
-Tower::Tower(size_t index)
+template <class T>
+Tower<T>::Tower(size_t index)
 	: m_index(index)
 {
 }
 
-Tower::~Tower()
+template <class T>
+Tower<T>::~Tower()
 {
 }
 
-int Tower::Index()
+template <class T>
+size_t Tower<T>::Index()
 {
 	return m_index;
 }
 
-void Tower::Add(size_t disk)
+template <class T>
+bool Tower<T>::isEmpty()
+{
+	return m_disks.isEmpty();
+}
+template <class T>
+void Tower<T>::Clear()
+{
+	m_disks.clear();
+}
+template <class T>
+T Tower<T>::TopDisk()
+{
+	return m_disks.peek();
+}
+template <class T>
+void Tower<T>::Add(T disk)
 {
 	if (!m_disks.isEmpty() && m_disks.peek() <= disk)
 	{
@@ -27,13 +47,15 @@ void Tower::Add(size_t disk)
 		m_disks.push(disk);
 }
 
-void Tower::MoveTopTo(Tower *t)
+template <class T>
+void Tower<T>::MoveTopTo(Tower *t)
 {
-	int top = m_disks.pop();
+	T top = m_disks.pop();
 	t->Add(top);
 }
 
-void Tower::print()
+template <class T>
+void Tower<T>::print()
 {
 	cout << "Tower " << m_index << " content: " << endl;
 	m_disks.PrintStack();
@@ -47,12 +69,16 @@ void Tower::print()
 // The above is a recursive algorithm, to carry out steps 1 and 3, apply the same algorithm again for n−1.
 // The entire procedure is a finite number of steps, since at some point the algorithm will be required for n = 1.
 // This step, moving a single disc from peg A to peg B, is trivial.
-void Tower::MoveDisks(size_t n, Tower *dest, Tower *buffer)
+template <class T>
+size_t Tower<T>::MoveDisks(T n, Tower *dest, Tower *buffer)
 {
+	size_t moves = 0;
 	if (n > 0)
-	{										  // 1 (smallest, topmost)
-		MoveDisks(n - 1, buffer, dest);		  // 1. move n−1 discs from A to B. This leaves disc n alone on peg A
-		MoveTopTo(dest);					  // 2. move disc n from A to C
-		buffer->MoveDisks(n - 1, dest, this); // 3. move n−1 discs from B to C so they sit on disc n
+	{											 // 1 (smallest, topmost)
+		moves += MoveDisks(n - 1, buffer, dest); // 1. move n−1 discs from A to B. This leaves disc n alone on peg A
+		MoveTopTo(dest);						 // 2. move disc n from A to C
+		moves++;
+		moves += buffer->MoveDisks(n - 1, dest, this); // 3. move n−1 discs from B to C so they sit on disc n
 	}
+	return moves;
 }

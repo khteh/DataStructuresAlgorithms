@@ -12,6 +12,9 @@
         "unordered_set": "cpp",
         "string_view": "cpp",
         "initializer_list": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "bitset": "cpp",
+        "*.tcc": "cpp",
+        "algorithm": "cpp"
     }
 }

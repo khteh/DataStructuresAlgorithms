@@ -5,18 +5,22 @@
 #include "MyStack.h"
 using namespace std;
 
+template <class T>
 class Tower
 {
 private:
 	size_t m_index;
-	MyStack<size_t> m_disks;
+	MyStack<T> m_disks;
 	void MoveTopTo(Tower *);
 
 public:
 	Tower(size_t);
 	~Tower();
-	int Index();
-	void Add(size_t);
+	size_t Index();
+	bool isEmpty();
+	T TopDisk();
+	void Clear();
+	void Add(T);
 	void print();
-	void MoveDisks(size_t, Tower *, Tower *);
+	size_t MoveDisks(T, Tower *, Tower *);
 };
