@@ -14248,6 +14248,8 @@ void rotateMatrixRTimesAntiClockwise(vector<vector<long>> &matrix, size_t rotati
 			return;
 		items.clear();
 		size_t r = rotation % count;
+		if (!r)
+			continue;
 		// Copy top row
 		items.insert(items.end(), matrix[top].begin() + left, matrix[top].begin() + left + rowCount);
 		// Copy right column
