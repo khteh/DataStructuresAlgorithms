@@ -92,6 +92,12 @@ bool Graph<TTag, TItem>::Remove(TTag tag)
 	return true;
 }
 template <typename TTag, typename TItem>
+void Graph<TTag, TItem>::Print(TTag tag)
+{
+	if (HasVertex(tag))
+		Print(GetVertex(tag));
+}
+template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex)
 {
 	ostringstream oss;
@@ -246,41 +252,6 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 			vertices.erase(vertex);
 	}
 	return vertex ? costs[vertex] : -1;
-}
-// https://www.hackerrank.com/challenges/rust-murderer/problem
-// 3/7 test cases failed :(
-template <typename TTag, typename TItem>
-void Graph<TTag, TItem>::UnbeatenPath(TTag start, vector<size_t> &paths)
-{
-	for (TTag destination = 1; destination <= (TTag)vertices_.size(); destination++)
-	{
-		shared_ptr<Vertex<TTag, TItem>> v = GetVertex(start);
-		if (destination == start)
-			continue;
-		size_t count = 0;
-		for (TTag hop = start + 1;;)
-		{
-			if (!v->HasNeighbour(destination))
-			{
-				count++;
-				break;
-			}
-			if (!v->HasNeighbour(hop))
-			{
-				count++;
-				v = GetVertex(hop);
-			}
-			if (++hop > (TTag)vertices_.size())
-				hop = 1;
-			if (hop == destination)
-			{
-				if (!v->HasNeighbour(hop))
-					count++;
-				break;
-			}
-		}
-		paths.push_back(count);
-	}
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>> &result, shared_ptr<Vertex<TTag, TItem>> &start)

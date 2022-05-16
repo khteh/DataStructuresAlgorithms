@@ -930,8 +930,8 @@ int main(int argc, char *argv[])
 
 	a.clear();
 	a = {1, 2, 3, 4, 5, 6, 5};
-	// 1 2 3 4 5 6
-	//   6 5 4
+	// 1, 2, 3, 4, 5, 6, 5
+	//    6  5  4
 	assert(sumpairs(a, 8) == 2);
 
 	a.clear();
@@ -2002,21 +2002,6 @@ int main(int argc, char *argv[])
 	grid1 = {{2, 1, 1000}, {3, 4, 299}, {2, 4, 200}, {2, 4, 100}, {3, 2, 300}, {3, 2, 6}};
 	assert(PrimMinimumSpanningTree(4, grid1, 2) == 1106);
 
-	grid1 = {{1, 2}, {2, 3}, {1, 4}};
-	vector<size_t> unbeatenPaths;
-	UnbeatenPaths(4, grid1, 1, unbeatenPaths);
-	assert(unbeatenPaths.size() == 3);
-	assert(unbeatenPaths[0] == 3);
-	assert(unbeatenPaths[1] == 1);
-	assert(unbeatenPaths[2] == 2);
-
-	grid1 = {{1, 2}, {2, 3}};
-	unbeatenPaths.clear();
-	UnbeatenPaths(4, grid1, 2, unbeatenPaths);
-	assert(unbeatenPaths.size() == 3);
-	assert(unbeatenPaths[0] == 2);
-	assert(unbeatenPaths[1] == 2);
-	assert(unbeatenPaths[2] == 1);
 	grid1.clear();
 	grid1.resize(1);
 	grid1[0].push_back(1);
@@ -4258,7 +4243,17 @@ void GraphTests()
 	{
 		cout << "Level " << it->first << ": ";
 		for (vector<shared_ptr<Vertex<size_t, size_t>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+		{
 			cout << (*it1)->GetItem() << " ";
+			if ((*it1)->HasNeighbours())
+			{
+				vector<shared_ptr<Vertex<size_t, size_t>>> neighbours = (*it1)->GetNeighbours();
+				cout << "[";
+				for (vector<shared_ptr<Vertex<size_t, size_t>>>::iterator it1 = neighbours.begin(); it1 != neighbours.end(); it1++)
+					cout << (*it1)->GetItem() << ",";
+				cout << "] ";
+			}
+		}
 		cout << endl;
 	}
 	map<shared_ptr<Vertex<size_t, size_t>>, long> costs;
@@ -4344,6 +4339,42 @@ void GraphTests()
 	data1 = {5, 11, 12, 15, 16};
 	links1 = {{17, 4, 3}, {11, 12, 5}, {14, 2, 1}, {16, 14, 4}, {7, 8, 4}, {13, 5, 5}, {17, 15, 2}, {5, 3, 5}, {8, 6, 1}, {18, 10, 4}, {18, 1, 3}, {16, 1, 2}, {9, 2, 5}, {11, 6, 1}, {4, 9, 4}, {7, 20, 2}, {13, 19, 3}, {19, 12, 3}, {10, 20, 2}};
 	assert(PostmanProblem(data1, links1) == 54);
+	vector<vector<size_t>> edges = {{1, 2}, {1, 3}, {3, 4}};
+	vector<long> expectedDistances = {6, 6, 12, -1};
+	vector<long> distances = bfs(5, 3, edges, 1);
+	assert(expectedDistances == distances);
+	edges.clear();
+	expectedDistances.clear();
+	distances.clear();
+	edges = {{1, 2}, {1, 3}};
+	expectedDistances = {6, 6, -1};
+	distances = bfs(4, 3, edges, 1);
+	assert(expectedDistances == distances);
+	edges.clear();
+	expectedDistances.clear();
+	distances.clear();
+	edges = {{2, 3}};
+	expectedDistances = {-1, 6};
+	distances = bfs(3, 1, edges, 2);
+	assert(expectedDistances == distances);
+	edges.clear();
+	data.clear();
+	edges = {{1, 2}, {2, 3}, {1, 4}};
+	data = {3, 1, 2};
+	assert(data == UnbeatenPath(4, edges, 1));
+	edges.clear();
+	data.clear();
+	edges = {{1, 2}, {2, 3}};
+	data = {2, 2, 1};
+	assert(data == UnbeatenPath(4, edges, 2));
+	edges.clear();
+	data.clear();
+	edges = {{1, 3}, {1, 4}, {1, 5}, {2, 4}, {2, 5}, {3, 5}};
+	data = {1, 2, 3, 4};
+	assert(data == UnbeatenPath(5, edges, 1));
+	edges.clear();
+	data.clear();
+
 	cout << endl;
 }
 void parentheses(vector<string> &result, string &str, size_t index, long left, long right)
@@ -8700,24 +8731,26 @@ void trim(string &str)
 	for (; j < str.size(); j++)
 		str[j] = ' ';
 }
-/*       1 2 3 4 5 6 (sum: 8)
+/*        1 2 3 4 5 6 (sum: 8)
  * diff:  7 6 5 4 3 2
- * pairs: 1 2 3 4	  <= 2 pairs: {[3,5], [2,6]}
+ * pairs: 1 2 3 4 . .  <= 2 pairs: {[3,5], [2,6]}
+ *
+ * 	     1 2 3 4 5 6 5 (sum: 8)
+ * diff: 7 6 5 4 3 2 3
+ * pairs:1 2 3 4 . .    <= 2 pairs: {[3,5], [2,6]}
  */
 size_t sumpairs(vector<long> &numbers, long sum)
 {
 	size_t count = 0;
 	long diff;
-	set<long> pairs;
-	set<long> exclude;
+	set<long> pairs, duplicates;
 	for (vector<long>::const_iterator it = numbers.begin(); it != numbers.end(); it++)
 	{
 		diff = sum - *it;
-		if (pairs.find(diff) != pairs.end() && exclude.find(diff) == exclude.end())
+		if (pairs.find(diff) != pairs.end() && duplicates.find(diff) == duplicates.end())
 		{
 			count++;
-			exclude.emplace(diff);
-			// cout << *it << " + " << tmp << endl;
+			duplicates.emplace(diff);
 		}
 		else
 			pairs.emplace(*it);
@@ -12510,30 +12543,6 @@ size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>> &edges, long s
 	}
 	return graph.PrimMinimumSpanningTree(startVertex);
 }
-// https://www.hackerrank.com/challenges/rust-murderer/problem
-// 2/7 test cases failed and 1 test case times out!
-void UnbeatenPaths(size_t nodes, vector<vector<long>> &edges, long start, vector<size_t> &paths)
-{
-	Graph<long, long> graph;
-	for (size_t i = 1; i <= nodes; i++)
-		graph.AddVertex(i);
-	for (size_t i = 0; i < edges.size(); i++)
-	{
-		shared_ptr<Vertex<long, long>> v1 = graph.GetVertex(edges[i][0]);
-		shared_ptr<Vertex<long, long>> v2 = graph.GetVertex(edges[i][1]);
-		assert(v1);
-		assert(v2);
-		graph.AddUndirectedEdge(v1, v2, 0);
-	}
-	cout << __FUNCTION__ << " graph (" << nodes << " nodes):" << endl;
-	for (size_t i = 0; i < nodes; i++)
-	{
-		shared_ptr<Vertex<long, long>> v = graph.GetVertex(i + 1);
-		assert(v);
-		graph.Print(v);
-	}
-	graph.UnbeatenPath(start, paths);
-}
 // https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
 // Timeout! for test cases with 50000 nodes
 long getLowestPathCost(size_t g_nodes, vector<long> &g_from, vector<long> &g_to, vector<long> &g_weight)
@@ -15033,5 +15042,100 @@ vector<string> fizzBuzz(size_t n)
 			str = to_string(i);
 		result.push_back(str);
 	}
+	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/bfsshortreach
+ * Time out and wrong answer. WIP.
+ */
+vector<long> bfs(size_t nodecount, size_t edgecount, vector<vector<size_t>> &edges, size_t s)
+{
+	vector<size_t> data(nodecount);
+	generate(data.begin(), data.end(), [n = 1]() mutable
+			 { return n++; });
+	Graph<size_t, size_t> graph(data);
+	assert(graph.Count() == nodecount);
+	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
+	{
+		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex((*it)[0]);
+		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex((*it)[1]);
+		graph.AddUndirectedEdge(v1, v2, 6);
+	}
+	shared_ptr<Vertex<size_t, size_t>> start = graph.GetVertex(s);
+	map<size_t, vector<shared_ptr<Vertex<size_t, size_t>>>> vertices; // Get BFS vertices
+	graph.GetBFSNodes(vertices, start);
+	assert(!vertices.empty());
+	cout << "Graph content by level:" << endl;
+	map<size_t, long> distances;
+	for (map<size_t, vector<shared_ptr<Vertex<size_t, size_t>>>>::const_iterator it = vertices.begin(); it != vertices.end(); it++)
+	{
+		cout << "Level " << it->first << ": ";
+		for (vector<shared_ptr<Vertex<size_t, size_t>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+		{
+			cout << (*it1)->GetItem() << " ";
+			if (distances.find((*it1)->GetItem()) == distances.end())
+				distances.emplace((*it1)->GetItem(), (it->first) * 6);
+			else
+				distances[(*it1)->GetItem()] += (it->first) * 6;
+			cout << " (distance: " << distances[(*it1)->GetItem()] << "), ";
+		}
+		cout << endl;
+	}
+	vector<long> result;
+	for (size_t i = 1; i <= nodecount; i++)
+	{
+		if (i != s)
+			result.push_back(distances.find(i) == distances.end() ? -1 : distances[i]);
+	}
+	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/rust-murderer/problem
+ * Time out and wrong answer. WIP.
+ */
+vector<size_t> UnbeatenPath(size_t n, vector<vector<size_t>> &roads, size_t source)
+{
+	map<size_t, set<size_t>> edges;
+	for (vector<vector<size_t>>::iterator it = roads.begin(); it != roads.end(); it++)
+	{
+		if (edges.find((*it)[0]) == edges.end())
+			edges.emplace((*it)[0], set<size_t>{(*it)[1]});
+		else
+			edges[(*it)[0]].insert((*it)[1]);
+		if (edges.find((*it)[1]) == edges.end())
+			edges.emplace((*it)[1], set<size_t>{(*it)[0]});
+		else
+			edges[(*it)[1]].insert((*it)[0]);
+	}
+	vector<size_t> data(n);
+	generate(data.begin(), data.end(), [n = 1]() mutable
+			 { return n++; });
+	Graph<size_t, size_t> graph(data);
+	for (map<size_t, set<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
+	{
+		shared_ptr<Vertex<size_t, size_t>> v = graph.GetVertex(it->first);
+		for (size_t i = 1; i <= n; i++)
+		{
+			if (i != it->first && it->second.find(i) == it->second.end())
+				graph.AddUndirectedEdge(v, graph.GetVertex(i), 1);
+		}
+	}
+	map<shared_ptr<Vertex<size_t, size_t>>, long> costs;
+	graph.Dijkstra(source, costs);
+	map<size_t, size_t> sortedCosts;
+	cout << "Vertex\tDistance from Source " << source << ": " << endl;
+	for (map<shared_ptr<Vertex<size_t, size_t>>, long>::iterator it = costs.begin(); it != costs.end(); it++)
+	{
+		cout << it->first->GetItem() << "\t" << it->second << endl;
+		if (it->first->GetTag() != source)
+			sortedCosts.emplace(it->first->GetTag(), it->second);
+	}
+	vector<size_t> result;
+	transform(
+		sortedCosts.begin(),
+		sortedCosts.end(),
+		back_inserter(result),
+		[](const typename map<size_t, size_t>::value_type &pair)
+		{ return pair.second; });
 	return result;
 }
