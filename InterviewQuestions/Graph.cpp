@@ -28,7 +28,7 @@ void Graph<TTag, TItem>::Clear()
 	vertices_.clear();
 }
 template <typename TTag, typename TItem>
-size_t Graph<TTag, TItem>::Count()
+size_t Graph<TTag, TItem>::Count() const
 {
 	return vertices_.size();
 }

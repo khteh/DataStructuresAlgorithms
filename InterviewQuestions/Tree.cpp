@@ -600,17 +600,17 @@ vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 	return result;
 }
 template <typename T>
-size_t Tree<T>::Count(const shared_ptr<Node<T>> &node)
+size_t Tree<T>::Count(const shared_ptr<Node<T>> &node) const
 {
 	return node ? 1 + Count(node->Left()) + Count(node->Right()) : 0;
 }
 template <typename T>
-size_t Tree<T>::Count()
+size_t Tree<T>::Count() const
 {
 	return m_root ? 1 + Count(m_root->Left()) + Count(m_root->Right()) : 0;
 }
 template <typename T>
-void Tree<T>::GetNodes(map<size_t, vector<shared_ptr<Node<T>>>> &result, long lvl) // Typical Breadth-First-Search algorithm
+void Tree<T>::GetNodes(map<size_t, vector<shared_ptr<Node<T>>>> &result, long lvl) const // Typical Breadth-First-Search algorithm
 {
 	long level = 0;
 	result.emplace(level, vector<shared_ptr<Node<T>>>{m_root});
@@ -670,30 +670,30 @@ shared_ptr<Node<T>> Tree<T>::LeftMostChild(shared_ptr<Node<T>> &node)
 }
 
 template <typename T>
-size_t Tree<T>::MinDepth(const shared_ptr<Node<T>> &node)
+size_t Tree<T>::MinDepth(const shared_ptr<Node<T>> &node) const
 {
 	return node ? 1 + min(MinDepth(node->Left()), MinDepth(node->Right())) : 0;
 }
 
 template <typename T>
-size_t Tree<T>::MaxDepth(const shared_ptr<Node<T>> &node)
+size_t Tree<T>::MaxDepth(const shared_ptr<Node<T>> &node) const
 {
 	return node ? 1 + max(MaxDepth(node->Left()), MaxDepth(node->Right())) : 0;
 }
 
 template <typename T>
-bool Tree<T>::IsBalancedTree()
+bool Tree<T>::IsBalancedTree() const
 {
 	return MaxDepth(m_root) - MinDepth(m_root) <= 1;
 }
 
 template <typename T>
-T Tree<T>::MinDiffInBST()
+T Tree<T>::MinDiffInBST() const
 {
 	return m_root ? MinDiffInBST(nullptr, m_root) : -1;
 }
 template <typename T>
-T Tree<T>::MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> current)
+T Tree<T>::MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> current) const
 {
 	T minimum = numeric_limits<T>::max();
 	// Use In-Order traversal to find min diff between any 2 nodes
@@ -707,7 +707,7 @@ T Tree<T>::MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> curren
 	return minimum;
 }
 template <typename T>
-T Tree<T>::MinSubTreesDifference()
+T Tree<T>::MinSubTreesDifference() const
 {
 	return m_root ? m_root->MinSubTreesDifference() : 0;
 }
@@ -755,7 +755,7 @@ void Tree<T>::PrintColumns(const shared_ptr<Node<T>> &node, long column, map<lon
 	}
 }
 template <typename T>
-void Tree<T>::PrintTree()
+void Tree<T>::PrintTree() const
 {
 	// Use Pre-Order traversal to print node values
 	if (!m_root)
@@ -794,22 +794,22 @@ void Tree<T>::PrintTree()
 	}
 }
 template <typename T>
-T Tree<T>::Min()
+T Tree<T>::Min() const
 {
 	return m_root ? Min(m_root) : numeric_limits<T>::max();
 }
 template <typename T>
-T Tree<T>::Max()
+T Tree<T>::Max() const
 {
 	return m_root ? Max(m_root) : numeric_limits<T>::min();
 }
 template <typename T>
-T Tree<T>::Min(const shared_ptr<Node<T>> &n)
+T Tree<T>::Min(const shared_ptr<Node<T>> &n) const
 {
 	return n ? min(n->Item(), min(Min(n->Left()), Min(n->Right()))) : numeric_limits<T>::max();
 }
 template <typename T>
-T Tree<T>::Max(const shared_ptr<Node<T>> &n)
+T Tree<T>::Max(const shared_ptr<Node<T>> &n) const
 {
 	return n ? max(n->Item(), max(Max(n->Left()), Max(n->Right()))) : numeric_limits<T>::min();
 }
@@ -895,12 +895,12 @@ T Tree<T>::kthLargest(size_t k)
 	return result;
 }
 template <typename T>
-bool Tree<T>::HasNextMin()
+bool Tree<T>::HasNextMin() const
 {
 	return !minStack.empty();
 }
 template <typename T>
-bool Tree<T>::HasNextMax()
+bool Tree<T>::HasNextMax() const
 {
 	return !maxStack.empty();
 }
@@ -954,7 +954,7 @@ shared_ptr<Node<T>> Tree<T>::ToLinkedList(const shared_ptr<Node<T>> &n)
 	return n;
 }
 template <typename T>
-bool Tree<T>::isValidBST(const shared_ptr<Node<T>> &n)
+bool Tree<T>::isValidBST(const shared_ptr<Node<T>> &n) const
 {
 	bool result = true;
 	if (n)
@@ -969,7 +969,7 @@ bool Tree<T>::isValidBST(const shared_ptr<Node<T>> &n)
 	return result;
 }
 template <typename T>
-bool Tree<T>::isValidBST()
+bool Tree<T>::isValidBST() const
 {
 	return isValidBST(m_root);
 }

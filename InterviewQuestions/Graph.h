@@ -14,7 +14,7 @@ public:
 	Graph();
 	Graph(vector<TItem> &);
 	virtual ~Graph();
-	size_t Count();
+	size_t Count() const;
 	void Clear();
 	void AddVertex(shared_ptr<Vertex<TTag, TItem>>);
 	shared_ptr<Vertex<TTag, TItem>> AddVertex(TTag);

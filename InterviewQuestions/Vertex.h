@@ -8,7 +8,7 @@
 #include <sstream>
 #include <limits>
 using namespace std;
-template<typename TTag, typename TItem>	// TTag is used as a unique ID. Graph vertices can have duplicate values of TItem
+template <typename TTag, typename TItem> // TTag is used as a unique ID. Graph vertices can have duplicate values of TItem
 class Vertex
 {
 public:
@@ -31,12 +31,14 @@ public:
 	bool HasNeighbour(TTag, TItem) const;
 	bool HasNeighbour(shared_ptr<Vertex<TTag, TItem>>) const;
 	size_t NeighbourCount() const;
+	size_t DescendentsCount() const;
 	TItem MinSubGraphDifference(set<TTag>, TItem sum = 0);
-	Vertex<TTag, TItem>& operator=(Vertex<TTag, TItem>&);
-	bool operator==(Vertex<TTag, TItem>&);
-	bool operator!=(Vertex<TTag, TItem>&);
-	bool operator<(Vertex<TTag, TItem>&);
-	bool operator>(Vertex<TTag, TItem>&);
+	Vertex<TTag, TItem> &operator=(Vertex<TTag, TItem> &);
+	bool operator==(Vertex<TTag, TItem> &);
+	bool operator!=(Vertex<TTag, TItem> &);
+	bool operator<(Vertex<TTag, TItem> &);
+	bool operator>(Vertex<TTag, TItem> &);
+
 protected:
 	TTag tag_;
 	TItem item_;

@@ -34,18 +34,19 @@ class SuffixTree
 private:
 	vector<string> m_strings;
 	unique_ptr<SuffixTreeNode> m_root;
+
 public:
 	SuffixTree();
 	SuffixTree(string const &);
 	~SuffixTree();
-	void InsertString(string const&);
-	void RemoveString(string const&);
+	void InsertString(string const &);
+	void RemoveString(string const &);
 	const vector<size_t> GetIndexes();
-	const vector<size_t> GetIndexes(string const&);
+	const vector<size_t> GetIndexes(string const &);
 	const vector<string> LongestRepeatedSubstring();
 	const size_t LongestCommonSubstring(long); // Uses LongestRepeatedSubstring
 	void Clear();
-	size_t Count();
+	size_t Count() const;
 };
 
 class SuffixTreeNode
@@ -54,6 +55,7 @@ private:
 	char m_char;
 	map<char, unique_ptr<SuffixTreeNode>> m_children;
 	set<size_t> m_indices;
+
 public:
 	SuffixTreeNode(char);
 	~SuffixTreeNode();
@@ -62,5 +64,5 @@ public:
 	const set<size_t> GetIndexes();
 	const set<size_t> GetIndexes(string const &);
 	const map<string, size_t> LongestRepeatedSubstring();
-	size_t Count();
+	size_t Count() const;
 };

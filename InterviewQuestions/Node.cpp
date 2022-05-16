@@ -8,74 +8,67 @@ template class Node<int>;
 template class Node<long>;
 template class Node<string>;
 template class Node<size_t>;
-template<class T>
+template <class T>
 Node<T>::Node()
-	:m_item(T()), m_previous(nullptr), m_next(nullptr), m_left(nullptr), m_right(nullptr)
+	: m_item(T()), m_previous(nullptr), m_next(nullptr), m_left(nullptr), m_right(nullptr)
 {
 }
-template<class T>
+template <class T>
 Node<T>::Node(T item)
-	:m_item(item), m_previous(nullptr), m_next(nullptr), m_left(nullptr), m_right(nullptr)
+	: m_item(item), m_previous(nullptr), m_next(nullptr), m_left(nullptr), m_right(nullptr)
 {
 }
-template<class T>
+template <class T>
 Node<T>::Node(const Node &node) // Shallow Copy !!! It will have runtime error with create/delete of objects
-	: m_item(node.m_item)
-	, m_previous(node.m_previous)
-	, m_next(node.m_next)
-	, m_left(node.m_left)
-	, m_right(node.m_right)
+	: m_item(node.m_item), m_previous(node.m_previous), m_next(node.m_next), m_left(node.m_left), m_right(node.m_right)
 {
 }
 
-template<class T>
+template <class T>
 Node<T>::Node(const shared_ptr<Node> node) // Shallow Copy !!! It will have runtime error with create/delete of objects
-	: m_item(node->m_item)
-	, m_previous(node->m_previous)
-	, m_next(node->m_next)
-	, m_left(node->m_left)
-	, m_right(node->m_right)
+	: m_item(node->m_item), m_previous(node->m_previous), m_next(node->m_next), m_left(node->m_left), m_right(node->m_right)
 {
 }
 
-template<class T>
+template <class T>
 Node<T>::~Node()
 {
-	//m_item = default(T);
+	// m_item = default(T);
 }
 
-template<class T>
+template <class T>
 T Node<T>::Item()
 {
 	return m_item;
 }
-template<class T>
-shared_ptr<Node<T>> Node<T>::Previous()
+template <class T>
+shared_ptr<Node<T>> Node<T>::Previous() const
 {
 	return m_previous;
 }
-template<class T>
-shared_ptr<Node<T>> Node<T>::Next()
+template <class T>
+shared_ptr<Node<T>> Node<T>::Next() const
 {
 	return m_next;
 }
 
-template<class T>
-shared_ptr<Node<T>> Node<T>::Left()
+template <class T>
+shared_ptr<Node<T>> Node<T>::Left() const
 {
 	return m_left;
 }
 
-template<class T>
-shared_ptr<Node<T>> Node<T>::Right()
+template <class T>
+shared_ptr<Node<T>> Node<T>::Right() const
 {
 	return m_right;
 }
-template<class T>
+template <class T>
 T Node<T>::MinSubTreesDifference(shared_ptr<Node<T>> n, T sum, T subtreeSum)
 {
 	ostringstream oss;
-	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, size_t>) {
+	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, size_t>)
+	{
 		T adjustedSum = subtreeSum - n->Item();
 		if (sum + n->Item() == adjustedSum)
 			return 0;
@@ -83,12 +76,14 @@ T Node<T>::MinSubTreesDifference(shared_ptr<Node<T>> n, T sum, T subtreeSum)
 			return abs((long)sum - (long)subtreeSum);
 		else
 			return n->MinSubTreesDifference(sum);
-	} else {
+	}
+	else
+	{
 		oss << __FUNCTION__ << " is only applicable to integral types!";
 		throw runtime_error(oss.str());
 	}
 }
-template<class T>
+template <class T>
 T Node<T>::MinSubTreesDifference(T sum)
 {
 	/*
@@ -101,7 +96,8 @@ T Node<T>::MinSubTreesDifference(T sum)
 	Diff: 21 - 20 = 1
 	*/
 	ostringstream oss;
-	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, size_t>) {
+	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, size_t>)
+	{
 		if (!m_left && !m_right)
 			return abs((long)sum - (long)m_item);
 		else if (!m_left)
@@ -117,12 +113,14 @@ T Node<T>::MinSubTreesDifference(T sum)
 			return MinSubTreesDifference(m_right, sum + leftSum, rightSum);
 		else
 			return MinSubTreesDifference(m_left, sum + rightSum, leftSum);
-	} else {
+	}
+	else
+	{
 		oss << __FUNCTION__ << " is only applicable to integral types!";
 		throw runtime_error(oss.str());
 	}
 }
-template<class T>
+template <class T>
 T Node<T>::Sum()
 {
 	T sum = m_item;
@@ -132,12 +130,12 @@ T Node<T>::Sum()
 		sum += m_right->Sum();
 	return sum;
 }
-template<class T>
+template <class T>
 void Node<T>::SetPrevious(shared_ptr<Node<T>> node)
 {
 	m_previous = node;
 }
-template<class T>
+template <class T>
 void Node<T>::SetNext(shared_ptr<Node<T>> node)
 {
 	m_next = node;
@@ -146,26 +144,26 @@ void Node<T>::SetNext(shared_ptr<Node<T>> node)
 	m_adjacents.insert(node);
 }
 
-template<class T>
+template <class T>
 void Node<T>::SetLeft(shared_ptr<Node<T>> node)
 {
 	m_left = node;
 }
 
-template<class T>
+template <class T>
 void Node<T>::SetRight(shared_ptr<Node<T>> node)
 {
 	m_right = node;
 }
 
-template<class T>
+template <class T>
 void Node<T>::SetItem(T item)
 {
 	m_item = item;
 }
 
-template<class T>
-Node<T>& Node<T>::operator=(Node<T>& rhs)
+template <class T>
+Node<T> &Node<T>::operator=(Node<T> &rhs)
 {
 	m_previous = rhs.Previous();
 	m_item = rhs.Item();
@@ -175,31 +173,31 @@ Node<T>& Node<T>::operator=(Node<T>& rhs)
 	return *this;
 }
 
-template<class T>
-bool Node<T>::operator==(Node<T>& rhs)
+template <class T>
+bool Node<T>::operator==(Node<T> &rhs)
 {
 	return m_item == rhs.Item();
 }
 
-template<class T>
-bool Node<T>::operator!=(Node<T>& rhs)
+template <class T>
+bool Node<T>::operator!=(Node<T> &rhs)
 {
 	return !(*this == rhs);
 }
 
-template<class T>
-bool Node<T>::operator<(Node<T>& rhs)
+template <class T>
+bool Node<T>::operator<(Node<T> &rhs)
 {
 	return m_item < rhs.Item();
 }
 
-template<class T>
-bool Node<T>::operator>(Node<T>& rhs)
+template <class T>
+bool Node<T>::operator>(Node<T> &rhs)
 {
 	return m_item > rhs.Item();
 }
 
-template<class T>
+template <class T>
 bool Node<T>::isLeaf()
 {
 	return !Next() && !Left() && !Right();

@@ -8,34 +8,36 @@
 #include <memory>
 #include <stdexcept>
 using namespace std;
-template<typename T>
+template <typename T>
 class TrieNode;
 
-template<typename T>
+template <typename T>
 class Trie
 {
 private:
 	shared_ptr<TrieNode<T>> m_root;
-	T FindFast(string const&, shared_ptr<TrieNode<T>>&);
+	T FindFast(string const &, shared_ptr<TrieNode<T>> &);
+
 public:
 	Trie();
 	Trie(string const &, T);
 	~Trie();
 	void Insert(string const &, T);
-	void InsertFast(string const&, T);
+	void InsertFast(string const &, T);
 	void RemoveString(string const &);
 	T Find(string const &);
-	T FindFast(string const&);
+	T FindFast(string const &);
 	void Clear();
-	size_t Count();
+	size_t Count() const;
 };
 
-template<typename T>
+template <typename T>
 class TrieNode : enable_shared_from_this<TrieNode<T>>
 {
 private:
 	T m_key;
 	map<char, shared_ptr<TrieNode<T>>> m_children;
+
 public:
 	typedef typename map<char, shared_ptr<TrieNode<T>>>::const_iterator IteratorType;
 	TrieNode();
@@ -50,5 +52,5 @@ public:
 	shared_ptr<TrieNode<T>> AddNode(char);
 	IteratorType ChildrenStart() const;
 	IteratorType ChildrenEnd() const;
-	size_t Count();
+	size_t Count() const;
 };
