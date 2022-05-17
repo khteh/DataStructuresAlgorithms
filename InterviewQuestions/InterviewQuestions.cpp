@@ -827,6 +827,7 @@ int main(int argc, char *argv[])
 	assert(fibonacciModified(0, 1, 6) == "734");
 	assert(fibonacciModified(0, 1, 7) == "538783");
 	assert(fibonacciModified(0, 1, 8) == "290287121823");
+	assert(fibonacciModified(0, 1, 9) == "84266613096281243382112");
 	assert(fibonacciModified(2, 0, 0) == "2");
 	assert(fibonacciModified(2, 0, 1) == "0");
 	assert(fibonacciModified(2, 0, 2) == "2");
