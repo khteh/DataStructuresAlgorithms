@@ -172,9 +172,9 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 					  { return value + p.second; });
 }
 template <typename TTag, typename TItem>
-void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem>>, long> &costs) // spt: Shortest Path Tree
+void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem>>, long> &costs)
 {
-	set<shared_ptr<Vertex<TTag, TItem>>> spt;
+	set<shared_ptr<Vertex<TTag, TItem>>> spt; // spt: Shortest Path Tree
 	set<shared_ptr<Vertex<TTag, TItem>>> vertices;
 	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(source);
 	assert(vertex);
@@ -213,7 +213,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 template <typename TTag, typename TItem>
 long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 {
-	set<shared_ptr<Vertex<TTag, TItem>>> spt;
+	set<shared_ptr<Vertex<TTag, TItem>>> spt; // spt: Shortest Path Tree
 	set<shared_ptr<Vertex<TTag, TItem>>> vertices;
 	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(src);
 	shared_ptr<Vertex<TTag, TItem>> destination = GetVertex(dest);
