@@ -29,7 +29,7 @@ public:
 	long Dijkstra(TTag, TTag);
 	void GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>> &, shared_ptr<Vertex<TTag, TItem>> &);
 	long GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>> &, shared_ptr<Vertex<TTag, TItem>>, shared_ptr<Vertex<TTag, TItem>>);
-	TItem MinSubTreesDifference(shared_ptr<Vertex<TTag, TItem>>);
+	TItem MinSubGraphsDifference(TTag, TItem);
 	long EvenForest(TTag);
 	void Print(TTag);
 	void Print(shared_ptr<Vertex<TTag, TItem>>);

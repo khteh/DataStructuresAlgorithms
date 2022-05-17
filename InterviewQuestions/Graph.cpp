@@ -338,10 +338,14 @@ long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>> &spt
 	return vertex ? costs[vertex] : -1;
 }
 template <typename TTag, typename TItem>
-TItem Graph<TTag, TItem>::MinSubTreesDifference(shared_ptr<Vertex<TTag, TItem>> node)
+TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root, TItem sum)
 {
-	set<TTag> visited;
-	return node ? node->MinSubGraphDifference(visited) : 0;
+	set<TItem> diffs;
+	shared_ptr<Vertex<TTag, TItem>> n = GetVertex(root);
+	vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = n->GetNeighbours();
+	for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
+		(*it)->MinSubGraphsDifference(root, sum, diffs);
+	return diffs.empty() ? numeric_limits<size_t>::max() : *diffs.begin();
 }
 template <typename TTag, typename TItem>
 long Graph<TTag, TItem>::EvenForest(TTag root)

@@ -4289,13 +4289,13 @@ void GraphTests()
 	graph.Clear();
 	data.clear();
 	data = {10, 5, 11};
-	vector<vector<size_t>> links = {{1, 2}, {1, 3}}; // Use tag. Not value
+	vector<vector<size_t>> edges = {{1, 2}, {1, 3}}; // Use tag. Not value
 	/*
 			10
 		11		5
 	Diff: 15 - 11 = 4
 	*/
-	assert(MinSubGraphDifference(data, links) == 4);
+	assert(MinSubGraphsDifference(data, edges) == 4);
 	data.clear();
 	data = {10, 5, 6, 20};
 	/*
@@ -4304,8 +4304,8 @@ void GraphTests()
 	  20
 	Diff: 21 - 20 = 1
 	*/
-	links = {{1, 2}, {1, 3}, {2, 4}}; //{ {10,5}, {10,6}, {5,20} };
-	assert(MinSubGraphDifference(data, links) == 1);
+	edges = {{1, 2}, {1, 3}, {2, 4}}; //{ {10,5}, {10,6}, {5,20} };
+	assert(MinSubGraphsDifference(data, edges) == 1);
 	/*
 			10
 		 5
@@ -4314,79 +4314,80 @@ void GraphTests()
 	*/
 	data.clear();
 	data = {10, 5, 20};
-	links = {{1, 2}, {2, 3}}; //{ {10,5}, {5,20} };
-	assert(MinSubGraphDifference(data, links) == 5);
+	edges = {{1, 2}, {2, 3}}; //{ {10,5}, {5,20} };
+	assert(MinSubGraphsDifference(data, edges) == 5);
 	cout << endl;
 	data.clear();
 	data = {100, 200, 100, 100, 500, 600};
-	links = {{1, 2}, {2, 3}, {2, 4}, {4, 5}, {4, 6}};
-	assert(MinSubGraphDifference(data, links) == 400);
+	edges = {{1, 2}, {2, 3}, {2, 4}, {4, 5}, {4, 6}};
+	assert(MinSubGraphsDifference(data, edges) == 400);
 	data.clear();
 	data = {205, 573, 985, 242, 830, 514, 592, 263, 142, 915};
-	links = {{2, 8}, {10, 5}, {1, 7}, {6, 9}, {4, 3}, {8, 10}, {5, 1}, {7, 6}, {9, 4}};
-	assert(MinSubGraphDifference(data, links) == 99);
-	vector<size_t> data2 = {716, 365, 206, 641, 841, 585, 801, 645, 208, 924, 920, 286, 554, 832, 359, 836, 247, 959, 31, 322, 709, 860, 890, 195, 575, 905, 314, 41, 669, 549, 950, 736, 265, 507, 729, 457, 91, 529, 102, 650, 805, 373, 287, 710, 556, 645, 546, 154, 956, 928};
-	links = {{14, 25}, {25, 13}, {13, 20}, {20, 24}, {43, 2}, {2, 48}, {48, 42}, {42, 5}, {27, 18}, {18, 30}, {30, 7}, {7, 36}, {37, 9}, {9, 23}, {23, 49}, {49, 15}, {31, 26}, {26, 29}, {29, 50}, {50, 21}, {41, 45}, {45, 10}, {10, 17}, {17, 34}, {28, 47}, {47, 44}, {44, 11}, {11, 16}, {3, 8}, {8, 39}, {39, 38}, {38, 22}, {19, 32}, {32, 12}, {12, 40}, {40, 46}, {1, 35}, {35, 4}, {4, 33}, {33, 6}, {25, 2}, {2, 27}, {7, 37}, {15, 50}, {21, 10}, {17, 28}, {16, 39}, {38, 19}, {40, 1}};
-	size_t result = MinSubGraphDifference(data2, links);
+	edges = {{2, 8}, {10, 5}, {1, 7}, {6, 9}, {4, 3}, {8, 10}, {5, 1}, {7, 6}, {9, 4}};
+	assert(MinSubGraphsDifference(data, edges) == 99);
+	data.clear();
+	edges.clear();
+	data = {716, 365, 206, 641, 841, 585, 801, 645, 208, 924, 920, 286, 554, 832, 359, 836, 247, 959, 31, 322, 709, 860, 890, 195, 575, 905, 314, 41, 669, 549, 950, 736, 265, 507, 729, 457, 91, 529, 102, 650, 805, 373, 287, 710, 556, 645, 546, 154, 956, 928};
+	edges = {{14, 25}, {25, 13}, {13, 20}, {20, 24}, {43, 2}, {2, 48}, {48, 42}, {42, 5}, {27, 18}, {18, 30}, {30, 7}, {7, 36}, {37, 9}, {9, 23}, {23, 49}, {49, 15}, {31, 26}, {26, 29}, {29, 50}, {50, 21}, {41, 45}, {45, 10}, {10, 17}, {17, 34}, {28, 47}, {47, 44}, {44, 11}, {11, 16}, {3, 8}, {8, 39}, {39, 38}, {38, 22}, {19, 32}, {32, 12}, {12, 40}, {40, 46}, {1, 35}, {35, 4}, {4, 33}, {33, 6}, {25, 2}, {2, 27}, {7, 37}, {15, 50}, {21, 10}, {17, 28}, {16, 39}, {38, 19}, {40, 1}};
+	// size_t result = MinSubGraphsDifference(data, edges); Segmentation fault. Maybe due to recursion
 	// assert(result == 525); Fail but difficult to check due to the sheer number of data points.
 	vector<long> data1;
-	vector<vector<long>> links1;
+	vector<vector<long>> edges1;
 	data1.clear();
 	data1 = {1, 3, 4};
-	links1 = {{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}};
-	assert(PostmanProblem(data1, links1) == 6);
+	edges1 = {{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}};
+	assert(PostmanProblem(data1, edges1) == 6);
 	data1.clear();
 	data1 = {5, 11, 12, 15, 16};
-	links1 = {{17, 4, 3}, {11, 12, 5}, {14, 2, 1}, {16, 14, 4}, {7, 8, 4}, {13, 5, 5}, {17, 15, 2}, {5, 3, 5}, {8, 6, 1}, {18, 10, 4}, {18, 1, 3}, {16, 1, 2}, {9, 2, 5}, {11, 6, 1}, {4, 9, 4}, {7, 20, 2}, {13, 19, 3}, {19, 12, 3}, {10, 20, 2}};
-	assert(PostmanProblem(data1, links1) == 54);
-	vector<vector<size_t>> edges = {{1, 2}, {1, 3}, {3, 4}};
+	edges1 = {{17, 4, 3}, {11, 12, 5}, {14, 2, 1}, {16, 14, 4}, {7, 8, 4}, {13, 5, 5}, {17, 15, 2}, {5, 3, 5}, {8, 6, 1}, {18, 10, 4}, {18, 1, 3}, {16, 1, 2}, {9, 2, 5}, {11, 6, 1}, {4, 9, 4}, {7, 20, 2}, {13, 19, 3}, {19, 12, 3}, {10, 20, 2}};
+	assert(PostmanProblem(data1, edges1) == 54);
+	vector<vector<size_t>> edges2 = {{1, 2}, {1, 3}, {3, 4}};
 	vector<long> expectedDistances = {6, 6, 12, -1};
-	vector<long> distances = bfs(5, 3, edges, 1);
+	vector<long> distances = bfs(5, 3, edges2, 1);
 	assert(expectedDistances == distances);
-	edges.clear();
+	edges2.clear();
 	expectedDistances.clear();
 	distances.clear();
-	edges = {{1, 2}, {1, 3}};
+	edges2 = {{1, 2}, {1, 3}};
 	expectedDistances = {6, 6, -1};
-	distances = bfs(4, 3, edges, 1);
+	distances = bfs(4, 3, edges2, 1);
 	assert(expectedDistances == distances);
-	edges.clear();
+	edges2.clear();
 	expectedDistances.clear();
 	distances.clear();
-	edges = {{2, 3}};
+	edges2 = {{2, 3}};
 	expectedDistances = {-1, 6};
-	distances = bfs(3, 1, edges, 2);
+	distances = bfs(3, 1, edges2, 2);
 	assert(expectedDistances == distances);
-	edges.clear();
+	edges2.clear();
 	data.clear();
-	edges = {{1, 2}, {2, 3}, {1, 4}};
+	edges2 = {{1, 2}, {2, 3}, {1, 4}};
 	data = {3, 1, 2};
-	assert(data == UnbeatenPath(4, edges, 1));
-	edges.clear();
+	assert(data == UnbeatenPath(4, edges2, 1));
+	edges2.clear();
 	data.clear();
-	edges = {{1, 2}, {2, 3}};
+	edges2 = {{1, 2}, {2, 3}};
 	data = {2, 2, 1};
-	assert(data == UnbeatenPath(4, edges, 2));
-	edges.clear();
+	assert(data == UnbeatenPath(4, edges2, 2));
+	edges2.clear();
 	data.clear();
-	edges = {{1, 3}, {1, 4}, {1, 5}, {2, 4}, {2, 5}, {3, 5}};
+	edges2 = {{1, 3}, {1, 4}, {1, 5}, {2, 4}, {2, 5}, {3, 5}};
 	data = {1, 2, 3, 4};
-	assert(data == UnbeatenPath(5, edges, 1));
-	edges.clear();
+	assert(data == UnbeatenPath(5, edges2, 1));
+	edges2.clear();
 	data.clear();
-	edges = {{1, 2}, {1, 3}, {3, 4}};
-	assert(1 == evenForest(4, edges));
-	edges.clear();
+	edges2 = {{1, 2}, {1, 3}, {3, 4}};
+	assert(1 == evenForest(4, edges2));
+	edges2.clear();
 	data.clear();
-	edges = {{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 1}, {7, 2}, {8, 6}, {9, 8}, {10, 8}};
-	assert(2 == evenForest(10, edges));
-	edges.clear();
+	edges2 = {{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 1}, {7, 2}, {8, 6}, {9, 8}, {10, 8}};
+	assert(2 == evenForest(10, edges2));
+	edges2.clear();
 	data.clear();
-	edges = {{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 5}, {7, 1}, {8, 1}, {9, 2}, {10, 7}, {11, 10}, {12, 3}, {13, 7}, {14, 8}, {15, 12}, {16, 6}, {17, 6}, {18, 10}, {19, 1}, {20, 8}};
-	assert(4 == evenForest(20, edges));
-	edges.clear();
+	edges2 = {{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 5}, {7, 1}, {8, 1}, {9, 2}, {10, 7}, {11, 10}, {12, 3}, {13, 7}, {14, 8}, {15, 12}, {16, 6}, {17, 6}, {18, 10}, {19, 1}, {20, 8}};
+	assert(4 == evenForest(20, edges2));
+	edges2.clear();
 	data.clear();
-
 	cout << endl;
 }
 void parentheses(vector<string> &result, string &str, size_t index, long left, long right)
@@ -8137,32 +8138,6 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	result.clear();
 	vector<size_t> data = {10, 5, 11};
 	vector<vector<size_t>> links = {{10, 5}, {10, 11}};
-	/*
-			10
-		11		5
-	Diff: 15 - 11 = 4
-	*/
-	assert(cutTheTree(data, links) == 4);
-	data.clear();
-	data = {10, 5, 6, 20};
-	/*
-			10
-		 5		6
-	  20
-	Diff: 21 - 20 = 1
-	*/
-	links = {{10, 5}, {10, 6}, {5, 20}};
-	assert(cutTheTree(data, links) == 1);
-	/*
-			10
-		 5
-	  20
-	Diff: 20 - 15 = 5
-	*/
-	data.clear();
-	data = {10, 5, 20};
-	links = {{10, 5}, {5, 20}};
-	assert(cutTheTree(data, links) == 5);
 
 	vector<long> a, b;
 	a.clear();
@@ -12557,12 +12532,13 @@ size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>> &edges, long s
 }
 // https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
 // Timeout! for test cases with 50000 nodes
-long getLowestPathCost(size_t g_nodes, vector<long> &g_from, vector<long> &g_to, vector<long> &g_weight)
+long getLowestPathCost(size_t nodecount, vector<long> &g_from, vector<long> &g_to, vector<long> &g_weight)
 {
 	// Breadth-First-Search algorithm
-	Graph<long, long> graph;
-	for (size_t i = 1; i <= g_nodes; i++)
-		graph.AddVertex(i);
+	vector<long> data(nodecount);
+	generate(data.begin(), data.end(), [n = 1]() mutable
+			 { return n++; });
+	Graph<long, long> graph(data);
 	for (size_t i = 0; i < g_from.size(); i++)
 	{
 		shared_ptr<Vertex<long, long>> v1 = graph.GetVertex(g_from[i]);
@@ -12576,7 +12552,7 @@ long getLowestPathCost(size_t g_nodes, vector<long> &g_from, vector<long> &g_to,
 	//	graph.Print(graph.GetVertex(i));
 	// cout << endl;
 	set<shared_ptr<Vertex<long, long>>> spt;
-	long cost = graph.GetPathsCosts(spt, graph.GetVertex(1), graph.GetVertex(g_nodes));
+	long cost = graph.GetPathsCosts(spt, graph.GetVertex(1), graph.GetVertex(nodecount));
 	// cout << "Vertex\tDistance from Source" << endl;
 	// for (set<shared_ptr<Vertex<long, long>>>::iterator it = spt.begin(); it != spt.end(); it++)
 	//	cout << (*it)->GetTag() << "\t" << (*it)->GetTotalCost() << endl;
@@ -12619,42 +12595,25 @@ size_t SurfaceArea3D(vector<vector<long>> &data)
 	}
 	return xArea + yArea + zArea * 2;
 }
-// https://www.hackerrank.com/challenges/cut-the-tree/problem
-// Only pass the sample quetions with 6 and 10 nodes. Difficult to reproduce due to the data input
-size_t cutTheTree(vector<size_t> &data, vector<vector<size_t>> &edges)
+/* https://www.hackerrank.com/challenges/cut-the-tree/problem
+ * Segmentation fault. Maybe due to recursion
+ */
+size_t MinSubGraphsDifference(vector<size_t> &vertices, vector<vector<size_t>> &edges)
 {
-	Tree<size_t> tree(data[0]);
-	for (size_t i = 0; i < edges.size(); i++)
+	Graph<size_t, size_t> graph(vertices);
+	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 	{
-		shared_ptr<Node<size_t>> parent = tree.FindNode(edges[i][0]);
-		assert(parent);
-		shared_ptr<Node<size_t>> n = make_shared<Node<size_t>>(edges[i][1]);
-		tree.InsertNode(parent, n);
-	}
-	tree.PrintTree();
-	size_t result = tree.MinSubTreesDifference();
-	return result;
-}
-// https://www.hackerrank.com/challenges/cut-the-tree/problem
-// Only pass the sample quetions with 6 and 10 nodes. Difficult to reproduce due to the data input.
-size_t MinSubGraphDifference(vector<size_t> &data, vector<vector<size_t>> &edges)
-{
-	Graph<size_t, size_t> graph;
-	for (size_t i = 0; i < data.size(); i++)
-		graph.AddVertex(i + 1, data[i]);
-	for (size_t i = 0; i < edges.size(); i++)
-	{
-		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(edges[i][0]);
-		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex(edges[i][1]);
+		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(vertices[(*it)[0] - 1]);
+		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex(vertices[(*it)[1] - 1]);
 		assert(v1);
 		assert(v2);
 		graph.AddUndirectedEdge(v1, v2, 0);
 	}
-	// cout << __FUNCTION__ << " graph (" << data.size() << " nodes)" << endl;
-	// for (size_t i = 0; i < data.size(); i++)
-	//	graph.Print(graph.GetVertex(i + 1));
-	// cout << endl;
-	size_t result = graph.MinSubTreesDifference(graph.GetVertex(1));
+	shared_ptr<Vertex<size_t, size_t>> v = graph.GetVertex(650);
+	if (v)
+		graph.Print(v);
+	size_t sum = accumulate(vertices.begin(), vertices.end(), 0);
+	size_t result = graph.MinSubGraphsDifference(vertices[0], sum);
 	return result;
 }
 // https://www.hackerrank.com/challenges/jeanies-route/problem

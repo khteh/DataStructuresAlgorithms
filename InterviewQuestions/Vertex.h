@@ -20,7 +20,7 @@ public:
 	TTag GetTag() const;
 	TItem GetItem() const;
 	long GetCost(shared_ptr<Vertex<TTag, TItem>>);
-	TItem GetSum(set<TTag>) const;
+	TItem MinSubGraphsDifference(TTag, TItem, set<TItem> &) const;
 	void ResetTotalCost();
 	void AddNeighbour(shared_ptr<Vertex<TTag, TItem>>, long);
 	void RemoveNeighbour(shared_ptr<Vertex<TTag, TItem>>);
@@ -32,7 +32,6 @@ public:
 	bool HasNeighbour(shared_ptr<Vertex<TTag, TItem>>) const;
 	size_t NeighbourCount() const;
 	size_t EvenForestDescendentsCount(TTag, set<string> &) const;
-	TItem MinSubGraphDifference(set<TTag>, TItem sum = 0);
 	Vertex<TTag, TItem> &operator=(Vertex<TTag, TItem> &);
 	bool operator==(Vertex<TTag, TItem> &);
 	bool operator!=(Vertex<TTag, TItem> &);
