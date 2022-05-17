@@ -9,32 +9,32 @@ template class MyStack<int>;
 template class MyStack<long>;
 template class MyStack<string>;
 
-template <class T>
+template <typename T>
 MyStack<T>::MyStack()
 	: m_top(nullptr), m_size(0)
 {
 }
 
-template <class T>
+template <typename T>
 MyStack<T>::MyStack(const MyStack &stack)
 {
 	m_size = stack.m_size;
 	m_top = stack.m_top;
 }
 
-template <class T>
+template <typename T>
 MyStack<T>::~MyStack()
 {
 	clear();
 }
 
-template <class T>
+template <typename T>
 bool MyStack<T>::isEmpty()
 {
 	return !m_top;
 }
 
-template <class T>
+template <typename T>
 T MyStack<T>::pop()
 {
 	shared_ptr<Node<T>> top = m_top;
@@ -43,7 +43,7 @@ T MyStack<T>::pop()
 	return top->Item();
 }
 
-template <class T>
+template <typename T>
 void MyStack<T>::push(T item)
 {
 	shared_ptr<Node<T>> node = m_top;
@@ -52,19 +52,19 @@ void MyStack<T>::push(T item)
 	m_size++;
 }
 
-template <class T>
+template <typename T>
 T MyStack<T>::peek()
 {
 	return !isEmpty() ? m_top->Item() : numeric_limits<T>::max();
 }
 
-template <class T>
+template <typename T>
 unsigned long MyStack<T>::size()
 {
 	return m_size;
 }
 
-template <class T>
+template <typename T>
 void MyStack<T>::clear()
 {
 	shared_ptr<Node<T>> next;
@@ -78,7 +78,7 @@ void MyStack<T>::clear()
 	m_size = 0;
 }
 
-template <class T>
+template <typename T>
 void MyStack<T>::PrintStack()
 {
 	for (shared_ptr<Node<T>> node = m_top; node; node = node->Next())

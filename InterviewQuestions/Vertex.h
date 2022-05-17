@@ -31,7 +31,7 @@ public:
 	bool HasNeighbour(TTag, TItem) const;
 	bool HasNeighbour(shared_ptr<Vertex<TTag, TItem>>) const;
 	size_t NeighbourCount() const;
-	size_t DescendentsCount() const;
+	size_t EvenForestDescendentsCount(TTag, set<string> &) const;
 	TItem MinSubGraphDifference(set<TTag>, TItem sum = 0);
 	Vertex<TTag, TItem> &operator=(Vertex<TTag, TItem> &);
 	bool operator==(Vertex<TTag, TItem> &);

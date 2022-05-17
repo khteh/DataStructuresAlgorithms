@@ -1,19 +1,19 @@
 #include "stdafx.h"
 #include "DisJointSet.h"
 template class DisJointSet<long>;
-template <class T>
+template <typename T>
 DisJointSet<T>::DisJointSet(vector<T> &data)
 {
 	MakeSet(data);
 }
-template <class T>
+template <typename T>
 void DisJointSet<T>::MakeSet(vector<T> &data)
 {
 	// perform makeset operation	by creating n disjoint sets
 	for (typename vector<T>::iterator it = data.begin(); it != data.end(); it++)
 		_parent.emplace(*it, *it); // Key: current item; Value: parent of the current item
 }
-template <class T>
+template <typename T>
 T DisJointSet<T>::Find(T item)
 {
 	// C++ map will insert non-existing key silently
@@ -36,12 +36,12 @@ T DisJointSet<T>::Find(T item)
 		return root;
 	}
 }
-template <class T>
+template <typename T>
 size_t DisJointSet<T>::Rank(T item)
 {
 	return _rank[Find(item)];
 }
-template <class T>
+template <typename T>
 T DisJointSet<T>::Union(T x, T y)
 {
 	// Unites the set that includes x
@@ -86,7 +86,7 @@ T DisJointSet<T>::Union(T x, T y)
 		root = numeric_limits<T>::min(); // Already joined
 	return root;
 }
-template <class T>
+template <typename T>
 void DisJointSet<T>::Print(vector<T> const &data, size_t linesize)
 {
 	size_t i = 1;

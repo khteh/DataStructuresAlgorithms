@@ -2,39 +2,39 @@
 #include "Tower.h"
 template class Tower<size_t>;
 
-template <class T>
+template <typename T>
 Tower<T>::Tower(size_t index)
 	: m_index(index)
 {
 }
 
-template <class T>
+template <typename T>
 Tower<T>::~Tower()
 {
 }
 
-template <class T>
+template <typename T>
 size_t Tower<T>::Index()
 {
 	return m_index;
 }
 
-template <class T>
+template <typename T>
 bool Tower<T>::isEmpty()
 {
 	return m_disks.isEmpty();
 }
-template <class T>
+template <typename T>
 void Tower<T>::Clear()
 {
 	m_disks.clear();
 }
-template <class T>
+template <typename T>
 T Tower<T>::TopDisk()
 {
 	return m_disks.peek();
 }
-template <class T>
+template <typename T>
 void Tower<T>::Add(T disk)
 {
 	if (!m_disks.isEmpty() && m_disks.peek() <= disk)
@@ -47,14 +47,14 @@ void Tower<T>::Add(T disk)
 		m_disks.push(disk);
 }
 
-template <class T>
+template <typename T>
 void Tower<T>::MoveTopTo(Tower *t)
 {
 	T top = m_disks.pop();
 	t->Add(top);
 }
 
-template <class T>
+template <typename T>
 void Tower<T>::print()
 {
 	cout << "Tower " << m_index << " content: " << endl;
@@ -69,7 +69,7 @@ void Tower<T>::print()
 // The above is a recursive algorithm, to carry out steps 1 and 3, apply the same algorithm again for n−1.
 // The entire procedure is a finite number of steps, since at some point the algorithm will be required for n = 1.
 // This step, moving a single disc from peg A to peg B, is trivial.
-template <class T>
+template <typename T>
 size_t Tower<T>::MoveDisks(T n, Tower *dest, Tower *buffer)
 {
 	size_t moves = 0;

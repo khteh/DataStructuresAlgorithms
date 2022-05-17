@@ -6,31 +6,31 @@ template class Heap<int>;
 template class Heap<long>;
 // http://en.wikipedia.org/wiki/Binary_heap
 
-template<class T>
+template<typename T>
 Heap<T>::Heap(HeapType t)
 	: type_(t)
 {
 }
 
-template<class T>
+template<typename T>
 Heap<T>::Heap(T item, HeapType t)
 	: type_(t), Tree<T>::Tree(item)
 {
 }
 
-template<class T>
+template<typename T>
 Heap<T>::Heap(shared_ptr<Node<T>>& node, HeapType t)
 	: type_(t), Tree<T>::Tree(node)
 {
 }
-template<class T>
+template<typename T>
 Heap<T>::Heap(vector<T>& data, HeapType type)
 	: type_(type)
 {
 	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
 		InsertItem(*it);
 }
-template<class T>
+template<typename T>
 void Heap<T>::InsertNode(shared_ptr<Node<T>>& root, shared_ptr<Node<T>>& node)
 {
 	if (node) {
@@ -51,7 +51,7 @@ void Heap<T>::InsertNode(shared_ptr<Node<T>>& root, shared_ptr<Node<T>>& node)
 
 // MinHeap/MinMaxHeap: Remove min
 // MaxHeap: Remove max
-template<class T>
+template<typename T>
 shared_ptr<Node<T>> Heap<T>::pop()
 {
 	shared_ptr<Node<T>> result(nullptr), node(nullptr);
@@ -78,13 +78,13 @@ shared_ptr<Node<T>> Heap<T>::pop()
 	return result;
 }
 
-template<class T>
+template<typename T>
 shared_ptr<Node<T>> Heap<T>::front()
 {
 	return m_root;
 }
 
-template<class T>
+template<typename T>
 void Heap<T>::Serialize(vector<T>& result)
 {
 	shared_ptr<Node<T>> node;
@@ -92,7 +92,7 @@ void Heap<T>::Serialize(vector<T>& result)
 		result.push_back(node->Item());
 }
 
-template<class T>
+template<typename T>
 void Heap<T>::swap(shared_ptr<Node<T>>& n, shared_ptr<Node<T>>& m)
 {
 	T tmp(n->Item());
@@ -100,7 +100,7 @@ void Heap<T>::swap(shared_ptr<Node<T>>& n, shared_ptr<Node<T>>& m)
 	m->SetItem(tmp);
 }
 
-template<class T>
+template<typename T>
 void Heap<T>::HeapifyUp(shared_ptr<Node<T>>& node, unsigned long level)
 {
 	if (node && level >= 0) {
@@ -177,7 +177,7 @@ void Heap<T>::HeapifyUp(shared_ptr<Node<T>>& node, unsigned long level)
 	}
 }
 
-template<class T>
+template<typename T>
 void Heap<T>::HeapifyDown(shared_ptr<Node<T>>& node)
 {
 	if (node) {
@@ -249,7 +249,7 @@ void Heap<T>::HeapifyDown(shared_ptr<Node<T>>& node)
 	}
 }
 
-template<class T>
+template<typename T>
 shared_ptr<Node<T>> Heap<T>::FindEmptyLeafParent() // Use Breath-First-Search to find empty leaf
 {
 	unsigned long level = 0;
@@ -278,7 +278,7 @@ shared_ptr<Node<T>> Heap<T>::FindEmptyLeafParent() // Use Breath-First-Search to
 	return nullptr;
 }
 
-template<class T>
+template<typename T>
 shared_ptr<Node<T>> Heap<T>::FindLastLeaf() // Use Breadth-First-Search to find empty leaf
 {
 	shared_ptr<Node<T>> result(nullptr);

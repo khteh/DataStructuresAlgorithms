@@ -1,12 +1,13 @@
 #pragma once
 #include "MyStack.h"
-template<class T>
+template <typename T>
 class MyQueue
 {
 private:
 	MyStack<T> front_;
 	MyStack<T> back_;
 	void back2front();
+
 public:
 	MyQueue();
 	virtual ~MyQueue();
@@ -16,4 +17,3 @@ public:
 	size_t size();
 	bool isEmpty();
 };
-

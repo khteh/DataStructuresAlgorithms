@@ -6,7 +6,7 @@
 #include <limits>
 using namespace std;
 
-template <class T>
+template <typename T>
 class DisJointSet
 {
 private:

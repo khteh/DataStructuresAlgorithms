@@ -267,7 +267,7 @@ void parentheses(vector<string> &, string &, size_t, long, long);
 long LongestValidParentheses(const string &);
 long LongestValidParenthesesWithFixes(const string &, size_t k);
 vector<long> diffWaysToCompute(string);
-template <class T>
+template <typename T>
 void SortStack(MyStack<T> &, MyStack<T> &, sort_order_t order);
 long ToggleSign(long);
 long absolute(long a);
@@ -298,7 +298,7 @@ void MaxHeapTests();
 void MinMaxHeapTests();
 void SparseNumberTests();
 void LongestCommonSubsequenceTests();
-template <class URNG>
+template <typename URNG>
 void TestURNG(URNG &);
 void TestRandom();
 void GreedyAlgorithmTests();
@@ -416,7 +416,7 @@ size_t countPaths(size_t, size_t, size_t, size_t, size_t);
 vector<shared_ptr<Node<string>>> shortest_cycle_path(shared_ptr<Node<string>>);
 int findMinFlip(vector<int> &);
 bool IsValidMatrix(vector<vector<char>> const &);
-template <class T>
+template <typename T>
 T TreeArithmeticTotal(shared_ptr<Node<string>>);
 size_t ZigZagEscape(vector<long> &);
 size_t ZigZagEscape(vector<long> &, set<string> &);
@@ -498,3 +498,4 @@ size_t eggDrops(size_t, size_t);
 vector<string> fizzBuzz(size_t);
 vector<long> bfs(size_t, size_t, vector<vector<size_t>> &, size_t);
 vector<size_t> UnbeatenPath(size_t, vector<vector<size_t>> &, size_t);
+size_t evenForest(size_t, vector<vector<size_t>> &, size_t start = 1);

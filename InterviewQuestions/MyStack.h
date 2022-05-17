@@ -1,12 +1,13 @@
 #pragma once
 #include "Node.h"
 
-template<class T>
+template <typename T>
 class MyStack
 {
 private:
 	shared_ptr<Node<T>> m_top;
 	unsigned long m_size;
+
 public:
 	MyStack();
 	MyStack(const MyStack &);

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
-template <class T... Types>
+template <typename T... Types>
 class InterleavingIterator : public IIterator<T>
 {
 private:

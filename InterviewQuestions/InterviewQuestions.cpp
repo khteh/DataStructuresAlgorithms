@@ -4374,6 +4374,18 @@ void GraphTests()
 	assert(data == UnbeatenPath(5, edges, 1));
 	edges.clear();
 	data.clear();
+	edges = {{1, 2}, {1, 3}, {3, 4}};
+	assert(1 == evenForest(4, edges));
+	edges.clear();
+	data.clear();
+	edges = {{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 1}, {7, 2}, {8, 6}, {9, 8}, {10, 8}};
+	assert(2 == evenForest(10, edges));
+	edges.clear();
+	data.clear();
+	edges = {{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 5}, {7, 1}, {8, 1}, {9, 2}, {10, 7}, {11, 10}, {12, 3}, {13, 7}, {14, 8}, {15, 12}, {16, 6}, {17, 6}, {18, 10}, {19, 1}, {20, 8}};
+	assert(4 == evenForest(20, edges));
+	edges.clear();
+	data.clear();
 
 	cout << endl;
 }
@@ -4722,7 +4734,7 @@ size_t findLongestContiguousPattern(string &str, char c)
 	return max;
 }
 
-template <class T>
+template <typename T>
 void SortStack(MyStack<T> &src, MyStack<T> &dest, sort_order_t order)
 {
 	T item;
@@ -9980,7 +9992,7 @@ unsigned long long XOR(unsigned long long n)
 {
 	return (n <= 1) ? n : n ^ XOR(n - 1);
 }
-template <class URNG>
+template <typename URNG>
 void TestURNG(URNG &urng)
 {
 	// Uniform distribution used with vector
@@ -11279,7 +11291,7 @@ bool IsValidMatrix(vector<vector<char>> const &data)
 }
 // Return the arithmetic total.
 // Tree nodes are arithmetic operators. Only leaf nodes are values (long in this case).
-template <class T>
+template <typename T>
 T TreeArithmeticTotal(shared_ptr<Node<string>> node)
 {
 	T result;
@@ -15138,4 +15150,25 @@ vector<size_t> UnbeatenPath(size_t n, vector<vector<size_t>> &roads, size_t sour
 		[](const typename map<size_t, size_t>::value_type &pair)
 		{ return pair.second; });
 	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/even-tree/problem
+ * 100%
+ */
+size_t evenForest(size_t nodeCount, vector<vector<size_t>> &edges, size_t start)
+{
+	vector<size_t> data(nodeCount);
+	generate(data.begin(), data.end(), [n = 1]() mutable
+			 { return n++; });
+	Graph<size_t, size_t> graph(data);
+	assert(graph.Count() == nodeCount);
+	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
+	{
+		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex((*it)[0]);
+		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex((*it)[1]);
+		graph.AddUndirectedEdge(v1, v2, 0);
+	}
+	// The root of the graph is Node 1
+	size_t cuts = graph.EvenForest(start);
+	return cuts;
 }

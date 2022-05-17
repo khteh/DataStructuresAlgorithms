@@ -5,7 +5,7 @@
 #include "MyStack.h"
 using namespace std;
 
-template <class T>
+template <typename T>
 class Tower
 {
 private:

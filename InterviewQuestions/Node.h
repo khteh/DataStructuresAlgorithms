@@ -5,7 +5,7 @@
 #include <limits>
 using namespace std;
 
-template <class T>
+template <typename T>
 class Node : public enable_shared_from_this<Node<T>>
 {
 protected:

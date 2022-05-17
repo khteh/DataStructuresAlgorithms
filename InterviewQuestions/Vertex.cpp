@@ -100,11 +100,25 @@ size_t Vertex<TTag, TItem>::NeighbourCount() const
 	return neighbours_.size();
 }
 template <typename TTag, typename TItem>
-size_t Vertex<TTag, TItem>::DescendentsCount() const
+size_t Vertex<TTag, TItem>::EvenForestDescendentsCount(TTag root, set<string> &cuts) const
 {
+	ostringstream oss;
 	size_t count = 1; // Include itself
 	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
-		count += it->first->DescendentsCount();
+	{
+		if (it->first->GetTag() != root)
+		{
+			size_t descendents = it->first->EvenForestDescendentsCount(GetTag(), cuts);
+			if (!(descendents % 2))
+			{
+				oss.str("");
+				oss << GetTag() << "-" << it->first->GetTag();
+				cuts.emplace(oss.str());
+			}
+			else
+				count += descendents;
+		}
+	}
 	return count;
 }
 template <typename TTag, typename TItem>

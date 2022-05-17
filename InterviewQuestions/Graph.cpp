@@ -343,3 +343,23 @@ TItem Graph<TTag, TItem>::MinSubTreesDifference(shared_ptr<Vertex<TTag, TItem>> 
 	set<TTag> visited;
 	return node ? node->MinSubGraphDifference(visited) : 0;
 }
+template <typename TTag, typename TItem>
+long Graph<TTag, TItem>::EvenForest(TTag root)
+{
+	shared_ptr<Vertex<TTag, TItem>> n = GetVertex(root);
+	assert(n);
+	ostringstream oss;
+	set<string> cuts;
+	vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = n->GetNeighbours();
+	for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
+	{
+		size_t descendents = (*it)->EvenForestDescendentsCount(root, cuts);
+		if (!(descendents % 2))
+		{
+			oss.str("");
+			oss << root << "-" << (*it)->GetTag();
+			cuts.emplace(oss.str());
+		}
+	}
+	return cuts.size();
+}
