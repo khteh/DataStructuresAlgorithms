@@ -499,3 +499,4 @@ vector<string> fizzBuzz(size_t);
 vector<long> bfs(size_t, size_t, vector<vector<size_t>> &, size_t);
 vector<size_t> UnbeatenPath(size_t, vector<vector<size_t>> &, size_t);
 size_t evenForest(size_t, vector<vector<size_t>> &, size_t start = 1);
+string roadsInHackerland(size_t, vector<vector<size_t>> &);

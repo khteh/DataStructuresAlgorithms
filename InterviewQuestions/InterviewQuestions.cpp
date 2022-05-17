@@ -4388,6 +4388,9 @@ void GraphTests()
 	assert(4 == evenForest(20, edges2));
 	edges2.clear();
 	data.clear();
+	edges.clear();
+	edges = {{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}};
+	assert(roadsInHackerland(5, edges) == "1000100");
 	cout << endl;
 }
 void parentheses(vector<string> &result, string &str, size_t index, long left, long right)
@@ -15130,4 +15133,31 @@ size_t evenForest(size_t nodeCount, vector<vector<size_t>> &edges, size_t start)
 	// The root of the graph is Node 1
 	size_t cuts = graph.EvenForest(start);
 	return cuts;
+}
+/*
+ * https://www.hackerrank.com/challenges/johnland/problem
+ * Timeout!
+ */
+string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
+{
+	vector<size_t> data(n);
+	generate(data.begin(), data.end(), [n = 1]() mutable
+			 { return n++; });
+	Graph<size_t, size_t> graph(data);
+	assert(graph.Count() == n);
+	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
+	{
+		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex((*it)[0]);
+		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex((*it)[1]);
+		graph.AddUndirectedEdge(v1, v2, 1 << (*it)[2]);
+	}
+	size_t distance = 0;
+	for (size_t i = 1; i <= n; i++)
+		for (size_t j = i + 1; j <= n; j++)
+		{
+			if (i != j)
+				distance += graph.Dijkstra(i, j);
+		}
+	string binary = decimal_to_binary(distance);
+	return binary.substr(binary.find_first_not_of('0'));
 }
