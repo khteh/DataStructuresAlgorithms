@@ -4209,27 +4209,27 @@ void GraphTests()
 	assert(v2->GetCost(v2) == 0);
 	assert(v3->GetCost(v3) == 0);
 	assert(v4->GetCost(v4) == 0);
-	graph.AddUndirectedEdge(v1, v2, 1);
+	graph.AddUndirectedEdge(v1, v2, 1); // 1->2 (1)
 	assert(v1->HasNeighbour(v2));
 	assert(v1->GetCost(v2) == 1);
 	assert(v2->HasNeighbour(v1));
 	assert(v2->GetCost(v1) == 1);
-	graph.AddUndirectedEdge(v2, v3, 2);
+	graph.AddUndirectedEdge(v2, v3, 2); // 2->3 (2)
 	assert(v2->HasNeighbour(v3));
 	assert(v2->GetCost(v3) == 2);
 	assert(v3->HasNeighbour(v2));
 	assert(v3->GetCost(v2) == 2);
-	graph.AddUndirectedEdge(v2, v4, 3);
+	graph.AddUndirectedEdge(v2, v4, 3); // 2->4 (3)
 	assert(v2->HasNeighbour(v4));
 	assert(v2->GetCost(v4) == 3);
 	assert(v4->HasNeighbour(v2));
 	assert(v4->GetCost(v2) == 3);
-	graph.AddUndirectedEdge(v3, v5, 4);
+	graph.AddUndirectedEdge(v3, v5, 4); // 3->5 (4)
 	assert(v3->HasNeighbour(v5));
 	assert(v3->GetCost(v5) == 4);
 	assert(v5->HasNeighbour(v3));
 	assert(v5->GetCost(v3) == 4);
-	graph.AddUndirectedEdge(v4, v5, 5);
+	graph.AddUndirectedEdge(v4, v5, 5); // 4->5 (5)
 	assert(v4->HasNeighbour(v5));
 	assert(v4->GetCost(v5) == 5);
 	assert(v5->HasNeighbour(v4));
@@ -4264,7 +4264,8 @@ void GraphTests()
 	cout << "Vertex\tDistance from Source (1): " << endl;
 	for (map<shared_ptr<Vertex<size_t, size_t>>, long>::iterator it = costs.begin(); it != costs.end(); it++)
 		cout << it->first->GetItem() << "\t" << it->second << endl;
-	assert(graph.Dijkstra(1, 5) == 7);
+	assert(graph.Dijkstra(1, 5) == 7); // 1->2->3->5
+	assert(graph.Dijkstra(5, 1) == 7); // 1->2->3->5
 	graph.Remove(3);
 	assert(!graph.HasVertex(3));
 	assert(!v2->HasNeighbour(v3));
@@ -4283,11 +4284,17 @@ void GraphTests()
 	graph.AddUndirectedEdge(v3, v5, 3);
 	graph.AddUndirectedEdge(v2, v4, 2);
 	assert(graph.Dijkstra(1, 5) == 6); // 1 + 2 + 3
+	assert(graph.Dijkstra(5, 1) == 6); // 1 + 2 + 3
 	assert(graph.Dijkstra(1, 2) == 1);
+	assert(graph.Dijkstra(2, 1) == 1);
 	assert(graph.Dijkstra(2, 3) == 2);
+	assert(graph.Dijkstra(3, 2) == 2);
 	assert(graph.Dijkstra(1, 3) == 3); // 1 + 2
+	assert(graph.Dijkstra(3, 1) == 3); // 1 + 2
 	assert(graph.Dijkstra(1, 4) == 3); // 1 + 2
+	assert(graph.Dijkstra(4, 1) == 3); // 1 + 2
 	assert(graph.Dijkstra(3, 4) == 4); // 2 + 2
+	assert(graph.Dijkstra(4, 3) == 4); // 2 + 2
 	costs.clear();
 	graph.Clear();
 	data.clear();
@@ -15157,11 +15164,27 @@ string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 		graph.AddUndirectedEdge(v1, v2, 1 << (*it)[2]);
 	}
 	size_t distance = 0;
+	map<string, long> costCache;
+	ostringstream oss1, oss2;
 	for (size_t i = 1; i <= n; i++)
 		for (size_t j = i + 1; j <= n; j++)
 		{
-			if (i != j)
-				distance += graph.Dijkstra(i, j);
+			if (i != j) {
+				oss1.str("");
+				oss2.str("");
+				oss1 << i << "-" << j;
+				oss2 << j << "-" << i;
+				if (costCache.find(oss1.str()) != costCache.end())
+					distance += costCache[oss1.str()];
+				else if (costCache.find(oss2.str()) != costCache.end())
+					distance += costCache[oss2.str()];
+				else {
+					size_t cost = graph.Dijkstra(i, j);
+					costCache[oss1.str()] = cost;
+					costCache[oss2.str()] = cost;
+					distance += cost;
+				}
+			}
 		}
 	string binary = decimal_to_binary(distance);
 	return binary.substr(binary.find_first_not_of('0'));
