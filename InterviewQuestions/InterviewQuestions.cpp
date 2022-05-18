@@ -794,7 +794,9 @@ int main(int argc, char *argv[])
 	assert(factorialDynamicProgramming(4) == 24);
 	assert(factorialDynamicProgramming(5) == 120);
 	assert(factorialDynamicProgramming(20) == 2432902008176640000);
-	assert(factorialDynamicProgramming(25) == 15511210043330985984000000);
+#if defined(__GNUC__) || defined(__GNUG__)
+	assert(factorialDynamicProgramming(25) == 15511210043330985984000000); // Only 64-bit on GNU C++
+#endif
 	assert(SequenceSum(0) == 0);
 	assert(SequenceSum(1) == 1);
 	assert(SequenceSum(5) == 15);
@@ -14222,39 +14224,41 @@ r3: 3 1 2 4
  */
 void rotateMatrixRTimesAntiClockwise(vector<vector<long>> &matrix, size_t rotation)
 {
-	long bottom = matrix.size() - 1, right = matrix[0].size() - 1, top = 0, left = 0;
-	vector<long> items;
-	for (; left < right && top < bottom; top++, left++, bottom--, right--)
-	{
-		size_t rowCount = right - left + 1, colCount = bottom - top - 1;
-		size_t count = 2 * rowCount + 2 * (bottom - top - 1);
-		if (!count)
-			return;
-		items.clear();
-		size_t r = rotation % count;
-		if (!r)
-			continue;
-		// Copy top row
-		items.insert(items.end(), matrix[top].begin() + left, matrix[top].begin() + left + rowCount);
-		// Copy right column
-		for (size_t y = top + 1; y < bottom; y++)
-			items.push_back(matrix[y][right]);
-		// Copy bottom row in reverse order
-		items.insert(items.end(), matrix[bottom].rbegin() + left, matrix[bottom].rbegin() + left + rowCount); // left here is offset from the right which is the same both left and right
-		// Copy left column in reverse order
-		for (long y = bottom - 1; y > top; y--)
-			items.push_back(matrix[y][left]);
-		rotate(items.begin(), items.begin() + rotation % count, items.end());
-		// Copy back top row
-		copy(items.begin(), items.begin() + rowCount, matrix[top].begin() + left);
-		// Copy back right column
-		for (size_t y = top + 1, i = rowCount; y < bottom && i < rowCount + colCount; y++, i++)
-			matrix[y][right] = items[i];
-		// Copy back bottom row in reverse order
-		copy(items.begin() + rowCount + colCount, items.begin() + 2 * rowCount + colCount, matrix[bottom].rbegin() + left);
-		// Copy back left column
-		for (long y = bottom - 1, i = 2 * rowCount + colCount; y > top && i < 2 * rowCount + 2 * colCount; y--, i++)
-			matrix[y][left] = items[i];
+	if (!matrix.empty()) {
+		long bottom = matrix.size() - 1, right = matrix[0].size() - 1, top = 0, left = 0;
+		vector<long> items;
+		for (; left < right && top < bottom; top++, left++, bottom--, right--)
+		{
+			size_t rowCount = right - left + 1, colCount = bottom - top - 1;
+			size_t count = 2 * rowCount + 2 * (bottom - top - 1);
+			if (!count)
+				return;
+			items.clear();
+			size_t r = rotation % count;
+			if (!r)
+				continue;
+			// Copy top row
+			items.insert(items.end(), matrix[top].begin() + left, matrix[top].begin() + left + rowCount);
+			// Copy right column
+			for (size_t y = top + 1; y < bottom; y++)
+				items.push_back(matrix[y][right]);
+			// Copy bottom row in reverse order
+			items.insert(items.end(), matrix[bottom].rbegin() + left, matrix[bottom].rbegin() + left + rowCount); // left here is offset from the right which is the same both left and right
+			// Copy left column in reverse order
+			for (long y = bottom - 1; y > top; y--)
+				items.push_back(matrix[y][left]);
+			rotate(items.begin(), items.begin() + rotation % count, items.end());
+			// Copy back top row
+			copy(items.begin(), items.begin() + rowCount, matrix[top].begin() + left);
+			// Copy back right column
+			for (size_t y = top + 1, i = rowCount; y < bottom && i < rowCount + colCount; y++, i++)
+				matrix[y][right] = items[i];
+			// Copy back bottom row in reverse order
+			copy(items.begin() + rowCount + colCount, items.begin() + 2 * rowCount + colCount, matrix[bottom].rbegin() + left);
+			// Copy back left column
+			for (long y = bottom - 1, i = 2 * rowCount + colCount; y > top && i < 2 * rowCount + 2 * colCount; y--, i++)
+				matrix[y][left] = items[i];
+		}
 	}
 }
 /* https://leetcode.com/problems/search-a-2d-matrix-ii/
