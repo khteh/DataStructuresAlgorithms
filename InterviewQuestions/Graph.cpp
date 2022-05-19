@@ -168,8 +168,8 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 	cout << __FUNCTION__ << " edges of Minimum Spanning Tree: " << endl;
 	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = parents.begin(); it != parents.end(); it++)
 		cout << it->second->GetTag() << " -> " << it->first << endl;
-	return accumulate(costs.begin(), costs.end(), 0, [](size_t value, const typename map<TTag, long>::value_type &p)
-					  { return value + p.second; });
+	return accumulate(costs.begin(), costs.end(), 0, [](size_t value, const typename map<TTag, long>::value_type& p)
+		{ return value + p.second; });
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem>>, long> &costs)

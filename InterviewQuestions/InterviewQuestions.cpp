@@ -132,6 +132,7 @@ int main(int argc, char *argv[])
 #endif
 	assert(sizeof(float) == 4);
 	assert(sizeof(long long) == 8);
+	assert(sizeof(unsigned long long) == 8);
 	assert(sizeof(double) == 8);
 #if defined(__GNUC__) || defined(__GNUG__)
 	assert(sizeof(long double) == 16);
@@ -795,7 +796,7 @@ int main(int argc, char *argv[])
 	assert(factorialDynamicProgramming(5) == 120);
 	assert(factorialDynamicProgramming(20) == 2432902008176640000);
 #if defined(__GNUC__) || defined(__GNUG__)
-	assert(factorialDynamicProgramming(25) == 15511210043330985984000000); // Only 64-bit on GNU C++
+		assert(factorialDynamicProgramming(25) == 15511210043330985984000000); // Only 64-bit on GNU C++. "constant too big" compilation error on MSVC
 #endif
 	assert(SequenceSum(0) == 0);
 	assert(SequenceSum(1) == 1);
@@ -10511,8 +10512,21 @@ size_t getMinimumCost(size_t k, vector<size_t> &c)
 				}
 			}
 		}
-		else
-			price = accumulate(c.begin(), c.end(), 0);
+		else {
+#ifdef _MSC_VER
+			price = parallel_reduce(c.begin(), c.end(), 0);
+#elif defined(__GNUC__) || defined(__GNUG__)
+			price = parallel_reduce(
+				blocked_range<size_t>(0, c.size()), 0,
+				[&](tbb::blocked_range<size_t> r, size_t running_total)
+				{
+					for (int i = r.begin(); i < r.end(); ++i)
+						running_total += c[i];
+					return running_total;
+				},
+				std::plus<size_t>());
+#endif
+		}
 	}
 	return price;
 }
@@ -10729,8 +10743,11 @@ void Knapsack_CoinChangeTests()
 	vector<vector<size_t>> result = BoundedKnapsack(8, numbers);
 	assert(result.size() == 4);
 	cout << "BoundedKnapsack which sums to amount 8: ";
-	for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
+	for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++) {
+		cout << "[";
 		copy(it->begin(), it->end(), ostream_iterator<size_t>(cout, " "));
+		cout << "], ";
+	}
 	cout << endl;
 	numbers.clear();
 	numbers = {2, 3, 5};
@@ -12625,7 +12642,19 @@ size_t MinSubGraphsDifference(vector<size_t> &vertices, vector<vector<size_t>> &
 	shared_ptr<Vertex<size_t, size_t>> v = graph.GetVertex(650);
 	if (v)
 		graph.Print(v);
-	size_t sum = accumulate(vertices.begin(), vertices.end(), 0);
+#ifdef _MSC_VER
+	size_t sum = parallel_reduce(vertices.begin(), vertices.end(), 0);
+#elif defined(__GNUC__) || defined(__GNUG__)
+	size_t sum = parallel_reduce(
+		blocked_range<size_t>(0, vertices.size()), 0,
+		[&](tbb::blocked_range<size_t> r, size_t running_total)
+		{
+			for (int i = r.begin(); i < r.end(); ++i)
+				running_total += vertices[i];
+			return running_total;
+		},
+		std::plus<size_t>());
+#endif
 	size_t result = graph.MinSubGraphsDifference(vertices[0], sum);
 	return result;
 }
@@ -13040,8 +13069,21 @@ size_t StairsClimbingDynamicProgrammingBottomUp(long destination, vector<size_t>
 {
 	vector<size_t> combinations(steps.size(), 0);
 	combinations[0] = 1;
-	for (size_t i = 1; i <= (size_t)destination; i++)
-		combinations[i % combinations.size()] = accumulate(combinations.begin(), combinations.end(), 0);
+	for (size_t i = 1; i <= (size_t)destination; i++) {
+#ifdef _MSC_VER
+		combinations[i % combinations.size()] = parallel_reduce(combinations.begin(), combinations.end(), 0);
+#elif defined(__GNUC__) || defined(__GNUG__)
+		combinations[i % combinations.size()] = parallel_reduce(
+			blocked_range<size_t>(0, combinations.size()), 0,
+			[&](tbb::blocked_range<size_t> r, size_t running_total)
+			{
+				for (int i = r.begin(); i < r.end(); ++i)
+					running_total += combinations[i];
+				return running_total;
+			},
+			std::plus<size_t>());
+#endif
+	}
 	return combinations[destination % combinations.size()];
 }
 // https://www.hackerrank.com/challenges/unbounded-knapsack/problem
@@ -13096,8 +13138,22 @@ size_t UnboundedKnapsack(long k, vector<size_t> &arr)
 	knapsackCache.clear();
 	set<vector<size_t>> combinations = Knapsack(k, arr);
 	set<size_t> sums;
-	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
-		sums.insert(accumulate(it->begin(), it->end(), 0));
+	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++) {
+#ifdef _MSC_VER
+		size_t sum = parallel_reduce(it->begin(), it->end(), 0);
+#elif defined(__GNUC__) || defined(__GNUG__)
+		size_t sum = parallel_reduce(
+			blocked_range<size_t>(0, it->size()), 0,
+			[&](tbb::blocked_range<size_t> r, size_t running_total)
+			{
+				for (int i = r.begin(); i < r.end(); ++i)
+					running_total += (*it)[i];
+				return running_total;
+			},
+			std::plus<size_t>());
+#endif
+		sums.insert(sum);
+	}
 	return sums.empty() ? 0 : *sums.rbegin();
 }
 set<vector<size_t>> _BoundedKnapsack(long amount, vector<size_t> &numbers)
@@ -13145,9 +13201,23 @@ vector<vector<size_t>> BoundedKnapsack(long amount, vector<size_t> &numbers)
 	vector<vector<size_t>> result;
 	knapsackCache.clear();
 	set<vector<size_t>> combinations = _BoundedKnapsack(amount, numbers);
-	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
-		if (accumulate(it->begin(), it->end(), 0) == amount)
+	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++) {
+#ifdef _MSC_VER
+		size_t sum = parallel_reduce(it->begin(), it->end(), 0);
+#elif defined(__GNUC__) || defined(__GNUG__)
+		size_t sum = parallel_reduce(
+			blocked_range<size_t>(0, it->size()), 0,
+			[&](tbb::blocked_range<size_t> r, size_t running_total)
+			{
+				for (int i = r.begin(); i < r.end(); ++i)
+					running_total += (*it)[i];
+				return running_total;
+			},
+			std::plus<size_t>());
+#endif
+		if (sum == amount)
 			result.push_back(*it);
+	}
 	return result;
 }
 /* https://leetcode.com/problems/combination-sum-iii/
@@ -13175,7 +13245,20 @@ set<vector<size_t>> _BoundedKnapsackCombinationSum(size_t k, size_t sum)
 					{
 						vector<size_t> change(*it);
 						change.push_back(i);
-						if (accumulate(change.begin(), change.end(), 0) == sum)
+#ifdef _MSC_VER
+						size_t total = parallel_reduce(change.begin(), change.end(), 0);
+#elif defined(__GNUC__) || defined(__GNUG__)
+						size_t total = parallel_reduce(
+							blocked_range<size_t>(0, change.size()), 0,
+							[&](tbb::blocked_range<size_t> r, size_t running_total)
+							{
+								for (int i = r.begin(); i < r.end(); ++i)
+									running_total += change[i];
+								return running_total;
+							},
+							std::plus<size_t>());
+#endif
+						if (total == sum)
 						{
 							sort(change.begin(), change.end());
 							combinations.insert(change);
