@@ -1262,7 +1262,7 @@ int main(int argc, char *argv[])
 #ifdef _MSC_VER
 	sum = parallel_reduce(b.begin(), b.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
-	long sum = parallel_reduce(
+	sum = parallel_reduce(
 		blocked_range<long>(0, b.size()), 0,
 		[&](tbb::blocked_range<long> r, long running_total)
 		{
