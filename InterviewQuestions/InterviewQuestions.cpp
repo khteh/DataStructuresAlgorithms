@@ -796,7 +796,7 @@ int main(int argc, char *argv[])
 	assert(factorialDynamicProgramming(5) == 120);
 	assert(factorialDynamicProgramming(20) == 2432902008176640000);
 #if defined(__GNUC__) || defined(__GNUG__)
-		assert(factorialDynamicProgramming(25) == 15511210043330985984000000); // Only 64-bit on GNU C++. "constant too big" compilation error on MSVC
+	assert(factorialDynamicProgramming(25) == 15511210043330985984000000); // Only 64-bit on GNU C++. "constant too big" compilation error on MSVC
 #endif
 	assert(SequenceSum(0) == 0);
 	assert(SequenceSum(1) == 1);
@@ -1238,7 +1238,8 @@ int main(int argc, char *argv[])
 	a.clear();
 	b.clear();
 	a.resize(10);
-	generate(a.begin(), a.end(), [n = 1]() mutable { return n++; });
+	generate(a.begin(), a.end(), [n = 1]() mutable
+			 { return n++; });
 #ifdef _MSC_VER
 	long sum = parallel_reduce(a.begin(), a.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
@@ -10530,7 +10531,8 @@ size_t getMinimumCost(size_t k, vector<size_t> &c)
 				}
 			}
 		}
-		else {
+		else
+		{
 #ifdef _MSC_VER
 			price = parallel_reduce(c.begin(), c.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
@@ -10761,7 +10763,8 @@ void Knapsack_CoinChangeTests()
 	vector<vector<size_t>> result = BoundedKnapsack(8, numbers);
 	assert(result.size() == 4);
 	cout << "BoundedKnapsack which sums to amount 8: ";
-	for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++) {
+	for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
+	{
 		cout << "[";
 		copy(it->begin(), it->end(), ostream_iterator<size_t>(cout, " "));
 		cout << "], ";
@@ -13087,7 +13090,8 @@ size_t StairsClimbingDynamicProgrammingBottomUp(long destination, vector<size_t>
 {
 	vector<size_t> combinations(steps.size(), 0);
 	combinations[0] = 1;
-	for (size_t i = 1; i <= (size_t)destination; i++) {
+	for (size_t i = 1; i <= (size_t)destination; i++)
+	{
 #ifdef _MSC_VER
 		combinations[i % combinations.size()] = parallel_reduce(combinations.begin(), combinations.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
@@ -13156,7 +13160,8 @@ size_t UnboundedKnapsack(long k, vector<size_t> &arr)
 	knapsackCache.clear();
 	set<vector<size_t>> combinations = Knapsack(k, arr);
 	set<size_t> sums;
-	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++) {
+	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
+	{
 #ifdef _MSC_VER
 		size_t sum = parallel_reduce(it->begin(), it->end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
@@ -13219,7 +13224,8 @@ vector<vector<size_t>> BoundedKnapsack(long amount, vector<size_t> &numbers)
 	vector<vector<size_t>> result;
 	knapsackCache.clear();
 	set<vector<size_t>> combinations = _BoundedKnapsack(amount, numbers);
-	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++) {
+	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
+	{
 #ifdef _MSC_VER
 		size_t sum = parallel_reduce(it->begin(), it->end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
@@ -14332,7 +14338,8 @@ r3: 3 1 2 4
  */
 void rotateMatrixRTimesAntiClockwise(vector<vector<long>> &matrix, size_t rotation)
 {
-	if (!matrix.empty()) {
+	if (!matrix.empty())
+	{
 		long bottom = matrix.size() - 1, right = matrix[0].size() - 1, top = 0, left = 0;
 		vector<long> items;
 		for (; left < right && top < bottom; top++, left++, bottom--, right--)
@@ -15270,7 +15277,8 @@ string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 	for (size_t i = 1; i <= n; i++)
 		for (size_t j = i + 1; j <= n; j++)
 		{
-			if (i != j) {
+			if (i != j)
+			{
 				oss1.str("");
 				oss2.str("");
 				oss1 << i << "-" << j;
@@ -15279,7 +15287,8 @@ string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 					distance += costCache[oss1.str()];
 				else if (costCache.find(oss2.str()) != costCache.end())
 					distance += costCache[oss2.str()];
-				else {
+				else
+				{
 					size_t cost = graph.Dijkstra(i, j);
 					costCache[oss1.str()] = cost;
 					costCache[oss2.str()] = cost;
