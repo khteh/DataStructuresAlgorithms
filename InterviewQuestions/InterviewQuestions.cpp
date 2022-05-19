@@ -1237,12 +1237,30 @@ int main(int argc, char *argv[])
 	assert(countNumbersWithUniqueDigits(11) == 0);
 	a.clear();
 	b.clear();
+	a.resize(10);
+	generate(a.begin(), a.end(), [n = 1]() mutable { return n++; });
+#ifdef _MSC_VER
+	long sum = parallel_reduce(a.begin(), a.end(), 0);
+#elif defined(__GNUC__) || defined(__GNUG__)
+	long sum = parallel_reduce(
+		blocked_range<long>(0, a.size()), 0,
+		[&](tbb::blocked_range<long> r, long running_total)
+		{
+			for (int i = r.begin(); i < r.end(); ++i)
+				running_total += a[i];
+			return running_total;
+		},
+		std::plus<long>());
+#endif
+	assert(sum == 55);
+	a.clear();
+	b.clear();
 	a = {1, 7, 15, 29, 11, 9};
 	EqualAverageDivide(a, b);
 	assert(b.size() == 2);
 	cout << "Left part: ";
 #ifdef _MSC_VER
-	long sum = parallel_reduce(b.begin(), b.end(), 0);
+	sum = parallel_reduce(b.begin(), b.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
 	long sum = parallel_reduce(
 		blocked_range<long>(0, b.size()), 0,
