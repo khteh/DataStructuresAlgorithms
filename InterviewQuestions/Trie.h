@@ -42,7 +42,7 @@ public:
 	typedef typename map<char, shared_ptr<TrieNode<T>>>::const_iterator IteratorType;
 	TrieNode();
 	TrieNode(T);
-	~TrieNode<T>();
+	~TrieNode();
 	T Key() const;
 	void SetKey(T);
 	void InsertString(string const &, T);

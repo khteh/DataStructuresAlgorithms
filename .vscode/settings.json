@@ -15,6 +15,9 @@
         "regex": "cpp",
         "bitset": "cpp",
         "*.tcc": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "functional": "cpp",
+        "ranges": "cpp",
+        "span": "cpp"
     }
 }

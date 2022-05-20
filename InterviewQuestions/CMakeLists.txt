@@ -125,7 +125,7 @@ if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
     )
 endif()
 #set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY_STR})
-set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 20)
 
 ################################################################################
 # Compile definitions
@@ -181,6 +181,7 @@ if(MSVC)
                 /Y-
             >
             $<$<CONFIG:Release>:
+                /std:c++20;
                 /O2;
                 /Gy;
                 ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
@@ -200,6 +201,7 @@ if(MSVC)
                 /Y-
             >
             $<$<CONFIG:Release>:
+                /std:c++20;
                 /O2;
                 /Oi;
                 /Gy

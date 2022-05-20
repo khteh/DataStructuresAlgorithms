@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "InterviewQuestions.h"
 using namespace std;
+namespace ranges = std::ranges;
 #if defined(__GNUC__) || defined(__GNUG__)
 using namespace tbb;
 #endif
@@ -398,7 +399,7 @@ int main(int argc, char *argv[])
 	assert(!WordExistsInGrid(maze, string("ABCB")));
 	line = "ab2c3";
 	assert(uncompress(line) == "ababcababcababc");
-	cout << "uncompress(\"ab2c3\"): " << uncompress(line) << endl;
+	cout << "uncompress(" << quoted(line) << "): " << uncompress(line) << endl;
 	line = "0010110100";
 	size = findLongestContiguousPattern(line, '1');
 	assert(size == 4);
@@ -1165,8 +1166,7 @@ int main(int argc, char *argv[])
 		 << endl;
 
 	cout << "Test shuffle deck of cards: " << endl;
-	vector<long> cards, result;
-	cards.resize(52);
+	vector<long> cards(52), result;
 	iota(cards.begin(), cards.end(), 0);
 	shuffleCards(cards);
 	for (i = 0; i < 52; i++)
@@ -2715,6 +2715,7 @@ int main(int argc, char *argv[])
 	assert(fizzBuzz(5) == vector<string>({"1", "2", "Fizz", "4", "Buzz"}));
 	assert(fizzBuzz(10) == vector<string>({"1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz"}));
 	assert(fizzBuzz(15) == vector<string>({"1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz"}));
+	cpp20readonlyranges();
 	/***** The End *****/
 	// cout << endl << "Press ENTER to exit!";
 	// getline(cin, line);
@@ -6850,7 +6851,7 @@ void SuffixTreeTests()
 		if (!indexes.empty())
 			copy(indexes.begin(), indexes.end(), ostream_iterator<size_t>(cout, " "));
 		else
-			cout << "\"" << *it << "\" not found!";
+			cout << quoted(*it) << " not found!";
 		cout << endl;
 	}
 	vector<size_t> indices1 = sTree.GetIndexes("is");
@@ -7389,22 +7390,22 @@ void AnagramTests()
 	str = "Hello World!!!";
 	str1 = "World Hello!!!";
 	assert(areAnagrams(str, str1));
-	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+	cout << quoted(str) << " and " << quoted(str1) << " -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
 	str1 = "World!!! Hello";
 	assert(areAnagrams(str, str1));
-	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+	cout << quoted(str) << " and " << quoted(str1) << " -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
 	str1 = "!HWr ole!d!lol";
 	assert(areAnagrams(str, str1));
-	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+	cout << quoted(str) << " and " << quoted(str1) << " -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
 	str1 = "World Hello!!! ";
 	assert(!areAnagrams(str, str1));
-	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+	cout << quoted(str) << " and " << quoted(str1) << " -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
 	str1 = "world hello!!!";
 	assert(!areAnagrams(str, str1));
-	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+	cout << quoted(str) << " and " << quoted(str1) << " -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
 	str1 = "Good Morning!!!";
 	assert(!areAnagrams(str, str1));
-	cout << "\"" << str << "\" and \"" << str1 << "\" -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+	cout << quoted(str) << " and " << quoted(str1) << " -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
 	strings.clear();
 	strings.push_back("star"); // "arst" : "star"
 	strings.push_back("dog");  // "dgo" : "dog"
@@ -8073,7 +8074,7 @@ void BinaryTreeTests()
 	assert(result.size() == 3); //"-100" "-100 0" "-50 0 -100 50"
 	cout << "Sum -100 path: ";
 	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
-		cout << "\"" << *it << "\" ";
+		cout << quoted(*it) << " ";
 	cout << endl;
 	result.clear();
 
@@ -8081,7 +8082,7 @@ void BinaryTreeTests()
 	assert(result.size() == 1);
 	cout << "Sum 110 path: ";
 	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
-		cout << "\"" << *it << "\" ";
+		cout << quoted(*it) << " ";
 	cout << endl;
 	result.clear();
 
@@ -8166,7 +8167,7 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	assert(result.size() == 1);
 	cout << "Sum 5 path: ";
 	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
-		cout << "\"" << *it << "\" ";
+		cout << quoted(*it) << " ";
 	cout << endl;
 	result.clear();
 	vector<size_t> data = {10, 5, 11};
@@ -8479,14 +8480,14 @@ void BinarySearchTreeTests()
 	tree1.FindSum(tree1.Root(), -100, result);
 	cout << "Sum -100 path: ";
 	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
-		cout << "\"" << *it << "\" ";
+		cout << quoted(*it) << " ";
 	cout << endl;
 	result.clear();
 
 	tree1.FindSum(tree1.Root(), 150, result);
 	cout << "Sum 150 path: ";
 	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
-		cout << "\"" << *it << "\" ";
+		cout << quoted(*it) << " ";
 	cout << endl;
 	result.clear();
 
@@ -9917,14 +9918,12 @@ set<string> intersectionNgram(const string &str1, const string &str2, int n)
 		return result;
 	cout << "str1 " << n << "-grams: ";
 	for (set<string>::const_iterator it = ngrams1.begin(); it != ngrams1.end(); it++)
-		cout << "\"" << *it << "\""
-			 << ", ";
+		cout << quoted(*it) << ", ";
 	cout << endl;
 	set<string> ngrams2 = process(str2, n);
 	cout << "str2 " << n << "-grams: ";
 	for (set<string>::const_iterator it = ngrams2.begin(); it != ngrams2.end(); it++)
-		cout << "\"" << *it << "\""
-			 << ", ";
+		cout << quoted(*it) << ", ";
 	cout << endl;
 	set_intersection(ngrams1.begin(), ngrams1.end(), ngrams2.begin(), ngrams2.end(), inserter(result, result.begin()));
 	return result;
@@ -15298,4 +15297,156 @@ string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 		}
 	string binary = decimal_to_binary(distance);
 	return binary.substr(binary.find_first_not_of('0'));
+}
+/*
+ * https://www.cppstories.com/2022/ranges-alg-part-one/
+ */
+void cpp20readonlyranges()
+{
+	// 1. all_of, any_of, none_of
+	cout << "C++20 ranges all_of, any_of, none_of:" << endl;
+	const vector<int> nums = {1, 2, 3, -4, 5, 6, 7, 8};
+	auto is_positive = [](const auto &v)
+	{ return v > 0; };
+	// standard version:
+	assert(!all_of(nums.begin(), nums.end(), is_positive));
+	assert(any_of(nums.begin(), nums.end(), is_positive));
+	// ranges version:
+	assert(!ranges::all_of(nums, is_positive));
+	assert(ranges::any_of(nums, is_positive));
+
+	vector<Node<int>> nodes;
+	int n = -5;
+	for (size_t i = 0; i < 10; i++, n++)
+		nodes.push_back(Node<int>(n));
+	auto is_positive_val = [](Node<int> &n)
+	{
+		return n.Item() > 0;
+	};
+	// standard version:
+	assert(!all_of(nodes.begin(), nodes.end(), is_positive_val));
+	assert(any_of(nodes.begin(), nodes.end(), is_positive_val));
+	// ranges version:
+	assert(!ranges::all_of(nodes, is_positive, &Node<int>::Item));
+	assert(ranges::any_of(nodes, is_positive, &Node<int>::Item));
+
+	// 2. for_each
+	cout << "C++20 ranges for_each:" << endl;
+	auto out = [](const auto &v)
+	{ cout << v << ", "; };
+	// standard version:
+	cout << "std::for_each:" << endl;
+	for_each(nodes.begin(), nodes.end(), [](Node<int> &n)
+			 { cout << n.Item() << ", "; });
+	cout << endl;
+	cout << "std::for_each only reversed:" << endl;
+	for_each(nodes.rbegin(), nodes.rend(), [](Node<int> &n)
+			 { cout << n.Item() << ", "; });
+	cout << endl;
+	// ranges version:
+	cout << "std::ranges::for_each:" << endl;
+	ranges::for_each(nodes, [](Node<int> &n)
+					 { cout << n.Item() << ", "; });
+	cout << endl;
+	cout << "std::ranges::for_each reversed:" << endl;
+	ranges::for_each(nodes | std::views::reverse,
+					 out, &Node<int>::Item);
+	cout << endl;
+
+	// 3. count_if
+	cout << "C++20 count_if:" << endl;
+	// standard version:
+	assert(5 == count_if(nodes.begin(), nodes.end(), [](Node<int> &n)
+						 { return n.Item() >= 0; }));
+	// ranges version:
+	assert(5 == ranges::count_if(nodes, [](Node<int> &n)
+								 { return n.Item() >= 0; }));
+	assert(1 == ranges::count(nodes, 0, &Node<int>::Item));
+
+	// 4. find_if
+	cout << "C++20 find_if:" << endl;
+	// standard version:
+	auto it = find_if(nodes.begin(), nodes.end(), [](Node<int> &n)
+					  { return n.Item() >= 0; });
+	assert(it != nodes.end());
+	assert(it->Item() == 0);
+
+	// ranges version:
+	it = ranges::find_if(nodes, [](Node<int> &n)
+						 { return n.Item() >= 0; });
+	assert(it != nodes.end());
+	assert(it->Item() == 0);
+
+	// 5. find_first_of
+	cout << "C++20 find_first_of:" << endl;
+	vector<Node<int>> invalids;
+	invalids.push_back(Node<int>(-3));
+	invalids.push_back(Node<int>(3));
+	// standard version:
+	it = find_first_of(nodes.begin(), nodes.end(), invalids.begin(), invalids.end());
+	assert(it != nodes.end());
+	assert(distance(nodes.begin(), it) == 2);
+	auto it2 = find_first_of(next(it), nodes.end(), invalids.begin(), invalids.end());
+	assert(it2 != nodes.end());
+	assert(distance(nodes.begin(), it2) == 8);
+	// -3, -2, -1, 0, 1, 2, 3
+	assert(distance(it, it2) == 6);
+
+	// Ranges version
+	vector<int> invalidInts = {-3, 3};
+	it = ranges::find_first_of(nodes, invalidInts, ranges::equal_to{}, &Node<int>::Item);
+	assert(it != nodes.end());
+	auto pos = distance(nodes.begin(), it);
+	assert(pos == 2);
+	it2 = ranges::find_first_of(nodes | views::drop(pos + 1), invalidInts, ranges::equal_to{}, &Node<int>::Item);
+	assert(it2 != nodes.end());
+	assert(distance(nodes.begin(), it2) == 8);
+	assert(distance(it, it2) == 6);
+
+	// 6. mismatch
+	cout << "C++20 mismatch:" << endl;
+	const string firstStr = "Hello Super World";
+	const string secondStr = "Hello Amazing World";
+	// standard version :
+	auto [first, second] = mismatch(firstStr.begin(), firstStr.end(), secondStr.begin());
+	{
+		assert(distance(firstStr.begin(), first) == 6);
+	}
+	// ranges version
+	auto [i1, i2] = ranges::mismatch(firstStr, secondStr);
+	assert(distance(firstStr.begin(), i1) == 6);
+
+	// 7. search
+	const string_view needle{"Super"};
+	const string_view needle1{"SUPER"};
+	// standard
+	const auto it3 = search(firstStr.begin(), firstStr.end(), boyer_moore_searcher(needle.begin(), needle.end()));
+	assert(it3 != firstStr.end());
+	assert(distance(firstStr.begin(), it3) == 6);
+	// ranges case-sensitive
+	auto found = ranges::search(firstStr, needle);
+	assert(!found.empty());
+	assert(distance(firstStr.begin(), found.begin()) == 6);
+	assert(distance(firstStr.begin(), found.end()) == 11);
+	// ranges case-insensitive
+	found = ranges::search(firstStr, needle1, ranges::equal_to{}, ::toupper, ::toupper);
+	assert(!found.empty());
+	assert(distance(firstStr.begin(), found.begin()) == 6);
+	assert(distance(firstStr.begin(), found.end()) == 11);
+
+	const string sequence = "CTGCCCAGGGTTT";
+	const char letter = 'C';
+	const size_t count = 3;
+	cout << "looking for " << count << " " << letter << "'s in " << quoted(sequence) << endl;
+	// standard version:
+	auto it4 = search_n(sequence.begin(), sequence.end(), count, letter);
+	assert(it4 != sequence.end());
+	assert(distance(sequence.begin(), it4) == 3);
+	// ranges case-sensitive
+	found = ranges::search_n(sequence, count, letter);
+	assert(!found.empty());
+	assert(distance(sequence.begin(), found.begin()) == 3);
+	assert(distance(sequence.begin(), found.end()) == 6);
+
+	cout << endl;
 }

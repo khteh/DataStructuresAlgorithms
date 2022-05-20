@@ -24,6 +24,7 @@
 #include <regex>
 #include <exception>
 #include <cstring>
+#include <ranges>
 #ifdef _MSC_VER
 #include <ppl.h>
 #elif defined(__GNUC__) || defined(__GNUG__)
@@ -500,3 +501,4 @@ vector<long> bfs(size_t, size_t, vector<vector<size_t>> &, size_t);
 vector<size_t> UnbeatenPath(size_t, vector<vector<size_t>> &, size_t);
 size_t evenForest(size_t, vector<vector<size_t>> &, size_t start = 1);
 string roadsInHackerland(size_t, vector<vector<size_t>> &);
+void cpp20readonlyranges();
