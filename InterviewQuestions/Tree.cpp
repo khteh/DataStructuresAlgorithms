@@ -276,7 +276,7 @@ Tree<T> &Tree<T>::operator=(Tree<T> &tree)
 }
 
 template <typename T>
-bool Tree<T>::operator==(Tree<T> &tree)
+bool Tree<T>::operator==(const Tree<T> const &tree) const
 {
 	return MatchTree(m_root, tree.Root());
 }
@@ -298,7 +298,7 @@ shared_ptr<Node<T>> Tree<T>::Copy(const shared_ptr<Node<T>> &node, map<shared_pt
 		return nullptr;
 }
 template <typename T>
-shared_ptr<Node<T>> Tree<T>::Root()
+shared_ptr<Node<T>> Tree<T>::Root() const
 {
 	return m_root;
 }
@@ -496,7 +496,7 @@ bool Tree<T>::SubTree(const shared_ptr<Node<T>> &parent, const shared_ptr<Node<T
 }
 
 template <typename T>
-bool Tree<T>::MatchTree(const shared_ptr<Node<T>> &p, const shared_ptr<Node<T>> &q)
+bool Tree<T>::MatchTree(const shared_ptr<Node<T>> &p, const shared_ptr<Node<T>> &q) const
 {
 	if (!p && !q)
 		return true; // Nothing left in the subtree

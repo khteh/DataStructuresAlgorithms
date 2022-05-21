@@ -79,9 +79,9 @@ public:
 	virtual ~Tree();
 	void Clear();
 	Tree<T> &operator=(Tree<T> &);
-	bool operator==(Tree<T> &);
+	bool operator==(const Tree<T> const &) const;
 	void Serialize(const shared_ptr<Node<T>> &, vector<T> &);
-	shared_ptr<Node<T>> Root();
+	shared_ptr<Node<T>> Root() const;
 	void InsertItem(T);
 	virtual void InsertNode(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> FindNode(T);
@@ -92,7 +92,7 @@ public:
 	void FindSum(const shared_ptr<Node<T>> &, long, vector<string> &);
 	T SumRoot2LeafNumbers();
 	bool SubTree(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
-	bool MatchTree(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
+	bool MatchTree(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &) const;
 	size_t MinDepth(const shared_ptr<Node<T>> &) const;
 	size_t MaxDepth(const shared_ptr<Node<T>> &) const;
 	T NextMin();

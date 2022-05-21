@@ -170,8 +170,10 @@
     <ClInclude Include="FunctionObject.h" />
     <ClInclude Include="interval_map.h" />
     <ClInclude Include="KDTree.h" />
+    <ClInclude Include="KnapSack.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="ListRangeSum.h" />
+    <ClInclude Include="LongestCommonSubsequence.h" />
     <ClInclude Include="LRUCache.h" />
     <ClInclude Include="Square.h" />
     <ClInclude Include="TreasureGame.h" />
@@ -209,8 +211,10 @@
     <ClCompile Include="FunctionObject.cpp" />
     <ClCompile Include="interval_map.cpp" />
     <ClCompile Include="KDTree.cpp" />
+    <ClCompile Include="KnapSack.cpp" />
     <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="ListRangeSum.cpp" />
+    <ClCompile Include="LongestCommonSubsequence.cpp" />
     <ClCompile Include="LRUCache.cpp" />
     <ClCompile Include="Square.cpp" />
     <ClCompile Include="TreasureGame.cpp" />

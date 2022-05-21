@@ -33,3 +33,6 @@
 #include <cstring>
 #include <ranges>
 #include "../InterviewQuestions/InterviewQuestions.h"
+#include "../InterviewQuestions/MyStack.h"
+#include "../InterviewQuestions/LongestCommonSubsequence.h"
+#include "../InterviewQuestions/KnapSack.h"

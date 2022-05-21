@@ -67,11 +67,6 @@ using namespace std;
 using namespace concurrency;
 #endif
 using namespace chrono;
-typedef enum class SortOrder
-{
-	SORT_ASCENDING,
-	SORT_DESCENDING
-} sort_order_t;
 typedef union
 {
 	long l;
@@ -267,8 +262,6 @@ void parentheses(vector<string> &, string &, size_t, long, long);
 long LongestValidParentheses(const string &);
 long LongestValidParenthesesWithFixes(const string &, size_t k);
 vector<long> diffWaysToCompute(string);
-template <typename T>
-void SortStack(MyStack<T> &, MyStack<T> &, sort_order_t order);
 long ToggleSign(long);
 long absolute(long a);
 long SubtractWithPlusSign(long a, long b);
@@ -276,35 +269,12 @@ long MultiplyWithPlusSign(long a, long b);
 long DivideWithPlusSign(long a, long b);
 long divide(long, long);
 void KDTreeTests();
-void BinaryTreeTests();
-void BinarySearchTreeTests();
-void MinHeapTests();
-void MaxHeapTests();
-void MinMaxHeapTests();
-void SparseNumberTests();
-void LongestCommonSubsequenceTests();
 template <typename URNG>
 void TestURNG(URNG &);
 void TestRandom();
-void GreedyAlgorithmTests();
-void Knapsack_CoinChangeTests();
-void Knapsack_CombinationSumTests();
 void TweeterAPITests();
 void MinHeapifyDown(vector<long> &, size_t);
 void MaxHeapifyDown(vector<long> &, size_t);
-set<vector<size_t>> CoinChange(long, vector<size_t> &);
-set<vector<size_t>> CoinsChangeDynamicProgramming(long, vector<size_t> &);
-size_t CoinsChangeUniqueWaysDynamicProgramming(long, vector<size_t> &);
-size_t CoinsChangeDuplicateWaysDynamicProgramming(size_t, vector<size_t> &);
-long CoinsChangeFewestCoinsDynamicProgramming(long, vector<size_t> &);
-size_t StairsClimbingDynamicProgramming(long, vector<size_t> &);
-size_t StairsClimbingDynamicProgrammingBottomUp(long, vector<size_t> &);
-set<vector<size_t>> Knapsack(long, vector<size_t> &);
-size_t UnboundedKnapsack(long, vector<size_t> &);
-set<vector<size_t>> _BoundedKnapsack(long, vector<size_t> &);
-vector<vector<size_t>> BoundedKnapsack(long, vector<size_t> &);
-set<vector<size_t>> _BoundedKnapsackCombinationSum(size_t, size_t);
-set<vector<size_t>> BoundedKnapsackCombinationSum(size_t, size_t);
 void BubbleSort(vector<long> &);
 size_t minimumBribes(vector<long> &);
 size_t Partition(vector<long> &, size_t left, size_t right, size_t pivot);
@@ -411,7 +381,6 @@ int IncreasingSequences(vector<long> &, vector<long> &);
 size_t LongestIncreasingSubsequence(vector<size_t> &);
 size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &);
 bool increasingTriplet(vector<size_t> &);
-void IncreasingSequenceTests();
 size_t FindSubsequenceRecursive(const string &, const string &);
 size_t FindSubsequenceDynamicProgramming(const string &, const string &);
 size_t shortPalindrome(const string &);
@@ -429,25 +398,12 @@ string timeInWords(int, int);
 size_t beautifulQuadruples(int, int, int, int);
 long kruskals(int, vector<long> &, vector<long> &, vector<long> &);
 size_t PrimMinimumSpanningTree(size_t, vector<vector<long>> &, long);
-void UnbeatenPaths(size_t, vector<vector<long>> &, long, vector<size_t> &);
 long getLowestPathCost(size_t g_nodes, vector<long> &, vector<long> &, vector<long> &);
 size_t SurfaceArea3D(vector<vector<long>> &);
 size_t cutTheTree(vector<size_t> &, vector<vector<size_t>> &);
 size_t MinSubGraphsDifference(vector<size_t> &, vector<vector<size_t>> &);
 long PostmanProblem(vector<long> &, vector<vector<long>> &);
 string AlmostSorted(vector<long> &);
-size_t LCSLength(string &, string &);
-template <typename T>
-size_t LCSLength(vector<T> &, vector<T> &);
-size_t LCSLength(vector<vector<size_t>> &, string &, string &);
-template <typename T>
-size_t LCSLength(vector<vector<size_t>> &, vector<T> &, vector<T> &);
-string LCSBackTrack(vector<vector<size_t>> &, string &, string &, size_t, size_t);
-template <typename T>
-vector<T> LCSBackTrack(vector<vector<size_t>> &, vector<T> &, vector<T> &, size_t, size_t);
-void LCSPrintDiff(vector<vector<size_t>> &, string &, string &, long, long);
-template <typename T>
-void LCSPrintDiff(vector<vector<size_t>> &, vector<T> &, vector<T> &, long, long);
 string DecryptPassword(const string &);
 unsigned long long substrings(const string &);
 size_t steadyGene(string &);
@@ -482,7 +438,7 @@ void EulerianPath(string, map<string, multiset<string>> &, vector<string> &);
 size_t eggDrops(size_t, size_t);
 vector<string> fizzBuzz(size_t);
 vector<long> bfs(size_t, size_t, vector<vector<size_t>> &, size_t);
-vector<size_t> UnbeatenPath(size_t, vector<vector<size_t>> &, size_t);
+vector<size_t> UnbeatenPaths(size_t, vector<vector<size_t>> &, size_t);
 size_t evenForest(size_t, vector<vector<size_t>> &, size_t start = 1);
 string roadsInHackerland(size_t, vector<vector<size_t>> &);
 void cpp20readonlyranges();

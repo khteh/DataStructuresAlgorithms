@@ -85,3 +85,27 @@ void MyStack<T>::PrintStack()
 		cout << node->Item() << " ";
 	cout << endl;
 }
+template <typename T>
+void MyStack<T>::SortStack(MyStack<T>& src, MyStack<T>& dest, sort_order_t order)
+{
+	T item;
+	while (!src.isEmpty())
+	{
+		item = src.pop();
+		switch (order)
+		{
+		case SortOrder::SORT_ASCENDING: // Value grows from bottom of stack to top of stack
+			while (!dest.isEmpty() && item < dest.peek())
+				src.push(dest.pop());
+			break;
+		case SortOrder::SORT_DESCENDING: // Value shrinks from bottom of stack to top of stack
+			while (!dest.isEmpty() && item > dest.peek())
+				src.push(dest.pop());
+			break;
+		default:
+			throw runtime_error("Invalid sort order");
+			break;
+		}
+		dest.push(item);
+	}
+}

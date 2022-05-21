@@ -38,9 +38,16 @@
   <ItemGroup>
     <ClCompile Include="AnagramTests.cpp" />
     <ClCompile Include="BinarySearchTests.cpp" />
+    <ClCompile Include="BinarySearchTreeTests.cpp" />
+    <ClCompile Include="BinaryTreeTests.cpp" />
     <ClCompile Include="GraphTests.cpp" />
+    <ClCompile Include="GreedyAlgorithmTests.cpp" />
+    <ClCompile Include="IncreasingSequenceTests.cpp" />
+    <ClCompile Include="KnapsackTests.cpp" />
     <ClCompile Include="LinkedListTests.cpp" />
     <ClCompile Include="ListPermutationTests.cpp" />
+    <ClCompile Include="HeapTests.cpp" />
+    <ClCompile Include="LongestCommonSubsequenceTests.cpp" />
     <ClCompile Include="MaxZeroProductTests.cpp" />
     <ClCompile Include="PalindromeTests.cpp" />
     <ClCompile Include="pch.cpp">
@@ -52,6 +59,7 @@
     <ClCompile Include="PrefixTrieTests.cpp" />
     <ClCompile Include="QueueTests.cpp" />
     <ClCompile Include="SortTests.cpp" />
+    <ClCompile Include="SparseNumberTests.cpp" />
     <ClCompile Include="StackTests.cpp" />
     <ClCompile Include="StringPermutationTests.cpp" />
     <ClCompile Include="SuffixTreeTests.cpp" />
