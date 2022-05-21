@@ -275,7 +275,6 @@ long SubtractWithPlusSign(long a, long b);
 long MultiplyWithPlusSign(long a, long b);
 long DivideWithPlusSign(long a, long b);
 long divide(long, long);
-void SortTests();
 void KDTreeTests();
 void BinaryTreeTests();
 void BinarySearchTreeTests();

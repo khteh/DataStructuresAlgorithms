@@ -51,6 +51,7 @@
     </ClCompile>
     <ClCompile Include="PrefixTrieTests.cpp" />
     <ClCompile Include="QueueTests.cpp" />
+    <ClCompile Include="SortTests.cpp" />
     <ClCompile Include="StackTests.cpp" />
     <ClCompile Include="StringPermutationTests.cpp" />
     <ClCompile Include="SuffixTreeTests.cpp" />
