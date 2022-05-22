@@ -1,10 +1,4 @@
-//
-// pch.h
-//
-
 #pragma once
-
-#include "gtest/gtest.h"
 #include <limits>
 #include <memory>
 #include <utility>
@@ -32,7 +26,7 @@
 #include <exception>
 #include <cstring>
 #include <ranges>
-#include "../InterviewQuestions/InterviewQuestions.h"
-#include "../InterviewQuestions/MyStack.h"
-#include "../InterviewQuestions/LongestCommonSubsequence.h"
-#include "../InterviewQuestions/KnapSack.h"
+#include "../DataStructuresAlgorithms/DataStructuresAlgorithms.h"
+#include "../DataStructuresAlgorithms/MyStack.h"
+#include "../DataStructuresAlgorithms/LongestCommonSubsequence.h"
+#include "../DataStructuresAlgorithms/KnapSack.h"

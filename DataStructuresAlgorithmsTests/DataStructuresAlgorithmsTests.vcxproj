@@ -25,6 +25,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <ProjectName>DataStructuresAlgorithmsTests</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -49,6 +50,7 @@
     <ClCompile Include="HeapTests.cpp" />
     <ClCompile Include="LongestCommonSubsequenceTests.cpp" />
     <ClCompile Include="MaxZeroProductTests.cpp" />
+    <ClCompile Include="ArrayNegativePositiveSeriesTests.cpp" />
     <ClCompile Include="PalindromeTests.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -63,12 +65,17 @@
     <ClCompile Include="StackTests.cpp" />
     <ClCompile Include="StringPermutationTests.cpp" />
     <ClCompile Include="SuffixTreeTests.cpp" />
+    <ClCompile Include="TreeTests.cpp" />
     <ClCompile Include="TrieTests.cpp" />
+    <ClCompile Include="TweeterAPITests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataStructuresAlgorithms\DataStructuresAlgorithms.vcxproj">
+      <Project>{153df1ce-50a7-419e-b21c-4e1865e779b2}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\InterviewQuestions\InterviewQuestions.vcxproj">
       <Project>{153df1ce-50a7-419e-b21c-4e1865e779b2}</Project>
     </ProjectReference>

@@ -32,6 +32,8 @@ Parent: |(i - 1)/2|, assuming root at i=0
 template class Tree<int>;
 template class Tree<long>;
 template class Tree<size_t>;
+template class Tree<double>;
+template class Tree<float>;
 template <typename T>
 Tree<T>::Tree()
 	: m_root(nullptr)
@@ -972,6 +974,29 @@ template <typename T>
 bool Tree<T>::isValidBST() const
 {
 	return isValidBST(m_root);
+}
+// Return the arithmetic total.
+// Tree nodes are arithmetic operators. Only leaf nodes are values (long in this case).
+template <typename T>
+T Tree<T>::TreeArithmeticTotal(shared_ptr<Node<string>> node)
+{
+	T result;
+	if (node->isLeaf())
+	{
+		istringstream(node->Item()) >> result;
+		return result;
+	}
+	T left = TreeArithmeticTotal(node->Left());
+	T right = TreeArithmeticTotal(node->Right());
+	if (node->Item() == decltype(node->Item())("+"))
+		result = left + right;
+	else if (node->Item() == decltype(node->Item())("-"))
+		result = left - right;
+	else if (node->Item() == decltype(node->Item())("*"))
+		result = left * right;
+	else if (node->Item() == decltype(node->Item())("/"))
+		result = left / right;
+	return result;
 }
 #if 0
 template<typename T>

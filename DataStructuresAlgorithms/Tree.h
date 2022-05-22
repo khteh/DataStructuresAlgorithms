@@ -68,7 +68,6 @@ protected:
 	shared_ptr<Node<T>> BuildTreePreOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> BuildTreePostOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
-
 public:
 	Tree();
 	Tree(Tree<T> &);
@@ -112,4 +111,5 @@ public:
 	vector<size_t> GetLevelNodeCount();
 	void ToLinkedList();
 	bool isValidBST() const;
+	T TreeArithmeticTotal(shared_ptr<Node<string>>);
 };

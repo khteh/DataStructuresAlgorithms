@@ -272,7 +272,6 @@ void KDTreeTests();
 template <typename URNG>
 void TestURNG(URNG &);
 void TestRandom();
-void TweeterAPITests();
 void MinHeapifyDown(vector<long> &, size_t);
 void MaxHeapifyDown(vector<long> &, size_t);
 void BubbleSort(vector<long> &);
@@ -339,12 +338,8 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &);
 bool WordExistsInGrid(vector<vector<char>> &, const string &);
 bool WordExistsInGrid(vector<vector<char>> &, const string &, long, long, size_t);
 // Start of Sort numbers into consecutive positive/negative numbers
-template <typename type>
 void sortNumbers(vector<long> &);
-template <typename type>
 void OrderArrayIntoNegativePositiveSeries(vector<long> &);
-void OrderArrayIntoNegativePositiveSeriesTests();
-void TestCornerCases();
 // End of Sort numbers into consecutive positive/negative numbers
 void EqualAverageDivide(vector<long> &, vector<long> &);
 bool GetSum(vector<long> &, size_t K, long sum, size_t index, vector<long> &);
@@ -371,8 +366,6 @@ size_t countPaths(size_t, size_t, size_t, size_t, size_t);
 vector<shared_ptr<Node<string>>> shortest_cycle_path(shared_ptr<Node<string>>);
 int findMinFlip(vector<int> &);
 bool IsValidMatrix(vector<vector<char>> const &);
-template <typename T>
-T TreeArithmeticTotal(shared_ptr<Node<string>>);
 size_t ZigZagEscape(vector<long> &);
 size_t ZigZagEscape(vector<long> &, set<string> &);
 vector<string> ZigZagEscape(vector<long> &, vector<long> &, size_t lIndex, size_t rIndex, long current, bool dir);

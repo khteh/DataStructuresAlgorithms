@@ -8,6 +8,8 @@ template class Node<int>;
 template class Node<long>;
 template class Node<string>;
 template class Node<size_t>;
+template class Node<float>;
+template class Node<double>;
 template <typename T>
 Node<T>::Node()
 	: m_item(T()), m_previous(nullptr), m_next(nullptr), m_left(nullptr), m_right(nullptr)
