@@ -1,10 +1,4 @@
 #include "KnapSack.h"
-using namespace std;
-namespace ranges = std::ranges;
-#if defined(__GNUC__) || defined(__GNUG__)
-using namespace tbb;
-#endif
-
 static map<long, set<vector<size_t>>> coinChangeCache;
 static map<long, set<vector<size_t>>> knapsackCache;
 static map<long, size_t> dpMemoization;

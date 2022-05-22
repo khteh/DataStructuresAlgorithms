@@ -8615,6 +8615,4 @@ void cpp20readonlyranges()
 	assert(!found.empty());
 	assert(distance(sequence.begin(), found.begin()) == 3);
 	assert(distance(sequence.begin(), found.end()) == 6);
-
-	cout << endl;
 }
