@@ -38,7 +38,20 @@ set<vector<size_t>> KnapSack::CoinChange(long amount, vector<size_t> &coins)
 					for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++)
 					{
 						vector<size_t> change(*it);
-						if (accumulate(change.begin(), change.end(), *coin) == amount)
+#ifdef _MSC_VER
+						size_t sum = parallel_reduce(change.begin(), change.end(), 0) + *coin;
+#elif defined(__GNUC__) || defined(__GNUG__)
+						size_t sum = parallel_reduce(
+							blocked_range<long>(0, change.size()), 0,
+							[&](tbb::blocked_range<long> r, long running_total)
+							{
+								for (int i = r.begin(); i < r.end(); ++i)
+									running_total += change[i];
+								return running_total;
+							},
+							std::plus<long>()) + *coin;
+#endif
+						if (sum == amount)
 						{
 							change.push_back(*coin);
 							sort(change.begin(), change.end());
@@ -171,7 +184,20 @@ set<vector<size_t>> KnapSack::Knapsack(long amount, vector<size_t> &numbers)
 						for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++)
 						{
 							vector<size_t> change(*it);
-							if (accumulate(change.begin(), change.end(), *number) <= (size_t)amount)
+#ifdef _MSC_VER
+							size_t sum = parallel_reduce(change.begin(), change.end(), 0) + *number;
+#elif defined(__GNUC__) || defined(__GNUG__)
+							size_t sum = parallel_reduce(
+								blocked_range<long>(0, change.size()), 0,
+								[&](tbb::blocked_range<long> r, long running_total)
+								{
+									for (int i = r.begin(); i < r.end(); ++i)
+										running_total += change[i];
+									return running_total;
+								},
+								std::plus<long>()) + *number;
+#endif
+							if (sum <= (size_t)amount)
 							{
 								change.push_back(*number);
 								sort(change.begin(), change.end());
@@ -234,7 +260,20 @@ set<vector<size_t>> KnapSack::_BoundedKnapsack(long amount, vector<size_t> &numb
 					for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++)
 					{
 						vector<size_t> tmp1(*it);
-						if (accumulate(tmp1.begin(), tmp1.end(), *number) == amount)
+#ifdef _MSC_VER
+						size_t sum = parallel_reduce(tmp1.begin(), tmp1.end(), 0) + *number;
+#elif defined(__GNUC__) || defined(__GNUG__)
+						size_t sum = parallel_reduce(
+							blocked_range<long>(0, tmp1.size()), 0,
+							[&](tbb::blocked_range<long> r, long running_total)
+							{
+								for (int i = r.begin(); i < r.end(); ++i)
+									running_total += tmp1[i];
+								return running_total;
+							},
+							std::plus<long>()) + *number;
+#endif
+						if (sum == amount)
 						{
 							tmp1.push_back(*number);
 							sort(tmp1.begin(), tmp1.end());

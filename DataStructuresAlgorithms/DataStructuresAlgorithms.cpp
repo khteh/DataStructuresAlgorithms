@@ -3935,7 +3935,6 @@ void EqualAverageDivide(vector<long> &data, vector<long> &left)
 		},
 		std::plus<long>());
 #endif
-
 	for (K = 1; K < (N - K); K++)
 	{
 		if (((K * sum) % N)) //  check if such P can be integer (we operate with array of integers).
