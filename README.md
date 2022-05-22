@@ -1,6 +1,6 @@
 # Data Structures and Algorithms
 
-C++ Algorithms and data structures using only standard libraries. This answers many of the challenges in HackerRank, LeetCode and some in Codility.
+C++ data structures and algorithms using only standard libraries. This answers many of the challenges in HackerRank, LeetCode and some in Codility.
 
 ## Windows
 
@@ -18,3 +18,4 @@ C++ Algorithms and data structures using only standard libraries. This answers m
   - gdb
   - g++-latest (https://code.visualstudio.com/docs/cpp/cmake-linux)
   - libtbb-dev (Intel® Threading Building Blocks)
+  - libgtest-dev
