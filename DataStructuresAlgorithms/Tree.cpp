@@ -278,7 +278,7 @@ Tree<T> &Tree<T>::operator=(Tree<T> &tree)
 }
 
 template <typename T>
-bool Tree<T>::operator==(const Tree<T> const &tree) const
+bool Tree<T>::operator==(const Tree<T> &tree) const
 {
 	return MatchTree(m_root, tree.Root());
 }

@@ -51,7 +51,7 @@
     <ClInclude Include="interval_map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InterviewQuestions.h">
+    <ClInclude Include="DataStructuresAlgorithms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KDTree.h">
@@ -170,7 +170,7 @@
     <ClCompile Include="interval_map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InterviewQuestions.cpp">
+    <ClCompile Include="DataStructuresAlgorithms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KDTree.cpp">

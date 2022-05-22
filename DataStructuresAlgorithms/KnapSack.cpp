@@ -1,4 +1,10 @@
 #include "KnapSack.h"
+using namespace std;
+namespace ranges = std::ranges;
+#if defined(__GNUC__) || defined(__GNUG__)
+using namespace tbb;
+#endif
+
 static map<long, set<vector<size_t>>> coinChangeCache;
 static map<long, set<vector<size_t>>> knapsackCache;
 static map<long, size_t> dpMemoization;
@@ -17,7 +23,7 @@ void KnapSack::ClearDPMemoization()
 }
 // https://www.hackerrank.com/challenges/coin-change/problem
 // Times out!
-set<vector<size_t>> KnapSack::CoinChange(long amount, vector<size_t>& coins)
+set<vector<size_t>> KnapSack::CoinChange(long amount, vector<size_t> &coins)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0)
@@ -51,7 +57,7 @@ set<vector<size_t>> KnapSack::CoinChange(long amount, vector<size_t>& coins)
 		}
 	return combinations;
 }
-set<vector<size_t>> KnapSack::CoinsChangeDynamicProgramming(long amount, vector<size_t>& coins)
+set<vector<size_t>> KnapSack::CoinsChangeDynamicProgramming(long amount, vector<size_t> &coins)
 {
 	map<size_t, set<vector<size_t>>> dp;
 	sort(coins.begin(), coins.end());
@@ -93,7 +99,7 @@ set<vector<size_t>> KnapSack::CoinsChangeDynamicProgramming(long amount, vector<
  * ways: 1 0 1 1 1 2 2 2 3 3 4
  * i:    0 1 2 3 4 5 6 7 8 9 10 {5,5},{5,2,3},{2,2,3,3},{2,2,2,2,2}
  */
-size_t KnapSack::CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<size_t>& coins)
+size_t KnapSack::CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<size_t> &coins)
 {
 	if (amount <= 0 || coins.empty())
 		return 0;
@@ -110,7 +116,7 @@ size_t KnapSack::CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<siz
  * ways: 1 0 1 1 1 3 2 5 6 8 14
  * i:    0 1 2 3 4 5 6 7 8 9 10
  */
-size_t KnapSack::CoinsChangeDuplicateWaysDynamicProgramming(size_t amount, vector<size_t>& coins)
+size_t KnapSack::CoinsChangeDuplicateWaysDynamicProgramming(size_t amount, vector<size_t> &coins)
 {
 	if (amount <= 0 || coins.empty())
 		return 0;
@@ -128,7 +134,7 @@ size_t KnapSack::CoinsChangeDuplicateWaysDynamicProgramming(size_t amount, vecto
  * i:    0 1 2     3     4     5        6       7      8       9       10
  * ways: 0 1 {2,1} {2,2} {3,2} {3,3,1} {2,3,2} {3,2,2} {3,3,3} {4,3,3} {4,4,2}
  */
-long KnapSack::CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size_t>& coins)
+long KnapSack::CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size_t> &coins)
 {
 	if (amount <= 0 || coins.empty())
 		return 0;
@@ -143,7 +149,7 @@ long KnapSack::CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size
 }
 // https://www.hackerrank.com/challenges/unbounded-knapsack/problem
 // 100%
-set<vector<size_t>> KnapSack::Knapsack(long amount, vector<size_t>& numbers)
+set<vector<size_t>> KnapSack::Knapsack(long amount, vector<size_t> &numbers)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0 && !numbers.empty())
@@ -188,7 +194,7 @@ set<vector<size_t>> KnapSack::Knapsack(long amount, vector<size_t>& numbers)
 }
 // Bounded places an upper bound on the number of copies of each kind of item included in the knapsack
 // Unbounded places no upper bound on the number of copies of each kind of item included in the knapsack
-size_t KnapSack::UnboundedKnapsack(long k, vector<size_t>& arr)
+size_t KnapSack::UnboundedKnapsack(long k, vector<size_t> &arr)
 {
 	knapsackCache.clear();
 	set<vector<size_t>> combinations = Knapsack(k, arr);
@@ -212,7 +218,7 @@ size_t KnapSack::UnboundedKnapsack(long k, vector<size_t>& arr)
 	}
 	return sums.empty() ? 0 : *sums.rbegin();
 }
-set<vector<size_t>> KnapSack::_BoundedKnapsack(long amount, vector<size_t>& numbers)
+set<vector<size_t>> KnapSack::_BoundedKnapsack(long amount, vector<size_t> &numbers)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0 && !numbers.empty())
@@ -252,7 +258,7 @@ set<vector<size_t>> KnapSack::_BoundedKnapsack(long amount, vector<size_t>& numb
 	}
 	return combinations;
 }
-vector<vector<size_t>> KnapSack::BoundedKnapsack(long amount, vector<size_t>& numbers)
+vector<vector<size_t>> KnapSack::BoundedKnapsack(long amount, vector<size_t> &numbers)
 {
 	vector<vector<size_t>> result;
 	knapsackCache.clear();
@@ -346,7 +352,7 @@ set<vector<size_t>> KnapSack::BoundedKnapsackCombinationSum(size_t k, size_t sum
  *  0(1)	1
  *     -1(0) 0(1)
  */
-size_t KnapSack::StairsClimbingDynamicProgramming(long destination, vector<size_t>& steps)
+size_t KnapSack::StairsClimbingDynamicProgramming(long destination, vector<size_t> &steps)
 {
 	if (!destination) // 0 step = stays. So it is one possibility.
 		return 1;
@@ -372,7 +378,7 @@ size_t KnapSack::StairsClimbingDynamicProgramming(long destination, vector<size_
  * {1,1,2,4,7,13,24} <= [i] = [i-1] + [i-2] + [i-3]
  * {1,0,0}, {1,1,0}, {1,1,2}, {4,1,2}, {4,7,2}, {4,7,13}, {24,7,13} => [n%3] = 24
  */
-size_t KnapSack::StairsClimbingDynamicProgrammingBottomUp(long destination, vector<size_t>& steps)
+size_t KnapSack::StairsClimbingDynamicProgrammingBottomUp(long destination, vector<size_t> &steps)
 {
 	vector<size_t> combinations(steps.size(), 0);
 	combinations[0] = 1;

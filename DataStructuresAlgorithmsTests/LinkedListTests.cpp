@@ -48,7 +48,7 @@ TEST(LinkedListTests, LinkedListTest) {
 	lptr = lla2.NthElementFromBack(11);
 	ASSERT_FALSE(lptr);
 	lptr = lla2.RemoveNthElementFromBack(4);
-	ASSERT_TRUE(9, lla2.Length());
+	ASSERT_EQ(9, lla2.Length());
 	a.clear();
 	a = { 0, 1, 2, 3, 4, 5, 7, 8, 9 };
 	for (size_t i = 0; i < lla2.Length(); i++)

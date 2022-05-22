@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{153DF1CE-50A7-419E-B21C-4E1865E779B2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>InterviewQuestions</RootNamespace>
+    <RootNamespace>DataStructuresAlgorithms</RootNamespace>
     <SccProjectName>SAK</SccProjectName>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>

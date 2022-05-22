@@ -68,6 +68,7 @@ protected:
 	shared_ptr<Node<T>> BuildTreePreOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> BuildTreePostOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
+
 public:
 	Tree();
 	Tree(Tree<T> &);
@@ -78,7 +79,7 @@ public:
 	virtual ~Tree();
 	void Clear();
 	Tree<T> &operator=(Tree<T> &);
-	bool operator==(const Tree<T> const &) const;
+	bool operator==(const Tree<T> &) const;
 	void Serialize(const shared_ptr<Node<T>> &, vector<T> &);
 	shared_ptr<Node<T>> Root() const;
 	void InsertItem(T);

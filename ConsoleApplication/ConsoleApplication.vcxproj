@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Projects\C++\InterviewQuestions\DataStructuresAlgorithms;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Projects\C++\DataStructuresAlgorithms\DataStructuresAlgorithms;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

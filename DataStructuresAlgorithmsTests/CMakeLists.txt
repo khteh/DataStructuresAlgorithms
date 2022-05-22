@@ -1,70 +1,60 @@
-set(PROJECT_NAME InterviewQuestionsTests)
+set(PROJECT_NAME DataStructuresAlgorithmsTests)
 
 ################################################################################
 # Source groups
 ################################################################################
-set(Header_Files
+set(Headers
     "pch.h"
 )
-source_group("Header Files" FILES ${Header_Files})
+source_group("Headers" FILES ${Headers})
 
-set(Source_Files
-"AnagramTests.cpp"
-"HeapTests.cpp"
-"MaxZeroProductTests.cpp"
-"StackTests.cpp"
-"BinarySearchTests.cpp"
-"IncreasingSequenceTests.cpp"
-"PalindromeTests.cpp"
-"StringPermutationTests.cpp"
-"BinarySearchTreeTests.cpp"
-"KnapsackTests.cpp"
-"PrefixTrieTests.cpp"
-"SuffixTreeTests.cpp"
-"BinaryTreeTests.cpp"
-"LinkedListTests.cpp"
-"QueueTests.cpp"
-"TrieTests.cpp"
-"GraphTests.cpp"
-"ListPermutationTests.cpp"
-"SortTests.cpp"
-"pch.cpp"
-"GreedyAlgorithmTests.cpp"
-"LongestCommonSubsequenceTests.cpp"
-"SparseNumberTests.cpp"
-"TweeterAPITests.cpp"
-"ArrayNegativePositiveSeriesTests.cpp"
+set(Sources
+    "AnagramTests.cpp"
+    "ArrayNegativePositiveSeriesTests.cpp"
+    "BinarySearchTests.cpp"
+    "BinarySearchTreeTests.cpp"
+    "BinaryTreeTests.cpp"
+    "GraphTests.cpp"
+    "GreedyAlgorithmTests.cpp"
+    "HeapTests.cpp"
+    "IncreasingSequenceTests.cpp"
+    "KnapsackTests.cpp"
+    "LinkedListTests.cpp"
+    "ListPermutationTests.cpp"
+    "LongestCommonSubsequenceTests.cpp"
+    "MaxZeroProductTests.cpp"
+    "PalindromeTests.cpp"
+    "pch.cpp"
+    "PrefixTrieTests.cpp"
+    "QueueTests.cpp"
+    "SortTests.cpp"
+    "SparseNumberTests.cpp"
+    "StackTests.cpp"
+    "StringPermutationTests.cpp"
+    "SuffixTreeTests.cpp"
+    "TreeTests.cpp"
+    "TrieTests.cpp"
+    "TweeterAPITests.cpp"
 )
-source_group("Source Files" FILES ${Source_Files})
+source_group("Sources" FILES ${Sources})
 
 set(ALL_FILES
-    ${Header_Files}
-    ${Source_Files}
+    ${Headers}
+    ${Sources}
 )
 
 ################################################################################
 # Target
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
-
-add_precompiled_header(${PROJECT_NAME} "stdafx.h" "stdafx.cpp")
+target_precompile_headers(${PROJECT_NAME} PRIVATE
+    "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/pch.h>"
+)
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
-set(ROOT_NAMESPACE InterviewQuestionsTests)
-
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
-if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
-    )
-elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-    message("=== x64 Platform ===")
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
-    )
-endif()
 ################################################################################
 # MSVC runtime library
 ################################################################################
@@ -74,7 +64,20 @@ if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         $<$<CONFIG:Debug>:
             MultiThreadedDebugDLL
         >
-        $<$<NOT:$<OR:$<CONFIG:Debug>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
+        $<$<CONFIG:Release>:
+            MultiThreadedDLL
+        >
+        $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
+    )
+elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+    string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
+        $<$<CONFIG:Debug>:
+            MultiThreadedDebugDLL
+        >
+        $<$<CONFIG:Release>:
+            MultiThreadedDLL
+        >
+        $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
     )
 endif()
 #set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY_STR})
@@ -83,6 +86,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX CXX_STANDAR
 ################################################################################
 # Compile definitions
 ################################################################################
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    "UNICODE;"
+    "_UNICODE"
+)
 if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         "$<$<CONFIG:Debug>:"
@@ -92,9 +99,7 @@ if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
             "NDEBUG"
         ">"
         "WIN32;"
-        "_CONSOLE;"
-        "UNICODE;"
-        "_UNICODE"
+        "_CONSOLE"
     )
 elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
     target_compile_definitions(${PROJECT_NAME} PRIVATE
@@ -102,20 +107,13 @@ elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
             "_DEBUG"
         ">"
         "$<$<CONFIG:Release>:"
-            "WIN32;"
             "NDEBUG"
         ">"
-        "_CONSOLE;"
-        "UNICODE;"
-        "_UNICODE"
+        "X64;"
+        "_CONSOLE"
     )
 endif()
-if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
-  message("-- Setting GNU options")
-  include_directories("/usr/include/tbb")
-  link_directories(${CMAKE_SOURCE_DIR}/lib/x86_64-linux-gnu)
-  target_link_libraries(${PROJECT_NAME} tbb)
-endif()
+
 ################################################################################
 # Compile and link options
 ################################################################################
@@ -123,69 +121,44 @@ if(MSVC)
     if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
-                /MP;
-                /std:c++20;
                 /Od;
-                /GT;
-                /arch:AVX;
-                /ZI;
-                /TP;
-                /GR;
-                /Y-
-            >
-            $<$<CONFIG:Release>:
-                /std:c++20;
-                /O2;
-                /Gy;
+                /RTC1;
                 ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
             >
-            /Oi;
+            $<$<CONFIG:Release>:
+                /Zi
+            >
             /W3;
             ${DEFAULT_CXX_EXCEPTION_HANDLING}
         )
     elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-    message("-- x64 --")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
-                /permissive-;
-                /std:c++20;
-                /sdl;
-                /arch:AVX;
-                /Y-
+                /Od;
+                /RTC1;
+                ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
             >
             $<$<CONFIG:Release>:
-                /std:c++20;
-                /O2;
-                /Oi;
-                /Gy
+                /Zi
             >
             /W3;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
             ${DEFAULT_CXX_EXCEPTION_HANDLING}
         )
     endif()
     if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         target_link_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Debug>:
-                /INCREMENTAL
-            >
             $<$<CONFIG:Release>:
                 /OPT:REF;
-                /OPT:ICF;
-                /INCREMENTAL:NO
+                /OPT:ICF
             >
             /DEBUG;
             /SUBSYSTEM:CONSOLE
         )
     elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_link_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Debug>:
-                /INCREMENTAL
-            >
             $<$<CONFIG:Release>:
                 /OPT:REF;
-                /OPT:ICF;
-                /INCREMENTAL:NO
+                /OPT:ICF
             >
             /DEBUG;
             /SUBSYSTEM:CONSOLE
@@ -193,3 +166,18 @@ if(MSVC)
     endif()
 endif()
 
+################################################################################
+# Dependencies
+################################################################################
+# Link with other targets.
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    DataStructuresAlgorithmsLib
+    gtest
+    gtest_main    
+)
+if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
+    use_package(${PROJECT_NAME} Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn 1.8.1.5)
+elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")    
+    include(GoogleTest) # To use gtest_discover_tests
+    gtest_discover_tests(${PROJECT_NAME}) # Runs GTest with CTest
+endif()

@@ -1,112 +1,110 @@
-set(PROJECT_NAME InterviewQuestions)
+set(PROJECT_NAME DataStructuresAlgorithmsLib)
 
 ################################################################################
 # Source groups
 ################################################################################
-set(Header_Files
-    "CMatrix.h"
-    "Error.h"
-    "LRUCache.h"
-    "Poker.h"
-    "Trie.h"
+set(Headers
     "Call.h"
-    "FunctionObject.h"
-    "LinkedList.h"
-    "PrefixTrie.h"
-    "Twitter.h"
     "CallHandler.h"
-    "Graph.h"
-    "ListRangeSum.h"
-    "PriorityQueueMedian.h"
-    "Vertex.h"
     "Card.h"
-    "Heap.h"
-    "LongestCommonSubsequence.h"
-    "Singleton.h"
-    "interval_map.h"
     "CircularLinkedList.h"
-    "IIterator.h"
-    "MaxSubsetSumData.h"
+    "CMatrix.h"
+    "DataStructuresAlgorithms.h"
+    "DiamondProblem.h"
+    "DisJointSet.h"
+    "Edge.h"
+    "Employee.h"
+    "Error.h"
+    "FunctionObject.h"
+    "Graph.h"
+    "Heap.h"
+    "interval_map.h"
+    "KDTree.h"
+    "KnapSack.h"
+    "LinkedList.h"
+    "ListRangeSum.h"
+    "LongestCommonSubsequence.h"
+    "LRUCache.h"
+    "MyQueue.h"
+    "MyStack.h"
+    "NameHidingExample.h"
+    "Node.h"
+    "Poker.h"
+    "PrefixTrie.h"
+    "PriorityQueueMedian.h"
+    "Singleton.h"
     "Square.h"
     "stdafx.h"
-    "DiamondProblem.h"
-    "InterleavingIterator.h"
-    "MyQueue.h"
     "SuffixTree.h"
     "targetver.h"
-    "DisJointSet.h"
-    "InterviewQuestions.h"
-    "MyStack.h"
     "Tower.h"
-    "Edge.h"
-    "KDTree.h"
-    "NameHidingExample.h"
     "TreasureGame.h"
-    "Employee.h"
-    "KnapSack.h"
-    "Node.h"
     "Tree.h"
+    "Trie.h"
+    "Twitter.h"
+    "Vertex.h"
 )
-source_group("Header Files" FILES ${Header_Files})
+source_group("Headers" FILES ${Headers})
 
-set(Source_Files
-    "CMatrix.cpp"
-    "FunctionObject.cpp"
-    "LongestCommonSubsequence.cpp"
-    "Square.cpp"
+set(Sources
     "Call.cpp"
-    "Graph.cpp"
-    "MaxSubsetSumData.cpp"
-    "SuffixTree.cpp"
     "CallHandler.cpp"
-    "Heap.cpp"
-    "MyQueue.cpp"
-    "Tower.cpp"
     "Card.cpp"
-    "InterleavingIterator.cpp"
-    "MyStack.cpp"
-    "TreasureGame.cpp"
     "CircularLinkedList.cpp"
-    "InterviewQuestions.cpp"
-    "NameHidingExample.cpp"
-    "Tree.cpp"
+    "CMatrix.cpp"
+    "DataStructuresAlgorithms.cpp"
     "DiamondProblem.cpp"
-    "KDTree.cpp"
-    "Node.cpp"
-    "Trie.cpp"
     "DisJointSet.cpp"
-    "KnapSack.cpp"
-    "Poker.cpp"
-    "Twitter.cpp"
     "Edge.cpp"
-    "LRUCache.cpp"
-    "PrefixTrie.cpp"
-    "Vertex.cpp"
     "Employee.cpp"
-    "LinkedList.cpp"
-    "PriorityQueueMedian.cpp"
-    "interval_map.cpp"
     "Error.cpp"
+    "FunctionObject.cpp"
+    "Graph.cpp"
+    "Heap.cpp"
+    "interval_map.cpp"
+    "KDTree.cpp"
+    "KnapSack.cpp"
+    "LinkedList.cpp"
     "ListRangeSum.cpp"
+    "LongestCommonSubsequence.cpp"
+    "LRUCache.cpp"
+    "MyQueue.cpp"
+    "MyStack.cpp"
+    "NameHidingExample.cpp"
+    "Node.cpp"
+    "Poker.cpp"
+    "PrefixTrie.cpp"
+    "PriorityQueueMedian.cpp"
     "Singleton.cpp"
+    "Square.cpp"
     "stdafx.cpp"
+    "SuffixTree.cpp"
+    "Tower.cpp"
+    "TreasureGame.cpp"
+    "Tree.cpp"
+    "Trie.cpp"
+    "Twitter.cpp"
+    "Vertex.cpp"
 )
-source_group("Source Files" FILES ${Source_Files})
+source_group("Sources" FILES ${Sources})
 
 set(ALL_FILES
-    ${Header_Files}
-    ${Source_Files}
+    ${Headers}
+    ${Sources}
 )
-
+set(BUILD_STATIC_LIBS ON)
 ################################################################################
 # Target
 ################################################################################
-add_executable(${PROJECT_NAME} ${ALL_FILES})
+#add_executable(${PROJECT_NAME} ${ALL_FILES})
+add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 
-add_precompiled_header(${PROJECT_NAME} "stdafx.h" "stdafx.cpp")
+target_precompile_headers(${PROJECT_NAME} PRIVATE
+    "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h>"
+)
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
-set(ROOT_NAMESPACE InterviewQuestions)
+set(ROOT_NAMESPACE DataStructuresAlgorithms)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
@@ -116,7 +114,6 @@ if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
     )
 elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-    message("=== x64 Platform ===")
     set_target_properties(${PROJECT_NAME} PROPERTIES
         INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
     )
@@ -200,11 +197,10 @@ if(MSVC)
             ${DEFAULT_CXX_EXCEPTION_HANDLING}
         )
     elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-    message("-- x64 --")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
-                /permissive-;
                 /std:c++20;
+                /permissive-;
                 /sdl;
                 /arch:AVX;
                 /Y-
@@ -223,9 +219,11 @@ if(MSVC)
     if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         target_link_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
+                /std:c++20;
                 /INCREMENTAL
             >
             $<$<CONFIG:Release>:
+                /std:c++20;
                 /OPT:REF;
                 /OPT:ICF;
                 /INCREMENTAL:NO
@@ -235,15 +233,13 @@ if(MSVC)
         )
     elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_link_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Debug>:
-                /INCREMENTAL
-            >
             $<$<CONFIG:Release>:
+                /std:c++20;
+                /DEBUG;
                 /OPT:REF;
                 /OPT:ICF;
                 /INCREMENTAL:NO
             >
-            /DEBUG;
             /SUBSYSTEM:CONSOLE
         )
     endif()
