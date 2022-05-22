@@ -171,7 +171,7 @@ endif()
 ################################################################################
 # Link with other targets.
 target_link_libraries(${PROJECT_NAME} PUBLIC
-    DataStructuresAlgorithmsLib
+    DataStructuresAlgorithms
     gtest
     gtest_main    
 )

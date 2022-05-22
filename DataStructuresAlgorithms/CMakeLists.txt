@@ -1,4 +1,4 @@
-set(PROJECT_NAME DataStructuresAlgorithmsLib)
+set(PROJECT_NAME DataStructuresAlgorithms)
 
 ################################################################################
 # Source groups
@@ -96,7 +96,6 @@ set(BUILD_STATIC_LIBS ON)
 ################################################################################
 # Target
 ################################################################################
-#add_executable(${PROJECT_NAME} ${ALL_FILES})
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE
