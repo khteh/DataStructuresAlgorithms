@@ -21,6 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0b7f15c4-7c48-47c8-bd81-dd270ab13d44}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+	<RootNamespace>DataStructuresAlgorithmsTests</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>

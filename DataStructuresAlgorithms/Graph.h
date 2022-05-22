@@ -6,7 +6,15 @@
 #include <numeric>
 #include <sstream>
 #include "Vertex.h"
-using namespace std;
+#ifdef _MSC_VER
+#include <ppl.h>
+using namespace concurrency;
+#elif defined(__GNUC__) || defined(__GNUG__)
+#include "tbb/parallel_reduce.h"
+#include "tbb/blocked_range.h"
+using namespace tbb;
+#endif
+
 template <typename TTag, typename TItem> // TTag is used as a unique ID. Graph vertices can have duplicate values of TItem
 class Graph
 {

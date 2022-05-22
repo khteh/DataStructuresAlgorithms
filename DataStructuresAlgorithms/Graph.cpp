@@ -5,6 +5,11 @@
 #include <iostream>
 #include <limits>
 using namespace std;
+namespace ranges = std::ranges;
+#if defined(__GNUC__) || defined(__GNUG__)
+using namespace tbb;
+#endif
+
 template class Graph<long, long>;
 template class Graph<size_t, size_t>;
 template <typename TTag, typename TItem>
@@ -168,7 +173,7 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 	cout << __FUNCTION__ << " edges of Minimum Spanning Tree: " << endl;
 	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = parents.begin(); it != parents.end(); it++)
 		cout << it->second->GetTag() << " -> " << it->first << endl;
-	return accumulate(costs.begin(), costs.end(), 0, [](size_t value, const typename map<TTag, long>::value_type& p)
+	return accumulate(costs.begin(), costs.end(), 0, [](long value, const typename map<TTag, long>::value_type& p)
 		{ return value + p.second; });
 }
 template <typename TTag, typename TItem>
