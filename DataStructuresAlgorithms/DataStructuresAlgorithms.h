@@ -64,6 +64,8 @@ using namespace tbb;
 #include "Twitter.h"
 #include "CMatrix.h"
 #include "ListRangeSum.h"
+#include "LongestCommonSubsequence.h"
+#include "KnapSack.h"
 using namespace std;
 #ifdef _MSC_VER
 using namespace concurrency;
