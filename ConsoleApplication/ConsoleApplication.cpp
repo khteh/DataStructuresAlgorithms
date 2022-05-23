@@ -2666,6 +2666,7 @@ int main(int argc, char* argv[])
 	assert(fizzBuzz(10) == vector<string>({ "1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz" }));
 	assert(fizzBuzz(15) == vector<string>({ "1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz" }));
 	cpp20readonlyranges();
+	cpp20ranges();
 	/***** The End *****/
 	// cout << endl << "Press ENTER to exit!";
 	// getline(cin, line);

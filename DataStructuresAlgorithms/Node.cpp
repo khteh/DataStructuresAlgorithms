@@ -39,7 +39,7 @@ Node<T>::~Node()
 }
 
 template <typename T>
-T Node<T>::Item()
+T Node<T>::Item() const
 {
 	return m_item;
 }
@@ -123,7 +123,7 @@ T Node<T>::MinSubTreesDifference(T sum)
 	}
 }
 template <typename T>
-T Node<T>::Sum()
+T Node<T>::Sum() const
 {
 	T sum = m_item;
 	if (m_left)
@@ -163,9 +163,14 @@ void Node<T>::SetItem(T item)
 {
 	m_item = item;
 }
-
 template <typename T>
-Node<T> &Node<T>::operator=(Node<T> &rhs)
+Node<T>& Node<T>::operator=(T item)
+{
+	m_item = item;
+	return *this;
+}
+template <typename T>
+Node<T>& Node<T>::operator=(Node<T> &rhs)
 {
 	m_previous = rhs.Previous();
 	m_item = rhs.Item();
@@ -174,33 +179,40 @@ Node<T> &Node<T>::operator=(Node<T> &rhs)
 	m_right = rhs.Right();
 	return *this;
 }
-
 template <typename T>
-bool Node<T>::operator==(Node<T> &rhs)
+Node<T>& Node<T>::operator=(Node<T> rhs)
+{
+	m_previous = rhs.Previous();
+	m_item = rhs.Item();
+	m_next = rhs.Next();
+	m_left = rhs.Left();
+	m_right = rhs.Right();
+	return *this;
+}
+template <typename T>
+bool Node<T>::operator==(Node<T> rhs) const
 {
 	return m_item == rhs.Item();
 }
-
 template <typename T>
-bool Node<T>::operator!=(Node<T> &rhs)
+bool Node<T>::operator!=(Node<T> &rhs) const
 {
 	return !(*this == rhs);
 }
 
 template <typename T>
-bool Node<T>::operator<(Node<T> &rhs)
+bool Node<T>::operator<(Node<T> &rhs) const
 {
 	return m_item < rhs.Item();
 }
 
 template <typename T>
-bool Node<T>::operator>(Node<T> &rhs)
+bool Node<T>::operator>(Node<T> &rhs) const
 {
 	return m_item > rhs.Item();
 }
-
 template <typename T>
-bool Node<T>::isLeaf()
+bool Node<T>::isLeaf() const
 {
 	return !Next() && !Left() && !Right();
 }
