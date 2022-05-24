@@ -9,7 +9,7 @@ TEST(BinarySearchTests, BinarySearchTest) {
 	generate(source.begin(), source.begin() + 10, [i = 0]() mutable	{ return i++; });
 	generate(source.begin() + 10, source.begin() + 20, [i = 1000]() mutable	{ return i++; });
 	generate(source.begin() + 20, source.begin() + 30, [i = 2000]() mutable	{ return i++; });
-	rotate(source.begin(), source.begin() + source.size() / 2, source.end());
+	ranges::rotate(source, source.begin() + source.size() / 2);
 	pos = BinarySearch(source, 1000);
 	ASSERT_GE(pos, 0);
 	ASSERT_EQ(1000, source[pos]);

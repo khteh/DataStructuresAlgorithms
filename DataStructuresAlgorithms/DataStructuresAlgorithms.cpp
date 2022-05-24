@@ -772,7 +772,7 @@ size_t PalindromeAnagramCount1(string const &str)
 bool AreRotatedStrings(string const &s1, string const &s2, size_t n)
 {
 	string str(s1);
-	rotate(str.begin(), str.begin() + n, str.end());
+	ranges::rotate(str, str.begin() + n);
 	return (str == s2);
 }
 // Return occurrance of any anagram of s2 in s1
@@ -7526,7 +7526,7 @@ void rotateMatrixRTimesAntiClockwise(vector<vector<long>> &matrix, size_t rotati
 			// Copy left column in reverse order
 			for (long y = bottom - 1; y > top; y--)
 				items.push_back(matrix[y][left]);
-			rotate(items.begin(), items.begin() + rotation % count, items.end());
+			ranges::rotate(items, items.begin() + rotation % count);
 			// Copy back top row
 			copy(items.begin(), items.begin() + rowCount, matrix[top].begin() + left);
 			// Copy back right column
@@ -8608,6 +8608,9 @@ ostream &operator<<(ostream &os, const Node<int> &n)
 	os << n.Item();
 	return os;
 }
+/*
+* https://www.cppstories.com/2022/ranges-alg-part-two/
+*/
 void cpp20ranges()
 {
 	vector<Node<int>> nodes;
