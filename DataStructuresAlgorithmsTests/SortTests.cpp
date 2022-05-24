@@ -293,4 +293,9 @@ TEST(SortTests, SortTest) {
 	b = { 5, 8, 5, 7, 3, 6, 2, 5, 1 };
 	WiggleSort(a);
 	ASSERT_EQ(a, b);
+
+	vector<string> strings = { "abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE" };
+	vector<string> strings1 = { "abcchcz", "ABCCHCZ", "abcczch", "ABCCZCH", "abcde", "ABCDE" };
+	sort(strings.begin(), strings.end(), LexicographicSort);
+	ASSERT_EQ(strings1, strings);
 }

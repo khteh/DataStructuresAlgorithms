@@ -55,9 +55,8 @@ template <typename TTag, typename TItem>
 vector<shared_ptr<Vertex<TTag, TItem>>> Vertex<TTag, TItem>::GetNeighbours()
 {
 	vector<shared_ptr<Vertex<TTag, TItem>>> vertices;
-	transform(
-		neighbours_.begin(),
-		neighbours_.end(),
+	ranges::transform(
+		neighbours_,
 		back_inserter(vertices),
 		[](const typename map<shared_ptr<Vertex<TTag, TItem>>, long>::value_type &pair)
 		{ return pair.first; });

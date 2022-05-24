@@ -3422,7 +3422,7 @@ template <typename A, typename B>
 multimap<B, A> flip_map(const map<A, B> &src)
 {
 	multimap<B, A> dst;
-	transform(src.begin(), src.end(), inserter(dst, dst.begin()), flip_pair<A, B>);
+	ranges::transform(src, inserter(dst, dst.begin()), flip_pair<A, B>);
 	return dst;
 }
 // https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
@@ -4454,8 +4454,8 @@ bool LexicographicSort(string s1, string s2)
 	size_t i, j;
 	map<string, size_t> order = {{"a", 0}, {"b", 1}, {"c", 2}, {"ch", 3}, {"cz", 4}, {"d", 5}, {"e", 6}, {"f", 7}, {"g", 8}, {"h", 9}, {"i", 10}, {"j", 11}, {"k", 12}, {"l", 13}, {"m", 14}, {"n", 15}, {"o", 16}, {"p", 17}, {"q", 18}, {"r", 18}, {"s", 19}, {"t", 20}, {"u", 21}, {"v", 22}, {"w", 23}, {"x", 24}, {"y", 24}, {"z", 25}};
 	map<string, size_t>::iterator s1It = order.end(), s2It = order.end();
-	transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
-	transform(s2.begin(), s2.end(), s2.begin(), ::tolower);
+	ranges::transform(s1, s1.begin(), ::tolower);
+	ranges::transform(s2, s2.begin(), ::tolower);
 	for (i = 0, j = 0; i < s1.size() && j < s2.size();)
 	{
 		if (i < s1.size() - 1)
@@ -8370,9 +8370,8 @@ vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sou
 			sortedCosts.emplace(it->first->GetTag(), it->second);
 	}
 	vector<size_t> result;
-	transform(
-		sortedCosts.begin(),
-		sortedCosts.end(),
+	ranges::transform(
+		sortedCosts,
 		back_inserter(result),
 		[](const typename map<size_t, size_t>::value_type &pair)
 		{ return pair.second; });

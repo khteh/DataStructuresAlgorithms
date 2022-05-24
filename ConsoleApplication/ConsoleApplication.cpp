@@ -41,11 +41,6 @@ int main(int argc, char* argv[])
 	line = to_string(0);
 	istringstream(line) >> i;
 	assert(i == 0);
-	strings.clear();
-	strings = { "abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE" };
-	strings1 = { "abcchcz", "ABCCHCZ", "abcczch", "ABCCZCH", "abcde", "ABCDE" };
-	sort(strings.begin(), strings.end(), LexicographicSort);
-	assert(strings1 == strings);
 	Singleton* singleton = Singleton::Instance();
 	assert(singleton);
 	singleton->Print("Hello Singleton!!!");

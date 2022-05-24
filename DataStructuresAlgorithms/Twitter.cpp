@@ -74,7 +74,7 @@ vector<TTweetID> Twitter<TUserID, TTweetID>::GetNewsFeed(TUserID userId, size_t 
     vector<TTweetID> result;
     typename set<TweetItem<TUserID, TTweetID>, greater<TweetItem<TUserID, TTweetID>>>::iterator start = _tweets[userId].begin(), end = start;
     advance(end, min((long)size, (long)_tweets[userId].size()));
-    transform(start, 
+    ranges::transform(start, 
         end, 
         back_inserter(result),
         [](const TweetItem<TUserID, TTweetID>& tweet) { return tweet.ID(); });
@@ -89,7 +89,7 @@ vector<TTweetID> Twitter<TUserID, TTweetID>::GetFromLastNewsFeed(TUserID userId,
         size_t counts = distance(_tweets[userId].begin(), _tweetsMap[userId][tweetId]);
         if (counts > size)
             advance(start, counts - size);
-        transform(start,
+        ranges::transform(start,
             end,
             back_inserter(result),
             [](const TweetItem<TUserID, TTweetID>& tweet) { return tweet.ID(); });
