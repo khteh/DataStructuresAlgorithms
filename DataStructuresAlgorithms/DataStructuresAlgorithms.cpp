@@ -5200,8 +5200,7 @@ size_t ZigZagEscape(vector<long> &data, set<string> &strResult)
 				else
 				{
 					tmp = ZigZagEscape(left, right, j, 0, current, true);
-					for (vector<string>::iterator it = tmp.begin(); it != tmp.end(); it++)
-						strResult.insert(*it);
+					ranges::copy(tmp, inserter(strResult, strResult.end()));
 				}
 			}
 		}
@@ -5219,8 +5218,7 @@ size_t ZigZagEscape(vector<long> &data, set<string> &strResult)
 				else
 				{
 					tmp = ZigZagEscape(left, right, 0, j, current, false);
-					for (vector<string>::iterator it = tmp.begin(); it != tmp.end(); it++)
-						strResult.insert(*it);
+					ranges::copy(tmp, inserter(strResult, strResult.end()));
 				}
 			}
 		}
@@ -8170,20 +8168,6 @@ size_t LargestNumberCompositionProductWithDynamicProgramming(size_t n)
 size_t maxProductOfNonOverlappingWordLengths(vector<string> &words)
 {
 	size_t result = 0;
-#if 0
-	Times out!
-	set<char> intersection;
-	vector<set<char>> strings;
-	for (vector<string>::iterator it = words.begin(); it != words.end(); it++)
-		strings.push_back(set<char>(it->begin(), it->end()));
-	for (size_t i = 0; i < strings.size(); i++)
-		for (size_t j = i + 1; j < strings.size(); j++) {
-			intersection.clear();
-			set_intersection(strings[i].begin(), strings[i].end(), strings[j].begin(), strings[j].end(), inserter(intersection, intersection.begin()));
-			if (intersection.empty() && words[i].size() * words[j].size() > result)
-				result = words[i].size() * words[j].size();
-		}
-#endif
 	map<size_t, size_t> patterns;
 	for (size_t i = 0; i < words.size(); i++)
 	{
@@ -8319,6 +8303,8 @@ vector<long> bfs(size_t nodecount, size_t edgecount, vector<vector<size_t>> &edg
 	{
 		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex((*it)[0]);
 		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex((*it)[1]);
+		assert(v1);
+		assert(v2);
 		graph.AddUndirectedEdge(v1, v2, 6);
 	}
 	shared_ptr<Vertex<size_t, size_t>> start = graph.GetVertex(s);
@@ -8414,6 +8400,8 @@ size_t evenForest(size_t nodeCount, vector<vector<size_t>> &edges, size_t start)
 	{
 		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex((*it)[0]);
 		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex((*it)[1]);
+		assert(v1);
+		assert(v2);
 		graph.AddUndirectedEdge(v1, v2, 0);
 	}
 	// The root of the graph is Node 1

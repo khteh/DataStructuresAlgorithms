@@ -283,3 +283,14 @@ TEST(GraphTests, EvenForestTest) {
 	edges = { {1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2} };
 	ASSERT_EQ("1000100", roadsInHackerland(5, edges));
 }
+TEST(GraphTests, PrimMinimumSpanningTreeTest) {
+	vector<vector<long>> grid;
+	grid = { {1, 2, 3}, {1, 3, 4}, {4, 2, 6}, {5, 2, 2}, {2, 3, 5}, {3, 5, 7} };
+	ASSERT_EQ(15, PrimMinimumSpanningTree(5, grid, 1));
+	grid.clear();
+	grid = { {1, 2, 20}, {1, 3, 50}, {1, 4, 70}, {1, 5, 90}, {2, 3, 30}, {3, 4, 40}, {4, 5, 60} };
+	ASSERT_EQ(150, PrimMinimumSpanningTree(5, grid, 2));
+	grid.clear();
+	grid = { {2, 1, 1000}, {3, 4, 299}, {2, 4, 200}, {2, 4, 100}, {3, 2, 300}, {3, 2, 6} };
+	ASSERT_EQ(1106, PrimMinimumSpanningTree(4, grid, 2));
+}

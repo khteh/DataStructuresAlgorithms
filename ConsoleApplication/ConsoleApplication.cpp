@@ -1966,15 +1966,6 @@ int main(int argc, char* argv[])
 	assert(weights.size() == 45);
 	assert(getLowestPathCost(10, from, to, weights) == 1196);
 
-	grid1 = { {1, 2, 3}, {1, 3, 4}, {4, 2, 6}, {5, 2, 2}, {2, 3, 5}, {3, 5, 7} };
-	assert(PrimMinimumSpanningTree(5, grid1, 1) == 15);
-
-	grid1 = { {1, 2, 20}, {1, 3, 50}, {1, 4, 70}, {1, 5, 90}, {2, 3, 30}, {3, 4, 40}, {4, 5, 60} };
-	assert(PrimMinimumSpanningTree(5, grid1, 2) == 150);
-
-	grid1 = { {2, 1, 1000}, {3, 4, 299}, {2, 4, 200}, {2, 4, 100}, {3, 2, 300}, {3, 2, 6} };
-	assert(PrimMinimumSpanningTree(4, grid1, 2) == 1106);
-
 	grid1.clear();
 	grid1.resize(1);
 	grid1[0].push_back(1);
