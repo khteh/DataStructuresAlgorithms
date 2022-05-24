@@ -2,7 +2,7 @@
 using namespace std;
 TEST(GraphTests, BredthFirstSearchTest) {
 	vector<size_t> data(5);
-	generate(data.begin(), data.end(), [n = 1]() mutable { return n++; });
+	ranges::generate(data, [n = 1]() mutable { return n++; });
 	Graph<size_t, size_t> graph(data);
 	ASSERT_EQ(data.size(), graph.Count());
 	shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(1);
@@ -97,7 +97,7 @@ TEST(GraphTests, BredthFirstSearchTest) {
 }
 TEST(GraphTests, DijkstraTest) {
 	vector<size_t> data(5);
-	generate(data.begin(), data.end(), [n = 1]() mutable { return n++; });
+	ranges::generate(data, [n = 1]() mutable { return n++; });
 	Graph<size_t, size_t> graph(data);
 	ASSERT_EQ(data.size(), graph.Count());
 	shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(1);

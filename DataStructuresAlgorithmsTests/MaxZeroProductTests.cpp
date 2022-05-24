@@ -51,7 +51,7 @@ TEST(MaxZeroProductTests, MaxZeroProductTest) {
 	ASSERT_EQ(6, MaxZeroProductBruteForce(data));
 	data.clear();
 	data.resize(9);
-	generate(data.begin(), data.end(), [i = 1]() mutable { return i++; });
+	ranges::generate(data, [i = 1]() mutable { return i++; });
 	// assert(MaxZeroProduct(data) == 1);
 	ASSERT_EQ(1, MaxZeroProductBruteForce(data));
 	data.push_back(10);
@@ -202,8 +202,7 @@ TEST(MaxZeroProductTests, MaxZeroProductTest) {
 	// Distribution is [-5, 5] inclusive
 	uniform_int_distribution<int> dist(0, 1000000000);
 	data.resize(100);
-	generate(data.begin(), data.end(), [&]
-		{ return dist(device); });
+	ranges::generate(data, [&] { return dist(device); });
 	long result1 = MaxZeroProductBruteForce(data);
 	long result2 = MaxZeroProduct(data);
 	//ASSERT_EQ(result1, result2); MaxZeroProduct still WIP

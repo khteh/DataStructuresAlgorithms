@@ -2379,7 +2379,7 @@ void shuffleCards(vector<long> &cards)
 	random_device device;
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
-	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
 	if (!cards.empty() && cards.size() <= 52)
@@ -2415,7 +2415,7 @@ void randomSubset(vector<long> &source, size_t count, vector<long> &result)
 	random_device device;
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
-	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
 	for (size_t i = 0; i < count; i++)
@@ -3615,8 +3615,8 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 {
 	vector<long> data;
 	data.resize(grid.size() * grid[0].size());
-	generate(data.begin(), data.end(), [i = 1]() mutable
-			 { return i++; });
+	ranges::generate(data, [n = 1]() mutable { return n++; });
+
 	DisJointSet<long> disjointSet(data);
 	size_t width = grid[0].size();
 	map<long, size_t> counts;
@@ -4223,8 +4223,7 @@ void TestURNG(URNG &urng)
 	uniform_int_distribution<long> dist(-5, 5);
 	vector<long> v;
 	v.resize(20);
-	generate(v.begin(), v.end(), [&]
-			 { return dist(urng); });
+	ranges::generate(v, [&] { return dist(urng); });
 	cout << "Randomized vector: ";
 	copy(v.begin(), v.end(), ostream_iterator<long>(cout, " "));
 	cout << endl;
@@ -4248,9 +4247,7 @@ void TestRandom()
 	uniform_int_distribution<long> dist(-5, 5);
 	vector<long> v;
 	v.resize(20);
-	generate(v.begin(), v.end(), [&]
-			 { return dist(device); });
-
+	ranges::generate(v, [&] { return dist(device); });
 	TestURNG(device);
 
 	// Second run: simple integer seed. Repeatable results
@@ -4270,7 +4267,7 @@ void TestRandom()
 	vector<unsigned int> seeds;
 	cout << "mt19937_64::state_size: " << mt19937_64::state_size << endl;
 	seeds.resize(mt19937_64::state_size);
-	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 non_deterministic_seed_sequence_mersene_twister_engine{sequence};
 	TestURNG(non_deterministic_seed_sequence_mersene_twister_engine);
@@ -6237,8 +6234,7 @@ long getLowestPathCost(size_t nodecount, vector<long> &g_from, vector<long> &g_t
 {
 	// Breadth-First-Search algorithm
 	vector<long> data(nodecount);
-	generate(data.begin(), data.end(), [n = 1]() mutable
-			 { return n++; });
+	ranges::generate(data, [n = 1]() mutable { return n++;  });
 	Graph<long, long> graph(data);
 	for (size_t i = 0; i < g_from.size(); i++)
 	{
@@ -6783,7 +6779,7 @@ size_t TwoCrosses(vector<string> &grid)
 vector<long> absolutePermutation(size_t n, size_t k)
 {
 	vector<long> sequence(n, 0);
-	generate(sequence.begin(), sequence.end(), [i = 1]() mutable
+	ranges::generate(sequence, [i = 1]() mutable
 			 { return i++; });
 	// |sequence[i] - i| = k
 	vector<long> a, b;
@@ -8257,8 +8253,7 @@ size_t eggDrops(size_t eggs, size_t floors)
 			dp[i][1] = 1;
 	}
 	// Base case for 1 egg
-	generate(dp[0].begin(), dp[0].end(), [n = 0]() mutable
-			 { return n++; });
+	ranges::generate(dp[0], [n = 0]() mutable { return n++; });
 	// size_t attempts = eggDropsDynamicProgramming(eggs, floors, dp);
 	for (size_t egg = 1; egg < eggs; egg++)
 		for (size_t floor = 2; floor <= floors; floor++)
@@ -8295,8 +8290,7 @@ vector<string> fizzBuzz(size_t n)
 vector<long> bfs(size_t nodecount, size_t edgecount, vector<vector<size_t>> &edges, size_t s)
 {
 	vector<size_t> data(nodecount);
-	generate(data.begin(), data.end(), [n = 1]() mutable
-			 { return n++; });
+	ranges::generate(data, [n = 1]() mutable { return n++; });
 	Graph<size_t, size_t> graph(data);
 	assert(graph.Count() == nodecount);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
@@ -8354,8 +8348,7 @@ vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sou
 			edges[(*it)[1]].insert((*it)[0]);
 	}
 	vector<size_t> data(n);
-	generate(data.begin(), data.end(), [n = 1]() mutable
-			 { return n++; });
+	ranges::generate(data, [n = 1]() mutable { return n++; });
 	Graph<size_t, size_t> graph(data);
 	for (map<size_t, set<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 	{
@@ -8392,8 +8385,7 @@ vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sou
 size_t evenForest(size_t nodeCount, vector<vector<size_t>> &edges, size_t start)
 {
 	vector<size_t> data(nodeCount);
-	generate(data.begin(), data.end(), [n = 1]() mutable
-			 { return n++; });
+	ranges::generate(data, [n = 1]() mutable { return n++; });
 	Graph<size_t, size_t> graph(data);
 	assert(graph.Count() == nodeCount);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
@@ -8415,8 +8407,7 @@ size_t evenForest(size_t nodeCount, vector<vector<size_t>> &edges, size_t start)
 string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 {
 	vector<size_t> data(n);
-	generate(data.begin(), data.end(), [n = 1]() mutable
-			 { return n++; });
+	ranges::generate(data, [n = 1]() mutable { return n++; });
 	Graph<size_t, size_t> graph(data);
 	assert(graph.Count() == n);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)

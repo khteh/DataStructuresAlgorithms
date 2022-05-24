@@ -6,9 +6,9 @@ TEST(BinarySearchTests, BinarySearchTest) {
 	long data[12] = { 15, 16, 17, 18, 19, 20, 0, 1, 2, 3, 4, 5 };
 	/*L				      M			         U*/
 	source.resize(30);
-	generate(source.begin(), source.begin() + 10, [i = 0]() mutable	{ return i++; });
-	generate(source.begin() + 10, source.begin() + 20, [i = 1000]() mutable	{ return i++; });
-	generate(source.begin() + 20, source.begin() + 30, [i = 2000]() mutable	{ return i++; });
+	ranges::generate(source.begin(), source.begin() + 10, [i = 0]() mutable	{ return i++; });
+	ranges::generate(source.begin() + 10, source.begin() + 20, [i = 1000]() mutable	{ return i++; });
+	ranges::generate(source.begin() + 20, source.begin() + 30, [i = 2000]() mutable	{ return i++; });
 	ranges::rotate(source, source.begin() + source.size() / 2);
 	pos = BinarySearch(source, 1000);
 	ASSERT_GE(pos, 0);
@@ -181,8 +181,8 @@ TEST(BinarySearchTests, BinarySearchCountTest) {
 	vector<long> ages(50, 20);
 	ages.resize(100);
 	// 0:49 20, 50: 79 30, 80: 99 50
-	generate(ages.begin() + 50, ages.begin() + 80, [i = 30]() mutable { return i; });
-	generate(ages.begin() + 80, ages.end(), [i = 50]() mutable { return i; });
+	ranges::generate(ages.begin() + 50, ages.begin() + 80, [i = 30]() mutable { return i; });
+	ranges::generate(ages.begin() + 80, ages.end(), [i = 50]() mutable { return i; });
 	int count = BinarySearchCountUpper(ages, 18, 0, ages.size() - 1) - BinarySearchCountLower(ages, 18, 0, ages.size() - 1);
 	ASSERT_EQ(0, count);
 	count = BinarySearchCountUpper(ages, 20, 0, ages.size() - 1) - BinarySearchCountLower(ages, 20, 0, ages.size() - 1) + 1;

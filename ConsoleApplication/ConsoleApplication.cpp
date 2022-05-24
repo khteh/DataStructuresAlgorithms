@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 	// Advanced uses. Allows more than 32 bits of randomness.
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
-	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
 	int i, j, index, * iPtr;
@@ -246,8 +246,7 @@ int main(int argc, char* argv[])
 	assert(j == 0x7FFFFFFF);
 	cout << i << " 0x" << hex << i << " - 1 = 0x" << j << dec << " " << j << endl;
 	a.resize(10);
-	generate(a.begin(), a.end(), [n = 1]() mutable
-	{ return n++; });
+	ranges::generate(a, [n = 1]() mutable { return n++; });
 	for (size_t i = 0; i < a.size(); i++)
 		assert(a[i] == i + 1);
 	time_point timestamp = system_clock::now();
@@ -843,10 +842,8 @@ int main(int argc, char* argv[])
 	str = "abc";
 	a.clear();
 	a.resize(25);
-	generate(a.begin(), a.begin() + 10, [n = 0]() mutable
-	{ return n++; });
-	generate(a.begin() + 10, a.end(), [n = 5]() mutable
-	{ return n++; });
+	ranges::generate(a.begin(), a.begin() + 10, [n = 0]() mutable { return n++; });
+	ranges::generate(a.begin() + 10, a.end(), [n = 5]() mutable	{ return n++; });
 	b.clear();
 	findDistinct(a, b);
 	assert(b.size() == 20);
@@ -1210,8 +1207,7 @@ int main(int argc, char* argv[])
 	a.clear();
 	b.clear();
 	a.resize(10);
-	generate(a.begin(), a.end(), [n = 1]() mutable
-	{ return n++; });
+	ranges::generate(a, [n = 1]() mutable { return n++; });
 #ifdef _MSC_VER
 	long sum = parallel_reduce(a.begin(), a.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
@@ -1355,8 +1351,7 @@ int main(int argc, char* argv[])
 	cout << endl;
 	data.clear();
 	data.resize(4);
-	generate(data.begin(), data.end(), [n = 1]() mutable
-	{ return n++; });
+	ranges::generate(data, [n = 1]() mutable { return n++; });
 	vector<int> intResult = Increment(data);
 	assert(intResult[0] == 1);
 	assert(intResult[1] == 2);
@@ -1803,8 +1798,7 @@ int main(int argc, char* argv[])
 	assert(binary_gap(529) == 4);
 	data.clear();
 	data.resize(5);
-	generate(data.begin(), data.end(), [i = 0]() mutable
-	{ return i++; });
+	ranges::generate(data, [i = 0]() mutable { return i++; });
 	/* 0 1 2 3 4 => 2 3 4 0 1 (Rotate 3)
 	 */
 	RotateRightArray(data, 3);
@@ -1812,8 +1806,7 @@ int main(int argc, char* argv[])
 		assert(data[i] == j);
 	data.clear();
 	data.resize(5);
-	generate(data.begin(), data.end(), [i = 0]() mutable
-	{ return i++; });
+	ranges::generate(data, [i = 0]() mutable { return i++; });
 	/* 0 1 2 3 4 => 2 3 4 0 1 (Rotate 13)
 	 */
 	RotateRightArray(data, 13);

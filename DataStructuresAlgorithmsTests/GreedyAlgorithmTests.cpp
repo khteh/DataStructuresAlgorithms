@@ -14,11 +14,11 @@ TEST(GreedyAlgorithmTests, GreedyAlgorithmTest) {
 	ASSERT_EQ(5, MaxNonOverlappingSegments(a, b)); // No overlapping segments
 	a.clear();
 	a.resize(6);
-	generate(a.begin(), a.end(), [i = 1]() mutable
+	ranges::generate(a, [i = 1]() mutable
 	{ return i++; });
 	b.clear();
 	b.resize(6);
-	generate(b.begin(), b.end(), [i = 5]() mutable
+	ranges::generate(b, [i = 5]() mutable
 	{ return i++; });
 	ASSERT_EQ(2, MaxNonOverlappingSegments(a, b));
 	a.clear();

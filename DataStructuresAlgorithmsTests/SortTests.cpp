@@ -15,8 +15,7 @@ TEST(SortTests, SortTest) {
 	ASSERT_EQ(1, sortData[2]);
 	sortData.clear();
 	sortData.resize(100);
-	generate(sortData.begin(), sortData.end(), [&]
-		{ return uniformDistribution(engine); });
+	ranges::generate(sortData, [&] { return uniformDistribution(engine); });
 	buffer.clear();
 	buffer.assign(sortData.begin(), sortData.end());
 	sort(buffer.begin(), buffer.end());
@@ -38,8 +37,7 @@ TEST(SortTests, SortTest) {
 	ASSERT_EQ(1, sortData[2]);
 	sortData.clear();
 	sortData.resize(100);
-	generate(sortData.begin(), sortData.end(), [&]
-		{ return uniformDistribution(engine); });
+	ranges::generate(sortData, [&] { return uniformDistribution(engine); });
 	buffer.clear();
 	buffer.assign(sortData.begin(), sortData.end());
 	sort(buffer.begin(), buffer.end());
@@ -54,8 +52,7 @@ TEST(SortTests, SortTest) {
 	ASSERT_EQ(1, sortData[2]);
 	sortData.clear();
 	sortData.resize(100);
-	generate(sortData.begin(), sortData.end(), [&]
-		{ return uniformDistribution(engine); });
+	ranges::generate(sortData, [&] { return uniformDistribution(engine); });
 	buffer.clear();
 	buffer.assign(sortData.begin(), sortData.end());
 	sort(buffer.begin(), buffer.end());
@@ -70,8 +67,7 @@ TEST(SortTests, SortTest) {
 	ASSERT_EQ(1, sortData[2]);
 	sortData.clear();
 	sortData.resize(100);
-	generate(sortData.begin(), sortData.end(), [&]
-		{ return uniformDistribution(engine); });
+	ranges::generate(sortData, [&] { return uniformDistribution(engine); });
 	buffer.clear();
 	buffer.assign(sortData.begin(), sortData.end());
 	sort(buffer.begin(), buffer.end());
@@ -98,8 +94,7 @@ TEST(SortTests, SortTest) {
 
 	sortData.clear();
 	sortData.resize(100);
-	generate(sortData.begin(), sortData.end(), [&]
-		{ return uniformDistribution(engine); });
+	ranges::generate(sortData, [&] { return uniformDistribution(engine); });
 	a.clear();
 	a.assign(sortData.begin(), sortData.end());
 	sort(a.begin(), a.end());
@@ -117,8 +112,7 @@ TEST(SortTests, SortTest) {
 	ASSERT_EQ(1, sortData[2]);
 	sortData.clear();
 	sortData.resize(100);
-	generate(sortData.begin(), sortData.end(), [&]
-		{ return uniformDistribution(engine); });
+	ranges::generate(sortData, [&] { return uniformDistribution(engine); });
 	a.clear();
 	a.assign(sortData.begin(), sortData.end());
 	sort(a.begin(), a.end());
@@ -166,8 +160,7 @@ TEST(SortTests, SortTest) {
 
 	sortData.clear();
 	sortData.resize(100);
-	generate(sortData.begin(), sortData.end(), [&]
-		{ return uniformDistribution(engine); });
+	ranges::generate(sortData, [&] { return uniformDistribution(engine); });
 	buffer.clear();
 	buffer.assign(sortData.begin(), sortData.end());
 	sort(buffer.begin(), buffer.end());
@@ -177,10 +170,8 @@ TEST(SortTests, SortTest) {
 	a.clear();
 	a.resize(10);
 	b.resize(20);
-	generate(a.begin(), a.end(), [&]
-		{ return uniformDistribution(engine); });
-	generate(b.begin(), b.end(), [&]
-		{ return uniformDistribution(engine); });
+	ranges::generate(a, [&] { return uniformDistribution(engine); });
+	ranges::generate(b, [&] { return uniformDistribution(engine); });
 	sort(a.begin(), a.end());
 	sort(b.begin(), b.end());
 	Merge(a, b);
@@ -195,10 +186,8 @@ TEST(SortTests, SortTest) {
 	}
 	a.resize(20);
 	b.resize(10);
-	generate(a.begin(), a.end(), [&]
-		{ return uniformDistribution(engine); });
-	generate(b.begin(), b.end(), [&]
-		{ return uniformDistribution(engine); });
+	ranges::generate(a, [&] { return uniformDistribution(engine); });
+	ranges::generate(b, [&] { return uniformDistribution(engine); });
 	sort(a.begin(), a.end());
 	sort(b.begin(), b.end());
 	Merge(a, b);

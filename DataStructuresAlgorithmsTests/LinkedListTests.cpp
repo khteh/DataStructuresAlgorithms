@@ -5,14 +5,13 @@ TEST(LinkedListTests, LinkedListTest) {
 	random_device device;
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
-	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	ranges:generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
 	uniform_int_distribution<long> uniformDistribution;
 	a.clear();
 	a.resize(10);
-	generate(a.begin(), a.end(), [&]
-		{ return uniformDistribution(engine); });
+	ranges::generate(a, [&] { return uniformDistribution(engine); });
 	LinkedList<long> lla1(a);
 	ASSERT_EQ(10, lla1.Length());
 	b.clear();
@@ -33,7 +32,7 @@ TEST(LinkedListTests, LinkedListTest) {
 	lla1.Clear();
 	a.clear();
 	a.resize(10);
-	generate(a.begin(), a.end(), [n = 0]() mutable { return n++; });
+	ranges::generate(a, [n = 0]() mutable { return n++; });
 	// 0->1->2->3->4->5->6->7->8->9
 	// 10 9  8  7  6  5  4  3  2  1
 	LinkedList<long> lla2(a);
@@ -119,10 +118,8 @@ TEST(LinkedListTests, LinkedListTest) {
 	b.clear();
 	a.resize(10);
 	b.resize(10);
-	generate(a.begin(), a.end(), [&]
-		{ return uniformDistribution(engine); });
-	generate(b.begin(), b.end(), [&]
-		{ return uniformDistribution(engine); });
+	ranges::generate(a, [&] { return uniformDistribution(engine); });
+	ranges::generate(b, [&] { return uniformDistribution(engine); });
 	LinkedList<long> lla4(a), llb2(b);
 	ASSERT_EQ(10, lla4.Length());
 	ASSERT_EQ(10, llb2.Length());
