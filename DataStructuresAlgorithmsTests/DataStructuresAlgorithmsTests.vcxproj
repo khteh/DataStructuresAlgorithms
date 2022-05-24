@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0b7f15c4-7c48-47c8-bd81-dd270ab13d44}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-	<RootNamespace>DataStructuresAlgorithmsTests</RootNamespace>
+    <RootNamespace>DataStructuresAlgorithmsTests</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
@@ -50,6 +50,7 @@
     <ClCompile Include="ListPermutationTests.cpp" />
     <ClCompile Include="HeapTests.cpp" />
     <ClCompile Include="LongestCommonSubsequenceTests.cpp" />
+    <ClCompile Include="MatrixTests.cpp" />
     <ClCompile Include="MaxZeroProductTests.cpp" />
     <ClCompile Include="ArrayNegativePositiveSeriesTests.cpp" />
     <ClCompile Include="PalindromeTests.cpp" />
