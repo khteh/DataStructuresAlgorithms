@@ -4223,7 +4223,8 @@ void TestURNG(URNG &urng)
 	uniform_int_distribution<long> dist(-5, 5);
 	vector<long> v;
 	v.resize(20);
-	generate(v.begin(), v.end(), [&] { return dist(urng); });
+	generate(v.begin(), v.end(), [&]
+			 { return dist(urng); });
 	cout << "Randomized vector: ";
 	copy(v.begin(), v.end(), ostream_iterator<long>(cout, " "));
 	cout << endl;
@@ -4254,13 +4255,13 @@ void TestRandom()
 
 	// Second run: simple integer seed. Repeatable results
 	cout << "Using constant-seed mersene twister engine URNG:" << endl;
-	mt19937_64 constant_seed_mersene_twister_engine{ 12345 };
+	mt19937_64 constant_seed_mersene_twister_engine{12345};
 	TestURNG(constant_seed_mersene_twister_engine);
 
 	// Third run: random_device as seed; different each run.
 	// Desirable for most purposes
 	cout << "Using non-deterministic-seed mersene twister engine URNG:" << endl;
-	mt19937_64 non_deterministic_seed_mersene_twister_engine{ device() };
+	mt19937_64 non_deterministic_seed_mersene_twister_engine{device()};
 	TestURNG(non_deterministic_seed_mersene_twister_engine);
 
 	// Fourth run: "warm-up" sequence as as seed; different each run.
@@ -8614,7 +8615,8 @@ void cpp20readonlyranges()
 	assert(distance(sequence.begin(), found.begin()) == 3);
 	assert(distance(sequence.begin(), found.end()) == 6);
 }
-ostream& operator<<(ostream& os, const Node<int>& n) {
+ostream &operator<<(ostream &os, const Node<int> &n)
+{
 	os << n.Item();
 	return os;
 }
@@ -8627,10 +8629,12 @@ void cpp20ranges()
 	// copy_if
 	cout << "C++20 ranges copy_if:" << endl;
 	// standard version:
-	copy_if(nodes.begin(), nodes.end(), ostream_iterator<Node<int>>(cout, ", "), [](const Node<int>& n) { return n.Item() >= 0; });
+	copy_if(nodes.begin(), nodes.end(), ostream_iterator<Node<int>>(cout, ", "), [](const Node<int> &n)
+			{ return n.Item() >= 0; });
 	cout << endl;
 	// ranges version:
-	ranges::copy_if(nodes, ostream_iterator<Node<int>>(cout, ", "), [](const Node<int>& n) {return n.Item() >= 0; });
+	ranges::copy_if(nodes, ostream_iterator<Node<int>>(cout, ", "), [](const Node<int> &n)
+					{ return n.Item() >= 0; });
 	cout << endl;
 
 	// fill
@@ -8651,33 +8655,39 @@ void cpp20ranges()
 	// generate
 	cout << "C++20 ranges generate:" << endl;
 	// standard version
-	generate(nodes.begin(), nodes.end(), [n = 1]() mutable { return n++; });
+	generate(nodes.begin(), nodes.end(), [n = 1]() mutable
+			 { return n++; });
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 	// ranges version
-	ranges::generate(nodes, [n = 1]() mutable {return n++; });
+	ranges::generate(nodes, [n = 1]() mutable
+					 { return n++; });
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 
 	// transform
 	cout << "C++20 ranges transform:" << endl;
 	// standard version
-	transform(nodes.begin(), nodes.end(), nodes.begin(), [](const Node<int>& n) mutable {return n.Item() * -10; });
+	transform(nodes.begin(), nodes.end(), nodes.begin(), [](const Node<int> &n) mutable
+			  { return n.Item() * -10; });
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 	// ranges version
 	nodes.clear();
 	nodes.resize(5);
-	ranges::generate(nodes, [n = 1]() mutable {return n++; });
-	ranges::transform(nodes, nodes.begin(), [](const Node<int>& n) mutable { return n.Item() * 10; });
+	ranges::generate(nodes, [n = 1]() mutable
+					 { return n++; });
+	ranges::transform(nodes, nodes.begin(), [](const Node<int> &n) mutable
+					  { return n.Item() * 10; });
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
-	vector<Node<int>> nodes1{ 5, Node<int>(10) };
-	vector<int> numbers = { -1,1,2,-2,3 };
+	vector<Node<int>> nodes1{5, Node<int>(10)};
+	vector<int> numbers = {-1, 1, 2, -2, 3};
 	assert(nodes1.size() == 5);
 	for (vector<Node<int>>::iterator it = nodes1.begin(); it != nodes1.end(); it++)
 		assert(it->Item() == 10);
-	ranges::transform(nodes1, numbers, nodes1.begin(), [](const Node<int>& n, int number) {return n.Item() * number; });
+	ranges::transform(nodes1, numbers, nodes1.begin(), [](const Node<int> &n, int number)
+					  { return n.Item() * number; });
 	ranges::copy(nodes1, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 
@@ -8685,9 +8695,12 @@ void cpp20ranges()
 	cout << "C++20 ranges remove:" << endl;
 	nodes.clear();
 	nodes.resize(10);
-	ranges::generate(nodes, [n = -5]() mutable {return n++; });
+	ranges::generate(nodes, [n = -5]() mutable
+					 { return n++; });
 	// standard version
-	nodes.erase(remove_if(nodes.begin(), nodes.end(), [](const Node<int>& n) { return n.Item() < 0; }), nodes.end());
+	nodes.erase(remove_if(nodes.begin(), nodes.end(), [](const Node<int> &n)
+						  { return n.Item() < 0; }),
+				nodes.end());
 	assert(nodes.size() == 5);
 	cout << "vector<Nodes<int>> after std::remove_if: ";
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
@@ -8695,17 +8708,23 @@ void cpp20ranges()
 	// ranges version
 	nodes.clear();
 	nodes.resize(10);
-	ranges::generate(nodes, [n = -5]() mutable {return n++; });
-	nodes.erase(ranges::remove_if(nodes, [](const Node<int>& n) { return n.Item() < 0; }).begin(), nodes.end());
+	ranges::generate(nodes, [n = -5]() mutable
+					 { return n++; });
+	nodes.erase(ranges::remove_if(nodes, [](const Node<int> &n)
+								  { return n.Item() < 0; })
+					.begin(),
+				nodes.end());
 	assert(nodes.size() == 5);
 	cout << "vector<Nodes<int>> after ranges::remove_if: ";
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
-	// C++20 version:  
+	// C++20 version:
 	nodes.clear();
 	nodes.resize(10);
-	ranges::generate(nodes, [n = -5]() mutable {return n++; });
-	erase_if(nodes, [](const Node<int>& n) {return n.Item() < 0; });
+	ranges::generate(nodes, [n = -5]() mutable
+					 { return n++; });
+	erase_if(nodes, [](const Node<int> &n)
+			 { return n.Item() < 0; });
 	assert(nodes.size() == 5);
 	cout << "vector<Nodes<int>> after std::erase_if: ";
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
@@ -8716,7 +8735,8 @@ void cpp20ranges()
 	// standard version
 	nodes.clear();
 	nodes.resize(10);
-	ranges::generate(nodes, [n = -5]() mutable {return n++; });
+	ranges::generate(nodes, [n = -5]() mutable
+					 { return n++; });
 	replace(nodes.begin(), nodes.end(), Node<int>(-1), Node<int>(100));
 	// ranges version
 	ranges::replace(nodes, 1, Node<int>(200), &Node<int>::Item);
@@ -8728,7 +8748,8 @@ void cpp20ranges()
 	cout << "C++20 ranges reverse:" << endl;
 	nodes.clear();
 	nodes.resize(10);
-	ranges::generate(nodes, [n = -5]() mutable {return n++; });
+	ranges::generate(nodes, [n = -5]() mutable
+					 { return n++; });
 	// standard version
 	reverse_copy(nodes.begin(), nodes.end(), ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
@@ -8744,34 +8765,36 @@ void cpp20ranges()
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 	// -4, -3, -2, -1, 0, 1, 2, 3, 4, -5
-	assert(9, distance(nodes.begin(), newPos));
+	assert(9 == distance(nodes.begin(), newPos));
 	cout << firstNode << " is now at position " << distance(nodes.begin(), newPos) << endl;
 	// ranges version
 	auto zeroPos = ranges::find(nodes, Node<int>(0));
 	assert(zeroPos != nodes.end());
 	Node<int> firstNode1(nodes[0]);
-	assert(-4, firstNode1);
+	assert(-4 == firstNode1.Item());
 	auto newPos1 = ranges::rotate(nodes, zeroPos);
 	// 0, 1, 2, 3, 4, -5, -4, -3, -2, -1
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
-	assert(6, distance(nodes.begin(), newPos1.begin()));
+	assert(6 == distance(nodes.begin(), newPos1.begin()));
 	cout << firstNode1 << " is now at position " << distance(nodes.begin(), newPos1.begin()) << endl;
 
 	// shuffle
 	// std::random_shuffle was deprecated and removed in C++17
 	cout << "C++20 ranges shuffle:" << endl;
 	random_device device;
-	mt19937_64 rng{ device() };
+	mt19937_64 rng{device()};
 	nodes.clear();
 	nodes.resize(10);
-	ranges::generate(nodes, [n = -5]() mutable {return n++; });
+	ranges::generate(nodes, [n = -5]() mutable
+					 { return n++; });
 	shuffle(nodes.begin(), nodes.end(), rng);
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 	nodes.clear();
 	nodes.resize(10);
-	ranges::generate(nodes, [n = -5]() mutable {return n++; });
+	ranges::generate(nodes, [n = -5]() mutable
+					 { return n++; });
 	ranges::shuffle(nodes, rng);
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
@@ -8809,7 +8832,7 @@ void cpp20ranges()
 	nodes.push_back(Node<int>(5));
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
-	//auto unique = ranges::unique(nodes, {}, &Node<int>::Item);
+	// auto unique = ranges::unique(nodes, {}, &Node<int>::Item);
 	auto unique = ranges::unique(nodes);
 	// After the first run to unique(), the nodes vector is modified so that elements to be removed are passed to the end of the container. What’s more, they are of unspecified value.
 	// The returned object contains a sub-range pointing to the first “removed” element and the end of the input range.
@@ -8830,7 +8853,7 @@ void cpp20ranges()
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 	cout << "After sort: ";
-	ranges::sort(nodes, {}, & Node<int>::Item);
+	ranges::sort(nodes, {}, &Node<int>::Item);
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 }

@@ -22,6 +22,7 @@ set(Sources
     "LinkedListTests.cpp"
     "ListPermutationTests.cpp"
     "LongestCommonSubsequenceTests.cpp"
+    "MatrixTests.cpp"
     "MaxZeroProductTests.cpp"
     "PalindromeTests.cpp"
     "pch.cpp"
