@@ -1271,41 +1271,6 @@ int main(int argc, char* argv[])
 	assert(JSONValidation("{a:b,c:{e:{f:g}}}"));
 	assert(!JSONValidation("{a}"));
 	assert(!JSONValidation("{{a}}"));
-	// Test single-character string permutations
-	set<string> dictionary = { "DAMP", "LAMP", "LIMP", "LIME", "LIKE", "LAKE" };
-	strings.clear();
-	WordLadder(string("DAMP"), string("LIKE"), dictionary, strings);
-	assert(!strings.empty());
-	cout << "Single-character transformation from \"DAMP\" to \"LIKE\": ";
-	// DAMP LAMP LIMP LIME LIKE
-	assert(strings.size() == 5);
-	assert(strings[0] == "LIKE");
-	assert(strings[1] == "LIME");
-	assert(strings[2] == "LIMP");
-	assert(strings[3] == "LAMP");
-	assert(strings[4] == "DAMP");
-	ranges::reverse_copy(strings, ostream_iterator<string>(cout, " "));
-	cout << endl;
-	strings.clear();
-	WordLadder(string("DAMP"), string("Like"), dictionary, strings);
-	assert(strings.empty()); // "LICK" is not in the dictionary
-	dictionary.clear();
-	strings.clear();
-	dictionary = { "Hot", "Dot", "Dog", "Lot", "Log", "Cog" };
-	WordLadder(string("Hit"), string("Cog"), dictionary, strings);
-	assert(!strings.empty());
-	assert(strings.size() == 5);
-	assert(strings[0] == "Cog");
-	assert(strings[1] == "Dog");
-	assert(strings[2] == "Dot");
-	assert(strings[3] == "Hot");
-	assert(strings[4] == "Hit");
-	cout << "Single-character transformation from \"Hit\" to \"Cog\": ";
-	ranges::reverse_copy(strings, ostream_iterator<string>(cout, " "));
-	cout << endl;
-	strings.clear();
-	WordLadder(string("Hit"), string("Hat"), dictionary, strings);
-	assert(strings.empty()); // "HAT" is not in the dictionary
 	assert(match(string("abba"), string("redbluebluered")));
 	assert(match(string("aaaa"), string("asdasdasdasd")));
 	assert(match(string("aabb"), string("xyzxyzabcabc")));
@@ -1313,7 +1278,7 @@ int main(int argc, char* argv[])
 	assert(!match(string("aabb"), string("xyzabcxyzabc")));
 	assert(!match(string("abba"), string("xyzabcxyzabc")));
 	assert(!match(string("aaaa"), string("xyzabcxyzabc")));
-	cout << endl;
+
 	stringset.clear();
 	stringset.insert("cdf");
 	stringset.insert("too");

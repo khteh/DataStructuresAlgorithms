@@ -2869,7 +2869,7 @@ void GetPermutations(string &w, set<string> &dictionary, set<string> &result)
 	}
 }
 // DAMP -> LAMP -> LIMP -> LIME -> LIKE
-void WordLadder(const string &start, const string &stop, set<string> &dictionary, vector<string> &result)
+void WordsLadder(const string &start, const string &stop, set<string> &dictionary, vector<string> &result)
 {
 	queue<string> actionQ;
 	set<string> visited;

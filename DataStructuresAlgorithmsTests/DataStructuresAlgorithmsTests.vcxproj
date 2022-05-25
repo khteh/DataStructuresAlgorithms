@@ -70,6 +70,7 @@
     <ClCompile Include="TreeTests.cpp" />
     <ClCompile Include="TrieTests.cpp" />
     <ClCompile Include="TweeterAPITests.cpp" />
+    <ClCompile Include="WordsLadderTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

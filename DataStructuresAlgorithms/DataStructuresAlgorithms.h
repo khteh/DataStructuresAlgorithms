@@ -306,7 +306,7 @@ void randomSubset(vector<long> &, size_t, vector<long> &);
 size_t countDigits(char, size_t);
 size_t countNumbersWithUniqueDigits(size_t);
 size_t Count1Bits(long);
-void WordLadder(const string &, const string &, set<string> &, vector<string> &);
+void WordsLadder(const string &, const string &, set<string> &, vector<string> &);
 void GetPermutations(string &);
 void trim(string &);
 size_t sumpairs(vector<long> &, long);
