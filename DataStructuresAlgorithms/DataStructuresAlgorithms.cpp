@@ -8361,6 +8361,7 @@ vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sou
 	for (map<size_t, set<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 	{
 		shared_ptr<Vertex<size_t, size_t>> v = graph.GetVertex(it->first);
+		assert(v);
 		for (size_t i = 1; i <= n; i++)
 		{
 			if (i != it->first && it->second.find(i) == it->second.end())
@@ -8426,8 +8427,8 @@ string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 		graph.AddUndirectedEdge(v1, v2, 1 << (*it)[2]);
 	}
 	size_t distance = 0;
-	map<string, long> costCache;
 #ifdef _MSC_VER
+	map<string, long> costCache;
 	parallel_for(size_t(1), n, [&](size_t i)
 				 {
 		for (size_t j = i + 1; j <= n; j++)
@@ -8452,6 +8453,7 @@ string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 		} });
 #elif defined(__GNUC__) || defined(__GNUG__)
 	mutex m;
+	set<string> computed;
 	parallel_for(blocked_range<size_t>(1, n, 2), [&](blocked_range<size_t> r)
 				 {
 		m.lock();
@@ -8466,14 +8468,17 @@ string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 					oss1 << i << "-" << j;
 					oss2 << j << "-" << i;
 					m.lock();
-					if (costCache.find(oss1.str()) == costCache.end() && costCache.find(oss2.str()) == costCache.end())
+					if (computed.find(oss1.str()) == computed.end() && computed.find(oss2.str()) == computed.end())
 					{
-						size_t cost = graph.Dijkstra(i, j);
-						costCache[oss1.str()] = cost;
-						costCache[oss2.str()] = cost;
+						computed.emplace(oss1.str());
+						computed.emplace(oss2.str());
+						m.unlock();
+						long cost = graph.Dijkstra(i, j);
+						m.lock();
 						distance += cost;
-					}
-					m.unlock();
+						m.unlock();
+					} else
+						m.unlock();
 				}
 				 } });
 #endif
