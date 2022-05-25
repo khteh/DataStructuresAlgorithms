@@ -2505,6 +2505,12 @@ int main(int argc, char* argv[])
 	assert(fizzBuzz(5) == vector<string>({ "1", "2", "Fizz", "4", "Buzz" }));
 	assert(fizzBuzz(10) == vector<string>({ "1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz" }));
 	assert(fizzBuzz(15) == vector<string>({ "1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz" }));
+	Graph<size_t, size_t> graph;
+	vector<vector<size_t>> edges;
+	data.clear();
+	edges.clear();
+	edges = { {1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2} };
+	assert("1000100" == roadsInHackerland(5, edges));
 	cpp20readonlyranges();
 	cpp20ranges();
 	/***** The End *****/

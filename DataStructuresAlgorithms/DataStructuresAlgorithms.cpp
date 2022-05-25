@@ -6444,9 +6444,9 @@ string AlmostSorted(vector<long> &arr)
 			sum += diff[index];
 			if (diff[index] < 0 && sum == 0)
 			{
-				size_t positives = count_if(diff.begin(), diff.end(), [](long i)
+				size_t positives = ranges::count_if(diff, [](long i)
 											{ return i > 0; });
-				size_t negatives = count_if(diff.begin(), diff.end(), [](long i)
+				size_t negatives = ranges::count_if(diff, [](long i)
 											{ return i < 0; });
 				if (diff[index] + diff[0] != 0)
 					return "no";
@@ -6606,7 +6606,7 @@ bool SolvabilityOfTheTilesGame(vector<size_t> &data)
 	for (size_t i = 0; i < data.size(); i++)
 	{
 		size_t item = data[i];
-		size_t smallerItems = count_if(data.begin(), data.begin() + i, [&item](size_t i)
+		size_t smallerItems = ranges::count_if(data.begin(), data.begin() + i, [&item](size_t i)
 									   { return i < item; });
 		inversions += item - 1 - smallerItems;
 	}
@@ -7739,7 +7739,7 @@ size_t hIndex(vector<size_t> &citations)
 		if (*it != previous)
 		{
 			size_t value = *it;
-			size_t count = count_if(citations.begin(), citations.end(), [&value](size_t i)
+			size_t count = ranges::count_if(citations, [&value](size_t i)
 									{ return i >= value; });
 			if (value < count && value > result)
 				result = value;
@@ -8418,14 +8418,13 @@ string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 	}
 	size_t distance = 0;
 	map<string, long> costCache;
-	ostringstream oss1, oss2;
-	for (size_t i = 1; i <= n; i++)
+#ifdef _MSC_VER
+	parallel_for(size_t(1), n, [&](size_t i) {
 		for (size_t j = i + 1; j <= n; j++)
 		{
 			if (i != j)
 			{
-				oss1.str("");
-				oss2.str("");
+				ostringstream oss1, oss2;
 				oss1 << i << "-" << j;
 				oss2 << j << "-" << i;
 				if (costCache.find(oss1.str()) != costCache.end())
@@ -8441,6 +8440,33 @@ string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 				}
 			}
 		}
+		});
+#elif defined(__GNUC__) || defined(__GNUG__)
+	tbb::parallel_for(tbb::blocked_range<int>(1, n),
+		[&](tbb::blocked_range<size_t> r)
+		{
+			for (size_t j = r.begin() + 1; j <= n; j++)
+			{
+				if (i != j)
+				{
+					ostringstream oss1, oss2;
+					oss1 << i << "-" << j;
+					oss2 << j << "-" << i;
+					if (costCache.find(oss1.str()) != costCache.end())
+						distance += costCache[oss1.str()];
+					else if (costCache.find(oss2.str()) != costCache.end())
+						distance += costCache[oss2.str()];
+					else
+					{
+						size_t cost = graph.Dijkstra(i, j);
+						costCache[oss1.str()] = cost;
+						costCache[oss2.str()] = cost;
+						distance += cost;
+					}
+				}
+			}
+			});
+#endif
 	string binary = decimal_to_binary(distance);
 	return binary.substr(binary.find_first_not_of('0'));
 }
@@ -8539,6 +8565,7 @@ void cpp20readonlyranges()
 	assert(distance(it, it2) == 6);
 
 	// Ranges version
+	// -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5
 	vector<int> invalidInts = {-3, 3};
 	it = ranges::find_first_of(nodes, invalidInts, ranges::equal_to{}, &Node<int>::Item);
 	assert(it != nodes.end());
