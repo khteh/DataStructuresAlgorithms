@@ -72,7 +72,7 @@ Tree<T>::Tree(vector<T> &v, TreeType type)
 		switch (type)
 		{
 		case TreeType::BinarySearch:
-			sort(v.begin(), v.end());
+			ranges::sort(v);
 			m_root = AddToTree(nullptr, v, 0, v.size() - 1);
 			break;
 		case TreeType::Binary:

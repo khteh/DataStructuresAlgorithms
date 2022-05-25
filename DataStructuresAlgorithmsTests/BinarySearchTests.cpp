@@ -166,7 +166,7 @@ TEST(BinarySearchTests, BinarySearchTest) {
 TEST(BinarySearchTests, BinarySearchStringTest) {
 	int pos;
 	vector<string> str{ "abc", "ABC", "", "123", "789", "xyz", "XYZ", "" };
-	sort(str.begin(), str.end());
+	ranges::sort(str);
 
 	pos = BinarySearch(str, string("123"));
 	ASSERT_EQ(2, pos);

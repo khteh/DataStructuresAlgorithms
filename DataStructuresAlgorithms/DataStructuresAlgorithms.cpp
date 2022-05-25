@@ -75,7 +75,7 @@ vector<string> findUnique(vector<string> const &a, vector<string> const &b)
 	vector<string> result;
 	vector<string> c(a);
 	c.insert(c.end(), b.begin(), b.end());
-	sort(c.begin(), c.end());
+	ranges::sort(c);
 	for (vector<string>::const_iterator it = c.begin(); it != c.end(); it++)
 	{
 		if (it != (c.end() - 1))
@@ -434,8 +434,8 @@ bool areAnagrams(string const &s1, string const &s2)
 	if (s1.size() == s2.size())
 	{
 		string str1(s1), str2(s2);
-		sort(str1.begin(), str1.end());
-		sort(str2.begin(), str2.end());
+		ranges::sort(str1);
+		ranges::sort(str2);
 		return str1 == str2;
 	}
 	else
@@ -447,7 +447,7 @@ size_t FindAnagrams(vector<string> const &s, vector<vector<string>> &result)
 	for (vector<string>::const_iterator it = s.begin(); it != s.end(); it++)
 	{
 		string s1(*it);
-		sort(s1.begin(), s1.end());
+		ranges::sort(s1);
 		anagrams[s1].push_back(*it);
 	}
 	size_t count = 0;
@@ -547,7 +547,7 @@ bool isPalindrome1(string const &s)
 	size_t count = 1, odd = 0;
 	size_t length = s.length();
 	string s1(s);
-	sort(s1.begin(), s1.end());
+	ranges::sort(s1);
 	for (size_t i = 1; i < length; i++)
 	{
 		if (s1[i] == s1[i - 1])
@@ -1385,8 +1385,8 @@ size_t CommonPrimeDivisors(vector<long> &data1, vector<long> &data2)
 {
 	vector<size_t> indices;
 	vector<long> a(data1), b(data2);
-	sort(a.begin(), a.end());
-	sort(b.begin(), b.end());
+	ranges::sort(a);
+	ranges::sort(b);
 	long maxNum = max(a.back(), b.back());
 	vector<long> primes;
 	findPrimes(maxNum, primes);
@@ -1993,7 +1993,7 @@ void BottomUpMergeSort(vector<long> &A, vector<long> &B)
  */
 void WiggleSort(vector<long> &data)
 {
-	sort(data.begin(), data.end());
+	ranges::sort(data);
 	vector<long> result;
 	size_t middle = data.size() / 2 + data.size() % 2;
 	int i = middle - 1, j = data.size() - 1;
@@ -3004,7 +3004,7 @@ vector<vector<long>> threeSum(vector<long> &nums)
 	set<vector<long>> result;
 	if (nums.empty() || nums.size() < 3)
 		return vector<vector<long>>();
-	sort(nums.begin(), nums.end());
+	ranges::sort(nums);
 	// -1,0,1,2,-1,-4 => -1, -1, 0, 1, 2, 4
 	// -4,-1,-1,0,1,2
 	for (size_t i = 0; i < nums.size(); i++)
@@ -3031,7 +3031,7 @@ vector<vector<long>> fourSum(vector<long> &nums, long target)
 	set<vector<long>> result;
 	if (nums.empty() || nums.size() < 4)
 		return vector<vector<long>>();
-	sort(nums.begin(), nums.end());
+	ranges::sort(nums);
 	// -1,0,1,2,-1,-4 => -1, -1, 0, 1, 2, 4
 	// -4,-1,-1,0,1,2
 	for (size_t i = 0; i < nums.size(); i++)
@@ -3088,7 +3088,7 @@ size_t diffpairs(set<long> &numbers, long diff)
 size_t minDiffPairs(vector<long> &numbers, long diff)
 {
 	size_t count = 0;
-	sort(numbers.begin(), numbers.end());
+	ranges::sort(numbers);
 	set<long> pairs;
 	if (numbers.size() < 2)
 		return 0;
@@ -3922,7 +3922,7 @@ void EqualAverageDivide(vector<long> &data, vector<long> &left)
 	long sum = 0, P = 0;
 	size_t N = data.size(), K;
 	// Sort the data
-	sort(data.begin(), data.end());
+	ranges::sort(data);
 #ifdef _MSC_VER
 	sum = parallel_reduce(data.begin(), data.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
@@ -4015,7 +4015,7 @@ string GetRange(vector<long> &input)
 {
 	ostringstream oss;
 	vector<long> numbers(input);
-	sort(numbers.begin(), numbers.end());
+	ranges::sort(numbers);
 	if (!numbers.empty())
 	{
 		size_t first = 0;
@@ -4042,7 +4042,7 @@ vector<vector<long>> MergeIntervals(vector<vector<long>> &intervals)
 {
 	vector<vector<long>> result;
 	// Sort the 2D vector in ascending order of the first element.
-	sort(intervals.begin(), intervals.end(), [](const vector<long> &a, const vector<long> &b)
+	ranges::sort(intervals, [](const vector<long> &a, const vector<long> &b)
 		 { return a[0] < b[0]; });
 	for (size_t i = 0; i < intervals.size(); i++)
 	{
@@ -4276,7 +4276,7 @@ void TestRandom()
 long concat(vector<long> &data)
 {
 	ostringstream oss;
-	sort(data.begin(), data.end(), [&data](long i, long j) -> bool
+	ranges::sort(data, [](long i, long j) -> bool
 		 {
 		ostringstream a, b;
 		a << i << j;
@@ -4320,7 +4320,7 @@ string buildmax(vector<size_t> &a)
 }
 long MaxLengths(vector<string> &data)
 {
-	sort(data.begin(), data.end(), [](string a, string b)
+	ranges::sort(data, [](string a, string b)
 		 { return a.size() > b.size(); });
 	for (vector<string>::const_iterator it = data.begin(); it != data.end(); it++)
 		for (vector<string>::const_iterator it1 = it + 1; it1 != data.end(); it1++)
@@ -4728,7 +4728,7 @@ size_t getMinimumCost(size_t k, vector<size_t> &c)
 				k--;
 			}
 			size_t perperson = (c.size() - solos) / k;
-			sort(c.begin(), c.end());
+			ranges::sort(c);
 			size_t soloCnt = 0;
 			for (vector<size_t>::reverse_iterator it = c.rbegin(); it != c.rend() && soloCnt < solos; it++, soloCnt++)
 				price += *it;
@@ -4767,7 +4767,7 @@ size_t getMinimumCost(size_t k, vector<size_t> &c)
 // 100%
 size_t maxMin(size_t k, vector<size_t> &arr)
 {
-	sort(arr.begin(), arr.end());
+	ranges::sort(arr);
 	size_t unfair = numeric_limits<size_t>::max();
 	size_t max = 0;
 	for (size_t i = 0; i < arr.size() && max < arr.size() - 1; i++)
@@ -5108,7 +5108,7 @@ size_t ZigZagEscape(vector<long> &data)
 		zigzag_t zz(i, data[i]);
 		zigzag.push_back(zz);
 	}
-	sort(zigzag.begin(), zigzag.end());
+	ranges::sort(zigzag, {}, &zigzag_t::value);
 	for (size_t i = 0; i < zigzag.size(); i++)
 	{
 		bool wasSmaller = false;
@@ -5180,8 +5180,8 @@ size_t ZigZagEscape(vector<long> &data, set<string> &strResult)
 			left.assign(data.begin(), data.begin() + i);
 		if (i != data.size() - 1)
 			right.assign(data.begin() + i + 1, data.end());
-		sort(left.begin(), left.end());
-		sort(right.begin(), right.end());
+		ranges::sort(left);
+		ranges::sort(right);
 		current = data[i];
 		strResult.insert(to_string(current));
 		// Start with left
@@ -5601,7 +5601,7 @@ void cpluplus17()
 }
 long MaxProductOfThree(vector<long> &data)
 {
-	sort(data.begin(), data.end());
+	ranges::sort(data);
 	long tmp1 = data[0] * data[1];
 	long tmp2 = data[data.size() - 2] * data[data.size() - 3];
 	if (data.back() > 0)
@@ -5789,7 +5789,7 @@ string encryption(string &s)
 vector<size_t> climbingLeaderboard(vector<long> &scores, vector<long> &alice)
 {
 	vector<size_t> result;
-	sort(scores.begin(), scores.end());
+	ranges::sort(scores);
 	scores.erase(unique(scores.begin(), scores.end()), scores.end());
 	for (size_t i = 0; i < alice.size(); i++)
 	{
@@ -6429,7 +6429,7 @@ string AlmostSorted(vector<long> &arr)
 {
 	ostringstream oss;
 	vector<long> sorted(arr);
-	sort(sorted.begin(), sorted.end());
+	ranges::sort(sorted);
 	vector<long> diff;
 	long positive = -1, sum = 0;
 	for (size_t i = 0; i < arr.size(); i++)
@@ -6801,7 +6801,7 @@ vector<long> absolutePermutation(size_t n, size_t k)
 			return vector<long>(1, -1);
 	}
 	vector<long> result(a);
-	sort(a.begin(), a.end());
+	ranges::sort(a);
 	if (a == sequence)
 		return result;
 	return vector<long>(1, -1);
@@ -7724,7 +7724,7 @@ size_t hIndex(vector<size_t> &citations)
 	size_t result = 0;
 	if (citations.size() == 1)
 		return citations[0] > 0 ? 1 : 0;
-	sort(citations.begin(), citations.end());
+	ranges::sort(citations);
 	size_t previous = 0;
 	/*
 	 * [1,1] => value: 1, count: 2 => h: 1

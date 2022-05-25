@@ -79,7 +79,7 @@ TEST(KnapsackTests, Knapsack_CoinChangeTest) {
 	ASSERT_EQ(2, KnapSack::CoinsChangeDuplicateWaysDynamicProgramming(6, numbers)); //
 	numbers.clear();
 	numbers = { 5, 37, 8, 39, 33, 17, 22, 32, 13, 7, 10, 35, 40, 2, 43, 49, 46, 19, 41, 1, 12, 11, 28 };
-	sort(numbers.begin(), numbers.end());
+	ranges::sort(numbers);
 	ASSERT_EQ(96190959, KnapSack::CoinsChangeUniqueWaysDynamicProgramming(166, numbers));
 	KnapSack::ClearCoinChangeCache();
 	numbers.clear();

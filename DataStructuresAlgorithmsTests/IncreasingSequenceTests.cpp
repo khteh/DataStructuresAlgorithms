@@ -79,8 +79,8 @@ TEST(IncreasingSequenceTests, IncreasingSequenceTest) {
 	b.resize(100000);
 	iota(a.begin(), a.end(), -50000);
 	iota(b.begin(), b.end(), 50000);
-	sort(a.begin(), a.end(), greater<long>()); // a and b decreasing
-	sort(b.begin(), b.end(), greater<long>());
+	ranges::sort(a, ranges::greater()); // a and b decreasing
+	ranges::sort(b, ranges::greater());
 	ASSERT_EQ(-1, IncreasingSequences(a, b));
 
 	a.clear();
@@ -89,7 +89,7 @@ TEST(IncreasingSequenceTests, IncreasingSequenceTest) {
 	b.resize(100000);
 	iota(a.begin(), a.end(), 0);		   // a increasing
 	iota(b.begin(), b.end(), -1000000000); // b decreasing
-	sort(b.begin(), b.end(), greater<long>());
+	ranges::sort(b, ranges::greater());
 	ASSERT_EQ(-1, IncreasingSequences(a, b));
 	a.clear();
 	vector<size_t> c = { 0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15 };

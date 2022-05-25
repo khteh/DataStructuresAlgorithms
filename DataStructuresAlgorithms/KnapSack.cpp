@@ -54,7 +54,7 @@ set<vector<size_t>> KnapSack::CoinChange(long amount, vector<size_t> &coins)
 						if (sum == amount)
 						{
 							change.push_back(*coin);
-							sort(change.begin(), change.end());
+							ranges::sort(change);
 							combinations.insert(change);
 						}
 					}
@@ -67,7 +67,7 @@ set<vector<size_t>> KnapSack::CoinChange(long amount, vector<size_t> &coins)
 set<vector<size_t>> KnapSack::CoinsChangeDynamicProgramming(long amount, vector<size_t> &coins)
 {
 	map<size_t, set<vector<size_t>>> dp;
-	sort(coins.begin(), coins.end());
+	ranges::sort(coins);
 	for (size_t i = coins[0]; i <= (size_t)amount; i++) // Bottom-Up
 		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end(); coin++)
 		{
@@ -82,7 +82,7 @@ set<vector<size_t>> KnapSack::CoinsChangeDynamicProgramming(long amount, vector<
 					{
 						vector<size_t> tmp = *it;
 						tmp.push_back(*coin);
-						sort(tmp.begin(), tmp.end());
+						ranges::sort(tmp);
 						dp[i].insert(tmp);
 					}
 				}
@@ -127,7 +127,7 @@ size_t KnapSack::CoinsChangeDuplicateWaysDynamicProgramming(size_t amount, vecto
 {
 	if (amount <= 0 || coins.empty())
 		return 0;
-	sort(coins.begin(), coins.end());
+	ranges::sort(coins);
 	vector<size_t> dp(amount + 1, 0); // Index: amount. Value: #ways or #posibilities
 	dp[0] = 1;						  // $0 is one possibility
 	for (size_t i = coins[0]; i <= amount; i++)
@@ -145,7 +145,7 @@ long KnapSack::CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size
 {
 	if (amount <= 0 || coins.empty())
 		return 0;
-	sort(coins.begin(), coins.end());
+	ranges::sort(coins);
 	vector<size_t> dp(amount + 1, numeric_limits<size_t>::max()); // Index: amount. Value: #coins
 	dp[0] = 0;													  // $0 = 0 coins
 	for (size_t i = coins[0]; i <= (size_t)amount; i++)
@@ -200,7 +200,7 @@ set<vector<size_t>> KnapSack::Knapsack(long amount, vector<size_t> &numbers)
 							if (sum <= (size_t)amount)
 							{
 								change.push_back(*number);
-								sort(change.begin(), change.end());
+								ranges::sort(change);
 								combinations.insert(change);
 							}
 						}
@@ -276,7 +276,7 @@ set<vector<size_t>> KnapSack::_BoundedKnapsack(long amount, vector<size_t> &numb
 						if (sum == amount)
 						{
 							tmp1.push_back(*number);
-							sort(tmp1.begin(), tmp1.end());
+							ranges::sort(tmp1);
 							size_t cnt = count(tmp1.begin(), tmp1.end(), *number);
 							size_t cnt1 = count(numbers.begin(), numbers.end(), *number);
 							if (cnt <= cnt1) // The result must not contain more than the input as this is *Bounded* knapsack.
@@ -356,7 +356,7 @@ set<vector<size_t>> KnapSack::_BoundedKnapsackCombinationSum(size_t k, size_t su
 #endif
 						if (total == sum)
 						{
-							sort(change.begin(), change.end());
+							ranges::sort(change);
 							combinations.insert(change);
 						}
 					}

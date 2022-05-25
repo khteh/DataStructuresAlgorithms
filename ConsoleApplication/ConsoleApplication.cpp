@@ -650,17 +650,17 @@ int main(int argc, char* argv[])
 	strings = { "Angel", "legnA", "Hello World!!!", "World Hello!!!" };
 	cout << "strings without sorted: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
-	sort(strings.begin(), strings.end());
+	ranges::sort(strings);
 	assert(strings[0] == "Angel");
 	assert(strings[1] == "Hello World!!!");
 	assert(strings[2] == "World Hello!!!");
 	assert(strings[3] == "legnA");
 	cout << "strings sorted with default comparer: " << endl;
 	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
-	sort(strings.begin(), strings.end(), [](string a, string b) -> bool
+	ranges::sort(strings, [](string a, string b) -> bool
 		{
-			sort(a.begin(), a.end());
-			sort(b.begin(), b.end());
+			ranges::sort(a);
+			ranges::sort(b);
 			return a < b; });
 	assert(strings[0] == "Hello World!!!");
 	assert(strings[1] == "World Hello!!!");

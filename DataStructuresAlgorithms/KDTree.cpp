@@ -67,7 +67,7 @@ shared_ptr<KDNode<T>> KDTree<T>::Construct(vector<vector<T>> data, long depth)
 	// Select axis based on depth so that axis cycles through all valid values
 	// Assume all points have the same dimension
 	long axis = depth % data[0].size();
-	sort(data.begin(), data.end(), [axis](const std::vector<T> &a, const std::vector<T> &b)
+	ranges::sort(data, [axis](const std::vector<T> &a, const std::vector<T> &b)
 		 { return a[axis] < b[axis]; });
 	long median = data.size() / 2;
 	vector<vector<T>> left, right;
