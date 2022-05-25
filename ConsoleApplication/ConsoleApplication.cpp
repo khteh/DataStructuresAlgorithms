@@ -543,9 +543,9 @@ int main(int argc, char* argv[])
 	long lResult = ConsecutiveLargestSum(a, b);
 	assert(lResult == 7);
 	cout << "ConsecutiveLargestSum of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	ranges::copy(a, ostream_iterator<long>(cout, " "));
 	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	ranges::copy(b, ostream_iterator<long>(cout, " "));
 	cout << ")" << endl;
 	assert(b.size() == 5);
 	assert(b[0] == 4);
@@ -559,9 +559,9 @@ int main(int argc, char* argv[])
 	lResult = ConsecutiveLargestSum(a, b);
 	assert(lResult == 5);
 	cout << "ConsecutiveLargestSum of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	ranges::copy(a, ostream_iterator<long>(cout, " "));
 	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	ranges::copy(b, ostream_iterator<long>(cout, " "));
 	cout << ")" << endl;
 	assert(b.size() == 2);
 	assert(b[0] == 2);
@@ -572,9 +572,9 @@ int main(int argc, char* argv[])
 	lResult = ConsecutiveLargestSum(a, b);
 	assert(lResult == 15);
 	cout << "ConsecutiveLargestSum of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	ranges::copy(a, ostream_iterator<long>(cout, " "));
 	cout << ": " << lResult << " (";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	ranges::copy(b, ostream_iterator<long>(cout, " "));
 	cout << ")" << endl;
 	assert(b.size() == 3);
 	assert(b[0] == 4);
@@ -649,14 +649,14 @@ int main(int argc, char* argv[])
 	strings.clear();
 	strings = { "Angel", "legnA", "Hello World!!!", "World Hello!!!" };
 	cout << "strings without sorted: " << endl;
-	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
+	ranges::copy(strings, ostream_iterator<string>(cout, "\r\n"));
 	ranges::sort(strings);
 	assert(strings[0] == "Angel");
 	assert(strings[1] == "Hello World!!!");
 	assert(strings[2] == "World Hello!!!");
 	assert(strings[3] == "legnA");
 	cout << "strings sorted with default comparer: " << endl;
-	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
+	ranges::copy(strings, ostream_iterator<string>(cout, "\r\n"));
 	ranges::sort(strings, [](string a, string b) -> bool
 		{
 			ranges::sort(a);
@@ -667,7 +667,7 @@ int main(int argc, char* argv[])
 	assert(strings[2] == "Angel");
 	assert(strings[3] == "legnA");
 	cout << "strings sorted with anagrams next to each other: " << endl;
-	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, "\r\n"));
+	ranges::copy(strings, ostream_iterator<string>(cout, "\r\n"));
 	a.clear();
 	a = { 0, 1, 2, 7, 10, 11, 12, 20, 25, 26, 27 };
 	string strRange = GetRange(a);
@@ -695,7 +695,7 @@ int main(int argc, char* argv[])
 	assert(grid2[0][1] == 10);
 	assert(strRange == "0 - 2, 7, 10 - 12, 20, 25 - 27");
 	cout << "GetRange(\"";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, ", "));
+	ranges::copy(a, ostream_iterator<long>(cout, ", "));
 	cout << "\") : " << strRange << endl;
 	// copy_on_write_string();
 	float f = 0xabcd;
@@ -877,9 +877,9 @@ int main(int argc, char* argv[])
 	assert(b[0] == 2);
 	assert(b.back() == 76);
 	cout << "Longest alternating subsequence of ";
-	copy(a.begin(), a.end(), ostream_iterator<long>(cout, " "));
+	ranges::copy(a, ostream_iterator<long>(cout, " "));
 	cout << ": ";
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	ranges::copy(b, ostream_iterator<long>(cout, " "));
 	cout << endl;
 	ull.clear();
 	ull = { 1, 2, 1, 2 };
@@ -1144,7 +1144,7 @@ int main(int argc, char* argv[])
 	cout << "Randomly picking m integers out of an array: " << endl;
 	randomSubset(cards, 13, result);
 	assert(result.size() == 13);
-	copy(result.begin(), result.end(), ostream_iterator<long>(cout, " "));
+	ranges::copy(result, ostream_iterator<long>(cout, " "));
 	cout << endl;
 
 	// Test priority queue
@@ -1236,7 +1236,7 @@ int main(int argc, char* argv[])
 		},
 		std::plus<long>());
 #endif
-	copy(b.begin(), b.end(), ostream_iterator<long>(cout, " "));
+	ranges::copy(b, ostream_iterator<long>(cout, " "));
 	assert(sum == 24);
 	cout << "sum: " << sum << endl;
 
@@ -1284,7 +1284,7 @@ int main(int argc, char* argv[])
 	assert(strings[2] == "LIMP");
 	assert(strings[3] == "LAMP");
 	assert(strings[4] == "DAMP");
-	copy(strings.rbegin(), strings.rend(), ostream_iterator<string>(cout, " "));
+	ranges::reverse_copy(strings, ostream_iterator<string>(cout, " "));
 	cout << endl;
 	strings.clear();
 	WordLadder(string("DAMP"), string("Like"), dictionary, strings);
@@ -1301,7 +1301,7 @@ int main(int argc, char* argv[])
 	assert(strings[3] == "Hot");
 	assert(strings[4] == "Hit");
 	cout << "Single-character transformation from \"Hit\" to \"Cog\": ";
-	copy(strings.rbegin(), strings.rend(), ostream_iterator<string>(cout, " "));
+	ranges::reverse_copy(strings, ostream_iterator<string>(cout, " "));
 	cout << endl;
 	strings.clear();
 	WordLadder(string("Hit"), string("Hat"), dictionary, strings);
@@ -1380,7 +1380,7 @@ int main(int argc, char* argv[])
 	sortData.clear();
 	sortData = { 1, 2, 3, 10, 25, 26, 30, 31, 32, 33 };
 	strings = numbersegments(sortData);
-	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, ","));
+	ranges::copy(strings, ostream_iterator<string>(cout, ","));
 	cout << endl;
 	assert(XOR(1) == 1);
 	assert(XOR(2) == 3);

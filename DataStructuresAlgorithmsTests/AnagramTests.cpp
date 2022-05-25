@@ -36,7 +36,7 @@ TEST(AnagramTests, FindAnagramsTest) {
 	for (vector<vector<string>>::const_iterator it = anagrams.begin(); it != anagrams.end(); it++)
 	{
 		cout << "( ";
-		copy(it->begin(), it->end(), ostream_iterator<string>(cout, " "));
+		ranges::copy(*it, ostream_iterator<string>(cout, " "));
 		cout << "), ";
 	}
 }

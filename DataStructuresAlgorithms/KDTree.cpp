@@ -34,7 +34,7 @@ template <typename T>
 void KDNode<T>::PrintLocation()
 {
 	cout << "(";
-	copy(location_.begin(), location_.end(), ostream_iterator<T>(cout, ", "));
+	ranges::copy(location_, ostream_iterator<T>(cout, ", "));
 	cout << ")";
 }
 template <typename T>

@@ -152,7 +152,7 @@ TEST(KnapsackTests, Knapsack_CoinChangeTest) {
 	for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
 	{
 		cout << "[";
-		copy(it->begin(), it->end(), ostream_iterator<size_t>(cout, " "));
+		ranges::copy(*it, ostream_iterator<size_t>(cout, " "));
 		cout << "], ";
 	}
 	cout << endl;

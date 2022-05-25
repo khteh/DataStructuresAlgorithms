@@ -1513,7 +1513,7 @@ void Merge(vector<long> &dest, vector<long> &source)
 	while (j >= 0)
 		dest[k--] = source[j--];
 }
-// Start of Sort numbers into consecutive positive/negative numbers
+// Sort numbers into consecutive positive/negative numbers
 // http://www.careercup.com/question?id=5183920823861248
 void sortNumbers(vector<long> &data)
 {
@@ -4226,7 +4226,7 @@ void TestURNG(URNG &urng)
 	v.resize(20);
 	ranges::generate(v, [&] { return dist(urng); });
 	cout << "Randomized vector: ";
-	copy(v.begin(), v.end(), ostream_iterator<long>(cout, " "));
+	ranges::copy(v, ostream_iterator<long>(cout, " "));
 	cout << endl;
 
 	// Shuffle an array.
@@ -4236,7 +4236,7 @@ void TestURNG(URNG &urng)
 							   "Ti", "V", "Cr", "Mn", "Fe"}};
 	shuffle(strings.begin(), strings.end(), urng);
 	cout << "Randomized vector<string>: ";
-	copy(strings.begin(), strings.end(), ostream_iterator<string>(cout, " "));
+	ranges::copy(strings, ostream_iterator<string>(cout, " "));
 	cout << endl;
 }
 void TestRandom()
@@ -5128,7 +5128,7 @@ size_t ZigZagEscape(vector<long> &data)
 					isFirst = false;
 					wasSmaller = zigzag[j].index < zigzag[i].index;
 					r.emplace(zigzag[j].value);
-					// copy(r.begin(), r.end(), ostream_iterator<size_t>(cout, " "));
+					// ranges::copy(r, ostream_iterator<size_t>(cout, " "));
 					// cout << endl;
 					result.emplace(r);
 				}
@@ -5136,7 +5136,7 @@ size_t ZigZagEscape(vector<long> &data)
 				{
 					wasSmaller = !wasSmaller;
 					r.emplace(zigzag[j].value);
-					// copy(r.begin(), r.end(), ostream_iterator<size_t>(cout, " "));
+					// ranges::copy(r, ostream_iterator<size_t>(cout, " "));
 					// cout << endl;
 					result.emplace(r);
 				}
@@ -5144,7 +5144,7 @@ size_t ZigZagEscape(vector<long> &data)
 				{
 					wasSmaller = !wasSmaller;
 					r.emplace(zigzag[j].value);
-					// copy(r.begin(), r.end(), ostream_iterator<size_t>(cout, " "));
+					// ranges::copy(r, ostream_iterator<size_t>(cout, " "));
 					// cout << endl;
 					result.emplace(r);
 				}
@@ -5162,7 +5162,7 @@ size_t ZigZagEscape(vector<long> &data)
 #if 0
 	cout << "Final: " << endl;
 	for (set<set<int>>::const_iterator it = result.begin(); it != result.end(); it++) {
-		copy(it->begin(), it->end(), ostream_iterator<size_t>(cout, " "));
+		ranges::copy(*it, ostream_iterator<size_t>(cout, " "));
 		cout << endl;
 	}
 #endif
@@ -7525,12 +7525,12 @@ void rotateMatrixRTimesAntiClockwise(vector<vector<long>> &matrix, size_t rotati
 				items.push_back(matrix[y][left]);
 			ranges::rotate(items, items.begin() + rotation % count);
 			// Copy back top row
-			copy(items.begin(), items.begin() + rowCount, matrix[top].begin() + left);
+			ranges::copy(items.begin(), items.begin() + rowCount, matrix[top].begin() + left);
 			// Copy back right column
 			for (size_t y = top + 1, i = rowCount; y < bottom && i < rowCount + colCount; y++, i++)
 				matrix[y][right] = items[i];
 			// Copy back bottom row in reverse order
-			copy(items.begin() + rowCount + colCount, items.begin() + 2 * rowCount + colCount, matrix[bottom].rbegin() + left);
+			ranges::copy(items.begin() + rowCount + colCount, items.begin() + 2 * rowCount + colCount, matrix[bottom].rbegin() + left);
 			// Copy back left column
 			for (long y = bottom - 1, i = 2 * rowCount + colCount; y > top && i < 2 * rowCount + 2 * colCount; y--, i++)
 				matrix[y][left] = items[i];

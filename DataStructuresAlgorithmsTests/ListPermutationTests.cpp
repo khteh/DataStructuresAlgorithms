@@ -8,7 +8,7 @@ TEST(ListPermutationTests, ListPermutationTest) {
 	cout << "permutations of List of {1,2,3} are:" << endl;
 	for (set<vector<long>>::iterator it = permutations.begin(); it != permutations.end(); it++)
 	{
-		copy(it->begin(), it->end(), ostream_iterator<long>(cout, " "));
+		ranges::copy(*it, ostream_iterator<long>(cout, " "));
 		cout << endl;
 	}
 	permutations.clear();

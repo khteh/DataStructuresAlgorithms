@@ -11,13 +11,13 @@ TEST(StringPermutationTests, StringPermutationTest) {
 	ASSERT_NE(permutations.find("cba"), permutations.end());
 	ASSERT_NE(permutations.find("cab"), permutations.end());
 	cout << "permutations of \"abc\" are: ";
-	copy(permutations.begin(), permutations.end(), ostream_iterator<string>(cout, " "));
+	ranges::copy(permutations, ostream_iterator<string>(cout, " "));
 	cout << endl;
 	permutations.clear();
 
 	OrderedMergedCombinations(permutations, string("Hey"), string("Bob"), string(""));
 	cout << "Ordered permutations of \"HeyBob\" are: ";
-	copy(permutations.begin(), permutations.end(), ostream_iterator<string>(cout, " "));
+	ranges::copy(permutations, ostream_iterator<string>(cout, " "));
 	cout << endl;
 	ASSERT_EQ(20, permutations.size());
 	ASSERT_NE(permutations.find("HeBoby"), permutations.end());

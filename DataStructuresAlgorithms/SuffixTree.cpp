@@ -261,7 +261,7 @@ const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
 	   <0>
 	*/
 	ostringstream oss;
-	copy(m_indices.begin(), m_indices.end(), ostream_iterator<size_t>(oss, ","));
+	ranges::copy(m_indices, ostream_iterator<size_t>(oss, ","));
 	string indices = oss.str();
 	map<string, size_t> result;
 	if (m_char != '\0' && m_indices.size() > 1)

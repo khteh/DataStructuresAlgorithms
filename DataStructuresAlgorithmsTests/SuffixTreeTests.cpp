@@ -12,7 +12,7 @@ TEST(SuffixTreeTests, SuffixTreeTest) {
 		cout << "Suffix index of substring " << *it << ": ";
 		indexes = sTree.GetIndexes(*it);
 		if (!indexes.empty())
-			copy(indexes.begin(), indexes.end(), ostream_iterator<size_t>(cout, " "));
+			ranges::copy(indexes, ostream_iterator<size_t>(cout, " "));
 		else
 			cout << quoted(*it) << " not found!";
 		cout << endl;
