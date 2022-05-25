@@ -2173,9 +2173,10 @@ size_t SortSwapCount(vector<size_t> &data)
 /* https://en.wikipedia.org/wiki/Dutch_national_flag_problem
 * https://leetcode.com/problems/sort-colors/
 * 100%
-* i: index for the next 0
-* j: index for the next 1
-* k: index for the next 2
+* Entries from 0 up to (but NOT including) i are values less than mid,
+* entries from i up to (but NOT including) j are values equal to mid,
+* entries from j up to (and including) k are values not yet sorted, and
+* entries from k + 1 to the end of the array are values greater than mid.
 0  i   j   k  n-1
 <mid mid ??? >mid
 
@@ -2209,7 +2210,7 @@ i   j     k    (<mid)
 0 0 1 1 1 2 2 2
 	i   k j		<= j > k base case
 */
-void DutchPartitioning(vector<size_t> &data, size_t mid)
+void DutchPartitioning(vector<long> &data, long mid)
 {
 	for (int i = 0, j = 0, k = data.size() - 1; !data.empty() && j <= k;)
 	{
