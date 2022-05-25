@@ -3616,7 +3616,8 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 {
 	vector<long> data;
 	data.resize(grid.size() * grid[0].size());
-	ranges::generate(data, [n = 1]() mutable { return n++; });
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
 
 	DisJointSet<long> disjointSet(data);
 	size_t width = grid[0].size();
@@ -4043,7 +4044,7 @@ vector<vector<long>> MergeIntervals(vector<vector<long>> &intervals)
 	vector<vector<long>> result;
 	// Sort the 2D vector in ascending order of the first element.
 	ranges::sort(intervals, [](const vector<long> &a, const vector<long> &b)
-		 { return a[0] < b[0]; });
+				 { return a[0] < b[0]; });
 	for (size_t i = 0; i < intervals.size(); i++)
 	{
 		if (!i)
@@ -4224,7 +4225,8 @@ void TestURNG(URNG &urng)
 	uniform_int_distribution<long> dist(-5, 5);
 	vector<long> v;
 	v.resize(20);
-	ranges::generate(v, [&] { return dist(urng); });
+	ranges::generate(v, [&]
+					 { return dist(urng); });
 	cout << "Randomized vector: ";
 	ranges::copy(v, ostream_iterator<long>(cout, " "));
 	cout << endl;
@@ -4248,7 +4250,8 @@ void TestRandom()
 	uniform_int_distribution<long> dist(-5, 5);
 	vector<long> v;
 	v.resize(20);
-	ranges::generate(v, [&] { return dist(device); });
+	ranges::generate(v, [&]
+					 { return dist(device); });
 	TestURNG(device);
 
 	// Second run: simple integer seed. Repeatable results
@@ -4277,7 +4280,7 @@ long concat(vector<long> &data)
 {
 	ostringstream oss;
 	ranges::sort(data, [](long i, long j) -> bool
-		 {
+				 {
 		ostringstream a, b;
 		a << i << j;
 		b << j << i;
@@ -4321,7 +4324,7 @@ string buildmax(vector<size_t> &a)
 long MaxLengths(vector<string> &data)
 {
 	ranges::sort(data, [](string a, string b)
-		 { return a.size() > b.size(); });
+				 { return a.size() > b.size(); });
 	for (vector<string>::const_iterator it = data.begin(); it != data.end(); it++)
 		for (vector<string>::const_iterator it1 = it + 1; it1 != data.end(); it1++)
 		{
@@ -6235,7 +6238,8 @@ long getLowestPathCost(size_t nodecount, vector<long> &g_from, vector<long> &g_t
 {
 	// Breadth-First-Search algorithm
 	vector<long> data(nodecount);
-	ranges::generate(data, [n = 1]() mutable { return n++;  });
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
 	Graph<long, long> graph(data);
 	for (size_t i = 0; i < g_from.size(); i++)
 	{
@@ -6445,9 +6449,9 @@ string AlmostSorted(vector<long> &arr)
 			if (diff[index] < 0 && sum == 0)
 			{
 				size_t positives = ranges::count_if(diff, [](long i)
-											{ return i > 0; });
+													{ return i > 0; });
 				size_t negatives = ranges::count_if(diff, [](long i)
-											{ return i < 0; });
+													{ return i < 0; });
 				if (diff[index] + diff[0] != 0)
 					return "no";
 				else if (positives == 1 && negatives == 1)
@@ -6607,7 +6611,7 @@ bool SolvabilityOfTheTilesGame(vector<size_t> &data)
 	{
 		size_t item = data[i];
 		size_t smallerItems = ranges::count_if(data.begin(), data.begin() + i, [&item](size_t i)
-									   { return i < item; });
+											   { return i < item; });
 		inversions += item - 1 - smallerItems;
 	}
 	return !(inversions % 2);
@@ -6781,7 +6785,7 @@ vector<long> absolutePermutation(size_t n, size_t k)
 {
 	vector<long> sequence(n, 0);
 	ranges::generate(sequence, [i = 1]() mutable
-			 { return i++; });
+					 { return i++; });
 	// |sequence[i] - i| = k
 	vector<long> a, b;
 	set<long> exists;
@@ -7740,7 +7744,7 @@ size_t hIndex(vector<size_t> &citations)
 		{
 			size_t value = *it;
 			size_t count = ranges::count_if(citations, [&value](size_t i)
-									{ return i >= value; });
+											{ return i >= value; });
 			if (value < count && value > result)
 				result = value;
 			else if (value >= count && min(count, value) > result)
@@ -8254,7 +8258,8 @@ size_t eggDrops(size_t eggs, size_t floors)
 			dp[i][1] = 1;
 	}
 	// Base case for 1 egg
-	ranges::generate(dp[0], [n = 0]() mutable { return n++; });
+	ranges::generate(dp[0], [n = 0]() mutable
+					 { return n++; });
 	// size_t attempts = eggDropsDynamicProgramming(eggs, floors, dp);
 	for (size_t egg = 1; egg < eggs; egg++)
 		for (size_t floor = 2; floor <= floors; floor++)
@@ -8291,7 +8296,8 @@ vector<string> fizzBuzz(size_t n)
 vector<long> bfs(size_t nodecount, size_t edgecount, vector<vector<size_t>> &edges, size_t s)
 {
 	vector<size_t> data(nodecount);
-	ranges::generate(data, [n = 1]() mutable { return n++; });
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
 	Graph<size_t, size_t> graph(data);
 	assert(graph.Count() == nodecount);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
@@ -8349,7 +8355,8 @@ vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sou
 			edges[(*it)[1]].insert((*it)[0]);
 	}
 	vector<size_t> data(n);
-	ranges::generate(data, [n = 1]() mutable { return n++; });
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
 	Graph<size_t, size_t> graph(data);
 	for (map<size_t, set<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 	{
@@ -8385,7 +8392,8 @@ vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sou
 size_t evenForest(size_t nodeCount, vector<vector<size_t>> &edges, size_t start)
 {
 	vector<size_t> data(nodeCount);
-	ranges::generate(data, [n = 1]() mutable { return n++; });
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
 	Graph<size_t, size_t> graph(data);
 	assert(graph.Count() == nodeCount);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
@@ -8407,7 +8415,8 @@ size_t evenForest(size_t nodeCount, vector<vector<size_t>> &edges, size_t start)
 string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 {
 	vector<size_t> data(n);
-	ranges::generate(data, [n = 1]() mutable { return n++; });
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
 	Graph<size_t, size_t> graph(data);
 	assert(graph.Count() == n);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
@@ -8419,7 +8428,8 @@ string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 	size_t distance = 0;
 	map<string, long> costCache;
 #ifdef _MSC_VER
-	parallel_for(size_t(1), n, [&](size_t i) {
+	parallel_for(size_t(1), n, [&](size_t i)
+				 {
 		for (size_t j = i + 1; j <= n; j++)
 		{
 			if (i != j)
@@ -8439,35 +8449,35 @@ string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 					distance += cost;
 				}
 			}
-		}
-		});
+		} });
 #elif defined(__GNUC__) || defined(__GNUG__)
-	tbb::parallel_for(tbb::blocked_range<int>(1, n),
-		[&](tbb::blocked_range<size_t> r)
-		{
-			for (size_t j = r.begin() + 1; j <= n; j++)
+	mutex m;
+	parallel_for(blocked_range<size_t>(1, n, 2), [&](blocked_range<size_t> r)
+				 {
+		m.lock();
+		cout << "parallel_for blocked range [" << r.begin() << "," << r.end() << "]" << endl;
+		m.unlock();
+		for (size_t i = r.begin(); i < r.end(); i++)
+			for (size_t j = 1; j <= n; j++)
 			{
 				if (i != j)
 				{
 					ostringstream oss1, oss2;
 					oss1 << i << "-" << j;
 					oss2 << j << "-" << i;
-					if (costCache.find(oss1.str()) != costCache.end())
-						distance += costCache[oss1.str()];
-					else if (costCache.find(oss2.str()) != costCache.end())
-						distance += costCache[oss2.str()];
-					else
+					m.lock();
+					if (costCache.find(oss1.str()) == costCache.end() && costCache.find(oss2.str()) == costCache.end())
 					{
 						size_t cost = graph.Dijkstra(i, j);
 						costCache[oss1.str()] = cost;
 						costCache[oss2.str()] = cost;
 						distance += cost;
 					}
+					m.unlock();
 				}
-			}
-			});
+				 } });
 #endif
-	string binary = decimal_to_binary(distance);
+	string binary = decimal_to_binary(distance ? distance : -1);
 	return binary.substr(binary.find_first_not_of('0'));
 }
 /*
@@ -8627,8 +8637,8 @@ ostream &operator<<(ostream &os, const Node<int> &n)
 	return os;
 }
 /*
-* https://www.cppstories.com/2022/ranges-alg-part-two/
-*/
+ * https://www.cppstories.com/2022/ranges-alg-part-two/
+ */
 void cpp20ranges()
 {
 	vector<Node<int>> nodes;

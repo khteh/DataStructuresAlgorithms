@@ -1,26 +1,27 @@
 {
-    "files.associations": {
-        "limits": "cpp",
-        "vector": "cpp",
-        "stdexcept": "cpp",
-        "iostream": "cpp",
-        "array": "cpp",
-        "deque": "cpp",
-        "list": "cpp",
-        "string": "cpp",
-        "unordered_map": "cpp",
-        "unordered_set": "cpp",
-        "string_view": "cpp",
-        "initializer_list": "cpp",
-        "regex": "cpp",
-        "bitset": "cpp",
-        "*.tcc": "cpp",
-        "algorithm": "cpp",
-        "functional": "cpp",
-        "ranges": "cpp",
-        "span": "cpp"
-    },
-    "cmake.configureSettings": {
-        "gtest_build_samples": "ON"
-    }
+  "files.associations": {
+    "limits": "cpp",
+    "vector": "cpp",
+    "stdexcept": "cpp",
+    "iostream": "cpp",
+    "array": "cpp",
+    "deque": "cpp",
+    "list": "cpp",
+    "string": "cpp",
+    "unordered_map": "cpp",
+    "unordered_set": "cpp",
+    "string_view": "cpp",
+    "initializer_list": "cpp",
+    "regex": "cpp",
+    "bitset": "cpp",
+    "*.tcc": "cpp",
+    "algorithm": "cpp",
+    "functional": "cpp",
+    "ranges": "cpp",
+    "span": "cpp",
+    "ostream": "cpp"
+  },
+  "cmake.configureSettings": {
+    "gtest_build_samples": "ON"
+  }
 }

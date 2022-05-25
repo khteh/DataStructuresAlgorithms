@@ -36,6 +36,7 @@ set(Sources
     "TreeTests.cpp"
     "TrieTests.cpp"
     "TweeterAPITests.cpp"
+    "WordsLadderTests.cpp"
 )
 source_group("Sources" FILES ${Sources})
 
