@@ -110,7 +110,7 @@ public:
 	virtual void PrintTree() const;
 	void PrintTreeColumns();
 	vector<size_t> GetLevelNodeCount();
-	void ToLinkedList();
+	shared_ptr<Node<T>> ToLinkedList();
 	bool isValidBST() const;
 	T TreeArithmeticTotal(shared_ptr<Node<string>>);
 };

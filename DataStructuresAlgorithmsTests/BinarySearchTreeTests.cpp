@@ -1,8 +1,9 @@
 #include "pch.h"
 using namespace std;
-TEST(BinarySearchTreeTests, BinarySearchTreeTest) {
+TEST(BinarySearchTreeTests, BinarySearchTreeTest)
+{
 	vector<long> a, b;
-	vector<string> result;
+	vector<string> result, expected;
 	map<size_t, vector<shared_ptr<Node<long>>>> nodes;
 	Tree<long> subtree((long)0);
 	subtree.InsertItem(-50);
@@ -18,7 +19,7 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest) {
 
 	a.clear();
 	b.clear();
-	a = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+	a = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 	Tree<long> tree0(a, TreeType::BinarySearch);
 	ASSERT_TRUE(tree0.isValidBST());
 	ASSERT_EQ(9, tree0.Count());
@@ -49,7 +50,7 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest) {
 
 	a.clear();
 	b.clear();
-	a = { 50, -100, 0, 10, -50, 60, 100, 75, 150 };
+	a = {50, -100, 0, 10, -50, 60, 100, 75, 150};
 	Tree<long> tree1(a, TreeType::BinarySearch);
 	ASSERT_TRUE(tree1.isValidBST());
 	ASSERT_EQ(9, tree1.Count());
@@ -87,50 +88,91 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest) {
 	ASSERT_FALSE(b.empty());
 	ASSERT_EQ(b.size(), a.size());
 	ASSERT_EQ(b, a);
-	cout << "Binary Search Tree content: " << endl;
+	cout << "Binary Search Tree (tree1) content: " << endl;
 	tree1.PrintTree();
 	cout << endl;
 	tree1.PrintTreeColumns();
 	long min = tree1.MinDiffInBST();
 	ASSERT_EQ(10, min);
 	cout << endl
-		<< "Binary Search Tree minimum diff between any 2 nodes: " << min << endl;
+		 << "Binary Search Tree minimum diff between any 2 nodes: " << min << endl;
 	cout << endl;
-	cout << "Subtree content: " << endl;
+	cout << "Subtree (subtree) content: " << endl;
 	subtree.PrintTree();
-	cout << endl;
 	ASSERT_TRUE(tree1.SubTree(tree1.Root(), subtree.Root()));
-	cout << (tree1.SubTree(tree1.Root(), subtree.Root()) ? "Subtree" : "Not subtree") << endl;
+	cout << quoted("subtree") << (tree1.SubTree(tree1.Root(), subtree.Root()) ? " is subtree of " : " is NOT subtree of ") << quoted("tree1") << endl
+		 << endl;
 
 	cout << "Subtree1 content: " << endl;
 	subtree1.PrintTree();
 	cout << endl;
-	ASSERT_TRUE(tree1.SubTree(tree1.Root(), subtree1.Root()));
-	cout << (tree1.SubTree(tree1.Root(), subtree1.Root()) ? "Subtree" : "Not subtree") << endl;
+	ASSERT_FALSE(tree1.SubTree(tree1.Root(), subtree1.Root()));
+	cout << quoted("subtree1") << (tree1.SubTree(tree1.Root(), subtree1.Root()) ? " is subtree of " : " is NOT subtree of ") << quoted("tree1") << endl
+		 << endl;
 
 	cout << "Subtree2 content: " << endl;
 	subtree2.PrintTree();
 	cout << endl;
-	ASSERT_TRUE(tree1.SubTree(tree1.Root(), subtree2.Root()));
-	cout << (tree1.SubTree(tree1.Root(), subtree2.Root()) ? "Subtree" : "Not subtree") << endl;
+	ASSERT_FALSE(tree1.SubTree(tree1.Root(), subtree2.Root()));
+	cout << quoted("subtree2") << (tree1.SubTree(tree1.Root(), subtree2.Root()) ? " is subtree of " : " is NOT subtree of ") << quoted("tree1") << endl
+		 << endl;
 
-	cout << "MinDepth: " << tree1.MinDepth(tree1.Root()) << ", MaxDepth: " << tree1.MaxDepth(tree1.Root()) << " " << (tree1.IsBalancedTree() ? "balanced" : "Unbalanced") << endl;
+	cout << "tree1 MinDepth: " << tree1.MinDepth(tree1.Root()) << ", MaxDepth: " << tree1.MaxDepth(tree1.Root()) << " " << (tree1.IsBalancedTree() ? "balanced" : "Unbalanced") << endl;
+	ASSERT_EQ(3, tree1.MinDepth(tree1.Root()));
+	ASSERT_EQ(4, tree1.MaxDepth(tree1.Root()));
+	ASSERT_TRUE(tree1.IsBalancedTree());
+}
+TEST(BinarySearchTreeTests, BinarySearchTreeFindSumTest)
+{
+	vector<long> a;
+	vector<string> result, expected;
+	a = {50, -100, 0, 10, -50, 60, 100, 75, 150};
+	Tree<long> tree(a, TreeType::BinarySearch);
+	ASSERT_TRUE(tree.isValidBST());
+	ASSERT_EQ(9, tree.Count());
+	ASSERT_EQ(-100, tree.Min());
+	ASSERT_EQ(150, tree.Max());
+	/*
+Binary Search Tree (tree1) content:
+Level 0:                              50
+Level 1:                        0(50)            100(50)
+Level 2:                -50(0)     10(0)   75(100)       150(100)
+Level 3:        -100(-50)               60(75)
+	*/
+	tree.FindSum(tree.Root(), -100, result);
+	ASSERT_FALSE(result.empty());
+	ASSERT_EQ(2, result.size());
+	expected.clear();
+	expected = {"-100", "50 0 -50 -100"};
+	ASSERT_EQ(expected, result);
 
-	tree1.FindSum(tree1.Root(), -100, result);
-	cout << "Sum -100 path: ";
-	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
-		cout << quoted(*it) << " ";
-	cout << endl;
+	result.clear();
+	tree.FindSum(tree.Root(), 150, result);
+	ASSERT_FALSE(result.empty());
+	expected.clear();
+	expected = {"50 100", "150"};
+	ASSERT_EQ(expected, result);
 	result.clear();
 
-	tree1.FindSum(tree1.Root(), 150, result);
-	cout << "Sum 150 path: ";
-	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
-		cout << quoted(*it) << " ";
-	cout << endl;
 	result.clear();
-
-	tree1.GetNodes(nodes);
+	tree.FindSum(tree.Root(), 110, result);
+	ASSERT_TRUE(result.empty());
+	expected.clear();
+	ASSERT_EQ(expected, result);
+	result.clear();
+}
+TEST(BinarySearchTreeTests, BinarySearchTreeInOrderSuccessorTest)
+{
+	vector<long> a, b;
+	vector<string> result, expected;
+	map<size_t, vector<shared_ptr<Node<long>>>> nodes;
+	a = {50, -100, 0, 10, -50, 60, 100, 75, 150};
+	Tree<long> tree(a, TreeType::BinarySearch);
+	ASSERT_TRUE(tree.isValidBST());
+	ASSERT_EQ(9, tree.Count());
+	ASSERT_EQ(-100, tree.Min());
+	ASSERT_EQ(150, tree.Max());
+	tree.GetNodes(nodes);
 	ASSERT_FALSE(nodes.empty());
 	cout << "Binary Search Tree content by level:" << endl;
 	for (map<size_t, vector<shared_ptr<Node<long>>>>::const_iterator it = nodes.begin(); it != nodes.end(); it++)
@@ -140,57 +182,71 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest) {
 			cout << (*it1)->Item() << " ";
 		cout << endl;
 	}
-	shared_ptr<Node<long>> node, node1, node2, node3;
-	node = tree1.FindNode(-50);
+	shared_ptr<Node<long>> node;
+	node = tree.FindNode(-50);
 	ASSERT_TRUE(node);
 	// assert(tree1.InOrderSuccessor(node)->Item() == 0);
-	cout << "InOrder successor of -50: " << tree1.InOrderSuccessor(node)->Item() << endl;
-	node = tree1.FindNode(50);
+	cout << "InOrder successor of -50: " << tree.InOrderSuccessor(node)->Item() << endl;
+	node = tree.FindNode(50);
 	ASSERT_TRUE(node);
 	// assert(tree1.InOrderSuccessor(node)->Item() == 100);
-	cout << "InOrder successor of 50: " << tree1.InOrderSuccessor(node)->Item() << endl;
+	cout << "InOrder successor of 50: " << tree.InOrderSuccessor(node)->Item() << endl;
 	nodes.clear();
-
-	node = tree1.FindNode(-50);
+}
+TEST(BinarySearchTreeTests, BinarySearchTreeCommonAncestorTest)
+{
+	vector<long> a;
+	shared_ptr<Node<long>> node, node1, node2, node3;
+	a = {50, -100, 0, 10, -50, 60, 100, 75, 150};
+	Tree<long> tree(a, TreeType::BinarySearch);
+	ASSERT_TRUE(tree.isValidBST());
+	ASSERT_EQ(9, tree.Count());
+	ASSERT_EQ(-100, tree.Min());
+	ASSERT_EQ(150, tree.Max());
+	node = tree.FindNode(-50);
 	ASSERT_TRUE(node);
-	node1 = tree1.FindNode(10);
+	node1 = tree.FindNode(10);
 	ASSERT_TRUE(node1);
-	node2 = tree1.CommonAncestor(node, node1);
-	node3 = tree1.CommonAncestor1(node, node1);
+	node2 = tree.CommonAncestor(node, node1);
+	node3 = tree.CommonAncestor1(node, node1);
 	ASSERT_TRUE(node2);
 	ASSERT_TRUE(node3);
 	ASSERT_TRUE(node2 == node3);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
-	node1 = tree1.FindNode(75);
+	node1 = tree.FindNode(75);
 	ASSERT_TRUE(node1);
-	node2 = tree1.CommonAncestor(node, node1);
-	node3 = tree1.CommonAncestor1(node, node1);
+	node2 = tree.CommonAncestor(node, node1);
+	node3 = tree.CommonAncestor1(node, node1);
 	ASSERT_TRUE(node2);
 	ASSERT_TRUE(node3);
 	ASSERT_TRUE(node2 == node3);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
-	node = tree1.FindNode(60);
+	node = tree.FindNode(60);
 	ASSERT_TRUE(node);
-	node1 = tree1.FindNode(75);
+	node1 = tree.FindNode(75);
 	ASSERT_TRUE(node1);
-	node2 = tree1.CommonAncestor(node, node1);
-	node3 = tree1.CommonAncestor1(node, node1);
+	node2 = tree.CommonAncestor(node, node1);
+	node3 = tree.CommonAncestor1(node, node1);
 	ASSERT_TRUE(node2);
 	ASSERT_TRUE(node3);
 	ASSERT_TRUE(node2 == node3);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
-
-	Tree<long> tree2(tree1);
-	ASSERT_EQ(tree2, tree1);
-	ASSERT_TRUE(tree2.isValidBST());
-	ASSERT_EQ(9, tree2.Count());
-	ASSERT_EQ(-100, tree2.Min());
-	ASSERT_EQ(150, tree2.Max());
+}
+TEST(BinarySearchTreeTests, BinarySearchTreekthSmallestAndLargestTests)
+{
+	vector<long> a;
+	shared_ptr<Node<long>> node, node1, node2, node3;
+	a = {50, -100, 0, 10, -50, 60, 100, 75, 150};
+	Tree<long> tree(a, TreeType::BinarySearch);
+	ASSERT_TRUE(tree.isValidBST());
+	ASSERT_EQ(9, tree.Count());
+	ASSERT_EQ(-100, tree.Min());
+	ASSERT_EQ(150, tree.Max());
 	// 50,-100,0,10,-50,60,100,75,150
 	// -100,-50,0,10,50,60,75,100,150
-	ASSERT_EQ(0, tree2.kthSmallest(3));
-	ASSERT_EQ(75, tree2.kthLargest(3));
+	ASSERT_EQ(0, tree.kthSmallest(3));
+	ASSERT_EQ(75, tree.kthLargest(3));
 	cout << "Tree2 content (= Tree1): " << endl;
-	tree2.PrintTree();
+	tree.PrintTree();
 	cout << endl;
 }

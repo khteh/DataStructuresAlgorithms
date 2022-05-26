@@ -524,11 +524,11 @@ template <typename T>
 void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, long sum, long level, vector<long> values, vector<string> &result)
 {
 	/*
-Binary Tree content:
-Level 0:                50
-Level 1:      -100(50)        60(50)
-Level 2:            0(-100)         100(60)
-Level 3:       -50(0)     10(0)  75(100)   150(100)
+Binary Search Tree (tree1) content:
+Level 0:                                50
+Level 1:                        0(50)   100(50)
+Level 2:                -50(0)  10(0)   75(100)         150(100)
+Level 3:        -100(-50)       60(75)
 	*/
 	ostringstream oss;
 	if (!node)
@@ -547,6 +547,7 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 					oss << " ";
 			}
 			result.push_back(oss.str());
+			oss.str("");
 		}
 	}
 	FindSum(node->Left(), sum, level + 1, values, result);
@@ -907,9 +908,9 @@ bool Tree<T>::HasNextMax() const
 	return !maxStack.empty();
 }
 template <typename T>
-void Tree<T>::ToLinkedList()
+shared_ptr<Node<T>> Tree<T>::ToLinkedList()
 {
-	ToLinkedList(m_root);
+	return ToLinkedList(m_root);
 }
 /* https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
  * Given the root of a binary tree, flatten the tree into a "linked list":
