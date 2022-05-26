@@ -42,6 +42,7 @@
     <ClCompile Include="BinarySearchTests.cpp" />
     <ClCompile Include="BinarySearchTreeTests.cpp" />
     <ClCompile Include="BinaryTreeTests.cpp" />
+    <ClCompile Include="CircularLinkedListTests.cpp" />
     <ClCompile Include="GraphTests.cpp" />
     <ClCompile Include="GreedyAlgorithmTests.cpp" />
     <ClCompile Include="IncreasingSequenceTests.cpp" />

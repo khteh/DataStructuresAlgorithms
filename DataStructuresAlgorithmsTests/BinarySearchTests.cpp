@@ -72,7 +72,9 @@ TEST(BinarySearchTests, BinarySearchTest) {
 	// cout << "[" << __FUNCTION__ << " " << __LINE__ << "]: 12 found at location: " << pos << ", " << source[pos] << endl;
 	pos = BinarySearch(source, 0);
 	ASSERT_LT(pos, 0);
-
+}
+TEST(BinarySearchTests, MatrixBinarySearchTest) {
+	vector<size_t> source;
 	vector<vector<long>> a = { {1, 3, 5, 7}, {10, 11, 16, 20}, {23, 30, 34, 50} };
 	ASSERT_TRUE(searchMatrix(a, 3));
 	ASSERT_FALSE(searchMatrix(a, 13));
@@ -100,7 +102,9 @@ TEST(BinarySearchTests, BinarySearchTest) {
 	a = { {1, 1} };
 	ASSERT_TRUE(searchMatrix1(a, 1));
 	ASSERT_FALSE(searchMatrix1(a, 0));
-	source.clear();
+}
+TEST(BinarySearchTests, VectorBinarySearchTest) {
+	vector<size_t> source;
 	source = { 5, 7, 7, 8, 8, 10 };
 	vector<long> result = searchRange(source, 8);
 	ASSERT_FALSE(result.empty());
@@ -159,8 +163,9 @@ TEST(BinarySearchTests, BinarySearchTest) {
 	ASSERT_EQ(2, result.size());
 	ASSERT_EQ(2, result[0]);
 	ASSERT_EQ(2, result[1]);
-
-	vector<long> b{ 3, 4, 5, 1 };
+}
+TEST(BinarySearchTests, VectorMinimumBinarySearchTest) {
+	vector<long> b{ 3, 4, 1, 5 };
 	ASSERT_EQ(1, BinarySearchMinimum(b, 0, b.size() - 1));
 }
 TEST(BinarySearchTests, BinarySearchStringTest) {

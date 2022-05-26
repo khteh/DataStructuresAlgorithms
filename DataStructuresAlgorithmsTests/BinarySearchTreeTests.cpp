@@ -99,16 +99,19 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest) {
 	cout << "Subtree content: " << endl;
 	subtree.PrintTree();
 	cout << endl;
+	ASSERT_TRUE(tree1.SubTree(tree1.Root(), subtree.Root()));
 	cout << (tree1.SubTree(tree1.Root(), subtree.Root()) ? "Subtree" : "Not subtree") << endl;
 
 	cout << "Subtree1 content: " << endl;
 	subtree1.PrintTree();
 	cout << endl;
+	ASSERT_TRUE(tree1.SubTree(tree1.Root(), subtree1.Root()));
 	cout << (tree1.SubTree(tree1.Root(), subtree1.Root()) ? "Subtree" : "Not subtree") << endl;
 
 	cout << "Subtree2 content: " << endl;
 	subtree2.PrintTree();
 	cout << endl;
+	ASSERT_TRUE(tree1.SubTree(tree1.Root(), subtree2.Root()));
 	cout << (tree1.SubTree(tree1.Root(), subtree2.Root()) ? "Subtree" : "Not subtree") << endl;
 
 	cout << "MinDepth: " << tree1.MinDepth(tree1.Root()) << ", MaxDepth: " << tree1.MaxDepth(tree1.Root()) << " " << (tree1.IsBalancedTree() ? "balanced" : "Unbalanced") << endl;
