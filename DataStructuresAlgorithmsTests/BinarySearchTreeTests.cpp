@@ -94,30 +94,20 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest)
 	tree1.PrintTreeColumns();
 	long min = tree1.MinDiffInBST();
 	ASSERT_EQ(10, min);
-	cout << endl
-		 << "Binary Search Tree minimum diff between any 2 nodes: " << min << endl;
-	cout << endl;
 	cout << "Subtree (subtree) content: " << endl;
 	subtree.PrintTree();
 	ASSERT_TRUE(tree1.SubTree(tree1.Root(), subtree.Root()));
-	cout << quoted("subtree") << (tree1.SubTree(tree1.Root(), subtree.Root()) ? " is subtree of " : " is NOT subtree of ") << quoted("tree1") << endl
-		 << endl;
 
 	cout << "Subtree1 content: " << endl;
 	subtree1.PrintTree();
 	cout << endl;
 	ASSERT_FALSE(tree1.SubTree(tree1.Root(), subtree1.Root()));
-	cout << quoted("subtree1") << (tree1.SubTree(tree1.Root(), subtree1.Root()) ? " is subtree of " : " is NOT subtree of ") << quoted("tree1") << endl
-		 << endl;
 
 	cout << "Subtree2 content: " << endl;
 	subtree2.PrintTree();
 	cout << endl;
 	ASSERT_FALSE(tree1.SubTree(tree1.Root(), subtree2.Root()));
-	cout << quoted("subtree2") << (tree1.SubTree(tree1.Root(), subtree2.Root()) ? " is subtree of " : " is NOT subtree of ") << quoted("tree1") << endl
-		 << endl;
 
-	cout << "tree1 MinDepth: " << tree1.MinDepth(tree1.Root()) << ", MaxDepth: " << tree1.MaxDepth(tree1.Root()) << " " << (tree1.IsBalancedTree() ? "balanced" : "Unbalanced") << endl;
 	ASSERT_EQ(3, tree1.MinDepth(tree1.Root()));
 	ASSERT_EQ(4, tree1.MaxDepth(tree1.Root()));
 	ASSERT_TRUE(tree1.IsBalancedTree());
@@ -182,15 +172,20 @@ TEST(BinarySearchTreeTests, BinarySearchTreeInOrderSuccessorTest)
 			cout << (*it1)->Item() << " ";
 		cout << endl;
 	}
+	/*
+Binary Search Tree (tree1) content:
+Level 0:                                50
+Level 1:                        0(50)          100(50)
+Level 2:                -50(0)     10(0)   75(100)       150(100)
+Level 3:        -100(-50)               60(75)
+	*/
 	shared_ptr<Node<long>> node;
 	node = tree.FindNode(-50);
 	ASSERT_TRUE(node);
-	// assert(tree1.InOrderSuccessor(node)->Item() == 0);
-	cout << "InOrder successor of -50: " << tree.InOrderSuccessor(node)->Item() << endl;
+	ASSERT_EQ(0, tree.InOrderSuccessor(node)->Item());
 	node = tree.FindNode(50);
 	ASSERT_TRUE(node);
-	// assert(tree1.InOrderSuccessor(node)->Item() == 100);
-	cout << "InOrder successor of 50: " << tree.InOrderSuccessor(node)->Item() << endl;
+	ASSERT_EQ(60, tree.InOrderSuccessor(node)->Item());
 	nodes.clear();
 }
 TEST(BinarySearchTreeTests, BinarySearchTreeCommonAncestorTest)
@@ -211,7 +206,7 @@ TEST(BinarySearchTreeTests, BinarySearchTreeCommonAncestorTest)
 	node3 = tree.CommonAncestor1(node, node1);
 	ASSERT_TRUE(node2);
 	ASSERT_TRUE(node3);
-	ASSERT_TRUE(node2 == node3);
+	ASSERT_EQ(node2, node3);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 	node1 = tree.FindNode(75);
 	ASSERT_TRUE(node1);
@@ -219,7 +214,7 @@ TEST(BinarySearchTreeTests, BinarySearchTreeCommonAncestorTest)
 	node3 = tree.CommonAncestor1(node, node1);
 	ASSERT_TRUE(node2);
 	ASSERT_TRUE(node3);
-	ASSERT_TRUE(node2 == node3);
+	ASSERT_EQ(node2, node3);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 	node = tree.FindNode(60);
 	ASSERT_TRUE(node);
@@ -229,7 +224,7 @@ TEST(BinarySearchTreeTests, BinarySearchTreeCommonAncestorTest)
 	node3 = tree.CommonAncestor1(node, node1);
 	ASSERT_TRUE(node2);
 	ASSERT_TRUE(node3);
-	ASSERT_TRUE(node2 == node3);
+	ASSERT_EQ(node2, node3);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 }
 TEST(BinarySearchTreeTests, BinarySearchTreekthSmallestAndLargestTests)

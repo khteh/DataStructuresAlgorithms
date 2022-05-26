@@ -1,6 +1,7 @@
 #include "pch.h"
 using namespace std;
-TEST(PalindromeTests, PalindromeTest) {
+TEST(PalindromeTests, PalindromeTest)
+{
 	set<string> palindromes;
 	ASSERT_TRUE(isPalindrome("abcdefghhgfedecba"));
 	ASSERT_FALSE(isPalindrome("aabbcd"));

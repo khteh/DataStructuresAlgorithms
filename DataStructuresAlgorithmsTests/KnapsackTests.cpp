@@ -130,7 +130,7 @@ TEST(KnapsackTests, UnboundedKnapsackTest)
 	numbers.clear();
 	numbers = {9, 9, 9};
 	ASSERT_EQ(9, KnapSack::UnboundedKnapsack(9, numbers)); // 9
-	assert(KnapSack::UnboundedKnapsack(8, numbers) == 0);
+	ASSERT_EQ(0, KnapSack::UnboundedKnapsack(8, numbers));
 	numbers.clear();
 	numbers = {1};
 	ASSERT_EQ(9999, KnapSack::UnboundedKnapsack(9999, numbers)); // 1 * 9999

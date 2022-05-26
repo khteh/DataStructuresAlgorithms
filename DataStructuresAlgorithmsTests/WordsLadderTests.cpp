@@ -1,10 +1,11 @@
 #include "pch.h"
 using namespace std;
-TEST(WordsLadderTests, WordsLadderTest) {
+TEST(WordsLadderTests, WordsLadderTest)
+{
 	vector<string> strings, expected;
 	// Test single-character string permutations
-	set<string> dictionary = { "DAMP", "LAMP", "LIMP", "LIME", "LIKE", "LAKE" };
-	expected = { "LIKE", "LIME", "LIMP", "LAMP", "DAMP" };
+	set<string> dictionary = {"DAMP", "LAMP", "LIMP", "LIME", "LIKE", "LAKE"};
+	expected = {"LIKE", "LIME", "LIMP", "LAMP", "DAMP"};
 	strings.clear();
 	WordsLadder(string("DAMP"), string("LIKE"), dictionary, strings);
 	ASSERT_TRUE(!strings.empty());
@@ -22,7 +23,7 @@ TEST(WordsLadderTests, WordsLadderTest) {
 	dictionary.clear();
 	strings.clear();
 	expected.clear();
-	dictionary = { "Hot", "Dot", "Dog", "Lot", "Log", "Cog" };
+	dictionary = {"Hot", "Dot", "Dog", "Lot", "Log", "Cog"};
 	expected = {"Cog", "Dog", "Dot", "Hot", "Hit"};
 	WordsLadder(string("Hit"), string("Cog"), dictionary, strings);
 	ASSERT_TRUE(!strings.empty());
@@ -34,6 +35,6 @@ TEST(WordsLadderTests, WordsLadderTest) {
 	strings.clear();
 	expected.clear();
 	WordsLadder(string("Hit"), string("Hat"), dictionary, strings);
-	assert(strings.empty()); // "HAT" is not in the dictionary
+	ASSERT_TRUE(strings.empty()); // "HAT" is not in the dictionary
 	ASSERT_EQ(expected, strings);
 }

@@ -33,24 +33,17 @@ TEST(BinaryTreeTests, BinaryTreeTest)
 	subtree.PrintTree();
 	cout << endl;
 	ASSERT_TRUE(tree.SubTree(tree.Root(), subtree.Root()));
-	cout << quoted("subtree") << (tree.SubTree(tree.Root(), subtree.Root()) ? " is subtree of " : " is NOT subtree of ") << quoted("tree") << endl
-		 << endl;
 
 	cout << "SubTree1 content: " << endl;
 	subtree1.PrintTree();
 	cout << endl;
-	cout << quoted("subtree1") << (tree.SubTree(tree.Root(), subtree1.Root()) ? " is subtree of " : " is NOT subtree of ") << quoted("tree") << endl
-		 << endl;
 	ASSERT_FALSE(tree.SubTree(tree.Root(), subtree1.Root()));
 
 	cout << "SubTree2 content: " << endl;
 	subtree2.PrintTree();
 	cout << endl;
-	cout << quoted("subtree2") << (tree.SubTree(tree.Root(), subtree2.Root()) ? " is subtree of " : " is NOT subtree of ") << quoted("tree") << endl
-		 << endl;
 	ASSERT_TRUE(tree.SubTree(tree.Root(), subtree2.Root()));
 
-	cout << "tree MinDepth: " << tree.MinDepth(tree.Root()) << ", MaxDepth: " << tree.MaxDepth(tree.Root()) << " " << (tree.IsBalancedTree() ? "balanced" : "Unbalanced") << endl;
 	ASSERT_EQ(2, tree.MinDepth(tree.Root()));
 	ASSERT_EQ(4, tree.MaxDepth(tree.Root()));
 	ASSERT_FALSE(tree.IsBalancedTree());
@@ -81,10 +74,6 @@ TEST(BinaryTreeTests, BinaryTreeFindSumTest)
 	ASSERT_EQ(3, result.size()); //"-100" "-100 0" "-50 0 -100 50"
 	expected = {"-100", "-100 0", "50 -100 0 -50"};
 	ASSERT_EQ(expected, result);
-	cout << "Sum -100 path: ";
-	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
-		cout << quoted(*it) << " ";
-	cout << endl;
 	result.clear();
 
 	tree.FindSum(tree.Root(), 110, result);
@@ -116,11 +105,9 @@ TEST(BinaryTreeTests, BinaryTreeFindSumTest)
 	tree.FindSum(tree.Root(), 5, result);
 	ASSERT_FALSE(result.empty());
 	ASSERT_EQ(1, result.size());
-	cout << "Sum 5 path: ";
-	for (vector<string>::const_iterator it = result.begin(); it != result.end(); it++)
-		cout << quoted(*it) << " ";
-	cout << endl;
-	result.clear();
+	expected.clear();
+	expected = {"2 3"};
+	ASSERT_EQ(expected, result);
 }
 TEST(BinaryTreeTests, BinaryTreeInOrderSuccessorTest)
 {
@@ -150,9 +137,9 @@ TEST(BinaryTreeTests, BinaryTreeInOrderSuccessorTest)
 	/*
 Binary Tree content:
 Level 0:                50
-Level 1:      -100(50)        60(50)
-Level 2:            0(-100)         100(60)
-Level 3:       -50(0)     10(0)  75(100)   150(100)
+Level 1:        -100(50)        60(50)
+Level 2:      0(-100)                 100(60)
+Level 3: -50(0)   10(0)          75(100)   150(100)
 	*/
 	shared_ptr<Node<long>> node = tree.FindNode(-50), node1, node2, node3;
 	ASSERT_TRUE(node);

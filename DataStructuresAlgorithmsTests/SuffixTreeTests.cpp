@@ -1,9 +1,10 @@
 #include "pch.h"
 using namespace std;
-TEST(SuffixTreeTests, SuffixTreeTest) {
+TEST(SuffixTreeTests, SuffixTreeTest)
+{
 	SuffixTree sTree("Mississippi");
 	vector<size_t> indexes;
-	vector<string> subStrings{ "Mississippi", "M", "m", "i", "s", "p", "is", "si", "sip", "hi", "sis", "pi", "ppi", "ssi", "issi" };
+	vector<string> subStrings{"Mississippi", "M", "m", "i", "s", "p", "is", "si", "sip", "hi", "sis", "pi", "ppi", "ssi", "issi"};
 	size_t count = sTree.Count();
 	ASSERT_EQ(53, count);
 	cout << "Suffix tree of \"Mississippi\" has " << count << " nodes" << endl;

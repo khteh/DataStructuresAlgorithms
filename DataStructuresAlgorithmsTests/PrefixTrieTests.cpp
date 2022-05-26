@@ -1,6 +1,7 @@
 #include "pch.h"
 using namespace std;
-TEST(PrefixTrieTests, PrefixTrieTest) {
+TEST(PrefixTrieTests, PrefixTrieTest)
+{
 	vector<string> result;
 	PrefixTrie prefixTrie;
 	cout << "Prefix-Trie tests..." << endl;
@@ -59,7 +60,7 @@ TEST(PrefixTrieTests, PrefixTrieTest) {
 	ASSERT_EQ("ted", result[1]);
 	ASSERT_EQ("ten", result[2]);
 	ASSERT_EQ("to", result[3]);
-	ASSERT_EQ("topple",result[4]);
+	ASSERT_EQ("topple", result[4]);
 
 	ASSERT_FALSE(prefixTrie.Find(string("te")));
 	result = prefixTrie.StartsWith(string("te"));
@@ -68,7 +69,7 @@ TEST(PrefixTrieTests, PrefixTrieTest) {
 	ASSERT_EQ("ted", result[1]);
 	ASSERT_EQ("ten", result[2]);
 
-	PrefixTrieNode* node = prefixTrie.GetNode("apple");
+	PrefixTrieNode *node = prefixTrie.GetNode("apple");
 	ASSERT_TRUE(node);
 	ASSERT_EQ("apple", node->Value());
 
@@ -97,7 +98,7 @@ TEST(PrefixTrieTests, PrefixTrieTest) {
 	ASSERT_EQ("", node->Value());
 
 	node = prefixTrie.GetNode("te");
-	assert(node);
+	ASSERT_TRUE(node);
 	ASSERT_EQ("", node->Value());
 
 	result = prefixTrie.GetNodes();
