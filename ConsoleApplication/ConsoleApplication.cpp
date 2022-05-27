@@ -1162,21 +1162,21 @@ int main(int argc, char* argv[])
 	a.push_back(5); // 1
 	a.push_back(5); // 2
 	a.push_back(2); // 1
-	assert(CountDistinctSlices(6, a) == 9);
+	assert(CountDistinctSlices(a) == 9);
 	a.clear();
 	a.push_back(0);							 // 5
 	a.push_back(1);							 // 4
 	a.push_back(2);							 // 3
 	a.push_back(3);							 // 2
 	a.push_back(4);							 // 1
-	assert(CountDistinctSlices(6, a) == 15); // 5 + 4 + 3
+	assert(CountDistinctSlices(a) == 15); // 5 + 4 + 3
 	a.clear();
 	a.push_back(1);							// 5
 	a.push_back(1);							// 4
 	a.push_back(1);							// 3
 	a.push_back(1);							// 2
 	a.push_back(1);							// 1
-	assert(CountDistinctSlices(2, a) == 5); // 5 + 4 + 3
+	assert(CountDistinctSlices(a) == 5); // 5 + 4 + 3
 	a.clear();
 	a.push_back(1);							// 2
 	a.push_back(2);							// 1
@@ -1184,7 +1184,7 @@ int main(int argc, char* argv[])
 	a.push_back(3);							// 1
 	a.push_back(3);							// 2
 	a.push_back(4);							// 1
-	assert(CountDistinctSlices(3, a) == 9); // 5 + 4 + 3
+	assert(CountDistinctSlices(a) == 9); // 5 + 4 + 3
 	a.clear();
 	a.push_back(1);							 // 2
 	a.push_back(2);							 // 1
@@ -1192,7 +1192,7 @@ int main(int argc, char* argv[])
 	a.push_back(3);							 // 2
 	a.push_back(4);							 // 1
 	a.push_back(4);							 // 1
-	assert(CountDistinctSlices(3, a) == 10); // 5 + 4 + 3
+	assert(CountDistinctSlices(a) == 10); // 5 + 4 + 3
 	a.clear();
 	a.push_back(1);							 // 1
 	a.push_back(1);							 // 4
@@ -1200,7 +1200,7 @@ int main(int argc, char* argv[])
 	a.push_back(3);							 // 2
 	a.push_back(4);							 // 1
 	a.push_back(4);							 // 1
-	assert(CountDistinctSlices(3, a) == 12); // 5 + 4 + 3
+	assert(CountDistinctSlices(a) == 12); // 5 + 4 + 3
 	a.clear();
 	a.push_back(1);							 // 2
 	a.push_back(2);							 // 1
@@ -1208,7 +1208,7 @@ int main(int argc, char* argv[])
 	a.push_back(2);							 // 2
 	a.push_back(4);							 // 1
 	a.push_back(4);							 // 1
-	assert(CountDistinctSlices(3, a) == 10); // 5 + 4 + 3
+	assert(CountDistinctSlices(a) == 10); // 5 + 4 + 3
 	a.clear();
 	a.push_back(1);							 // 2
 	a.push_back(2);							 // 1
@@ -1216,7 +1216,7 @@ int main(int argc, char* argv[])
 	a.push_back(4);							 // 2
 	a.push_back(5);							 // 1
 	a.push_back(6);							 // 1
-	assert(CountDistinctSlices(3, a) == 21); // 5 + 4 + 3
+	assert(CountDistinctSlices(a) == 21); // 5 + 4 + 3
 	a.clear();
 	a = { 10, 2, 5, 1, 8, 12 };
 	assert(CountTriangles(a) == 4);
@@ -1227,27 +1227,6 @@ int main(int argc, char* argv[])
 	a.clear();
 	a = { 2, 2, 1 };
 	assert(MinAbsSum(a) == 1);
-	a.clear();
-	a = { 23171, 21011, 21123, 21366, 21013, 21367 };
-	assert(MaxProfit(a) == 356);
-	a.clear();
-	a = { 5, 3, 2 };
-	assert(StockMax(a) == 0);
-	a.clear();
-	a = { 1, 2, 100 };
-	assert(StockMax(a) == 197); // (100 - 1 = 99) + (100 - 2 = 98) = 197
-	a.clear();
-	a = { 1, 3, 1, 2 };
-	assert(StockMax(a) == 3);
-	a.clear();
-	a = { 1, 2, 3, 0, 2, 5 };
-	assert(StockMaxProfit(a) == 6);
-	a.clear();
-	a = { 1, 2, 3, 0, 1, 5 };
-	assert(StockMaxProfit(a) == 6);
-	a.clear();
-	a = { 1, 2, 6, 0, 1, 5 };
-	assert(StockMaxProfit(a) == 9);
 	a.clear();
 	a = { 1, -2, 0, 9, -1, -2 };
 	assert(NumberSolitaire(a) == 8);

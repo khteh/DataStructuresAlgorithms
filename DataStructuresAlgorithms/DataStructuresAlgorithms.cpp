@@ -225,23 +225,23 @@ size_t CountDistinctSlices1(long m, vector<long> &data)
 // a.push_back(5); // 1
 // a.push_back(5); // 2
 // a.push_back(2); // 1
-size_t CountDistinctSlices(long m, vector<long> &data)
+size_t CountDistinctSlices(vector<long> &data)
 {
 	size_t slices = 0, start = 0;
 	set<long> unique;
 	for (size_t i = 0; i < data.size(); i++)
 	{
 		if (unique.find(data[i]) == unique.end())
-			unique.emplace(data[i]);
+			unique.emplace(data[i]); // 3, 4, 5, 2
 		else
 		{
-			slices += SequenceSum(i - start);
-			start = i;
+			slices += SequenceSum(i - start); // f(3) = 1+2+3 = 6
+			start = i; // 3
 			unique.clear();
-			unique.emplace(data[i]);
+			unique.emplace(data[i]); // 5
 		}
 	}
-	return slices + SequenceSum(data.size() - start);
+	return slices + SequenceSum(data.size() - start); // 6 + f(2) = 6 + 3 = 9
 }
 // "Hello World!!!" -> "!!!dlroW olleH"
 void reverse(string &str)

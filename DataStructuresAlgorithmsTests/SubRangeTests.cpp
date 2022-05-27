@@ -160,3 +160,30 @@ TEST(SubRangeTests, DiffPairsTest)
 	a = { 1, 3, 5, 8, 6, 4, 2 };
 	ASSERT_EQ(5, diffpairs(a, 2));
 }
+TEST(SubRangeTests, StockMaxTest)
+{
+	vector<long> a = { 5, 3, 2 };
+	ASSERT_EQ(0, StockMax(a));
+	a.clear();
+	a = { 1, 2, 100 };
+	ASSERT_EQ(197, StockMax(a)); // (100 - 1 = 99) + (100 - 2 = 98) = 197
+	a.clear();
+	a = { 1, 3, 1, 2 };
+	ASSERT_EQ(3, StockMax(a));
+}
+TEST(SubRangeTests, MaxProfitTest)
+{
+	vector<long> a = { 23171, 21011, 21123, 21366, 21013, 21367 };
+	ASSERT_EQ(356, MaxProfit(a));
+}
+TEST(SubRangeTests, StockMaxProfitTest)
+{
+	vector<long> a = { 1, 2, 3, 0, 2, 5 };
+	ASSERT_EQ(6, StockMaxProfit(a));
+	a.clear();
+	a = { 1, 2, 3, 0, 1, 5 };
+	ASSERT_EQ(6, StockMaxProfit(a));
+	a.clear();
+	a = { 1, 2, 6, 0, 1, 5 };
+	ASSERT_EQ(9, StockMaxProfit(a));
+}

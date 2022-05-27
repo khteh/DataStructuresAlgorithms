@@ -182,7 +182,7 @@ long ConsecutiveLargestProduct(vector<long> &);
 long ConsecutiveLargestSumOfFactors(vector<zerofactors_t> &data, vector<zerofactors_t> &result, int value);
 long ConsecutiveSumMinCount(long, vector<long> &);
 long LongestNonNegativeSumSlice(vector<long> &);
-size_t CountDistinctSlices(long m, vector<long> &);
+size_t CountDistinctSlices(vector<long> &);
 size_t CountTriangles(vector<long> &);
 // Greedy Algorithms
 size_t MaxNonOverlappingSegments(vector<size_t> &, vector<size_t> &);
