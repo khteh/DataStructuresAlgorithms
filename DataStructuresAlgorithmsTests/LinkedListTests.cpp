@@ -465,3 +465,22 @@ TEST(LinkedListTests, LinkedListRotateRightTest) {
 	ll2.ToVector(a);
 	ASSERT_EQ(b, a);
 }
+TEST(LinkedListTests, ConnectedCellsInAGridTest) {
+	vector<vector<long>> grid = { {1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0} };
+	ASSERT_EQ(5, ConnectedCellsInAGridLinkedList(grid));
+
+	grid = { {0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0} };
+	ASSERT_EQ(8, ConnectedCellsInAGridLinkedList(grid));
+
+	grid = { {1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1} };
+	ASSERT_EQ(5, ConnectedCellsInAGridLinkedList(grid));
+
+	grid = { {0, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 1, 0, 1, 0}, {0, 1, 0, 1, 1}, {0, 1, 1, 1, 0} };
+	ASSERT_EQ(15, ConnectedCellsInAGridLinkedList(grid));
+
+	grid = { {1, 1, 1, 0, 1}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 0}, {0, 1, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 1, 0} };
+	ASSERT_EQ(9, ConnectedCellsInAGridLinkedList(grid));
+
+	grid = { {1, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 0, 0, 1, 0, 0} };
+	ASSERT_EQ(1, ConnectedCellsInAGridLinkedList(grid));
+}

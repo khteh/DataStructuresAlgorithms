@@ -256,29 +256,6 @@ int main(int argc, char* argv[])
 	// grid.back() = {7,8,9}
 	assert(grid.back().back() == 9);
 	grid.clear();
-	grid = { {1, 3, 5}, {2, 4, 6}, {7, 8, 9} };
-	pathResult_t pathResult = FindMaxPath(grid, 0, 0);
-	assert(pathResult.sum == 27);
-	cout << "Grid traversal which yields maximum sum " << pathResult.sum << ": " << pathResult.path << endl;
-
-	vector<vector<char>> maze = { {'1', '1', '1', '1', '1'}, {'S', '1', 'X', '1', '1'}, {'1', '1', '1', '1', '1'}, {'X', '1', '1', 'E', '1'}, {'1', '1', '1', '1', 'X'} };
-	cout << "maze (" << maze.size() << "): " << endl;
-	for (size_t i = 0; i < 5; i++)
-	{
-		for (size_t j = 0; j < 5; j++)
-			cout << maze[i][j] << " ";
-		cout << endl;
-	}
-	queue<string> mazeResult;
-	assert(FindShortestPath(maze, 1, 0, mazeResult, 'E', 'X'));
-	cout << "Shortest path: ";
-	while (!mazeResult.empty())
-	{
-		line = mazeResult.front();
-		mazeResult.pop();
-		cout << line << " ";
-	}
-	cout << endl;
 	grid1 = { {-1, 0, -1}, {-1, -1, -1}, {-1, -1, -1} };
 	grid2 = { {1, 0, 1}, {2, 1, 2}, {3, 2, 3} };
 	MatrixDistance(grid1, 0, 1);
@@ -292,78 +269,7 @@ int main(int argc, char* argv[])
 		}
 		cout << endl;
 	}
-	grid1 = { {1, 3, 5}, {6, 4, 2}, {7, 9, 8} };
-	grid2 = { {1, 3, 5}, {6, 4, 2}, {7, 9, 8} };
-	MatrixSort(grid1);
-	cout << "MatrixSort: " << endl;
-	for (size_t i = 0; i < grid1.size(); i++)
-	{
-		for (size_t j = 0; j < grid1[i].size(); j++)
-			cout << grid1[i][j] << " ";
-		cout << endl;
-	}
-	MatrixSortWithHeap(grid2);
-	cout << "MatrixSortWithHeap: " << endl;
-	for (size_t i = 0; i < grid2.size(); i++)
-	{
-		for (size_t j = 0; j < grid2[i].size(); j++)
-		{
-			cout << grid2[i][j] << " ";
-			assert(grid1[i][j] == grid2[i][j]);
-		}
-		cout << endl;
-	}
-	grid1 = { {0, 0, 1}, {0, 1, 1}, {1, 1, 1} };
-	assert(MatrixPatternCount(grid1) == 3);
-
-	grid1 = { {0, 0, 1}, {0, 0, 1}, {1, 1, 1} };
-	assert(MatrixPatternCount(grid1) == 4);
-
-	grid1 = { {0, 0, 0, 1}, {0, 0, 1, 1}, {0, 1, 1, 1}, {1, 1, 1, 1} };
-	assert(MatrixPatternCount(grid1) == 6);
-
-	grid1 = { {1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0} };
-	assert(ConnectedCellsInAGridLinkedList(grid1) == 5);
-	assert(ConnectedCellsInAGrid(grid1) == 5);
-
-	grid1 = { {0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0} };
-	assert(ConnectedCellsInAGridLinkedList(grid1) == 8);
-	assert(ConnectedCellsInAGrid(grid1) == 8);
-
-	grid1 = { {1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1} };
-	assert(ConnectedCellsInAGridLinkedList(grid1) == 5);
-	assert(ConnectedCellsInAGrid(grid1) == 5);
-
-	grid1 = { {0, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 1, 0, 1, 0}, {0, 1, 0, 1, 1}, {0, 1, 1, 1, 0} };
-	assert(ConnectedCellsInAGridLinkedList(grid1) == 15);
-	assert(ConnectedCellsInAGrid(grid1) == 15);
-
-	grid1 = { {1, 1, 1, 0, 1}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 0}, {0, 1, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 1, 0} };
-	assert(ConnectedCellsInAGridLinkedList(grid1) == 9);
-	assert(ConnectedCellsInAGrid(grid1) == 9);
-
-	grid1 = { {1, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 0, 0, 1, 0, 0} };
-	assert(ConnectedCellsInAGridLinkedList(grid1) == 1);
-	assert(ConnectedCellsInAGrid(grid1) == 1);
-
-	maze = { {0, 0, 1, 0, 1}, {0, 0, 0, 0, 0}, {0, 1, 1, 1, 1}, {0, 1, 1, 0, 0} };
-	queue<string> puzzleResult;
-	assert(PathExists(maze, 1, 4, 0, 3, puzzleResult, 1));
-	cout << "Puzzle path: ";
-	while (!puzzleResult.empty())
-	{
-		line = puzzleResult.front();
-		puzzleResult.pop();
-		cout << line << " ";
-	}
-	cout << endl;
-	maze = { {0, 0, 1, 1, 1}, {0, 1, 0, 0, 0}, {1, 1, 1, 1, 1}, {0, 0, 0, 0, 1} };
-	queue<string> puzzleResult1;
-	assert(!PathExists(maze, 0, 0, 1, 2, puzzleResult1, 1));
-	maze.clear();
-	maze = { {'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'} };
-	assert(WordExistsInGrid(maze, string("ABCCED")));
-	assert(!WordExistsInGrid(maze, string("ABCB")));
+	vector<vector<char>> maze;
 	line = "ab2c3";
 	assert(uncompress(line) == "ababcababcababc");
 	cout << "uncompress(" << quoted(line) << "): " << uncompress(line) << endl;

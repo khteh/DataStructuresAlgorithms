@@ -3186,7 +3186,7 @@ size_t greaterthansumpairs(vector<long> &numbers, long sum)
  * element [n][n] using the path which will yield the maximum sum of all the elements traversed. You can only move right and down; NOT left and up.
  * 1 2
  */
-pathResult_t FindMaxPath(vector<vector<unsigned long>> &grid, size_t r, size_t c)
+pathResult_t FindMaxPath(vector<vector<size_t>> &grid, size_t r, size_t c)
 {
 	ostringstream oss;
 	pathResult_t result;

@@ -330,7 +330,7 @@ typedef struct PathResult
 	unsigned long sum;
 	string path;
 } pathResult_t;
-pathResult_t FindMaxPath(vector<vector<unsigned long>> &, size_t, size_t);
+pathResult_t FindMaxPath(vector<vector<size_t>> &, size_t, size_t);
 bool PathExists(vector<vector<char>> &, size_t, size_t, size_t, size_t, queue<string> &, char);
 vector<string> findShortestPath(int, int, int, int, int);
 bool FindShortestPath(vector<vector<char>> &, size_t, size_t, queue<string> &, char, char);

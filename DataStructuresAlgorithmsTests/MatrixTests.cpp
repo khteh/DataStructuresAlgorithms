@@ -1,5 +1,98 @@
 #include "pch.h"
 using namespace std;
+TEST(MatrixTests, FindMaxPathTests) {
+	vector<vector<size_t>> grid;
+	grid = { {1, 3, 5}, {2, 4, 6}, {7, 8, 9} };
+	pathResult_t pathResult = FindMaxPath(grid, 0, 0);
+	ASSERT_EQ(27, pathResult.sum);
+}
+TEST(MatrixTests, FindShortestPathTests)
+{
+	vector<vector<char>> maze = { {'1', '1', '1', '1', '1'}, {'S', '1', 'X', '1', '1'}, {'1', '1', '1', '1', '1'}, {'X', '1', '1', 'E', '1'}, {'1', '1', '1', '1', 'X'} };
+	cout << "maze (" << maze.size() << "): " << endl;
+	for (size_t i = 0; i < 5; i++)
+	{
+		for (size_t j = 0; j < 5; j++)
+			cout << maze[i][j] << " ";
+		cout << endl;
+	}
+	queue<string> mazeResult;
+	ASSERT_TRUE(FindShortestPath(maze, 1, 0, mazeResult, 'E', 'X'));
+	ASSERT_FALSE(mazeResult.empty());
+	cout << "Shortest path: ";
+	while (!mazeResult.empty())
+	{
+		string line = mazeResult.front();
+		mazeResult.pop();
+		cout << line << " ";
+	}
+	cout << endl;
+}
+TEST(MatrixTests, MatrixSortTest)
+{
+	vector<vector<long>> grid = { {1, 3, 5}, {6, 4, 2}, {7, 9, 8} };
+	vector<vector<long>> expected = { {1, 4, 7}, {2, 5, 8}, {3, 6, 9} };
+	MatrixSort(grid);
+	ASSERT_EQ(expected, grid);
+	cout << "MatrixSort: " << endl;
+	for (size_t i = 0; i < grid.size(); i++)
+	{
+		for (size_t j = 0; j < grid[i].size(); j++)
+			cout << grid[i][j] << " ";
+		cout << endl;
+	}
+}
+TEST(MatrixTests, MatrixSortWithHeapTest)
+{
+	vector<vector<long>> grid = { {1, 3, 5}, {6, 4, 2}, {7, 9, 8} };
+	vector<vector<long>> expected = { {1, 4, 7}, {2, 5, 8}, {3, 6, 9} };
+	MatrixSortWithHeap(grid);
+	ASSERT_EQ(expected, grid);
+	cout << "MatrixSortWithHeap: " << endl;
+	for (size_t i = 0; i < grid.size(); i++)
+	{
+		for (size_t j = 0; j < grid[i].size(); j++)
+			cout << grid[i][j] << " ";
+		cout << endl;
+	}
+}
+TEST(MatrixTests, MatrixPatternCountTest)
+{
+	vector<vector<long>> grid = { {0, 0, 1}, {0, 1, 1}, {1, 1, 1} };
+	ASSERT_EQ(3, MatrixPatternCount(grid));
+
+	grid = { {0, 0, 1}, {0, 0, 1}, {1, 1, 1} };
+	ASSERT_EQ(4, MatrixPatternCount(grid));
+
+	grid = { {0, 0, 0, 1}, {0, 0, 1, 1}, {0, 1, 1, 1}, {1, 1, 1, 1} };
+	ASSERT_EQ(6, MatrixPatternCount(grid));
+}
+TEST(MatrixTests, PathExistsTest)
+{
+	vector<vector<char>> maze = { {0, 0, 1, 0, 1}, {0, 0, 0, 0, 0}, {0, 1, 1, 1, 1}, {0, 1, 1, 0, 0} };
+	queue<string> puzzleResult;
+	ASSERT_TRUE(PathExists(maze, 1, 4, 0, 3, puzzleResult, 1));
+	ASSERT_FALSE(puzzleResult.empty());
+	cout << "Puzzle path: ";
+	while (!puzzleResult.empty())
+	{
+		string line = puzzleResult.front();
+		puzzleResult.pop();
+		cout << line << " ";
+	}
+	cout << endl;
+	maze = { {0, 0, 1, 1, 1}, {0, 1, 0, 0, 0}, {1, 1, 1, 1, 1}, {0, 0, 0, 0, 1} };
+	queue<string> puzzleResult1;
+	ASSERT_FALSE(PathExists(maze, 0, 0, 1, 2, puzzleResult1, 1));
+	ASSERT_TRUE(puzzleResult.empty());
+}
+TEST(MatrixTests, WordExistsInGridTest)
+{
+	vector<vector<char>> maze;
+	maze = { {'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'} };
+	ASSERT_TRUE(WordExistsInGrid(maze, string("ABCCED")));
+	ASSERT_FALSE(WordExistsInGrid(maze, string("ABCB")));
+}
 TEST(MatrixTests, SpiralOrderTests) {
 	vector<vector<long>> grid1;
 	vector<long> a;
