@@ -998,10 +998,7 @@ int main(int argc, char* argv[])
 	assert(!match(string("aaaa"), string("xyzabcxyzabc")));
 
 	stringset.clear();
-	stringset.insert("cdf");
-	stringset.insert("too");
-	stringset.insert("hgfdt");
-	stringset.insert("paa");
+	stringset = {"cdf", "too", "hgfdt", "paa"};
 	stringset1.clear();
 	FindPattern("abc", stringset, stringset1);
 	assert(stringset1.size() == 1);
@@ -1136,8 +1133,7 @@ int main(int argc, char* argv[])
 	assert(buildmax(udata) == "0");
 	strings.clear();
 	strings = { "ABCW", "BAZ", "FOO", "BAR", "XTFN", "ABCDEF" };
-	long max = MaxLengths(strings);
-	assert(max == 24);
+	assert(24 == MaxLengths(strings));
 	Square square1(0, 0, 10, 10), square2(5, 5, 10, 10);
 	assert(square1.IsOverlappig(square2));
 	assert(square2.IsOverlappig(square1));

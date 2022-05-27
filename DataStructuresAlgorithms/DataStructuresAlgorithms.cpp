@@ -4328,7 +4328,7 @@ long MaxLengths(vector<string> &data)
 		{
 			size_t i = 0;
 			for (; i < it1->size(); i++)
-				if (it->find(it1[i]) != string::npos)
+				if (it->find(it1[i]) != string::npos) // Check if *it has it1[i] character
 					break;
 			if (i != it1->size() - 1)
 				return it->size() * it1->size();
