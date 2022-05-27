@@ -33,6 +33,3 @@
 #include <cstring>
 #include <ranges>
 #include "../DataStructuresAlgorithms/DataStructuresAlgorithms.h"
-#include "../DataStructuresAlgorithms/MyStack.h"
-#include "../DataStructuresAlgorithms/LongestCommonSubsequence.h"
-#include "../DataStructuresAlgorithms/KnapSack.h"

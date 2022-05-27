@@ -66,7 +66,7 @@ using namespace tbb;
 #include "CMatrix.h"
 #include "ListRangeSum.h"
 #include "LongestCommonSubsequence.h"
-#include "KnapSack.h"
+#include "Knapsack.h"
 using namespace std;
 #ifdef _MSC_VER
 using namespace concurrency;
