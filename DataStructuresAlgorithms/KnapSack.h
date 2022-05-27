@@ -17,21 +17,25 @@ using namespace std;
 namespace ranges = std::ranges;
 class KnapSack
 {
+private:
+	map<long, set<vector<size_t>>> coinChangeCache;
+	map<long, set<vector<size_t>>> knapsackCache;
+	map<long, size_t> dpMemoization;
 public:
-	static void ClearCoinChangeCache();
-	static void ClearKnapSackCache();
-	static void ClearDPMemoization();
-	static set<vector<size_t>> CoinChange(long, vector<size_t> &);
-	static set<vector<size_t>> CoinsChangeDynamicProgramming(long, vector<size_t> &);
-	static size_t CoinsChangeUniqueWaysDynamicProgramming(long, vector<size_t> &);
-	static size_t CoinsChangeDuplicateWaysDynamicProgramming(size_t, vector<size_t> &);
-	static long CoinsChangeFewestCoinsDynamicProgramming(long, vector<size_t> &);
-	static set<vector<size_t>> Knapsack(long, vector<size_t> &);
-	static size_t UnboundedKnapsack(long, vector<size_t> &);
-	static set<vector<size_t>> _BoundedKnapsack(long, vector<size_t> &);
-	static vector<vector<size_t>> BoundedKnapsack(long, vector<size_t> &);
-	static set<vector<size_t>> _BoundedKnapsackCombinationSum(size_t, size_t);
-	static set<vector<size_t>> BoundedKnapsackCombinationSum(size_t, size_t);
-	static size_t StairsClimbingDynamicProgramming(long, vector<size_t> &);
-	static size_t StairsClimbingDynamicProgrammingBottomUp(long, vector<size_t> &);
+	void ClearCoinChangeCache();
+	void ClearKnapSackCache();
+	void ClearDPMemoization();
+	set<vector<size_t>> CoinChange(long, vector<size_t> &);
+	set<vector<size_t>> CoinsChangeDynamicProgramming(long, vector<size_t> &);
+	size_t CoinsChangeUniqueWaysDynamicProgramming(long, vector<size_t> &);
+	size_t CoinsChangeDuplicateWaysDynamicProgramming(size_t, vector<size_t> &);
+	long CoinsChangeFewestCoinsDynamicProgramming(long, vector<size_t> &);
+	set<vector<size_t>> Knapsack(long, vector<size_t> &);
+	size_t UnboundedKnapsack(long, vector<size_t> &);
+	set<vector<size_t>> _BoundedKnapsack(long, vector<size_t> &);
+	vector<vector<size_t>> BoundedKnapsack(long, vector<size_t> &);
+	set<vector<size_t>> _BoundedKnapsackCombinationSum(size_t, size_t);
+	set<vector<size_t>> BoundedKnapsackCombinationSum(size_t, size_t);
+	size_t StairsClimbingDynamicProgramming(long, vector<size_t> &);
+	size_t StairsClimbingDynamicProgrammingBottomUp(long, vector<size_t> &);
 };

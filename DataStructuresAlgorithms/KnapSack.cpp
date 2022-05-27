@@ -1,8 +1,4 @@
 #include "KnapSack.h"
-static map<long, set<vector<size_t>>> coinChangeCache;
-static map<long, set<vector<size_t>>> knapsackCache;
-static map<long, size_t> dpMemoization;
-
 void KnapSack::ClearCoinChangeCache()
 {
 	coinChangeCache.clear();
