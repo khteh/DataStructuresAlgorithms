@@ -5791,7 +5791,8 @@ vector<size_t> climbingLeaderboard(vector<long> &scores, vector<long> &alice)
 {
 	vector<size_t> result;
 	ranges::sort(scores);
-	scores.erase(unique(scores.begin(), scores.end()), scores.end());
+	auto unique = ranges::unique(scores);
+	scores.erase(unique.begin(), unique.end());
 	for (size_t i = 0; i < alice.size(); i++)
 	{
 		vector<long>::iterator it = upper_bound(scores.begin(), scores.end(), alice[i]);
