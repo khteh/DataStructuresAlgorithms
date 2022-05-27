@@ -93,6 +93,27 @@ TEST(MatrixTests, WordExistsInGridTest)
 	ASSERT_TRUE(WordExistsInGrid(maze, string("ABCCED")));
 	ASSERT_FALSE(WordExistsInGrid(maze, string("ABCB")));
 }
+TEST(MatrixTests, MergeIntervalsTest)
+{
+	vector<vector<long>> grid, grid1;
+	grid = { {1, 3}, {2, 6}, {8, 10}, {15, 18} };
+	grid1 = MergeIntervals(grid);
+	grid = { {1, 6}, {8, 10}, {15, 18} };
+	ASSERT_EQ(3, grid1.size());
+	ASSERT_EQ(grid, grid1);
+	grid.clear();
+	grid = { {1, 4}, {4, 5} };
+	grid1 = MergeIntervals(grid);
+	ASSERT_EQ(1, grid1.size());
+	grid = { {1, 5} };
+	ASSERT_EQ(grid, grid1);
+	grid.clear();
+	grid = { {2, 3}, {4, 5}, {6, 7}, {8, 9}, {1, 10} };
+	grid1 = MergeIntervals(grid);
+	ASSERT_EQ(1, grid1.size());
+	grid = { {1, 10} };
+	ASSERT_EQ(grid, grid1);
+}
 TEST(MatrixTests, SpiralOrderTests) {
 	vector<vector<long>> grid1;
 	vector<long> a;
