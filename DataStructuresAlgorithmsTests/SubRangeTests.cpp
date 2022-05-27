@@ -91,3 +91,72 @@ TEST(SubRangeTests, LongestNonNegativeSumSliceTest)
 	a = { -1, -1, -1, -1, -1, -1, 1, 1 };
 	ASSERT_EQ(4, LongestNonNegativeSumSlice(a));
 }
+TEST(SubRangeTests, LongestUpDownAlternatingSubSequenceTest)
+{
+	vector<long> a = { 1, 2, 51, 50, 60, 55, 70, 68, 80, 76, 75, 12, 45 }, b;
+	size_t count = LongestUpDownAlternatingSubSequence(a, b);
+	a = { 2, 51, 50, 60, 55, 70, 68, 80, 76 };
+	ASSERT_EQ(9, count);
+	ASSERT_EQ(9, b.size());
+	ASSERT_EQ(a, b);
+}
+TEST(SubRangeTests, SumPairsTest)
+{
+	vector<long> a = { 1, 2, 3, 4, 5, 6, 5 };
+	// 1, 2, 3, 4, 5, 6, 5
+	//    6  5  4
+	ASSERT_EQ(2, sumpairs(a, 8));
+
+	a.clear();
+	a = { 5, 7, 9, 13, 11, 6, 6, 3, 3 };
+	ASSERT_EQ(3, sumpairs(a, 12));
+
+	// long testData[] = { 92,407,1152,403,1419,689,1029,108,128,1307,300,775,622,730,978,526,943,127,566,869,715,983,820,1394,901,606,497,98,1222,843,600,1153,302,1450,1457,973,1431,217,936,958,1258,970,1155,1061,1341,657,333,1151,790,101,588,263,101,534,747,405,585,111,849,695,1256,1508,139,336,1430,615,1295,550,783,575,992,709,828,1447,1457,738,1024,529,406,164,994,1008,50,811,564,580,952,768,863,1225,251,1032,1460,1558 };
+	// vector<int> testDataVector(testData, testData + sizeof(testData) / sizeof(testData[0]));
+	// assert(sumpairs(a, 8) == 2);
+	a.clear();
+	a.resize(10);
+	iota(a.begin(), a.end(), 0);
+	ASSERT_EQ(4, sumpairs(a, 10));
+}
+TEST(SubRangeTests, ThreeSumTest)
+{
+	vector<long> a = { -1, 0, 1, 2, -1, -4 };
+	vector<vector<long>> grid = { {-1, -1, 2}, {-1, 0, 1} }, grid1;
+	grid1 = threeSum(a);
+	ASSERT_EQ(grid, grid1);
+	a.clear();
+	a = { 0, 0, 0 };
+	grid = { {0, 0, 0} };
+	grid1 = threeSum(a);
+	ASSERT_EQ(grid, grid1);
+}
+TEST(SubRangeTests, FourSumTest)
+{
+	vector<long> a = { 1, 0, -1, 0, -2, 2 };
+	vector<vector<long>> grid = { {-2, -1, 1, 2}, {-2, 0, 0, 2}, {-1, 0, 0, 1} }, grid1;
+	grid1 = fourSum(a, 0);
+	ASSERT_EQ(grid, grid1);
+
+	a = { -3, -1, 0, 2, 4, 5 };
+	grid = { {-3, -1, 2, 4} };
+	grid1 = fourSum(a, 2);
+	ASSERT_EQ(grid, grid1);
+}
+TEST(SubRangeTests, DiffPairsTest)
+{
+	set<long> lSet{ 1, 2, 3, 5, 6, 8, 9, 11, 12, 13 };
+	ASSERT_EQ(6, diffpairs(lSet, 3));
+	lSet.clear();
+	lSet = { 1, 5, 3, 4, 2 };
+	ASSERT_EQ(3, diffpairs(lSet, 2));
+	lSet.clear();
+	lSet = { 1, 3, 5, 8, 6, 4, 2 };
+	ASSERT_EQ(5, diffpairs(lSet, 2));
+
+	vector<long> a = { 1, 5, 3, 4, 2 };
+	ASSERT_EQ(3, diffpairs(a, 2));
+	a.clear();
+	a = { 1, 3, 5, 8, 6, 4, 2 };
+	ASSERT_EQ(5, diffpairs(a, 2));
+}

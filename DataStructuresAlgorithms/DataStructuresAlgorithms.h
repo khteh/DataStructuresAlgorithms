@@ -365,7 +365,7 @@ bool JSONValidation(string);
 vector<char> AddVectors(vector<char> &, vector<char> &);
 long MaxLengths(vector<string> &);
 void ExceptionTest();
-size_t LongestAlternatingSubSequence(const vector<long> &, vector<long> &);
+size_t LongestUpDownAlternatingSubSequence(const vector<long> &, vector<long> &);
 void PlayTreasureGame();
 size_t countPaths(size_t, size_t, size_t, size_t, size_t);
 vector<shared_ptr<Node<string>>> shortest_cycle_path(shared_ptr<Node<string>>);

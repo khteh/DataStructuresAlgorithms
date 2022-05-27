@@ -649,17 +649,6 @@ int main(int argc, char* argv[])
 	assert(!isPrime(10));
 	a.clear();
 	b.clear();
-	a = { 1, 2, 51, 50, 60, 55, 70, 68, 80, 76, 75, 12, 45 };
-	size_t count = LongestAlternatingSubSequence(a, b);
-	assert(count == 9);
-	assert(b.size() == 9);
-	assert(b[0] == 2);
-	assert(b.back() == 76);
-	cout << "Longest alternating subsequence of ";
-	ranges::copy(a, ostream_iterator<long>(cout, " "));
-	cout << ": ";
-	ranges::copy(b, ostream_iterator<long>(cout, " "));
-	cout << endl;
 	ull.clear();
 	ull = { 1, 2, 1, 2 };
 	unsigned long long findMaxResult = findMax(ull);
@@ -678,59 +667,7 @@ int main(int argc, char* argv[])
 	cout << " trim(line): |" << line << "| size: " << line.size() << endl;
 
 	a.clear();
-	a = { 1, 2, 3, 4, 5, 6, 5 };
-	// 1, 2, 3, 4, 5, 6, 5
-	//    6  5  4
-	assert(sumpairs(a, 8) == 2);
-
-	a.clear();
-	a = { 5, 7, 9, 13, 11, 6, 6, 3, 3 };
-	assert(sumpairs(a, 12) == 3);
-
-	// long testData[] = { 92,407,1152,403,1419,689,1029,108,128,1307,300,775,622,730,978,526,943,127,566,869,715,983,820,1394,901,606,497,98,1222,843,600,1153,302,1450,1457,973,1431,217,936,958,1258,970,1155,1061,1341,657,333,1151,790,101,588,263,101,534,747,405,585,111,849,695,1256,1508,139,336,1430,615,1295,550,783,575,992,709,828,1447,1457,738,1024,529,406,164,994,1008,50,811,564,580,952,768,863,1225,251,1032,1460,1558 };
-	// vector<int> testDataVector(testData, testData + sizeof(testData) / sizeof(testData[0]));
-	// assert(sumpairs(a, 8) == 2);
-	a.clear();
-	cout << endl;
-	a.resize(10);
-	iota(a.begin(), a.end(), 0);
-	assert(sumpairs(a, 10) == 4);
-	a.clear();
-	a = { -1, 0, 1, 2, -1, -4 };
-	grid1 = { {-1, -1, 2}, {-1, 0, 1} };
-	grid2 = threeSum(a);
-	assert(grid1 == grid2);
-	a.clear();
-	a = { 0, 0, 0 };
-	grid1 = { {0, 0, 0} };
-	grid2 = threeSum(a);
-	assert(grid1 == grid2);
-	a.clear();
-	a = { 1, 0, -1, 0, -2, 2 };
-	grid1 = { {-2, -1, 1, 2}, {-2, 0, 0, 2}, {-1, 0, 0, 1} };
-	grid2 = fourSum(a, 0);
-	assert(grid1 == grid2);
-	a.clear();
-	a = { -3, -1, 0, 2, 4, 5 };
-	grid1 = { {-3, -1, 2, 4} };
-	grid2 = fourSum(a, 2);
-	assert(grid1 == grid2);
-	set<long> lSet{ 1, 2, 3, 5, 6, 8, 9, 11, 12, 13 };
-	assert(diffpairs(lSet, 3) == 6);
-	lSet.clear();
-	lSet = { 1, 5, 3, 4, 2 };
-	assert(diffpairs(lSet, 2) == 3);
-	lSet.clear();
-	lSet = { 1, 3, 5, 8, 6, 4, 2 };
-	assert(diffpairs(lSet, 2) == 5);
-
-	a.clear();
-	a = { 1, 5, 3, 4, 2 };
-	assert(diffpairs(a, 2) == 3);
-	a.clear();
-	a = { 1, 3, 5, 8, 6, 4, 2 };
-	assert(diffpairs(a, 2) == 5);
-	a.clear();
+	cout << "minDiffPairs(): " << endl;
 	a = { 1, 2, 3, 4, 5, 6 };
 	assert(minDiffPairs(a, 0) == 3);
 	a.clear();
@@ -738,13 +675,15 @@ int main(int argc, char* argv[])
 	assert(minDiffPairs(a, 1) == 3);
 	a.clear();
 	a = { 1, 2, 3, 4, 5, 6 };
-	assert(minDiffPairs(a, 4) == 2);
+	assert(minDiffPairs(a, 2) == 2);
 	a.clear();
 	a = { 6, 5, 4, 3, 2, 1 };
-	assert(minDiffPairs(a, 4) == 2);
+	assert(minDiffPairs(a, 3) == 3);
+	cout << endl;
 	a.clear();
 	a = { 3, 5, 1, 6, 2, 4 };
 	assert(minDiffPairs(a, 4) == 2);
+	assert(minDiffPairs(a, 5) == 1);
 	a.clear();
 	a = { 1, 1, 1, 5, 5, 5, 5 };
 	assert(minDiffPairs(a, 4) == 3);

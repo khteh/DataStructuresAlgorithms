@@ -3055,7 +3055,7 @@ vector<vector<long>> fourSum(vector<long> &nums, long target)
  * 100%
  *       1 2 3 4 5 6 (diff: 1)
  * tmp:  2 3 4 5 6 7
- * count:1 2	3 4	5  	=> 5 pairs
+ * count:1 2 3 4 5  	=> 5 pairs
  */
 size_t diffpairs(vector<long> &numbers, long diff)
 {
@@ -3087,27 +3087,25 @@ size_t diffpairs(set<long> &numbers, long diff)
 }
 size_t minDiffPairs(vector<long> &numbers, long diff)
 {
+	set<long> pairs;
 	size_t count = 0;
 	ranges::sort(numbers);
-	set<long> pairs;
 	if (numbers.size() < 2)
 		return 0;
 	size_t offset = 1;
 	for (size_t i = 0; i < numbers.size(); i++)
 	{
-		if (pairs.find(i) != pairs.end())
-			continue;
-		int num = numbers[i];
-		for (size_t j = offset; j < numbers.size(); j++)
-		{
-			if (pairs.find(j) != pairs.end())
-				continue;
-			if (abs(numbers[i] - numbers[j]) >= diff)
+		if (pairs.find(i) == pairs.end()) {
+			int num = numbers[i];
+			for (size_t j = offset; j < numbers.size(); j++)
 			{
-				offset = j + 1;
-				pairs.insert(i);
-				pairs.insert(j);
-				break;
+				if (pairs.find(j) == pairs.end() && abs(numbers[i] - numbers[j]) >= diff)
+				{
+					offset = j + 1;
+					pairs.insert(i);
+					pairs.insert(j);
+					break;
+				}
 			}
 		}
 	}
@@ -4421,7 +4419,7 @@ void ExceptionTest()
 		cout << "Outer catch, &e: " << &e << " msg: " << e.msg_ << endl;
 	}
 }
-size_t LongestAlternatingSubSequence(const vector<long> &data, vector<long> &result)
+size_t LongestUpDownAlternatingSubSequence(const vector<long> &data, vector<long> &result)
 {
 	map<size_t, vector<long>> sequences;
 	direction_t direction = Direction::NoChange, flag = Direction::NoChange;
