@@ -1,6 +1,6 @@
 # Data Structures and Algorithms
 
-C++ data structures and algorithms using only standard libraries. This answers many of the challenges in HackerRank, LeetCode and some in Codility.
+C++-latest data structures and algorithms using only standard libraries. This answers many of the challenges in HackerRank, LeetCode and some in Codility.
 
 ## Windows
 
