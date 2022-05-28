@@ -129,7 +129,7 @@
     <ClInclude Include="LongestCommonSubsequence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KnapSack.h">
+    <ClInclude Include="Knapsack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -245,7 +245,7 @@
     <ClCompile Include="LongestCommonSubsequence.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="KnapSack.cpp">
+    <ClCompile Include="Knapsack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

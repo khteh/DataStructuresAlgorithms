@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
-template <typename T... Types>
+template <typename T>
 class InterleavingIterator : public IIterator<T>
 {
 private:
@@ -14,4 +14,6 @@ private:
 public:
 	InterleavingIterator(std::vector<std::vector<T>> &);
 	virtual ~InterleavingIterator();
+	bool HasNext();
+	T Next();
 };

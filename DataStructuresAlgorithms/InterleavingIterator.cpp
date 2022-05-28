@@ -6,9 +6,9 @@ template <typename T>
 InterleavingIterator<T>::InterleavingIterator(vector<vector<T>> &containers)
 	: containers_(containers),
 	  current_(0),
-	  size(0)
+	  size_(0)
 {
-	for (vector<vector<T>>::const_iterator it = containers_.begin(); it != containers_.end(); it++)
+	for (typename vector<vector<T>>::const_iterator it = containers_.begin(); it != containers_.end(); it++)
 		size += it->size();
 }
 
@@ -17,7 +17,7 @@ InterleavingIterator<T>::~InterleavingIterator()
 {
 }
 
-template <>
+template <typename T>
 bool InterleavingIterator<T>::HasNext()
 {
 	current_ < size_;
