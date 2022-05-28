@@ -169,7 +169,7 @@
     <ClInclude Include="DisJointSet.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="FunctionObject.h" />
-    <ClInclude Include="interval_map.h" />
+    <ClInclude Include="IntervalMap.h" />
     <ClInclude Include="KDTree.h" />
     <ClInclude Include="Knapsack.h" />
     <ClInclude Include="LinkedList.h" />
@@ -210,7 +210,7 @@
     <ClCompile Include="DisJointSet.cpp" />
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="FunctionObject.cpp" />
-    <ClCompile Include="interval_map.cpp" />
+    <ClCompile Include="IntervalMap.cpp" />
     <ClCompile Include="DataStructuresAlgorithms.cpp" />
     <ClCompile Include="KDTree.cpp" />
     <ClCompile Include="Knapsack.cpp" />

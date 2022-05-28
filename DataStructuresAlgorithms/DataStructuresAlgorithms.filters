@@ -48,7 +48,7 @@
     <ClInclude Include="Heap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="interval_map.h">
+    <ClInclude Include="IntervalMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DataStructuresAlgorithms.h">
@@ -167,7 +167,7 @@
     <ClCompile Include="Heap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="interval_map.cpp">
+    <ClCompile Include="IntervalMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DataStructuresAlgorithms.cpp">

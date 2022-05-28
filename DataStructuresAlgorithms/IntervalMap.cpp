@@ -1,26 +1,26 @@
 #include "stdafx.h"
-#include "interval_map.h"
-template class interval_map<int, char>;
-template class interval_map<unsigned int, char>;
-template<typename K, typename V>
-interval_map<K,V>::interval_map(V const& val)
+#include "IntervalMap.h"
+template class IntervalMap<int, char>;
+template class IntervalMap<unsigned int, char>;
+template <typename K, typename V>
+IntervalMap<K, V>::IntervalMap(V const &val)
 {
 	// constructor associates whole range of K with val by inserting (K_min, val) into the map
 	m_map.emplace(numeric_limits<K>::lowest(), val);
 }
 
-template<typename K, typename V>
-interval_map<K,V>::~interval_map()
+template <typename K, typename V>
+IntervalMap<K, V>::~IntervalMap()
 {
 	m_map.clear();
 }
-template<typename K, typename V>
-size_t interval_map<K,V>::size() const noexcept
+template <typename K, typename V>
+size_t IntervalMap<K, V>::size() const noexcept
 {
 	return m_map.size();
 }
-template<typename K, typename V>
-void interval_map<K, V>::clear() noexcept
+template <typename K, typename V>
+void IntervalMap<K, V>::clear() noexcept
 {
 	m_map.clear();
 }
@@ -30,26 +30,34 @@ void interval_map<K, V>::clear() noexcept
 // includes keyBegin, but excludes keyEnd.
 // If !( keyBegin < keyEnd ), this designates an empty interval,
 // and assign must do nothing.
-template<typename K, typename V>
-void interval_map<K, V>::assign(K const& keyBegin, K const& keyEnd, V const& val)
+template <typename K, typename V>
+void IntervalMap<K, V>::assign(K const &keyBegin, K const &keyEnd, V const &val)
 {
-	if (keyBegin < keyEnd && keyBegin >= numeric_limits<K>::lowest() && keyEnd <= numeric_limits<K>::max()) {
+	if (keyBegin < keyEnd && keyBegin >= numeric_limits<K>::lowest() && keyEnd <= numeric_limits<K>::max())
+	{
 		typename map<K, V>::const_iterator it;
 		it = m_map.find(keyBegin);
-		if (it == m_map.end()) {
-			if (!m_map.empty()) {
-				auto&[key, value] = *m_map.rbegin();
+		if (it == m_map.end())
+		{
+			if (!m_map.empty())
+			{
+				auto &[key, value] = *m_map.rbegin();
 				if (key == (keyBegin - 1) && value == val)
 					return;
-				if (keyBegin > numeric_limits<K>::lowest()) {
+				if (keyBegin > numeric_limits<K>::lowest())
+				{
 					it = m_map.upper_bound(keyBegin - 1);
 					if (it != m_map.end() && (--it)->second == val)
 						return;
 				}
 			}
-		} else {
-			if (keyBegin > numeric_limits<K>::lowest()) {
-				for (K key = keyBegin - 1; key > numeric_limits<K>::lowest(); key--) {
+		}
+		else
+		{
+			if (keyBegin > numeric_limits<K>::lowest())
+			{
+				for (K key = keyBegin - 1; key > numeric_limits<K>::lowest(); key--)
+				{
 					it = m_map.upper_bound(key);
 					if (it != m_map.end() && (--it)->second == val)
 						return;
@@ -64,7 +72,8 @@ void interval_map<K, V>::assign(K const& keyBegin, K const& keyEnd, V const& val
 }
 
 // look-up of the value associated with key
-template<typename K, typename V>
-V const& interval_map<K, V>::operator[](K const& key) const {
+template <typename K, typename V>
+V const &IntervalMap<K, V>::operator[](K const &key) const
+{
 	return (--m_map.upper_bound(key))->second;
 }

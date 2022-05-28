@@ -58,7 +58,7 @@ using namespace tbb;
 #include "Square.h"
 #include "TreasureGame.h"
 #include "FunctionObject.h"
-#include "interval_map.h"
+#include "IntervalMap.h"
 #include "DisJointSet.h"
 #include "Edge.h"
 #include "LRUCache.h"

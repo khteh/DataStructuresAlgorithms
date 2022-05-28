@@ -7,7 +7,7 @@ namespace ranges = std::ranges;
 #if defined(__GNUC__) || defined(__GNUG__)
 using namespace tbb;
 #endif
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	string line, line1;
 	size_t size;
@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
-	int i, j, index, * iPtr;
+	int i, j, index, *iPtr;
 	unsigned long long mask = 0;
 	vector<string> strings, strings1;
 	set<string> stringset, stringset1;
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 	line = to_string(0);
 	istringstream(line) >> i;
 	assert(i == 0);
-	Singleton* singleton = Singleton::Instance();
+	Singleton *singleton = Singleton::Instance();
 	assert(singleton);
 	singleton->Print("Hello Singleton!!!");
 	unique_ptr<NameHidingExampleDerived> hide = make_unique<NameHidingExampleDerived>(0xdeadbeef);
@@ -52,8 +52,8 @@ int main(int argc, char* argv[])
 	//((NameHidingExample*)hide)->Print(1, 2);
 	cout << endl;
 	unique_ptr<Radio> radio = make_unique<Radio>("Radio");
-	Transmitter* tx = radio.get();
-	Receiver* rx = radio.get();
+	Transmitter *tx = radio.get();
+	Receiver *rx = radio.get();
 	radio->Write(); // Transmitter::Write() -> Receiver::Read()
 	assert(radio->Read() == "Receiver: Receiver: Radio");
 	tx->Write(); // Transmitter::Write() -> Receiver::Read()
@@ -88,12 +88,12 @@ int main(int argc, char* argv[])
 	assert(str1.empty());
 	char cstr[8];
 	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;
-	cout << "sizeof(void*): " << sizeof(void*) << endl;
+	cout << "sizeof(void*): " << sizeof(void *) << endl;
 	cout << "sizeof(long double): " << sizeof(long double) << endl;
 	assert(sizeof(char) == 1);
 	assert(sizeof(short) == 2);
 	assert(sizeof(int) == 4);
-	assert(sizeof(int*) == 8);
+	assert(sizeof(int *) == 8);
 #if defined(__GNUC__) || defined(__GNUG__)
 	assert(sizeof(long) == 8);
 #else
@@ -241,7 +241,8 @@ int main(int argc, char* argv[])
 	assert(j == 0x7FFFFFFF);
 	cout << i << " 0x" << hex << i << " - 1 = 0x" << j << dec << " " << j << endl;
 	a.resize(10);
-	ranges::generate(a, [n = 1]() mutable { return n++; });
+	ranges::generate(a, [n = 1]() mutable
+					 { return n++; });
 	for (size_t i = 0; i < a.size(); i++)
 		assert(a[i] == i + 1);
 	time_point timestamp = system_clock::now();
@@ -252,12 +253,12 @@ int main(int argc, char* argv[])
 	assert(std::chrono::system_clock::duration::max().count() == numeric_limits<long long>::max());
 	assert(signedTicks == ticks);
 	cout << "Current timestamp (ticks since Epoch): " << ticks << ", signed ticks: " << signedTicks << endl;
-	grid = { {1, 3, 5}, {2, 4, 6}, {7, 8, 9} };
+	grid = {{1, 3, 5}, {2, 4, 6}, {7, 8, 9}};
 	// grid.back() = {7,8,9}
 	assert(grid.back().back() == 9);
 	grid.clear();
-	grid1 = { {-1, 0, -1}, {-1, -1, -1}, {-1, -1, -1} };
-	grid2 = { {1, 0, 1}, {2, 1, 2}, {3, 2, 3} };
+	grid1 = {{-1, 0, -1}, {-1, -1, -1}, {-1, -1, -1}};
+	grid2 = {{1, 0, 1}, {2, 1, 2}, {3, 2, 3}};
 	MatrixDistance(grid1, 0, 1);
 	cout << "grid1 (" << grid1.size() << "): " << endl;
 	for (size_t i = 0; i < 3; i++)
@@ -285,7 +286,7 @@ int main(int argc, char* argv[])
 	cout << "findLongestContiguousPattern(\"00101101100\", \'1\'): " << line << " size: " << size << endl;
 
 	// Test C++ *& "pointer reference" construct
-	iPtr = (int*)malloc(10 * sizeof(int));
+	iPtr = (int *)malloc(10 * sizeof(int));
 	cout << "Size of iPtr: " << sizeof(iPtr) << " Sizeof *iPtr: " << sizeof(*iPtr) << endl;
 	memset(iPtr, 0xdeadbeef, 10 * sizeof(int));
 	for (size_t i = 0; i < 10; i++)
@@ -369,24 +370,24 @@ int main(int argc, char* argv[])
 	if (AreRotatedStrings(line, line1, 2))
 		cout << line << " and " << line1 << " are rotated by 2 places" << endl;
 	udata.clear();
-	udata = { 3, 1, 2 };
+	udata = {3, 1, 2};
 	assert(SolvabilityOfTheTilesGame(udata));
 	udata.clear();
-	udata = { 1, 3, 4, 2 };
+	udata = {1, 3, 4, 2};
 	assert(SolvabilityOfTheTilesGame(udata));
 	udata.clear();
-	udata = { 1, 2, 3, 5, 4 };
+	udata = {1, 2, 3, 5, 4};
 	assert(!SolvabilityOfTheTilesGame(udata));
 	udata.clear();
-	udata = { 4, 1, 3, 2 };
+	udata = {4, 1, 3, 2};
 	assert(SolvabilityOfTheTilesGame(udata));
 	udata.clear();
-	udata = { 1, 6, 5, 2, 3, 4 };
+	udata = {1, 6, 5, 2, 3, 4};
 	assert(!SolvabilityOfTheTilesGame(udata));
 	line = "abcdefcdbacd";
 	line1 = "abcd";
 	udata = FindSubString(line, line1);
-	udata1 = { 0, 6, 7, 8 };
+	udata1 = {0, 6, 7, 8};
 	assert(udata.size() == 4); // 0 6 7 8
 	assert(udata1 == udata);
 
@@ -402,7 +403,7 @@ int main(int argc, char* argv[])
 	BitCombinations(3, a); // 000 001 010 100 011 101 110 111
 	assert(a.size() == 8);
 	b.clear();
-	b = { 0, 1, 2, 4, 3, 5, 6, 7 };
+	b = {0, 1, 2, 4, 3, 5, 6, 7};
 	assert(b == a);
 	cout << "BitCombinations from 0 to 3 of '1' bits: ";
 	for (vector<long>::iterator it = a.begin(); it != a.end(); it++)
@@ -412,7 +413,7 @@ int main(int argc, char* argv[])
 	BitCombinations(4, a); // 0000 0001 0010 0100 1000 0011 0101 0110 1001 1010 1100 0111 1011 1101 1110 1111
 	assert(a.size() == 16);
 	b.clear();
-	b = { 0, 1, 2, 4, 8, 3, 5, 6, 9, 10, 12, 7, 11, 13, 14, 15 };
+	b = {0, 1, 2, 4, 8, 3, 5, 6, 9, 10, 12, 7, 11, 13, 14, 15};
 	assert(b == a);
 	cout << "BitCombinations from 0 to 4 of '1' bits: ";
 	for (vector<long>::iterator it = a.begin(); it != a.end(); it++)
@@ -422,15 +423,15 @@ int main(int argc, char* argv[])
 	udata = grayCode(2);
 	assert(udata.size() == 4);
 	udata1.clear();
-	udata1 = { 0, 1, 3, 2 };
+	udata1 = {0, 1, 3, 2};
 	assert(udata1 == udata);
 	udata.clear();
 	udata = grayCode(0);
 	assert(udata.size() == 1);
 	assert(udata[0] == 0);
 	strings.clear();
-	strings = { "a", "b", "c", "d" };
-	strings1 = { "b", "c" };
+	strings = {"a", "b", "c", "d"};
+	strings1 = {"b", "c"};
 	strings = findUnique(strings, strings1);
 	assert(strings.size() == 2); //  a d
 	assert(strings[0] == "a");
@@ -447,7 +448,7 @@ int main(int argc, char* argv[])
 	a.clear();
 	b.clear();
 	strings.clear();
-	strings = { "Angel", "legnA", "Hello World!!!", "World Hello!!!" };
+	strings = {"Angel", "legnA", "Hello World!!!", "World Hello!!!"};
 	cout << "strings without sorted: " << endl;
 	ranges::copy(strings, ostream_iterator<string>(cout, "\r\n"));
 	ranges::sort(strings);
@@ -458,7 +459,7 @@ int main(int argc, char* argv[])
 	cout << "strings sorted with default comparer: " << endl;
 	ranges::copy(strings, ostream_iterator<string>(cout, "\r\n"));
 	ranges::sort(strings, [](string a, string b) -> bool
-		{
+				 {
 			ranges::sort(a);
 			ranges::sort(b);
 			return a < b; });
@@ -469,7 +470,7 @@ int main(int argc, char* argv[])
 	cout << "strings sorted with anagrams next to each other: " << endl;
 	ranges::copy(strings, ostream_iterator<string>(cout, "\r\n"));
 	a.clear();
-	a = { 0, 1, 2, 7, 10, 11, 12, 20, 25, 26, 27 };
+	a = {0, 1, 2, 7, 10, 11, 12, 20, 25, 26, 27};
 	string strRange = GetRange(a);
 	assert(strRange == "0 - 2, 7, 10 - 12, 20, 25 - 27");
 	cout << "GetRange(\"";
@@ -616,8 +617,10 @@ int main(int argc, char* argv[])
 	str = "abc";
 	a.clear();
 	a.resize(25);
-	ranges::generate(a.begin(), a.begin() + 10, [n = 0]() mutable { return n++; });
-	ranges::generate(a.begin() + 10, a.end(), [n = 5]() mutable	{ return n++; });
+	ranges::generate(a.begin(), a.begin() + 10, [n = 0]() mutable
+					 { return n++; });
+	ranges::generate(a.begin() + 10, a.end(), [n = 5]() mutable
+					 { return n++; });
 	b.clear();
 	findDistinct(a, b);
 	assert(b.size() == 20);
@@ -628,13 +631,13 @@ int main(int argc, char* argv[])
 	assert(a.size() == 8);
 	a.clear();
 	b.clear();
-	a = { 15, 10, 3 };
-	b = { 75, 30, 5 };
+	a = {15, 10, 3};
+	b = {75, 30, 5};
 	assert(CommonPrimeDivisors(a, b) == 1);
 	a.clear();
 	b.clear();
-	a = { 7, 17, 5, 3 };
-	b = { 7, 11, 5, 2 };
+	a = {7, 17, 5, 3};
+	b = {7, 11, 5, 2};
 	assert(CommonPrimeDivisors(a, b) == 2);
 
 	assert(!isPrime(1));
@@ -650,12 +653,12 @@ int main(int argc, char* argv[])
 	a.clear();
 	b.clear();
 	ull.clear();
-	ull = { 1, 2, 1, 2 };
+	ull = {1, 2, 1, 2};
 	unsigned long long findMaxResult = findMax(ull);
 	assert(findMaxResult == 9);
 
 	ull.clear();
-	ull = { 2, 3, 3, 2 };
+	ull = {2, 3, 3, 2};
 	findMaxResult = findMax(ull);
 	assert(findMaxResult == 36);
 
@@ -668,27 +671,27 @@ int main(int argc, char* argv[])
 
 	a.clear();
 	cout << "minDiffPairs(): " << endl;
-	a = { 1, 2, 3, 4, 5, 6 };
+	a = {1, 2, 3, 4, 5, 6};
 	assert(minDiffPairs(a, 0) == 3);
 	a.clear();
-	a = { 1, 2, 3, 4, 5, 6 };
+	a = {1, 2, 3, 4, 5, 6};
 	assert(minDiffPairs(a, 1) == 3);
 	a.clear();
-	a = { 1, 2, 3, 4, 5, 6 };
+	a = {1, 2, 3, 4, 5, 6};
 	assert(minDiffPairs(a, 2) == 2);
 	a.clear();
-	a = { 6, 5, 4, 3, 2, 1 };
+	a = {6, 5, 4, 3, 2, 1};
 	assert(minDiffPairs(a, 3) == 3);
 	cout << endl;
 	a.clear();
-	a = { 3, 5, 1, 6, 2, 4 };
+	a = {3, 5, 1, 6, 2, 4};
 	assert(minDiffPairs(a, 4) == 2);
 	assert(minDiffPairs(a, 5) == 1);
 	a.clear();
-	a = { 1, 1, 1, 5, 5, 5, 5 };
+	a = {1, 1, 1, 5, 5, 5, 5};
 	assert(minDiffPairs(a, 4) == 3);
 	a.clear();
-	a = { 1, 1 };
+	a = {1, 1};
 	assert(minDiffPairs(a, 1) == 0);
 	// 0 1 2 3 4 5 6 7 8 9
 	//         ^ (10 / 2 - 1)
@@ -729,7 +732,7 @@ int main(int argc, char* argv[])
 	// Test Recursive algorithm
 	strings.clear();
 	parentheses(strings, 2);
-	strings1 = { "(())", "()()" };
+	strings1 = {"(())", "()()"};
 	assert(strings.size() == 2);
 	assert(strings1 == strings);
 
@@ -737,7 +740,7 @@ int main(int argc, char* argv[])
 	parentheses(strings, 3);
 	assert(strings.size() == 5);
 	strings1.clear();
-	strings1 = { "((()))", "(()())", "(())()", "()(())", "()()()" };
+	strings1 = {"((()))", "(()())", "(())()", "()(())", "()()()"};
 	assert(strings1 == strings);
 	assert(LongestValidParentheses(string("(")) == 0);
 	assert(LongestValidParentheses(string("((()")) == 2);
@@ -801,7 +804,7 @@ int main(int argc, char* argv[])
 
 	// Test 2D memory buffer allocation
 	cout << "Test 2D memory buffer allocation...." << endl;
-	long** my2Dbuffer = my2DAlloc(10, 10);
+	long **my2Dbuffer = my2DAlloc(10, 10);
 	for (i = 0; i < 10; i++)
 		for (j = 0; j < 10; j++)
 			my2Dbuffer[i][j] = i * 10 + j;
@@ -818,7 +821,7 @@ int main(int argc, char* argv[])
 	free(my2Dbuffer);
 	// Test 3D memory buffer allocation
 	cout << "Test 3D memory buffer allocation...." << endl;
-	long*** my3Dbuffer = my3DAlloc(10, 10, 10);
+	long ***my3Dbuffer = my3DAlloc(10, 10, 10);
 	for (i = 0; i < 10; i++)
 		for (j = 0; j < 10; j++)
 			for (size_t k = 0; k < 10; k++)
@@ -845,7 +848,7 @@ int main(int argc, char* argv[])
 	for (i = 0; i < 64; i++)
 		mask |= ((unsigned long long)1 << i);
 	cout << "mask: " << hex << mask << dec << endl
-		<< endl;
+		 << endl;
 
 	cout << "Test shuffle deck of cards: " << endl;
 	vector<long> cards(52), result;
@@ -858,7 +861,7 @@ int main(int argc, char* argv[])
 		cout << cards[i] << " ";
 	}
 	cout << endl
-		<< endl;
+		 << endl;
 	cout << "Randomly picking m integers out of an array: " << endl;
 	randomSubset(cards, 13, result);
 	assert(result.size() == 13);
@@ -920,7 +923,8 @@ int main(int argc, char* argv[])
 	a.clear();
 	b.clear();
 	a.resize(10);
-	ranges::generate(a, [n = 1]() mutable { return n++; });
+	ranges::generate(a, [n = 1]() mutable
+					 { return n++; });
 #ifdef _MSC_VER
 	long sum = parallel_reduce(a.begin(), a.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
@@ -937,7 +941,7 @@ int main(int argc, char* argv[])
 	assert(sum == 55);
 	a.clear();
 	b.clear();
-	a = { 1, 7, 15, 29, 11, 9 };
+	a = {1, 7, 15, 29, 11, 9};
 	EqualAverageDivide(a, b);
 	assert(b.size() == 2);
 	cout << "Left part: ";
@@ -958,7 +962,7 @@ int main(int argc, char* argv[])
 	assert(sum == 24);
 	cout << "sum: " << sum << endl;
 
-	vector<char> cData1{ 1, 2, 3 }, cData2{ 4, 5, 6 };
+	vector<char> cData1{1, 2, 3}, cData2{4, 5, 6};
 	vector<char> sumResult = AddVectors(cData1, cData2);
 	assert(sumResult.size() == 3);
 	assert(sumResult[0] == 5);
@@ -974,8 +978,8 @@ int main(int argc, char* argv[])
 
 	cData1.clear();
 	cData2.clear();
-	cData1 = { 9, 8, 7 };
-	cData2 = { 6, 5, 4 };
+	cData1 = {9, 8, 7};
+	cData2 = {6, 5, 4};
 	sumResult = AddVectors(cData1, cData2);
 	assert(sumResult.size() == 4);
 	assert(sumResult[0] == 1);
@@ -1026,7 +1030,8 @@ int main(int argc, char* argv[])
 	cout << endl;
 	data.clear();
 	data.resize(4);
-	ranges::generate(data, [n = 1]() mutable { return n++; });
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
 	vector<int> intResult = Increment(data);
 	assert(intResult[0] == 1);
 	assert(intResult[1] == 2);
@@ -1034,7 +1039,7 @@ int main(int argc, char* argv[])
 	assert(intResult[3] == 5);
 
 	data.clear();
-	data = { 9, 9, 9, 9 };
+	data = {9, 9, 9, 9};
 	intResult = Increment(data);
 	assert(intResult[0] == 1);
 	assert(intResult[1] == 0);
@@ -1042,7 +1047,7 @@ int main(int argc, char* argv[])
 	assert(intResult[3] == 0);
 	assert(intResult[4] == 0);
 
-	void* addr = alignedMalloc(1000, 64);
+	void *addr = alignedMalloc(1000, 64);
 	assert(addr);
 	int alignment = (unsigned long)addr % (64 / 8);
 	assert(!alignment);
@@ -1058,7 +1063,7 @@ int main(int argc, char* argv[])
 	assert(!addr);
 
 	sortData.clear();
-	sortData = { 1, 2, 3, 10, 25, 26, 30, 31, 32, 33 };
+	sortData = {1, 2, 3, 10, 25, 26, 30, 31, 32, 33};
 	strings = numbersegments(sortData);
 	ranges::copy(strings, ostream_iterator<string>(cout, ","));
 	cout << endl;
@@ -1108,31 +1113,31 @@ int main(int argc, char* argv[])
 	assert(KthNumberWith357PrimeFactors(9) == 27);
 	assert(KthNumberWith357PrimeFactors(10) == 35);
 	a.clear();
-	a = { 9, 918, 917 };
+	a = {9, 918, 917};
 	assert(concat(a) == 9918917);
 	a.clear();
-	a = { 1, 112, 113 };
+	a = {1, 112, 113};
 	assert(concat(a) == 1131121);
 	a.clear();
-	a = { 901, 9015 };
+	a = {901, 9015};
 	// 9019015, 9015901
 	assert(concat(a) == 9019015);
 	udata.clear();
-	udata = { 10, 2 };
+	udata = {10, 2};
 	assert(buildmax(udata) == "210");
 	udata.clear();
-	udata = { 3, 30, 34, 5, 9 };
+	udata = {3, 30, 34, 5, 9};
 	assert(buildmax(udata) == "9534330");
 	udata.clear();
-	udata = { 128, 12, 320, 32 };
+	udata = {128, 12, 320, 32};
 	assert(buildmax(udata) == "3232012812");
 	udata.clear();
-	udata = { 0, 0 };
+	udata = {0, 0};
 	assert(buildmax(udata) == "0");
 	udata.clear();
 	assert(buildmax(udata) == "0");
 	strings.clear();
-	strings = { "ABCW", "BAZ", "FOO", "BAR", "XTFN", "ABCDEF" };
+	strings = {"ABCW", "BAZ", "FOO", "BAR", "XTFN", "ABCDEF"};
 	assert(24 == MaxLengths(strings));
 	Square square1(0, 0, 10, 10), square2(5, 5, 10, 10);
 	assert(square1.IsOverlappig(square2));
@@ -1164,80 +1169,80 @@ int main(int argc, char* argv[])
 	a.push_back(2); // 1
 	assert(CountDistinctSlices(a) == 9);
 	a.clear();
-	a.push_back(0);							 // 5
-	a.push_back(1);							 // 4
-	a.push_back(2);							 // 3
-	a.push_back(3);							 // 2
-	a.push_back(4);							 // 1
+	a.push_back(0);						  // 5
+	a.push_back(1);						  // 4
+	a.push_back(2);						  // 3
+	a.push_back(3);						  // 2
+	a.push_back(4);						  // 1
 	assert(CountDistinctSlices(a) == 15); // 5 + 4 + 3
 	a.clear();
-	a.push_back(1);							// 5
-	a.push_back(1);							// 4
-	a.push_back(1);							// 3
-	a.push_back(1);							// 2
-	a.push_back(1);							// 1
+	a.push_back(1);						 // 5
+	a.push_back(1);						 // 4
+	a.push_back(1);						 // 3
+	a.push_back(1);						 // 2
+	a.push_back(1);						 // 1
 	assert(CountDistinctSlices(a) == 5); // 5 + 4 + 3
 	a.clear();
-	a.push_back(1);							// 2
-	a.push_back(2);							// 1
-	a.push_back(2);							// 2
-	a.push_back(3);							// 1
-	a.push_back(3);							// 2
-	a.push_back(4);							// 1
+	a.push_back(1);						 // 2
+	a.push_back(2);						 // 1
+	a.push_back(2);						 // 2
+	a.push_back(3);						 // 1
+	a.push_back(3);						 // 2
+	a.push_back(4);						 // 1
 	assert(CountDistinctSlices(a) == 9); // 5 + 4 + 3
 	a.clear();
-	a.push_back(1);							 // 2
-	a.push_back(2);							 // 1
-	a.push_back(2);							 // 3
-	a.push_back(3);							 // 2
-	a.push_back(4);							 // 1
-	a.push_back(4);							 // 1
+	a.push_back(1);						  // 2
+	a.push_back(2);						  // 1
+	a.push_back(2);						  // 3
+	a.push_back(3);						  // 2
+	a.push_back(4);						  // 1
+	a.push_back(4);						  // 1
 	assert(CountDistinctSlices(a) == 10); // 5 + 4 + 3
 	a.clear();
-	a.push_back(1);							 // 1
-	a.push_back(1);							 // 4
-	a.push_back(2);							 // 3
-	a.push_back(3);							 // 2
-	a.push_back(4);							 // 1
-	a.push_back(4);							 // 1
+	a.push_back(1);						  // 1
+	a.push_back(1);						  // 4
+	a.push_back(2);						  // 3
+	a.push_back(3);						  // 2
+	a.push_back(4);						  // 1
+	a.push_back(4);						  // 1
 	assert(CountDistinctSlices(a) == 12); // 5 + 4 + 3
 	a.clear();
-	a.push_back(1);							 // 2
-	a.push_back(2);							 // 1
-	a.push_back(1);							 // 3
-	a.push_back(2);							 // 2
-	a.push_back(4);							 // 1
-	a.push_back(4);							 // 1
+	a.push_back(1);						  // 2
+	a.push_back(2);						  // 1
+	a.push_back(1);						  // 3
+	a.push_back(2);						  // 2
+	a.push_back(4);						  // 1
+	a.push_back(4);						  // 1
 	assert(CountDistinctSlices(a) == 10); // 5 + 4 + 3
 	a.clear();
-	a.push_back(1);							 // 2
-	a.push_back(2);							 // 1
-	a.push_back(3);							 // 3
-	a.push_back(4);							 // 2
-	a.push_back(5);							 // 1
-	a.push_back(6);							 // 1
+	a.push_back(1);						  // 2
+	a.push_back(2);						  // 1
+	a.push_back(3);						  // 3
+	a.push_back(4);						  // 2
+	a.push_back(5);						  // 1
+	a.push_back(6);						  // 1
 	assert(CountDistinctSlices(a) == 21); // 5 + 4 + 3
 	a.clear();
-	a = { 10, 2, 5, 1, 8, 12 };
+	a = {10, 2, 5, 1, 8, 12};
 	assert(CountTriangles(a) == 4);
 	assert(decimal_to_binary(0) == "0");
 	a.clear();
-	a = { 1, 5, 2, -2 };
+	a = {1, 5, 2, -2};
 	assert(MinAbsSum(a) == 0);
 	a.clear();
-	a = { 2, 2, 1 };
+	a = {2, 2, 1};
 	assert(MinAbsSum(a) == 1);
 	a.clear();
-	a = { 1, -2, 0, 9, -1, -2 };
+	a = {1, -2, 0, 9, -1, -2};
 	assert(NumberSolitaire(a) == 8);
 	a.clear();
-	a = { 1, -2, 4, 3, -1, -3, -7, 4, -9 };
+	a = {1, -2, 4, 3, -1, -3, -7, 4, -9};
 	assert(NumberSolitaire(a) == 3);
 	a.clear();
-	a = { 0, -4, -5, -2, -7, -9, -3, -10 };
+	a = {0, -4, -5, -2, -7, -9, -3, -10};
 	assert(NumberSolitaire(a) == -12);
 	a.clear();
-	a = { -1, -4, -5, -2, -7, -9, -3, -10 };
+	a = {-1, -4, -5, -2, -7, -9, -3, -10};
 	assert(NumberSolitaire(a) == -13);
 	PlayTreasureGame();
 	assert(countPaths(2, 2, 1, 1, 2) == 2);		   // 2
@@ -1301,10 +1306,10 @@ int main(int argc, char* argv[])
 		cout << (*it)->Item() << " ";
 	cout << endl;
 	data.clear();
-	data = { 1, 0, 1, 1, 0, 0, 0 };
+	data = {1, 0, 1, 1, 0, 0, 0};
 	assert(findMinFlip(data) == 1);
 	data.clear();
-	data = { 0, 0, 0, 0, 1 };
+	data = {0, 0, 0, 0, 1};
 	assert(findMinFlip(data) == 2);
 	vector<vector<char>> m = {
 		{'R', 'G', 'R', 'B'},
@@ -1331,17 +1336,17 @@ int main(int argc, char* argv[])
 	};
 	assert(!IsValidMatrix(m2));
 	a.clear();
-	a = { 13, 2, 5 };
+	a = {13, 2, 5};
 	stringset.clear();
 	// assert(ZigZagEscape(a, stringset) == 7);
 	assert(ZigZagEscape(a) == 7);
 	a.clear();
-	a = { 4, 6, 2, 1, 5 };
+	a = {4, 6, 2, 1, 5};
 	stringset.clear();
 	// assert(ZigZagEscape(a, stringset) == 23);
 	assert(ZigZagEscape(a) == 23);
 	a.clear();
-	a = { 6, 3, 1, 4, 2, 5 };
+	a = {6, 3, 1, 4, 2, 5};
 	stringset.clear();
 	// assert(ZigZagEscape(a, stringset) == 41);
 	// assert(ZigZagEscape(a) == 41); Unfinished work!
@@ -1370,7 +1375,7 @@ int main(int argc, char* argv[])
 	assert((--mapIt)->first == 2);
 	mymap.emplace(3, 'C');
 	cout << numeric_limits<int>::lowest() << endl;
-	interval_map<int, char> imap(0);
+	IntervalMap<int, char> imap(0);
 	imap.assign(0, 2, 'A');
 	imap.assign(4, 6, 'A');
 	imap.assign(2, 4, 'A');
@@ -1379,7 +1384,7 @@ int main(int argc, char* argv[])
 	assert(imap[1] == 'A');
 	assert(imap[4] == 'A');
 	assert(imap[5] == 'A');
-	interval_map<int, char> imap1(0);
+	IntervalMap<int, char> imap1(0);
 	imap1.assign(0, 2, 'A');
 	imap1.assign(4, 6, 'A');
 	imap1.assign(2, 4, 'B');
@@ -1390,7 +1395,7 @@ int main(int argc, char* argv[])
 	assert(imap1[3] == 'B');
 	assert(imap1[4] == 'A');
 	assert(imap1[5] == 'A');
-	interval_map<int, char> imap2(0);
+	IntervalMap<int, char> imap2(0);
 	imap2.assign(0, 2, 'A');
 	imap2.assign(4, 6, 'A');
 	imap2.assign(2, 4, 'B');
@@ -1405,7 +1410,7 @@ int main(int argc, char* argv[])
 	assert(imap2.size() == 7);
 	assert(imap2[2] == 'B');
 	assert(imap2[3] == 'B');
-	interval_map<int, char> imap3(0);
+	IntervalMap<int, char> imap3(0);
 	imap3.assign(0, 2, 'A');
 	imap3.assign(4, 6, 'A');
 	assert(imap3.size() == 5);
@@ -1417,7 +1422,7 @@ int main(int argc, char* argv[])
 	assert(imap3[3] == 'B');
 	assert(imap3[4] == 'B');
 	assert(imap3[5] == 'B');
-	interval_map<unsigned int, char> imap4(0);
+	IntervalMap<unsigned int, char> imap4(0);
 	imap4.assign(0, 2, 'A');
 	imap4.assign(4, 6, 'A');
 	imap4.assign(2, 4, 'A');
@@ -1426,7 +1431,7 @@ int main(int argc, char* argv[])
 	assert(imap4[1] == 'A');
 	assert(imap4[4] == 'A');
 	assert(imap4[5] == 'A');
-	interval_map<unsigned int, char> imap5(0);
+	IntervalMap<unsigned int, char> imap5(0);
 	imap5.assign(2, 0, 'A');
 	imap5.assign(4, 6, 'A');
 	imap5.assign(2, 4, 'A');
@@ -1435,7 +1440,7 @@ int main(int argc, char* argv[])
 	assert(imap5[3] == 'A');
 	assert(imap5[4] == 'A');
 	assert(imap5[5] == 'A');
-	interval_map<unsigned int, char> imap6(0);
+	IntervalMap<unsigned int, char> imap6(0);
 	imap6.assign(2, 0, 'A');
 	imap6.assign(2, 4, 'A');
 	imap6.assign(4, 6, 'A');
@@ -1443,14 +1448,15 @@ int main(int argc, char* argv[])
 	assert(imap6[2] == 'A');
 	assert(imap6[3] == 'A');
 	a.clear();
-	a = { -3, 1, 2, -2, 5, 6 };
+	a = {-3, 1, 2, -2, 5, 6};
 	assert(MaxProductOfThree(a) == 60);
 	assert(binary_gap(9) == 2);
 	assert(binary_gap(32) == 0);
 	assert(binary_gap(529) == 4);
 	data.clear();
 	data.resize(5);
-	ranges::generate(data, [i = 0]() mutable { return i++; });
+	ranges::generate(data, [i = 0]() mutable
+					 { return i++; });
 	/* 0 1 2 3 4 => 2 3 4 0 1 (Rotate 3)
 	 */
 	RotateRightArray(data, 3);
@@ -1458,7 +1464,8 @@ int main(int argc, char* argv[])
 		assert(data[i] == j);
 	data.clear();
 	data.resize(5);
-	ranges::generate(data, [i = 0]() mutable { return i++; });
+	ranges::generate(data, [i = 0]() mutable
+					 { return i++; });
 	/* 0 1 2 3 4 => 2 3 4 0 1 (Rotate 13)
 	 */
 	RotateRightArray(data, 13);
@@ -1470,10 +1477,10 @@ int main(int argc, char* argv[])
 	assert(CountDiv(0, 2000000000, 2000000000) == 2);
 	assert(CountDiv(0, numeric_limits<int>::max(), numeric_limits<int>::max()) == 2);
 	a.clear();
-	a = { 2, 1, 5, 3, 4 };
+	a = {2, 1, 5, 3, 4};
 	assert(minimumBribes(a) == 3);
 	a.clear();
-	a = { 2, 5, 1, 3, 4 };
+	a = {2, 5, 1, 3, 4};
 	assert(minimumBribes(a) == -1);
 	assert(SherlockValidString("abcdefghhgfedecba"));
 	assert(!SherlockValidString("aabbcd"));
@@ -1483,10 +1490,10 @@ int main(int argc, char* argv[])
 	line = "if man was meant to stay on the ground god would have given us roots";
 	assert(encryption(line) == "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau");
 	a.clear();
-	a = { 3, 1, 5, 4, 2 };
+	a = {3, 1, 5, 4, 2};
 	assert(calculateMedian(a) == 3);
 	a.clear();
-	a = { 3, 1, 5, 4, 2, 6 };
+	a = {3, 1, 5, 4, 2, 6};
 	assert(calculateMedian(a) == 3);
 	assert(timeInWords(5, 47) == "thirteen minutes to six");
 	assert(timeInWords(12, 29) == "twenty nine minutes past twelve");
@@ -1522,7 +1529,7 @@ int main(int argc, char* argv[])
 	assert(paths[0] == "45");
 	assert(paths[1] == "LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LL LL LL LL LL LL LL LL LL LL LL LL");
 	a.clear();
-	a = { 1, 3, 5, 7, 9 };
+	a = {1, 3, 5, 7, 9};
 	DisJointSet<long> disjointSet(a);
 	disjointSet.Print(a);
 	// Test islands
@@ -1566,38 +1573,38 @@ int main(int argc, char* argv[])
 	// assert(disjointSet.Find(2) == 0); C++ map will insert non-existing key silently
 	// assert(disjointSet.Find(1) != disjointSet.Find(2)); C++ map will insert non-existing key silently
 
-	vector<long> from = { 1, 3, 1, 4, 2 };
-	vector<long> to = { 2, 5, 4, 5, 3 };
-	vector<long> weights = { 60, 70, 120, 150, 80 };
+	vector<long> from = {1, 3, 1, 4, 2};
+	vector<long> to = {2, 5, 4, 5, 3};
+	vector<long> weights = {60, 70, 120, 150, 80};
 	assert(getLowestPathCost(5, from, to, weights) == 80);
 
 	from.clear();
 	to.clear();
 	weights.clear();
-	from = { 1, 2, 1, 3 };
-	to = { 2, 4, 3, 4 };
-	weights = { 20, 30, 5, 40 };
+	from = {1, 2, 1, 3};
+	to = {2, 4, 3, 4};
+	weights = {20, 30, 5, 40};
 	assert(getLowestPathCost(4, from, to, weights) == 30);
 
 	from.clear();
 	to.clear();
 	weights.clear();
-	from = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9 };
-	to = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 3, 4, 5, 6, 7, 8, 9, 10, 4, 5, 6, 7, 8, 9, 10, 5, 6, 7, 8, 9, 10, 6, 7, 8, 9, 10, 7, 8, 9, 10, 8, 9, 10, 9, 10, 10 };
-	weights = { 6337, 1594, 3766, 3645, 75, 5877, 8561, 242, 6386, 3331, 4194, 8069, 3934, 101, 8536, 6963, 9303, 7639, 8512, 1330, 6458, 1180, 3913, 1565, 9488, 1369, 8066, 9439, 7510, 6833, 4215, 194, 4774, 4328, 187, 1196, 200, 8743, 1433, 2933, 2069, 1974, 7349, 2351, 8423 };
+	from = {1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9};
+	to = {2, 3, 4, 5, 6, 7, 8, 9, 10, 3, 4, 5, 6, 7, 8, 9, 10, 4, 5, 6, 7, 8, 9, 10, 5, 6, 7, 8, 9, 10, 6, 7, 8, 9, 10, 7, 8, 9, 10, 8, 9, 10, 9, 10, 10};
+	weights = {6337, 1594, 3766, 3645, 75, 5877, 8561, 242, 6386, 3331, 4194, 8069, 3934, 101, 8536, 6963, 9303, 7639, 8512, 1330, 6458, 1180, 3913, 1565, 9488, 1369, 8066, 9439, 7510, 6833, 4215, 194, 4774, 4328, 187, 1196, 200, 8743, 1433, 2933, 2069, 1974, 7349, 2351, 8423};
 	assert(from.size() == 45);
 	assert(to.size() == 45);
 	assert(weights.size() == 45);
 	assert(getLowestPathCost(10, from, to, weights) == 1196);
 
 	a.clear();
-	a = { 4, 2 };
+	a = {4, 2};
 	assert(AlmostSorted(a) == "swap 1 2");
 	a.clear();
-	a = { 4104, 8529, 49984, 54956, 63034, 82534, 84473, 86411, 92941, 95929, 108831, 894947, 125082, 137123, 137276, 142534, 149840, 154703, 174744, 180537, 207563, 221088, 223069, 231982, 249517, 252211, 255192, 260283, 261543, 262406, 270616, 274600, 274709, 283838, 289532, 295589, 310856, 314991, 322201, 339198, 343271, 383392, 385869, 389367, 403468, 441925, 444543, 454300, 455366, 469896, 478627, 479055, 484516, 499114, 512738, 543943, 552836, 560153, 578730, 579688, 591631, 594436, 606033, 613146, 621500, 627475, 631582, 643754, 658309, 666435, 667186, 671190, 674741, 685292, 702340, 705383, 722375, 722776, 726812, 748441, 790023, 795574, 797416, 813164, 813248, 827778, 839998, 843708, 851728, 857147, 860454, 861956, 864994, 868755, 116375, 911042, 912634, 914500, 920825, 979477 };
+	a = {4104, 8529, 49984, 54956, 63034, 82534, 84473, 86411, 92941, 95929, 108831, 894947, 125082, 137123, 137276, 142534, 149840, 154703, 174744, 180537, 207563, 221088, 223069, 231982, 249517, 252211, 255192, 260283, 261543, 262406, 270616, 274600, 274709, 283838, 289532, 295589, 310856, 314991, 322201, 339198, 343271, 383392, 385869, 389367, 403468, 441925, 444543, 454300, 455366, 469896, 478627, 479055, 484516, 499114, 512738, 543943, 552836, 560153, 578730, 579688, 591631, 594436, 606033, 613146, 621500, 627475, 631582, 643754, 658309, 666435, 667186, 671190, 674741, 685292, 702340, 705383, 722375, 722776, 726812, 748441, 790023, 795574, 797416, 813164, 813248, 827778, 839998, 843708, 851728, 857147, 860454, 861956, 864994, 868755, 116375, 911042, 912634, 914500, 920825, 979477};
 	assert(AlmostSorted(a) == "swap 12 95");
 	a.clear();
-	a = { 43, 65, 1, 98, 99, 101 };
+	a = {43, 65, 1, 98, 99, 101};
 	assert(AlmostSorted(a) == "no");
 	assert(cipher(7, 4, string("1110101001")) == "1001011");
 	assert(cipher(4, 5, string("11000110")) == "1010");
@@ -1617,34 +1624,34 @@ int main(int argc, char* argv[])
 	//assert(steadyGene(string("ACAAAAATAAACAAAAACAAAAAAAAAATAAATACAATAAAAAAAAAAAATGAAATACAACAACAAATAAAATAAAAACGACTAAAAAATAAAAAAAAAAAAAAAAAGAGTACTAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAACACAATCAAAATAAACAAAAAAAAAAAAACCAAAATAATCAACAAAAAAAAAAAAAACAAAAACAACAACAAACAAAAAAAAACACAAACAAAAAAAAAAAAAAAACAAAACAAACAAAAAAAAAAAAACAAAAAAACAAAAAAAAAAAAAAAAACAAAAAAAAAAATAAAAAAAAAAAAAAAAAAAAAACAAACAAAAAAAAAAAATACAAAAAGCTATAAAAAAAAAAAAATTAAAAAACAAAAAAAAATAAAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAAAAAAGAAAAACAAAAAAAAAAAAAAAAACAACCAAAAAACAAAAAAAAACTAAAAAAAAAAAAAAAAAAAAAAAAAAATAACAAAAAACACAAAAAAAAAAAAGAAAGAAAAAAAACACAAAAAAAAACAAACAAAAAAAAAAAAAAAAAAAGAAAACAAAAAAACAAAAAAAACAAAAAAAAAACAAAAATTGGACAAAAAAAAACAAAAAAAAAAAACAAAAAAAGTAAAACAAATAAAAAAACAAAAAAAACAAAAAAAAAAAAAAAAAACAAAAAAGAAACAAAAAACAAAAAAAAATAACAAAACCAAAAAACAAATAAAAAACAAAAAAAATAACACAAAAAAAAAAAGAAACAAAAAAAAAAAAAAAAAAAAAAATTATAAAAAAAAAAAAAAAACAAAAAAAAAAAAAACAAAAAAAAAAGGAAAAAAAAAAAAAAAAAAAAAAAAAAATAACTAAACAAAAAAAAACAAACAAAAAATCAAAAAAAAAAAAGAAAAAAGAATAAGCAACAAAAACACAAAAAAAAAAAAAAAAAAAAAAAACATAAACAATAATAAAAAAAAAACAAAAAAAACAAAAGAACAACAAAAAACAAAACTAAACAAATAAAAAAAAAAAAACAAAAACTACAAAAAAAAAAAGAAAAAAAAAGAAAAAAAAACAAATAAAAGAAAAAAAAAAAAAAAAAAAACACAAAAAAAAAAATAAAAAAAAAAAAAAAAACAAAATAAACAAAAACAAAGAAAAAAACAAACAAAAAAAAAAAACAAAAAACTAAAAACAAAAAAAAAACAAAACACAAAAAAAAAAAAAAATAAAAAAAAAACAAAAAAACAAAAAGGAAAAAAAAAAAAGAACAAAAAAAAAAACAACAGAAAAAAGAAAAGAAAAAAAAAAAAAGACCACAAAATAAAAAAAAACAACAAACAAAAAAAAACAAAACAAAAAAACGAACAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAAAAAAAGGCAAAAACAAAAAAAACAAAACAAAACAAAAAAACAAAAAAAAATTAAGATAAAGAACAAAAAAAGAAGAGAAAAAATTAACAAAAAAAAAAAAATAAAAAATACAAAAAGAAATAAAAAATACAACACACAACAAAAACGAAAAAAAAAAAAAAAACACAAAATAGAAAAAAAAAAAAAACAAAAAAAAAAAAAAGAAAAAAACAAAAAAAAAAAAATAAAAAAAAACGACACAGAAACAAAAAATAACAAAAAAAAAAAAAATAAAAAAAAAACAAAAAAAAAACAAAAAATAAAAAAAAAAACAAACAAAAAAAAAAAAAAAATAAAAAAAAAAAAAGCAAAACATAAACAAGAAAAAAAAAAAAAGTACAAATAACAAAACAAAAAAGACACTAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAACCACAAAACAAAAAAATAAAGCAAAAAAAAAAAAAAAAAAAAAAAAAAAATAAATGAAAAAAAAAAGAAAACCAAAAAAATAAAAGA")) == 1393); stack overflow!
 #endif
 	strings.clear();
-	strings = { "GGGGGGGGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GGGGGGGGG" };
+	strings = {"GGGGGGGGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GGGGGGGGG"};
 	assert(TwoCrosses(strings) == 1);
-	strings = { "GGGGGGG", "BGBBBBG", "BGBBBBG", "GGGGGGG", "GGGGGGG", "BGBBBBG" };
+	strings = {"GGGGGGG", "BGBBBBG", "BGBBBBG", "GGGGGGG", "GGGGGGG", "BGBBBBG"};
 	assert(TwoCrosses(strings) == 5);
-	strings = { "GBGBGGB", "GBGBGGB", "GBGBGGB", "GGGGGGG", "GGGGGGG", "GBGBGGB", "GBGBGGB" };
+	strings = {"GBGBGGB", "GBGBGGB", "GBGBGGB", "GGGGGGG", "GGGGGGG", "GBGBGGB", "GBGBGGB"};
 	assert(TwoCrosses(strings) == 45);
-	strings = { "GGGGGGGG", "GBGBGGBG", "GBGBGGBG", "GGGGGGGG", "GBGBGGBG", "GGGGGGGG", "GBGBGGBG", "GGGGGGGG" };
+	strings = {"GGGGGGGG", "GBGBGGBG", "GBGBGGBG", "GGGGGGGG", "GBGBGGBG", "GGGGGGGG", "GBGBGGBG", "GGGGGGGG"};
 	assert(TwoCrosses(strings) == 81);
-	strings = { "GGGGGGGGGG", "GBBBBBBGGG", "GGGGGGGGGG", "GGGGGGGGGG", "GBBBBBBGGG", "GGGGGGGGGG", "GBBBBBBGGG", "GBBBBBBGGG", "GGGGGGGGGG" };
+	strings = {"GGGGGGGGGG", "GBBBBBBGGG", "GGGGGGGGGG", "GGGGGGGGGG", "GBBBBBBGGG", "GGGGGGGGGG", "GBBBBBBGGG", "GBBBBBBGGG", "GGGGGGGGGG"};
 	assert(TwoCrosses(strings) == 45);
-	strings = { "BBBBBGGBGG", "GGGGGGGGGG", "GGGGGGGGGG", "BBBBBGGBGG", "BBBBBGGBGG", "GGGGGGGGGG", "BBBBBGGBGG", "GGGGGGGGGG", "BBBBBGGBGG", "GGGGGGGGGG" };
+	strings = {"BBBBBGGBGG", "GGGGGGGGGG", "GGGGGGGGGG", "BBBBBGGBGG", "BBBBBGGBGG", "GGGGGGGGGG", "BBBBBGGBGG", "GGGGGGGGGG", "BBBBBGGBGG", "GGGGGGGGGG"};
 	assert(TwoCrosses(strings) == 85);
-	strings = { "GGGGGGGGGGGG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GGGGGGGGGGGG", "GBGGBBBBBBBG" };
+	strings = {"GGGGGGGGGGGG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GGGGGGGGGGGG", "GBGGBBBBBBBG"};
 	assert(TwoCrosses(strings) == 81);
-	strings = { "GGGGGGGGGGGG", "GGGGGGGGGGGG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG" };
+	strings = {"GGGGGGGGGGGG", "GGGGGGGGGGGG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG"};
 	assert(TwoCrosses(strings) == 189);
-	strings = { "BGB", "GGG", "BGB", "BGB", "GGG", "BGB" };
+	strings = {"BGB", "GGG", "BGB", "BGB", "GGG", "BGB"};
 	assert(TwoCrosses(strings) == 25);
-	strings = { "BGBBGB", "GGGGGG", "BGBBGB" };
+	strings = {"BGBBGB", "GGGGGG", "BGBBGB"};
 	assert(TwoCrosses(strings) == 25);
 	a = absolutePermutation(10, 0);
-	b = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	b = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	assert(a == b);
 	a = absolutePermutation(10, 1);
-	b = { 2, 1, 4, 3, 6, 5, 8, 7, 10, 9 };
+	b = {2, 1, 4, 3, 6, 5, 8, 7, 10, 9};
 	assert(a == b);
-	strings = { ".......", "...O...", "....O..", ".......", "OO.....", "OO....." };
-	strings1 = { "OOO.OOO", "OO...OO", "OOO...O", "..OO.OO", "...OOOO", "...OOOO" };
+	strings = {".......", "...O...", "....O..", ".......", "OO.....", "OO....."};
+	strings1 = {"OOO.OOO", "OO...OO", "OOO...O", "..OO.OO", "...OOOO", "...OOOO"};
 	assert(bomberMan(3, strings) == strings1);
 	assert(FindSubsequenceRecursive(string("1221"), string("12")) == 2);
 	assert(FindSubsequenceRecursive(string("1234"), string("56")) == 0);
@@ -1655,31 +1662,31 @@ int main(int argc, char* argv[])
 	assert(shortPalindrome(string("kkkkkkz")) == 15);
 	assert(shortPalindrome(string("ghhggh")) == 4);
 	assert(shortPalindrome(string("cbbdcacccdaddbaabbaacbacacaaddaaacdbccccccbbadbbcdddddddaccbdbddcbacaaadbbdcbcbcdabdddbbcdccaacdccab")) == 242745);
-	strings = { "123412", "561212", "123634", "781288" };
-	strings1 = { "12", "34" };
+	strings = {"123412", "561212", "123634", "781288"};
+	strings1 = {"12", "34"};
 	assert(gridSearch(strings, strings1));
 	strings.clear();
-	vector<vector<size_t>> ladders = { {32, 62}, {42, 68}, {12, 98} };
-	vector<vector<size_t>> snakes = { {95, 13}, {97, 25}, {93, 37}, {79, 27}, {75, 19}, {49, 47}, {67, 17} };
+	vector<vector<size_t>> ladders = {{32, 62}, {42, 68}, {12, 98}};
+	vector<vector<size_t>> snakes = {{95, 13}, {97, 25}, {93, 37}, {79, 27}, {75, 19}, {49, 47}, {67, 17}};
 	assert(SnakesAndLaddersGame(ladders, snakes) == 3);
 	assert(SnakesAndLaddersGameFast(ladders, snakes) == 3);
-	vector<vector<size_t>> ladders1 = { {8, 52}, {6, 80}, {26, 42}, {2, 72} };
-	vector<vector<size_t>> snakes1 = { {51, 19}, {39, 11}, {37, 29}, {81, 3}, {59, 5}, {79, 23}, {53, 7}, {43, 33}, {77, 21} };
+	vector<vector<size_t>> ladders1 = {{8, 52}, {6, 80}, {26, 42}, {2, 72}};
+	vector<vector<size_t>> snakes1 = {{51, 19}, {39, 11}, {37, 29}, {81, 3}, {59, 5}, {79, 23}, {53, 7}, {43, 33}, {77, 21}};
 	assert(SnakesAndLaddersGame(ladders1, snakes1) == 5);
 	assert(SnakesAndLaddersGameFast(ladders1, snakes1) == 5);
-	vector<vector<size_t>> ladders2 = { {3, 5}, {7, 8}, {44, 56}, {36, 54}, {88, 91}, {77, 83}, {2, 4}, {9, 99}, {45, 78}, {31, 75} };
-	vector<vector<size_t>> snakes2 = { {10, 6}, {95, 90}, {96, 30}, {97, 52}, {98, 86} };
+	vector<vector<size_t>> ladders2 = {{3, 5}, {7, 8}, {44, 56}, {36, 54}, {88, 91}, {77, 83}, {2, 4}, {9, 99}, {45, 78}, {31, 75}};
+	vector<vector<size_t>> snakes2 = {{10, 6}, {95, 90}, {96, 30}, {97, 52}, {98, 86}};
 	assert(SnakesAndLaddersGame(ladders2, snakes2) == 3);
 	assert(SnakesAndLaddersGameFast(ladders2, snakes2) == 3);
-	vector<vector<size_t>> ladders3 = { {3, 54}, {37, 100} };
-	vector<vector<size_t>> snakes3 = { {56, 33} };
+	vector<vector<size_t>> ladders3 = {{3, 54}, {37, 100}};
+	vector<vector<size_t>> snakes3 = {{56, 33}};
 	assert(SnakesAndLaddersGame(ladders3, snakes3) == 3);
 	assert(SnakesAndLaddersGameFast(ladders3, snakes3) == 3);
-	vector<vector<size_t>> ladders4 = { {5, 6} };
-	vector<vector<size_t>> snakes4 = { {97, 95} };
+	vector<vector<size_t>> ladders4 = {{5, 6}};
+	vector<vector<size_t>> snakes4 = {{97, 95}};
 	assert(SnakesAndLaddersGameFast(ladders4, snakes4) == 17);
-	vector<vector<size_t>> ladders5 = { {3, 90} };
-	vector<vector<size_t>> snakes5 = { {99, 10}, {97, 20}, {98, 30}, {96, 40}, {95, 50}, {94, 60}, {93, 70} };
+	vector<vector<size_t>> ladders5 = {{3, 90}};
+	vector<vector<size_t>> snakes5 = {{99, 10}, {97, 20}, {98, 30}, {96, 40}, {95, 50}, {94, 60}, {93, 70}};
 	// assert(SnakesAndLaddersGame(ladders5, snakes5) == 0); // Impossible. Times out!
 	assert(SnakesAndLaddersGameFast(ladders5, snakes5) == 0); // Impossible
 	assert(lengthOfLongestSubstring(string("abcabc")) == 3);
@@ -1701,47 +1708,47 @@ int main(int argc, char* argv[])
 	assert(numberToRoman(900) == "CM");
 	a.clear();
 	b.clear();
-	a = { 1, 3, 5, 7, 9 };
-	b = { 2, 4, 6, 8, 10 };
+	a = {1, 3, 5, 7, 9};
+	b = {2, 4, 6, 8, 10};
 	assert(median(a, b) == 11 / (double)2);
 	a.clear();
 	b.clear();
-	a = { 1, 3, 5, 7, 9 };
-	b = { 2, 4, 6, 8, 10, 11 };
+	a = {1, 3, 5, 7, 9};
+	b = {2, 4, 6, 8, 10, 11};
 	assert(median(a, b) == 6);
 	a.clear();
 	b.clear();
-	a = { 1, 3, 5 };
-	b = { 2, 4, 6, 8, 10, 11 };
+	a = {1, 3, 5};
+	b = {2, 4, 6, 8, 10, 11};
 	assert(median(a, b) == 5);
 	a.clear();
 	b.clear();
-	a = { 1, 3, 5 };
-	b = { 2, 4, 6, 8, 10, 11, 13 };
+	a = {1, 3, 5};
+	b = {2, 4, 6, 8, 10, 11, 13};
 	assert(median(a, b) == 11 / (double)2);
 	a.clear();
 	b.clear();
-	a = { 1, 3, 5, 7, 9, 11, 13 };
-	b = { 2, 4, 6, 8 };
+	a = {1, 3, 5, 7, 9, 11, 13};
+	b = {2, 4, 6, 8};
 	assert(median(a, b) == 6);
 	a.clear();
 	b.clear();
-	a = { 1, 3, 5, 7, 9, 11, 13, 15 };
-	b = { 2, 4, 6, 8 };
+	a = {1, 3, 5, 7, 9, 11, 13, 15};
+	b = {2, 4, 6, 8};
 	assert(median(a, b) == (6 + 7) / (double)2);
 	a.clear();
 	b.clear();
-	b = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	b = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 	assert(median(a, b) == 5);
 	b.clear();
-	b = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	b = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	assert(median(a, b) == (5 + 6) / (double)2);
 	a.clear();
 	b.clear();
-	a = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	a = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 	assert(median(a, b) == 5);
 	a.clear();
-	a = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	a = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	assert(median(a, b) == (5 + 6) / (double)2);
 	a.clear();
 	b.clear();
@@ -1780,13 +1787,13 @@ int main(int argc, char* argv[])
 	assert(lruCache2.Get(2) == -1);
 	assert(lruCache2.Get(3) == 2);
 	strings.clear();
-	strings = { "2", "1", "+", "3", "*" };
+	strings = {"2", "1", "+", "3", "*"};
 	assert(ReversePolishNotation(strings) == 9);
 	strings.clear();
-	strings = { "4", "13", "5", "/", "+" };
+	strings = {"4", "13", "5", "/", "+"};
 	assert(ReversePolishNotation(strings) == 6);
 	strings.clear();
-	strings = { "10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+" };
+	strings = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
 	assert(ReversePolishNotation(strings) == 22);
 	assert(basicCalculator(string("3+2*2-1")) == 6);
 	assert(basicCalculator(string("3+2")) == 5);
@@ -1795,54 +1802,54 @@ int main(int argc, char* argv[])
 	assert(basicCalculator(string("3+2-4*5")) == -15);
 	assert(basicCalculator(string("3*2+5/4")) == 7);
 	a.clear();
-	a = { 1, 2, 3, 4 };
+	a = {1, 2, 3, 4};
 	a = productExceptSelf(a);
 	b.clear();
-	b = { 24, 12, 8, 6 };
+	b = {24, 12, 8, 6};
 	assert(!a.empty());
 	assert(a.size() == 4);
 	assert(b == a);
 	udata.clear();
-	udata = { 3, 0, 6, 1, 5 };
+	udata = {3, 0, 6, 1, 5};
 	assert(hIndex(udata) == 3);
 	udata.clear();
-	udata = { 0, 1 };
+	udata = {0, 1};
 	assert(hIndex(udata) == 1);
 	udata.clear();
-	udata = { 1, 1 };
+	udata = {1, 1};
 	assert(hIndex(udata) == 1);
 	udata.clear();
-	udata = { 123 };
+	udata = {123};
 	assert(hIndex(udata) == 1);
 	udata.clear();
-	udata = { 1, 1, 2 };
+	udata = {1, 1, 2};
 	assert(hIndex(udata) == 1);
 	udata.clear();
-	udata = { 1, 2, 2 };
+	udata = {1, 2, 2};
 	assert(hIndex(udata) == 2);
 	udata.clear();
-	udata = { 3, 2, 2 };
+	udata = {3, 2, 2};
 	assert(hIndex(udata) == 2);
 	udata.clear();
-	udata = { 3, 3, 2 };
+	udata = {3, 3, 2};
 	assert(hIndex(udata) == 2);
 	strings = PhoneKeyLetters(string("23"));
 	assert(strings.size() == 9);
-	strings1 = { "ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf" };
+	strings1 = {"ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"};
 	assert(strings1 == strings);
 	strings = PhoneKeyLetters(string(""));
 	assert(strings.empty());
 	strings = PhoneKeyLetters(string("2"));
 	assert(strings.size() == 3);
-	strings1 = { "a", "b", "c" };
+	strings1 = {"a", "b", "c"};
 	strings = PhoneKeyLetters(string("358"));
 	assert(strings.size() == 27);
-	strings1 = { "djt", "dkt", "dlt", "ejt", "ekt", "elt", "fjt", "fkt", "flt", "dju", "dku", "dlu", "eju", "eku", "elu", "fju", "fku", "flu", "djv", "dkv", "dlv", "ejv", "ekv", "elv", "fjv", "fkv", "flv" };
+	strings1 = {"djt", "dkt", "dlt", "ejt", "ekt", "elt", "fjt", "fkt", "flt", "dju", "dku", "dlu", "eju", "eku", "elu", "fju", "fku", "flu", "djv", "dkv", "dlv", "ejv", "ekv", "elv", "fjv", "fkv", "flv"};
 	assert(strings1 == strings);
 	strings = PhoneKeyLetters(string("5678"));
 	assert(strings.size() == 108);
 	stringset.clear();
-	stringset = { "Hello", "World" };
+	stringset = {"Hello", "World"};
 	assert(wordBreakDynamicProgramming(string("HelloWorld"), stringset));
 	strings1.clear();
 	wordBreakDynamicProgramming(string("HelloWorld"), stringset, strings1);
@@ -1854,7 +1861,7 @@ int main(int argc, char* argv[])
 	assert(strings1.size() == 1);
 	assert(strings1[0] == "Hello World");
 	stringset.clear();
-	stringset = { "cats", "dog", "sand", "and", "cat" };
+	stringset = {"cats", "dog", "sand", "and", "cat"};
 	assert(!wordBreakDynamicProgramming(string("catsandog"), stringset));
 	assert(wordBreakDynamicProgramming(string("catsanddog"), stringset));
 	assert(wordBreakDynamicProgramming(string("catanddog"), stringset));
@@ -1880,7 +1887,7 @@ int main(int argc, char* argv[])
 	assert(strings1.size() == 1);
 
 	stringset.clear();
-	stringset = { "apple", "pen" };
+	stringset = {"apple", "pen"};
 	assert(wordBreakDynamicProgramming(string("applepenapple"), stringset));
 	strings1.clear();
 	wordBreakDynamicProgramming(string("applepenapple"), stringset, strings1);
@@ -1894,7 +1901,7 @@ int main(int argc, char* argv[])
 	assert(strings1[0] == "apple pen apple");
 
 	stringset.clear();
-	stringset = { "aaaa", "aaa" };
+	stringset = {"aaaa", "aaa"};
 	assert(wordBreakDynamicProgramming(string("aaaaaaa"), stringset));
 	strings1.clear();
 	wordBreakDynamicProgramming(string("aaaaaaa"), stringset, strings1);
@@ -1905,13 +1912,13 @@ int main(int argc, char* argv[])
 	assert(!strings1.empty());
 	assert(strings1.size() == 2);
 	a.clear();
-	a = { 1, 2, 3, 1 };
+	a = {1, 2, 3, 1};
 	assert(containsNearbyAlmostDuplicate(a, 3, 0));
 	a.clear();
-	a = { 1, 0, 1, 1 };
+	a = {1, 0, 1, 1};
 	assert(containsNearbyAlmostDuplicate(a, 1, 2));
 	a.clear();
-	a = { 1, 5, 9, 1, 5, 9 };
+	a = {1, 5, 9, 1, 5, 9};
 	assert(!containsNearbyAlmostDuplicate(a, 2, 3));
 	assert(!containsNearbyAlmostDuplicate(a, 0, 0)); // indices must be distinct
 	assert(!containsNearbyAlmostDuplicate(a, 0, 1));
@@ -1921,16 +1928,16 @@ int main(int argc, char* argv[])
 	a.clear();
 	assert(abs(2147483647L - -1) == (long)2147483648);
 	assert(abs(-1 - 2147483647L) == (long)2147483648);
-	a = { 2147483647, -1, 2147483647 }; // 0x7FFFF_FFFF, 0xFFFF_FFFF
+	a = {2147483647, -1, 2147483647}; // 0x7FFFF_FFFF, 0xFFFF_FFFF
 	assert(!containsNearbyAlmostDuplicate(a, 1, 2147483647));
 	assert(!containsNearbyAlmostDuplicate(a, 1, -2147483648L)); // 2147483648 is 0x8000_0000 = 0xFFFF_FFFF_8000_0000 < 0
 	a.clear();
 	assert(abs(-INT_MIN - 0x7FFFFFFF) == 1);
 	assert(abs(0x7FFFFFFF - -INT_MIN) == 1);
-	a = { (long)-2147483648, 2147483647 };			 // 0xFFFF_FFFF_8000_0000, 0x7FFF_FFFF
+	a = {(long)-2147483648, 2147483647};			 // 0xFFFF_FFFF_8000_0000, 0x7FFF_FFFF
 	assert(!containsNearbyAlmostDuplicate(a, 1, 1)); // -2147483648 = 0xFFFF_FFFF_8000_0000; 2147483647 = 0x7FFF_FFFF. One in negative bucket, another in positive bucket. Different from abs((long)2147483648 - (long)2147483647)
 	a.clear();
-	a = { 4, 1, -1, 6, 5 };
+	a = {4, 1, -1, 6, 5};
 	assert(containsNearbyAlmostDuplicate(a, 3, 1));
 	a.clear();
 	a = diffWaysToCompute("2-1-1");
@@ -1942,49 +1949,49 @@ int main(int argc, char* argv[])
 	assert(a.size() == 5);
 	assert(getHint(string("6244988279"), string("3819888600")) == "2A2B");
 	grid1.clear();
-	grid1 = { {2, 0, -3, 4}, {6, 3, 2, -1}, {5, 4, 7, 3}, {2, -6, 8, 1} };
+	grid1 = {{2, 0, -3, 4}, {6, 3, 2, -1}, {5, 4, 7, 3}, {2, -6, 8, 1}};
 	CMatrix<long> matrix(grid1);
 	ugrid.clear();
-	ugrid = { {1, 1}, {3, 2} };
+	ugrid = {{1, 1}, {3, 2}};
 	assert(matrix.Sum(ugrid) == 18);
 	ugrid.clear();
-	ugrid = { {0, 2}, {3, 3} };
+	ugrid = {{0, 2}, {3, 3}};
 	assert(matrix.Sum(ugrid) == 21);
 	ugrid.clear();
 	sum = matrix.LargestSumSubmatrix(ugrid);
 	assert(!ugrid.empty());
 	grid1.clear();
-	grid1 = { {-4, -5} };
+	grid1 = {{-4, -5}};
 	CMatrix<long> matrix1(grid1);
 	ugrid.clear();
-	ugrid = { {0, 0}, {0, 0} };
+	ugrid = {{0, 0}, {0, 0}};
 	assert(matrix1.Sum(ugrid) == -4);
 	ugrid.clear();
-	ugrid = { {0, 0}, {0, 1} };
+	ugrid = {{0, 0}, {0, 1}};
 	assert(matrix1.Sum(ugrid) == -9);
 	ugrid.clear();
 	assert(matrix1.LargestSumSubmatrix(ugrid) == -4);
 	assert(!ugrid.empty());
 	ugrid1.clear();
-	ugrid1 = { {0, 0}, {0, 0} };
+	ugrid1 = {{0, 0}, {0, 0}};
 	assert(ugrid1 == ugrid);
 	grid1.clear();
-	grid1 = { {-1, -2, -3, -4}, {-2, 3, 2, -3}, {-3, 4, 7, -2}, {-4, -3, -2, -1} };
+	grid1 = {{-1, -2, -3, -4}, {-2, 3, 2, -3}, {-3, 4, 7, -2}, {-4, -3, -2, -1}};
 	CMatrix<long> matrix2(grid1);
 	ugrid.clear();
 	ugrid1.clear();
 	assert(matrix2.LargestSumSubmatrix(ugrid) == 16);
 	assert(!ugrid.empty());
-	ugrid1 = { {1, 1}, {2, 2} };
+	ugrid1 = {{1, 1}, {2, 2}};
 	assert(ugrid1 == ugrid);
 	a.clear();
-	a = { 1, 3, 5 };
+	a = {1, 3, 5};
 	ListRangeSum<long> listSum(a);
 	assert(listSum.Sum(0, 2) == 9);
 	listSum.Update(1, 2);
 	assert(listSum.Sum(0, 2) == 8);
 	a.clear();
-	a = { -1 };
+	a = {-1};
 	ListRangeSum<long> listSum1(a);
 	assert(listSum1.Sum(0, 0) == -1);
 	listSum1.Update(0, 1);
@@ -1998,37 +2005,37 @@ int main(int argc, char* argv[])
 	assert(LargestNumberCompositionProductWithDynamicProgramming(2) == 1);
 	assert(LargestNumberCompositionProductWithDynamicProgramming(10) == 36);
 	strings.clear();
-	strings = { "abcw", "baz", "foo", "bar", "xtfn", "abcdef" };
+	strings = {"abcw", "baz", "foo", "bar", "xtfn", "abcdef"};
 	assert(maxProductOfNonOverlappingWordLengths(strings) == 16); // "abcw", "xtfn"
 	strings.clear();
-	strings = { "a", "ab", "abc", "d", "cd", "bcd", "abcd" };
+	strings = {"a", "ab", "abc", "d", "cd", "bcd", "abcd"};
 	assert(maxProductOfNonOverlappingWordLengths(strings) == 4); // "ab", "cd"
 	strings.clear();
-	strings = { "a", "aa", "aaa", "aaaa" };
+	strings = {"a", "aa", "aaa", "aaaa"};
 	assert(maxProductOfNonOverlappingWordLengths(strings) == 0);
 	sgrid.clear();
-	sgrid = { {"MUC", "LHR"}, {"JFK", "MUC"}, {"SFO", "SJC"}, {"LHR", "SFO"} };
+	sgrid = {{"MUC", "LHR"}, {"JFK", "MUC"}, {"SFO", "SJC"}, {"LHR", "SFO"}};
 	strings = findItinerary(sgrid, string("JFK"));
 	assert(!strings.empty());
 	assert(strings.size() == 5);
 	strings1.clear();
-	strings1 = { "JFK", "MUC", "LHR", "SFO", "SJC" };
+	strings1 = {"JFK", "MUC", "LHR", "SFO", "SJC"};
 	assert(strings1 == strings);
 	sgrid.clear();
-	sgrid = { {"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"} };
+	sgrid = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
 	strings = findItinerary(sgrid, string("JFK"));
 	assert(!strings.empty());
 	assert(strings.size() == 6);
 	strings1.clear();
-	strings1 = { "JFK", "ATL", "JFK", "SFO", "ATL", "SFO" };
+	strings1 = {"JFK", "ATL", "JFK", "SFO", "ATL", "SFO"};
 	assert(strings1 == strings);
 	sgrid.clear();
-	sgrid = { {"EZE", "AXA"}, {"TIA", "ANU"}, {"ANU", "JFK"}, {"JFK", "ANU"}, {"ANU", "EZE"}, {"TIA", "ANU"}, {"AXA", "TIA"}, {"TIA", "JFK"}, {"ANU", "TIA"}, {"JFK", "TIA"} };
+	sgrid = {{"EZE", "AXA"}, {"TIA", "ANU"}, {"ANU", "JFK"}, {"JFK", "ANU"}, {"ANU", "EZE"}, {"TIA", "ANU"}, {"AXA", "TIA"}, {"TIA", "JFK"}, {"ANU", "TIA"}, {"JFK", "TIA"}};
 	strings = findItinerary(sgrid, string("JFK"));
 	assert(!strings.empty());
 	assert(strings.size() == 11);
 	strings1.clear();
-	strings1 = { "JFK", "ANU", "EZE", "AXA", "TIA", "ANU", "JFK", "TIA", "ANU", "TIA", "JFK" };
+	strings1 = {"JFK", "ANU", "EZE", "AXA", "TIA", "ANU", "JFK", "TIA", "ANU", "TIA", "JFK"};
 	assert(strings1 == strings);
 	ugrid.clear();
 	numberCombinations(4, 2, ugrid);
@@ -2037,7 +2044,7 @@ int main(int argc, char* argv[])
 	for (vector<vector<size_t>>::iterator it = ugrid.begin(); it != ugrid.end(); it++)
 		assert(it->size() == 2);
 	ugrid1.clear();
-	ugrid1 = { {1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4} };
+	ugrid1 = {{1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4}};
 	assert(ugrid1 == ugrid);
 	ugrid.clear();
 	numberCombinations(20, 16, ugrid);
@@ -2048,15 +2055,15 @@ int main(int argc, char* argv[])
 	assert(eggDrops(1, 123) == 123);
 	assert(eggDrops(2, 2) == 2);
 	assert(eggDrops(3, 6) == 3);
-	assert(fizzBuzz(3) == vector<string>({ "1", "2", "Fizz" }));
-	assert(fizzBuzz(5) == vector<string>({ "1", "2", "Fizz", "4", "Buzz" }));
-	assert(fizzBuzz(10) == vector<string>({ "1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz" }));
-	assert(fizzBuzz(15) == vector<string>({ "1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz" }));
+	assert(fizzBuzz(3) == vector<string>({"1", "2", "Fizz"}));
+	assert(fizzBuzz(5) == vector<string>({"1", "2", "Fizz", "4", "Buzz"}));
+	assert(fizzBuzz(10) == vector<string>({"1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz"}));
+	assert(fizzBuzz(15) == vector<string>({"1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz"}));
 	Graph<size_t, size_t> graph;
 	vector<vector<size_t>> edges;
 	data.clear();
 	edges.clear();
-	edges = { {1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2} };
+	edges = {{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}};
 	assert("1000100" == roadsInHackerland(5, edges));
 	cpp20readonlyranges();
 	cpp20ranges();
