@@ -63,7 +63,7 @@ using namespace tbb;
 #include "Edge.h"
 #include "LRUCache.h"
 #include "Twitter.h"
-#include "CMatrix.h"
+#include "Matrix.h"
 #include "ListRangeSum.h"
 #include "LongestCommonSubsequence.h"
 #include "Knapsack.h"

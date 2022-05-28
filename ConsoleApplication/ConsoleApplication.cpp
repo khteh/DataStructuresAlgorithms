@@ -1950,7 +1950,7 @@ int main(int argc, char *argv[])
 	assert(getHint(string("6244988279"), string("3819888600")) == "2A2B");
 	grid1.clear();
 	grid1 = {{2, 0, -3, 4}, {6, 3, 2, -1}, {5, 4, 7, 3}, {2, -6, 8, 1}};
-	CMatrix<long> matrix(grid1);
+	Matrix<long> matrix(grid1);
 	ugrid.clear();
 	ugrid = {{1, 1}, {3, 2}};
 	assert(matrix.Sum(ugrid) == 18);
@@ -1962,7 +1962,7 @@ int main(int argc, char *argv[])
 	assert(!ugrid.empty());
 	grid1.clear();
 	grid1 = {{-4, -5}};
-	CMatrix<long> matrix1(grid1);
+	Matrix<long> matrix1(grid1);
 	ugrid.clear();
 	ugrid = {{0, 0}, {0, 0}};
 	assert(matrix1.Sum(ugrid) == -4);
@@ -1977,7 +1977,7 @@ int main(int argc, char *argv[])
 	assert(ugrid1 == ugrid);
 	grid1.clear();
 	grid1 = {{-1, -2, -3, -4}, {-2, 3, 2, -3}, {-3, 4, 7, -2}, {-4, -3, -2, -1}};
-	CMatrix<long> matrix2(grid1);
+	Matrix<long> matrix2(grid1);
 	ugrid.clear();
 	ugrid1.clear();
 	assert(matrix2.LargestSumSubmatrix(ugrid) == 16);

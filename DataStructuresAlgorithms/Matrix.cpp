@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "CMatrix.h"
-template class CMatrix<long>;
+#include "Matrix.h"
+template class Matrix<long>;
 /*
 * Matrix area sum using bottom-up dynamic programming
 * 	0	1	2	3
@@ -8,25 +8,26 @@ template class CMatrix<long>;
 1	6	3	2	-1
 2	5	4	7	3
 3	2	-6	8	1
-				
+
 	0	1	2	3
 0	2	2	-1	3
 1	8	11	10	13
 2	13	20	26	32
 3	15	16	30	37
-				
-[1,1] - [3,2]			30 - 15 - (-1) + 2 = 18	
-[0,2] - [3,3]			37 - 16 = 21	
+
+[1,1] - [3,2]			30 - 15 - (-1) + 2 = 18
+[0,2] - [3,3]			37 - 16 = 21
 
 https://leetcode.com/problems/range-sum-query-2d-immutable/
 https://www.youtube.com/watch?v=PwDqpOMwg6U
 */
-template<typename T>
-CMatrix<T>::CMatrix(vector<vector<T>>& matrix)
-	:_matrix(matrix.size(), vector<T>(matrix.empty() ? 0 : matrix[0].size()))// Defaults to zero initial value
+template <typename T>
+Matrix<T>::Matrix(vector<vector<T>> &matrix)
+	: _matrix(matrix.size(), vector<T>(matrix.empty() ? 0 : matrix[0].size())) // Defaults to zero initial value
 {
 	for (size_t i = 0; i < matrix.size(); i++)
-		for (size_t j = 0; j < matrix[i].size(); j++) {
+		for (size_t j = 0; j < matrix[i].size(); j++)
+		{
 			_matrix[i][j] = matrix[i][j];
 			if (i > 0)
 				_matrix[i][j] += _matrix[i - 1][j];
@@ -36,8 +37,8 @@ CMatrix<T>::CMatrix(vector<vector<T>>& matrix)
 				_matrix[i][j] -= _matrix[i - 1][j - 1];
 		}
 }
-template<typename T>
-T CMatrix<T>::Sum(vector<vector<size_t>>& area)
+template <typename T>
+T Matrix<T>::Sum(vector<vector<size_t>> &area)
 {
 	if (_matrix.empty() || area.empty() || area.size() < 2 || area[0].size() < 2)
 		return 0;
@@ -53,17 +54,19 @@ T CMatrix<T>::Sum(vector<vector<size_t>>& area)
 		sum += _matrix[r1 - 1][c1 - 1];
 	return sum;
 }
-template<typename T>
-T CMatrix<T>::LargestSumSubmatrix(vector<vector<size_t>>& matrix)
+template <typename T>
+T Matrix<T>::LargestSumSubmatrix(vector<vector<size_t>> &matrix)
 {
 	T sum = numeric_limits<T>::min();
 	for (size_t r1 = 0; r1 < _matrix.size(); r1++)
 		for (size_t r2 = r1; r2 < _matrix.size(); r2++)
 			for (size_t c1 = 0; c1 < _matrix[r1].size(); c1++)
-				for (size_t c2 = c1; c2 < _matrix[r2].size(); c2++) {
-					vector<vector<size_t>> area = vector<vector<size_t>>{ {r1, c1}, { r2,c2 }};
+				for (size_t c2 = c1; c2 < _matrix[r2].size(); c2++)
+				{
+					vector<vector<size_t>> area = vector<vector<size_t>>{{r1, c1}, {r2, c2}};
 					T tmp = Sum(area);
-					if (tmp > sum) {
+					if (tmp > sum)
+					{
 						sum = tmp;
 						matrix = area;
 					}

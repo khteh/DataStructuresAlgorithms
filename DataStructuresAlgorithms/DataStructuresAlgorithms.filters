@@ -120,7 +120,7 @@
     <ClInclude Include="Twitter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CMatrix.h">
+    <ClInclude Include="Matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ListRangeSum.h">
@@ -236,7 +236,7 @@
     <ClCompile Include="Twitter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CMatrix.cpp">
+    <ClCompile Include="Matrix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ListRangeSum.cpp">
