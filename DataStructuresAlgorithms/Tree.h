@@ -53,11 +53,11 @@ protected:
 	shared_ptr<Node<T>> FindNode(const shared_ptr<Node<T>> &, T item);
 	void PrintColumns(const shared_ptr<Node<T>> &, long, map<long, shared_ptr<vector<T>>> &);
 	void AddToColumn(T, long, map<long, shared_ptr<vector<T>>> &);
-	T MinDiffInBST(shared_ptr<Node<T>>, shared_ptr<Node<T>>) const;
+	long MinDiffInBST(shared_ptr<Node<T>>, shared_ptr<Node<T>>) const;
 	shared_ptr<Node<T>> Copy(const shared_ptr<Node<T>> &, map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> &);
 	shared_ptr<Node<T>> LeftMostChild(shared_ptr<Node<T>> &);
 	bool covers(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
-	void FindSum(const shared_ptr<Node<T>> &, long, long, vector<long>, vector<string> &);
+	void FindSum(const shared_ptr<Node<T>> &, T, long, vector<T>, vector<string> &);
 	vector<string> GetRoot2LeafNumbers(const shared_ptr<Node<T>> &);
 	size_t Count(const shared_ptr<Node<T>> &) const;
 	T Min(const shared_ptr<Node<T>> &) const;
@@ -68,7 +68,6 @@ protected:
 	shared_ptr<Node<T>> BuildTreePreOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> BuildTreePostOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
-
 public:
 	Tree();
 	Tree(Tree<T> &);
@@ -89,7 +88,7 @@ public:
 	shared_ptr<Node<T>> InOrderSuccessor(shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> CommonAncestor1(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
-	void FindSum(const shared_ptr<Node<T>> &, long, vector<string> &);
+	void FindSum(const shared_ptr<Node<T>> &, T, vector<string> &);
 	T SumRoot2LeafNumbers();
 	bool SubTree(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	bool MatchTree(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &) const;
@@ -105,7 +104,7 @@ public:
 	T Max() const;
 	T MinSubTreesDifference() const;
 	bool IsBalancedTree() const;
-	T MinDiffInBST() const;
+	long MinDiffInBST() const;
 	size_t Count() const;
 	virtual void PrintTree() const;
 	void PrintTreeColumns();

@@ -34,6 +34,7 @@ template class Tree<long>;
 template class Tree<size_t>;
 template class Tree<double>;
 template class Tree<float>;
+template class Tree<string>;
 template <typename T>
 Tree<T>::Tree()
 	: m_root(nullptr)
@@ -513,45 +514,47 @@ bool Tree<T>::MatchTree(const shared_ptr<Node<T>> &p, const shared_ptr<Node<T>> 
 }
 
 template <typename T>
-void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, long sum, vector<string> &result)
+void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, vector<string> &result)
 {
-	vector<long> values;
+	vector<T> values;
 	if (node)
 		FindSum(node, sum, 0, values, result);
 }
 
 template <typename T>
-void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, long sum, long level, vector<long> values, vector<string> &result)
+void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, long level, vector<T> values, vector<string> &result)
 {
-	/*
-Binary Search Tree (tree1) content:
-Level 0:                                50
-Level 1:                        0(50)   100(50)
-Level 2:                -50(0)  10(0)   75(100)         150(100)
-Level 3:        -100(-50)       60(75)
-	*/
-	ostringstream oss;
-	if (!node)
-		return;
-	long tmp = sum;
-	values.push_back(node->Item());
-	for (long i = level; i >= 0; i--)
-	{ // From leaf to root
-		tmp -= values[i];
-		if (!tmp)
-		{
-			for (long j = i; j <= level; j++)
-			{ // From root to leaf
-				oss << values[j];
-				if (j != level)
-					oss << " ";
+	if constexpr (is_same_v<T, long> || is_same_v<T, int>) {
+		/*
+	Binary Search Tree (tree1) content:
+	Level 0:                                50
+	Level 1:                        0(50)   100(50)
+	Level 2:                -50(0)  10(0)   75(100)         150(100)
+	Level 3:        -100(-50)       60(75)
+		*/
+		ostringstream oss;
+		if (!node)
+			return;
+		decltype(sum) tmp = sum;
+		values.push_back(node->Item());
+		for (long i = level; i >= 0; i--)
+		{ // From leaf to root
+			tmp -= values[i];
+			if (!tmp)
+			{
+				for (long j = i; j <= level; j++)
+				{ // From root to leaf
+					oss << values[j];
+					if (j != level)
+						oss << " ";
+				}
+				result.push_back(oss.str());
+				oss.str("");
 			}
-			result.push_back(oss.str());
-			oss.str("");
 		}
+		FindSum(node->Left(), sum, level + 1, values, result);
+		FindSum(node->Right(), sum, level + 1, values, result);
 	}
-	FindSum(node->Left(), sum, level + 1, values, result);
-	FindSum(node->Right(), sum, level + 1, values, result);
 }
 /* https://leetcode.com/problems/sum-root-to-leaf-numbers/
  * 100%
@@ -584,8 +587,14 @@ vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 		{
 			for (vector<string>::iterator it = left.begin(); it != left.end(); it++)
 			{
-				string str = to_string(node->Item());
-				result.push_back(str.append(*it));
+				if constexpr (is_same_v<T, long> || is_same_v<T, int>) {
+					string str = to_string(node->Item());
+					result.push_back(str.append(*it));
+				}
+				else if constexpr (is_same_v<T, string>) {
+					string str = node->Item();
+					result.push_back(str.append(*it));
+				}
 			}
 		}
 		vector<string> right = GetRoot2LeafNumbers(node->Right());
@@ -593,12 +602,24 @@ vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 		{
 			for (vector<string>::iterator it = right.begin(); it != right.end(); it++)
 			{
-				string str = to_string(node->Item());
-				result.push_back(str.append(*it));
+				if constexpr (is_same_v<T, long> || is_same_v<T, int>) {
+					string str = to_string(node->Item());
+					result.push_back(str.append(*it));
+				}
+				else if constexpr (is_same_v<T, string>) {
+					string str = node->Item();
+					result.push_back(str.append(*it));
+				}
 			}
 		}
-		if (left.empty() && right.empty())
-			result.push_back(to_string(node->Item()));
+		if (left.empty() && right.empty()) {
+			if constexpr (is_same_v<T, long> || is_same_v<T, int>) {
+				result.push_back(to_string(node->Item()));
+			}
+			else if constexpr (is_same_v<T, string>) {
+				result.push_back(node->Item());
+			}
+		}
 	}
 	return result;
 }
@@ -691,21 +712,23 @@ bool Tree<T>::IsBalancedTree() const
 }
 
 template <typename T>
-T Tree<T>::MinDiffInBST() const
+long Tree<T>::MinDiffInBST() const
 {
 	return m_root ? MinDiffInBST(nullptr, m_root) : -1;
 }
 template <typename T>
-T Tree<T>::MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> current) const
+long Tree<T>::MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> current) const
 {
-	T minimum = numeric_limits<T>::max();
-	// Use In-Order traversal to find min diff between any 2 nodes
-	if (current)
-	{
-		minimum = MinDiffInBST(current, current->Left());
-		if (previous)
-			minimum = min((long)minimum, abs((long)current->Item() - (long)previous->Item()));
-		minimum = min(minimum, MinDiffInBST(current, current->Right()));
+	long minimum = numeric_limits<long>::max();
+	if constexpr (is_same_v<T, long> || is_same_v<T, int>) {
+		// Use In-Order traversal to find min diff between any 2 nodes
+		if (current)
+		{
+			minimum = MinDiffInBST(current, current->Left());
+			if (previous)
+				minimum = min((long)minimum, abs((long)current->Item() - (long)previous->Item()));
+			minimum = min(minimum, MinDiffInBST(current, current->Right()));
+		}
 	}
 	return minimum;
 }
@@ -989,14 +1012,16 @@ T Tree<T>::TreeArithmeticTotal(shared_ptr<Node<string>> node)
 	}
 	T left = TreeArithmeticTotal(node->Left());
 	T right = TreeArithmeticTotal(node->Right());
-	if (node->Item() == decltype(node->Item())("+"))
-		result = left + right;
-	else if (node->Item() == decltype(node->Item())("-"))
-		result = left - right;
-	else if (node->Item() == decltype(node->Item())("*"))
-		result = left * right;
-	else if (node->Item() == decltype(node->Item())("/"))
-		result = left / right;
+	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, double> || is_same_v<T, float>) {
+		if (node->Item() == decltype(node->Item())("+"))
+			result = left + right;
+		else if (node->Item() == decltype(node->Item())("-"))
+			result = left - right;
+		else if (node->Item() == decltype(node->Item())("*"))
+			result = left * right;
+		else if (node->Item() == decltype(node->Item())("/"))
+			result = left / right;
+	}
 	return result;
 }
 #if 0

@@ -69,7 +69,7 @@ template <typename T>
 T Node<T>::MinSubTreesDifference(shared_ptr<Node<T>> n, T sum, T subtreeSum)
 {
 	ostringstream oss;
-	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, size_t>)
+	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, double> || is_same_v<T, float> || is_same_v<T, size_t>)
 	{
 		T adjustedSum = subtreeSum - n->Item();
 		if (sum + n->Item() == adjustedSum)
@@ -98,7 +98,7 @@ T Node<T>::MinSubTreesDifference(T sum)
 	Diff: 21 - 20 = 1
 	*/
 	ostringstream oss;
-	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, size_t>)
+	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, double> || is_same_v<T, float> || is_same_v<T, size_t>)
 	{
 		if (!m_left && !m_right)
 			return abs((long)sum - (long)m_item);

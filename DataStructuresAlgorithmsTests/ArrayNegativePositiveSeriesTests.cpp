@@ -1,10 +1,11 @@
 #include "pch.h"
 using namespace std;
 TEST(ArrayNegativePositiveSeriesTests, ArrayNegativePositiveSeriesTest) {
+	Sort<long> sort;
 	vector<long> testArr{ 2, -1, -3, -7, -8, 9, 5, -5, -7 };
 	vector<long> result { 2, -1, 9, -3, 5, -7, -8, -5, -7 };
 	// Sort numbers into consecutive positive/negative numbers
-	sortNumbers(testArr);
+	sort.SortNumbers(testArr);
 	ASSERT_EQ(result, testArr);
 
 	testArr.clear();
@@ -12,7 +13,7 @@ TEST(ArrayNegativePositiveSeriesTests, ArrayNegativePositiveSeriesTest) {
 	testArr = { -1, -3, -7, -8, 9, 5, -5, -7, 2 };
 	result =  { -1, 9, -3, 5, -7, 2, -8, -5, -7 };
 	// Sort numbers into consecutive positive/negative numbers
-	sortNumbers(testArr);
+	sort.SortNumbers(testArr);
 	ASSERT_EQ(result, testArr);
 
 	testArr.clear();

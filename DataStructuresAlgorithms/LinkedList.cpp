@@ -513,7 +513,7 @@ shared_ptr<Node<T>> LinkedList<T>::RemoveNthElementFromBack(long n) // n starts 
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::AddNumbers(shared_ptr<Node<T>> p1, shared_ptr<Node<T>> p2, T carry)
 {
-	if constexpr (is_same_v<T, long> || is_same_v<T, int>)
+	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, double> || is_same_v<T, float> || is_same_v<T, size_t>)
 	{
 		if (p1 || p2 || carry > T())
 		{

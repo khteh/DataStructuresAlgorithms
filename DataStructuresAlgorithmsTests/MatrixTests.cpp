@@ -30,9 +30,10 @@ TEST(MatrixTests, FindShortestPathTests)
 }
 TEST(MatrixTests, MatrixSortTest)
 {
+	Matrix<long> matrix;
 	vector<vector<long>> grid = { {1, 3, 5}, {6, 4, 2}, {7, 9, 8} };
 	vector<vector<long>> expected = { {1, 4, 7}, {2, 5, 8}, {3, 6, 9} };
-	MatrixSort(grid);
+	matrix.MatrixSort(grid);
 	ASSERT_EQ(expected, grid);
 	cout << "MatrixSort: " << endl;
 	for (size_t i = 0; i < grid.size(); i++)
@@ -44,9 +45,10 @@ TEST(MatrixTests, MatrixSortTest)
 }
 TEST(MatrixTests, MatrixSortWithHeapTest)
 {
+	Matrix<long> matrix;
 	vector<vector<long>> grid = { {1, 3, 5}, {6, 4, 2}, {7, 9, 8} };
 	vector<vector<long>> expected = { {1, 4, 7}, {2, 5, 8}, {3, 6, 9} };
-	MatrixSortWithHeap(grid);
+	matrix.MatrixSortWithHeap(grid);
 	ASSERT_EQ(expected, grid);
 	cout << "MatrixSortWithHeap: " << endl;
 	for (size_t i = 0; i < grid.size(); i++)
@@ -58,14 +60,15 @@ TEST(MatrixTests, MatrixSortWithHeapTest)
 }
 TEST(MatrixTests, MatrixPatternCountTest)
 {
+	Matrix<long> matrix;
 	vector<vector<long>> grid = { {0, 0, 1}, {0, 1, 1}, {1, 1, 1} };
-	ASSERT_EQ(3, MatrixPatternCount(grid));
+	ASSERT_EQ(3, matrix.MatrixPatternCount(grid));
 
 	grid = { {0, 0, 1}, {0, 0, 1}, {1, 1, 1} };
-	ASSERT_EQ(4, MatrixPatternCount(grid));
+	ASSERT_EQ(4, matrix.MatrixPatternCount(grid));
 
 	grid = { {0, 0, 0, 1}, {0, 0, 1, 1}, {0, 1, 1, 1}, {1, 1, 1, 1} };
-	ASSERT_EQ(6, MatrixPatternCount(grid));
+	ASSERT_EQ(6, matrix.MatrixPatternCount(grid));
 }
 TEST(MatrixTests, PathExistsTest)
 {
@@ -115,111 +118,114 @@ TEST(MatrixTests, MergeIntervalsTest)
 	ASSERT_EQ(grid, grid1);
 }
 TEST(MatrixTests, SpiralOrderTests) {
+	Matrix<long> matrix;
 	vector<vector<long>> grid1;
 	vector<long> a;
 	grid1 = { {1, 2, 3}, {4, 5, 6}, {7, 8, 9} };
 	a.clear();
 	a = { 1, 2, 3, 6, 9, 8, 7, 4, 5 };
-	ASSERT_EQ(a, matrixSprialOrder(grid1));
+	ASSERT_EQ(a, matrix.MatrixSprialOrder(grid1));
 	grid1.clear();
 	grid1 = { {1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12} };
 	a.clear();
 	a = { 1, 2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7 };
-	ASSERT_EQ(a, matrixSprialOrder(grid1));
+	ASSERT_EQ(a, matrix.MatrixSprialOrder(grid1));
 	grid1.clear();
 	grid1 = { {1, 2}, {3, 4} };
 	a.clear();
 	a = { 1, 2, 4, 3 };
-	ASSERT_EQ(a, matrixSprialOrder(grid1));
+	ASSERT_EQ(a, matrix.MatrixSprialOrder(grid1));
 }
 TEST(MatrixTests, RotateMatrix90DegressClockwiseTests) {
+	Matrix<long> matrix;
 	vector<vector<long>> grid1, grid2;
 	grid1 = { {1, 2, 3}, {4, 5, 6}, {7, 8, 9} };
 	grid2 = { {7, 4, 1}, {8, 5, 2}, {9, 6, 3} };
-	rotateMatrix90DegressClockwise(grid1);
+	matrix.RotateMatrix90DegressClockwise(grid1);
 	ASSERT_EQ(grid1, grid2);
 }
 TEST(MatrixTests, RotateMatrixRTimesAntiClockwiseTests) {
+	Matrix<long> matrix;
 	vector<vector<long>> grid1, grid2;
-	rotateMatrixRTimesAntiClockwise(grid1, 1);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 1);
 	ASSERT_EQ(grid1, grid2);
 	grid1 = { {1} };
 	grid2 = { {1} };
-	rotateMatrixRTimesAntiClockwise(grid1, 1);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 1);
 	ASSERT_EQ(grid1, grid2);
 	grid1.clear();
 	grid2.clear();
 	grid1 = { {} };
 	grid2 = { {} };
-	rotateMatrixRTimesAntiClockwise(grid1, 1);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 1);
 	ASSERT_EQ(grid1, grid2);
 	grid1.clear();
 	grid2.clear();
 	grid1 = { {1, 2}, {3, 4} };
 	grid2 = { {2, 4}, {1, 3} };
-	rotateMatrixRTimesAntiClockwise(grid1, 1);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 1);
 	ASSERT_EQ(grid1, grid2);
 	grid1.clear();
 	grid2.clear();
 	grid1 = { {1, 2}, {3, 4} };
 	grid2 = { {4, 3}, {2, 1} };
-	rotateMatrixRTimesAntiClockwise(grid1, 2);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 2);
 	ASSERT_EQ(grid1, grid2);
 	grid1.clear();
 	grid2.clear();
 	grid1 = { {1, 2}, {3, 4} };
 	grid2 = { {3, 1}, {4, 2} };
-	rotateMatrixRTimesAntiClockwise(grid1, 3);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 3);
 	ASSERT_EQ(grid1, grid2);
 	grid1.clear();
 	grid2.clear();
 	grid1 = { {1, 2}, {3, 4} };
 	grid2 = { {1, 2}, {3, 4} };
-	rotateMatrixRTimesAntiClockwise(grid1, 0);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 0);
 	ASSERT_EQ(grid1, grid2);
-	rotateMatrixRTimesAntiClockwise(grid1, 4);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 4);
 	ASSERT_EQ(grid1, grid2);
 	grid1.clear();
 	grid2.clear();
 	grid1 = { {1, 2}, {3, 4} };
 	grid2 = { {2, 4}, {1, 3} };
-	rotateMatrixRTimesAntiClockwise(grid1, 5);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 5);
 	ASSERT_EQ(grid1, grid2);
 	grid1.clear();
 	grid2.clear();
 	grid1 = { {1, 2}, {3, 4} };
 	grid2 = { {4, 3}, {2, 1} };
-	rotateMatrixRTimesAntiClockwise(grid1, 6);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 6);
 	ASSERT_EQ(grid1, grid2);
 	grid1.clear();
 	grid2.clear();
 	grid1 = { {1, 2}, {3, 4} };
 	grid2 = { {3, 1}, {4, 2} };
-	rotateMatrixRTimesAntiClockwise(grid1, 7);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 7);
 	ASSERT_EQ(grid1, grid2);
 	grid1.clear();
 	grid2.clear();
 	grid1 = { {1, 2, 3, 4}, {12, 1, 2, 5}, {11, 4, 3, 6}, {10, 9, 8, 7} };
 	grid2 = { {3, 4, 5, 6}, {2, 3, 4, 7}, {1, 2, 1, 8}, {12, 11, 10, 9} };
-	rotateMatrixRTimesAntiClockwise(grid1, 2);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 2);
 	ASSERT_EQ(grid1, grid2);
 	grid1.clear();
 	grid2.clear();
 	grid1 = { {1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16} };
 	grid2 = { {3, 4, 8, 12}, {2, 11, 10, 16}, {1, 7, 6, 15}, {5, 9, 13, 14} };
-	rotateMatrixRTimesAntiClockwise(grid1, 2);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 2);
 	ASSERT_EQ(grid1, grid2);
 	grid1.clear();
 	grid2.clear();
 	grid1 = { {1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16} };
 	grid2 = { {2, 3, 4, 8}, {1, 7, 11, 12}, {5, 6, 10, 16}, {9, 13, 14, 15} };
-	rotateMatrixRTimesAntiClockwise(grid1, 1);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 1);
 	ASSERT_EQ(grid1, grid2);
 	grid1.clear();
 	grid2.clear();
 	grid1 = { {1, 2, 3, 4}, {7, 8, 9, 10}, {13, 14, 15, 16}, {19, 20, 21, 22}, {25, 26, 27, 28} };
 	grid2 = { {28, 27, 26, 25}, {22, 9, 15, 19}, {16, 8, 21, 13}, {10, 14, 20, 7}, {4, 3, 2, 1} };
-	rotateMatrixRTimesAntiClockwise(grid1, 7);
+	matrix.RotateMatrixRTimesAntiClockwise(grid1, 7);
 	ASSERT_EQ(grid1, grid2);
 }
 TEST(MatrixTests, SurfaceArea3DTest)

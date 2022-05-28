@@ -4,6 +4,8 @@
 using namespace std;
 template class Heap<int>;
 template class Heap<long>;
+template class Heap<size_t>;
+template class Heap<string>;
 // http://en.wikipedia.org/wiki/Binary_heap
 
 template<typename T>
