@@ -290,3 +290,15 @@ TEST(GraphTests, PrimMinimumSpanningTreeTest) {
 	grid = { {2, 1, 1000}, {3, 4, 299}, {2, 4, 200}, {2, 4, 100}, {3, 2, 300}, {3, 2, 6} };
 	ASSERT_EQ(1106, PrimMinimumSpanningTree(4, grid, 2));
 }
+TEST(GraphTests, KruskalTest)
+{
+	vector<long> from{ 1, 1, 4, 2, 3, 3 }, to{ 2, 3, 1, 4, 2, 4 }, weights{ 5, 3, 6, 7, 4, 5 };
+	ASSERT_EQ(12, kruskals(4, from, to, weights));
+	from.clear();
+	to.clear();
+	weights.clear();
+	from = { 1, 3, 4, 1, 3 };
+	to = { 2, 2, 3, 4, 1 };
+	weights = { 1, 150, 99, 100, 200 };
+	ASSERT_EQ(200, kruskals(4, from, to, weights));
+}

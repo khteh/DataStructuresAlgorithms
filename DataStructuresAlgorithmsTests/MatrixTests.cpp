@@ -222,3 +222,36 @@ TEST(MatrixTests, RotateMatrixRTimesAntiClockwiseTests) {
 	rotateMatrixRTimesAntiClockwise(grid1, 7);
 	ASSERT_EQ(grid1, grid2);
 }
+TEST(MatrixTests, SurfaceArea3DTest)
+{
+	vector<vector<long>> grid;
+	grid.resize(1);
+	grid[0].push_back(1);
+	ASSERT_EQ(6, SurfaceArea3D(grid));
+	grid.clear();
+	grid.resize(1);
+	grid[0] = { 1, 0, 1 };
+	ASSERT_EQ(12, SurfaceArea3D(grid));
+
+	grid = { {1, 3, 4}, {2, 2, 3}, {1, 2, 4} };
+	ASSERT_EQ(60, SurfaceArea3D(grid));
+
+	grid.clear();
+	grid.resize(1);
+	grid[0] = { 1, 2, 3, 4, 5, 5, 4, 3, 2, 1 };
+	ASSERT_EQ(90, SurfaceArea3D(grid));
+
+	grid = { {1}, {2}, {3}, {4}, {5}, {5}, {4}, {3}, {2}, {1} };
+	ASSERT_EQ(90, SurfaceArea3D(grid));
+
+	grid.clear();
+	grid.resize(1);
+	grid[0] = { 1, 2, 3, 4, 5, 4, 5, 4, 3, 2, 1 };
+	ASSERT_EQ(102, SurfaceArea3D(grid));
+
+	grid = { {1}, {2}, {3}, {4}, {5}, {4}, {5}, {4}, {3}, {2}, {1} };
+	ASSERT_EQ(102, SurfaceArea3D(grid));
+
+	grid = { {51}, {32}, {28}, {49}, {28}, {21}, {98}, {56}, {99}, {77} };
+	ASSERT_EQ(1482, SurfaceArea3D(grid));
+}

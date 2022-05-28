@@ -1345,7 +1345,6 @@ int main(int argc, char* argv[])
 	stringset.clear();
 	// assert(ZigZagEscape(a, stringset) == 41);
 	// assert(ZigZagEscape(a) == 41); Unfinished work!
-	CircularLinkedListLoopStart();
 	cpluplus17();
 	FunctionObject functionObject;
 	map<string, size_t> myKeyCount;
@@ -1484,15 +1483,6 @@ int main(int argc, char* argv[])
 	line = "if man was meant to stay on the ground god would have given us roots";
 	assert(encryption(line) == "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau");
 	a.clear();
-	a = { 100, 100, 50, 40, 40, 20, 10 };
-	b.clear();
-	b = { 5, 25, 50, 120 };
-	vector<size_t> leaderBoardResult = climbingLeaderboard(a, b);
-	assert(leaderBoardResult[0] == 6);
-	assert(leaderBoardResult[1] == 4);
-	assert(leaderBoardResult[2] == 2);
-	assert(leaderBoardResult[3] == 1);
-	a.clear();
 	a = { 3, 1, 5, 4, 2 };
 	assert(calculateMedian(a) == 3);
 	a.clear();
@@ -1575,22 +1565,10 @@ int main(int argc, char* argv[])
 	assert(disjointSet.Find(3) == disjointSet.Find(7));
 	// assert(disjointSet.Find(2) == 0); C++ map will insert non-existing key silently
 	// assert(disjointSet.Find(1) != disjointSet.Find(2)); C++ map will insert non-existing key silently
-	vector<long> from{ 1, 1, 4, 2, 3, 3 }, to{ 2, 3, 1, 4, 2, 4 }, weights{ 5, 3, 6, 7, 4, 5 };
-	assert(kruskals(4, from, to, weights) == 12);
-	from.clear();
-	to.clear();
-	weights.clear();
-	from = { 1, 3, 4, 1, 3 };
-	to = { 2, 2, 3, 4, 1 };
-	weights = { 1, 150, 99, 100, 200 };
-	assert(kruskals(4, from, to, weights) == 200);
 
-	from.clear();
-	to.clear();
-	weights.clear();
-	from = { 1, 3, 1, 4, 2 };
-	to = { 2, 5, 4, 5, 3 };
-	weights = { 60, 70, 120, 150, 80 };
+	vector<long> from = { 1, 3, 1, 4, 2 };
+	vector<long> to = { 2, 5, 4, 5, 3 };
+	vector<long> weights = { 60, 70, 120, 150, 80 };
 	assert(getLowestPathCost(5, from, to, weights) == 80);
 
 	from.clear();
@@ -1612,37 +1590,6 @@ int main(int argc, char* argv[])
 	assert(weights.size() == 45);
 	assert(getLowestPathCost(10, from, to, weights) == 1196);
 
-	grid1.clear();
-	grid1.resize(1);
-	grid1[0].push_back(1);
-	assert(SurfaceArea3D(grid1) == 6);
-	grid1.clear();
-	grid1.resize(1);
-	grid1[0] = { 1, 0, 1 };
-	assert(SurfaceArea3D(grid1) == 12);
-
-	grid1 = { {1, 3, 4}, {2, 2, 3}, {1, 2, 4} };
-	assert(SurfaceArea3D(grid1) == 60);
-
-	grid1.clear();
-	grid1.resize(1);
-	grid1[0] = { 1, 2, 3, 4, 5, 5, 4, 3, 2, 1 };
-	assert(SurfaceArea3D(grid1) == 90);
-
-	grid1 = { {1}, {2}, {3}, {4}, {5}, {5}, {4}, {3}, {2}, {1} };
-	assert(SurfaceArea3D(grid1) == 90);
-
-	grid1.clear();
-	grid1.resize(1);
-	grid1[0] = { 1, 2, 3, 4, 5, 4, 5, 4, 3, 2, 1 };
-	assert(SurfaceArea3D(grid1) == 102);
-
-	grid1 = { {1}, {2}, {3}, {4}, {5}, {4}, {5}, {4}, {3}, {2}, {1} };
-	assert(SurfaceArea3D(grid1) == 102);
-
-	grid1 = { {51}, {32}, {28}, {49}, {28}, {21}, {98}, {56}, {99}, {77} };
-	assert(SurfaceArea3D(grid1) == 1482);
-
 	a.clear();
 	a = { 4, 2 };
 	assert(AlmostSorted(a) == "swap 1 2");
@@ -1657,14 +1604,6 @@ int main(int argc, char* argv[])
 	assert(DecryptPassword(string("43Ah*ck0rr0nk")) == "hAck3rr4nk");
 	assert(DecryptPassword(string("51Pa*0Lp*0e")) == "aP1pL5e");
 	udata.clear();
-	udata = { 1, 2, 3 };
-	assert(sherlockAndCost(udata) == 2);
-	udata.clear();
-	udata = { 4, 7, 9 };
-	assert(sherlockAndCost(udata) == 12);
-	udata.clear();
-	udata = { 10, 1, 10, 1, 10 };
-	assert(sherlockAndCost(udata) == 36);
 	assert(substrings(string("123")) == 164);
 	assert(substrings(string("1234")) == 1670);
 	assert(substrings(string("972698438521")) == 445677619);
@@ -1965,34 +1904,6 @@ int main(int argc, char* argv[])
 	strings1 = wordBreakDFS(string("aaaaaaa"), stringset);
 	assert(!strings1.empty());
 	assert(strings1.size() == 2);
-	ugrid = { {1, 0} };
-	udata.clear();
-	assert(canFinishCourseTopologicalSort(2, ugrid, udata));
-	assert(!udata.empty());
-	assert(udata.size() == 2);
-	assert(udata[0] == 0);
-	assert(udata[1] == 1);
-	ugrid.clear();
-	ugrid = { {1, 0}, {0, 1} };
-	udata.clear();
-	assert(!canFinishCourseTopologicalSort(2, ugrid, udata));
-	assert(udata.empty());
-	ugrid.clear();
-	ugrid = { {1, 0}, {2, 0} };
-	udata.clear();
-	assert(canFinishCourseTopologicalSort(3, ugrid, udata));
-	assert(!udata.empty());
-	assert(udata.size() == 3);
-	assert(udata[0] == 0);
-	ugrid.push_back(vector<size_t>{0, 2});
-	udata.clear();
-	assert(!canFinishCourseTopologicalSort(3, ugrid, udata));
-	assert(udata.empty());
-	ugrid.clear();
-	ugrid = { {1, 0}, {0, 2}, {2, 1} };
-	udata.clear();
-	assert(!canFinishCourseTopologicalSort(3, ugrid, udata));
-	assert(udata.empty());
 	a.clear();
 	a = { 1, 2, 3, 1 };
 	assert(containsNearbyAlmostDuplicate(a, 3, 0));
@@ -2078,63 +1989,6 @@ int main(int argc, char* argv[])
 	assert(listSum1.Sum(0, 0) == -1);
 	listSum1.Update(0, 1);
 	assert(listSum1.Sum(0, 0) == 1);
-	a.clear();
-	a = { 1, 7, 4, 9, 2, 5 };
-	b.clear();
-	wiggleMaxLength(a, b);
-	assert(!b.empty());
-	assert(b.size() == 6);
-	assert(a == b);
-	a.clear();
-	a = { 0 };
-	b.clear();
-	wiggleMaxLength(a, b);
-	assert(!b.empty());
-	assert(b.size() == 1);
-	assert(b.back() == 0);
-	a.clear();
-	a = { 0, 0 };
-	b.clear();
-	wiggleMaxLength(a, b);
-	assert(!b.empty());
-	assert(b.size() == 1);
-	assert(b.back() == 0);
-	a.clear();
-	b.clear();
-	a = { 3, 3, 3, 2, 5 };
-	wiggleMaxLength(a, b);
-	assert(!b.empty());
-	assert(b.size() == 3);
-	a.clear();
-	a = { 3, 2, 5 };
-	assert(b == a);
-	a.clear();
-	a = { 1, 17, 5, 10, 13, 15, 10, 5, 16, 8 };
-	b.clear();
-	wiggleMaxLength(a, b);
-	assert(!b.empty());
-	assert(b.size() == 7);
-	a.clear();
-	a = { 1, 17, 5, 15, 5, 16, 8 };
-	assert(a == b);
-	a.clear();
-	a = { 1, 17, 5, 10, 13, 15, 12, 5, 16, 8 };
-	b.clear();
-	wiggleMaxLength(a, b);
-	assert(!b.empty());
-	assert(b.size() == 7);
-	a.clear();
-	a = { 1, 17, 5, 15, 5, 16, 8 };
-	assert(a == b);
-	a.clear();
-	b.clear();
-	a = { 1, 17, 5, 10, 13, 11, 12, 5, 16, 8 };
-	wiggleMaxLength(a, b);
-	assert(!b.empty());
-	assert(b.size() == 9);
-	a.clear();
-	a = { 1, 17, 5, 13, 11, 12, 5, 16, 8 };
-	assert(a == b);
 	assert(!isValidPreOrderTreeSerialization(string("1")));
 	assert(isValidPreOrderTreeSerialization(string("#")));
 	assert(isValidPreOrderTreeSerialization(string("1,#,#")));

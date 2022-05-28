@@ -187,3 +187,76 @@ TEST(SubRangeTests, StockMaxProfitTest)
 	a = { 1, 2, 6, 0, 1, 5 };
 	ASSERT_EQ(9, StockMaxProfit(a));
 }
+TEST(SubRangeTests, SherlockAndCostTests)
+{
+	vector<size_t> data = { 1, 2, 3 };
+	ASSERT_EQ(2, sherlockAndCost(data));
+	data.clear();
+	data = { 4, 7, 9 };
+	ASSERT_EQ(12, sherlockAndCost(data));
+	data.clear();
+	data = { 10, 1, 10, 1, 10 };
+	ASSERT_EQ(36, sherlockAndCost(data));
+}
+TEST(SubRangeTests, ClimbLeaderboardTest)
+{
+	vector<long> a = { 100, 100, 50, 40, 40, 20, 10 };
+	vector<long> b = { 5, 25, 50, 120 };
+	vector<size_t> expected = { 6,4,2,1 };
+	ASSERT_EQ(expected, ClimbLeaderBoard(a, b));
+}
+TEST(SubRangeTests, WiggleMaxLengthTest)
+{
+	vector<long> a = { 1, 7, 4, 9, 2, 5 }, b;
+	WiggleMaxLength(a, b);
+	ASSERT_FALSE(b.empty());
+	ASSERT_EQ(6, b.size());
+	ASSERT_EQ(a, b);
+	a.clear();
+	a = { 0 };
+	b.clear();
+	WiggleMaxLength(a, b);
+	ASSERT_FALSE(b.empty());
+	ASSERT_EQ(1, b.size());
+	ASSERT_EQ(0, b.back());
+	a.clear();
+	a = { 0, 0 };
+	b.clear();
+	WiggleMaxLength(a, b);
+	ASSERT_FALSE(b.empty());
+	ASSERT_EQ(1, b.size());
+	ASSERT_EQ(0, b.back());
+	a.clear();
+	b.clear();
+	a = { 3, 3, 3, 2, 5 };
+	WiggleMaxLength(a, b);
+	ASSERT_FALSE(b.empty());
+	ASSERT_EQ(3, b.size());
+	a.clear();
+	a = { 3, 2, 5 };
+	ASSERT_EQ(b, a);
+	a.clear();
+	a = { 1, 17, 5, 10, 13, 15, 10, 5, 16, 8 };
+	b.clear();
+	WiggleMaxLength(a, b);
+	ASSERT_FALSE(b.empty());
+	ASSERT_EQ(7, b.size());
+	a.clear();
+	a = { 1, 17, 5, 15, 5, 16, 8 };
+	ASSERT_EQ(a, b);
+	a.clear();
+	a = { 1, 17, 5, 10, 13, 15, 12, 5, 16, 8 };
+	b.clear();
+	WiggleMaxLength(a, b);
+	ASSERT_FALSE(b.empty());
+	ASSERT_EQ(7, b.size());
+	a.clear();
+	a = { 1, 17, 5, 15, 5, 16, 8 };
+	ASSERT_EQ(a, b);
+	a.clear();
+	b.clear();
+	a = { 1, 17, 5, 10, 13, 11, 12, 5, 16, 8 };
+	WiggleMaxLength(a, b);
+	ASSERT_FALSE(b.empty());
+	ASSERT_EQ(9, b.size());
+}

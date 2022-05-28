@@ -373,3 +373,35 @@ TEST(SortTests, DutchPartitioningTest) {
 	DutchPartitioning(data, 1);
 	ASSERT_EQ(data1, data);
 }
+TEST(SortTests, CanFinishCourseTopologicalSortTest)
+{
+	vector<vector<size_t>> grid = { {1, 0} };
+	vector<size_t> data, expected;
+	ASSERT_TRUE(CanFinishCourseTopologicalSort(2, grid, data));
+	ASSERT_FALSE(data.empty());
+	ASSERT_EQ(2, data.size());
+	expected = { 0, 1 };
+	ASSERT_EQ(expected, data);
+	grid.clear();
+	data.clear();
+	grid = { {1, 0}, {0, 1} };
+	ASSERT_FALSE(CanFinishCourseTopologicalSort(2, grid, data));
+	ASSERT_TRUE(data.empty());
+	grid.clear();
+	grid = { {1, 0}, {2, 0} };
+	data.clear();
+	ASSERT_TRUE(CanFinishCourseTopologicalSort(3, grid, data));
+	ASSERT_FALSE(data.empty());
+	ASSERT_EQ(3, data.size());
+	expected = {0,1,2};
+	ASSERT_EQ(expected, data);
+	data.clear();
+	grid.push_back(vector<size_t> {0, 2}); // Add another dependency will fail the same requirement
+	ASSERT_FALSE(CanFinishCourseTopologicalSort(3, grid, data));
+	ASSERT_TRUE(data.empty());
+	grid.clear();
+	data.clear();
+	grid = { {1, 0}, {0, 2}, {2, 1} };
+	ASSERT_FALSE(CanFinishCourseTopologicalSort(3, grid, data));
+	ASSERT_TRUE(data.empty());
+}

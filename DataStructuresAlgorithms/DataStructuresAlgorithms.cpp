@@ -225,6 +225,7 @@ size_t CountDistinctSlices1(long m, vector<long> &data)
 // a.push_back(5); // 1
 // a.push_back(5); // 2
 // a.push_back(2); // 1
+// XXX: I don't know what this function is doing. May remove this function!
 size_t CountDistinctSlices(vector<long> &data)
 {
 	size_t slices = 0, start = 0;
@@ -232,7 +233,7 @@ size_t CountDistinctSlices(vector<long> &data)
 	for (size_t i = 0; i < data.size(); i++)
 	{
 		if (unique.find(data[i]) == unique.end())
-			unique.emplace(data[i]); // 3, 4, 5, 2
+			unique.emplace(data[i]); // {3, 4, 5}, {5, 2}
 		else
 		{
 			slices += SequenceSum(i - start); // f(3) = 1+2+3 = 6
@@ -481,16 +482,16 @@ size_t sherlockAndAnagrams(string const &s)
 	100%
 4 7 9
 i: 1
-hl = 4 - 1 = 3
-lh = 7 - 1 = 6
-hh = 7 - 4 = 3
+hl = 4 - 1 = 3 {4 1 9}
+lh = 7 - 1 = 6 {1 7 9}
+hh = 7 - 4 = 3 {4 7 9}
 l = max(0, 0+3) = 3
 h = max(0+3, 0+6) = 6
 
 i: 2
-hl = 7 - 1 = 6
-lh = 9 - 1 = 8
-hh = 9 - 7 = 2
+hl = 7 - 1 = 6 {4 7 1}
+lh = 9 - 1 = 8 {4 1 9}
+hh = 9 - 7 = 2 {4 7 9}
 l = max(3, 6+6) = 12
 h = max(6+2, 3+8) = 11
 */
@@ -5285,50 +5286,6 @@ vector<string> ZigZagEscape(vector<long> &left, vector<long> &right, size_t lInd
 			}
 	return result;
 }
-void CircularLinkedListLoopStart()
-{
-	shared_ptr<Node<int>> head = make_shared<Node<int>>(-3);
-	shared_ptr<Node<int>> n1 = make_shared<Node<int>>(-2);
-	head->SetNext(n1);
-	shared_ptr<Node<int>> n2 = make_shared<Node<int>>(-1);
-	n1->SetNext(n2);
-	shared_ptr<Node<int>> n3 = make_shared<Node<int>>(0);
-	n2->SetNext(n3);
-	shared_ptr<Node<int>> n4 = make_shared<Node<int>>(1);
-	n3->SetNext(n4);
-	shared_ptr<Node<int>> n5 = make_shared<Node<int>>(2);
-	n4->SetNext(n5);
-	shared_ptr<Node<int>> n6 = make_shared<Node<int>>(3);
-	n5->SetNext(n6);
-	shared_ptr<Node<int>> n7 = make_shared<Node<int>>(4);
-	n6->SetNext(n7);
-	shared_ptr<Node<int>> n8 = make_shared<Node<int>>(5);
-	n7->SetNext(n8);
-	shared_ptr<Node<int>> n9 = make_shared<Node<int>>(6);
-	n8->SetNext(n9);
-	shared_ptr<Node<int>> n10 = make_shared<Node<int>>(7);
-	n9->SetNext(n10);
-	n10->SetNext(n3);
-	shared_ptr<Node<int>> node1 = head;
-	shared_ptr<Node<int>> node2 = head;
-	// Find meeting point
-	while (node2->Next())
-	{
-		node1 = node1->Next();
-		node2 = node2->Next()->Next();
-		if (node1 == node2)
-			break;
-	}
-	if (!node2->Next())
-		return;
-	node1 = head;
-	while (node1 != node2)
-	{
-		node1 = node1->Next();
-		node2 = node2->Next();
-	}
-	cout << "Circular linked list loop starts at: " << node1->Item() << " / " << node2->Item() << endl;
-}
 /* https://app.codility.com/demo/results/trainingCP4NRT-FE4/
  * https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/discuss/119835/Java-O(n)-DP-Solution
  * 100%
@@ -5787,7 +5744,7 @@ string encryption(string &s)
 }
 // https://www.hackerrank.com/challenges/climbing-the-leaderboard/problem
 // 100%
-vector<size_t> climbingLeaderboard(vector<long> &scores, vector<long> &alice)
+vector<size_t> ClimbLeaderBoard(vector<long> &scores, vector<long> &alice)
 {
 	vector<size_t> result;
 	ranges::sort(scores);
@@ -5884,14 +5841,7 @@ size_t beautifulQuadruples(int a, int b, int c, int d)
 			for (int k = 1; k <= c; k++)
 				for (int l = 1; l <= d; l++)
 					if ((i ^ j ^ k ^ l) != 0)
-					{
-						multiset<int> tmp;
-						tmp.emplace(i);
-						tmp.emplace(j);
-						tmp.emplace(k);
-						tmp.emplace(l);
-						quadruples.emplace(tmp);
-					}
+						quadruples.emplace(multiset<int>{i,j,k,l});
 	return quadruples.size();
 }
 // https://www.hackerrank.com/challenges/red-knights-shortest-path/problem
@@ -7038,7 +6988,7 @@ size_t SnakesAndLaddersGameFast(vector<vector<size_t>> &ladders, vector<vector<s
 	return 0;
 }
 /*
- * https://leetcode.com/problems/longest-substring-without-repeating-characters/submissions/
+ * https://leetcode.com/problems/longest-substring-without-repeating-characters
  * 100%
  * aaa -> 1
  * abcabc ->
@@ -7905,7 +7855,7 @@ vector<string> wordBreakDFS(const string &s, set<string> &words)
  * Use Kahn's algorithm
  * 100%
  */
-bool canFinishCourseTopologicalSort(size_t numCourses, vector<vector<size_t>> &courses, vector<size_t> &sequence) // First element depends on second element in each row
+bool CanFinishCourseTopologicalSort(size_t numCourses, vector<vector<size_t>> &courses, vector<size_t> &sequence) // First element depends on second element in each row
 {
 	map<size_t, size_t> dependencies;
 	map<size_t, vector<size_t>> edges; // Key: Independent; Value: Dependent
@@ -7935,6 +7885,8 @@ bool canFinishCourseTopologicalSort(size_t numCourses, vector<vector<size_t>> &c
 	return !edgeCount; // A topological ordering is possible if and only if the graph has no directed cycles, that is, if it is a directed acyclic graph (DAG)
 }
 /* https://leetcode.com/problems/contains-duplicate-iii/
+* Given an integer array nums and two integers k and t, return true if there are two distinct indices i and j in the array such that abs(nums[i] - nums[j]) <= t and abs(i - j) <= k.
+* 100%
 * Use bucket sort theory.
 * nums are distributed to bucket of size t.
 * (1) All values within the same bucket will have a diff or distance <= t.
@@ -7943,6 +7895,8 @@ bool canFinishCourseTopologicalSort(size_t numCourses, vector<vector<size_t>> &c
 * (1) Positive values will have even distribution of size t
 * (2) Need to adjust the distribution of negative numbers
 * (3) t+1 to avoid division by zero
+t:1
+w = t+1 = 2
  i i/w* desired**
 -7 -3	-4
 -6 -3	-3
@@ -8105,7 +8059,7 @@ string getHint(const string &secret, const string &guess)
  * 1 17 5 10 13 11 12 5 16 8
  * 1 17 5 13 11 12 5 16 8
  */
-void wiggleMaxLength(vector<long> &nums, vector<long> &result)
+void WiggleMaxLength(vector<long> &nums, vector<long> &result)
 {
 	bool direction = false; // false: down. true: up
 	for (size_t i = 0; i < nums.size(); i++)
