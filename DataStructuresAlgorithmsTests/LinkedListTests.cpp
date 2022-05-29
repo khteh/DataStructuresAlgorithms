@@ -99,7 +99,7 @@ TEST(LinkedListTests, LinkedListArithmeticTest) {
 	a.push_back(8); // LSB
 	a.push_back(0);
 	a.push_back(3);
-	a.push_back(1);																	 // MSB
+	a.push_back(1);	// MSB
 	LinkedList<long> listAdditionResult = lla.AddNumbers(lla.Head(), llb.Head()); // 987 + 321 = 1308 List in reverse order. Head points to LSB
 	ASSERT_EQ(4, listAdditionResult.Length());
 	listAdditionResult.Print();

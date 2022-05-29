@@ -35,6 +35,36 @@ template class Tree<size_t>;
 template class Tree<double>;
 template class Tree<float>;
 template class Tree<string>;
+template int Tree<int>::MinSubTreesDifference<int>() const;
+template long Tree<long>::MinSubTreesDifference<long>() const;
+template size_t Tree<size_t>::MinSubTreesDifference<size_t>() const;
+template double Tree<double>::MinSubTreesDifference<double>() const;
+template float Tree<float>::MinSubTreesDifference<float>() const;
+template void Tree<int>::FindSum<int>(const shared_ptr<Node<int>>& node, int sum, vector<string>& result);
+template void Tree<long>::FindSum<long>(const shared_ptr<Node<long>>& node, long sum, vector<string>& result);
+template void Tree<size_t>::FindSum<size_t>(const shared_ptr<Node<size_t>>& node, size_t sum, vector<string>& result);
+template void Tree<double>::FindSum<double>(const shared_ptr<Node<double>>& node, double sum, vector<string>& result);
+template void Tree<float>::FindSum<float>(const shared_ptr<Node<float>>& node, float sum, vector<string>& result);
+template void Tree<int>::FindSum<int>(const shared_ptr<Node<int>>& node, int sum, long level, vector<int> values, vector<string>& result);
+template void Tree<long>::FindSum<long>(const shared_ptr<Node<long>>& node, long sum, long level, vector<long> values, vector<string>& result);
+template void Tree<size_t>::FindSum<size_t>(const shared_ptr<Node<size_t>>& node, size_t sum, long level, vector<size_t> values, vector<string>& result);
+template void Tree<double>::FindSum<double>(const shared_ptr<Node<double>>& node, double sum, long level, vector<double> values, vector<string>& result);
+template void Tree<float>::FindSum<float>(const shared_ptr<Node<float>>& node, float sum, long level, vector<float> values, vector<string>& result);
+template int Tree<int>::MinDiffInBST<int>() const;
+template size_t Tree<size_t>::MinDiffInBST<size_t>() const;
+template long Tree<long>::MinDiffInBST<long>() const;
+template float Tree<float>::MinDiffInBST<float>() const;
+template double Tree<double>::MinDiffInBST<double>() const;
+template int Tree<int>::MinDiffInBST<int>(shared_ptr<Node<int>> previous, shared_ptr<Node<int>> current) const;
+template size_t Tree<size_t>::MinDiffInBST<size_t>(shared_ptr<Node<size_t>> previous, shared_ptr<Node<size_t>> current) const;
+template long Tree<long>::MinDiffInBST<long>(shared_ptr<Node<long>> previous, shared_ptr<Node<long>> current) const;
+template float Tree<float>::MinDiffInBST<float>(shared_ptr<Node<float>> previous, shared_ptr<Node<float>> current) const;
+template double Tree<double>::MinDiffInBST<double>(shared_ptr<Node<double>> previous, shared_ptr<Node<double>> current) const;
+template int Tree<int>::TreeArithmeticTotal<int>(shared_ptr<Node<string>> node);
+template size_t Tree<size_t>::TreeArithmeticTotal<size_t>(shared_ptr<Node<string>> node);
+template long Tree<long>::TreeArithmeticTotal<long>(shared_ptr<Node<string>> node);
+template float Tree<float>::TreeArithmeticTotal<float>(shared_ptr<Node<string>> node);
+template double Tree<double>::TreeArithmeticTotal<double>(shared_ptr<Node<string>> node);
 template <typename T>
 Tree<T>::Tree()
 	: m_root(nullptr)
@@ -514,7 +544,8 @@ bool Tree<T>::MatchTree(const shared_ptr<Node<T>> &p, const shared_ptr<Node<T>> 
 }
 
 template <typename T>
-void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, vector<string> &result)
+template<arithmetic_type U>
+void Tree<T>::FindSum(const shared_ptr<Node<U>> &node, U sum, vector<string> &result)
 {
 	vector<T> values;
 	if (node)
@@ -522,39 +553,38 @@ void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, vector<string> &re
 }
 
 template <typename T>
-void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, long level, vector<T> values, vector<string> &result)
+template<arithmetic_type U>
+void Tree<T>::FindSum(const shared_ptr<Node<U>> &node, U sum, long level, vector<U> values, vector<string> &result)
 {
-	if constexpr (is_same_v<T, long> || is_same_v<T, int>) {
-		/*
+	/*
 	Binary Search Tree (tree1) content:
 	Level 0:                                50
 	Level 1:                        0(50)   100(50)
 	Level 2:                -50(0)  10(0)   75(100)         150(100)
 	Level 3:        -100(-50)       60(75)
-		*/
-		ostringstream oss;
-		if (!node)
-			return;
-		decltype(sum) tmp = sum;
-		values.push_back(node->Item());
-		for (long i = level; i >= 0; i--)
-		{ // From leaf to root
-			tmp -= values[i];
-			if (!tmp)
-			{
-				for (long j = i; j <= level; j++)
-				{ // From root to leaf
-					oss << values[j];
-					if (j != level)
-						oss << " ";
-				}
-				result.push_back(oss.str());
-				oss.str("");
+	*/
+	ostringstream oss;
+	if (!node)
+		return;
+	U tmp = sum;
+	values.push_back(node->Item());
+	for (long i = level; i >= 0; i--)
+	{ // From leaf to root
+		tmp -= values[i];
+		if (!tmp)
+		{
+			for (long j = i; j <= level; j++)
+			{ // From root to leaf
+				oss << values[j];
+				if (j != level)
+					oss << " ";
 			}
+			result.push_back(oss.str());
+			oss.str("");
 		}
-		FindSum(node->Left(), sum, level + 1, values, result);
-		FindSum(node->Right(), sum, level + 1, values, result);
 	}
+	FindSum(node->Left(), sum, level + 1, values, result);
+	FindSum(node->Right(), sum, level + 1, values, result);
 }
 /* https://leetcode.com/problems/sum-root-to-leaf-numbers/
  * 100%
@@ -565,10 +595,10 @@ T Tree<T>::SumRoot2LeafNumbers()
 	if (m_root)
 	{
 		vector<string> result = GetRoot2LeafNumbers(m_root);
-		T sum = 0;
+		T sum = T();
 		for (vector<string>::iterator it = result.begin(); it != result.end(); it++)
 		{
-			T tmp;
+			T tmp = T();
 			istringstream(*it) >> tmp;
 			sum += tmp;
 		}
@@ -582,19 +612,17 @@ vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 	vector<string> result;
 	if (node)
 	{
+		string str;
 		vector<string> left = GetRoot2LeafNumbers(node->Left());
 		if (!left.empty())
 		{
 			for (vector<string>::iterator it = left.begin(); it != left.end(); it++)
 			{
-				if constexpr (is_same_v<T, long> || is_same_v<T, int>) {
-					string str = to_string(node->Item());
-					result.push_back(str.append(*it));
-				}
-				else if constexpr (is_same_v<T, string>) {
-					string str = node->Item();
-					result.push_back(str.append(*it));
-				}
+				if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, float> || is_same_v<T, size_t> || is_same_v<T, double>)
+					str = to_string(node->Item());
+				else if constexpr (is_same_v<T, string>)
+					str = node->Item();
+				result.push_back(str.append(*it));
 			}
 		}
 		vector<string> right = GetRoot2LeafNumbers(node->Right());
@@ -602,23 +630,18 @@ vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 		{
 			for (vector<string>::iterator it = right.begin(); it != right.end(); it++)
 			{
-				if constexpr (is_same_v<T, long> || is_same_v<T, int>) {
-					string str = to_string(node->Item());
-					result.push_back(str.append(*it));
-				}
-				else if constexpr (is_same_v<T, string>) {
-					string str = node->Item();
-					result.push_back(str.append(*it));
-				}
+				if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, float> || is_same_v<T, size_t> || is_same_v<T, double>)
+					str = to_string(node->Item());
+				else if constexpr (is_same_v<T, string>)
+					str = node->Item();
+				result.push_back(str.append(*it));
 			}
 		}
 		if (left.empty() && right.empty()) {
-			if constexpr (is_same_v<T, long> || is_same_v<T, int>) {
+			if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, float> || is_same_v<T, size_t> || is_same_v<T, double>)
 				result.push_back(to_string(node->Item()));
-			}
-			else if constexpr (is_same_v<T, string>) {
+			else if constexpr (is_same_v<T, string>)
 				result.push_back(node->Item());
-			}
 		}
 	}
 	return result;
@@ -712,30 +735,31 @@ bool Tree<T>::IsBalancedTree() const
 }
 
 template <typename T>
-long Tree<T>::MinDiffInBST() const
+template <arithmetic_type U>
+U Tree<T>::MinDiffInBST() const
 {
-	return m_root ? MinDiffInBST(nullptr, m_root) : -1;
+	return m_root ? MinDiffInBST<U>(nullptr, m_root) : -1;
 }
 template <typename T>
-long Tree<T>::MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> current) const
+template <arithmetic_type U>
+U Tree<T>::MinDiffInBST(shared_ptr<Node<U>> previous, shared_ptr<Node<U>> current) const
 {
-	long minimum = numeric_limits<long>::max();
-	if constexpr (is_same_v<T, long> || is_same_v<T, int>) {
-		// Use In-Order traversal to find min diff between any 2 nodes
-		if (current)
-		{
-			minimum = MinDiffInBST(current, current->Left());
-			if (previous)
-				minimum = min((long)minimum, abs((long)current->Item() - (long)previous->Item()));
-			minimum = min(minimum, MinDiffInBST(current, current->Right()));
-		}
+	U minimum = numeric_limits<U>::max();
+	// Use In-Order traversal to find min diff between any 2 nodes
+	if (current)
+	{
+		minimum = MinDiffInBST(current, current->Left());
+		if (previous)
+			minimum = min((long)minimum, abs((long)current->Item() - (long)previous->Item()));
+		minimum = min(minimum, MinDiffInBST(current, current->Right()));
 	}
 	return minimum;
 }
 template <typename T>
-T Tree<T>::MinSubTreesDifference() const
+template<arithmetic_type U>
+U Tree<T>::MinSubTreesDifference() const
 {
-	return m_root ? m_root->MinSubTreesDifference() : 0;
+	return m_root ? m_root->MinSubTreesDifference<U>() : U();
 }
 template <typename T>
 void Tree<T>::PrintTreeColumns()
@@ -1002,26 +1026,25 @@ bool Tree<T>::isValidBST() const
 // Return the arithmetic total.
 // Tree nodes are arithmetic operators. Only leaf nodes are values (long in this case).
 template <typename T>
-T Tree<T>::TreeArithmeticTotal(shared_ptr<Node<string>> node)
+template <arithmetic_type U>
+U Tree<T>::TreeArithmeticTotal(shared_ptr<Node<string>> node)
 {
-	T result;
+	U result = U();
 	if (node->isLeaf())
 	{
 		istringstream(node->Item()) >> result;
 		return result;
 	}
-	T left = TreeArithmeticTotal(node->Left());
-	T right = TreeArithmeticTotal(node->Right());
-	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, double> || is_same_v<T, float>) {
-		if (node->Item() == decltype(node->Item())("+"))
-			result = left + right;
-		else if (node->Item() == decltype(node->Item())("-"))
-			result = left - right;
-		else if (node->Item() == decltype(node->Item())("*"))
-			result = left * right;
-		else if (node->Item() == decltype(node->Item())("/"))
-			result = left / right;
-	}
+	U left = TreeArithmeticTotal<U>(node->Left());
+	U right = TreeArithmeticTotal<U>(node->Right());
+	if (node->Item() == decltype(node->Item())("+"))
+		result = left + right;
+	else if (node->Item() == decltype(node->Item())("-"))
+		result = left - right;
+	else if (node->Item() == decltype(node->Item())("*"))
+		result = left * right;
+	else if (node->Item() == decltype(node->Item())("/"))
+		result = left / right;
 	return result;
 }
 #if 0

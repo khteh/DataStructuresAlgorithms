@@ -94,7 +94,7 @@ template<typename T>
 T Matrix<T>::MatrixPatternCount(vector<vector<T>>& data)
 {
 	T i = data.size() - 1, j = data[0].size() - 1;
-	T count = 0;
+	T count = T();
 	for (; i >= 0 && j >= 0; i--, j--)
 		if (!data[i][j])
 		{

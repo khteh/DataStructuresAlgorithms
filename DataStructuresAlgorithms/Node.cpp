@@ -10,6 +10,16 @@ template class Node<string>;
 template class Node<size_t>;
 template class Node<float>;
 template class Node<double>;
+template int Node<int>::MinSubTreesDifference<int>(shared_ptr<Node<int>> n, int sum, int subtreeSum);
+template long Node<long>::MinSubTreesDifference<long>(shared_ptr<Node<long>> n, long sum, long subtreeSum);
+template float Node<float>::MinSubTreesDifference<float>(shared_ptr<Node<float>> n, float sum, float subtreeSum);
+template double Node<double>::MinSubTreesDifference<double>(shared_ptr<Node<double>> n, double sum, double subtreeSum);
+template size_t Node<size_t>::MinSubTreesDifference<size_t>(shared_ptr<Node<size_t>> n, size_t sum, size_t subtreeSum);
+template int Node<int>::MinSubTreesDifference(int sum);
+template size_t Node<size_t>::MinSubTreesDifference(size_t sum);
+template long Node<long>::MinSubTreesDifference(long sum);
+template float Node<float>::MinSubTreesDifference(float sum);
+template double Node<double>::MinSubTreesDifference(double sum);
 template <typename T>
 Node<T>::Node()
 	: m_item(T()), m_previous(nullptr), m_next(nullptr), m_left(nullptr), m_right(nullptr)
@@ -65,28 +75,22 @@ shared_ptr<Node<T>> Node<T>::Right() const
 {
 	return m_right;
 }
-template <typename T>
-T Node<T>::MinSubTreesDifference(shared_ptr<Node<T>> n, T sum, T subtreeSum)
+template<typename T>
+template<arithmetic_type U>
+U Node<T>::MinSubTreesDifference(shared_ptr<Node<U>> n, U sum, U subtreeSum)
 {
 	ostringstream oss;
-	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, double> || is_same_v<T, float> || is_same_v<T, size_t>)
-	{
-		T adjustedSum = subtreeSum - n->Item();
-		if (sum + n->Item() == adjustedSum)
-			return 0;
-		else if (sum + n->Item() > adjustedSum)
-			return abs((long)sum - (long)subtreeSum);
-		else
-			return n->MinSubTreesDifference(sum);
-	}
+	U adjustedSum = subtreeSum - n->Item();
+	if (sum + n->Item() == adjustedSum)
+		return 0;
+	else if (sum + n->Item() > adjustedSum)
+		return abs((double)sum - (double)subtreeSum);
 	else
-	{
-		oss << __FUNCTION__ << " is only applicable to integral types!";
-		throw runtime_error(oss.str());
-	}
+		return n->MinSubTreesDifference(sum);
 }
 template <typename T>
-T Node<T>::MinSubTreesDifference(T sum)
+template<arithmetic_type U>
+U Node<T>::MinSubTreesDifference(U sum)
 {
 	/*
 			10
@@ -98,29 +102,21 @@ T Node<T>::MinSubTreesDifference(T sum)
 	Diff: 21 - 20 = 1
 	*/
 	ostringstream oss;
-	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, double> || is_same_v<T, float> || is_same_v<T, size_t>)
-	{
-		if (!m_left && !m_right)
-			return abs((long)sum - (long)m_item);
-		else if (!m_left)
-			return m_right->MinSubTreesDifference(sum + m_item);
-		else if (!m_right)
-			return m_left->MinSubTreesDifference(sum + m_item);
-		T leftSum = m_left ? m_left->Sum() : 0;
-		T rightSum = m_right ? m_right->Sum() : 0;
-		sum += m_item;
-		if (leftSum == rightSum)
-			return 0;
-		else if (leftSum < rightSum)
-			return MinSubTreesDifference(m_right, sum + leftSum, rightSum);
-		else
-			return MinSubTreesDifference(m_left, sum + rightSum, leftSum);
-	}
+	if (!m_left && !m_right)
+		return abs((double)sum - (double)m_item);
+	else if (!m_left)
+		return m_right->MinSubTreesDifference(sum + m_item);
+	else if (!m_right)
+		return m_left->MinSubTreesDifference(sum + m_item);
+	U leftSum = m_left ? m_left->Sum() : 0;
+	U rightSum = m_right ? m_right->Sum() : 0;
+	sum += m_item;
+	if (leftSum == rightSum)
+		return 0;
+	else if (leftSum < rightSum)
+		return MinSubTreesDifference(m_right, sum + leftSum, rightSum);
 	else
-	{
-		oss << __FUNCTION__ << " is only applicable to integral types!";
-		throw runtime_error(oss.str());
-	}
+		return MinSubTreesDifference(m_left, sum + rightSum, leftSum);
 }
 template <typename T>
 T Node<T>::Sum() const

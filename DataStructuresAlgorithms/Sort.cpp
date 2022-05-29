@@ -1,11 +1,24 @@
 #include "Sort.h"
+template class Sort<int>;
+template class Sort<size_t>;
 template class Sort<long>;
 template class Sort<string>;
-template class Sort<size_t>;
+template class Sort<float>;
+template class Sort<double>;
+template void Sort<int>::CountingSort<int>(vector<int>& data);
+template void Sort<size_t>::CountingSort<size_t>(vector<size_t>& data);
+template void Sort<long>::CountingSort<long>(vector<long>& data);
+template void Sort<float>::CountingSort<float>(vector<float>& data);
+template void Sort<double>::CountingSort<double>(vector<double>& data);
+template void Sort<int>::SortNumbers<int>(vector<int>& data);
+template void Sort<size_t>::SortNumbers<size_t>(vector<size_t>& data);
+template void Sort<long>::SortNumbers<long>(vector<long>& data);
+template void Sort<float>::SortNumbers<float>(vector<float>& data);
+template void Sort<double>::SortNumbers<double>(vector<double>& data);
 template<typename T>
 void Sort<T>::BubbleSort(vector<T>& data)
 {
-	T tmp;
+	T tmp = T();
 	for (size_t lastIndex = data.size() - 1; lastIndex >= 1; lastIndex--)
 	{
 		for (size_t i = 0; i < lastIndex; i++)
@@ -128,30 +141,29 @@ void Sort<T>::HeapSort(vector<T>& data)
 // https://en.wikipedia.org/wiki/Counting_sort
 // each of which has a non-negative integer key whose maximum value is at most k
 template<typename T>
-void Sort<T>::CountingSort(vector<T>& data)
+template<arithmetic_type U>
+void Sort<T>::CountingSort(vector<U>& data)
 {
-	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, double> || is_same_v<T, float> || is_same_v<T, size_t>) {
-		vector<T> input(data);
-		T min = numeric_limits<T>::max(), max = 0;
-		for (typename vector<T>::iterator it = input.begin(); it != input.end(); it++)
-		{
-			if (*it < min)
-				min = *it;
-			if (*it > max)
-				max = *it;
-		}
-		// Do NOT use map / multimap to keep the counts. map / multimap auto-sort on keys. This defeats the purpose of CountingSort
-		vector<T> counts(max + 1, 0);
-		for (typename vector<T>::iterator it = input.begin(); it != input.end(); it++)
-			counts[*it]++;
-		for (long i = min > 0 ? min : 1; i <= max; i++)
-			counts[i] += counts[i - 1];
-		// Use reverse_iterator for a stable sort
-		for (typename vector<T>::reverse_iterator it = input.rbegin(); it != input.rend(); it++)
-		{
-			data[counts[*it] - 1] = *it;
-			counts[*it]--;
-		}
+	vector<T> input(data);
+	U min = numeric_limits<T>::max(), max = 0;
+	for (typename vector<T>::iterator it = input.begin(); it != input.end(); it++)
+	{
+		if (*it < min)
+			min = *it;
+		if (*it > max)
+			max = *it;
+	}
+	// Do NOT use map / multimap to keep the counts. map / multimap auto-sort on keys. This defeats the purpose of CountingSort
+	vector<T> counts(max + 1, 0);
+	for (typename vector<T>::iterator it = input.begin(); it != input.end(); it++)
+		counts[*it]++;
+	for (long i = min > 0 ? min : 1; i <= max; i++)
+		counts[i] += counts[i - 1];
+	// Use reverse_iterator for a stable sort
+	for (typename vector<T>::reverse_iterator it = input.rbegin(); it != input.rend(); it++)
+	{
+		data[counts[*it] - 1] = *it;
+		counts[*it]--;
 	}
 }
 template<typename T>
@@ -485,11 +497,11 @@ bool Sort<T>::CanFinishCourseTopologicalSort(size_t numCourses, vector<vector<T>
 // Sort numbers into consecutive positive/negative numbers
 // http://www.careercup.com/question?id=5183920823861248
 template<typename T>
-void Sort<T>::SortNumbers(vector<T>& data)
+template<arithmetic_type U>
+void Sort<T>::SortNumbers(vector<U>& data)
 {
 	size_t j;
-	T tmp;
-	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, double> || is_same_v<T, float> || is_same_v<T, size_t>)
+	U tmp = U();
 	for (size_t i = 0; i < data.size(); i++)
 	{
 		if (data[i] < 0 && data[i + 1] < 0)

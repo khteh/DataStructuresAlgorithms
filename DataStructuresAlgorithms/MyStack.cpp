@@ -88,7 +88,7 @@ void MyStack<T>::PrintStack()
 template <typename T>
 void MyStack<T>::SortStack(MyStack<T>& src, MyStack<T>& dest, sort_order_t order)
 {
-	T item;
+	T item = T();
 	while (!src.isEmpty())
 	{
 		item = src.pop();

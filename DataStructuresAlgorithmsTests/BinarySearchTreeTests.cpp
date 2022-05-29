@@ -92,7 +92,7 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest)
 	tree1.PrintTree();
 	cout << endl;
 	tree1.PrintTreeColumns();
-	long min = tree1.MinDiffInBST();
+	long min = tree1.MinDiffInBST<long>();
 	ASSERT_EQ(10, min);
 	cout << "Subtree (subtree) content: " << endl;
 	subtree.PrintTree();
@@ -129,7 +129,7 @@ Level 1:                        0(50)            100(50)
 Level 2:                -50(0)     10(0)   75(100)       150(100)
 Level 3:        -100(-50)               60(75)
 	*/
-	tree.FindSum(tree.Root(), -100, result);
+	tree.FindSum(tree.Root(), (long)-100, result);
 	ASSERT_FALSE(result.empty());
 	ASSERT_EQ(2, result.size());
 	expected.clear();
@@ -137,7 +137,7 @@ Level 3:        -100(-50)               60(75)
 	ASSERT_EQ(expected, result);
 
 	result.clear();
-	tree.FindSum(tree.Root(), 150, result);
+	tree.FindSum(tree.Root(), (long)150, result);
 	ASSERT_FALSE(result.empty());
 	expected.clear();
 	expected = {"50 100", "150"};
@@ -145,7 +145,7 @@ Level 3:        -100(-50)               60(75)
 	result.clear();
 
 	result.clear();
-	tree.FindSum(tree.Root(), 110, result);
+	tree.FindSum(tree.Root(), (long)110, result);
 	ASSERT_TRUE(result.empty());
 	expected.clear();
 	ASSERT_EQ(expected, result);

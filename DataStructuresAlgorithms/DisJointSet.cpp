@@ -60,7 +60,7 @@ T DisJointSet<T>::Union(T x, T y)
 		oss << y << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << y << ");";
 		throw runtime_error(oss.str());
 	}
-	T root;
+	T root = T();
 	if (rootX != rootY)
 	{
 		// Put smaller ranked item under bigger ranked item if ranks are different. Copying of smaller ranked item saves time!

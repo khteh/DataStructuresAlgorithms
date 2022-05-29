@@ -50,8 +50,7 @@ void Tower<T>::Add(T disk)
 template <typename T>
 void Tower<T>::MoveTopTo(Tower *t)
 {
-	T top = m_disks.pop();
-	t->Add(top);
+	t->Add(m_disks.pop());
 }
 
 template <typename T>

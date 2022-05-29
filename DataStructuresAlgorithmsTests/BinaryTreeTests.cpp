@@ -69,14 +69,14 @@ TEST(BinaryTreeTests, BinaryTreeFindSumTest)
 	Level 3:        -50(0)  10(0)         75(100)     150(100)
 	*/
 	tree.PrintTreeColumns();
-	tree.FindSum(tree.Root(), -100, result);
+	tree.FindSum(tree.Root(), (long)-100, result);
 	ASSERT_FALSE(result.empty());
 	ASSERT_EQ(3, result.size()); //"-100" "-100 0" "-50 0 -100 50"
 	expected = {"-100", "-100 0", "50 -100 0 -50"};
 	ASSERT_EQ(expected, result);
 	result.clear();
 
-	tree.FindSum(tree.Root(), 110, result);
+	tree.FindSum(tree.Root(), (long)110, result);
 	ASSERT_FALSE(result.empty());
 	ASSERT_EQ(1, result.size());
 	expected.clear();
@@ -84,7 +84,7 @@ TEST(BinaryTreeTests, BinaryTreeFindSumTest)
 	ASSERT_EQ(expected, result);
 
 	result.clear();
-	tree.FindSum(tree.Root(), 150, result);
+	tree.FindSum(tree.Root(), (long)150, result);
 	ASSERT_FALSE(result.empty());
 	expected.clear();
 	expected = {"150"};
@@ -102,7 +102,7 @@ TEST(BinaryTreeTests, BinaryTreeFindSumTest)
 	result.clear();
 	cout << "Tree content (= Tree): " << endl;
 	tree.PrintTree();
-	tree.FindSum(tree.Root(), 5, result);
+	tree.FindSum(tree.Root(), (long)5, result);
 	ASSERT_FALSE(result.empty());
 	ASSERT_EQ(1, result.size());
 	expected.clear();

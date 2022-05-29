@@ -3,7 +3,11 @@
 #include <memory>
 #include <sstream>
 #include <limits>
+#include <concepts>
+#include <cstdlib>
 using namespace std;
+template<typename T>
+concept arithmetic_type = integral<T> || floating_point<T>;
 
 template <typename T>
 class Node : public enable_shared_from_this<Node<T>>
@@ -11,7 +15,8 @@ class Node : public enable_shared_from_this<Node<T>>
 protected:
 	T m_item;
 	shared_ptr<Node<T>> m_next, m_previous, m_left, m_right;
-	T MinSubTreesDifference(shared_ptr<Node<T>>, T, T);
+	template<arithmetic_type U>
+	U MinSubTreesDifference(shared_ptr<Node<U>>, U, U);
 
 public:
 	Node();
@@ -25,7 +30,8 @@ public:
 	shared_ptr<Node<T>> Previous() const;
 	shared_ptr<Node<T>> Left() const;
 	shared_ptr<Node<T>> Right() const;
-	T MinSubTreesDifference(T sum = 0);
+	template<arithmetic_type U>
+	U MinSubTreesDifference(U sum = 0);
 	void SetPrevious(shared_ptr<Node<T>>);
 	void SetNext(shared_ptr<Node<T>>);
 	void SetLeft(shared_ptr<Node<T>>);

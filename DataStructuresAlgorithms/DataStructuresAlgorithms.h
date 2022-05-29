@@ -37,6 +37,7 @@ using namespace tbb;
 #include <limits.h>
 #include <cmath>
 #include <chrono>
+#include <concepts>
 #include "NameHidingExample.h"
 #include "Singleton.h"
 #include "Graph.h"

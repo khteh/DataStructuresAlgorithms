@@ -1,9 +1,16 @@
 #include "stdafx.h"
 #include "LinkedList.h"
 template class LinkedList<int>;
+template class LinkedList<size_t>;
 template class LinkedList<long>;
 template class LinkedList<string>;
-using Type = std::variant<int, long>;
+template class LinkedList<float>;
+template class LinkedList<double>;
+template shared_ptr<Node<int>> LinkedList<int>::AddNumbers<int>(shared_ptr<Node<int>> p1, shared_ptr<Node<int>> p2, int carry);
+template shared_ptr<Node<long>> LinkedList<long>::AddNumbers<long>(shared_ptr<Node<long>> p1, shared_ptr<Node<long>> p2, long carry);
+template shared_ptr<Node<float>> LinkedList<float>::AddNumbers<float>(shared_ptr<Node<float>> p1, shared_ptr<Node<float>> p2, float carry);
+template shared_ptr<Node<double>> LinkedList<double>::AddNumbers<double>(shared_ptr<Node<double>> p1, shared_ptr<Node<double>> p2, double carry);
+template shared_ptr<Node<size_t>> LinkedList<size_t>::AddNumbers<size_t>(shared_ptr<Node<size_t>> p1, shared_ptr<Node<size_t>> p2, size_t carry);
 template <typename T>
 LinkedList<T>::LinkedList()
 	: m_head(nullptr)
@@ -510,23 +517,21 @@ shared_ptr<Node<T>> LinkedList<T>::RemoveNthElementFromBack(long n) // n starts 
 //   p1:   3 -> 1 -> 5
 //   p2:   5 -> 9 -> 2
 // Output: 8 -> 0 -> 8
-template <typename T>
-shared_ptr<Node<T>> LinkedList<T>::AddNumbers(shared_ptr<Node<T>> p1, shared_ptr<Node<T>> p2, T carry)
+template<typename T>
+template<arithmetic_type U>
+shared_ptr<Node<U>> LinkedList<T>::AddNumbers(shared_ptr<Node<U>> p1, shared_ptr<Node<U>> p2, U carry)
 {
-	if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, double> || is_same_v<T, float> || is_same_v<T, size_t>)
+	if (p1 || p2 || carry > U())
 	{
-		if (p1 || p2 || carry > T())
-		{
-			shared_ptr<Node<T>> result = make_shared<Node<T>>(carry);
-			if (p1)
-				result->SetItem(result->Item() + p1->Item());
-			if (p2)
-				result->SetItem(result->Item() + p2->Item());
-			carry = result->Item() / 10;
-			result->SetItem(result->Item() % 10);
-			result->SetNext(AddNumbers(p1 ? p1->Next() : nullptr, p2 ? p2->Next() : nullptr, carry));
-			return result;
-		}
+		shared_ptr<Node<U>> result = make_shared<Node<U>>(carry);
+		if (p1)
+			result->SetItem(result->Item() + p1->Item());
+		if (p2)
+			result->SetItem(result->Item() + p2->Item());
+		carry = result->Item() / 10;
+		result->SetItem(fmod(result->Item(), 10));
+		result->SetNext(AddNumbers(p1 ? p1->Next() : nullptr, p2 ? p2->Next() : nullptr, carry));
+		return result;
 	}
 	return nullptr;
 }

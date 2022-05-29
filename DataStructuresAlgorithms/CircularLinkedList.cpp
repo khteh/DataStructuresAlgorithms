@@ -3,7 +3,6 @@
 template class CircularLinkedList<int>;
 template class CircularLinkedList<long>;
 template class CircularLinkedList<string>;
-using Type = std::variant<int, long>;
 template <typename T>
 CircularLinkedList<T>::CircularLinkedList(vector<T> &data)
 {

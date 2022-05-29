@@ -4,7 +4,10 @@
 #include <iostream>
 #include <variant>
 #include <memory>
+#include <concepts>
+#include <cmath>
 using namespace std;
+
 template <typename T>
 class LinkedList
 {
@@ -13,7 +16,6 @@ protected:
 	void SetHead(shared_ptr<Node<T>>);
 	shared_ptr<Node<T>> Split(shared_ptr<Node<T>>, size_t);
 	void Merge(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
-
 public:
 	LinkedList();
 	LinkedList(shared_ptr<Node<T>>);
@@ -44,5 +46,6 @@ public:
 	// Implement an algorithm to find the nth to last element of a singly linked list.
 	shared_ptr<Node<T>> NthElementFromBack(long);
 	shared_ptr<Node<T>> RemoveNthElementFromBack(long);
-	shared_ptr<Node<T>> AddNumbers(shared_ptr<Node<T>>, shared_ptr<Node<T>>, T carry = 0);
+	template<arithmetic_type U>
+	shared_ptr<Node<U>> AddNumbers(shared_ptr<Node<U>>, shared_ptr<Node<U>>, U carry = 0);
 };
