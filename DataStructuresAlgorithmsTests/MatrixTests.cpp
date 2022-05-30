@@ -261,3 +261,57 @@ TEST(MatrixTests, SurfaceArea3DTest)
 	grid = { {51}, {32}, {28}, {49}, {28}, {21}, {98}, {56}, {99}, {77} };
 	ASSERT_EQ(1482, SurfaceArea3D(grid));
 }
+TEST(MatrixTests, MatrixSumTest)
+{
+	vector<vector<long>> grid;
+	vector<vector<size_t>> ugrid;
+	grid = { {2, 0, -3, 4}, {6, 3, 2, -1}, {5, 4, 7, 3}, {2, -6, 8, 1} };
+	ugrid = { {1, 1}, {3, 2} };
+	Matrix<long> matrix(grid);
+	ASSERT_EQ(18, matrix.Sum(ugrid));
+	ugrid.clear();
+	ugrid = { {0, 2}, {3, 3} };
+	ASSERT_EQ(21, matrix.Sum(ugrid));
+
+	grid.clear();
+	grid = { {-4, -5} };
+	Matrix<long> matrix1(grid);
+	ugrid.clear();
+	ugrid = { {0, 0}, {0, 0} };
+	ASSERT_EQ(-4, matrix1.Sum(ugrid));
+	ugrid.clear();
+	ugrid = { {0, 0}, {0, 1} };
+	ASSERT_EQ(-9, matrix1.Sum(ugrid));
+}
+TEST(MatrixTests, LargestSumSubmatrixTest)
+{
+	vector<vector<long>> grid;
+	vector<vector<size_t>> ugrid, ugrid1;
+	grid = { {2, 0, -3, 4}, {6, 3, 2, -1}, {5, 4, 7, 3}, {2, -6, 8, 1} };
+	Matrix<long> matrix(grid);
+	ASSERT_EQ(37, matrix.LargestSumSubmatrix(ugrid));
+	ASSERT_FALSE(ugrid.empty());
+	ugrid1 = { {0,0}, {3,3} };
+	ASSERT_EQ(ugrid1, ugrid);
+
+	grid.clear();
+	grid = { {-4, -5} };
+	Matrix<long> matrix1(grid);
+	ugrid.clear();
+	ugrid1.clear();
+	ASSERT_EQ(-4, matrix1.LargestSumSubmatrix(ugrid));
+	ASSERT_FALSE(ugrid.empty());
+	ugrid1 = { {0,0}, {0,0} };
+	ASSERT_EQ(ugrid1, ugrid);
+
+	grid.clear();
+	grid = { {-1, -2, -3, -4}, {-2, 3, 2, -3}, {-3, 4, 7, -2}, {-4, -3, -2, -1} };
+	Matrix<long> matrix2(grid);
+	ugrid.clear();
+	ugrid1.clear();
+	ASSERT_EQ(16, matrix2.LargestSumSubmatrix(ugrid));
+	ASSERT_FALSE(ugrid.empty());
+	ugrid1 = { {1, 1}, {2, 2} };
+	ASSERT_EQ(ugrid1, ugrid);
+
+}
