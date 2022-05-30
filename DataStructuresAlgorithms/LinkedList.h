@@ -46,6 +46,5 @@ public:
 	// Implement an algorithm to find the nth to last element of a singly linked list.
 	shared_ptr<Node<T>> NthElementFromBack(long);
 	shared_ptr<Node<T>> RemoveNthElementFromBack(long);
-	template<arithmetic_type U>
-	shared_ptr<Node<U>> AddNumbers(shared_ptr<Node<U>>, shared_ptr<Node<U>>, U carry = 0);
+	shared_ptr<Node<T>> AddNumbers(shared_ptr<Node<T>>, shared_ptr<Node<T>>, T carry = 0) requires integral_type<T>;
 };

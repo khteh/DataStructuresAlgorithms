@@ -10,16 +10,6 @@ template class Node<string>;
 template class Node<size_t>;
 template class Node<float>;
 template class Node<double>;
-template int Node<int>::MinSubTreesDifference<int>(shared_ptr<Node<int>> n, int sum, int subtreeSum);
-template long Node<long>::MinSubTreesDifference<long>(shared_ptr<Node<long>> n, long sum, long subtreeSum);
-template float Node<float>::MinSubTreesDifference<float>(shared_ptr<Node<float>> n, float sum, float subtreeSum);
-template double Node<double>::MinSubTreesDifference<double>(shared_ptr<Node<double>> n, double sum, double subtreeSum);
-template size_t Node<size_t>::MinSubTreesDifference<size_t>(shared_ptr<Node<size_t>> n, size_t sum, size_t subtreeSum);
-template int Node<int>::MinSubTreesDifference(int sum);
-template size_t Node<size_t>::MinSubTreesDifference(size_t sum);
-template long Node<long>::MinSubTreesDifference(long sum);
-template float Node<float>::MinSubTreesDifference(float sum);
-template double Node<double>::MinSubTreesDifference(double sum);
 template <typename T>
 Node<T>::Node()
 	: m_item(T()), m_previous(nullptr), m_next(nullptr), m_left(nullptr), m_right(nullptr)
@@ -76,11 +66,10 @@ shared_ptr<Node<T>> Node<T>::Right() const
 	return m_right;
 }
 template<typename T>
-template<arithmetic_type U>
-U Node<T>::MinSubTreesDifference(shared_ptr<Node<U>> n, U sum, U subtreeSum)
+T Node<T>::MinSubTreesDifference(shared_ptr<Node<T>> n, T sum, T subtreeSum) requires arithmetic_type<T>
 {
 	ostringstream oss;
-	U adjustedSum = subtreeSum - n->Item();
+	T adjustedSum = subtreeSum - n->Item();
 	if (sum + n->Item() == adjustedSum)
 		return 0;
 	else if (sum + n->Item() > adjustedSum)
@@ -89,8 +78,7 @@ U Node<T>::MinSubTreesDifference(shared_ptr<Node<U>> n, U sum, U subtreeSum)
 		return n->MinSubTreesDifference(sum);
 }
 template <typename T>
-template<arithmetic_type U>
-U Node<T>::MinSubTreesDifference(U sum)
+T Node<T>::MinSubTreesDifference(T sum)  requires arithmetic_type<T>
 {
 	/*
 			10
@@ -108,8 +96,8 @@ U Node<T>::MinSubTreesDifference(U sum)
 		return m_right->MinSubTreesDifference(sum + m_item);
 	else if (!m_right)
 		return m_left->MinSubTreesDifference(sum + m_item);
-	U leftSum = m_left ? m_left->Sum() : 0;
-	U rightSum = m_right ? m_right->Sum() : 0;
+	T leftSum = m_left ? m_left->Sum() : 0;
+	T rightSum = m_right ? m_right->Sum() : 0;
 	sum += m_item;
 	if (leftSum == rightSum)
 		return 0;

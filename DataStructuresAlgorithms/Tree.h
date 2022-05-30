@@ -54,13 +54,11 @@ protected:
 	shared_ptr<Node<T>> FindNode(const shared_ptr<Node<T>> &, T item);
 	void PrintColumns(const shared_ptr<Node<T>> &, long, map<long, shared_ptr<vector<T>>> &);
 	void AddToColumn(T, long, map<long, shared_ptr<vector<T>>> &);
-	template<arithmetic_type U>
-	U MinDiffInBST(shared_ptr<Node<U>>, shared_ptr<Node<U>>) const;
+	T MinDiffInBST(shared_ptr<Node<T>>, shared_ptr<Node<T>>) const requires arithmetic_type<T>;
 	shared_ptr<Node<T>> Copy(const shared_ptr<Node<T>> &, map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> &);
 	shared_ptr<Node<T>> LeftMostChild(shared_ptr<Node<T>> &);
 	bool covers(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
-	template<arithmetic_type U>
-	void FindSum(const shared_ptr<Node<U>> &, U, long, vector<U>, vector<string> &);
+	void FindSum(const shared_ptr<Node<T>> &, T, long, vector<T>, vector<string> &) requires arithmetic_type<T>;
 	vector<string> GetRoot2LeafNumbers(const shared_ptr<Node<T>> &);
 	size_t Count(const shared_ptr<Node<T>> &) const;
 	T Min(const shared_ptr<Node<T>> &) const;
@@ -91,8 +89,7 @@ public:
 	shared_ptr<Node<T>> InOrderSuccessor(shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> CommonAncestor1(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
-	template<arithmetic_type U>
-	void FindSum(const shared_ptr<Node<U>> &, U, vector<string> &);
+	void FindSum(const shared_ptr<Node<T>>&, T, vector<string>&) requires arithmetic_type<T>;
 	T SumRoot2LeafNumbers();
 	bool SubTree(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	bool MatchTree(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &) const;
@@ -106,17 +103,14 @@ public:
 	bool HasNextMax() const;
 	T Min() const;
 	T Max() const;
-	template<arithmetic_type U>
-	U MinSubTreesDifference() const;
+	T MinSubTreesDifference() const requires arithmetic_type<T>;
 	bool IsBalancedTree() const;
-	template<arithmetic_type U>
-	U MinDiffInBST() const;
+	T MinDiffInBST() const requires arithmetic_type<T>;
 	size_t Count() const;
 	virtual void PrintTree() const;
 	void PrintTreeColumns();
 	vector<size_t> GetLevelNodeCount();
 	shared_ptr<Node<T>> ToLinkedList();
 	bool isValidBST() const;
-	template<arithmetic_type U>
-	U TreeArithmeticTotal(shared_ptr<Node<string>>);
+	T TreeArithmeticTotal(shared_ptr<Node<string>>)  requires arithmetic_type<T>;
 };

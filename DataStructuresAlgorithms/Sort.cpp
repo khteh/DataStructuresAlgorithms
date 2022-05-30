@@ -5,16 +5,6 @@ template class Sort<long>;
 template class Sort<string>;
 template class Sort<float>;
 template class Sort<double>;
-template void Sort<int>::CountingSort<int>(vector<int>& data);
-template void Sort<size_t>::CountingSort<size_t>(vector<size_t>& data);
-template void Sort<long>::CountingSort<long>(vector<long>& data);
-template void Sort<float>::CountingSort<float>(vector<float>& data);
-template void Sort<double>::CountingSort<double>(vector<double>& data);
-template void Sort<int>::SortNumbers<int>(vector<int>& data);
-template void Sort<size_t>::SortNumbers<size_t>(vector<size_t>& data);
-template void Sort<long>::SortNumbers<long>(vector<long>& data);
-template void Sort<float>::SortNumbers<float>(vector<float>& data);
-template void Sort<double>::SortNumbers<double>(vector<double>& data);
 template<typename T>
 void Sort<T>::BubbleSort(vector<T>& data)
 {
@@ -141,11 +131,10 @@ void Sort<T>::HeapSort(vector<T>& data)
 // https://en.wikipedia.org/wiki/Counting_sort
 // each of which has a non-negative integer key whose maximum value is at most k
 template<typename T>
-template<arithmetic_type U>
-void Sort<T>::CountingSort(vector<U>& data)
+void Sort<T>::CountingSort(vector<T>& data) requires arithmetic_type<T>
 {
 	vector<T> input(data);
-	U min = numeric_limits<T>::max(), max = 0;
+	T min = numeric_limits<T>::max(), max = 0;
 	for (typename vector<T>::iterator it = input.begin(); it != input.end(); it++)
 	{
 		if (*it < min)
@@ -497,11 +486,10 @@ bool Sort<T>::CanFinishCourseTopologicalSort(size_t numCourses, vector<vector<T>
 // Sort numbers into consecutive positive/negative numbers
 // http://www.careercup.com/question?id=5183920823861248
 template<typename T>
-template<arithmetic_type U>
-void Sort<T>::SortNumbers(vector<U>& data)
+void Sort<T>::SortNumbers(vector<T>& data) requires arithmetic_type<T>
 {
 	size_t j;
-	U tmp = U();
+	T tmp = T();
 	for (size_t i = 0; i < data.size(); i++)
 	{
 		if (data[i] < 0 && data[i + 1] < 0)

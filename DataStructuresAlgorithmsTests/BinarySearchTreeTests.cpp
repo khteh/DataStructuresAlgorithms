@@ -92,7 +92,7 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest)
 	tree1.PrintTree();
 	cout << endl;
 	tree1.PrintTreeColumns();
-	long min = tree1.MinDiffInBST<long>();
+	long min = tree1.MinDiffInBST();
 	ASSERT_EQ(10, min);
 	cout << "Subtree (subtree) content: " << endl;
 	subtree.PrintTree();

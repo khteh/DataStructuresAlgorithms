@@ -14,12 +14,12 @@ TEST(TreeTests, TreeArithmeticTotalDoubleTest) {
 	multiplier->SetLeft(adder);
 	multiplier->SetRight(minus);
 	// (1 + 2) * (3 - 4) = 3 * -1 = -3
-	ASSERT_EQ(-3, tree.TreeArithmeticTotal<double>(multiplier));
+	ASSERT_EQ(-3, tree.TreeArithmeticTotal(multiplier));
 	adder->SetLeft(num5);
 	adder->SetRight(num6);
 	minus->SetLeft(num7);
 	minus->SetRight(num8);
 	// (1.2 + 2.3) * (3.4 - 4.5) = 3.5 * -1.1 = -3.85
 	double expected = (1.2 + 2.3) * (3.4 - 4.5);
-	ASSERT_LT(fabs(tree.TreeArithmeticTotal<double>(multiplier) - expected), numeric_limits<double>::epsilon());
+	ASSERT_LT(fabs(tree.TreeArithmeticTotal(multiplier) - expected), numeric_limits<double>::epsilon());
 }

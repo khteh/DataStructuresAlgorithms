@@ -25,14 +25,12 @@ public:
 	void SelectionSort(vector<T>&);
 	void InsertionSort(vector<T>&);
 	void HeapSort(vector<T>&);
-	template<arithmetic_type U>
-	void CountingSort(vector<U>&);
+	void CountingSort(vector<T>&) requires arithmetic_type<T>;
 	string StringCountingSort(vector<vector<string>>&);
 	void TopDownMergeSort(vector<T>&, vector<T>&, size_t, size_t);
 	void BottomUpMergeSort(vector<T>&, vector<T>&);
 	void WiggleSort(vector<T>&);
-	template<arithmetic_type U>
-	void SortNumbers(vector<U>&);
+	void SortNumbers(vector<T>&) requires arithmetic_type<T>;
 	size_t SortSwapCount(vector<T>&);
 	bool CanFinishCourseTopologicalSort(size_t, vector<vector<T>>&, vector<T>&);
 	size_t TopDownMergeSortCountConversions(vector<T>&, vector<T>&, size_t, size_t);
