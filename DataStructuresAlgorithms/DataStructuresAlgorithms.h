@@ -274,7 +274,6 @@ void MinHeapifyDown(vector<long> &, size_t);
 void MaxHeapifyDown(vector<long> &, size_t);
 size_t minimumBribes(vector<long> &);
 long countInversions(vector<long>&);
-bool LexicographicSort(string, string);
 size_t MergeCountInversions(vector<long>&, vector<long>&, size_t, size_t, size_t);
 void DutchPartitioning(vector<long> &, long);
 long **my2DAlloc(long, long);

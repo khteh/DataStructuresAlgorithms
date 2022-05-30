@@ -70,41 +70,6 @@ bool isUniqueString(string const &str)
 	}
 	return true;
 }
-bool LexicographicSort(string s1, string s2)
-{
-	size_t i, j;
-	map<string, size_t> order = { {"a", 0}, {"b", 1}, {"c", 2}, {"ch", 3}, {"cz", 4}, {"d", 5}, {"e", 6}, {"f", 7}, {"g", 8}, {"h", 9}, {"i", 10}, {"j", 11}, {"k", 12}, {"l", 13}, {"m", 14}, {"n", 15}, {"o", 16}, {"p", 17}, {"q", 18}, {"r", 18}, {"s", 19}, {"t", 20}, {"u", 21}, {"v", 22}, {"w", 23}, {"x", 24}, {"y", 24}, {"z", 25} };
-	map<string, size_t>::iterator s1It = order.end(), s2It = order.end();
-	ranges::transform(s1, s1.begin(), ::tolower);
-	ranges::transform(s2, s2.begin(), ::tolower);
-	for (i = 0, j = 0; i < s1.size() && j < s2.size();)
-	{
-		if (i < s1.size() - 1)
-		{
-			s1It = order.find(s1.substr(i, 2));
-			if (s1It != order.end())
-				i += 2;
-		}
-		if (s1It == order.end())
-			s1It = order.find(s1.substr(i++, 1));
-		if (j < s2.size() - 1)
-		{
-			s2It = order.find(s2.substr(j, 2));
-			if (s2It != order.end())
-				j += 2;
-		}
-		if (s2It == order.end())
-			s2It = order.find(s2.substr(j++, 1));
-		if (s1It->second == s2It->second)
-		{
-			s1It = order.end();
-			s2It = order.end();
-		}
-		else
-			return s1It->second < s2It->second; // substring comparison
-	}
-	return (s1.size() - i) < (s2.size() - j); // String length comparison.
-}
 vector<string> findUnique(vector<string> const &a, vector<string> const &b)
 {
 	vector<string> result;
