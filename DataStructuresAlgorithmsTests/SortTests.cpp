@@ -229,8 +229,7 @@ TEST(SortTests, WiggleSortTest) {
 TEST(SortTests, LexicographicSortTest) {
 	vector<string> strings = { "abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE" };
 	vector<string> strings1 = { "abcchcz", "ABCCHCZ", "abcczch", "ABCCZCH", "abcde", "ABCDE" };
-	Sort<string> sort;
-	ranges::sort(strings, sort.LexicographicSort);
+	ranges::sort(strings, &Sort<string>::LexicographicSort);
 	ASSERT_EQ(strings1, strings);
 }
 TEST(SortTests, Merge2SortedListsTest) {
