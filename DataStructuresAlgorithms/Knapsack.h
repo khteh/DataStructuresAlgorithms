@@ -21,6 +21,9 @@ private:
 	map<long, set<vector<size_t>>> coinChangeCache;
 	map<long, set<vector<size_t>>> knapsackCache;
 	map<long, size_t> dpMemoization;
+	set<vector<size_t>> _BoundedKnapsack(long, vector<size_t> &);
+	set<vector<size_t>> _BoundedKnapsackCombinationSum(size_t, size_t);
+
 public:
 	void ClearCoinChangeCache();
 	void ClearKnapsackCache();
@@ -32,9 +35,7 @@ public:
 	long CoinsChangeFewestCoinsDynamicProgramming(long, vector<size_t> &);
 	set<vector<size_t>> KnapsackCombinations(long, vector<size_t> &);
 	size_t UnboundedKnapsack(long, vector<size_t> &);
-	set<vector<size_t>> _BoundedKnapsack(long, vector<size_t> &);
 	vector<vector<size_t>> BoundedKnapsack(long, vector<size_t> &);
-	set<vector<size_t>> _BoundedKnapsackCombinationSum(size_t, size_t);
 	set<vector<size_t>> BoundedKnapsackCombinationSum(size_t, size_t);
 	size_t StairsClimbingDynamicProgramming(long, vector<size_t> &);
 	size_t StairsClimbingDynamicProgrammingBottomUp(long, vector<size_t> &);
