@@ -159,7 +159,7 @@ set<vector<size_t>> Knapsack::KnapsackCombinations(long amount, vector<size_t> &
 	{
 		if (numbers.size() == 1 && (long)numbers[0] <= amount)
 			combinations.insert(vector<size_t>{amount - amount % numbers[0]}); // Multiples of numbers[0] closest to amount
-		else if (find(numbers.begin(), numbers.end(), 1) != numbers.end())
+		else if (ranges::find(numbers, 1) != numbers.end())
 			combinations.insert(vector<size_t>{(size_t)amount});
 		else
 		{
@@ -315,17 +315,17 @@ vector<vector<size_t>> Knapsack::BoundedKnapsack(long amount, vector<size_t> &nu
 /* https://leetcode.com/problems/combination-sum-iii/
  * 100%
  */
-set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t k, size_t sum)
+set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t k, size_t sum, size_t max)
 {
 	set<vector<size_t>> combinations;
-	for (size_t i = 1; i < 10; i++)
+	for (size_t i = 1; i < max; i++)
 	{
 		if (sum >= i)
 		{
 			set<vector<size_t>> tmp;
 			if (knapsackCache.find(sum - i) == knapsackCache.end())
 			{
-				tmp = _BoundedKnapsackCombinationSum(k, sum - i);
+				tmp = _BoundedKnapsackCombinationSum(k, sum - i, max);
 				knapsackCache[sum - i] = tmp;
 			}
 			else
@@ -363,10 +363,10 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t k, size_t su
 	} // for
 	return combinations;
 }
-set<vector<size_t>> Knapsack::BoundedKnapsackCombinationSum(size_t k, size_t sum)
+set<vector<size_t>> Knapsack::BoundedKnapsackCombinationSum(size_t k, size_t sum, size_t max)
 {
 	knapsackCache.clear();
-	set<vector<size_t>> combinations = _BoundedKnapsackCombinationSum(k, sum);
+	set<vector<size_t>> combinations = _BoundedKnapsackCombinationSum(k, sum, max);
 	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end();)
 		if (it->size() != k)
 			it = combinations.erase(it);

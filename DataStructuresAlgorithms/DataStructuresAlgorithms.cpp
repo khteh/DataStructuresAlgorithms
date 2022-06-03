@@ -1921,8 +1921,7 @@ void shuffleCards(vector<long> &cards)
 	unsigned long long mask = 0; // bitmask of 52 cards.
 	int tmp, index;
 	random_device device;
-	vector<unsigned int> seeds;
-	seeds.resize(mt19937_64::state_size);
+	vector<unsigned int> seeds(mt19937_64::state_size);
 	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
@@ -1957,8 +1956,7 @@ void randomSubset(vector<long> &source, size_t count, vector<long> &result)
 	if (count > source.size())
 		return;
 	random_device device;
-	vector<unsigned int> seeds;
-	seeds.resize(mt19937_64::state_size);
+	vector<unsigned int> seeds(mt19937_64::state_size);
 	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
@@ -3086,11 +3084,9 @@ size_t ConnectedCellsInAGridLinkedList(vector<vector<long>> &grid)
 // 100%
 size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 {
-	vector<long> data;
-	data.resize(grid.size() * grid[0].size());
+	vector<long> data(grid.size() * grid[0].size());
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; });
-
 	DisJointSet<long> disjointSet(data);
 	size_t width = grid[0].size();
 	map<long, size_t> counts;
@@ -3695,8 +3691,7 @@ void TestURNG(URNG &urng)
 	// Uniform distribution used with vector
 	// Distribution is [-5, 5] inclusive
 	uniform_int_distribution<long> dist(-5, 5);
-	vector<long> v;
-	v.resize(20);
+	vector<long> v(20);
 	ranges::generate(v, [&]
 					 { return dist(urng); });
 	cout << "Randomized vector: ";
@@ -3720,8 +3715,7 @@ void TestRandom()
 	random_device device;
 	cout << "Using random_device URNG:" << endl;
 	uniform_int_distribution<long> dist(-5, 5);
-	vector<long> v;
-	v.resize(20);
+	vector<long> v(20);
 	ranges::generate(v, [&]
 					 { return dist(device); });
 	TestURNG(device);
@@ -3740,9 +3734,8 @@ void TestRandom()
 	// Fourth run: "warm-up" sequence as as seed; different each run.
 	// Advanced uses. Allows more than 32 bits of randomness.
 	cout << "Using non-deterministic-seed \"warm-up\" sequence mersene twister engine URNG" << endl;
-	vector<unsigned int> seeds;
+	vector<unsigned int> seeds(mt19937_64::state_size);
 	cout << "mt19937_64::state_size: " << mt19937_64::state_size << endl;
-	seeds.resize(mt19937_64::state_size);
 	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 non_deterministic_seed_sequence_mersene_twister_engine{sequence};

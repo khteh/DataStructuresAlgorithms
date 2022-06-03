@@ -14,8 +14,7 @@ int main(int argc, char *argv[])
 	random_device device;
 	// Fourth run: "warm-up" sequence as as seed; different each run.
 	// Advanced uses. Allows more than 32 bits of randomness.
-	vector<unsigned int> seeds;
-	seeds.resize(mt19937_64::state_size);
+	vector<unsigned int> seeds(mt19937_64::state_size);
 	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);

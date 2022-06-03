@@ -2,10 +2,9 @@
 using namespace std;
 TEST(BinarySearchTests, BinarySearchTest) {
 	int pos;
-	vector<size_t> source;
+	vector<size_t> source(30);
 	long data[12] = { 15, 16, 17, 18, 19, 20, 0, 1, 2, 3, 4, 5 };
 	/*L				      M			         U*/
-	source.resize(30);
 	ranges::generate(source.begin(), source.begin() + 10, [i = 0]() mutable	{ return i++; });
 	ranges::generate(source.begin() + 10, source.begin() + 20, [i = 1000]() mutable	{ return i++; });
 	ranges::generate(source.begin() + 20, source.begin() + 30, [i = 2000]() mutable	{ return i++; });

@@ -222,7 +222,7 @@ TEST(KnapsackTests, BoundedKnapsackTest)
 	result = knapsack.BoundedKnapsack(6, numbers);
 	ASSERT_TRUE(result.empty());
 }
-TEST(KnapsackTests, CombinationSumTests)
+TEST(KnapsackTests, BoundedCombinationSumTests)
 {
 	Knapsack knapsack;
 	set<vector<size_t>> combinations = knapsack.BoundedKnapsackCombinationSum(3, 7);
@@ -239,4 +239,28 @@ TEST(KnapsackTests, CombinationSumTests)
 	ASSERT_EQ(1, combinations.size()); // [[1,2,3,4,5,6,7,8,9]]
 	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
 		ASSERT_EQ(9, it->size());
+}
+TEST(KnapsackTests, BoundedCombinationSumWithMaxElementTests)
+{
+	Knapsack knapsack;
+	set<vector<size_t>> combinations = knapsack.BoundedKnapsackCombinationSum(3, 12, 8);
+	ASSERT_FALSE(combinations.empty());
+	combinations = knapsack.BoundedKnapsackCombinationSum(3, 10, 3);
+	ASSERT_TRUE(combinations.empty());
+	combinations = knapsack.BoundedKnapsackCombinationSum(2, 9, 10);
+	ASSERT_FALSE(combinations.empty());
+	combinations = knapsack.BoundedKnapsackCombinationSum(1, 5, 20);
+	ASSERT_FALSE(combinations.empty());
+	ASSERT_EQ(1, combinations.begin()->size());
+	ASSERT_EQ(5, *(combinations.begin()->begin()));
+	combinations = knapsack.BoundedKnapsackCombinationSum(1, 1, 20);
+	ASSERT_FALSE(combinations.empty());
+	ASSERT_EQ(1, combinations.begin()->size());
+	ASSERT_EQ(1, *(combinations.begin()->begin()));
+#if 0
+	combinations = knapsack.BoundedKnapsackCombinationSum(10, 154, 20);
+	ASSERT_FALSE(combinations.empty());
+	combinations = knapsack.BoundedKnapsackCombinationSum(10, 56, 20);
+	ASSERT_FALSE(combinations.empty());
+#endif
 }
