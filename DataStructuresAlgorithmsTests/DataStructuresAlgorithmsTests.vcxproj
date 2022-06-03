@@ -68,7 +68,7 @@
     <ClCompile Include="SparseNumberTests.cpp" />
     <ClCompile Include="StackTests.cpp" />
     <ClCompile Include="StringPermutationTests.cpp" />
-    <ClCompile Include="SubRangeTests.cpp" />
+    <ClCompile Include="RangeTests.cpp" />
     <ClCompile Include="SuffixTreeTests.cpp" />
     <ClCompile Include="TreeTests.cpp" />
     <ClCompile Include="TrieTests.cpp" />

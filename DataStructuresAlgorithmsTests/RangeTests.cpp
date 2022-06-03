@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 using namespace std;
-TEST(SubRangeTests, ConsecutiveLargestSumTest)
+TEST(RangeTests, ConsecutiveLargestSumTest)
 {
 	vector<long> a = { 2, 3, -6 }, b;
 	long lResult = ConsecutiveLargestSum(a, b);
@@ -33,7 +33,7 @@ TEST(SubRangeTests, ConsecutiveLargestSumTest)
 	a = { 4, -1, -2, 1, 5 };
 	ASSERT_EQ(a, b);
 }
-TEST(SubRangeTests, ConsecutiveLargestProductTest)
+TEST(RangeTests, ConsecutiveLargestProductTest)
 {
 	vector<long> a = { 2, 3, -2, 4 };
 	ASSERT_EQ(6, ConsecutiveLargestProduct(a));
@@ -65,7 +65,7 @@ TEST(SubRangeTests, ConsecutiveLargestProductTest)
 	a = { 2, 0, -3, 2, 1, 0, 1, -2 };
 	ASSERT_EQ(2, ConsecutiveLargestProduct(a));
 }
-TEST(SubRangeTests, ConsecutiveSumMinCountTest)
+TEST(RangeTests, ConsecutiveSumMinCountTest)
 {
 	vector<long> a = { 2, 3, 1, 2, 4, 3 };
 	ASSERT_EQ(2, ConsecutiveSumMinCount(7, a));
@@ -76,7 +76,7 @@ TEST(SubRangeTests, ConsecutiveSumMinCountTest)
 	ASSERT_EQ(2, ConsecutiveSumMinCount(5, a));
 	ASSERT_EQ(1, ConsecutiveSumMinCount(4, a));
 }
-TEST(SubRangeTests, LongestNonNegativeSumSliceTest)
+TEST(RangeTests, LongestNonNegativeSumSliceTest)
 {
 	vector<long> a = { -1, -1, 1, -1, 1, 0, 1, -1, -1 };
 	ASSERT_EQ(7, LongestNonNegativeSumSlice(a));
@@ -91,7 +91,7 @@ TEST(SubRangeTests, LongestNonNegativeSumSliceTest)
 	a = { -1, -1, -1, -1, -1, -1, 1, 1 };
 	ASSERT_EQ(4, LongestNonNegativeSumSlice(a));
 }
-TEST(SubRangeTests, LongestUpDownAlternatingSubSequenceTest)
+TEST(RangeTests, LongestUpDownAlternatingSubSequenceTest)
 {
 	vector<long> a = { 1, 2, 51, 50, 60, 55, 70, 68, 80, 76, 75, 12, 45 }, b;
 	size_t count = LongestUpDownAlternatingSubSequence(a, b);
@@ -100,7 +100,7 @@ TEST(SubRangeTests, LongestUpDownAlternatingSubSequenceTest)
 	ASSERT_EQ(9, b.size());
 	ASSERT_EQ(a, b);
 }
-TEST(SubRangeTests, SumPairsTest)
+TEST(RangeTests, SumPairsTest)
 {
 	vector<long> a = { 1, 2, 3, 4, 5, 6, 5 };
 	// 1, 2, 3, 4, 5, 6, 5
@@ -119,7 +119,7 @@ TEST(SubRangeTests, SumPairsTest)
 	iota(a.begin(), a.end(), 0);
 	ASSERT_EQ(4, sumpairs(a, 10));
 }
-TEST(SubRangeTests, ThreeSumTest)
+TEST(RangeTests, ThreeSumTest)
 {
 	vector<long> a = { -1, 0, 1, 2, -1, -4 };
 	vector<vector<long>> grid = { {-1, -1, 2}, {-1, 0, 1} }, grid1;
@@ -131,7 +131,7 @@ TEST(SubRangeTests, ThreeSumTest)
 	grid1 = threeSum(a);
 	ASSERT_EQ(grid, grid1);
 }
-TEST(SubRangeTests, FourSumTest)
+TEST(RangeTests, FourSumTest)
 {
 	vector<long> a = { 1, 0, -1, 0, -2, 2 };
 	vector<vector<long>> grid = { {-2, -1, 1, 2}, {-2, 0, 0, 2}, {-1, 0, 0, 1} }, grid1;
@@ -143,7 +143,7 @@ TEST(SubRangeTests, FourSumTest)
 	grid1 = fourSum(a, 2);
 	ASSERT_EQ(grid, grid1);
 }
-TEST(SubRangeTests, DiffPairsTest)
+TEST(RangeTests, DiffPairsTest)
 {
 	set<long> lSet{ 1, 2, 3, 5, 6, 8, 9, 11, 12, 13 };
 	ASSERT_EQ(6, diffpairs(lSet, 3));
@@ -160,7 +160,7 @@ TEST(SubRangeTests, DiffPairsTest)
 	a = { 1, 3, 5, 8, 6, 4, 2 };
 	ASSERT_EQ(5, diffpairs(a, 2));
 }
-TEST(SubRangeTests, StockMaxTest)
+TEST(RangeTests, StockMaxTest)
 {
 	vector<long> a = { 5, 3, 2 };
 	ASSERT_EQ(0, StockMax(a));
@@ -171,12 +171,12 @@ TEST(SubRangeTests, StockMaxTest)
 	a = { 1, 3, 1, 2 };
 	ASSERT_EQ(3, StockMax(a));
 }
-TEST(SubRangeTests, MaxProfitTest)
+TEST(RangeTests, MaxProfitTest)
 {
 	vector<long> a = { 23171, 21011, 21123, 21366, 21013, 21367 };
 	ASSERT_EQ(356, MaxProfit(a));
 }
-TEST(SubRangeTests, StockMaxProfitTest)
+TEST(RangeTests, StockMaxProfitTest)
 {
 	vector<long> a = { 1, 2, 3, 0, 2, 5 };
 	ASSERT_EQ(6, StockMaxProfit(a));
@@ -187,7 +187,7 @@ TEST(SubRangeTests, StockMaxProfitTest)
 	a = { 1, 2, 6, 0, 1, 5 };
 	ASSERT_EQ(9, StockMaxProfit(a));
 }
-TEST(SubRangeTests, SherlockAndCostTests)
+TEST(RangeTests, SherlockAndCostTests)
 {
 	vector<size_t> data = { 1, 2, 3 };
 	ASSERT_EQ(2, sherlockAndCost(data));
@@ -198,14 +198,14 @@ TEST(SubRangeTests, SherlockAndCostTests)
 	data = { 10, 1, 10, 1, 10 };
 	ASSERT_EQ(36, sherlockAndCost(data));
 }
-TEST(SubRangeTests, ClimbLeaderboardTest)
+TEST(RangeTests, ClimbLeaderboardTest)
 {
 	vector<long> a = { 100, 100, 50, 40, 40, 20, 10 };
 	vector<long> b = { 5, 25, 50, 120 };
 	vector<size_t> expected = { 6,4,2,1 };
 	ASSERT_EQ(expected, ClimbLeaderBoard(a, b));
 }
-TEST(SubRangeTests, WiggleMaxLengthTest)
+TEST(RangeTests, WiggleMaxLengthTest)
 {
 	vector<long> a = { 1, 7, 4, 9, 2, 5 }, b;
 	WiggleMaxLength(a, b);

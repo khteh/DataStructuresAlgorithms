@@ -34,7 +34,7 @@ set(Sources
 "SparseNumberTests.cpp"
 "StackTests.cpp"
 "StringPermutationTests.cpp"
-"SubRangeTests.cpp"
+"RangeTests.cpp"
 "SuffixTreeTests.cpp"
 "TreeTests.cpp"
 "TrieTests.cpp"
