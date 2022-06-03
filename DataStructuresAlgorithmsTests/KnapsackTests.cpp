@@ -44,14 +44,17 @@ TEST(KnapsackTests, CoinChangeTest)
 	numbers.clear();
 	numbers = {3, 7, 405, 436};
 	knapsack.ClearCoinChangeCache();
-	// combinations1 = knapsack.CoinsChangeDynamicProgramming(8839, numbers); // Stack overflow! using recursive knapsack.CoinChange()
-	// assert(!combinations1.empty());
+	//combinations = knapsack.CoinsChangeDynamicProgramming(8839, numbers); // Stack overflow! using recursive knapsack.CoinChange()
+	//ASSERT_FALSE(combinations.empty());
 }
 TEST(KnapsackTests, CoinChangeDynamicProgrammingTest)
 {
 	Knapsack knapsack;
 	vector<size_t> numbers = { 3, 2, 1 };
 	set<vector<size_t>> combinations = knapsack.CoinsChangeDynamicProgramming(0, numbers);
+	ASSERT_TRUE(combinations.empty());
+	knapsack.ClearCoinChangeCache();
+	combinations = knapsack.CoinsChangeDynamicProgramming(-1, numbers);
 	ASSERT_TRUE(combinations.empty());
 	knapsack.ClearCoinChangeCache();
 	combinations = knapsack.CoinsChangeDynamicProgramming(1, numbers);
@@ -65,6 +68,8 @@ TEST(KnapsackTests, CoinChangeDynamicProgrammingTest)
 	knapsack.ClearCoinChangeCache();
 	combinations = knapsack.CoinsChangeDynamicProgramming(4, numbers);
 	ASSERT_EQ(4, combinations.size());
+	combinations = knapsack.CoinsChangeDynamicProgramming(10, numbers);
+	ASSERT_FALSE(combinations.empty());
 	knapsack.ClearCoinChangeCache();
 	numbers.clear();
 	numbers = { 6, 5, 3, 2 };

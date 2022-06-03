@@ -64,6 +64,7 @@ set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<
 {
 	map<size_t, set<vector<size_t>>> dp;
 	ranges::sort(coins);
+	if (amount >= 0)
 	for (size_t i = coins[0]; i <= (size_t)amount; i++) // Bottom-Up
 		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end(); coin++)
 		{
