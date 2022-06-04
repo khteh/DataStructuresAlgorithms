@@ -237,7 +237,7 @@ size_t CountDistinctSlices(vector<long> &data)
 		else
 		{
 			slices += SequenceSum(i - start); // f(3) = 1+2+3 = 6
-			start = i; // 3
+			start = i;						  // 3
 			unique.clear();
 			unique.emplace(data[i]); // 5
 		}
@@ -1530,14 +1530,14 @@ void OrderArrayIntoNegativePositiveSeries(vector<long> &arr)
 			{
 				// Scenario 1: curIndex is increment by the for loop
 				positiveValToFind = !positiveValToFind;
-				++outOfOrderPos;
+				outOfOrderPos++;
 			}
 			else
 			{
 				// Scenario 2: curIndex is increment by the for loop
 				nextValue = arr[curIndex];
-				memcpy(&arr[outOfOrderPos + 1],
-					   &arr[outOfOrderPos],
+				memcpy(&arr[outOfOrderPos + 1], /* destination */
+					   &arr[outOfOrderPos],		/* source */
 					   (curIndex - outOfOrderPos) * sizeof(long));
 				arr[outOfOrderPos] = nextValue;
 				outOfOrderPos += 2;
@@ -2636,7 +2636,8 @@ size_t minDiffPairs(vector<long> &numbers, long diff)
 	size_t offset = 1;
 	for (size_t i = 0; i < numbers.size(); i++)
 	{
-		if (pairs.find(i) == pairs.end()) {
+		if (pairs.find(i) == pairs.end())
+		{
 			int num = numbers[i];
 			for (size_t j = offset; j < numbers.size(); j++)
 			{
@@ -4341,7 +4342,7 @@ size_t StockMax(vector<long> &prices)
 	{
 		if (maxIndex <= i)
 		{
-			vector<long>::iterator peak = max_element(prices.begin() + i, prices.end());
+			vector<long>::iterator peak = ranges::max_element(prices.begin() + i, prices.end());
 			if (peak != prices.end())
 				maxIndex = distance(prices.begin(), peak);
 		}
@@ -5195,7 +5196,7 @@ long calculateMedian(vector<long> &data)
 	nth_element(data.begin(), middleItr, data.end());
 	if (data.size() % 2 == 0)
 	{
-		const auto leftMiddleItr = max_element(data.begin(), middleItr);
+		const auto leftMiddleItr = ranges::max_element(data.begin(), middleItr);
 		return (*leftMiddleItr + *middleItr) / 2;
 	}
 	return *middleItr;
@@ -5272,7 +5273,7 @@ size_t beautifulQuadruples(int a, int b, int c, int d)
 			for (int k = 1; k <= c; k++)
 				for (int l = 1; l <= d; l++)
 					if ((i ^ j ^ k ^ l) != 0)
-						quadruples.emplace(multiset<int>{i,j,k,l});
+						quadruples.emplace(multiset<int>{i, j, k, l});
 	return quadruples.size();
 }
 // https://www.hackerrank.com/challenges/red-knights-shortest-path/problem
@@ -6157,7 +6158,7 @@ size_t TwoCrosses(vector<string> &grid)
 			}
 		}
 	}
-	return *max_element(products.begin(), products.end());
+	return *ranges::max_element(products.begin(), products.end());
 }
 // https://www.hackerrank.com/challenges/absolute-permutation/problem
 // 100%

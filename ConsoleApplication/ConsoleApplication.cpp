@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 {
 	string line, line1;
 	size_t size;
+	long l;
 	random_device device;
 	// Fourth run: "warm-up" sequence as as seed; different each run.
 	// Advanced uses. Allows more than 32 bits of randomness.
@@ -151,29 +152,29 @@ int main(int argc, char *argv[])
 	assert(-i == -3);
 	assert(~i == -4);
 	i = 0x7FFFFFFF;
-	long long l = i;
+	long long ll = i;
 	i++;
-	l++;
+	ll++;
 	assert(i == numeric_limits<int>::min());
 	assert(i < 0);
 	assert((long long)i == 0xFFFFFFFF80000000LL);
-	assert(l > 0);
-	assert(l == 0x80000000);
+	assert(ll > 0);
+	assert(ll == 0x80000000);
 	cout << "(int)0x7FFFFFFF + 1: " << i << ", long long: " << (long long)(i) << endl; // sign extended to 64-bit
-	cout << "(long long)0x7FFFFFFF + 1: " << l << endl;
+	cout << "(long long)0x7FFFFFFF + 1: " << ll << endl;
 
 	i = 0x80000000;
-	l = i;
-	assert(l < 0); // sign extended to 64-bit
-	assert(l == 0xFFFFFFFF80000000LL);
+	ll = i;
+	assert(ll < 0); // sign extended to 64-bit
+	assert(ll == 0xFFFFFFFF80000000LL);
 	i--;
-	l--;
+	ll--;
 	assert(i > 0); // integer overflow
 	assert(i == numeric_limits<int>::max());
-	assert(l < 0); // sign extended to 64-bit
-	assert(l == 0xFFFFFFFF7FFFFFFFLL);
+	assert(ll < 0); // sign extended to 64-bit
+	assert(ll == 0xFFFFFFFF7FFFFFFFLL);
 	cout << "(int)0x80000000 - 1: " << i << ", long long: " << (long long)(i) << endl; // integer overflow
-	cout << "(long long)0x80000000 - 1: " << l << endl;
+	cout << "(long long)0x80000000 - 1: " << ll << endl;
 	i = 0x80000000;
 	j = -INT_MIN; // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4146?view=msvc-160
 	assert(i == j);
@@ -181,17 +182,17 @@ int main(int argc, char *argv[])
 	assert(j < 0);
 	cout << "(int)-0x80000000: " << i << endl;
 	i = -INT_MIN; // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4146?view=msvc-160
-	l = i;
-	assert(l < 0); // sign extended to 64-bit
-	assert(l == 0xFFFFFFFF80000000LL);
+	ll = i;
+	assert(ll < 0); // sign extended to 64-bit
+	assert(ll == 0xFFFFFFFF80000000LL);
 	i--;
-	l--;
+	ll--;
 	assert(i > 0); // integer overflow
 	assert(i == numeric_limits<int>::max());
-	assert(l < 0); // sign extended to 64-bit
-	assert(l == 0xFFFFFFFF7FFFFFFFLL);
+	assert(ll < 0); // sign extended to 64-bit
+	assert(ll == 0xFFFFFFFF7FFFFFFFLL);
 	cout << "(int)0x80000000 - 1: " << i << ", long long: " << (long long)(i) << endl; // integer overflow
-	cout << "(long long)0x80000000 - 1: " << l << endl;
+	cout << "(long long)0x80000000 - 1: " << ll << endl;
 	i = 0x80000000;
 	assert(i < 0);
 	i /= 2;
@@ -203,17 +204,17 @@ int main(int argc, char *argv[])
 	assert(i < 0);
 	assert(i == -0x40000000);
 
-	l = 0x80000000LL;
-	assert(l > 0);
-	l--;
-	assert(l > 0);
-	assert(l == 0x7fffffffL);
-	l = -0x80000000LL;
-	assert(l == 0xFFFFFFFF80000000);
-	assert(l < 0);
-	l--;
-	assert(l < 0);
-	assert(l == 0xFFFFFFFF7FFFFFFFL);
+	ll = 0x80000000LL;
+	assert(ll > 0);
+	ll--;
+	assert(ll > 0);
+	assert(ll == 0x7fffffffL);
+	ll = -0x80000000LL;
+	assert(ll == 0xFFFFFFFF80000000);
+	assert(ll < 0);
+	ll--;
+	assert(ll < 0);
+	assert(ll == 0xFFFFFFFF7FFFFFFFL);
 
 	i = 0x80000000L;
 	j = 1;
@@ -2029,6 +2030,7 @@ int main(int argc, char *argv[])
 	edges.clear();
 	edges = {{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}};
 	assert("1000100" == roadsInHackerland(5, edges));
+
 	cpp20readonlyranges();
 	cpp20ranges();
 	/***** The End *****/
