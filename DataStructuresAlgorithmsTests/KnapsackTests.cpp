@@ -3,7 +3,7 @@ using namespace std;
 TEST(KnapsackTests, CoinChangeTest)
 {
 	Knapsack knapsack;
-	vector<size_t> numbers = { 3, 2, 1 };
+	vector<size_t> numbers = {3, 2, 1};
 	set<vector<size_t>> combinations = knapsack.CoinChange(0, numbers);
 	ASSERT_TRUE(combinations.empty());
 	knapsack.ClearCoinChangeCache();
@@ -44,13 +44,13 @@ TEST(KnapsackTests, CoinChangeTest)
 	numbers.clear();
 	numbers = {3, 7, 405, 436};
 	knapsack.ClearCoinChangeCache();
-	//combinations = knapsack.CoinsChangeDynamicProgramming(8839, numbers); // Stack overflow! using recursive knapsack.CoinChange()
-	//ASSERT_FALSE(combinations.empty());
+	// combinations = knapsack.CoinsChangeDynamicProgramming(8839, numbers); // Stack overflow! using recursive knapsack.CoinChange()
+	// ASSERT_FALSE(combinations.empty());
 }
 TEST(KnapsackTests, CoinChangeDynamicProgrammingTest)
 {
 	Knapsack knapsack;
-	vector<size_t> numbers = { 3, 2, 1 };
+	vector<size_t> numbers = {3, 2, 1};
 	set<vector<size_t>> combinations = knapsack.CoinsChangeDynamicProgramming(0, numbers);
 	ASSERT_TRUE(combinations.empty());
 	knapsack.ClearCoinChangeCache();
@@ -72,23 +72,23 @@ TEST(KnapsackTests, CoinChangeDynamicProgrammingTest)
 	ASSERT_FALSE(combinations.empty());
 	knapsack.ClearCoinChangeCache();
 	numbers.clear();
-	numbers = { 6, 5, 3, 2 };
+	numbers = {6, 5, 3, 2};
 	combinations = knapsack.CoinsChangeDynamicProgramming(10, numbers);
 	ASSERT_EQ(5, combinations.size());
 	knapsack.ClearCoinChangeCache();
 	numbers.clear();
-	numbers = { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 };
+	numbers = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
 	combinations = knapsack.CoinsChangeDynamicProgramming(10, numbers);
 	ASSERT_EQ(5, combinations.size());
 	numbers.clear();
-	numbers = { 1, 50 };
+	numbers = {1, 50};
 	combinations = knapsack.CoinsChangeDynamicProgramming(200, numbers);
 	ASSERT_EQ(5, combinations.size());
 }
 TEST(KnapsackTests, CoinsChangeUniqueWaysDynamicProgrammingTest)
 {
 	Knapsack knapsack;
-	vector<size_t> numbers = { 3, 2, 1 };
+	vector<size_t> numbers = {3, 2, 1};
 	set<vector<size_t>> combinations;
 	ASSERT_EQ(0, knapsack.CoinsChangeUniqueWaysDynamicProgramming(0, numbers));
 	knapsack.ClearCoinChangeCache();
@@ -101,17 +101,17 @@ TEST(KnapsackTests, CoinsChangeUniqueWaysDynamicProgrammingTest)
 	ASSERT_EQ(4, knapsack.CoinsChangeUniqueWaysDynamicProgramming(4, numbers));
 	knapsack.ClearCoinChangeCache();
 	numbers.clear();
-	numbers = { 6, 5, 3, 2 };
+	numbers = {6, 5, 3, 2};
 	ASSERT_EQ(5, knapsack.CoinsChangeUniqueWaysDynamicProgramming(10, numbers));
 	numbers.clear();
-	numbers = { 2, 3, 5 };
+	numbers = {2, 3, 5};
 	knapsack.ClearCoinChangeCache();
-	ASSERT_EQ(2, knapsack.CoinsChangeUniqueWaysDynamicProgramming(5, numbers));	// {{2,3}, {5}}
+	ASSERT_EQ(2, knapsack.CoinsChangeUniqueWaysDynamicProgramming(5, numbers)); // {{2,3}, {5}}
 	knapsack.ClearCoinChangeCache();
-	ASSERT_EQ(2, knapsack.CoinsChangeUniqueWaysDynamicProgramming(6, numbers));	// {{2,2,2}, {3,3}}
+	ASSERT_EQ(2, knapsack.CoinsChangeUniqueWaysDynamicProgramming(6, numbers)); // {{2,2,2}, {3,3}}
 	knapsack.ClearCoinChangeCache();
 	numbers.clear();
-	numbers = { 5, 37, 8, 39, 33, 17, 22, 32, 13, 7, 10, 35, 40, 2, 43, 49, 46, 19, 41, 1, 12, 11, 28 };
+	numbers = {5, 37, 8, 39, 33, 17, 22, 32, 13, 7, 10, 35, 40, 2, 43, 49, 46, 19, 41, 1, 12, 11, 28};
 	ranges::sort(numbers);
 	ASSERT_EQ(96190959, knapsack.CoinsChangeUniqueWaysDynamicProgramming(166, numbers));
 	knapsack.ClearCoinChangeCache();
@@ -119,7 +119,7 @@ TEST(KnapsackTests, CoinsChangeUniqueWaysDynamicProgrammingTest)
 TEST(KnapsackTests, CoinsChangeDuplicateWaysDynamicProgrammingTest)
 {
 	Knapsack knapsack;
-	vector<size_t> numbers = { 3, 2, 1 };
+	vector<size_t> numbers = {3, 2, 1};
 	ASSERT_EQ(0, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(0, numbers));
 	knapsack.ClearCoinChangeCache();
 	ASSERT_EQ(1, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(1, numbers));
@@ -131,25 +131,25 @@ TEST(KnapsackTests, CoinsChangeDuplicateWaysDynamicProgrammingTest)
 	ASSERT_EQ(7, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(4, numbers)); // {3,1},{3,1},{1,1,2},{1,2,1},{2,1,1},{2,2},{1,1,1,1}
 	knapsack.ClearCoinChangeCache();
 	numbers.clear();
-	numbers = { 6, 5, 3, 2 };
+	numbers = {6, 5, 3, 2};
 	ASSERT_EQ(17, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(10, numbers));
 	knapsack.ClearCoinChangeCache();
 	numbers.clear();
-	numbers = { 2, 3, 5 };
+	numbers = {2, 3, 5};
 	ASSERT_EQ(3, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(5, numbers)); //{2,3},{3,2},{5}
 	ASSERT_EQ(2, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(6, numbers)); //
 }
 TEST(KnapsackTests, CoinsChangeFewestCoinsDynamicProgrammingTest)
 {
 	Knapsack knapsack;
-	vector<size_t> numbers = { 1, 2, 5 };
+	vector<size_t> numbers = {1, 2, 5};
 	ASSERT_EQ(3, knapsack.CoinsChangeFewestCoinsDynamicProgramming(11, numbers));
 	ASSERT_EQ(2, knapsack.CoinsChangeFewestCoinsDynamicProgramming(10, numbers));
 	numbers.clear();
-	numbers = { 2 };
+	numbers = {2};
 	ASSERT_EQ(-1, knapsack.CoinsChangeFewestCoinsDynamicProgramming(3, numbers));
 	numbers.clear();
-	numbers = { 1 };
+	numbers = {1};
 	ASSERT_EQ(0, knapsack.CoinsChangeFewestCoinsDynamicProgramming(0, numbers));
 	ASSERT_EQ(1, knapsack.CoinsChangeFewestCoinsDynamicProgramming(1, numbers));
 	ASSERT_EQ(2, knapsack.CoinsChangeFewestCoinsDynamicProgramming(2, numbers));
@@ -157,20 +157,20 @@ TEST(KnapsackTests, CoinsChangeFewestCoinsDynamicProgrammingTest)
 TEST(KnapsackTests, StairsClimbingDynamicProgrammingTest)
 {
 	Knapsack knapsack;
-	vector<size_t> numbers = { 1, 2 };
+	vector<size_t> numbers = {1, 2};
 	ASSERT_EQ(13, knapsack.StairsClimbingDynamicProgramming(6, numbers));
 	numbers.clear();
-	numbers = { 1, 2, 3 };
+	numbers = {1, 2, 3};
 	knapsack.ClearDPMemoization();
 	ASSERT_EQ(24, knapsack.StairsClimbingDynamicProgramming(6, numbers));
 }
 TEST(KnapsackTests, StairsClimbingDynamicProgrammingBottomUpTest)
 {
 	Knapsack knapsack;
-	vector<size_t> numbers = { 1, 2 };
+	vector<size_t> numbers = {1, 2};
 	ASSERT_EQ(13, knapsack.StairsClimbingDynamicProgrammingBottomUp(6, numbers));
 	numbers.clear();
-	numbers = { 1, 2, 3 };
+	numbers = {1, 2, 3};
 	knapsack.ClearDPMemoization();
 	ASSERT_EQ(24, knapsack.StairsClimbingDynamicProgrammingBottomUp(6, numbers));
 }
@@ -200,12 +200,12 @@ TEST(KnapsackTests, UnboundedKnapsackTest)
 	numbers.clear();
 	numbers = {5, 9};
 	ASSERT_EQ(10, knapsack.UnboundedKnapsack(10, numbers)); // [5,5]
-	ASSERT_EQ(5, knapsack.UnboundedKnapsack(8, numbers));	 // [5]
+	ASSERT_EQ(5, knapsack.UnboundedKnapsack(8, numbers));	// [5]
 	numbers.clear();
 	numbers = {9};
 	ASSERT_EQ(9, knapsack.UnboundedKnapsack(10, numbers)); // [9]
-	ASSERT_EQ(9, knapsack.UnboundedKnapsack(9, numbers));	// [9]
-	ASSERT_EQ(0, knapsack.UnboundedKnapsack(8, numbers));	// [0]
+	ASSERT_EQ(9, knapsack.UnboundedKnapsack(9, numbers));  // [9]
+	ASSERT_EQ(0, knapsack.UnboundedKnapsack(8, numbers));  // [0]
 }
 TEST(KnapsackTests, BoundedKnapsackTest)
 {
@@ -262,10 +262,4 @@ TEST(KnapsackTests, BoundedCombinationSumWithMaxElementTests)
 	ASSERT_FALSE(combinations.empty());
 	ASSERT_EQ(1, combinations.begin()->size());
 	ASSERT_EQ(1, *(combinations.begin()->begin()));
-#if 0
-	combinations = knapsack.BoundedKnapsackCombinationSum(10, 154, 20);
-	ASSERT_FALSE(combinations.empty());
-	combinations = knapsack.BoundedKnapsackCombinationSum(10, 56, 20);
-	ASSERT_FALSE(combinations.empty());
-#endif
 }

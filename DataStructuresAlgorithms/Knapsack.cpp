@@ -38,14 +38,15 @@ set<vector<size_t>> Knapsack::CoinChange(long amount, vector<size_t> &coins)
 						size_t sum = parallel_reduce(change.begin(), change.end(), 0) + *coin;
 #elif defined(__GNUC__) || defined(__GNUG__)
 						size_t sum = parallel_reduce(
-							blocked_range<long>(0, change.size()), 0,
-							[&](tbb::blocked_range<long> r, long running_total)
-							{
-								for (int i = r.begin(); i < r.end(); ++i)
-									running_total += change[i];
-								return running_total;
-							},
-							std::plus<long>()) + *coin;
+										 blocked_range<long>(0, change.size()), 0,
+										 [&](tbb::blocked_range<long> r, long running_total)
+										 {
+											 for (int i = r.begin(); i < r.end(); ++i)
+												 running_total += change[i];
+											 return running_total;
+										 },
+										 std::plus<long>()) +
+									 *coin;
 #endif
 						if (sum == amount)
 						{
@@ -65,26 +66,26 @@ set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<
 	map<size_t, set<vector<size_t>>> dp;
 	ranges::sort(coins);
 	if (amount >= 0)
-	for (size_t i = coins[0]; i <= (size_t)amount; i++) // Bottom-Up
-		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end(); coin++)
-		{
-			if (i == *coin)
-				dp[i].insert(vector<size_t>{i});
-			else if (i > *coin)
-			{ // i:5 coins[j]:2 delta:3 dp[3] = {3}
-				size_t delta = i - *coin;
-				if (dp.find(delta) != dp.end())
-				{
-					for (set<vector<size_t>>::iterator it = dp[delta].begin(); it != dp[delta].end(); it++)
+		for (size_t i = coins[0]; i <= (size_t)amount; i++) // Bottom-Up
+			for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end(); coin++)
+			{
+				if (i == *coin)
+					dp[i].insert(vector<size_t>{i});
+				else if (i > *coin)
+				{ // i:5 coins[j]:2 delta:3 dp[3] = {3}
+					size_t delta = i - *coin;
+					if (dp.find(delta) != dp.end())
 					{
-						vector<size_t> tmp = *it;
-						tmp.push_back(*coin);
-						ranges::sort(tmp);
-						dp[i].insert(tmp);
+						for (set<vector<size_t>>::iterator it = dp[delta].begin(); it != dp[delta].end(); it++)
+						{
+							vector<size_t> tmp = *it;
+							tmp.push_back(*coin);
+							ranges::sort(tmp);
+							dp[i].insert(tmp);
+						}
 					}
 				}
 			}
-		}
 	return dp[amount];
 }
 /* https://www.hackerrank.com/challenges/coin-change/problem
@@ -185,14 +186,15 @@ set<vector<size_t>> Knapsack::KnapsackCombinations(long amount, vector<size_t> &
 							size_t sum = parallel_reduce(change.begin(), change.end(), 0) + *number;
 #elif defined(__GNUC__) || defined(__GNUG__)
 							size_t sum = parallel_reduce(
-								blocked_range<long>(0, change.size()), 0,
-								[&](tbb::blocked_range<long> r, long running_total)
-								{
-									for (int i = r.begin(); i < r.end(); ++i)
-										running_total += change[i];
-									return running_total;
-								},
-								std::plus<long>()) + *number;
+											 blocked_range<long>(0, change.size()), 0,
+											 [&](tbb::blocked_range<long> r, long running_total)
+											 {
+												 for (int i = r.begin(); i < r.end(); ++i)
+													 running_total += change[i];
+												 return running_total;
+											 },
+											 std::plus<long>()) +
+										 *number;
 #endif
 							if (sum <= (size_t)amount)
 							{
@@ -261,14 +263,15 @@ set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> &numb
 						size_t sum = parallel_reduce(tmp1.begin(), tmp1.end(), 0) + *number;
 #elif defined(__GNUC__) || defined(__GNUG__)
 						size_t sum = parallel_reduce(
-							blocked_range<long>(0, tmp1.size()), 0,
-							[&](tbb::blocked_range<long> r, long running_total)
-							{
-								for (int i = r.begin(); i < r.end(); ++i)
-									running_total += tmp1[i];
-								return running_total;
-							},
-							std::plus<long>()) + *number;
+										 blocked_range<long>(0, tmp1.size()), 0,
+										 [&](tbb::blocked_range<long> r, long running_total)
+										 {
+											 for (int i = r.begin(); i < r.end(); ++i)
+												 running_total += tmp1[i];
+											 return running_total;
+										 },
+										 std::plus<long>()) +
+									 *number;
 #endif
 						if (sum == amount)
 						{
