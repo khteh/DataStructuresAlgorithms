@@ -72,6 +72,7 @@ using namespace tbb;
 #include "Knapsack.h"
 #include "Sort.h"
 #include "Poker.h"
+#include "VariantVisitor.h"
 using namespace std;
 #ifdef _MSC_VER
 using namespace concurrency;

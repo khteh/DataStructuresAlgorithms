@@ -7984,22 +7984,6 @@ void cpp20ranges()
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 }
-class VariantVisitor
-{
-private:
-	template <typename T>
-	void print(T arg)
-	{
-		cout << "Type: " << typeid(arg).name() << ", value: " << arg << endl;
-	}
-
-public:
-	template <typename... Args>
-	auto operator()(Args... args)
-	{
-		(print(args), ...);
-	}
-};
 class VariantException
 {
 public:
