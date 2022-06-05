@@ -4217,19 +4217,32 @@ size_t maxMin(size_t k, vector<size_t> &arr)
 	}
 	return unfair;
 }
-string decimal_to_binary(int decimal)
+string decimal_to_binary(long decimal)
 {
 	if (decimal > 0)
 	{
 		ostringstream oss;
-		int remainder = decimal % 2;
+		long remainder = decimal % 2;
 		oss << decimal_to_binary(decimal / 2);
 		oss << remainder;
 		return oss.str();
 	}
 	return "0";
 }
-void decimal_to_binary(int decimal, vector<bool> &binary, size_t width)
+long binary_to_decimal(const string &binary)
+{
+	long result = 0;
+	size_t shift = 0;
+	for (long i = binary.size() - 1; i >= 0; i--)
+	{
+		if (binary[i] == '1')
+			result += (1 << shift);
+		if (binary[i] == '0' || binary[i] == '1')
+			shift++;
+	}
+	return result;
+}
+void decimal_to_binary(long decimal, vector<bool> &binary, size_t width)
 {
 	binary.resize(width, false);
 	for (long i = width - 1; i >= 0 && decimal; i--)

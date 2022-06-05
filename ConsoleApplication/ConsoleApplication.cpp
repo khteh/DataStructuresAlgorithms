@@ -1227,6 +1227,13 @@ int main(int argc, char *argv[])
 	a = {10, 2, 5, 1, 8, 12};
 	assert(CountTriangles(a) == 4);
 	assert(decimal_to_binary(0) == "0");
+	assert(binary_to_decimal(string("1010")) == 10);
+	cout << 0xdeadbeef << endl;
+#if defined(__GNUC__) || defined(__GNUG__)
+	assert(binary_to_decimal(string("1101 1110 1010 1101 1011 1110 1110 1111")) == 0xffffffffdeadbeef);
+#else
+	assert(binary_to_decimal(string("1101 1110 1010 1101 1011 1110 1110 1111")) == 0xdeadbeef);
+#endif
 	a.clear();
 	a = {1, 5, 2, -2};
 	assert(MinAbsSum(a) == 0);
