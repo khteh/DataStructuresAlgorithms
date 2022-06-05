@@ -45,6 +45,7 @@ set(Headers
 "Tree.h"
 "Trie.h"
 "Twitter.h"
+"VariantVisitor.h"
 "Vertex.h"
 )
 source_group("Headers" FILES ${Headers})
@@ -89,6 +90,7 @@ set(Sources
 "Tree.cpp"
 "Trie.cpp"
 "Twitter.cpp"
+"VariantVisitor.cpp"
 "Vertex.cpp"
 )
 source_group("Sources" FILES ${Sources})
