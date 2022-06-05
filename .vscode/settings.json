@@ -19,7 +19,8 @@
     "functional": "cpp",
     "ranges": "cpp",
     "span": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "variant": "cpp"
   },
   "cmake.configureSettings": {
     "gtest_build_samples": "ON"

@@ -7984,3 +7984,125 @@ void cpp20ranges()
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 }
+class VariantVisitor
+{
+private:
+	template <typename T>
+	void print(T arg)
+	{
+		cout << "Type: " << typeid(arg).name() << ", value: " << arg << endl;
+	}
+
+public:
+	template <typename... Args>
+	auto operator()(Args... args)
+	{
+		(print(args), ...);
+	}
+};
+class VariantException
+{
+public:
+	explicit VariantException(long i)
+	{
+		throw long(i);
+	}
+	operator long() { throw long(123); }
+};
+/*
+ * https://www.cppstories.com/2018/06/variant/
+ * https://www.cppstories.com/2018/09/visit-variants/
+ */
+void cpp20variants()
+{
+	variant<long, float, string> lfs;
+	static_assert(variant_size_v<decltype(lfs)> == 3);
+	// default initialized to the first alternative, should be 0
+	visit(VariantVisitor{}, lfs);
+	// index will show the currently used 'type'
+	cout << "Currently used type in variant: " << lfs.index() << endl;
+	assert(0 == lfs.index());
+	lfs = 123.456f;
+	cout << "Currently used type in variant: " << lfs.index() << endl;
+	assert(1 == lfs.index());
+	lfs = "Hello World!!!";
+	cout << "Currently used type in variant: " << lfs.index() << endl;
+	assert(2 == lfs.index());
+	// get_if<>
+	if (const auto lPtr(get_if<long>(&lfs)); lPtr)
+		cout << "long pointer: " << *lPtr << endl;
+	else if (const auto fPtr(get_if<float>(&lfs)); fPtr)
+		cout << "float pointer: " << *fPtr << endl;
+	if (holds_alternative<long>(lfs))
+		cout << "variant lfs holds a long value" << endl;
+	else if (holds_alternative<float>(lfs))
+		cout << "variant lfs holds a float value" << endl;
+	else if (holds_alternative<string>(lfs))
+		cout << "variant lfs holds a string value" << endl;
+	try
+	{
+		/* std::get<Type|Index>(variant)
+		 * It returns a reference to the desired type if it’s active (You can pass a Type or Index).
+		 * If not then you’ll get std::bad_variant_access exception.
+		 */
+		auto f = get<float>(lfs);
+		cout << "It's float! " << f << endl;
+	}
+	catch (bad_variant_access &)
+	{
+		cout << "Variant lfs currently does not hold a floating point value!" << endl;
+	}
+	// visit
+	visit(VariantVisitor{}, lfs);
+	lfs = 123;
+	visit(VariantVisitor{}, lfs);
+	lfs = 123.456f;
+	visit(VariantVisitor{}, lfs);
+
+	// Compile-time error if first alternative type does NOT have a default constructor
+	// variant<Poker, long, float, string> invalid; class Poker does not have  a default constructor
+	variant<monostate, Poker, long, float, string> variant1;
+	cout << "Currently used type in variant1: " << variant1.index() << endl;
+
+	// Ambiguity: double might convert to float or long.
+	// variant<long, float, string> variant2 {123.456};
+	// Resolve ambiguity by in_place
+	variant<long, float, string> variant2{in_place_index<1>, 123.456}; // double!
+	cout << "variant active type: " << variant2.index() << ", value: " << get<float>(variant2) << endl;
+
+	variant<long, float, string> variant3{"Hello"};
+	variant3 = 123;						  // long
+	variant3.emplace<2>(string("Hello")); // string
+	// get returns a reference.
+	get<string>(variant3) += string(" World!!!");
+	assert("Hello World!!!" == get<string>(variant3));
+	variant3 = 123.456f;
+	if (auto pFloat = get_if<float>(&variant3); pFloat)
+	{
+		*pFloat *= 2.0f;
+		assert(123.456f * 2.0f == get<float>(variant3));
+	}
+	variant<long, VariantException> variant4;
+	try
+	{
+		variant4 = VariantException(0);
+	}
+	catch (...)
+	{
+		assert(!variant4.valueless_by_exception());
+		// variant state is healthy and unchanged
+		cout << get<long>(variant4) << endl;
+	}
+	try
+	{
+		variant4.emplace<0>(VariantException(10)); // calls "long()" conversion operator
+	}
+	catch (...)
+	{
+		assert(!variant4.valueless_by_exception());
+		cout << get<long>(variant4) << endl;
+	}
+	variant<int, float, string> v1{"Hello World!!!"};
+	variant<long, double, string> v2{10};
+	visit(VariantVisitor{}, v1, v2);
+}

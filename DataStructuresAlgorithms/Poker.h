@@ -1,7 +1,7 @@
 #pragma once
 #include "Card.h"
 
-class Poker :	public Card
+class Poker : public Card
 {
 public:
 	Poker(int, Suit);

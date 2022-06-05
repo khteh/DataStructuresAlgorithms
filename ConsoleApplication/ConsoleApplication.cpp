@@ -2033,6 +2033,7 @@ int main(int argc, char *argv[])
 
 	cpp20readonlyranges();
 	cpp20ranges();
+	cpp20variants();
 	/***** The End *****/
 	// cout << endl << "Press ENTER to exit!";
 	// getline(cin, line);

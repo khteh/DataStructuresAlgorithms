@@ -25,6 +25,8 @@
 #include <exception>
 #include <cstring>
 #include <ranges>
+#include <variant>
+#include <typeinfo>
 #ifdef _MSC_VER
 #include <ppl.h>
 using namespace concurrency;
@@ -69,6 +71,7 @@ using namespace tbb;
 #include "LongestCommonSubsequence.h"
 #include "Knapsack.h"
 #include "Sort.h"
+#include "Poker.h"
 using namespace std;
 #ifdef _MSC_VER
 using namespace concurrency;
@@ -412,3 +415,4 @@ size_t evenForest(size_t, vector<vector<size_t>> &, size_t start = 1);
 string roadsInHackerland(size_t, vector<vector<size_t>> &);
 void cpp20readonlyranges();
 void cpp20ranges();
+void cpp20variants();
