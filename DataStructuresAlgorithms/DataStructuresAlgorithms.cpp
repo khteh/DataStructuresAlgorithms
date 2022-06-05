@@ -8102,7 +8102,9 @@ void cpp20variants()
 		assert(!variant4.valueless_by_exception());
 		cout << get<long>(variant4) << endl;
 	}
-	variant<int, float, string> v1{"Hello World!!!"};
+	variant<long, float, string> v1{"Hello World!!!"};
 	variant<long, double, string> v2{10};
-	visit(VariantVisitor{}, v1, v2);
+	variant<long, double, string> v3{123.456};
+	variant<long, float, string> v4{123.456f};
+	visit(VariantVisitor{}, v1, v2, v3, v4);
 }
