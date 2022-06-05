@@ -7,12 +7,12 @@ template <typename T>
 class LongestCommonSubsequence
 {
 public:
-	static size_t LCSLength(string&, string&);
-	static size_t LCSLength(vector<vector<size_t>>&, string&, string&);
-	static string LCSBackTrack(vector<vector<size_t>>&, string&, string&, size_t, size_t);
-	static size_t LCSLength(vector<T>&, vector<T>&);
-	static size_t LCSLength(vector<vector<size_t>>&, vector<T>&, vector<T>&);
-	static vector<T> LCSBackTrack(vector<vector<size_t>>&, vector<T>&, vector<T>&, size_t, size_t);
-	static void LCSPrintDiff(vector<vector<size_t>>&, string&, string&, long, long);
-	static void LCSPrintDiff(vector<vector<size_t>>&, vector<T>&, vector<T>&, long, long);
+	size_t LCSLength(string &, string &);
+	size_t LCSLength(vector<vector<size_t>> &, string &, string &);
+	string LCSBackTrack(vector<vector<size_t>> &, string &, string &, size_t, size_t);
+	size_t LCSLength(vector<T> &, vector<T> &);
+	size_t LCSLength(vector<vector<size_t>> &, vector<T> &, vector<T> &);
+	vector<T> LCSBackTrack(vector<vector<size_t>> &, vector<T> &, vector<T> &, size_t, size_t);
+	void LCSPrintDiff(vector<vector<size_t>> &, string &, string &, long, long);
+	void LCSPrintDiff(vector<vector<size_t>> &, vector<T> &, vector<T> &, long, long);
 };
