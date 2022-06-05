@@ -110,6 +110,10 @@ const vector<string> SuffixTree::LongestRepeatedSubstring()
 	// return "";
 	return repeats.empty() ? vector<string>() : repeats.rbegin()->second;
 }
+/*
+ * https://www.hackerrank.com/challenges/substring-diff/problem
+ * Unfinished work! Timeout!
+ */
 const size_t SuffixTree::LongestCommonSubstring(long n)
 {
 	size_t count = 0;
