@@ -173,8 +173,8 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 	cout << __FUNCTION__ << " edges of Minimum Spanning Tree: " << endl;
 	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = parents.begin(); it != parents.end(); it++)
 		cout << it->second->GetTag() << " -> " << it->first << endl;
-	return accumulate(costs.begin(), costs.end(), 0, [](long value, const typename map<TTag, long>::value_type& p)
-		{ return value + p.second; });
+	return accumulate(costs.begin(), costs.end(), 0, [](long value, const typename map<TTag, long>::value_type &p)
+					  { return value + p.second; });
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem>>, long> &costs)
@@ -297,8 +297,9 @@ void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, 
 		}
 	}
 }
-// https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
-// Timeout! for test cases with 50000 nodes
+/* https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
+ * Timeout! for 2 test cases with 50000 nodes. 70 out of 80 points.
+ */
 template <typename TTag, typename TItem>
 long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>> &spt, shared_ptr<Vertex<TTag, TItem>> vertex, shared_ptr<Vertex<TTag, TItem>> destination)
 {
@@ -338,8 +339,6 @@ long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>> &spt
 		if (vertex)
 			vertices.erase(vertex);
 	}
-	if (vertex)
-		spt.emplace(vertex);
 	return vertex ? costs[vertex] : -1;
 }
 template <typename TTag, typename TItem>

@@ -5085,11 +5085,9 @@ long ChocolatesByNumbers(long n, long m)
 	}
 	return count;
 }
-// https://www.hackerrank.com/challenges/new-year-chaos/problem
-// It's New Year's Day and everyone's in line for the Wonderland rollercoaster ride! There are a number of people queued up, and each person wears a sticker indicating their initial position in the queue. Initial positions increment by  from  at the front of the line to  at the back.
-// Any person in the queue can bribe the person directly in front of them to swap positions.If two people swap positions, they still wear the same sticker denoting their original places in line.One person can bribe at most two others.For example, ifand bribes, the queue will look like this: .
-// Fascinated by this chaotic queue, you decide you must know the minimum number of bribes that took place to get the queue into its current state!
-// Use a modification of Bubble sort. Timeouts!
+/* https://www.hackerrank.com/challenges/new-year-chaos/problem
+ * Use a modification of Bubble sort. Timeouts!
+ */
 size_t minimumBribes(vector<long> &data)
 {
 	size_t count = 0;
@@ -5626,8 +5624,9 @@ size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>> &edges, long s
 	}
 	return graph.PrimMinimumSpanningTree(startVertex);
 }
-// https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
-// Timeout! for test cases with 50000 nodes
+/* https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
+* Timeout! for 2 test cases with 50000 nodes. 70 out of 80 points.
+*/
 long getLowestPathCost(size_t nodecount, vector<long> &g_from, vector<long> &g_to, vector<long> &g_weight)
 {
 	// Breadth-First-Search algorithm
