@@ -141,6 +141,12 @@ TItem Vertex<TTag, TItem>::MinSubGraphsDifference(TTag parent, TItem sum, set<TI
 	return localSum;
 }
 template <typename TTag, typename TItem>
+long Vertex<TTag, TItem>::GetTotalCost() const { return cost_; }
+
+template <typename TTag, typename TItem>
+void Vertex<TTag, TItem>::SetTotalCost(long cost) { cost_ = cost; }
+
+template <typename TTag, typename TItem>
 void Vertex<TTag, TItem>::ResetTotalCost()
 {
 	cost_ = numeric_limits<long>::max();

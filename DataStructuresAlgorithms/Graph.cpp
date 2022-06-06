@@ -304,8 +304,7 @@ template <typename TTag, typename TItem>
 long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>> &spt, shared_ptr<Vertex<TTag, TItem>> vertex, shared_ptr<Vertex<TTag, TItem>> destination)
 {
 	set<shared_ptr<Vertex<TTag, TItem>>> vertices;
-	map<shared_ptr<Vertex<TTag, TItem>>, long> costs;
-	costs.emplace(vertex, 0);
+	vertex->SetTotalCost(0);
 	for (; vertex && destination && vertex != destination;)
 	{
 		spt.emplace(vertex);
@@ -317,29 +316,30 @@ long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>> &spt
 			// (1) is not in sptSet
 			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
 			// (3) and total weight of path from src to v through u is smaller than current value of dist[v]
+			// long cost = vertex->GetCost(*it);
+			long cost = vertex->GetTotalCost();
 			long cost1 = vertex->GetCost(*it);
-			long nextHopCost = cost1 - costs[vertex];
-			long newTotalCost = nextHopCost > 0 ? costs[vertex] + nextHopCost : costs[vertex];
+			long nextHopCost = cost1 - cost;
+			long newTotalCost = nextHopCost > 0 ? cost + nextHopCost : cost;
+			if (spt.find(*it) == spt.end() && newTotalCost < (*it)->GetTotalCost())
+				(*it)->SetTotalCost(newTotalCost);
 			if (spt.find(*it) == spt.end())
 			{
-				long uCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
-				if (newTotalCost < uCost)
-					costs[*it] = newTotalCost;
 				vertices.insert(*it);
 			}
 		}
 		vertex = nullptr;
 		long min = numeric_limits<long>::max();
 		for (typename set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
-			if (costs[*it] < min)
+			if ((*it)->GetTotalCost() < min)
 			{
-				min = costs[*it];
+				min = (*it)->GetTotalCost();
 				vertex = *it;
 			}
 		if (vertex)
 			vertices.erase(vertex);
 	}
-	return vertex ? costs[vertex] : -1;
+	return vertex ? vertex->GetTotalCost() : -1;
 }
 template <typename TTag, typename TItem>
 TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root, TItem sum)

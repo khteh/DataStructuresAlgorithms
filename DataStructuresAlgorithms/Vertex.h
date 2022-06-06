@@ -21,6 +21,8 @@ public:
 	TItem GetItem() const;
 	long GetCost(shared_ptr<Vertex<TTag, TItem>>);
 	TItem MinSubGraphsDifference(TTag, TItem, set<TItem> &) const;
+	long GetTotalCost() const;
+	void SetTotalCost(long);
 	void ResetTotalCost();
 	void AddNeighbour(shared_ptr<Vertex<TTag, TItem>>, long);
 	void RemoveNeighbour(shared_ptr<Vertex<TTag, TItem>>);
