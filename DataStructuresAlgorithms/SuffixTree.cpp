@@ -54,9 +54,10 @@ size_t SuffixTree::Count() const
 }
 void SuffixTree::InsertString(string const &str)
 {
-	if (!str.empty() && find(m_strings.begin(), m_strings.end(), str) == m_strings.end())
+	if (!str.empty() && ranges::find(m_strings, str) == m_strings.end())
 	{
 		size_t index = 0;
+		// First, look for unused index
 		for (vector<string>::iterator it = m_strings.begin(); it != m_strings.end(); it++)
 			index += it->size();
 		m_strings.push_back(str);

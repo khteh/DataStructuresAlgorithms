@@ -131,7 +131,7 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePreOrder(vector<T> &inorder, vector<T> &pr
 		 *	<9>      <20>
 		 * 5    10  15    7
 		 */
-		typename vector<T>::iterator inOrderRoot = find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, preorder[prestart]);
+		typename vector<T>::iterator inOrderRoot = ranges::find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, preorder[prestart]);
 		if (inOrderRoot == (inorder.begin() + instart + (inend - instart) + 1))
 			throw runtime_error("Invalid tree input parameters! No root found!");
 		root = make_shared<Node<T>>(preorder[prestart]);
@@ -180,7 +180,7 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePostOrder(vector<T> &inorder, vector<T> &p
 		 *  1
 		 *    2
 		 */
-		typename vector<T>::iterator inOrderRoot = find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, postorder[pstart]);
+		typename vector<T>::iterator inOrderRoot = ranges::find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, postorder[pstart]);
 		if (inOrderRoot == inorder.begin() + instart + (inend - instart) + 1)
 			throw runtime_error("Invalid tree input parameters! No root found!");
 		root = make_shared<Node<T>>(postorder[pstart]);
@@ -605,7 +605,8 @@ vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 				result.push_back(str.append(*it));
 			}
 		}
-		if (left.empty() && right.empty()) {
+		if (left.empty() && right.empty())
+		{
 			if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, float> || is_same_v<T, size_t> || is_same_v<T, double>)
 				result.push_back(to_string(node->Item()));
 			else if constexpr (is_same_v<T, string>)

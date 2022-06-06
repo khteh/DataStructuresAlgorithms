@@ -337,7 +337,7 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t k, size_t su
 			if (!tmp.empty())
 				for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++)
 				{
-					if (it->size() < k && find(it->begin(), it->end(), i) == it->end())
+					if (it->size() < k && ranges::find(*it, i) == it->end())
 					{
 						vector<size_t> change(*it);
 						change.push_back(i);

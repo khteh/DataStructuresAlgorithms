@@ -2758,7 +2758,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 	string pos, origin;
 	ostringstream oss, oss1;
 	set<string> visited;
-	map<string, string> route;
+	map<string, string> routes;
 	vector<position_t> positions;
 	positions.push_back(position_t(r, c));
 	oss << r << c;
@@ -2781,9 +2781,9 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && route.find(pos) != route.end())
+					while (pos != origin && routes.find(pos) != routes.end())
 					{
-						pos = route[pos];
+						pos = routes[pos];
 						result.push(pos);
 					}
 					return true;
@@ -2795,7 +2795,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 					if (visited.find(oss.str()) == visited.end())
 					{ // Prevent loop
 						positions.push_back(position_t(it->row + 1, it->col));
-						route.emplace(oss.str(), oss1.str());
+						routes.emplace(oss.str(), oss1.str());
 						visited.emplace(oss.str());
 					}
 				}
@@ -2808,9 +2808,9 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && route.find(pos) != route.end())
+					while (pos != origin && routes.find(pos) != routes.end())
 					{
-						pos = route[pos];
+						pos = routes[pos];
 						result.push(pos);
 					}
 					return true;
@@ -2822,7 +2822,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 					if (visited.find(oss.str()) == visited.end())
 					{ // Prevent loop
 						positions.push_back(position_t(it->row, it->col + 1));
-						route.emplace(oss.str(), oss1.str());
+						routes.emplace(oss.str(), oss1.str());
 						visited.emplace(oss.str());
 					}
 				}
@@ -2835,9 +2835,9 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && route.find(pos) != route.end())
+					while (pos != origin && routes.find(pos) != routes.end())
 					{
-						pos = route[pos];
+						pos = routes[pos];
 						result.push(pos);
 					}
 					return true;
@@ -2849,7 +2849,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 					if (visited.find(oss.str()) == visited.end())
 					{ // Prevent loop
 						positions.push_back(position_t(it->row - 1, it->col));
-						route.emplace(oss.str(), oss1.str());
+						routes.emplace(oss.str(), oss1.str());
 						visited.emplace(oss.str());
 					}
 				}
@@ -2862,9 +2862,9 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && route.find(pos) != route.end())
+					while (pos != origin && routes.find(pos) != routes.end())
 					{
-						pos = route[pos];
+						pos = routes[pos];
 						result.push(pos);
 					}
 					return true;
@@ -2876,7 +2876,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 					if (visited.find(oss.str()) == visited.end())
 					{ // Prevent loop
 						positions.push_back(position_t(it->row, it->col - 1));
-						route.emplace(oss.str(), oss1.str());
+						routes.emplace(oss.str(), oss1.str());
 						visited.emplace(oss.str());
 					}
 				}
@@ -3249,7 +3249,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 	string pos, origin;
 	ostringstream oss, oss1;
 	set<string> visited;
-	map<string, string> route;
+	map<string, string> routes;
 	vector<position_t> positions;
 	positions.push_back(position_t(r, c));
 	oss << r << c;
@@ -3272,9 +3272,9 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && route.find(pos) != route.end())
+					while (pos != origin && routes.find(pos) != routes.end())
 					{
-						pos = route[pos];
+						pos = routes[pos];
 						result.push(pos);
 					}
 					return true;
@@ -3286,7 +3286,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 					if (visited.find(oss.str()) == visited.end())
 					{ // Prevent loop
 						positions.push_back(position_t(it->row + 1, it->col));
-						route.emplace(oss.str(), oss1.str());
+						routes.emplace(oss.str(), oss1.str());
 						visited.emplace(oss.str());
 					}
 				}
@@ -3299,9 +3299,9 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && route.find(pos) != route.end())
+					while (pos != origin && routes.find(pos) != routes.end())
 					{
-						pos = route[pos];
+						pos = routes[pos];
 						result.push(pos);
 					}
 					return true;
@@ -3313,7 +3313,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 					if (visited.find(oss.str()) == visited.end())
 					{ // Prevent loop
 						positions.push_back(position_t(it->row, it->col + 1));
-						route.emplace(oss.str(), oss1.str());
+						routes.emplace(oss.str(), oss1.str());
 						visited.emplace(oss.str());
 					}
 				}
@@ -3326,9 +3326,9 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && route.find(pos) != route.end())
+					while (pos != origin && routes.find(pos) != routes.end())
 					{
-						pos = route[pos];
+						pos = routes[pos];
 						result.push(pos);
 					}
 					return true;
@@ -3340,7 +3340,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 					if (visited.find(oss.str()) == visited.end())
 					{ // Prevent loop
 						positions.push_back(position_t(it->row - 1, it->col));
-						route.emplace(oss.str(), oss1.str());
+						routes.emplace(oss.str(), oss1.str());
 						visited.emplace(oss.str());
 					}
 				}
@@ -3353,9 +3353,9 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && route.find(pos) != route.end())
+					while (pos != origin && routes.find(pos) != routes.end())
 					{
-						pos = route[pos];
+						pos = routes[pos];
 						result.push(pos);
 					}
 					return true;
@@ -3367,7 +3367,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 					if (visited.find(oss.str()) == visited.end())
 					{ // Prevent loop
 						positions.push_back(position_t(it->row, it->col - 1));
-						route.emplace(oss.str(), oss1.str());
+						routes.emplace(oss.str(), oss1.str());
 						visited.emplace(oss.str());
 					}
 				}
