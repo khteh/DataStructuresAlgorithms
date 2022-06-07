@@ -321,12 +321,10 @@ long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>> &spt
 			long cost1 = vertex->GetCost(*it);
 			long nextHopCost = cost1 - cost;
 			long newTotalCost = nextHopCost > 0 ? cost + nextHopCost : cost;
-			if (spt.find(*it) == spt.end() && newTotalCost < (*it)->GetTotalCost())
+			if (newTotalCost < (*it)->GetTotalCost())
 				(*it)->SetTotalCost(newTotalCost);
 			if (spt.find(*it) == spt.end())
-			{
 				vertices.insert(*it);
-			}
 		}
 		vertex = nullptr;
 		long min = numeric_limits<long>::max();
