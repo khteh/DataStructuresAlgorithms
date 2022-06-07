@@ -55,6 +55,7 @@ TEST(LongestCommonSubsequenceTests, LongestCommonSubsequenceTest)
 	ASSERT_EQ(2, lcs.LCSLength(table3, s1, s2));
 	ASSERT_EQ("aa", lcs.LCSBackTrack(table3, s1, s2, s1.size() - 1, s2.size() - 1));
 	lcs.LCSPrintDiff(table3, s1, s2, s1.size() - 1, s2.size() - 1);
+	cout << endl;
 	s1 = "WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS";
 	s2 = "FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC";
 	s1.insert(0, 1, 0);
