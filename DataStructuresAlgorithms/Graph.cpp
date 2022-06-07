@@ -191,14 +191,16 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
 		{
-			// Update dist[v] only if it:
-			// (1) is not in sptSet
-			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
-			// (3) and total weight of path from src to v through u is smaller than current value of dist[v]
+			/* v is (*it); u is vertex.
+			 * Update cost[v] only if it:
+			 * (1) is not in sptSet
+			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
+			 * (3) and total weight of path from src to v through u is smaller than current value of cost[v]
+			 */
 			if (spt.find(*it) == spt.end())
 			{
-				long uCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
-				if (costs[vertex] + vertex->GetCost(*it) < uCost)
+				long vCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
+				if (costs[vertex] + vertex->GetCost(*it) < vCost)
 					costs[*it] = costs[vertex] + vertex->GetCost(*it);
 				vertices.insert(*it);
 			}
@@ -233,14 +235,16 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
 		{
-			// Update cost[v] only if it:
-			// (1) is not in sptSet
-			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
-			// (3) and total weight of path from src to v through u is smaller than current value of dist[v]
+			/* v is (*it); u is vertex.
+			 * Update cost[v] only if it:
+			 * (1) is not in sptSet
+			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
+			 * (3) and total weight of path from src to v through u is smaller than current value of cost[v]
+			 */
 			if (spt.find(*it) == spt.end())
 			{
-				long uCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
-				if (costs[vertex] + vertex->GetCost(*it) < uCost)
+				long vCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
+				if (costs[vertex] + vertex->GetCost(*it) < vCost)
 					costs[*it] = costs[vertex] + vertex->GetCost(*it);
 				vertices.insert(*it);
 			}
