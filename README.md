@@ -12,6 +12,7 @@ C++-latest data structures and algorithms using only standard libraries. This an
 
   - C/C++
   - CMake Tools extension for VS Code
+  - https://marketplace.visualstudio.com/items?itemName=matepek.vscode-catch2-test-adapter
 
 - To convert Visual Studio solution `.sln` and included `.vcxproj` to `CMakeLists.txt`:
 
@@ -25,6 +26,3 @@ C++-latest data structures and algorithms using only standard libraries. This an
   - g++-latest (https://code.visualstudio.com/docs/cpp/cmake-linux)
   - libtbb-dev (Intel® Threading Building Blocks)
   - libgtest-dev
-
-- For tests
-  - Install https://marketplace.visualstudio.com/items?itemName=matepek.vscode-catch2-test-adapter extension in VSCode
