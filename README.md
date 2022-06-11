@@ -4,7 +4,7 @@ C++-latest data structures and algorithms using only standard libraries. This an
 
 ## Windows
 
-- It uses Visual Studio 2022 IDE, latest Windows SDK and ISO C++20 Standard.
+- Use Visual Studio 2022, latest Windows SDK and ISO C++20 Standard.
 
 ## Ubuntu
 
