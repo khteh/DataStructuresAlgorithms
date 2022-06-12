@@ -291,3 +291,93 @@ TEST(RangeTests, ContainsNearbyAlmostDuplicateTests)
 	a = {4, 1, -1, 6, 5};
 	assert(ContainsNearbyAlmostDuplicate(a, 3, 1));
 }
+TEST(RangeTests, VectorEqualSplitTests)
+{
+	vector<int> data;
+	data = {1};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {1, 2};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {1, 1};
+	assert(VectorEqualSplit(data) == 1);
+	data.clear();
+	data = {0, 0};
+	assert(VectorEqualSplit(data) == 1);
+	data.clear();
+	data = {0, 0, 0};
+	assert(VectorEqualSplit(data) == 2);
+	data.clear();
+	data = {1, 1, 1};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {2, 2, 2};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {1, 1, 1, 1, 1};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {2, 2, 2, 2, 2};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {1, 1, 1, 1};
+	assert(VectorEqualSplit(data) == 2);
+	data.clear();
+	data = {1, 1, 1, 1, 1, 1};
+	assert(VectorEqualSplit(data) == 1);
+	data.clear();
+	data = {1, 2, 1};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {1, 2, 1, 2};
+	assert(VectorEqualSplit(data) == 1);
+	data.clear();
+	data = {2, 2, 2, 3, 3};
+	assert(VectorEqualSplit(data) == 2);
+	data.clear();
+	data = {3, 2, 3, 2, 2, 2, 2};
+	/*
+	 * (1) [3 2 3] [2 2 2 2]
+	 * (2) [2 2] [2 2]
+	 * (3) [2] [2]
+	 */
+	assert(VectorEqualSplit(data) == 3);
+	data.clear();
+	data = {1, 1, 1, 1};
+	assert(VectorEqualSplit(data) == 2);
+	data.clear();
+	data = {4, 1, 0, 1, 1, 0, 1};
+	assert(VectorEqualSplit(data) == 3);
+	data.clear();
+	data = {0, 2, 0, 2, 0, 0, 0, 0, 2, 0, 0, 2, 2, 0, 2, 2, 2, 2, 0, 0, 0, 2, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 2, 2};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {2, 0, 0, 2, 2, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 2, 0, 0, 0, 2, 0, 0, 2, 0};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {16384, 8192, 8192, 16384, 8192, 8192, 32768, 32768};
+	assert(VectorEqualSplit(data) == 4);
+	data.clear();
+	data = {8760958, 8760957, 547560, 547560, 547560, 273780, 273780, 2190239, 4380479, 4380479, 4380478};
+	assert(VectorEqualSplit(data) == 1);
+	data.clear();
+	data = {0, 0, 0, 0, 0};
+	/*
+	 * (1) [0] [0 0 0 0]
+	 * (2) [0] [0 0 0]
+	 * (3) [0] [0 0]
+	 * (4) [0] [0]
+	 */
+	assert(VectorEqualSplit(data) == 4);
+	data.clear();
+	data = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	assert(VectorEqualSplit(data) == 2);
+	data.clear();
+	data = {21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994};
+	assert(VectorEqualSplit(data) == 6);
+	data.clear();
+}
