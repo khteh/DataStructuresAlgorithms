@@ -5625,8 +5625,8 @@ size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>> &edges, long s
 	return graph.PrimMinimumSpanningTree(startVertex);
 }
 /* https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
-* Timeout! for 2 test cases with 50000 nodes. 70 out of 80 points.
-*/
+ * Timeout! for 2 test cases with 50000 nodes. 70 out of 80 points.
+ */
 long getLowestPathCost(size_t nodecount, vector<long> &g_from, vector<long> &g_to, vector<long> &g_weight)
 {
 	// Breadth-First-Search algorithm
@@ -7122,7 +7122,7 @@ w: t+1 = 2
 -2147483648		(-2147483648 / 2) - 1 = -0x40000000 - 1 = -0x40000001 (<0)
 2147483647		(2147483647) / 2 > 0
 */
-bool containsNearbyAlmostDuplicate(vector<long> &nums, long k, long t)
+bool ContainsNearbyAlmostDuplicate(vector<long> &nums, long k, long t)
 {
 	map<long, long> buckets;
 	if (k > 0 && t >= 0)
@@ -7634,7 +7634,7 @@ void cpp20readonlyranges()
 
 	// 2. for_each
 	cout << "C++20 ranges for_each:" << endl;
-	auto out = [](const auto &v)
+	auto print = [](const auto &v)
 	{ cout << v << ", "; };
 	// standard version:
 	cout << "std::for_each:" << endl;
@@ -7652,7 +7652,7 @@ void cpp20readonlyranges()
 	cout << endl;
 	cout << "std::ranges::for_each reversed:" << endl;
 	ranges::for_each(nodes | std::views::reverse,
-					 out, &Node<int>::Item);
+					 print, &Node<int>::Item);
 	cout << endl;
 
 	// 3. count_if
@@ -8103,4 +8103,46 @@ void cpp20variants()
 	variant<long, double, string> v3{123.456};
 	variant<long, float, string> v4{123.456f};
 	visit(VariantVisitor{}, v1, v2, v3, v4);
+}
+/*
+ * https://www.hackerrank.com/challenges/array-splitting/problem
+ * 100%
+ * Do NOT change the data type from int to long!
+ */
+size_t VectorEqualSplit(vector<int> &data)
+{
+	set<int> unique(data.begin(), data.end());
+	size_t result = 0;
+	if (data.size() < 2)
+		return result;
+#ifdef _MSC_VER
+	int right = parallel_reduce(data.begin(), data.end(), 0);
+#elif defined(__GNUC__) || defined(__GNUG__)
+	int right = parallel_reduce(
+		blocked_range<int>(0, data.size()), 0,
+		[&](tbb::blocked_range<int> r, int running_total)
+		{
+			for (int j = r.begin(); j < r.end(); j++)
+				running_total += data[j];
+			return running_total;
+		},
+		std::plus<int>());
+#endif
+	int left = 0;
+	size_t i = 0;
+	if (!right)
+		return data.size() - 1;
+	else if (unique.size() == 1 && (right % 2 || (data.size() % 2 && data[data.size() / 2])))
+		return 0;
+	else
+		for (; i < data.size() && left != right; left += data[i], right -= data[i++])
+			;
+	if (left == right && i < data.size())
+	{
+		result++;
+		vector<int> leftSplit = vector<int>(data.begin(), data.begin() + i);
+		vector<int> rightSplit = vector<int>(data.begin() + i, data.end());
+		result += max(VectorEqualSplit(leftSplit), VectorEqualSplit(rightSplit));
+	}
+	return result;
 }

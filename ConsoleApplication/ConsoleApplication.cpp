@@ -923,9 +923,7 @@ int main(int argc, char *argv[])
 	assert(countNumbersWithUniqueDigits(11) == 0);
 	a.clear();
 	b.clear();
-	a.resize(10);
-	ranges::generate(a, [n = 1]() mutable
-					 { return n++; });
+	a.push_back(123);
 #ifdef _MSC_VER
 	long sum = parallel_reduce(a.begin(), a.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
@@ -933,7 +931,47 @@ int main(int argc, char *argv[])
 		blocked_range<long>(0, a.size()), 0,
 		[&](tbb::blocked_range<long> r, long running_total)
 		{
-			for (int i = r.begin(); i < r.end(); ++i)
+			for (int i = r.begin(); i < r.end(); i++)
+				running_total += a[i];
+			return running_total;
+		},
+		std::plus<long>());
+#endif
+	assert(sum == 123);
+
+	a.clear();
+	b.clear();
+	a.push_back(1);
+	a.push_back(2);
+	a.push_back(3);
+#ifdef _MSC_VER
+	sum = parallel_reduce(a.begin() + 2, a.end(), 0);
+#elif defined(__GNUC__) || defined(__GNUG__)
+	sum = parallel_reduce(
+		blocked_range<long>(2, a.size()), 0,
+		[&](tbb::blocked_range<long> r, long running_total)
+		{
+			for (int i = r.begin(); i < r.end(); i++)
+				running_total += a[i];
+			return running_total;
+		},
+		std::plus<long>());
+#endif
+	assert(sum == 3);
+
+	a.clear();
+	b.clear();
+	a.resize(10);
+	ranges::generate(a, [n = 1]() mutable
+					 { return n++; });
+#ifdef _MSC_VER
+	sum = parallel_reduce(a.begin(), a.end(), 0);
+#elif defined(__GNUC__) || defined(__GNUG__)
+	sum = parallel_reduce(
+		blocked_range<long>(0, a.size()), 0,
+		[&](tbb::blocked_range<long> r, long running_total)
+		{
+			for (int i = r.begin(); i < r.end(); i++)
 				running_total += a[i];
 			return running_total;
 		},
@@ -1920,33 +1958,6 @@ int main(int argc, char *argv[])
 	assert(!strings1.empty());
 	assert(strings1.size() == 2);
 	a.clear();
-	a = {1, 2, 3, 1};
-	assert(containsNearbyAlmostDuplicate(a, 3, 0));
-	a.clear();
-	a = {1, 0, 1, 1};
-	assert(containsNearbyAlmostDuplicate(a, 1, 2));
-	a.clear();
-	a = {1, 5, 9, 1, 5, 9};
-	assert(!containsNearbyAlmostDuplicate(a, 2, 3));
-	assert(!containsNearbyAlmostDuplicate(a, 0, 0)); // indices must be distinct
-	assert(!containsNearbyAlmostDuplicate(a, 0, 1));
-	assert(containsNearbyAlmostDuplicate(a, 3, 0));
-	assert(!containsNearbyAlmostDuplicate(a, 2, 0));
-	assert(!containsNearbyAlmostDuplicate(a, -1, -1));
-	a.clear();
-	assert(abs(2147483647L - -1) == (long)2147483648);
-	assert(abs(-1 - 2147483647L) == (long)2147483648);
-	a = {2147483647, -1, 2147483647}; // 0x7FFFF_FFFF, 0xFFFF_FFFF
-	assert(!containsNearbyAlmostDuplicate(a, 1, 2147483647));
-	assert(!containsNearbyAlmostDuplicate(a, 1, -2147483648L)); // 2147483648 is 0x8000_0000 = 0xFFFF_FFFF_8000_0000 < 0
-	a.clear();
-	assert(abs(-INT_MIN - 0x7FFFFFFF) == 1);
-	assert(abs(0x7FFFFFFF - -INT_MIN) == 1);
-	a = {(long)-2147483648, 2147483647};			 // 0xFFFF_FFFF_8000_0000, 0x7FFF_FFFF
-	assert(!containsNearbyAlmostDuplicate(a, 1, 1)); // -2147483648 = 0xFFFF_FFFF_8000_0000; 2147483647 = 0x7FFF_FFFF. One in negative bucket, another in positive bucket. Different from abs((long)2147483648 - (long)2147483647)
-	a.clear();
-	a = {4, 1, -1, 6, 5};
-	assert(containsNearbyAlmostDuplicate(a, 3, 1));
 	a.clear();
 	a = diffWaysToCompute("2-1-1");
 	assert(!a.empty());
@@ -2037,7 +2048,93 @@ int main(int argc, char *argv[])
 	edges.clear();
 	edges = {{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}};
 	assert("1000100" == roadsInHackerland(5, edges));
-
+	data.clear();
+	data = {1};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {1, 2};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {1, 1};
+	assert(VectorEqualSplit(data) == 1);
+	data.clear();
+	data = {0, 0};
+	assert(VectorEqualSplit(data) == 1);
+	data.clear();
+	data = {0, 0, 0};
+	assert(VectorEqualSplit(data) == 2);
+	data.clear();
+	data = {1, 1, 1};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {2, 2, 2};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {1, 1, 1, 1, 1};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {2, 2, 2, 2, 2};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {1, 1, 1, 1};
+	assert(VectorEqualSplit(data) == 2);
+	data.clear();
+	data = {1, 1, 1, 1, 1, 1};
+	assert(VectorEqualSplit(data) == 1);
+	data.clear();
+	data = {1, 2, 1};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {1, 2, 1, 2};
+	assert(VectorEqualSplit(data) == 1);
+	data.clear();
+	data = {2, 2, 2, 3, 3};
+	assert(VectorEqualSplit(data) == 2);
+	data.clear();
+	data = {3, 2, 3, 2, 2, 2, 2};
+	/*
+	 * (1) [3 2 3] [2 2 2 2]
+	 * (2) [2 2] [2 2]
+	 * (3) [2] [2]
+	 */
+	assert(VectorEqualSplit(data) == 3);
+	data.clear();
+	data = {1, 1, 1, 1};
+	assert(VectorEqualSplit(data) == 2);
+	data.clear();
+	data = {4, 1, 0, 1, 1, 0, 1};
+	assert(VectorEqualSplit(data) == 3);
+	data.clear();
+	data = {0, 2, 0, 2, 0, 0, 0, 0, 2, 0, 0, 2, 2, 0, 2, 2, 2, 2, 0, 0, 0, 2, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 2, 2};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {2, 0, 0, 2, 2, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 2, 0, 0, 0, 2, 0, 0, 2, 0};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {16384, 8192, 8192, 16384, 8192, 8192, 32768, 32768};
+	assert(VectorEqualSplit(data) == 4);
+	data.clear();
+	data = {8760958, 8760957, 547560, 547560, 547560, 273780, 273780, 2190239, 4380479, 4380479, 4380478};
+	assert(VectorEqualSplit(data) == 1);
+	data.clear();
+	data = {0, 0, 0, 0, 0};
+	/*
+	 * (1) [0] [0 0 0 0]
+	 * (2) [0] [0 0 0]
+	 * (3) [0] [0 0]
+	 * (4) [0] [0]
+	 */
+	assert(VectorEqualSplit(data) == 4);
+	data.clear();
+	data = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	assert(VectorEqualSplit(data) == 2);
+	data.clear();
+	data = {21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211};
+	assert(VectorEqualSplit(data) == 0);
+	data.clear();
+	data = {999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994};
+	assert(VectorEqualSplit(data) == 6);
+	data.clear();
 	cpp20readonlyranges();
 	cpp20ranges();
 	cpp20variants();
