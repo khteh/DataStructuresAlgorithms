@@ -26,3 +26,4 @@ C++-latest data structures and algorithms using only standard libraries. This an
   - g++-latest (https://code.visualstudio.com/docs/cpp/cmake-linux)
   - libtbb-dev (Intel® Threading Building Blocks)
   - libgtest-dev
+  - ninja-build
