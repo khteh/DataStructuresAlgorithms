@@ -388,7 +388,7 @@ vector<string> bomberMan(size_t, vector<string> &);
 bool gridSearch(vector<string> &, vector<string> &);
 size_t SnakesAndLaddersGame(vector<vector<size_t>> &, vector<vector<size_t>> &);
 size_t SnakesAndLaddersGameFast(vector<vector<size_t>> &, vector<vector<size_t>> &);
-size_t lengthOfLongestSubstring(const string &);
+size_t LengthOfLongestUniqueSubstring(const string &);
 string zigzagconvert(const string &, size_t);
 string numberToRoman(size_t);
 double median(vector<long> &, vector<long> &);

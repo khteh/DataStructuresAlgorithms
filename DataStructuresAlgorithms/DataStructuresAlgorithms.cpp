@@ -6443,7 +6443,7 @@ size_t SnakesAndLaddersGameFast(vector<vector<size_t>> &ladders, vector<vector<s
  * ohvhjdml ->
  * vqblqcb
  */
-size_t lengthOfLongestSubstring(const string &s)
+size_t LengthOfLongestUniqueSubstring(const string &s)
 {
 	size_t maxLength = 0;
 	set<char> chars;

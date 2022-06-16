@@ -1735,15 +1735,15 @@ int main(int argc, char *argv[])
 	vector<vector<size_t>> snakes5 = {{99, 10}, {97, 20}, {98, 30}, {96, 40}, {95, 50}, {94, 60}, {93, 70}};
 	// assert(SnakesAndLaddersGame(ladders5, snakes5) == 0); // Impossible. Times out!
 	assert(SnakesAndLaddersGameFast(ladders5, snakes5) == 0); // Impossible
-	assert(lengthOfLongestSubstring(string("abcabc")) == 3);
-	assert(lengthOfLongestSubstring(string("aaa")) == 1);
-	assert(lengthOfLongestSubstring(string("abcdef")) == 6);
-	assert(lengthOfLongestSubstring(string("dvdf")) == 3);
-	assert(lengthOfLongestSubstring(string("abcabcbb")) == 3);
-	assert(lengthOfLongestSubstring(string("tmmzuxt")) == 5);
-	assert(lengthOfLongestSubstring(string("pwwkew")) == 3);
-	assert(lengthOfLongestSubstring(string("ohvhjdml")) == 6);
-	assert(lengthOfLongestSubstring(string("vqblqcb")) == 4);
+	assert(LengthOfLongestUniqueSubstring(string("abcabc")) == 3);
+	assert(LengthOfLongestUniqueSubstring(string("aaa")) == 1);
+	assert(LengthOfLongestUniqueSubstring(string("abcdef")) == 6);
+	assert(LengthOfLongestUniqueSubstring(string("dvdf")) == 3);
+	assert(LengthOfLongestUniqueSubstring(string("abcabcbb")) == 3);
+	assert(LengthOfLongestUniqueSubstring(string("tmmzuxt")) == 5);
+	assert(LengthOfLongestUniqueSubstring(string("pwwkew")) == 3);
+	assert(LengthOfLongestUniqueSubstring(string("ohvhjdml")) == 6);
+	assert(LengthOfLongestUniqueSubstring(string("vqblqcb")) == 4);
 	assert(zigzagconvert(string("PAYPALISHIRING"), 3) == "PAHNAPLSIIGYIR");
 	assert(zigzagconvert(string("AB"), 1) == "AB");
 	assert(numberToRoman(4) == "IV");
