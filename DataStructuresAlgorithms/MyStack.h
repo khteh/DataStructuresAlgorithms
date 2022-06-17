@@ -11,18 +11,18 @@ class MyStack
 {
 private:
 	shared_ptr<Node<T>> m_top;
-	unsigned long m_size;
+	size_t m_size;
 
 public:
 	MyStack();
 	MyStack(const MyStack &);
 	~MyStack();
-	bool isEmpty();
+	bool isEmpty() const;
 	T pop();
 	void push(T);
-	T peek();
+	T peek() const;
 	void clear();
-	unsigned long size();
+	size_t size() const;
 	void PrintStack();
-	static void SortStack(MyStack<T>&, MyStack<T>&, sort_order_t);
+	static void SortStack(MyStack<T> &, MyStack<T> &, sort_order_t);
 };

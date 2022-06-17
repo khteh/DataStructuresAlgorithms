@@ -29,7 +29,7 @@ MyStack<T>::~MyStack()
 }
 
 template <typename T>
-bool MyStack<T>::isEmpty()
+bool MyStack<T>::isEmpty() const
 {
 	return !m_top;
 }
@@ -53,13 +53,13 @@ void MyStack<T>::push(T item)
 }
 
 template <typename T>
-T MyStack<T>::peek()
+T MyStack<T>::peek() const
 {
 	return !isEmpty() ? m_top->Item() : numeric_limits<T>::max();
 }
 
 template <typename T>
-unsigned long MyStack<T>::size()
+size_t MyStack<T>::size() const
 {
 	return m_size;
 }
@@ -86,7 +86,7 @@ void MyStack<T>::PrintStack()
 	cout << endl;
 }
 template <typename T>
-void MyStack<T>::SortStack(MyStack<T>& src, MyStack<T>& dest, sort_order_t order)
+void MyStack<T>::SortStack(MyStack<T> &src, MyStack<T> &dest, sort_order_t order)
 {
 	T item = T();
 	while (!src.isEmpty())

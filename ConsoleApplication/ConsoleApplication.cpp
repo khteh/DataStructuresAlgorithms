@@ -775,16 +775,22 @@ int main(int argc, char *argv[])
 	assert(LongestValidParenthesesWithFixes(string("((("), 1) == 2);
 	// Tower of Hanoi
 	cout << "Tower Of Hanoi recursive solution: " << endl;
-	unique_ptr<Tower<size_t>> towers[3];
+	vector<shared_ptr<Tower<size_t>>> towers(3);
 	for (i = 0; i < 3; i++)
-		towers[i] = make_unique<Tower<size_t>>(i);
+		towers[i] = make_shared<Tower<size_t>>(i);
 	for (i = 2; i > 0; i--) // Smallest disk is "1"
 	{
 		towers[0]->Add(i);
 		assert(towers[0]->TopDisk() == i);
 	}
-	size = towers[0]->MoveDisks(2, towers[2].get(), towers[1].get());
+	assert(!towers[0]->isEmpty());
+	assert(towers[1]->isEmpty());
+	assert(towers[2]->isEmpty());
+	size = towers[0]->MoveDisks(2, towers[2], towers[1]);
 	assert(size == 3); // size = #moves
+	assert(towers[0]->isEmpty());
+	assert(towers[1]->isEmpty());
+	assert(!towers[2]->isEmpty());
 	for (i = 0; i < 3; i++)
 		towers[i]->Clear();
 	for (i = 10; i > 0; i--) // Smallest disk is "1"
@@ -792,9 +798,12 @@ int main(int argc, char *argv[])
 		towers[0]->Add(i);
 		assert(towers[0]->TopDisk() == i);
 	}
+	assert(!towers[0]->isEmpty());
+	assert(towers[1]->isEmpty());
+	assert(towers[2]->isEmpty());
 	cout << "Tower 0 before move: " << endl;
 	towers[0]->print();
-	size = towers[0]->MoveDisks(5, towers[2].get(), towers[1].get());
+	size = towers[0]->MoveDisks(5, towers[2], towers[1]);
 	cout << "Tower 0,1,2 after " << size << " moves: " << endl;
 	towers[0]->print();
 	assert(towers[0]->TopDisk() == 6);

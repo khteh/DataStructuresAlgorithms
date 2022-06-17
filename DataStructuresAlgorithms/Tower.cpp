@@ -20,7 +20,7 @@ size_t Tower<T>::Index()
 }
 
 template <typename T>
-bool Tower<T>::isEmpty()
+bool Tower<T>::isEmpty() const
 {
 	return m_disks.isEmpty();
 }
@@ -30,7 +30,7 @@ void Tower<T>::Clear()
 	m_disks.clear();
 }
 template <typename T>
-T Tower<T>::TopDisk()
+T Tower<T>::TopDisk() const
 {
 	return m_disks.peek();
 }
@@ -48,9 +48,20 @@ void Tower<T>::Add(T disk)
 }
 
 template <typename T>
-void Tower<T>::MoveTopTo(Tower *t)
+void Tower<T>::MoveTopTo(shared_ptr<Tower<T>> &t)
 {
 	t->Add(m_disks.pop());
+}
+
+template <typename T>
+bool Tower<T>::operator<(Tower<T> &rhs) const
+{
+	return !isEmpty() && TopDisk() < rhs.TopDisk();
+}
+template <typename T>
+bool Tower<T>::operator>(Tower<T> &rhs) const
+{
+	return isEmpty() || TopDisk() > rhs.TopDisk();
 }
 
 template <typename T>
@@ -69,7 +80,7 @@ void Tower<T>::print()
 // The entire procedure is a finite number of steps, since at some point the algorithm will be required for n = 1.
 // This step, moving a single disc from peg A to peg B, is trivial.
 template <typename T>
-size_t Tower<T>::MoveDisks(T n, Tower *dest, Tower *buffer)
+size_t Tower<T>::MoveDisks(T n, shared_ptr<Tower<T>> &dest, shared_ptr<Tower<T>> &buffer)
 {
 	size_t moves = 0;
 	if (n > 0)
@@ -77,7 +88,8 @@ size_t Tower<T>::MoveDisks(T n, Tower *dest, Tower *buffer)
 		moves += MoveDisks(n - 1, buffer, dest); // 1. move n−1 discs from A to B. This leaves disc n alone on peg A
 		MoveTopTo(dest);						 // 2. move disc n from A to C
 		moves++;
-		moves += buffer->MoveDisks(n - 1, dest, this); // 3. move n−1 discs from B to C so they sit on disc n
+		shared_ptr<Tower<T>> bufferTower = this->shared_from_this(); // A non-const reference parameter, such as an int&, can only refer to an "lvalue," which is a named variable.
+		moves += buffer->MoveDisks(n - 1, dest, bufferTower); // 3. move n−1 discs from B to C so they sit on disc n
 	}
 	return moves;
 }
