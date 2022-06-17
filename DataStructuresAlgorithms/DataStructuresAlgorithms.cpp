@@ -8132,7 +8132,7 @@ size_t VectorEqualSplit(vector<int> &data)
 	size_t i = 0;
 	if (!right)
 		return data.size() - 1;
-	else if (unique.size() == 1 && (right % 2 || (data.size() % 2 && data[data.size() / 2])))
+	else if (unique.size() == 1 && data[0] && (right % 2 || data.size() % 2))
 		return 0;
 	else
 		for (; i < data.size() && left != right; left += data[i], right -= data[i++])
@@ -8145,4 +8145,74 @@ size_t VectorEqualSplit(vector<int> &data)
 		result += max(VectorEqualSplit(leftSplit), VectorEqualSplit(rightSplit));
 	}
 	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/abbr/problem
+ * 100%
+ * (1) Capitalize a
+ * (2) Delete remaining lowercase letters
+* AbcDE
+* AB DE <- Yes 'b' -> B; delete 'c'
+ j: A B D E
+i 1 0 0 0 0
+A 0 1 0 0 0
+b 0 1 1 0 0
+c 0 1 1 0 0
+D 0 0 0 1 0
+E 0 0 0 0 1
+
+* aaaa <- YES
+* A
+ j: A
+i 1 0
+a 1 1
+a 1 1
+a 1 1
+a 1 1
+
+* AbcDE
+* AF DE <- NO
+
+  j: A F D E
+i 1 0 0 0  0
+A 0 1 0 0  0
+b 0 1 0 0  0
+c 0 1 0 0  0
+D 0 0 0 0  0
+E 0 0 0 0  0
+
+ * AbcDE
+ * ADE	<- YES (Remove "bc")
+
+ j: A D E
+i 1 0 0 0
+A 0 1 0 0
+b 0 1 0 0
+c 0 1 0 0
+D 0 0 1 0
+E 0 0 0 1
+
+ * KXzQ
+ * K 	<- NO
+ j: K
+i 1 0
+K 0 1
+X 0 0
+z 0 0
+Q 0 0
+ */
+bool Abbreviation(string &s1, string &s2)
+{
+	if (s1.empty() || (s2.empty() && count_if(s1.begin(), s1.end(), [](char c)
+											  { return isupper(c); }) > 0))
+		return false;
+	vector<vector<bool>> table(s1.size() + 1, vector<bool>(s2.size() + 1)); // Defaults to false initial value
+	// dp[i][j] = true iff s1(0..i-1) can match s2(0..j-1)
+	table[0][0] = true;
+	for (size_t i = 1; i <= s1.size(); i++)
+		table[i][0] = table[i - 1][0] && islower(s1[i - 1]);
+	for (size_t i = 1; i <= s1.size(); i++)
+		for (size_t j = 1; j <= s2.size(); j++)
+			table[i][j] = (table[i - 1][j - 1] && toupper(s1[i - 1]) == s2[j - 1]) || (table[i - 1][j] && islower(s1[i - 1]));
+	return table[s1.size()][s2.size()];
 }

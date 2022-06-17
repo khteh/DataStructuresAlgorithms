@@ -416,6 +416,8 @@ vector<size_t> UnbeatenPaths(size_t, vector<vector<size_t>> &, size_t);
 size_t evenForest(size_t, vector<vector<size_t>> &, size_t start = 1);
 string roadsInHackerland(size_t, vector<vector<size_t>> &);
 size_t VectorEqualSplit(vector<int> &);
+long BricksGame(vector<long> &);
+bool Abbreviation(string &, string &);
 void cpp20readonlyranges();
 void cpp20ranges();
 void cpp20variants();
