@@ -6180,7 +6180,7 @@ vector<long> absolutePermutation(size_t n, size_t k)
 	ranges::generate(sequence, [i = 1]() mutable
 					 { return i++; });
 	// |sequence[i] - i| = k
-	vector<long> a, b;
+	vector<long> a;
 	set<long> exists;
 	for (size_t i = 1; i <= n; i++)
 	{
@@ -6199,9 +6199,7 @@ vector<long> absolutePermutation(size_t n, size_t k)
 	}
 	vector<long> result(a);
 	ranges::sort(a);
-	if (a == sequence)
-		return result;
-	return vector<long>(1, -1);
+	return a == sequence ? result : vector<long>(1, -1);
 }
 // https://www.hackerrank.com/challenges/bomber-man/problem
 // Times out!
@@ -6976,7 +6974,7 @@ vector<string> PhoneKeyLetters(const string &digits)
  * [0,0) is valid -> [0,4) is valid -> [0,7) is valid
  * 100%
  */
-bool wordBreakDynamicProgramming(const string &s, set<string> &words)
+bool WordBreakDynamicProgramming(const string &s, set<string> &words)
 {
 	vector<bool> valid(s.size() + 1, false);	 // flag to mark substring [0, end) validity
 	valid[0] = true;							 // empty substring is a valid string
@@ -6993,7 +6991,7 @@ bool wordBreakDynamicProgramming(const string &s, set<string> &words)
 }
 /* https://leetcode.com/problems/word-break-ii/
  */
-void wordBreakDynamicProgramming(const string &s, set<string> &words, vector<string> &result)
+void WordBreakDynamicProgramming(const string &s, set<string> &words, vector<string> &result)
 {
 	map<size_t, vector<string>> strings;
 	vector<bool> valid(s.size() + 1, false); // flag to mark substring [0, end) validity
@@ -7252,7 +7250,7 @@ void WiggleMaxLength(vector<long> &nums, vector<long> &result)
  * If such prefix does not exist, then the serialization is definitely invalid; otherwise, the serialization is valid if and only if the prefix is the entire sequence.
  * 100%
  */
-bool isValidPreOrderTreeSerialization(const string &preorder)
+bool IsValidPreOrderTreeSerialization(const string &preorder)
 {
 	vector<string> tokens;
 	::split(preorder, ',', tokens);

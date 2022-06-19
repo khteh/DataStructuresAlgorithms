@@ -514,39 +514,12 @@ int main(int argc, char *argv[])
 	d = round(0.1234, 2);
 	d = round(0.1234, 3);
 	d = round(0.1234, 4);
-	assert(NumberStringSum(string("1234567890"), string("9876543210")) == "11111111100");
-	assert(NumberStringSum(string("123"), string("45")) == "168");
-	line = "-4";
-	line1 = "5";
-	assert(NumberStringMultiplication(line, line1) == "-20");
-	line = "3";
-	line1 = "-4";
-	assert(NumberStringMultiplication(line, line1) == "-12");
-	line = "-7";
-	line1 = "-8";
-	assert(NumberStringMultiplication(line, line1) == "56");
-	line = "123456";
-	line1 = "654321";
-	assert(NumberStringMultiplication(line, line1) == "80779853376");
-	line = "456789";
-	line1 = "987654";
-	assert(NumberStringMultiplication(line, line1) == "451149483006");
-
 	assert(factorial(1) == 1);
 	assert(factorial(2) == 2);
 	assert(factorial(3) == 6);
 	assert(factorial(4) == 24);
 	assert(factorial(5) == 120);
 	assert(factorial(20) == 2432902008176640000);
-	assert(factorialDynamicProgramming(1) == 1);
-	assert(factorialDynamicProgramming(2) == 2);
-	assert(factorialDynamicProgramming(3) == 6);
-	assert(factorialDynamicProgramming(4) == 24);
-	assert(factorialDynamicProgramming(5) == 120);
-	assert(factorialDynamicProgramming(20) == 2432902008176640000);
-#if defined(__GNUC__) || defined(__GNUG__)
-	assert(factorialDynamicProgramming(25) == 15511210043330985984000000); // Only 64-bit on GNU C++. "constant too big" compilation error on MSVC
-#endif
 	assert(SequenceSum(0) == 0);
 	assert(SequenceSum(1) == 1);
 	assert(SequenceSum(5) == 15);
@@ -562,18 +535,6 @@ int main(int argc, char *argv[])
 	assert(fibonacci(8) == 21);
 	assert(fibonacci(9) == 34);
 	// assert(fibonacci(90) == 2880067194370816120ULL); Times out!!!
-	assert(fibonacciDynamicProgramming(-1) == -1);
-	assert(fibonacciDynamicProgramming(0) == 0);
-	assert(fibonacciDynamicProgramming(1) == 1);
-	assert(fibonacciDynamicProgramming(2) == 1);
-	assert(fibonacciDynamicProgramming(3) == 2);
-	assert(fibonacciDynamicProgramming(4) == 3);
-	assert(fibonacciDynamicProgramming(5) == 5);
-	assert(fibonacciDynamicProgramming(6) == 8);
-	assert(fibonacciDynamicProgramming(7) == 13);
-	assert(fibonacciDynamicProgramming(8) == 21);
-	assert(fibonacciDynamicProgramming(9) == 34);
-	assert(fibonacciDynamicProgramming(90) == 2880067194370816120ULL);
 	assert(fibonacciModified(0, 1, 4) == "5");
 	assert(fibonacciModified(0, 1, 5) == "27");
 	assert(fibonacciModified(0, 1, 6) == "734");
@@ -848,12 +809,6 @@ int main(int argc, char *argv[])
 		// cout << endl;
 	}
 	free(my3Dbuffer);
-	cout << "Test addition without using arithmetic symbol: " << endl;
-	assert(AddWithoutArithmetic(0, 0) == 0);
-	assert(AddWithoutArithmetic(-1, 1) == 0);
-	assert(AddWithoutArithmetic(0xdeadbeef, 0xfeedbeef) == 0x1dd9b7dde);
-	assert(AddWithoutArithmetic(0xdeadbeef, 0) == 0xdeadbeef);
-	assert(AddWithoutArithmetic(0, 0xfeedbeef) == 0xfeedbeef);
 
 	for (i = 0; i < 64; i++)
 		mask |= ((unsigned long long)1 << i);
@@ -1115,41 +1070,7 @@ int main(int argc, char *argv[])
 	strings = numbersegments(sortData);
 	ranges::copy(strings, ostream_iterator<string>(cout, ","));
 	cout << endl;
-	assert(XOR(1) == 1);
-	assert(XOR(2) == 3);
-	assert(XOR(3) == 0);
-	assert(XOR(4) == 4);
-	assert(XOR(5) == 1);
 	cout << dec;
-	assert(ToggleSign(-10) == 10);
-	assert(ToggleSign(10) == -10);
-	assert(absolute(-10) == 10);
-	assert(absolute(10) == 10);
-	assert(SubtractWithPlusSign(10, 5) == 5);
-	assert(SubtractWithPlusSign(10, -5) == 15);
-	assert(MultiplyWithPlusSign(10, 5) == 50);
-	assert(MultiplyWithPlusSign(10, -5) == -50);
-	assert(DivideWithPlusSign(10, 3) == 3);
-	assert(DivideWithPlusSign(10, -3) == -3);
-	assert(DivideWithPlusSign(-10, 3) == -3);
-	assert(DivideWithPlusSign(-10, -3) == 3);
-	assert(DivideWithPlusSign(-10, -1) == 10);
-	assert(DivideWithPlusSign(-1, 1) == -1);
-	assert(DivideWithPlusSign(1, -1) == -1);
-	assert(DivideWithPlusSign(-1, -1) == 1);
-	assert(DivideWithPlusSign(-2147483648, -1) == (long)2147483648);
-	assert(DivideWithPlusSign(-2147483648, 1) == -2147483648);
-	assert(DivideWithPlusSign(2147483648, -1) == -2147483648); // Takes very long time to ToggleSign of 64-bit value
-	assert(divide(10, 3) == 3);
-	assert(divide(10, -3) == -3);
-	assert(divide(-10, 3) == -3);
-	assert(divide(-10, -3) == 3);
-	assert(divide(-1, 1) == -1);
-	assert(divide(1, -1) == -1);
-	assert(divide(-1, -1) == 1);
-	assert(divide(-2147483648, -1) == (long)2147483648);
-	assert(divide(-2147483648, 1) == -2147483648);
-	assert(divide(2147483648, -1) == -2147483648); // Takes very long time to ToggleSign of 64-bit value
 	assert(KthNumberWith357PrimeFactors(1) == 1);
 	assert(KthNumberWith357PrimeFactors(2) == 3);
 	assert(KthNumberWith357PrimeFactors(3) == 5);
@@ -1583,50 +1504,6 @@ int main(int argc, char *argv[])
 	assert(paths.size() == 2);
 	assert(paths[0] == "45");
 	assert(paths[1] == "LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LL LL LL LL LL LL LL LL LL LL LL LL");
-	a.clear();
-	a = {1, 3, 5, 7, 9};
-	DisJointSet<long> disjointSet(a);
-	disjointSet.Print(a);
-	// Test islands
-	// assert(disjointSet.Find(0) == 0); C++ map will insert non-existing key silently
-	assert(disjointSet.Find(1) == 1);
-	assert(disjointSet.Find(3) == 3);
-	assert(disjointSet.Find(5) == 5);
-	assert(disjointSet.Find(7) == 7);
-	assert(disjointSet.Find(9) == 9);
-	// Test all islands of Rank 0
-	assert(disjointSet.Rank(1) == 0);
-	assert(disjointSet.Rank(3) == 0);
-	assert(disjointSet.Rank(5) == 0);
-	assert(disjointSet.Rank(7) == 0);
-	assert(disjointSet.Rank(9) == 0);
-	assert(disjointSet.Find(1) != disjointSet.Find(3));
-	assert(disjointSet.Find(3) != disjointSet.Find(5));
-	assert(disjointSet.Find(5) != disjointSet.Find(7));
-	assert(disjointSet.Find(7) != disjointSet.Find(9));
-	assert(disjointSet.Union(3, 7) == 7); // 3,7 root: 7
-	assert(disjointSet.Find(1) != disjointSet.Find(3));
-	assert(disjointSet.Find(3) != disjointSet.Find(5));
-	assert(disjointSet.Find(5) != disjointSet.Find(7));
-	assert(disjointSet.Find(7) != disjointSet.Find(9));
-	assert(disjointSet.Find(3) == disjointSet.Find(7));
-	assert(disjointSet.Rank(3) == 1);
-	assert(disjointSet.Rank(7) == 1);
-	disjointSet.Print(a);
-	// Put smaller ranked item under bigger ranked item if ranks are different
-	assert(disjointSet.Union(1, 3) == 7);							// 1, 3, 7 root: 7
-	assert(disjointSet.Union(1, 7) == numeric_limits<long>::min()); // Already joined!
-	assert(disjointSet.Rank(1) == 1);
-	assert(disjointSet.Rank(3) == 1);
-	assert(disjointSet.Rank(7) == 1);
-	disjointSet.Print(a);
-	assert(disjointSet.Find(1) == disjointSet.Find(3));
-	assert(disjointSet.Find(3) != disjointSet.Find(5));
-	assert(disjointSet.Find(5) != disjointSet.Find(7));
-	assert(disjointSet.Find(7) != disjointSet.Find(9));
-	assert(disjointSet.Find(3) == disjointSet.Find(7));
-	// assert(disjointSet.Find(2) == 0); C++ map will insert non-existing key silently
-	// assert(disjointSet.Find(1) != disjointSet.Find(2)); C++ map will insert non-existing key silently
 
 	vector<long> from = {1, 3, 1, 4, 2};
 	vector<long> to = {2, 5, 4, 5, 3};
@@ -1652,15 +1529,6 @@ int main(int argc, char *argv[])
 	assert(weights.size() == 45);
 	assert(getLowestPathCost(10, from, to, weights) == 1196);
 
-	a.clear();
-	a = {4, 2};
-	assert(AlmostSorted(a) == "swap 1 2");
-	a.clear();
-	a = {4104, 8529, 49984, 54956, 63034, 82534, 84473, 86411, 92941, 95929, 108831, 894947, 125082, 137123, 137276, 142534, 149840, 154703, 174744, 180537, 207563, 221088, 223069, 231982, 249517, 252211, 255192, 260283, 261543, 262406, 270616, 274600, 274709, 283838, 289532, 295589, 310856, 314991, 322201, 339198, 343271, 383392, 385869, 389367, 403468, 441925, 444543, 454300, 455366, 469896, 478627, 479055, 484516, 499114, 512738, 543943, 552836, 560153, 578730, 579688, 591631, 594436, 606033, 613146, 621500, 627475, 631582, 643754, 658309, 666435, 667186, 671190, 674741, 685292, 702340, 705383, 722375, 722776, 726812, 748441, 790023, 795574, 797416, 813164, 813248, 827778, 839998, 843708, 851728, 857147, 860454, 861956, 864994, 868755, 116375, 911042, 912634, 914500, 920825, 979477};
-	assert(AlmostSorted(a) == "swap 12 95");
-	a.clear();
-	a = {43, 65, 1, 98, 99, 101};
-	assert(AlmostSorted(a) == "no");
 	assert(cipher(7, 4, string("1110101001")) == "1001011");
 	assert(cipher(4, 5, string("11000110")) == "1010");
 	assert(DecryptPassword(string("43Ah*ck0rr0nk")) == "hAck3rr4nk");
@@ -1711,9 +1579,6 @@ int main(int argc, char *argv[])
 	assert(FindSubsequenceRecursive(string("1221"), string("12")) == 2);
 	assert(FindSubsequenceRecursive(string("1234"), string("56")) == 0);
 	assert(FindSubsequenceRecursive(string("kkkkkkz"), string("kkkk")) == 15);
-	assert(FindSubsequenceDynamicProgramming(string("1221"), string("12")) == 2);
-	assert(FindSubsequenceDynamicProgramming(string("1234"), string("56")) == 0);
-	assert(FindSubsequenceDynamicProgramming(string("kkkkkkz"), string("kkkk")) == 15);
 	assert(shortPalindrome(string("kkkkkkz")) == 15);
 	assert(shortPalindrome(string("ghhggh")) == 4);
 	assert(shortPalindrome(string("cbbdcacccdaddbaabbaacbacacaaddaaacdbccccccbbadbbcdddddddaccbdbddcbacaaadbbdcbcbcdabdddbbcdccaacdccab")) == 242745);
@@ -1808,48 +1673,6 @@ int main(int argc, char *argv[])
 	a.clear();
 	b.clear();
 	assert(median(a, b) == 0);
-	LRUCache<long, long> lruCache(2);
-	lruCache.Put(1, 1);
-	lruCache.Put(2, 2);
-	assert(lruCache.Get(1) == 1);
-	lruCache.Put(3, 3);
-	assert(lruCache.Get(2) == -1);
-	lruCache.Put(4, 4);
-	assert(lruCache.Get(1) == -1);
-	assert(lruCache.Get(3) == 3);
-	assert(lruCache.Get(4) == 4);
-
-	LRUCache<long, long> lruCache1(3);
-	lruCache1.Put(1, 1);
-	lruCache1.Put(2, 2);
-	lruCache1.Put(3, 3);		   // 1,2,3
-	lruCache1.Put(4, 4);		   // 2,3,4
-	assert(lruCache1.Get(4) == 4); // 2,3,4
-	assert(lruCache1.Get(3) == 3); // 2,4,3
-	assert(lruCache1.Get(2) == 2); // 4,3,2
-	assert(lruCache1.Get(1) == -1);
-	lruCache1.Put(5, 5);
-	assert(lruCache1.Get(1) == -1);
-	assert(lruCache1.Get(2) == 2);
-	assert(lruCache1.Get(3) == 3);
-	assert(lruCache1.Get(4) == -1);
-	assert(lruCache1.Get(5) == 5);
-
-	LRUCache<long, long> lruCache2(1);
-	lruCache2.Put(2, 1);
-	assert(lruCache2.Get(2) == 1);
-	lruCache2.Put(3, 2);
-	assert(lruCache2.Get(2) == -1);
-	assert(lruCache2.Get(3) == 2);
-	strings.clear();
-	strings = {"2", "1", "+", "3", "*"};
-	assert(ReversePolishNotation(strings) == 9);
-	strings.clear();
-	strings = {"4", "13", "5", "/", "+"};
-	assert(ReversePolishNotation(strings) == 6);
-	strings.clear();
-	strings = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
-	assert(ReversePolishNotation(strings) == 22);
 	assert(basicCalculator(string("3+2*2-1")) == 6);
 	assert(basicCalculator(string("3+2")) == 5);
 	assert(basicCalculator(string("3-2")) == 1);
@@ -1864,30 +1687,6 @@ int main(int argc, char *argv[])
 	assert(!a.empty());
 	assert(a.size() == 4);
 	assert(b == a);
-	udata.clear();
-	udata = {3, 0, 6, 1, 5};
-	assert(hIndex(udata) == 3);
-	udata.clear();
-	udata = {0, 1};
-	assert(hIndex(udata) == 1);
-	udata.clear();
-	udata = {1, 1};
-	assert(hIndex(udata) == 1);
-	udata.clear();
-	udata = {123};
-	assert(hIndex(udata) == 1);
-	udata.clear();
-	udata = {1, 1, 2};
-	assert(hIndex(udata) == 1);
-	udata.clear();
-	udata = {1, 2, 2};
-	assert(hIndex(udata) == 2);
-	udata.clear();
-	udata = {3, 2, 2};
-	assert(hIndex(udata) == 2);
-	udata.clear();
-	udata = {3, 3, 2};
-	assert(hIndex(udata) == 2);
 	strings = PhoneKeyLetters(string("23"));
 	assert(strings.size() == 9);
 	strings1 = {"ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"};
@@ -1903,35 +1702,14 @@ int main(int argc, char *argv[])
 	assert(strings1 == strings);
 	strings = PhoneKeyLetters(string("5678"));
 	assert(strings.size() == 108);
-	stringset.clear();
-	stringset = {"Hello", "World"};
-	assert(wordBreakDynamicProgramming(string("HelloWorld"), stringset));
-	strings1.clear();
-	wordBreakDynamicProgramming(string("HelloWorld"), stringset, strings1);
-	assert(!strings1.empty());
-	assert(strings1.size() == 1);
-	assert(strings1[0] == "Hello World");
+	stringset = { "Hello", "World" };
 	strings1 = wordBreakDFS(string("HelloWorld"), stringset);
 	assert(!strings1.empty());
 	assert(strings1.size() == 1);
 	assert(strings1[0] == "Hello World");
+	strings1.clear();
 	stringset.clear();
-	stringset = {"cats", "dog", "sand", "and", "cat"};
-	assert(!wordBreakDynamicProgramming(string("catsandog"), stringset));
-	assert(wordBreakDynamicProgramming(string("catsanddog"), stringset));
-	assert(wordBreakDynamicProgramming(string("catanddog"), stringset));
-	strings1.clear();
-	wordBreakDynamicProgramming(string("catsandog"), stringset, strings1);
-	assert(strings1.empty());
-	strings1.clear();
-	wordBreakDynamicProgramming(string("catsanddog"), stringset, strings1);
-	assert(!strings1.empty());
-	assert(strings1.size() == 2);
-	strings1.clear();
-	wordBreakDynamicProgramming(string("catanddog"), stringset, strings1);
-	assert(strings1.size() == 1);
-	assert(strings1[0] == "cat and dog");
-	strings1.clear();
+	stringset = { "cats", "dog", "sand", "and", "cat" };
 	strings1 = wordBreakDFS(string("catsandog"), stringset);
 	assert(strings1.empty());
 	strings1 = wordBreakDFS(string("catsanddog"), stringset);
@@ -1941,28 +1719,17 @@ int main(int argc, char *argv[])
 	assert(!strings1.empty());
 	assert(strings1.size() == 1);
 
+	strings1.clear();
 	stringset.clear();
-	stringset = {"apple", "pen"};
-	assert(wordBreakDynamicProgramming(string("applepenapple"), stringset));
-	strings1.clear();
-	wordBreakDynamicProgramming(string("applepenapple"), stringset, strings1);
-	assert(!strings1.empty());
-	assert(strings1.size() == 1);
-	assert(strings1[0] == "apple pen apple");
-	strings1.clear();
+	stringset = { "apple", "pen" };
 	strings1 = wordBreakDFS(string("applepenapple"), stringset);
 	assert(!strings1.empty());
 	assert(strings1.size() == 1);
 	assert(strings1[0] == "apple pen apple");
 
+	strings1.clear();
 	stringset.clear();
-	stringset = {"aaaa", "aaa"};
-	assert(wordBreakDynamicProgramming(string("aaaaaaa"), stringset));
-	strings1.clear();
-	wordBreakDynamicProgramming(string("aaaaaaa"), stringset, strings1);
-	assert(!strings1.empty());
-	assert(strings1.size() == 2);
-	strings1.clear();
+	stringset = { "aaaa", "aaa" };
 	strings1 = wordBreakDFS(string("aaaaaaa"), stringset);
 	assert(!strings1.empty());
 	assert(strings1.size() == 2);
@@ -1988,47 +1755,6 @@ int main(int argc, char *argv[])
 	assert(listSum1.Sum(0, 0) == -1);
 	listSum1.Update(0, 1);
 	assert(listSum1.Sum(0, 0) == 1);
-	assert(!isValidPreOrderTreeSerialization(string("1")));
-	assert(isValidPreOrderTreeSerialization(string("#")));
-	assert(isValidPreOrderTreeSerialization(string("1,#,#")));
-	assert(isValidPreOrderTreeSerialization(string("9,3,4,#,#,1,#,#,2,#,6,#,#")));
-	assert(isValidPreOrderTreeSerialization(string("9,#,93,#,9,9,#,#,#")));
-	assert(isValidPreOrderTreeSerialization(string("9,9,9,19,#,9,#,#,#,9,#,69,#,#,#")));
-	assert(LargestNumberCompositionProductWithDynamicProgramming(2) == 1);
-	assert(LargestNumberCompositionProductWithDynamicProgramming(10) == 36);
-	strings.clear();
-	strings = {"abcw", "baz", "foo", "bar", "xtfn", "abcdef"};
-	assert(maxProductOfNonOverlappingWordLengths(strings) == 16); // "abcw", "xtfn"
-	strings.clear();
-	strings = {"a", "ab", "abc", "d", "cd", "bcd", "abcd"};
-	assert(maxProductOfNonOverlappingWordLengths(strings) == 4); // "ab", "cd"
-	strings.clear();
-	strings = {"a", "aa", "aaa", "aaaa"};
-	assert(maxProductOfNonOverlappingWordLengths(strings) == 0);
-	sgrid.clear();
-	sgrid = {{"MUC", "LHR"}, {"JFK", "MUC"}, {"SFO", "SJC"}, {"LHR", "SFO"}};
-	strings = findItinerary(sgrid, string("JFK"));
-	assert(!strings.empty());
-	assert(strings.size() == 5);
-	strings1.clear();
-	strings1 = {"JFK", "MUC", "LHR", "SFO", "SJC"};
-	assert(strings1 == strings);
-	sgrid.clear();
-	sgrid = {{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}};
-	strings = findItinerary(sgrid, string("JFK"));
-	assert(!strings.empty());
-	assert(strings.size() == 6);
-	strings1.clear();
-	strings1 = {"JFK", "ATL", "JFK", "SFO", "ATL", "SFO"};
-	assert(strings1 == strings);
-	sgrid.clear();
-	sgrid = {{"EZE", "AXA"}, {"TIA", "ANU"}, {"ANU", "JFK"}, {"JFK", "ANU"}, {"ANU", "EZE"}, {"TIA", "ANU"}, {"AXA", "TIA"}, {"TIA", "JFK"}, {"ANU", "TIA"}, {"JFK", "TIA"}};
-	strings = findItinerary(sgrid, string("JFK"));
-	assert(!strings.empty());
-	assert(strings.size() == 11);
-	strings1.clear();
-	strings1 = {"JFK", "ANU", "EZE", "AXA", "TIA", "ANU", "JFK", "TIA", "ANU", "TIA", "JFK"};
-	assert(strings1 == strings);
 	ugrid.clear();
 	numberCombinations(4, 2, ugrid);
 	assert(!ugrid.empty());
@@ -2056,63 +1782,6 @@ int main(int argc, char *argv[])
 	edges.clear();
 	edges = {{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}};
 	assert("1000100" == roadsInHackerland(5, edges));
-	line = "AbcDE";
-	line1 = "ABDE";
-	assert(Abbreviation(line, line1));
-	line = "AbcDE";
-	line1 = "AFDE";
-	assert(!Abbreviation(line, line1));
-	line = "AbcDE";
-	line1 = "ACDE";
-	assert(Abbreviation(line, line1));
-	line = "AbcDE";
-	line1 = "ADE";
-	assert(Abbreviation(line, line1));
-	line = "AbcDE";
-	line1 = "ADDE";
-	assert(!Abbreviation(line, line1));
-	line = "aaaa";
-	line1 = "A";
-	assert(Abbreviation(line, line1));
-	line = "abcdef";
-	line1 = "A";
-	assert(Abbreviation(line, line1));
-	line = "bbbbb";
-	line1 = "A";
-	assert(!Abbreviation(line, line1));
-	line = "aaBaa";
-	line1 = "B";
-	assert(Abbreviation(line, line1));
-	line = "daBcd";
-	line1 = "ABC";
-	assert(Abbreviation(line, line1));
-	line = "bBccC";
-	line1 = "BBC";
-	assert(Abbreviation(line, line1));
-	line = "bbBccC";
-	line1 = "BBC";
-	assert(Abbreviation(line, line1));
-	line = "KXzQ";
-	line1 = "K";
-	assert(!Abbreviation(line, line1));
-	line = "beFgH";
-	line1 = "EFG";
-	assert(!Abbreviation(line, line1));
-	line = "ababbaAbAB";
-	line1 = "AABABB";
-	assert(!Abbreviation(line, line1));
-	line = "aAbAb";
-	line1 = "ABAB";
-	assert(Abbreviation(line, line1));
-	line = "baaBa";
-	line1 = "BAAA";
-	assert(!Abbreviation(line, line1));
-	line = "abAAb";
-	line1 = "AAA";
-	assert(Abbreviation(line, line1));
-	line = "babaABbbAb";
-	line1 = "ABAA";
-	assert(!Abbreviation(line, line1));
 	a.clear();
 	a = {4, 3, 2, 1};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 3);

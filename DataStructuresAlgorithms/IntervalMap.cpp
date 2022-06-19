@@ -41,12 +41,12 @@ void IntervalMap<K, V>::assign(K const &keyBegin, K const &keyEnd, V const &val)
 		{
 			if (!m_map.empty())
 			{
-				auto &[key, value] = *m_map.rbegin();
-				if (key == (keyBegin - 1) && value == val)
+				typename map<K, V>::reverse_iterator rit = m_map.rbegin();
+				if ((keyBegin - 1) == rit->first && val == rit->second)
 					return;
 				if (keyBegin > numeric_limits<K>::lowest())
 				{
-					it = m_map.upper_bound(keyBegin - 1);
+					it = m_map.upper_bound(keyBegin - 1); // Look for map entry with key > keyBegin - 1
 					if (it != m_map.end() && (--it)->second == val)
 						return;
 				}
@@ -54,15 +54,18 @@ void IntervalMap<K, V>::assign(K const &keyBegin, K const &keyEnd, V const &val)
 		}
 		else
 		{
+			// Existing key range
 			if (keyBegin > numeric_limits<K>::lowest())
 			{
 				for (K key = keyBegin - 1; key > numeric_limits<K>::lowest(); key--)
 				{
-					it = m_map.upper_bound(key);
-					if (it != m_map.end() && (--it)->second == val)
-						return;
-					else if (it != m_map.end())
-						break;
+					it = m_map.upper_bound(key); // Look for map entry with key > 'key'
+					if (it != m_map.end()) {
+						if ((--it)->second == val)
+							return;
+						else
+							break;
+					}
 				}
 			}
 		}

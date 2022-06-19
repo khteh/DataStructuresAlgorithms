@@ -39,19 +39,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnagramTests.cpp" />
+    <ClCompile Include="ArithmeticOperationTests.cpp" />
     <ClCompile Include="BinarySearchTests.cpp" />
     <ClCompile Include="BinarySearchTreeTests.cpp" />
     <ClCompile Include="BinaryTreeTests.cpp" />
     <ClCompile Include="CircularLinkedListTests.cpp" />
     <ClCompile Include="DisJointSetTests.cpp" />
+    <ClCompile Include="DynamicProgrammingTests.cpp" />
+    <ClCompile Include="EulerianPathTests.cpp" />
     <ClCompile Include="GraphTests.cpp" />
     <ClCompile Include="GreedyAlgorithmTests.cpp" />
+    <ClCompile Include="HIndexTests.cpp" />
     <ClCompile Include="IncreasingSequenceTests.cpp" />
     <ClCompile Include="KnapsackTests.cpp" />
     <ClCompile Include="LinkedListTests.cpp" />
     <ClCompile Include="ListPermutationTests.cpp" />
     <ClCompile Include="HeapTests.cpp" />
     <ClCompile Include="LongestCommonSubsequenceTests.cpp" />
+    <ClCompile Include="LRUCacheTests.cpp" />
     <ClCompile Include="MatrixTests.cpp" />
     <ClCompile Include="MaxZeroProductTests.cpp" />
     <ClCompile Include="ArrayNegativePositiveSeriesTests.cpp" />
@@ -64,6 +69,7 @@
     </ClCompile>
     <ClCompile Include="PrefixTrieTests.cpp" />
     <ClCompile Include="QueueTests.cpp" />
+    <ClCompile Include="ReversePolishNotationTests.cpp" />
     <ClCompile Include="SortTests.cpp" />
     <ClCompile Include="SparseNumberTests.cpp" />
     <ClCompile Include="StackTests.cpp" />

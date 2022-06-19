@@ -264,77 +264,77 @@ TEST(RangeTests, ContainsNearbyAlmostDuplicateTests)
 {
 	vector<long> a;
 	a = {1, 2, 3, 1};
-	assert(ContainsNearbyAlmostDuplicate(a, 3, 0));
+	ASSERT_TRUE(ContainsNearbyAlmostDuplicate(a, 3, 0));
 	a.clear();
 	a = {1, 0, 1, 1};
-	assert(ContainsNearbyAlmostDuplicate(a, 1, 2));
+	ASSERT_TRUE(ContainsNearbyAlmostDuplicate(a, 1, 2));
 	a.clear();
 	a = {1, 5, 9, 1, 5, 9};
-	assert(!ContainsNearbyAlmostDuplicate(a, 2, 3));
-	assert(!ContainsNearbyAlmostDuplicate(a, 0, 0)); // indices must be distinct
-	assert(!ContainsNearbyAlmostDuplicate(a, 0, 1));
-	assert(ContainsNearbyAlmostDuplicate(a, 3, 0));
-	assert(!ContainsNearbyAlmostDuplicate(a, 2, 0));
-	assert(!ContainsNearbyAlmostDuplicate(a, -1, -1));
+	ASSERT_FALSE(ContainsNearbyAlmostDuplicate(a, 2, 3));
+	ASSERT_FALSE(ContainsNearbyAlmostDuplicate(a, 0, 0)); // indices must be distinct
+	ASSERT_FALSE(ContainsNearbyAlmostDuplicate(a, 0, 1));
+	ASSERT_TRUE(ContainsNearbyAlmostDuplicate(a, 3, 0));
+	ASSERT_FALSE(ContainsNearbyAlmostDuplicate(a, 2, 0));
+	ASSERT_FALSE(ContainsNearbyAlmostDuplicate(a, -1, -1));
 	a.clear();
-	assert(abs(2147483647L - -1) == (long)2147483648);
-	assert(abs(-1 - 2147483647L) == (long)2147483648);
+	ASSERT_EQ((long)2147483648, abs(2147483647L - -1));
+	ASSERT_EQ((long)2147483648, abs(-1 - 2147483647L));
 	a = {2147483647, -1, 2147483647}; // 0x7FFFF_FFFF, 0xFFFF_FFFF
-	assert(!ContainsNearbyAlmostDuplicate(a, 1, 2147483647));
-	assert(!ContainsNearbyAlmostDuplicate(a, 1, -2147483648L)); // 2147483648 is 0x8000_0000 = 0xFFFF_FFFF_8000_0000 < 0
+	ASSERT_FALSE(ContainsNearbyAlmostDuplicate(a, 1, 2147483647));
+	ASSERT_FALSE(ContainsNearbyAlmostDuplicate(a, 1, -2147483648L)); // 2147483648 is 0x8000_0000 = 0xFFFF_FFFF_8000_0000 < 0
 	a.clear();
-	assert(abs(-INT_MIN - 0x7FFFFFFF) == 1);
-	assert(abs(0x7FFFFFFF - -INT_MIN) == 1);
+	ASSERT_EQ(1, abs(-INT_MIN - 0x7FFFFFFF));
+	ASSERT_EQ(1, abs(0x7FFFFFFF - -INT_MIN));
 	a = {(long)-2147483648, 2147483647};			 // 0xFFFF_FFFF_8000_0000, 0x7FFF_FFFF
-	assert(!ContainsNearbyAlmostDuplicate(a, 1, 1)); // -2147483648 = 0xFFFF_FFFF_8000_0000; 2147483647 = 0x7FFF_FFFF. One in negative bucket, another in positive bucket. Different from abs((long)2147483648 - (long)2147483647)
+	ASSERT_FALSE(ContainsNearbyAlmostDuplicate(a, 1, 1)); // -2147483648 = 0xFFFF_FFFF_8000_0000; 2147483647 = 0x7FFF_FFFF. One in negative bucket, another in positive bucket. Different from abs((long)2147483648 - (long)2147483647)
 	a.clear();
 	a = {4, 1, -1, 6, 5};
-	assert(ContainsNearbyAlmostDuplicate(a, 3, 1));
+	ASSERT_TRUE(ContainsNearbyAlmostDuplicate(a, 3, 1));
 }
 TEST(RangeTests, VectorEqualSplitTests)
 {
 	vector<int> data;
 	data = {1};
-	assert(VectorEqualSplit(data) == 0);
+	ASSERT_EQ(0, VectorEqualSplit(data));
 	data.clear();
 	data = {1, 2};
-	assert(VectorEqualSplit(data) == 0);
+	ASSERT_EQ(0, VectorEqualSplit(data));
 	data.clear();
 	data = {1, 1};
-	assert(VectorEqualSplit(data) == 1);
+	ASSERT_EQ(1, VectorEqualSplit(data));
 	data.clear();
 	data = {0, 0};
-	assert(VectorEqualSplit(data) == 1);
+	ASSERT_EQ(1, VectorEqualSplit(data));
 	data.clear();
 	data = {0, 0, 0};
-	assert(VectorEqualSplit(data) == 2);
+	ASSERT_EQ(2, VectorEqualSplit(data));
 	data.clear();
 	data = {1, 1, 1};
-	assert(VectorEqualSplit(data) == 0);
+	ASSERT_EQ(0, VectorEqualSplit(data));
 	data.clear();
 	data = {2, 2, 2};
-	assert(VectorEqualSplit(data) == 0);
+	ASSERT_EQ(0, VectorEqualSplit(data));
 	data.clear();
 	data = {1, 1, 1, 1, 1};
-	assert(VectorEqualSplit(data) == 0);
+	ASSERT_EQ(0, VectorEqualSplit(data));
 	data.clear();
 	data = {2, 2, 2, 2, 2};
-	assert(VectorEqualSplit(data) == 0);
+	ASSERT_EQ(0, VectorEqualSplit(data));
 	data.clear();
 	data = {1, 1, 1, 1};
-	assert(VectorEqualSplit(data) == 2);
+	ASSERT_EQ(2, VectorEqualSplit(data));
 	data.clear();
 	data = {1, 1, 1, 1, 1, 1};
-	assert(VectorEqualSplit(data) == 1);
+	ASSERT_EQ(1, VectorEqualSplit(data));
 	data.clear();
 	data = {1, 2, 1};
-	assert(VectorEqualSplit(data) == 0);
+	ASSERT_EQ(0, VectorEqualSplit(data));
 	data.clear();
 	data = {1, 2, 1, 2};
-	assert(VectorEqualSplit(data) == 1);
+	ASSERT_EQ(1, VectorEqualSplit(data));
 	data.clear();
 	data = {2, 2, 2, 3, 3};
-	assert(VectorEqualSplit(data) == 2);
+	ASSERT_EQ(2, VectorEqualSplit(data));
 	data.clear();
 	data = {3, 2, 3, 2, 2, 2, 2};
 	/*
@@ -342,25 +342,25 @@ TEST(RangeTests, VectorEqualSplitTests)
 	 * (2) [2 2] [2 2]
 	 * (3) [2] [2]
 	 */
-	assert(VectorEqualSplit(data) == 3);
+	ASSERT_EQ(3, VectorEqualSplit(data));
 	data.clear();
 	data = {1, 1, 1, 1};
-	assert(VectorEqualSplit(data) == 2);
+	ASSERT_EQ(2, VectorEqualSplit(data));
 	data.clear();
 	data = {4, 1, 0, 1, 1, 0, 1};
-	assert(VectorEqualSplit(data) == 3);
+	ASSERT_EQ(3, VectorEqualSplit(data));
 	data.clear();
 	data = {0, 2, 0, 2, 0, 0, 0, 0, 2, 0, 0, 2, 2, 0, 2, 2, 2, 2, 0, 0, 0, 2, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 2, 2};
-	assert(VectorEqualSplit(data) == 0);
+	ASSERT_EQ(0, VectorEqualSplit(data));
 	data.clear();
 	data = {2, 0, 0, 2, 2, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 2, 0, 0, 0, 2, 0, 0, 2, 0};
-	assert(VectorEqualSplit(data) == 0);
+	ASSERT_EQ(0, VectorEqualSplit(data));
 	data.clear();
 	data = {16384, 8192, 8192, 16384, 8192, 8192, 32768, 32768};
-	assert(VectorEqualSplit(data) == 4);
+	ASSERT_EQ(4, VectorEqualSplit(data));
 	data.clear();
 	data = {8760958, 8760957, 547560, 547560, 547560, 273780, 273780, 2190239, 4380479, 4380479, 4380478};
-	assert(VectorEqualSplit(data) == 1);
+	ASSERT_EQ(1, VectorEqualSplit(data));
 	data.clear();
 	data = {0, 0, 0, 0, 0};
 	/*
@@ -369,15 +369,38 @@ TEST(RangeTests, VectorEqualSplitTests)
 	 * (3) [0] [0 0]
 	 * (4) [0] [0]
 	 */
-	assert(VectorEqualSplit(data) == 4);
+	ASSERT_EQ(4, VectorEqualSplit(data));
 	data.clear();
 	data = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	assert(VectorEqualSplit(data) == 2);
+	ASSERT_EQ(2, VectorEqualSplit(data));
 	data.clear();
 	data = {21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211, 21211};
-	assert(VectorEqualSplit(data) == 0);
+	ASSERT_EQ(0, VectorEqualSplit(data));
 	data.clear();
 	data = {999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994, 999999994};
-	assert(VectorEqualSplit(data) == 6);
+	ASSERT_EQ(6, VectorEqualSplit(data));
 	data.clear();
+}
+TEST(RangeTests, MaxProductOfNonOverlappingWordLengthsTests)
+{
+	vector<string> strings;
+	strings = { "abcw", "baz", "foo", "bar", "xtfn", "abcdef" };
+	ASSERT_EQ(16, maxProductOfNonOverlappingWordLengths(strings)); // "abcw", "xtfn"
+	strings.clear();
+	strings = { "a", "ab", "abc", "d", "cd", "bcd", "abcd" };
+	ASSERT_EQ(4, maxProductOfNonOverlappingWordLengths(strings)); // "ab", "cd"
+	strings.clear();
+	strings = { "a", "aa", "aaa", "aaaa" };
+	ASSERT_EQ(0, maxProductOfNonOverlappingWordLengths(strings));
+}
+TEST(RangeTests, AlmostSortedTests)
+{
+	vector<long> a = { 4, 2 };
+	ASSERT_EQ("swap 1 2", AlmostSorted(a));
+	a.clear();
+	a = { 4104, 8529, 49984, 54956, 63034, 82534, 84473, 86411, 92941, 95929, 108831, 894947, 125082, 137123, 137276, 142534, 149840, 154703, 174744, 180537, 207563, 221088, 223069, 231982, 249517, 252211, 255192, 260283, 261543, 262406, 270616, 274600, 274709, 283838, 289532, 295589, 310856, 314991, 322201, 339198, 343271, 383392, 385869, 389367, 403468, 441925, 444543, 454300, 455366, 469896, 478627, 479055, 484516, 499114, 512738, 543943, 552836, 560153, 578730, 579688, 591631, 594436, 606033, 613146, 621500, 627475, 631582, 643754, 658309, 666435, 667186, 671190, 674741, 685292, 702340, 705383, 722375, 722776, 726812, 748441, 790023, 795574, 797416, 813164, 813248, 827778, 839998, 843708, 851728, 857147, 860454, 861956, 864994, 868755, 116375, 911042, 912634, 914500, 920825, 979477 };
+	ASSERT_EQ("swap 12 95", AlmostSorted(a));
+	a.clear();
+	a = { 43, 65, 1, 98, 99, 101 };
+	ASSERT_EQ("no", AlmostSorted(a));
 }

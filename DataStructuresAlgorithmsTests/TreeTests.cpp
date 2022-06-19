@@ -23,3 +23,12 @@ TEST(TreeTests, TreeArithmeticTotalDoubleTest) {
 	double expected = (1.2 + 2.3) * (3.4 - 4.5);
 	ASSERT_LT(fabs(tree.TreeArithmeticTotal(multiplier) - expected), numeric_limits<double>::epsilon());
 }
+TEST(TreeTests, IsValidPreOrderTreeSerializationTests)
+{
+	ASSERT_FALSE(IsValidPreOrderTreeSerialization(string("1")));
+	ASSERT_TRUE(IsValidPreOrderTreeSerialization(string("#")));
+	ASSERT_TRUE(IsValidPreOrderTreeSerialization(string("1,#,#")));
+	ASSERT_TRUE(IsValidPreOrderTreeSerialization(string("9,3,4,#,#,1,#,#,2,#,6,#,#")));
+	ASSERT_TRUE(IsValidPreOrderTreeSerialization(string("9,#,93,#,9,9,#,#,#")));
+	ASSERT_TRUE(IsValidPreOrderTreeSerialization(string("9,9,9,19,#,9,#,#,#,9,#,69,#,#,#")));
+}
