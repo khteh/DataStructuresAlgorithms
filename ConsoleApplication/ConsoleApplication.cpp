@@ -775,9 +775,9 @@ int main(int argc, char *argv[])
 	assert(LongestValidParenthesesWithFixes(string("((("), 1) == 2);
 	// Tower of Hanoi
 	cout << "Tower Of Hanoi recursive solution: " << endl;
-	vector<shared_ptr<Tower<size_t>>> towers(3);
+	vector<shared_ptr<Tower<size_t>>> towers;
 	for (i = 0; i < 3; i++)
-		towers[i] = make_shared<Tower<size_t>>(i);
+		towers.push_back(make_shared<Tower<size_t>>(i));
 	for (i = 2; i > 0; i--) // Smallest disk is "1"
 	{
 		towers[0]->Add(i);
@@ -811,7 +811,7 @@ int main(int argc, char *argv[])
 	assert(towers[1]->TopDisk() == numeric_limits<size_t>::max());
 	towers[2]->print();
 	assert(towers[2]->TopDisk() == 1);
-
+	towers.clear();
 	// Test 2D memory buffer allocation
 	cout << "Test 2D memory buffer allocation...." << endl;
 	long **my2Dbuffer = my2DAlloc(10, 10);
@@ -2113,6 +2113,36 @@ int main(int argc, char *argv[])
 	line = "babaABbbAb";
 	line1 = "ABAA";
 	assert(!Abbreviation(line, line1));
+	a.clear();
+	a = {4, 3, 2, 1};
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 3);
+	a.clear();
+	a = {1, 4, 1};
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 3);
+	a.clear();
+	a = {4, 2, 2, 1};
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 4);
+	a.clear();
+	a = {1, 3, 3};
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 5);
+	a.clear();
+	a = {2, 1, 3, 2};
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 7);
+	a.clear();
+	a = {2, 4, 4, 4};
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 8);
+	a.clear();
+	a = {2, 4, 2, 4};
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 6);
+	a.clear();
+	a = {3, 1, 2, 1, 4};
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 10);
+	a.clear();
+	a = {1, 1, 3, 1, 4};
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 11);
+	a.clear();
+	a = {1, 4, 2, 4, 2, 2};
+	// assert(MoveDisksToTowerOfHanoi1(4, a) == 14); WIP
 	a.clear();
 	cpp20readonlyranges();
 	cpp20ranges();

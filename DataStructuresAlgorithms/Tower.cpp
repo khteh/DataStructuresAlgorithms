@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "Tower.h"
 template class Tower<size_t>;
+template class Tower<long>;
 
 template <typename T>
 Tower<T>::Tower(size_t index)
@@ -14,11 +15,15 @@ Tower<T>::~Tower()
 }
 
 template <typename T>
-size_t Tower<T>::Index()
+size_t Tower<T>::Index() const
 {
 	return m_index;
 }
-
+template <typename T>
+size_t Tower<T>::DiskCount() const
+{
+	return m_disks.size();
+}
 template <typename T>
 bool Tower<T>::isEmpty() const
 {
@@ -67,9 +72,8 @@ bool Tower<T>::operator>(Tower<T> &rhs) const
 template <typename T>
 void Tower<T>::print()
 {
-	cout << "Tower " << m_index << " content: " << endl;
+	cout << "Tower " << m_index << " content: ";
 	m_disks.PrintStack();
-	cout << endl;
 }
 
 // http://en.wikipedia.org/wiki/Tower_of_Hanoi
@@ -83,13 +87,13 @@ template <typename T>
 size_t Tower<T>::MoveDisks(T n, shared_ptr<Tower<T>> &dest, shared_ptr<Tower<T>> &buffer)
 {
 	size_t moves = 0;
-	if (n > 0)
+	if (n > 0 && !isEmpty())
 	{											 // 1 (smallest, topmost)
 		moves += MoveDisks(n - 1, buffer, dest); // 1. move n−1 discs from A to B. This leaves disc n alone on peg A
 		MoveTopTo(dest);						 // 2. move disc n from A to C
 		moves++;
 		shared_ptr<Tower<T>> bufferTower = this->shared_from_this(); // A non-const reference parameter, such as an int&, can only refer to an "lvalue," which is a named variable.
-		moves += buffer->MoveDisks(n - 1, dest, bufferTower); // 3. move n−1 discs from B to C so they sit on disc n
+		moves += buffer->MoveDisks(n - 1, dest, bufferTower);		 // 3. move n−1 discs from B to C so they sit on disc n
 	}
 	return moves;
 }

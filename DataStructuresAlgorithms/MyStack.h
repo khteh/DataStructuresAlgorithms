@@ -20,6 +20,7 @@ public:
 	bool isEmpty() const;
 	T pop();
 	void push(T);
+	bool Has(T) const;
 	T peek() const;
 	void clear();
 	size_t size() const;

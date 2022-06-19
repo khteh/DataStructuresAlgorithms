@@ -421,3 +421,4 @@ bool Abbreviation(string &, string &);
 void cpp20readonlyranges();
 void cpp20ranges();
 void cpp20variants();
+size_t MoveDisksToTowerOfHanoi1(size_t, vector<long> &);

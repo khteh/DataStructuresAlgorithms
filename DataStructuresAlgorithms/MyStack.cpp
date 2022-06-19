@@ -40,6 +40,8 @@ T MyStack<T>::pop()
 	shared_ptr<Node<T>> top = m_top;
 	m_top = m_top->Next();
 	m_size--;
+	if (!m_size)
+		m_top = nullptr;
 	return top->Item();
 }
 
@@ -77,7 +79,14 @@ void MyStack<T>::clear()
 	m_top.reset();
 	m_size = 0;
 }
-
+template <typename T>
+bool MyStack<T>::Has(T item) const
+{
+	for (shared_ptr<Node<T>> node = m_top; node; node = node->Next())
+		if (node->Item() == item)
+			return true;
+	return false;
+}
 template <typename T>
 void MyStack<T>::PrintStack()
 {
