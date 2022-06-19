@@ -4139,7 +4139,7 @@ size_t TieRopes(vector<size_t> &data, size_t n)
 	}
 	return result;
 }
-// https://www.hackerrank.com/challenges/greedy-florist/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=greedy-algorithms
+// https://www.hackerrank.com/challenges/greedy-florist/problem
 // XXX: 0%
 // 3 2
 // 2 5 6 : 1..2 [1]
