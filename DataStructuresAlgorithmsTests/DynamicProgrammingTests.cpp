@@ -129,6 +129,23 @@ TEST(DynamicProgrammingTests, fibonacciDynamicProgrammingTests)
 	ASSERT_EQ(34, fibonacciDynamicProgramming(9));
 	ASSERT_EQ(2880067194370816120ULL, fibonacciDynamicProgramming(90));
 }
+TEST(DynamicProgrammingTests, fibonacciModifiedDynamicProgrammingTests)
+{
+	ASSERT_EQ("5", fibonacciModifiedDynamicProgramming(0, 1, 4));
+	ASSERT_EQ("27", fibonacciModifiedDynamicProgramming(0, 1, 5));
+	ASSERT_EQ("734", fibonacciModifiedDynamicProgramming(0, 1, 6));
+	ASSERT_EQ("538783", fibonacciModifiedDynamicProgramming(0, 1, 7));
+	ASSERT_EQ("290287121823", fibonacciModifiedDynamicProgramming(0, 1, 8));
+	ASSERT_EQ("2", fibonacciModifiedDynamicProgramming(2, 0, 0));
+	ASSERT_EQ("0", fibonacciModifiedDynamicProgramming(2, 0, 1));
+	ASSERT_EQ("2", fibonacciModifiedDynamicProgramming(2, 0, 2));
+	ASSERT_EQ("4", fibonacciModifiedDynamicProgramming(2, 0, 3));
+	ASSERT_EQ("18", fibonacciModifiedDynamicProgramming(2, 0, 4));
+	ASSERT_EQ("328", fibonacciModifiedDynamicProgramming(2, 0, 5));
+	ASSERT_EQ("107602", fibonacciModifiedDynamicProgramming(2, 0, 6));
+	ASSERT_EQ("11578190732", fibonacciModifiedDynamicProgramming(2, 0, 7));
+	ASSERT_EQ("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", fibonacciModifiedDynamicProgramming(2, 0, 11));
+}
 TEST(DynamicProgrammingTests, factorialDynamicProgrammingTests)
 {
 	ASSERT_EQ(1, factorialDynamicProgramming(1));

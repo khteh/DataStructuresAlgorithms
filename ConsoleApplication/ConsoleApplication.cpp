@@ -551,21 +551,6 @@ int main(int argc, char *argv[])
 	assert(fibonacciModified(2, 0, 7) == "11578190732");
 	assert(fibonacciModified(2, 0, 11) == "104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308");
 
-	assert(fibonacciModifiedDynamicProgramming(0, 1, 4) == "5");
-	assert(fibonacciModifiedDynamicProgramming(0, 1, 5) == "27");
-	assert(fibonacciModifiedDynamicProgramming(0, 1, 6) == "734");
-	assert(fibonacciModifiedDynamicProgramming(0, 1, 7) == "538783");
-	assert(fibonacciModifiedDynamicProgramming(0, 1, 8) == "290287121823");
-	assert(fibonacciModifiedDynamicProgramming(2, 0, 0) == "2");
-	assert(fibonacciModifiedDynamicProgramming(2, 0, 1) == "0");
-	assert(fibonacciModifiedDynamicProgramming(2, 0, 2) == "2");
-	assert(fibonacciModifiedDynamicProgramming(2, 0, 3) == "4");
-	assert(fibonacciModifiedDynamicProgramming(2, 0, 4) == "18");
-	assert(fibonacciModifiedDynamicProgramming(2, 0, 5) == "328");
-	assert(fibonacciModifiedDynamicProgramming(2, 0, 6) == "107602");
-	assert(fibonacciModifiedDynamicProgramming(2, 0, 7) == "11578190732");
-	assert(fibonacciModifiedDynamicProgramming(2, 0, 11) == "104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308");
-
 	ostringstream oss;
 	unsigned long long factorialResult = factorial(26);
 	cout << "26!: " << setiosflags(ios::fixed) << factorialResult << endl;
@@ -871,20 +856,6 @@ int main(int argc, char *argv[])
 	assert(pqueue.GetMedian() == 0);
 	pqueue.Clear();
 	assert(pqueue.GetMedian() == 0);
-	// Test countDigits
-	// 0 - 99: 10 + 10 = 20
-	// 100 - 199: 2 * 20
-	// 200 - 299: 3 * 20 + 100 = 160
-	// 300 - 345: 5(first digit) + 10(second digit) = 15
-	// total: 160 + 15 = 175
-	assert(countDigits(2, 345) == 175);
-	assert(countDigits(0, 345) == 175);
-	assert(countDigits(3, 35) == 10); // {3,13,23},30,31,32,{3}3,34,35
-	assert(countNumbersWithUniqueDigits(0) == 1);
-	assert(countNumbersWithUniqueDigits(1) == 10);
-	assert(countNumbersWithUniqueDigits(2) == 91);	// [0,100)
-	assert(countNumbersWithUniqueDigits(3) == 739); // [0,1000)
-	assert(countNumbersWithUniqueDigits(11) == 0);
 	a.clear();
 	b.clear();
 	a.push_back(123);
@@ -1782,6 +1753,18 @@ int main(int argc, char *argv[])
 	edges.clear();
 	edges = {{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}};
 	assert("1000100" == roadsInHackerland(5, edges));
+	a.clear();
+	a = { 1 };
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 0);
+	a.clear();
+	a = { 2 };
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 1);
+	a.clear();
+	a = { 2, 1 };
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 1);
+	a.clear();
+	a = { 2, 3 };
+	assert(MoveDisksToTowerOfHanoi1(4, a) == 2);
 	a.clear();
 	a = {4, 3, 2, 1};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 3);
