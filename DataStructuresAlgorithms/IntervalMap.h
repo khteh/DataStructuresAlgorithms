@@ -11,7 +11,7 @@ private:
 public:
 	// constructor associates whole range of K with val by inserting (K_min, val)
 	// into the map
-	IntervalMap(V const &val);
+	IntervalMap(V const &);
 	virtual ~IntervalMap();
 	// Assign value val to interval [keyBegin, keyEnd).
 	// Overwrite previous values in this interval.
@@ -19,9 +19,9 @@ public:
 	// includes keyBegin, but excludes keyEnd.
 	// If !( keyBegin < keyEnd ), this designates an empty interval,
 	// and assign must do nothing.
-	void assign(K const &keyBegin, K const &keyEnd, V const &val);
+	void assign(K const &, K const &, V const &);
 	size_t size() const noexcept;
 	void clear() noexcept;
 	// look-up of the value associated with key
-	V const &operator[](K const &key) const;
+	V const &operator[](K const &) const;
 };
