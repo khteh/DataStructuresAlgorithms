@@ -8456,3 +8456,24 @@ size_t MoveDisksToTowerOfHanoi1(size_t towerCount, vector<long> &posts)
 	}
 	return moves;
 }
+size_t VectorSlices(vector<long> &data)
+{
+	set<set<set<long>>> result;
+	for (size_t size = 1; size <= data.size(); size++)
+	{
+		set<set<long>> a, b;
+		for (long j = 0; j < data.size(); j += size)
+		{
+			set<long> tmp, tmp1;
+			long l = (long)(data.end() - (data.begin() + j));
+			size_t count = min((long)size, l);
+			tmp.insert(data.begin() + j, data.begin() + j + count);
+			tmp1.insert(data.rbegin() + j, data.rbegin() + j + count);
+			a.insert(tmp);
+			b.insert(tmp1);
+		}
+		result.emplace(a);
+		result.emplace(b);
+	}
+	return result.size();
+}

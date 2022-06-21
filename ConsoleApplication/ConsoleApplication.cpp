@@ -1673,14 +1673,14 @@ int main(int argc, char *argv[])
 	assert(strings1 == strings);
 	strings = PhoneKeyLetters(string("5678"));
 	assert(strings.size() == 108);
-	stringset = { "Hello", "World" };
+	stringset = {"Hello", "World"};
 	strings1 = wordBreakDFS(string("HelloWorld"), stringset);
 	assert(!strings1.empty());
 	assert(strings1.size() == 1);
 	assert(strings1[0] == "Hello World");
 	strings1.clear();
 	stringset.clear();
-	stringset = { "cats", "dog", "sand", "and", "cat" };
+	stringset = {"cats", "dog", "sand", "and", "cat"};
 	strings1 = wordBreakDFS(string("catsandog"), stringset);
 	assert(strings1.empty());
 	strings1 = wordBreakDFS(string("catsanddog"), stringset);
@@ -1692,7 +1692,7 @@ int main(int argc, char *argv[])
 
 	strings1.clear();
 	stringset.clear();
-	stringset = { "apple", "pen" };
+	stringset = {"apple", "pen"};
 	strings1 = wordBreakDFS(string("applepenapple"), stringset);
 	assert(!strings1.empty());
 	assert(strings1.size() == 1);
@@ -1700,7 +1700,7 @@ int main(int argc, char *argv[])
 
 	strings1.clear();
 	stringset.clear();
-	stringset = { "aaaa", "aaa" };
+	stringset = {"aaaa", "aaa"};
 	strings1 = wordBreakDFS(string("aaaaaaa"), stringset);
 	assert(!strings1.empty());
 	assert(strings1.size() == 2);
@@ -1754,16 +1754,16 @@ int main(int argc, char *argv[])
 	edges = {{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}};
 	assert("1000100" == roadsInHackerland(5, edges));
 	a.clear();
-	a = { 1 };
+	a = {1};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 0);
 	a.clear();
-	a = { 2 };
+	a = {2};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 1);
 	a.clear();
-	a = { 2, 1 };
+	a = {2, 1};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 1);
 	a.clear();
-	a = { 2, 3 };
+	a = {2, 3};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 2);
 	a.clear();
 	a = {4, 3, 2, 1};
@@ -1795,6 +1795,12 @@ int main(int argc, char *argv[])
 	a.clear();
 	a = {1, 4, 2, 4, 2, 2};
 	// assert(MoveDisksToTowerOfHanoi1(4, a) == 14); WIP
+	a.clear();
+	a = {1, 2, 3};
+	assert(VectorSlices(a) == 4);
+	a.clear();
+	a = {4, 2, 9, 10, 1};
+	assert(VectorSlices(a) == 8);
 	a.clear();
 	cpp20readonlyranges();
 	cpp20ranges();
