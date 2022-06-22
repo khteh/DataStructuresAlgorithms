@@ -8456,24 +8456,73 @@ size_t MoveDisksToTowerOfHanoi1(size_t towerCount, vector<long> &posts)
 	}
 	return moves;
 }
-size_t VectorSlices(vector<long> &data)
+/*
+ * https://www.hackerrank.com/challenges/summing-pieces/problem
+
+ 1 2 3
+[1] [2] [3]
+[1 2] [3]
+[1] [2 3]
+[1 2 3]
+
+1: 7
+2: 8
+3: 7
+
+ * [1 3 6 7]:
+ * [(1),(3),(6),(7)]
+ * [(1,3),(6),(7)]
+ * [(1),(3,6),(7)]
+ * [(1),(3),(6,7)]
+ * [(1,3,6),(7)]
+ * [(1,3),(6,7)]
+ * [(1),(3,6,7)]
+ * [(1,3,6,7)]
+ *
+ * 1 - 15
+ * 3 - 18
+ * 6 - 18
+ * 7 - 15
+ *
+ * ---------------------
+ * | 15 | 18 | 18 | 15 |
+ * ---------------------
+ * ^     ^   ^     ^
+ * |     |___|     |
+ * |_______________|
+ *
+ * So, For n>1 in general, the count values are
+----------------------------------------------------------------
+| 2^n-1 | p+2^(y) - 2^0 | p+2^(y-1) - 2^1 | p+2^(y-2) - 2^2|...
+----------------------------------------------------------------
+i:0		   i:1
+(2^n)-1  p+2^(n-2) - 2^0
+where,
+ p is previous box value
+ y starts from n-2 and decremented by 1 afterwards
+ *
+ * 15/29 test cases failed :(
+ */
+long double VectorSlicesSum(vector<long double> &data)
 {
-	set<set<set<long>>> result;
-	for (size_t size = 1; size <= data.size(); size++)
+	long double sum = 0;
+	long double modulo = 1e9 + 7L;
+	if (!data.empty())
 	{
-		set<set<long>> a, b;
-		for (long j = 0; j < data.size(); j += size)
+		long middle = data.size() / 2 + data.size() % 2;
+		vector<long double> sums(middle);
+		long double n = data.size(), y = n - 2L, z = 0L;
+		sums[0] = fmodl(pow(2L, n), modulo) - 1L;
+		for (long i = 1; i < middle; i++, y--, z++)
+			sums[i] = fmodl(sums[i - 1] + fmodl(pow(2L, y), modulo) - fmodl(pow(2L, z), modulo), modulo);
+		// Mirror the vector to second half
+		for (long i = (data.size() % 2) ? middle - 2 : middle - 1; i >= 0; i--)
+			sums.push_back(sums[i]);
+		for (long i = 0; i < data.size(); i++)
 		{
-			set<long> tmp, tmp1;
-			long l = (long)(data.end() - (data.begin() + j));
-			size_t count = min((long)size, l);
-			tmp.insert(data.begin() + j, data.begin() + j + count);
-			tmp1.insert(data.rbegin() + j, data.rbegin() + j + count);
-			a.insert(tmp);
-			b.insert(tmp1);
+			data[i] = fmodl(data[i] * sums[i], modulo);
+			sum = fmodl(sum + data[i], modulo);
 		}
-		result.emplace(a);
-		result.emplace(b);
 	}
-	return result.size();
+	return sum;
 }

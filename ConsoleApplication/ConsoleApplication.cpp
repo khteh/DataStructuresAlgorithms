@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 	vector<string> strings, strings1;
 	set<string> stringset, stringset1;
 	vector<long> a, b, sortData;
+	vector<long double> ld;
 	vector<int> data, data1;
 	vector<size_t> udata, udata1;
 	vector<unsigned long long> ull;
@@ -1795,12 +1796,23 @@ int main(int argc, char *argv[])
 	a.clear();
 	a = {1, 4, 2, 4, 2, 2};
 	// assert(MoveDisksToTowerOfHanoi1(4, a) == 14); WIP
-	a.clear();
-	a = {1, 2, 3};
-	assert(VectorSlices(a) == 4);
-	a.clear();
-	a = {4, 2, 9, 10, 1};
-	assert(VectorSlices(a) == 8);
+	ld.clear();
+	ld = {1, 2, 3};
+	assert(VectorSlicesSum(ld) == 44);
+	ld.clear();
+	ld = {1, 3, 6};
+	assert(VectorSlicesSum(ld) == 73);
+	ld.clear();
+	ld = {4, 2, 9, 10, 1};
+	assert(VectorSlicesSum(ld) == 971);
+	ld.clear();
+	ld = {477, 392, 161, 421, 245, 50, 530, 889, 750, 16, 545, 303, 898, 785, 162, 279, 677, 664, 126, 149, 814, 360, 334, 681, 473, 293, 267, 120, 825, 21, 267, 301, 413, 779, 73, 657, 181, 602, 897, 930, 969, 441, 232, 218, 577, 745, 848, 253};
+	assert(VectorSlicesSum(ld) == 868784194);
+	ld.clear();
+	ld = {695, 14, 706, 200, 379, 690, 991, 128, 60, 998, 730, 381, 301, 559, 192, 686, 608, 907, 256, 584, 177, 319, 843, 87, 446, 37, 520, 464, 483, 685, 894, 177, 50, 952, 376, 781, 641, 718, 908, 700, 715, 989, 432, 367, 547, 624, 52, 507, 530, 659, 90, 58, 978, 932, 497, 423, 321, 16, 238, 803, 52, 484, 979, 101, 435, 706, 881, 427, 423, 141, 126, 489, 129, 909, 207, 28, 884, 610, 534};
+	assert(VectorSlicesSum(ld) == 818555228);
+	ld.clear();
+	data.clear();
 	a.clear();
 	cpp20readonlyranges();
 	cpp20ranges();
