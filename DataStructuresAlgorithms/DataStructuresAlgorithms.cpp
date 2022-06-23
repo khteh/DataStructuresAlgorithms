@@ -4883,35 +4883,29 @@ long ChocolatesByNumbers(long n, long m)
 	return count;
 }
 /* https://www.hackerrank.com/challenges/new-year-chaos/problem
- * Use a modification of Bubble sort. Timeouts!
+ * 100%
+ * 0 1 2 3 4 5 6 7 <- i
+ * 1 2 5 3 7 8 6 4
+ * i: 7 -> bribes: [5, 7, 8, 6]
+ * i: 6 -> bribes: [7, 8]
+ * i: 5 -> bribes: []
+ * i: 4 -> bribes: []
+ * i: 3 -> bribes: [5]
+ * i: 2 -> bribes: []
+ * i: 1 -> bribes: []
+ * i: 0 -> bribes: []
  */
-size_t minimumBribes(vector<long> &data)
+long MinimumBribes(vector<long>& data)
 {
-	size_t count = 0;
-	long tmp;
-	map<long, size_t> bribes;
-	pair<map<long, size_t>::iterator, bool> found;
-	for (size_t lastIndex = data.size() - 1; lastIndex >= 1; lastIndex--)
-	{
-		for (size_t i = 0; i < lastIndex; i++)
-		{
-			if (data[i] > data[i + 1])
-			{
-				found = bribes.emplace(data[i], 1);
-				if (!found.second)
-				{
-					bribes[data[i]]++;
-					if (bribes[data[i]] > 2)
-						return -1;
-				}
-				count++;
-				tmp = data[i];
-				data[i] = data[i + 1];
-				data[i + 1] = tmp;
-			}
-		}
+	long bribes = 0;
+	for (long i = data.size() - 1; i >= 0; i--) {
+		if (data[i] - (i + 1) > 2)
+			return -1;
+		for (long j = max(0L, data[i] - 2); j < i; j++)
+			if (data[j] > data[i])
+				bribes++;
 	}
-	return count;
+	return bribes;
 }
 // https://www.hackerrank.com/challenges/frequency-queries/problem
 // 5/15 failed

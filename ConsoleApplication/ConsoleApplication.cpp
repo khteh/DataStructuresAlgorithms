@@ -1007,20 +1007,22 @@ int main(int argc, char *argv[])
 	data.resize(4);
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; });
-	vector<int> intResult = Increment(data);
-	assert(intResult[0] == 1);
-	assert(intResult[1] == 2);
-	assert(intResult[2] == 3);
-	assert(intResult[3] == 5);
+	data1.clear();
+	data1 = Increment(data);
+	assert(data1[0] == 1);
+	assert(data1[1] == 2);
+	assert(data1[2] == 3);
+	assert(data1[3] == 5);
 
 	data.clear();
+	data1.clear();
 	data = {9, 9, 9, 9};
-	intResult = Increment(data);
-	assert(intResult[0] == 1);
-	assert(intResult[1] == 0);
-	assert(intResult[2] == 0);
-	assert(intResult[3] == 0);
-	assert(intResult[4] == 0);
+	data1 = Increment(data);
+	assert(data1[0] == 1);
+	assert(data1[1] == 0);
+	assert(data1[2] == 0);
+	assert(data1[3] == 0);
+	assert(data1[4] == 0);
 
 	void *addr = alignedMalloc(1000, 64);
 	assert(addr);
@@ -1425,11 +1427,19 @@ int main(int argc, char *argv[])
 	assert(CountDiv(0, 2000000000, 2000000000) == 2);
 	assert(CountDiv(0, numeric_limits<int>::max(), numeric_limits<int>::max()) == 2);
 	a.clear();
+	a = { 1, 2, 3, 4, 5, 6, 7, 8 };
+	ranges::rotate(a.begin() + 2, a.begin() + 4, a.begin() + 5);
+	b = { 1, 2, 5, 3, 4, 6, 7, 8 };
+	assert(a == b);
+	a.clear();
 	a = {2, 1, 5, 3, 4};
-	assert(minimumBribes(a) == 3);
+	assert(MinimumBribes(a) == 3);
 	a.clear();
 	a = {2, 5, 1, 3, 4};
-	assert(minimumBribes(a) == -1);
+	assert(MinimumBribes(a) == -1);
+	a.clear();
+	a = { 1, 2, 5, 3, 7, 8, 6, 4 };
+	assert(MinimumBribes(a) == 7);
 	assert(SherlockValidString("abcdefghhgfedecba"));
 	assert(!SherlockValidString("aabbcd"));
 	assert(!SherlockValidString("aaaabbcc"));
