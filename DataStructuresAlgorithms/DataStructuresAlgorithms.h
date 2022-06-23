@@ -40,6 +40,7 @@ using namespace tbb;
 #include <cmath>
 #include <chrono>
 #include <concepts>
+#include "Arithmetic.h"
 #include "NameHidingExample.h"
 #include "Singleton.h"
 #include "Graph.h"
@@ -265,12 +266,6 @@ void parentheses(vector<string> &, string &, size_t, long, long);
 long LongestValidParentheses(const string &);
 long LongestValidParenthesesWithFixes(const string &, size_t k);
 vector<long> diffWaysToCompute(string);
-long ToggleSign(long);
-long absolute(long a);
-long SubtractWithPlusSign(long a, long b);
-long MultiplyWithPlusSign(long a, long b);
-long DivideWithPlusSign(long a, long b);
-long divide(long, long);
 void KDTreeTests();
 template <typename URNG>
 void TestURNG(URNG &);
@@ -283,7 +278,6 @@ size_t MergeCountInversions(vector<long> &, vector<long> &, size_t, size_t, size
 void DutchPartitioning(vector<long> &, long);
 long **my2DAlloc(long, long);
 long ***my3DAlloc(long, long, long);
-long long AddWithoutArithmetic(long long, long long);
 string NumberStringSum(const string &, const string &);
 string NumberStringMultiplication(string &, string &);
 void shuffleCards(vector<long> &);
@@ -336,7 +330,6 @@ vector<int> Increment(vector<int> &);
 void *alignedMalloc(size_t bytes, size_t alignment);
 void alignedFree(void **p);
 vector<string> numbersegments(vector<long> &);
-unsigned long long XOR(unsigned long long);
 long concat(vector<long> &);
 string buildmax(vector<size_t> &);
 bool JSONValidation(string);

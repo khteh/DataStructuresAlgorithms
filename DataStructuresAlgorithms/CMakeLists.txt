@@ -4,6 +4,7 @@ set(PROJECT_NAME DataStructuresAlgorithms)
 # Source groups
 ################################################################################
 set(Headers
+"Arithmetic.h"
 "Call.h"
 "CallHandler.h"
 "Card.h"
@@ -51,6 +52,7 @@ set(Headers
 source_group("Headers" FILES ${Headers})
 
 set(Sources
+"Arithmetic.cpp"
 "Call.cpp"
 "CallHandler.cpp"
 "Card.cpp"

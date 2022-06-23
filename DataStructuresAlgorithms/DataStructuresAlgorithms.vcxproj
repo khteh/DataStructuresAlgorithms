@@ -160,6 +160,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Arithmetic.h" />
     <ClInclude Include="Call.h" />
     <ClInclude Include="CallHandler.h" />
     <ClInclude Include="Card.h" />
@@ -203,6 +204,7 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Arithmetic.cpp" />
     <ClCompile Include="Call.cpp" />
     <ClCompile Include="CallHandler.cpp" />
     <ClCompile Include="Card.cpp" />
