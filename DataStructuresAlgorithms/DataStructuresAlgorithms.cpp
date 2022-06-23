@@ -144,11 +144,11 @@ long ConsecutiveLargestProduct(vector<long> &data)
 		if (!*it)
 		{
 			zero = true;
-			maxproduct = max(maxproduct, (long)0);
+			maxproduct = max(maxproduct, 0L);
 		}
 		else if (*it > 0)
 		{
-			min_ending_here = zero ? 1 : min((long)1, min_ending_here * *it); // -ve * +ve
+			min_ending_here = zero ? 1 : min(1L, min_ending_here * *it); // -ve * +ve
 			max_ending_here = zero ? *it : max_ending_here * *it;
 			zero = false;
 			maxproduct = max(maxproduct, max_ending_here);
@@ -165,7 +165,7 @@ long ConsecutiveLargestProduct(vector<long> &data)
 				}
 				else
 					max_ending_here = 1;
-				min_ending_here = tmp ? min((long)1, tmp * *it) : *it; // +ve * -ve
+				min_ending_here = tmp ? min(1L, tmp * *it) : *it; // +ve * -ve
 			}
 			else
 			{
@@ -4895,10 +4895,11 @@ long ChocolatesByNumbers(long n, long m)
  * i: 1 -> bribes: []
  * i: 0 -> bribes: []
  */
-long MinimumBribes(vector<long>& data)
+long MinimumBribes(vector<long> &data)
 {
 	long bribes = 0;
-	for (long i = data.size() - 1; i >= 0; i--) {
+	for (long i = data.size() - 1; i >= 0; i--)
+	{
 		if (data[i] - (i + 1) > 2)
 			return -1;
 		for (long j = max(0L, data[i] - 2); j < i; j++)
@@ -6139,7 +6140,7 @@ size_t SnakesAndLaddersGame(vector<vector<size_t>> &ladders, vector<vector<size_
 				parent = make_shared<Vertex<size_t, size_t>>(i);
 				vertices.emplace(i, parent);
 			}
-			for (size_t j = min((long)6, (long)(100 - i)); j > 0; j--)
+			for (size_t j = min(6L, (long)(100L - i)); j > 0; j--)
 			{
 				size_t next = i + j;
 				if (laddermap.find(next) != laddermap.end())
@@ -6188,7 +6189,7 @@ size_t SnakesAndLaddersGameFast(vector<vector<size_t>> &ladders, vector<vector<s
 	for (size_t i = 1; i <= 100; i++)
 		if (laddermap.find(i) == laddermap.end() && snakemap.find(i) == snakemap.end())
 		{ // Skip the number if it is at the beginning of a ladder
-			for (size_t j = min((long)6, (long)(100 - i)); j > 0; j--)
+			for (size_t j = min(6L, (long)(100L - i)); j > 0; j--)
 			{
 				size_t next = i + j;
 				if (laddermap.find(next) != laddermap.end())
@@ -7168,7 +7169,7 @@ size_t eggDrops(size_t eggs, size_t floors)
 	for (size_t egg = 1; egg < eggs; egg++)
 		for (size_t floor = 2; floor <= floors; floor++)
 			for (size_t i = 2; i <= floor; i++)
-				dp[egg][floor] = min((size_t)dp[egg][floor], 1 + max((size_t)dp[egg - 1][i - 1], (size_t)dp[egg][floor - i]));
+				dp[egg][floor] = min(dp[egg][floor], 1 + max(dp[egg - 1][i - 1], dp[egg][floor - i]));
 	return dp[eggs - 1][floors];
 }
 /*

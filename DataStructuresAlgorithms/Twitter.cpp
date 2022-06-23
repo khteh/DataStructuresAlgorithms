@@ -73,7 +73,7 @@ vector<TTweetID> Twitter<TUserID, TTweetID>::GetNewsFeed(TUserID userId, size_t 
 {
     vector<TTweetID> result;
     typename set<TweetItem<TUserID, TTweetID>, greater<TweetItem<TUserID, TTweetID>>>::iterator start = _tweets[userId].begin(), end = start;
-    advance(end, min((long)size, (long)_tweets[userId].size()));
+    advance(end, min(size, _tweets[userId].size()));
     ranges::transform(start, 
         end, 
         back_inserter(result),

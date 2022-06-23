@@ -1,4 +1,5 @@
 #pragma once
+#include <limits>
 #include <vector>
 #include <sstream>
 #include <stdexcept>
@@ -14,6 +15,6 @@ public:
 	long DivideWithPlusSign(long, long);
 	long divide(long, long);
 	long long AddWithoutArithmetic(long long, long long);
-	string NumberStringSum(const string&, const string&);
-	string NumberStringMultiplication(string&, string&);
+	string NumberStringSum(const string &, const string &);
+	string NumberStringMultiplication(string &, string &);
 };

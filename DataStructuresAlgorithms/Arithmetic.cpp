@@ -96,7 +96,7 @@ long long Arithmetic::AddWithoutArithmetic(long long sum, long long carry)
 	return !carry ? sum : AddWithoutArithmetic(sum ^ carry, (unsigned long long)(sum & carry) << 1);
 }
 // Function for finding sum of larger numbers
-string Arithmetic::NumberStringSum(const string& str1, const string& str2)
+string Arithmetic::NumberStringSum(const string &str1, const string &str2)
 {
 	if (str1.empty() && !str2.empty())
 		return str2;
@@ -141,7 +141,7 @@ string Arithmetic::NumberStringSum(const string& str1, const string& str2)
 	-----
 	26220
 */
-string Arithmetic::NumberStringMultiplication(string& num1, string& num2)
+string Arithmetic::NumberStringMultiplication(string &num1, string &num2)
 {
 	if (num1.empty() || num2.empty())
 		return "0";
