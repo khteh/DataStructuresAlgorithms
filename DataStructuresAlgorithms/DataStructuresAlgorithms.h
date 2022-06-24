@@ -273,7 +273,7 @@ void TestURNG(URNG &);
 void TestRandom();
 void MinHeapifyDown(vector<long> &, size_t);
 void MaxHeapifyDown(vector<long> &, size_t);
-long MinimumBribes(vector<long> &);
+long MinimumBribes(vector<long> &, size_t);
 long countInversions(vector<long> &);
 size_t MergeCountInversions(vector<long> &, vector<long> &, size_t, size_t, size_t);
 void DutchPartitioning(vector<long> &, long);

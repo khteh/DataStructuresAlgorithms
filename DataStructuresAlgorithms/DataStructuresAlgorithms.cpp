@@ -4894,15 +4894,39 @@ long ChocolatesByNumbers(long n, long m)
  * i: 2 -> bribes: []
  * i: 1 -> bribes: []
  * i: 0 -> bribes: []
+ *
+ * 0 1 2 3 4 <- i, maxBribes = 2
+ * 2 1 5 3 4
+ * i: 4 -> [5]
+ * i: 3 -> [5]
+ * i: 2 ->
+ * i: 1 -> [2]
+ * i: 0 ->
+ *
+ * 0 1 2 3 4 <- i, maxBribes = 3
+ * 2 5 1 3 4
+ * i: 4 -> [5]
+ * i: 3 -> [5]
+ * i: 2 -> [2, 5]
+ * i: 1 ->
+ * i: 0 ->
+ *
+ * 0 1 2 3 4 <- i, maxBribes = 4
+ * 5 2 1 3 4
+ * i: 4 -> [5]
+ * i: 3 -> [5]
+ * i: 2 -> [5, 2]
+ * i: 1 -> [5]
+ * i: 0
  */
-long MinimumBribes(vector<long> &data)
+long MinimumBribes(vector<long> &data, size_t maxBribes)
 {
 	long bribes = 0;
 	for (long i = data.size() - 1; i >= 0; i--)
 	{
-		if (data[i] - (i + 1) > 2)
+		if (data[i] - (i + 1) > (long)maxBribes)
 			return -1;
-		for (long j = max(0L, data[i] - 2); j < i; j++)
+		for (long j = max(0L, data[i] - (long)maxBribes); j < i; j++)
 			if (data[j] > data[i])
 				bribes++;
 	}
