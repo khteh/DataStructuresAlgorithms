@@ -2293,7 +2293,7 @@ void MinHeapifyDown(vector<long> &data, size_t start)
 		long tmp = data[start];
 		data[start] = data[min];
 		data[min] = tmp;
-		MaxHeapifyDown(data, min);
+		MinHeapifyDown(data, min);
 	}
 }
 void trim(string &str)

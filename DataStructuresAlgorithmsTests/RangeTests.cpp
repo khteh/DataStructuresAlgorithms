@@ -285,7 +285,7 @@ TEST(RangeTests, ContainsNearbyAlmostDuplicateTests)
 	a.clear();
 	ASSERT_EQ(1, abs(-INT_MIN - 0x7FFFFFFF));
 	ASSERT_EQ(1, abs(0x7FFFFFFF - -INT_MIN));
-	a = {(long)-2147483648, 2147483647};			 // 0xFFFF_FFFF_8000_0000, 0x7FFF_FFFF
+	a = {(long)-2147483648, 2147483647};				  // 0xFFFF_FFFF_8000_0000, 0x7FFF_FFFF
 	ASSERT_FALSE(ContainsNearbyAlmostDuplicate(a, 1, 1)); // -2147483648 = 0xFFFF_FFFF_8000_0000; 2147483647 = 0x7FFF_FFFF. One in negative bucket, another in positive bucket. Different from abs((long)2147483648 - (long)2147483647)
 	a.clear();
 	a = {4, 1, -1, 6, 5};
@@ -384,23 +384,43 @@ TEST(RangeTests, VectorEqualSplitTests)
 TEST(RangeTests, MaxProductOfNonOverlappingWordLengthsTests)
 {
 	vector<string> strings;
-	strings = { "abcw", "baz", "foo", "bar", "xtfn", "abcdef" };
+	strings = {"abcw", "baz", "foo", "bar", "xtfn", "abcdef"};
 	ASSERT_EQ(16, maxProductOfNonOverlappingWordLengths(strings)); // "abcw", "xtfn"
 	strings.clear();
-	strings = { "a", "ab", "abc", "d", "cd", "bcd", "abcd" };
+	strings = {"a", "ab", "abc", "d", "cd", "bcd", "abcd"};
 	ASSERT_EQ(4, maxProductOfNonOverlappingWordLengths(strings)); // "ab", "cd"
 	strings.clear();
-	strings = { "a", "aa", "aaa", "aaaa" };
+	strings = {"a", "aa", "aaa", "aaaa"};
 	ASSERT_EQ(0, maxProductOfNonOverlappingWordLengths(strings));
 }
 TEST(RangeTests, AlmostSortedTests)
 {
-	vector<long> a = { 4, 2 };
+	vector<long> a = {4, 2};
 	ASSERT_EQ("swap 1 2", AlmostSorted(a));
 	a.clear();
-	a = { 4104, 8529, 49984, 54956, 63034, 82534, 84473, 86411, 92941, 95929, 108831, 894947, 125082, 137123, 137276, 142534, 149840, 154703, 174744, 180537, 207563, 221088, 223069, 231982, 249517, 252211, 255192, 260283, 261543, 262406, 270616, 274600, 274709, 283838, 289532, 295589, 310856, 314991, 322201, 339198, 343271, 383392, 385869, 389367, 403468, 441925, 444543, 454300, 455366, 469896, 478627, 479055, 484516, 499114, 512738, 543943, 552836, 560153, 578730, 579688, 591631, 594436, 606033, 613146, 621500, 627475, 631582, 643754, 658309, 666435, 667186, 671190, 674741, 685292, 702340, 705383, 722375, 722776, 726812, 748441, 790023, 795574, 797416, 813164, 813248, 827778, 839998, 843708, 851728, 857147, 860454, 861956, 864994, 868755, 116375, 911042, 912634, 914500, 920825, 979477 };
+	a = {4104, 8529, 49984, 54956, 63034, 82534, 84473, 86411, 92941, 95929, 108831, 894947, 125082, 137123, 137276, 142534, 149840, 154703, 174744, 180537, 207563, 221088, 223069, 231982, 249517, 252211, 255192, 260283, 261543, 262406, 270616, 274600, 274709, 283838, 289532, 295589, 310856, 314991, 322201, 339198, 343271, 383392, 385869, 389367, 403468, 441925, 444543, 454300, 455366, 469896, 478627, 479055, 484516, 499114, 512738, 543943, 552836, 560153, 578730, 579688, 591631, 594436, 606033, 613146, 621500, 627475, 631582, 643754, 658309, 666435, 667186, 671190, 674741, 685292, 702340, 705383, 722375, 722776, 726812, 748441, 790023, 795574, 797416, 813164, 813248, 827778, 839998, 843708, 851728, 857147, 860454, 861956, 864994, 868755, 116375, 911042, 912634, 914500, 920825, 979477};
 	ASSERT_EQ("swap 12 95", AlmostSorted(a));
 	a.clear();
-	a = { 43, 65, 1, 98, 99, 101 };
+	a = {43, 65, 1, 98, 99, 101};
 	ASSERT_EQ("no", AlmostSorted(a));
+}
+TEST(RangeTests, MinimumBribesTests)
+{
+	vector<long> a = {2, 1, 5, 3, 4};
+	assert(MinimumBribes(a, 2) == 3);
+	a.clear();
+	a = {2, 5, 1, 3, 4};
+	assert(MinimumBribes(a, 2) == -1);
+	a.clear();
+	a = {2, 5, 1, 3, 4};
+	assert(MinimumBribes(a, 3) == 4);
+	a.clear();
+	a = {5, 2, 1, 3, 4};
+	assert(MinimumBribes(a, 3) == -1);
+	a.clear();
+	a = {5, 2, 1, 3, 4};
+	assert(MinimumBribes(a, 4) == 5);
+	a.clear();
+	a = {1, 2, 5, 3, 7, 8, 6, 4};
+	assert(MinimumBribes(a, 2) == 7);
 }
