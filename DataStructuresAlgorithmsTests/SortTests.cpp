@@ -9,12 +9,14 @@ TEST(SortTests, BubbleSortTest)
 	uniform_int_distribution<long> uniformDistribution;
 	vector<long> a;
 	a = {1, 0, -1};
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.BubbleSort(a);
 	ASSERT_TRUE(ranges::is_sorted(a));
 	a.clear();
 	a.resize(100);
 	ranges::generate(a, [&]
 					 { return uniformDistribution(engine); });
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.BubbleSort(a);
 	ASSERT_TRUE(ranges::is_sorted(a));
 }
@@ -26,17 +28,20 @@ TEST(SortTests, QuickSortTest)
 	mt19937_64 engine(device());
 	uniform_int_distribution<long> uniformDistribution;
 	a = {1, 3, 0, 2};
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.QuickSort(a, 0, a.size() - 1);
 	ASSERT_TRUE(ranges::is_sorted(a));
 
 	a.clear();
 	a = {1, 0, -1};
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.QuickSort(a, 0, a.size() - 1);
 	ASSERT_TRUE(ranges::is_sorted(a));
 	a.clear();
 	a.resize(100);
 	ranges::generate(a, [&]
 					 { return uniformDistribution(engine); });
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.QuickSort(a, 0, a.size() - 1);
 	ASSERT_TRUE(ranges::is_sorted(a));
 }
@@ -48,12 +53,14 @@ TEST(SortTests, SelectionSortTest)
 	mt19937_64 engine(device());
 	uniform_int_distribution<long> uniformDistribution;
 	a = {1, 0, -1};
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.SelectionSort(a);
 	ASSERT_TRUE(ranges::is_sorted(a));
 	a.clear();
 	a.resize(100);
 	ranges::generate(a, [&]
 					 { return uniformDistribution(engine); });
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.SelectionSort(a);
 	ASSERT_TRUE(ranges::is_sorted(a));
 }
@@ -65,12 +72,14 @@ TEST(SortTests, InsertionSortTest)
 	mt19937_64 engine(device());
 	uniform_int_distribution<long> uniformDistribution;
 	a = {1, 0, -1};
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.InsertionSort(a);
 	ASSERT_TRUE(ranges::is_sorted(a));
 	a.clear();
 	a.resize(100);
 	ranges::generate(a, [&]
 					 { return uniformDistribution(engine); });
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.InsertionSort(a);
 	ASSERT_TRUE(ranges::is_sorted(a));
 }
@@ -83,12 +92,14 @@ TEST(SortTests, TopDownMergeSortTest)
 	uniform_int_distribution<long> uniformDistribution;
 	a = {1, 0, -1};
 	b = a;
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.TopDownMergeSort(b, a, 0, a.size());
 	ASSERT_TRUE(ranges::is_sorted(a));
 
 	a.clear();
 	a = {2, 1, 3, 1, 2};
 	b = a;
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.TopDownMergeSort(b, a, 0, a.size());
 	ASSERT_TRUE(ranges::is_sorted(a));
 
@@ -98,6 +109,7 @@ TEST(SortTests, TopDownMergeSortTest)
 					 { return uniformDistribution(engine); });
 	b.clear();
 	b.assign(a.begin(), a.end());
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.TopDownMergeSort(b, a, 0, a.size());
 	ASSERT_TRUE(ranges::is_sorted(a));
 }
@@ -110,6 +122,7 @@ TEST(SortTests, BottomUpMergeSortTest)
 	uniform_int_distribution<long> uniformDistribution;
 	a = {1, 0, -1};
 	b = a;
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.BottomUpMergeSort(a, b);
 	ASSERT_TRUE(ranges::is_sorted(a));
 	a.clear();
@@ -118,6 +131,7 @@ TEST(SortTests, BottomUpMergeSortTest)
 					 { return uniformDistribution(engine); });
 	b.clear();
 	b.assign(a.begin(), a.end());
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.BottomUpMergeSort(a, b);
 	ASSERT_TRUE(ranges::is_sorted(a));
 }
@@ -129,6 +143,7 @@ TEST(SortTests, HeapSortTest)
 	mt19937_64 engine(device());
 	uniform_int_distribution<long> uniformDistribution;
 	a = {1, 0, -1};
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.HeapSort(a);
 	ASSERT_TRUE(ranges::is_sorted(a));
 
@@ -136,6 +151,7 @@ TEST(SortTests, HeapSortTest)
 	a.resize(100);
 	ranges::generate(a, [&]
 					 { return uniformDistribution(engine); });
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.HeapSort(a);
 	ASSERT_TRUE(ranges::is_sorted(a));
 }
@@ -147,11 +163,13 @@ TEST(SortTests, CountingSortTest)
 	mt19937_64 engine(device());
 	uniform_int_distribution<long> uniformDistribution;
 	a = {1, 0, 2};
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.CountingSort(a);
 	ASSERT_TRUE(ranges::is_sorted(a));
 
 	a.clear();
 	a = {456, 789, 123};
+	ASSERT_FALSE(ranges::is_sorted(a));
 	sort.CountingSort(a);
 	ASSERT_TRUE(ranges::is_sorted(a));
 
@@ -253,6 +271,7 @@ TEST(SortTests, TopDownMergeSortCountConversionsTest)
 	uniform_int_distribution<long> uniformDistribution;
 	a = {1, 5, 3, 7};
 	b = a;
+	ASSERT_FALSE(ranges::is_sorted(a));
 	ASSERT_EQ(1, sort.TopDownMergeSortCountConversions(b, a, 0, a.size()));
 	ASSERT_TRUE(ranges::is_sorted(a));
 
@@ -260,6 +279,7 @@ TEST(SortTests, TopDownMergeSortCountConversionsTest)
 	b.clear();
 	a = {7, 5, 3, 1};
 	b = a;
+	ASSERT_FALSE(ranges::is_sorted(a));
 	ASSERT_EQ(6, sort.TopDownMergeSortCountConversions(b, a, 0, a.size()));
 	ASSERT_TRUE(ranges::is_sorted(a));
 
@@ -267,6 +287,7 @@ TEST(SortTests, TopDownMergeSortCountConversionsTest)
 	b.clear();
 	a = {2, 1, 3, 1, 2};
 	b = a;
+	ASSERT_FALSE(ranges::is_sorted(a));
 	ASSERT_EQ(4, sort.TopDownMergeSortCountConversions(b, a, 0, a.size()));
 	ASSERT_TRUE(ranges::is_sorted(a));
 }
