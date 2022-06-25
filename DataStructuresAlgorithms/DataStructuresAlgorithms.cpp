@@ -5012,7 +5012,7 @@ vector<size_t> ClimbLeaderBoard(vector<long> &scores, vector<long> &alice)
 	for (size_t i = 0; i < alice.size(); i++)
 	{
 		vector<long>::iterator it = upper_bound(scores.begin(), scores.end(), alice[i]);
-		result.push_back(scores.end() - it + 1);
+		result.push_back(distance(it, scores.end()) + 1);
 		scores.insert(it, alice[i]);
 	}
 	return result;
