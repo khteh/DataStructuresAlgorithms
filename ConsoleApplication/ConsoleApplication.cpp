@@ -1815,6 +1815,9 @@ int main(int argc, char *argv[])
 	ld.clear();
 	data.clear();
 	a.clear();
+	assert(SteadyGene("ACGTCCGT") == 1);
+	assert(SteadyGene("AAGTGCCT") == 0);
+	assert(SteadyGene("ACTGAAAG") == 2);
 	cpp20readonlyranges();
 	cpp20ranges();
 	cpp20variants();

@@ -415,3 +415,4 @@ void cpp20ranges();
 void cpp20variants();
 size_t MoveDisksToTowerOfHanoi1(size_t, vector<long> &);
 long double VectorSlicesSum(vector<long double> &);
+long SteadyGene(string const &);

@@ -5825,57 +5825,6 @@ bool SolvabilityOfTheTilesGame(vector<size_t> &data)
 	}
 	return !(inversions % 2);
 }
-/* https://www.hackerrank.com/challenges/bear-and-steady-gene/problem
- * Unfinished work!
- */
-size_t steadyGene(string &gene)
-{
-	size_t result = 0, count = gene.size() / 4;
-	map<char, size_t> counts = {
-		{'A', 0},
-		{'C', 0},
-		{'G', 0},
-		{'T', 0},
-	};
-	map<char, vector<size_t>> indices;
-	size_t i = 0;
-	long start = -1;
-	for (string::iterator it = gene.begin(); it != gene.end(); it++, i++)
-	{
-		counts[*it]++;
-		indices[*it].push_back(i);
-		if (counts[*it] > count && start < 0)
-			start = i;
-	}
-	if (start < 0)
-		return 0;
-	/*
-	assert(steadyGene(string("AAAA")) == 3);
-	assert(steadyGene(string("ACAA")) == 2);
-	assert(steadyGene(string("ACTGAAAG")) == 2);
-	assert(steadyGene(string("GAAATAAA")) == 5);
-	*/
-	vector<size_t> fixedIndices;
-	for (map<char, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
-	{
-		if (it->second < count)
-		{
-			size_t shortage = count - it->second;
-			for (map<char, vector<size_t>>::iterator it1 = indices.begin(); it1 != indices.end() && shortage > 0; it1++)
-			{
-				if (it1->first != it->first && it1->second.size() > count)
-				{
-					size_t excess = it1->second.size() - count;
-					size_t toRemove = abs((long)excess - (long)shortage);
-					fixedIndices.assign(it1->second.begin(), it1->second.begin() + toRemove + 1);
-					it1->second.erase(it1->second.begin(), it1->second.begin() + toRemove + 1);
-					shortage -= toRemove;
-				}
-			}
-		}
-	}
-	return 0;
-}
 // https://www.hackerrank.com/challenges/two-pluses/problem
 // 100%
 size_t TwoCrosses(vector<string> &grid)
@@ -8341,4 +8290,111 @@ long double VectorSlicesSum(vector<long double> &data)
 		}
 	}
 	return sum;
+}
+/*
+ * https://www.hackerrank.com/challenges/bear-and-steady-gene/problem
+ * 100%
+ * Sliding window implementation
+ */
+long SteadyGene(string const &gene)
+{
+	long count = numeric_limits<long>::max();
+	if (gene.size() % 4) // gene.size() should be divisable by 4
+		return count;
+	size_t balancedCount = gene.size() / 4;
+	map<char, size_t> genes;
+	for (string::const_iterator it = gene.begin(); it != gene.end(); it++)
+	{
+		pair<map<char, size_t>::iterator, bool> result = genes.emplace(*it, 1);
+		if (!result.second)
+			result.first->second++;
+	}
+	/*
+	 * ACGTCCGT : length = 8, N = 2
+	 * 'A': 1
+	 * 'G': 2
+	 * 'C': 3
+	 * 'T': 2
+	 * i: 0, j: 0 -> A
+	 * 'A': 0, j: 1
+	 * 'G': 2
+	 * 'C': 3
+	 * 'T': 2
+	 * i: 0, j: 1 -> AC
+	 * 'A': 0
+	 * 'G': 2
+	 * 'C': 2, j: 2
+	 * 'T': 2
+	 * i: 0, j: 2 -> A
+	 * 'A': 1, i: 1 count: 2
+	 * 'G': 2
+	 * 'C': 2
+	 * 'T': 2
+	 * i: 1, j: 2 -> AC
+	 * 'A': 1
+	 * 'G': 2
+	 * 'C': 3, i: 2 count: 1
+	 * 'T': 2
+	 * i: 2, j: 2 -> ACG
+	 * 'A': 1
+	 * 'G': 1, j: 3
+	 * 'C': 3
+	 * 'T': 2
+	 * i: 2, j: 3 -> ACGT
+	 * 'A': 1
+	 * 'G': 1
+	 * 'C': 3
+	 * 'T': 1, j: 4
+	 * i: 2, j: 4 -> ACGTC
+	 * 'A': 1
+	 * 'G': 1
+	 * 'C': 2, j: 5
+	 * 'T': 1
+	 * i: 2, j: 5 -> ACG
+	 * 'A': 1
+	 * 'G': 2, i: 3 count: 3
+	 * 'C': 2
+	 * 'T': 1
+	 * i: 3, j: 5 -> ACGT
+	 * 'A': 1
+	 * 'G': 2
+	 * 'C': 2
+	 * 'T': 2, i: 4 count: 2
+	 * i: 4, j: 5 -> ACGTC
+	 * 'A': 1
+	 * 'G': 2
+	 * 'C': 3, i: 5 count: 1
+	 * 'T': 2
+	 * i: 5, j: 5 -> ACGTCCGT
+	 * 'A': 1
+	 * 'G': 2
+	 * 'C': 2, j: 6
+	 * 'T': 2
+	 * i: 5, j: 6 -> ACGTCC
+	 * 'A': 1
+	 * 'G': 2
+	 * 'C': 3, i: 6 count: 1
+	 * 'T': 2
+	 * i: 6, j: 6 -> ACGTCCG
+	 * 'A': 1
+	 * 'G': 1, j: 7
+	 * 'C': 3
+	 * 'T': 2
+	 * i: 6, j: 7 -> ACGTCCGT
+	 * 'A': 1
+	 * 'G': 1
+	 * 'C': 3
+	 * 'T': 1, j: 8
+	 */
+	for (long i = 0, j = 0; i < gene.size() && j < gene.size();)
+	{
+		if (genes['A'] <= balancedCount && genes['C'] <= balancedCount && genes['G'] <= balancedCount && genes['T'] <= balancedCount)
+		{
+			count = min(count, j - i);
+			genes[gene[i++]]++;
+		}
+		else
+			genes[gene[j++]]--;
+	}
+	return count;
 }
