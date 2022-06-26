@@ -1,7 +1,9 @@
 #pragma once
 #include <map>
 #include <limits>
+#include <iostream>
 using namespace std;
+
 template <typename K, typename V>
 class IntervalMap
 {
@@ -11,6 +13,7 @@ private:
 public:
 	// constructor associates whole range of K with val by inserting (K_min, val)
 	// into the map
+	IntervalMap();
 	IntervalMap(V const &);
 	virtual ~IntervalMap();
 	// Assign value val to interval [keyBegin, keyEnd).
@@ -19,9 +22,11 @@ public:
 	// includes keyBegin, but excludes keyEnd.
 	// If !( keyBegin < keyEnd ), this designates an empty interval,
 	// and assign must do nothing.
-	void assign(K const &, K const &, V const &);
+	void emplace(K const &, K const &, V const &);
 	size_t size() const noexcept;
 	void clear() noexcept;
+	void print() const;
 	// look-up of the value associated with key
-	V const &operator[](K const &) const;
+	V const &
+	operator[](K const &) const;
 };
