@@ -586,7 +586,7 @@ vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 		{
 			for (vector<string>::iterator it = left.begin(); it != left.end(); it++)
 			{
-				if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, float> || is_same_v<T, size_t> || is_same_v<T, double>)
+				if constexpr (is_integral_v<T>)
 					str = to_string(node->Item());
 				else if constexpr (is_same_v<T, string>)
 					str = node->Item();
@@ -598,7 +598,7 @@ vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 		{
 			for (vector<string>::iterator it = right.begin(); it != right.end(); it++)
 			{
-				if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, float> || is_same_v<T, size_t> || is_same_v<T, double>)
+				if constexpr (is_integral_v<T>)
 					str = to_string(node->Item());
 				else if constexpr (is_same_v<T, string>)
 					str = node->Item();
@@ -607,7 +607,7 @@ vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 		}
 		if (left.empty() && right.empty())
 		{
-			if constexpr (is_same_v<T, long> || is_same_v<T, int> || is_same_v<T, float> || is_same_v<T, size_t> || is_same_v<T, double>)
+			if constexpr (is_integral_v<T>)
 				result.push_back(to_string(node->Item()));
 			else if constexpr (is_same_v<T, string>)
 				result.push_back(node->Item());
