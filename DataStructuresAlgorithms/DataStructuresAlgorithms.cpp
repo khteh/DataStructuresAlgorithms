@@ -8408,14 +8408,14 @@ size_t PickingNumbers(vector<long> &a)
 	for (size_t i = 0; i < a.size(); i++)
 	{
 		long value = a[i];
-		size_t cnt = count_if(a.begin(), a.end(), [&value](long j)
-							  { return j == value; });
+		size_t cnt = ranges::count_if(a, [&value](long j)
+									  { return j == value; });
 		size_t oneless = 0;
 		if (value > 0)
-			oneless = count_if(a.begin(), a.end(), [&value](long j)
-							   { return j == (value - 1); });
-		size_t onemore = count_if(a.begin(), a.end(), [&value](long j)
-								  { return j == (value + 1); });
+			oneless = ranges::count_if(a, [&value](long j)
+									   { return j == (value - 1); });
+		size_t onemore = ranges::count_if(a, [&value](long j)
+										  { return j == (value + 1); });
 		cnt = cnt + oneless > cnt + onemore ? cnt + oneless : cnt + onemore;
 		if (cnt > max)
 			max = cnt;
@@ -8466,6 +8466,35 @@ size_t PickingNumbers(vector<long> &a)
 7: "7-10", "1-10": 2
 10: "7-10", "1-10": 2
 */
+#if 0
+size_t IntervalSelection(vector<vector<size_t>> &intervals)
+{
+	ranges::sort(intervals, [](const vector<size_t> &a, const vector<size_t> &b)
+				 { return a[1] < b[1]; });
+	/*
+	 * 1 2
+	 * 2 3
+	 * 2 4 (throw)
+	 *
+	 * 1 3
+	 * 4 6
+	 * 1 10
+	 * 7 10 (throw)
+	 *
+	 * 1 3
+	 * 3 6
+	 * 1 10
+	 * 7 10 (throw)
+	 */
+	vector<size_t> open(2);
+	open[0] = intervals[0][1];
+	for (vector<vector<size_t>>::iterator it = intervals.begin(); it != intervals.end(); it++)
+	{
+		size_t first = (*it)[0], second = (*it)[1];
+		if (first > open)
+	}
+}
+#endif
 #if 0
 size_t IntervalSelection(vector<vector<size_t>> &intervals)
 {
