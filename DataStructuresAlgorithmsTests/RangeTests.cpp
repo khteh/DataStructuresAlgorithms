@@ -407,20 +407,31 @@ TEST(RangeTests, AlmostSortedTests)
 TEST(RangeTests, MinimumBribesTests)
 {
 	vector<long> a = {2, 1, 5, 3, 4};
-	assert(MinimumBribes(a, 2) == 3);
+	ASSERT_EQ(3, MinimumBribes(a, 2));
 	a.clear();
 	a = {2, 5, 1, 3, 4};
-	assert(MinimumBribes(a, 2) == -1);
+	ASSERT_EQ(-1, MinimumBribes(a, 2));
 	a.clear();
 	a = {2, 5, 1, 3, 4};
-	assert(MinimumBribes(a, 3) == 4);
+	ASSERT_EQ(4, MinimumBribes(a, 3));
 	a.clear();
 	a = {5, 2, 1, 3, 4};
-	assert(MinimumBribes(a, 3) == -1);
+	ASSERT_EQ(-1, MinimumBribes(a, 3));
 	a.clear();
 	a = {5, 2, 1, 3, 4};
-	assert(MinimumBribes(a, 4) == 5);
+	ASSERT_EQ(5, MinimumBribes(a, 4));
 	a.clear();
 	a = {1, 2, 5, 3, 7, 8, 6, 4};
-	assert(MinimumBribes(a, 2) == 7);
+	ASSERT_EQ(7, MinimumBribes(a, 2));
+}
+TEST(RangeTests, PickNumbersFromRangesTests)
+{
+	vector<long> a = {1, 1, 2, 2, 4, 4, 5, 5, 5};
+	ASSERT_EQ(5, PickingNumbers(a));
+	a.clear();
+	a = {4, 6, 5, 3, 3, 1};
+	ASSERT_EQ(3, PickingNumbers(a));
+	a.clear();
+	a = {1, 2, 2, 3, 1, 2};
+	ASSERT_EQ(5, PickingNumbers(a));
 }

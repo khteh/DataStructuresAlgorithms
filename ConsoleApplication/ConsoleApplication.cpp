@@ -1326,18 +1326,21 @@ int main(int argc, char *argv[])
 	mymap.emplace(3, 'C');
 	cout << numeric_limits<int>::lowest() << endl;
 	IntervalMap<int, char> imap(0);
-	imap.assign(0, 2, 'A');
-	imap.assign(4, 6, 'A');
-	imap.assign(2, 4, 'A');
+	imap.emplace(0, 2, 'A'); // [0,1]: 'A'
+	imap.emplace(4, 6, 'A'); // [4,5]: 'A'
+	imap.emplace(2, 4, 'A'); // [2,3]: 'A'
 	assert(imap.size() == 5);
 	assert(imap[0] == 'A');
 	assert(imap[1] == 'A');
+	assert(imap[2] == 'A');
+	assert(imap[3] == 'A');
 	assert(imap[4] == 'A');
 	assert(imap[5] == 'A');
-	IntervalMap<int, char> imap1(0);
-	imap1.assign(0, 2, 'A');
-	imap1.assign(4, 6, 'A');
-	imap1.assign(2, 4, 'B');
+	imap.print();
+	IntervalMap<int, char> imap1;
+	imap1.emplace(0, 2, 'A'); // [0,1]: 'A'
+	imap1.emplace(4, 6, 'A'); // [4,5]: 'A'
+	imap1.emplace(2, 4, 'B'); // [2,3]: 'B'
 	assert(imap1.size() == 7);
 	assert(imap1[0] == 'A');
 	assert(imap1[1] == 'A');
@@ -1345,10 +1348,11 @@ int main(int argc, char *argv[])
 	assert(imap1[3] == 'B');
 	assert(imap1[4] == 'A');
 	assert(imap1[5] == 'A');
-	IntervalMap<int, char> imap2(0);
-	imap2.assign(0, 2, 'A');
-	imap2.assign(4, 6, 'A');
-	imap2.assign(2, 4, 'B');
+	imap1.print();
+	IntervalMap<int, char> imap2;
+	imap2.emplace(0, 2, 'A'); // [0,1]: 'A'
+	imap2.emplace(4, 6, 'A'); // [4,5]: 'A'
+	imap2.emplace(2, 4, 'B'); // [2,3]: 'B'
 	assert(imap2.size() == 7);
 	assert(imap2[0] == 'A');
 	assert(imap2[1] == 'A');
@@ -1356,47 +1360,66 @@ int main(int argc, char *argv[])
 	assert(imap2[3] == 'B');
 	assert(imap2[4] == 'A');
 	assert(imap2[5] == 'A');
-	imap2.assign(2, 4, 'A');
+	imap2.print();
+	imap2.emplace(2, 4, 'A'); // [2,3]: 'A'
 	assert(imap2.size() == 7);
-	assert(imap2[2] == 'B');
-	assert(imap2[3] == 'B');
-	IntervalMap<int, char> imap3(0);
-	imap3.assign(0, 2, 'A');
-	imap3.assign(4, 6, 'A');
+	assert(imap2[2] == 'B'); // XXX
+	assert(imap2[3] == 'B'); // XXX
+	imap2.print();
+	imap2.emplace(3, 4, 'A'); // [2,3]: 'A'
+	assert(imap2.size() == 7);
+	assert(imap2[2] == 'B'); // XXX
+	assert(imap2[3] == 'A'); // XXX
+	imap2.print();
+	IntervalMap<int, char> imap3;
+	imap3.emplace(0, 2, 'A'); // [0,1]: 'A'
+	imap3.emplace(4, 6, 'A'); // [4,5]: 'A'
 	assert(imap3.size() == 5);
 	assert(imap3[4] == 'A');
 	assert(imap3[5] == 'A');
-	imap3.assign(2, 6, 'B');
+	imap3.emplace(2, 6, 'B'); // [2,3,4,5]: 'B'
 	assert(imap3.size() == 7);
 	assert(imap3[2] == 'B');
 	assert(imap3[3] == 'B');
 	assert(imap3[4] == 'B');
 	assert(imap3[5] == 'B');
-	IntervalMap<unsigned int, char> imap4(0);
-	imap4.assign(0, 2, 'A');
-	imap4.assign(4, 6, 'A');
-	imap4.assign(2, 4, 'A');
+	IntervalMap<size_t, char> imap4;
+	imap4.emplace(0, 2, 'A'); // [0,1]: 'A'
+	imap4.emplace(4, 6, 'A'); // [4,5]: 'A'
+	imap4.emplace(2, 4, 'A'); // [2,3]: 'A'
 	assert(imap4.size() == 4);
 	assert(imap4[0] == 'A');
 	assert(imap4[1] == 'A');
 	assert(imap4[4] == 'A');
 	assert(imap4[5] == 'A');
-	IntervalMap<unsigned int, char> imap5(0);
-	imap5.assign(2, 0, 'A');
-	imap5.assign(4, 6, 'A');
-	imap5.assign(2, 4, 'A');
+	imap4.print();
+	IntervalMap<size_t, char> imap5;
+	imap5.emplace(2, 0, 'A');
+	imap5.emplace(4, 6, 'A'); // [4,5]: 'A'
+	imap5.emplace(2, 4, 'A'); // [2,3]: 'A'
 	assert(imap5.size() == 5);
 	assert(imap5[2] == 'A');
 	assert(imap5[3] == 'A');
 	assert(imap5[4] == 'A');
 	assert(imap5[5] == 'A');
-	IntervalMap<unsigned int, char> imap6(0);
-	imap6.assign(2, 0, 'A');
-	imap6.assign(2, 4, 'A');
-	imap6.assign(4, 6, 'A');
+	imap5.print();
+	IntervalMap<size_t, char> imap6;
+	imap6.emplace(2, 0, 'A');
+	imap6.emplace(2, 4, 'A'); // [2,3]: 'A'
+	imap6.emplace(4, 6, 'A'); // [4,5]: 'A'
 	assert(imap6.size() == 3);
 	assert(imap6[2] == 'A');
 	assert(imap6[3] == 'A');
+	assert(imap6[4] == 'A');
+	assert(imap6[5] == 'A');
+	imap6.print();
+	IntervalMap<size_t, string> imap7;
+	imap7.emplace(5, 8, "5-8"); // [5,6,7]: 'A'
+	imap7.print();
+	assert(imap7.size() == 4); // + numeric_limits<int>::lowest() entry
+	assert(imap7[4].empty());
+	assert(imap7[8] == "5-8");
+
 	a.clear();
 	a = {-3, 1, 2, -2, 5, 6};
 	assert(MaxProductOfThree(a) == 60);
@@ -1818,6 +1841,17 @@ int main(int argc, char *argv[])
 	assert(SteadyGene("ACGTCCGT") == 1);
 	assert(SteadyGene("AAGTGCCT") == 0);
 	assert(SteadyGene("ACTGAAAG") == 2);
+#if 0
+	ugrid.clear();
+	ugrid = {{1, 2}, {2, 3}, {2, 4}};
+	assert(IntervalSelection(ugrid) == 2);
+	ugrid.clear();
+	ugrid = {{1, 10}, {1, 3}, {4, 6}, {7, 10}};
+	assert(IntervalSelection(ugrid) == 4);
+	ugrid.clear();
+	ugrid = {{1, 10}, {1, 3}, {3, 6}, {7, 10}};
+	assert(IntervalSelection(ugrid) == 3);
+#endif
 	cpp20readonlyranges();
 	cpp20ranges();
 	cpp20variants();
