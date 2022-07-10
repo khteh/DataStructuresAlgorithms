@@ -8431,22 +8431,15 @@ size_t PickingNumbers(vector<long> &a)
  */
 string TwentyFourHourTimeConversion(string &s)
 {
-	bool am = true;
-	size_t apm = s.find("AM");
-	if (apm == string::npos)
-	{
-		am = false;
-		apm = s.find("PM");
-	}
 	int hour; // 12:00:00 AM - 11:59:59 AM => 00:00:00 - 11:59:59
 	istringstream(s.substr(0, 2)) >> hour;
-	if (am && hour == 12)
+	if (s.find("AM") != string::npos && hour == 12)
 	{
 		ostringstream oss;
 		oss << setfill('0') << setw(2) << hour - 12 << s.substr(2, s.size() - 4);
 		return oss.str();
 	}
-	else if (!am && hour != 12)
+	else if (s.find("PM") != string::npos && hour != 12)
 	{ // pm
 		ostringstream oss;
 		oss << setfill('0') << setw(2) << hour + 12 << s.substr(2, s.size() - 4);
