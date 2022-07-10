@@ -419,3 +419,4 @@ long SteadyGene(string const &);
 size_t PickingNumbers(vector<long> &);
 size_t IntervalSelection(vector<vector<size_t>> &);
 string TwentyFourHourTimeConversion(string &);
+vector<long> KaprekarNumbers(long, long);

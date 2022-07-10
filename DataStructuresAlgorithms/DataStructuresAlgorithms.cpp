@@ -8448,3 +8448,25 @@ string TwentyFourHourTimeConversion(string &s)
 	else
 		return s.substr(0, s.size() - 2);
 }
+/*
+ * https://en.wikipedia.org/wiki/Kaprekar_number
+ * https://www.hackerrank.com/challenges/kaprekar-numbers/problem
+ * 100%
+ */
+vector<long> KaprekarNumbers(long p, long q)
+{
+	vector<long> result;
+	for (long i = p; i <= q; i++)
+	{
+		string d = to_string(i);
+		string str = to_string(i * i);
+		string r = str.substr(str.size() - d.size(), d.size());
+		string l = str.substr(0, str.size() - r.size());
+		long j = 0, k = 0;
+		istringstream(l) >> j;
+		istringstream(r) >> k;
+		if (j + k == i)
+			result.push_back(i);
+	}
+	return result;
+}

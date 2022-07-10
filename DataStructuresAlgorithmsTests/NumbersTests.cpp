@@ -16,7 +16,15 @@ TEST(NumbersTests, countNumbersWithUniqueDigitsTests)
 {
 	ASSERT_EQ(1, countNumbersWithUniqueDigits(0));
 	ASSERT_EQ(10, countNumbersWithUniqueDigits(1));
-	ASSERT_EQ(91, countNumbersWithUniqueDigits(2));	// [0,100)
+	ASSERT_EQ(91, countNumbersWithUniqueDigits(2));	 // [0,100)
 	ASSERT_EQ(739, countNumbersWithUniqueDigits(3)); // [0,1000)
 	ASSERT_EQ(0, countNumbersWithUniqueDigits(11));
+}
+TEST(NumbersTests, KaprekarNumbersTests)
+{
+	vector<long> a = {1, 9, 45, 55, 99};
+	ASSERT_EQ(a, KaprekarNumbers(1, 100));
+	a.clear();
+	a = {1, 9, 45, 55, 99, 297, 703, 999, 2223, 2728, 4950, 5050, 7272, 7777, 9999, 17344, 22222, 77778, 82656, 95121, 99999};
+	ASSERT_EQ(a, KaprekarNumbers(1, 99999));
 }
