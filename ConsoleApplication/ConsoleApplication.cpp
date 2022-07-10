@@ -1843,6 +1843,8 @@ int main(int argc, char *argv[])
 	assert(SteadyGene("ACTGAAAG") == 2);
 	str = "07:05:45PM";
 	assert(TwentyFourHourTimeConversion(str) == "19:05:45");
+	str = "07:05:45AM";
+	assert(TwentyFourHourTimeConversion(str) == "07:05:45");
 	cpp20readonlyranges();
 	cpp20ranges();
 	cpp20variants();
