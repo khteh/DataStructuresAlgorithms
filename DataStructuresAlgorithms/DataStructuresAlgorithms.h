@@ -417,4 +417,5 @@ size_t MoveDisksToTowerOfHanoi1(size_t, vector<long> &);
 long double VectorSlicesSum(vector<long double> &);
 long SteadyGene(string const &);
 size_t PickingNumbers(vector<long> &);
-// size_t IntervalSelection(vector<vector<size_t>> &);
+size_t IntervalSelection(vector<vector<size_t>> &);
+string TwentyFourHourTimeConversion(string &);

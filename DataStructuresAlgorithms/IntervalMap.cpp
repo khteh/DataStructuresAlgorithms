@@ -35,6 +35,11 @@ void IntervalMap<K, V>::clear() noexcept
 	m_map.clear();
 }
 template <typename K, typename V>
+bool IntervalMap<K, V>::HasKey(K key) const
+{
+	return m_map.find(key) != m_map.end();
+}
+template <typename K, typename V>
 void IntervalMap<K, V>::print() const
 {
 	for (typename map<K, V>::const_iterator it = m_map.begin(); it != m_map.end(); it++)

@@ -25,6 +25,7 @@ public:
 	void emplace(K const &, K const &, V const &);
 	size_t size() const noexcept;
 	void clear() noexcept;
+	bool HasKey(K key) const;
 	void print() const;
 	// look-up of the value associated with key
 	V const &

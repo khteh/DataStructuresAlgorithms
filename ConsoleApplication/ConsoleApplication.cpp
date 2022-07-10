@@ -9,7 +9,7 @@ using namespace tbb;
 #endif
 int main(int argc, char *argv[])
 {
-	string line, line1;
+	string str, str1;
 	size_t size;
 	long l;
 	random_device device;
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
-	int i, j, index, *iPtr;
+	int i, j, *iPtr;
 	unsigned long long mask = 0;
 	vector<string> strings, strings1;
 	set<string> stringset, stringset1;
@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
 	TestRandom();
 	KDTreeTests();
 	stringset.erase("Does not exist");
-	line = to_string(0);
-	istringstream(line) >> i;
+	str = to_string(0);
+	istringstream(str) >> i;
 	assert(i == 0);
 	Singleton *singleton = Singleton::Instance();
 	assert(singleton);
@@ -82,8 +82,8 @@ int main(int argc, char *argv[])
 	rx1->Write("RX");
 	assert(rx1->Read() == "Receiver: RX");
 
-	string str = "m";
-	string str1 = str.substr(1);
+	str = "m";
+	str1 = str.substr(1);
 	assert(str1.empty());
 	str1 = str.substr(0, 0);
 	assert(str1.empty());
@@ -273,19 +273,19 @@ int main(int argc, char *argv[])
 		cout << endl;
 	}
 	vector<vector<char>> maze;
-	line = "ab2c3";
-	assert(uncompress(line) == "ababcababcababc");
-	cout << "uncompress(" << quoted(line) << "): " << uncompress(line) << endl;
-	line = "0010110100";
-	size = findLongestContiguousPattern(line, '1');
+	str = "ab2c3";
+	assert(uncompress(str) == "ababcababcababc");
+	cout << "uncompress(" << quoted(str) << "): " << uncompress(str) << endl;
+	str = "0010110100";
+	size = findLongestContiguousPattern(str, '1');
 	assert(size == 4);
-	assert(line == "0010111100");
-	cout << "findLongestContiguousPattern(\"0010110100\", \'1\'): " << line << " size: " << size << endl;
-	line = "00101101100";
-	size = findLongestContiguousPattern(line, '1');
+	assert(str == "0010111100");
+	cout << "findLongestContiguousPattern(\"0010110100\", \'1\'): " << str << " size: " << size << endl;
+	str = "00101101100";
+	size = findLongestContiguousPattern(str, '1');
 	assert(size == 5);
-	assert(line == "00101111100");
-	cout << "findLongestContiguousPattern(\"00101101100\", \'1\'): " << line << " size: " << size << endl;
+	assert(str == "00101111100");
+	cout << "findLongestContiguousPattern(\"00101101100\", \'1\'): " << str << " size: " << size << endl;
 
 	// Test C++ *& "pointer reference" construct
 	iPtr = (int *)malloc(10 * sizeof(int));
@@ -308,69 +308,69 @@ int main(int argc, char *argv[])
 	assert(gcd(1050, 507) == 3);
 	assert(lcm(21, 6) == 42);
 	assert(!isUniqueString("Helo World!!!"));
-	line = "Hello World!!!";
-	reverse(line);
-	assert(line == "!!!dlroW olleH");
-	line = "The house is blue";
-	reverseWords(line);
-	assert(line == "blue is house The");
-	line = "  The   house is    blue  ";
-	reverseWordsTrimmed(line);
-	assert(line == "blue is house The");
+	str = "Hello World!!!";
+	reverse(str);
+	assert(str == "!!!dlroW olleH");
+	str = "The house is blue";
+	reverseWords(str);
+	assert(str == "blue is house The");
+	str = "  The   house is    blue  ";
+	reverseWordsTrimmed(str);
+	assert(str == "blue is house The");
 
-	line = "Hello World!!!";
-	RemoveDuplicateCharacters(line);
-	assert(line == "Helo Wrd!");
-	line = "aaaaa";
-	RemoveDuplicateCharacters(line);
-	assert(line == "a");
-	line = "abcd";
-	RemoveDuplicateCharacters(line);
-	assert(line == "abcd");
-	line = "";
-	RemoveDuplicateCharacters(line);
-	assert(line == "");
-	line = "aaaabbbbcccc";
-	RemoveDuplicateCharacters(line);
-	assert(line == "abc");
-	line = "abababab";
-	RemoveDuplicateCharacters(line);
-	assert(line == "ab");
-	line = "bcabc";
-	RemoveDuplicateCharactersLexicographicalOrder(line);
-	assert(line == "abc");
-	line = "abdcb";
-	RemoveDuplicateCharactersLexicographicalOrder(line);
-	assert(line == "abdc");
-	line = "abacb";
-	RemoveDuplicateCharactersLexicographicalOrder(line);
-	assert(line == "abc");
-	line = "adcba";
-	RemoveDuplicateCharactersLexicographicalOrder(line);
-	assert(line == "adcb");
-	line = "cbacdcbc";
-	RemoveDuplicateCharactersLexicographicalOrder(line);
-	assert(line == "acdb");
-	line = "cbacdbcd";
-	RemoveDuplicateCharactersLexicographicalOrder(line);
-	assert(line == "abcd");
-	line = "cbaidbcj";
-	RemoveDuplicateCharactersLexicographicalOrder(line);
-	assert(line == "aidbcj");
-	line = "cdadabcc";
-	RemoveDuplicateCharactersLexicographicalOrder(line);
-	assert(line == "adbc");
+	str = "Hello World!!!";
+	RemoveDuplicateCharacters(str);
+	assert(str == "Helo Wrd!");
+	str = "aaaaa";
+	RemoveDuplicateCharacters(str);
+	assert(str == "a");
+	str = "abcd";
+	RemoveDuplicateCharacters(str);
+	assert(str == "abcd");
+	str = "";
+	RemoveDuplicateCharacters(str);
+	assert(str == "");
+	str = "aaaabbbbcccc";
+	RemoveDuplicateCharacters(str);
+	assert(str == "abc");
+	str = "abababab";
+	RemoveDuplicateCharacters(str);
+	assert(str == "ab");
+	str = "bcabc";
+	RemoveDuplicateCharactersLexicographicalOrder(str);
+	assert(str == "abc");
+	str = "abdcb";
+	RemoveDuplicateCharactersLexicographicalOrder(str);
+	assert(str == "abdc");
+	str = "abacb";
+	RemoveDuplicateCharactersLexicographicalOrder(str);
+	assert(str == "abc");
+	str = "adcba";
+	RemoveDuplicateCharactersLexicographicalOrder(str);
+	assert(str == "adcb");
+	str = "cbacdcbc";
+	RemoveDuplicateCharactersLexicographicalOrder(str);
+	assert(str == "acdb");
+	str = "cbacdbcd";
+	RemoveDuplicateCharactersLexicographicalOrder(str);
+	assert(str == "abcd");
+	str = "cbaidbcj";
+	RemoveDuplicateCharactersLexicographicalOrder(str);
+	assert(str == "aidbcj");
+	str = "cdadabcc";
+	RemoveDuplicateCharactersLexicographicalOrder(str);
+	assert(str == "adbc");
 	assert(isAdditiveNumber(string("123")));
 	assert(isAdditiveNumber(string("123581321")));
 	assert(isAdditiveNumber(string("199100199")));
 	assert(!isAdditiveNumber(string("1203")));
 	assert(!isAdditiveNumber(string("1023")));
 	assert(!isAdditiveNumber(string("0123")));
-	line = "Hello World!!!";
-	line1 = "llo World!!!He";
-	assert(AreRotatedStrings(line, line1, 2));
-	if (AreRotatedStrings(line, line1, 2))
-		cout << line << " and " << line1 << " are rotated by 2 places" << endl;
+	str = "Hello World!!!";
+	str1 = "llo World!!!He";
+	assert(AreRotatedStrings(str, str1, 2));
+	if (AreRotatedStrings(str, str1, 2))
+		cout << str << " and " << str1 << " are rotated by 2 places" << endl;
 	udata.clear();
 	udata = {3, 1, 2};
 	assert(SolvabilityOfTheTilesGame(udata));
@@ -386,9 +386,9 @@ int main(int argc, char *argv[])
 	udata.clear();
 	udata = {1, 6, 5, 2, 3, 4};
 	assert(!SolvabilityOfTheTilesGame(udata));
-	line = "abcdefcdbacd";
-	line1 = "abcd";
-	udata = FindSubString(line, line1);
+	str = "abcdefcdbacd";
+	str1 = "abcd";
+	udata = FindSubString(str, str1);
 	udata1 = {0, 6, 7, 8};
 	assert(udata.size() == 4); // 0 6 7 8
 	assert(udata1 == udata);
@@ -438,14 +438,14 @@ int main(int argc, char *argv[])
 	assert(strings.size() == 2); //  a d
 	assert(strings[0] == "a");
 	assert(strings[1] == "d");
-	line = "a";
-	assert(CanShuffleWithoutRepeat(line));
-	line = "aa";
-	assert(!CanShuffleWithoutRepeat(line));
-	line = "aab";
-	assert(CanShuffleWithoutRepeat(line));
-	line = "aaaabbcc";
-	assert(CanShuffleWithoutRepeat(line));
+	str = "a";
+	assert(CanShuffleWithoutRepeat(str));
+	str = "aa";
+	assert(!CanShuffleWithoutRepeat(str));
+	str = "aab";
+	assert(CanShuffleWithoutRepeat(str));
+	str = "aaaabbcc";
+	assert(CanShuffleWithoutRepeat(str));
 	a.clear();
 	a.clear();
 	b.clear();
@@ -610,12 +610,12 @@ int main(int argc, char *argv[])
 	findMaxResult = findMax(ull);
 	assert(findMaxResult == 36);
 
-	line = "     Hello     World!!!     ";
-	assert(line.size() == 28);
-	cout << line << " size: " << line.size();
-	trim(line);
-	// assert(line == "Hello     World!!!");
-	cout << " trim(line): |" << line << "| size: " << line.size() << endl;
+	str = "     Hello     World!!!     ";
+	assert(str.size() == 28);
+	cout << str << " size: " << str.size();
+	trim(str);
+	// assert(str == "Hello     World!!!");
+	cout << " trim(str): |" << str << "| size: " << str.size() << endl;
 
 	a.clear();
 	cout << "minDiffPairs(): " << endl;
@@ -987,9 +987,9 @@ int main(int argc, char *argv[])
 	assert(stringset1.size() == 2);
 	assert(stringset1.find("too") != stringset1.end());
 	assert(stringset1.find("paa") != stringset1.end());
-	line = "1024";
-	line1 = "2048";
-	istringstream iss1(line), iss2(line1);
+	str = "1024";
+	str1 = "2048";
+	istringstream iss1(str), iss2(str1);
 	cout << iss2.str() << " - " << iss1.str() << " = " << subtract(iss2, iss1) << endl;
 
 	// N-Gram test
@@ -1459,8 +1459,8 @@ int main(int argc, char *argv[])
 	assert(!SherlockValidString("aaaabbcc"));
 	assert(!SherlockValidString("xxxaabbccrry"));
 	assert(SherlockValidString("ibfdgaeadiaefgbhbdghhhbgdfgeiccbiehhfcggchgghadhdhagfbahhddgghbdehidbibaeaagaeeigffcebfbaieggabcfbiiedcabfihchdfabifahcbhagccbdfifhghcadfiadeeaheeddddiecaicbgigccageicehfdhdgafaddhffadigfhhcaedcedecafeacbdacgfgfeeibgaiffdehigebhhehiaahfidibccdcdagifgaihacihadecgifihbebffebdfbchbgigeccahgihbcbcaggebaaafgfedbfgagfediddghdgbgehhhifhgcedechahidcbchebheihaadbbbiaiccededchdagfhccfdefigfibifabeiaccghcegfbcghaefifbachebaacbhbfgfddeceababbacgffbagidebeadfihaefefegbghgddbbgddeehgfbhafbccidebgehifafgbghafacgfdccgifdcbbbidfifhdaibgigebigaedeaaiadegfefbhacgddhchgcbgcaeaieiegiffchbgbebgbehbbfcebciiagacaiechdigbgbghefcahgbhfibhedaeeiffebdiabcifgccdefabccdghehfibfiifdaicfedagahhdcbhbicdgibgcedieihcichadgchgbdcdagaihebbabhibcihicadgadfcihdheefbhffiageddhgahaidfdhhdbgciiaciegchiiebfbcbhaeagccfhbfhaddagnfieihghfbaggiffbbfbecgaiiidccdceadbbdfgigibgcgchafccdchgifdeieicbaididhfcfdedbhaadedfageigfdehgcdaecaebebebfcieaecfagfdieaefdiedbcadchabhebgehiidfcgahcdhcdhgchhiiheffiifeegcfdgbdeffhgeghdfhbfbifgidcafbfcd"));
-	line = "if man was meant to stay on the ground god would have given us roots";
-	assert(encryption(line) == "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau");
+	str = "if man was meant to stay on the ground god would have given us roots";
+	assert(encryption(str) == "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau");
 	a.clear();
 	a = {3, 1, 5, 4, 2};
 	assert(calculateMedian(a) == 3);
@@ -1841,22 +1841,11 @@ int main(int argc, char *argv[])
 	assert(SteadyGene("ACGTCCGT") == 1);
 	assert(SteadyGene("AAGTGCCT") == 0);
 	assert(SteadyGene("ACTGAAAG") == 2);
-#if 0
-	ugrid.clear();
-	ugrid = {{1, 2}, {2, 3}, {2, 4}};
-	assert(IntervalSelection(ugrid) == 2);
-	ugrid.clear();
-	ugrid = {{1, 10}, {1, 3}, {4, 6}, {7, 10}};
-	assert(IntervalSelection(ugrid) == 4);
-	ugrid.clear();
-	ugrid = {{1, 10}, {1, 3}, {3, 6}, {7, 10}};
-	assert(IntervalSelection(ugrid) == 3);
-#endif
+	str = "07:05:45PM";
+	assert(TwentyFourHourTimeConversion(str) == "19:05:45");
 	cpp20readonlyranges();
 	cpp20ranges();
 	cpp20variants();
 	/***** The End *****/
-	// cout << endl << "Press ENTER to exit!";
-	// getline(cin, line);
 	return 0;
 }

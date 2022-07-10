@@ -4812,8 +4812,11 @@ long MaxProductOfThree(vector<long> &data)
 /*
  * 1 2 3 4 5, n = 2
  * 5 4 3 2 1, reverse the whole vector
- * 4 5 3 2 1, reverse 0:n-1
- * 4 5 1 2 3, reverse 2:data.size()-1
+ * 4 5 3 2 1, reverse [0,n-1]
+ * 4 5 1 2 3, reverse [n,data.size()-1]
+ *
+ * https://www.hackerrank.com/challenges/circular-array-rotation/problem
+ * 100%
  */
 void RotateRightArray(vector<int> &data, int n)
 {
@@ -8423,202 +8426,52 @@ size_t PickingNumbers(vector<long> &a)
 	return max;
 }
 /*
-* This can be solved in O(nlogn) with greedy algo. Sort all the end points, then iterate through all the end points using a simple array of size 2
-* to keep track of the intervals that are still open(haven't met their closing point yet). Whenever the opening intervals reached 3,
-* just remove the interval that spans the furtherst.
-1 2
-2 3
-2 4
-[[1,2], [2,3],[2,4]] : 2
-["1-2", "2-3", "2-4"]
-
-1: "1-2"
-2: "1-2", "2-3", "2-4" <- Discard one of them
-3: "2-3", "2-4"
-4: "2-4"
-
-1 10
-1 3
-4 6
-7 10
-[[1, 3], [1,10]] [4,6] [7,10] : 4
-["1-3", "1-10", "7-10"]
-["4-6"]
-1: "1-3", "1-10": 2
-3: "1-3", "1-10": 2
-4: "4-6", "1-10": 2
-6: "4-6", "1-10": 2
-7: "7-10", "1-10": 2
-10: "1-10", "7-10": 2
-
-1 10
-1 3
-3 6
-7 10
-1 - 10: Includes 1-3, 3-6, 7-10
-[[1,10], [1,3], [3,6]] [7,10] : 3
-[[1,10], [1,3], [3,6]] : 3 intervals share point 3.
-"1-3", "3-6", "1-10", "7-10"
-
-1: "1-3", "1-10": 2
-3: "1-3", "3-6", "1-10": <- Discard one of them
-6: "3-6", "1-10": 2
-7: "7-10", "1-10": 2
-10: "7-10", "1-10": 2
-*/
-#if 0
-size_t IntervalSelection(vector<vector<size_t>> &intervals)
+ * https://www.hackerrank.com/challenges/time-conversion/problem
+ * 100%
+ */
+string TwentyFourHourTimeConversion(string &s)
 {
-	ranges::sort(intervals, [](const vector<size_t> &a, const vector<size_t> &b)
-				 { return a[1] < b[1]; });
-	/*
-	 * 1 2
-	 * 2 3
-	 * 2 4 (throw)
-	 *
-	 * 1 3
-	 * 4 6
-	 * 1 10
-	 * 7 10 (throw)
-	 *
-	 * 1 3
-	 * 3 6
-	 * 1 10
-	 * 7 10 (throw)
-	 */
-	vector<size_t> open(2);
-	open[0] = intervals[0][1];
-	for (vector<vector<size_t>>::iterator it = intervals.begin(); it != intervals.end(); it++)
+	bool am = true;
+	size_t apm = s.find("AM");
+	if (apm == string::npos)
 	{
-		size_t first = (*it)[0], second = (*it)[1];
-		if (first > open)
+		am = false;
+		apm = s.find("PM");
 	}
-}
-#endif
-#if 0
-size_t IntervalSelection(vector<vector<size_t>> &intervals)
-{
-	map<size_t, set<string>> intervalCounts;
-	set<string> discards;
-	ostringstream oss;
-	for (vector<vector<size_t>>::iterator it = intervals.begin(); it != intervals.end(); it++)
+	int hour; // 12:00:00 AM - 11:59:59 AM => 00:00:00 - 11:59:59
+	istringstream(s.substr(0, 2)) >> hour;
+	int min;
+	istringstream(s.substr(3, 2)) >> min;
+	int sec;
+	istringstream(s.substr(6, 2)) >> sec;
+	if (am)
 	{
-		size_t first = (*it)[0], second = (*it)[1];
-		oss.str("");
-		oss << to_string(first) << "-" << to_string(second);
-		string strInterval = oss.str();
-		if (discards.find(oss.str()) == discards.end())
+		if (hour == 12)
 		{
-			pair<typename map<size_t, set<string>>::iterator, bool> result = intervalCounts.emplace(first, set<string>{oss.str()});
-			if (!result.second)
-			{
-				if (result.first->second.size() < 2 && discards.find(oss.str()) == discards.end())
-					result.first->second.emplace(oss.str());
-				else if (result.first->second.size() >= 2)
-					discards.insert(oss.str());
-			}
+			ostringstream oss;
+			oss << setfill('0') << setw(2) << hour - 12 << ":" << setfill('0') << setw(2) << min << ":" << setfill('0') << setw(2) << sec;
+			return oss.str();
 		}
-		if (discards.find(oss.str()) == discards.end())
-		{
-			pair<typename map<size_t, set<string>>::iterator, bool> result = intervalCounts.emplace(second, set<string>{oss.str()});
-			if (!result.second)
-			{
-				if (result.first->second.size() < 2 && discards.find(oss.str()) == discards.end())
-					result.first->second.emplace(oss.str());
-				else if (result.first->second.size() >= 2)
-					discards.insert(oss.str());
-			}
-		}
-		for (typename map<size_t, set<string>>::iterator it = intervalCounts.begin(); it != intervalCounts.end(); it++)
-			if (it->first >= first && it->first <= second && it->second.size() < 2 && discards.find(oss.str()) == discards.end())
-				it->second.emplace(oss.str());
-	}
-	set<string> results;
-	for (typename map<size_t, set<string>>::iterator it = intervalCounts.begin(); it != intervalCounts.end(); it++)
-	{
-		for (typename set<string>::iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
-		{
-			if (discards.find(*it1) == discards.end())
-				results.insert(*it1);
-		}
-	}
-	return results.size();
-}
-size_t IntervalSelection(vector<vector<size_t>> &intervals)
-{
-	map<size_t, set<string>> intervalCounts;
-	set<string> discards;
-	// IntervalMap<size_t, string> imap;
-	ostringstream oss;
-	for (vector<vector<size_t>>::iterator it = intervals.begin(); it != intervals.end(); it++)
-	{
-		size_t first = (*it)[0], second = (*it)[1];
-		oss.str("");
-		oss << to_string(first) << "-" << to_string(second);
-		// counts[first]++;
-		// counts[second]++;
-		pair<typename map<size_t, set<string>>::iterator, bool> result = intervalCounts.emplace(first, set<string>{oss.str()});
-		if (!result.second)
-		{
-			if (result.first->second.size() < 2 && discards.find(oss.str()) == discards.end())
-				result.first->second.emplace(oss.str());
-			else if (result.first->second.size() > 2)
-				discards.insert(oss.str());
-		}
-		result = intervalCounts.emplace(second, set<string>{oss.str()});
-		if (!result.second)
-		{
-			if (result.first->second.size() < 2 && discards.find(oss.str()) == discards.end())
-				result.first->second.emplace(oss.str());
-			else if (result.first->second.size() > 2)
-				discards.insert(oss.str());
-		}
-		for (typename map<size_t, set<string>>::iterator it = intervalCounts.begin(); it != intervalCounts.end(); it++)
-			if (it->first >= first && it->first <= second && it->second.size() < 2 && discards.find(oss.str()) == discards.end())
-				it->second.emplace(oss.str());
-#if 0
-		if (imap[first].empty() && imap[second].empty())
-		{
-			oss.str("");
-			oss << to_string(first) << "-" << to_string(second);
-			imap.emplace(first, second + 1, oss.str());
-		}
-		else if (imap[first].empty() && !imap[second].empty())
-		{
-			oss.str("");
-			oss << imap[first] << "-" << to_string(second);
-			imap.emplace(first, second + 1, oss.str());
-		}
-		else if (!imap[first].empty() && imap[second].empty())
-		{
-			oss.str("");
-			oss << to_string(first) << "-" << imap[second];
-			imap.emplace(first, second + 1, oss.str());
-		}
-		else if (imap[first] != oss.str() || imap[second] != oss.str())
-			imap.emplace(first, second + 1, oss.str());
 		else
-			strIntervals.emplace(oss.str());
-#endif
-	}
-	set<string> results;
-	for (typename map<size_t, set<string>>::iterator it = intervalCounts.begin(); it != intervalCounts.end(); it++)
-	{
-		for (typename set<string>::iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 		{
-			if (discards.find(*it1) == discards.end())
-				results.insert(*it1);
+			ostringstream oss;
+			oss << setfill('0') << setw(2) << hour << ":" << setfill('0') << setw(2) << min << ":" << setfill('0') << setw(2) << sec;
+			return oss.str();
 		}
 	}
-	return results.size();
-#if 0
-	size_t duplicates = ranges::count_if(counts, [](pair<size_t, size_t> const &p)
-										 { return p.second > 1; });
-	set<string> values = imap.UniqueValues();
-	for (set<string>::const_iterator it = strIntervals.begin(); it != strIntervals.end(); it++)
-	{
+	else
+	{ // pm
+		if (hour == 12)
+		{
+			ostringstream oss;
+			oss << setfill('0') << setw(2) << hour << ":" << setfill('0') << setw(2) << min << ":" << setfill('0') << setw(2) << sec;
+			return oss.str();
+		}
+		else
+		{
+			ostringstream oss;
+			oss << setfill('0') << setw(2) << hour + 12 << ":" << setfill('0') << setw(2) << min << ":" << setfill('0') << setw(2) << sec;
+			return oss.str();
+		}
 	}
-	return imap.size() - 1;
-#endif
 }
-#endif
