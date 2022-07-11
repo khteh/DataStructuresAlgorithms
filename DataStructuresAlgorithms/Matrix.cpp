@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Matrix.h"
 template class Matrix<long>;
-template<typename T>
+template <typename T>
 Matrix<T>::Matrix() {}
 /*
 * Matrix area sum using bottom-up dynamic programming
@@ -42,8 +42,8 @@ Matrix<T>::Matrix(vector<vector<T>> &matrix)
 // -1  0 -1
 // -1 -1 -1
 // -1 -1 -1
-template<typename T>
-void Matrix<T>::MatrixDistance(vector<vector<T>>& data, size_t x, size_t y)
+template <typename T>
+void Matrix<T>::MatrixDistance(vector<vector<T>> &data, size_t x, size_t y)
 {
 	if (x < data.size() && y < data[0].size())
 	{
@@ -61,8 +61,8 @@ void Matrix<T>::MatrixDistance(vector<vector<T>>& data, size_t x, size_t y)
 		}
 	}
 }
-template<typename T>
-void Matrix<T>::MatrixSort(vector<vector<T>>& data)
+template <typename T>
+void Matrix<T>::MatrixSort(vector<vector<T>> &data)
 {
 	Sort<T> sort;
 	vector<T> sorted;
@@ -75,8 +75,8 @@ void Matrix<T>::MatrixSort(vector<vector<T>>& data)
 		for (size_t j = 0; j < data[i].size(); j++)
 			data[j][i] = sorted[k++];
 }
-template<typename T>
-void Matrix<T>::MatrixSortWithHeap(vector<vector<T>>& data)
+template <typename T>
+void Matrix<T>::MatrixSortWithHeap(vector<vector<T>> &data)
 {
 	Heap<T> heap;
 	for (size_t i = 0; i < data.size(); i++)
@@ -90,8 +90,8 @@ void Matrix<T>::MatrixSortWithHeap(vector<vector<T>>& data)
 }
 // You are given a matrix. Elements in matrix can be either 0 or 1. Each row and column of matrix is sorted in ascending order.
 // Find number of '0's in the given matrix. Expected complexity is O(log(N)).
-template<typename T>
-T Matrix<T>::MatrixPatternCount(vector<vector<T>>& data)
+template <typename T>
+T Matrix<T>::MatrixPatternCount(vector<vector<T>> &data)
 {
 	T i = data.size() - 1, j = data[0].size() - 1;
 	T count = T();
@@ -113,6 +113,23 @@ T Matrix<T>::MatrixPatternCount(vector<vector<T>>& data)
 				count++;
 	return count;
 }
+/*
+* Matrix area sum using bottom-up dynamic programming
+* 	0	1	2	3
+0	2	0	-3	4
+1	6	3	2	-1
+2	5	4	7	3
+3	2	-6	8	1
+
+	0	1	2	3
+0	2	2	-1	3
+1	8	11	10	13
+2	13	20	26	32
+3	15	16	30	37
+
+[1,1] - [3,2]			30 - (-1) - 15 + 2 = 31 - 15 + 2 = 31 - 13 = 18
+[0,2] - [3,3]			37 - (16) = 21
+*/
 template <typename T>
 T Matrix<T>::Sum(vector<vector<size_t>> &area)
 {
@@ -152,8 +169,8 @@ T Matrix<T>::LargestSumSubmatrix(vector<vector<size_t>> &matrix)
 /* https://leetcode.com/problems/search-a-2d-matrix/
  * 100%
  */
-template<typename T>
-bool Matrix<T>::SearchMatrix(vector<vector<T>>& matrix, T target)
+template <typename T>
+bool Matrix<T>::SearchMatrix(vector<vector<T>> &matrix, T target)
 {
 	if (matrix.empty())
 		return false;
@@ -208,8 +225,8 @@ bool Matrix<T>::SearchMatrix(vector<vector<T>>& matrix, T target)
 	}
 	return false;
 }
-template<typename T>
-bool Matrix<T>::SearchMatrixRow(vector<vector<T>>& matrix, T target, size_t row, T start, T end)
+template <typename T>
+bool Matrix<T>::SearchMatrixRow(vector<vector<T>> &matrix, T target, size_t row, T start, T end)
 {
 	if (start >= 0 && end < (long)matrix[row].size() && start <= end)
 	{
@@ -225,8 +242,8 @@ bool Matrix<T>::SearchMatrixRow(vector<vector<T>>& matrix, T target, size_t row,
 	}
 	return false;
 }
-template<typename T>
-bool Matrix<T>::SearchMatrixCol(vector<vector<T>>& matrix, T target, size_t col, T start, T end)
+template <typename T>
+bool Matrix<T>::SearchMatrixCol(vector<vector<T>> &matrix, T target, size_t col, T start, T end)
 {
 	if (start >= 0 && end < (long)matrix.size() && start <= end)
 	{
@@ -245,8 +262,8 @@ bool Matrix<T>::SearchMatrixCol(vector<vector<T>>& matrix, T target, size_t col,
 /* https://leetcode.com/problems/spiral-matrix/
  * 100%
  */
-template<typename T>
-vector<T> Matrix<T>::MatrixSprialOrder(vector<vector<T>>& matrix)
+template <typename T>
+vector<T> Matrix<T>::MatrixSprialOrder(vector<vector<T>> &matrix)
 {
 	vector<long> result;
 	int row = 0, col = 0;
@@ -301,8 +318,8 @@ vector<T> Matrix<T>::MatrixSprialOrder(vector<vector<T>>& matrix)
  * 4   5 6      [4] 5  2
  * [7] 8 3      9   6  3
  */
-template<typename T>
-void Matrix<T>::RotateMatrix90DegressClockwise(vector<vector<T>>& matrix)
+template <typename T>
+void Matrix<T>::RotateMatrix90DegressClockwise(vector<vector<T>> &matrix)
 {
 	for (long i = 0, j = matrix.size() - 1; i < j; i++, j--)
 	{
@@ -334,8 +351,8 @@ r1: 2 4 3 1
 r2: 4 3 1 2
 r3: 3 1 2 4
  */
-template<typename T>
-void Matrix<T>::RotateMatrixRTimesAntiClockwise(vector<vector<T>>& matrix, size_t rotation)
+template <typename T>
+void Matrix<T>::RotateMatrixRTimesAntiClockwise(vector<vector<T>> &matrix, size_t rotation)
 {
 	if (!matrix.empty())
 	{
@@ -378,8 +395,8 @@ void Matrix<T>::RotateMatrixRTimesAntiClockwise(vector<vector<T>>& matrix, size_
 /* https://leetcode.com/problems/search-a-2d-matrix-ii/
  * 100%
  */
-template<typename T>
-bool Matrix<T>::SearchMatrix1(vector<vector<T>>& matrix, T target)
+template <typename T>
+bool Matrix<T>::SearchMatrix1(vector<vector<T>> &matrix, T target)
 {
 	if (matrix.empty())
 		return false;
