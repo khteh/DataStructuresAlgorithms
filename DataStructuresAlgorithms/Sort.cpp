@@ -5,8 +5,8 @@ template class Sort<long>;
 template class Sort<string>;
 template class Sort<float>;
 template class Sort<double>;
-template<typename T>
-void Sort<T>::BubbleSort(vector<T>& data)
+template <typename T>
+void Sort<T>::BubbleSort(vector<T> &data)
 {
 	T tmp = T();
 	for (size_t lastIndex = data.size() - 1; lastIndex >= 1; lastIndex--)
@@ -31,8 +31,8 @@ void Sort<T>::BubbleSort(vector<T>& data)
  * ln(N) = 3 => 2^3 = 8
  * So, 2^lg(N) = N
  */
-template<typename T>
-void Sort<T>::QuickSort(vector<T>& data, long left, long right)
+template <typename T>
+void Sort<T>::QuickSort(vector<T> &data, long left, long right)
 {
 	size_t pivot;
 	if (left >= 0 && right < (long)data.size() && left < right)
@@ -71,8 +71,8 @@ void Sort<T>::QuickSort(vector<T>& data, long left, long right)
  *		newPivot: 2
  * => [0,1,2,3]
  */
-template<typename T>
-size_t Sort<T>::Partition(vector<T>& data, size_t left, size_t right, size_t pivot)
+template <typename T>
+size_t Sort<T>::Partition(vector<T> &data, size_t left, size_t right, size_t pivot)
 {
 	size_t newPivot = left; // This is used to find the final location for the pivot value
 	T pivotValue = data[pivot];
@@ -92,8 +92,8 @@ size_t Sort<T>::Partition(vector<T>& data, size_t left, size_t right, size_t piv
 // Find the smallest element using a linear scan and move it to the front.
 // Then, find the second smallest and move it, again doing a linear scan.
 // Continue doing this until all the elements are in place. O(n^2).
-template<typename T>
-void Sort<T>::SelectionSort(vector<T>& data)
+template <typename T>
+void Sort<T>::SelectionSort(vector<T> &data)
 {
 	size_t min = 0;
 	for (size_t i = 0; i < data.size(); i++)
@@ -108,17 +108,16 @@ void Sort<T>::SelectionSort(vector<T>& data)
 			swap(data[min], data[i]);
 	}
 }
-template<typename T>
-void Sort<T>::InsertionSort(vector<T>& data)
+template <typename T>
+void Sort<T>::InsertionSort(vector<T> &data)
 {
-	if (data.size() > 1)
-		for (size_t i = 1; i < data.size(); i++)
-			for (long j = i; j > 0 && data[j] < data[j - 1]; j--)
-				swap(data[j], data[j - 1]);
+	for (size_t i = 1; i < data.size(); i++)
+		for (long j = i; j > 0 && data[j] < data[j - 1]; j--)
+			swap(data[j], data[j - 1]);
 }
 // https://en.wikipedia.org/wiki/Heapsort
-template<typename T>
-void Sort<T>::HeapSort(vector<T>& data)
+template <typename T>
+void Sort<T>::HeapSort(vector<T> &data)
 {
 	Heap<T> heap(data, HeapType::MaxHeap);
 	assert(heap.Count() == data.size());
@@ -130,8 +129,8 @@ void Sort<T>::HeapSort(vector<T>& data)
 }
 // https://en.wikipedia.org/wiki/Counting_sort
 // each of which has a non-negative integer key whose maximum value is at most k
-template<typename T>
-void Sort<T>::CountingSort(vector<T>& data) requires arithmetic_type<T>
+template <typename T>
+void Sort<T>::CountingSort(vector<T> &data) requires arithmetic_type<T>
 {
 	vector<T> input(data);
 	T min = numeric_limits<T>::max(), max = 0;
@@ -155,8 +154,8 @@ void Sort<T>::CountingSort(vector<T>& data) requires arithmetic_type<T>
 		counts[*it]--;
 	}
 }
-template<typename T>
-string Sort<T>::StringCountingSort(vector<vector<string>>& data)
+template <typename T>
+string Sort<T>::StringCountingSort(vector<vector<string>> &data)
 {
 	vector<string> result;
 	long min = numeric_limits<size_t>::max(), max = 0;
@@ -200,8 +199,8 @@ string Sort<T>::StringCountingSort(vector<vector<string>>& data)
 	}
 	return oss.str();
 }
-template<typename T>
-void Sort<T>::Merge(vector<T>& source, vector<T>& dest, size_t start, size_t middle, size_t end)
+template <typename T>
+void Sort<T>::Merge(vector<T> &source, vector<T> &dest, size_t start, size_t middle, size_t end)
 {
 	size_t left = start;
 	size_t right = middle;
@@ -250,8 +249,8 @@ void Sort<T>::Merge(vector<T>& source, vector<T>& dest, size_t start, size_t mid
  * #nodes = (C^L - 1) / (C - 1) = 2^lg(N) = N
  * TC = N*lg((N)
  */
-template<typename T>
-void Sort<T>::TopDownMergeSort(vector<T>& A /* A */, vector<T>& B /* B */, size_t start, size_t end)
+template <typename T>
+void Sort<T>::TopDownMergeSort(vector<T> &A /* A */, vector<T> &B /* B */, size_t start, size_t end)
 {
 	if (end - start > 1)
 	{ // If run size == 1, consider it sorted
@@ -286,8 +285,8 @@ void Sort<T>::TopDownMergeSort(vector<T>& A /* A */, vector<T>& B /* B */, size_
  *			[0,1,2,3] Inversion between index 2 & 3
  * O(lg(N) * N) = O(N * lg(N))
  */
-template<typename T>
-void Sort<T>::BottomUpMergeSort(vector<T>& A, vector<T>& B)
+template <typename T>
+void Sort<T>::BottomUpMergeSort(vector<T> &A, vector<T> &B)
 {
 	size_t n = A.size();
 	// Each 1-element run in data is already "sorted".
@@ -334,8 +333,8 @@ void Sort<T>::BottomUpMergeSort(vector<T>& A, vector<T>& B)
  * 		  i  M      j
  * 5 8 5 7 3 6 2 5 1
  */
-template<typename T>
-void Sort<T>::WiggleSort(vector<T>& data)
+template <typename T>
+void Sort<T>::WiggleSort(vector<T> &data)
 {
 	ranges::sort(data);
 	vector<T> result;
@@ -354,8 +353,8 @@ void Sort<T>::WiggleSort(vector<T>& data)
 }
 // https://www.hackerrank.com/challenges/ctci-merge-sort/problem
 // 100%
-template<typename T>
-size_t Sort<T>::TopDownMergeSortCountConversions(vector<T>& B, vector<T>& A, size_t start, size_t end)
+template <typename T>
+size_t Sort<T>::TopDownMergeSortCountConversions(vector<T> &B, vector<T> &A, size_t start, size_t end)
 {
 	size_t inversions = 0;
 	if (end - start > 1)
@@ -369,8 +368,8 @@ size_t Sort<T>::TopDownMergeSortCountConversions(vector<T>& B, vector<T>& A, siz
 	}
 	return inversions;
 }
-template<typename T>
-size_t Sort<T>::MergeCountInversions(vector<T>& source, vector<T>& dest, size_t start, size_t middle, size_t end)
+template <typename T>
+size_t Sort<T>::MergeCountInversions(vector<T> &source, vector<T> &dest, size_t start, size_t middle, size_t end)
 {
 	size_t inversions = 0;
 	size_t left = start;
@@ -389,20 +388,20 @@ size_t Sort<T>::MergeCountInversions(vector<T>& source, vector<T>& dest, size_t 
 		}
 	}
 	return inversions;
-}/*
-   Count the minimum number of swaps needed to sort the data in either ascending or descending order
-data:         2 5 3 1
-sorted index: 1 3 2 0 <= 3 links (0:1 - 1:3 - 3:0) 2 swaps
+} /*
+	Count the minimum number of swaps needed to sort the data in either ascending or descending order
+ data:         2 5 3 1
+ sorted index: 1 3 2 0 <= 3 links (0:1 - 1:3 - 3:0) 2 swaps
 
-#index link #swaps
-	2		1
-	3		2
-	4		3
-	5		4
-Not optimized for big data input
-*/
-template<typename T>
-size_t Sort<T>::SortSwapCount(vector<T>& data)
+ #index link #swaps
+	 2		1
+	 3		2
+	 4		3
+	 5		4
+ Not optimized for big data input
+ */
+template <typename T>
+size_t Sort<T>::SortSwapCount(vector<T> &data)
 {
 	size_t result = 0, resultDescend = 0;
 	set<size_t> visited, visitedDescend;
@@ -448,8 +447,8 @@ size_t Sort<T>::SortSwapCount(vector<T>& data)
  * Use Kahn's algorithm
  * 100%
  */
-template<typename T>
-bool Sort<T>::CanFinishCourseTopologicalSort(size_t numCourses, vector<vector<T>>& courses, vector<T>& sequence) // First element depends on second element in each row
+template <typename T>
+bool Sort<T>::CanFinishCourseTopologicalSort(size_t numCourses, vector<vector<T>> &courses, vector<T> &sequence) // First element depends on second element in each row
 {
 	map<T, size_t> dependencies;
 	map<T, vector<T>> edges; // Key: Independent; Value: Dependent
@@ -464,7 +463,7 @@ bool Sort<T>::CanFinishCourseTopologicalSort(size_t numCourses, vector<vector<T>
 	}
 	assert(uniqueCourses.size() == numCourses);
 	queue<T> independentNodes; // Set of all nodes with no incoming edge
-	//for (size_t i = 0; i < numCourses; i++)
+	// for (size_t i = 0; i < numCourses; i++)
 	for (typename set<T>::iterator it = uniqueCourses.begin(); it != uniqueCourses.end(); it++)
 		if (dependencies.find(*it) == dependencies.end())
 			independentNodes.push(*it);
@@ -485,8 +484,8 @@ bool Sort<T>::CanFinishCourseTopologicalSort(size_t numCourses, vector<vector<T>
 }
 // Sort numbers into consecutive positive/negative numbers
 // http://www.careercup.com/question?id=5183920823861248
-template<typename T>
-void Sort<T>::SortNumbers(vector<T>& data) requires arithmetic_type<T>
+template <typename T>
+void Sort<T>::SortNumbers(vector<T> &data) requires arithmetic_type<T>
 {
 	size_t j;
 	T tmp = T();
@@ -518,11 +517,11 @@ void Sort<T>::SortNumbers(vector<T>& data) requires arithmetic_type<T>
 		}
 	}
 }
-template<typename T>
+template <typename T>
 bool Sort<T>::LexicographicSort(string s1, string s2)
 {
 	size_t i, j;
-	map<string, size_t> order = { {"a", 0}, {"b", 1}, {"c", 2}, {"ch", 3}, {"cz", 4}, {"d", 5}, {"e", 6}, {"f", 7}, {"g", 8}, {"h", 9}, {"i", 10}, {"j", 11}, {"k", 12}, {"l", 13}, {"m", 14}, {"n", 15}, {"o", 16}, {"p", 17}, {"q", 18}, {"r", 18}, {"s", 19}, {"t", 20}, {"u", 21}, {"v", 22}, {"w", 23}, {"x", 24}, {"y", 24}, {"z", 25} };
+	map<string, size_t> order = {{"a", 0}, {"b", 1}, {"c", 2}, {"ch", 3}, {"cz", 4}, {"d", 5}, {"e", 6}, {"f", 7}, {"g", 8}, {"h", 9}, {"i", 10}, {"j", 11}, {"k", 12}, {"l", 13}, {"m", 14}, {"n", 15}, {"o", 16}, {"p", 17}, {"q", 18}, {"r", 18}, {"s", 19}, {"t", 20}, {"u", 21}, {"v", 22}, {"w", 23}, {"x", 24}, {"y", 24}, {"z", 25}};
 	map<string, size_t>::iterator s1It = order.end(), s2It = order.end();
 	ranges::transform(s1, s1.begin(), ::tolower);
 	ranges::transform(s2, s2.begin(), ::tolower);
