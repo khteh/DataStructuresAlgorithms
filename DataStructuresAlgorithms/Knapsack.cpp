@@ -277,8 +277,8 @@ set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> &numb
 						{
 							tmp1.push_back(*number);
 							ranges::sort(tmp1);
-							size_t cnt = count(tmp1.begin(), tmp1.end(), *number);
-							size_t cnt1 = count(numbers.begin(), numbers.end(), *number);
+							size_t cnt = ranges::count(tmp1, *number);
+							size_t cnt1 = ranges::count(numbers, *number);
 							if (cnt <= cnt1) // The result must not contain more than the input as this is *Bounded* knapsack.
 								combinations.insert(tmp1);
 						}
