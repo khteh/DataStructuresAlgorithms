@@ -281,15 +281,15 @@ TEST(GraphTests, EvenForestTest)
 	Graph<size_t, size_t> graph;
 	vector<vector<size_t>> edges;
 	edges = {{1, 2}, {1, 3}, {3, 4}};
-	ASSERT_EQ(1, evenForest(4, edges));
+	ASSERT_EQ(1, EvenForest(4, edges));
 	edges.clear();
 	data.clear();
 	edges = {{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 1}, {7, 2}, {8, 6}, {9, 8}, {10, 8}};
-	ASSERT_EQ(2, evenForest(10, edges));
+	ASSERT_EQ(2, EvenForest(10, edges));
 	edges.clear();
 	data.clear();
 	edges = {{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 5}, {7, 1}, {8, 1}, {9, 2}, {10, 7}, {11, 10}, {12, 3}, {13, 7}, {14, 8}, {15, 12}, {16, 6}, {17, 6}, {18, 10}, {19, 1}, {20, 8}};
-	ASSERT_EQ(4, evenForest(20, edges));
+	ASSERT_EQ(4, EvenForest(20, edges));
 }
 TEST(GraphTests, PrimMinimumSpanningTreeTest)
 {
