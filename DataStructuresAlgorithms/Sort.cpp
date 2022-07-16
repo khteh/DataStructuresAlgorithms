@@ -112,7 +112,7 @@ template <typename T>
 void Sort<T>::InsertionSort(vector<T> &data)
 {
 	for (size_t i = 1; i < data.size(); i++)
-		for (long j = i; j > 0 && data[j] < data[j - 1]; j--)
+		for (size_t j = i; j > 0 && data[j] < data[j - 1]; j--)
 			swap(data[j], data[j - 1]);
 }
 // https://en.wikipedia.org/wiki/Heapsort
