@@ -1,8 +1,10 @@
 #include "pch.h"
 using namespace std;
-TEST(GraphTests, BredthFirstSearchTest) {
+TEST(GraphTests, BredthFirstSearchTest)
+{
 	vector<size_t> data(5);
-	ranges::generate(data, [n = 1]() mutable { return n++; });
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
 	Graph<size_t, size_t> graph(data);
 	ASSERT_EQ(data.size(), graph.Count());
 	shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(1);
@@ -76,28 +78,30 @@ TEST(GraphTests, BredthFirstSearchTest) {
 		}
 		cout << endl;
 	}
-	vector<vector<size_t>> edges2 = { {1, 2}, {1, 3}, {3, 4} };
-	vector<long> expectedDistances = { 6, 6, 12, -1 };
+	vector<vector<size_t>> edges2 = {{1, 2}, {1, 3}, {3, 4}};
+	vector<long> expectedDistances = {6, 6, 12, -1};
 	vector<long> distances = bfs(5, 3, edges2, 1);
 	ASSERT_EQ(expectedDistances, distances);
 	edges2.clear();
 	expectedDistances.clear();
 	distances.clear();
-	edges2 = { {1, 2}, {1, 3} };
-	expectedDistances = { 6, 6, -1 };
+	edges2 = {{1, 2}, {1, 3}};
+	expectedDistances = {6, 6, -1};
 	distances = bfs(4, 3, edges2, 1);
 	ASSERT_EQ(expectedDistances, distances);
 	edges2.clear();
 	expectedDistances.clear();
 	distances.clear();
-	edges2 = { {2, 3} };
-	expectedDistances = { -1, 6 };
+	edges2 = {{2, 3}};
+	expectedDistances = {-1, 6};
 	distances = bfs(3, 1, edges2, 2);
 	ASSERT_EQ(expectedDistances, distances);
 }
-TEST(GraphTests, DijkstraTest) {
+TEST(GraphTests, DijkstraTest)
+{
 	vector<size_t> data(5);
-	ranges::generate(data, [n = 1]() mutable { return n++; });
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
 	Graph<size_t, size_t> graph(data);
 	ASSERT_EQ(data.size(), graph.Count());
 	shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(1);
@@ -181,13 +185,18 @@ TEST(GraphTests, DijkstraTest) {
 	ASSERT_EQ(3, graph.Dijkstra(4, 1)); // 1 + 2
 	ASSERT_EQ(4, graph.Dijkstra(3, 4)); // 2 + 2
 	ASSERT_EQ(4, graph.Dijkstra(4, 3)); // 2 + 2
+	vector<vector<size_t>> ugrid = {{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}};
+	data.clear();
+	data = {24, 3, 15};
+	ASSERT_EQ(data, ShortestPaths(4, ugrid, 1));
 }
-TEST(GraphTests, MinSubGraphsDifferenceTest) {
-	vector<size_t> data = { 10, 5, 11 };
+TEST(GraphTests, MinSubGraphsDifferenceTest)
+{
+	vector<size_t> data = {10, 5, 11};
 	Graph<size_t, size_t> graph(data);
 	map<shared_ptr<Vertex<size_t, size_t>>, long> costs;
 	ASSERT_EQ(data.size(), graph.Count());
-	vector<vector<size_t>> edges = { {1, 2}, {1, 3} }; // Use tag. Not value
+	vector<vector<size_t>> edges = {{1, 2}, {1, 3}}; // Use tag. Not value
 	/*
 			10
 		11		5
@@ -195,14 +204,14 @@ TEST(GraphTests, MinSubGraphsDifferenceTest) {
 	*/
 	ASSERT_EQ(4, MinSubGraphsDifference(data, edges));
 	data.clear();
-	data = { 10, 5, 6, 20 };
+	data = {10, 5, 6, 20};
 	/*
 			10
 		 5		6
 	  20
 	Diff: 21 - 20 = 1
 	*/
-	edges = { {1, 2}, {1, 3}, {2, 4} }; //{ {10,5}, {10,6}, {5,20} };
+	edges = {{1, 2}, {1, 3}, {2, 4}}; //{ {10,5}, {10,6}, {5,20} };
 	ASSERT_EQ(1, MinSubGraphsDifference(data, edges));
 	/*
 			10
@@ -211,94 +220,98 @@ TEST(GraphTests, MinSubGraphsDifferenceTest) {
 	Diff: 20 - 15 = 5
 	*/
 	data.clear();
-	data = { 10, 5, 20 };
-	edges = { {1, 2}, {2, 3} };
+	data = {10, 5, 20};
+	edges = {{1, 2}, {2, 3}};
 	ASSERT_EQ(5, MinSubGraphsDifference(data, edges));
 	cout << endl;
 	data.clear();
-	data = { 100, 200, 100, 100, 500, 600 };
-	edges = { {1, 2}, {2, 3}, {2, 4}, {4, 5}, {4, 6} };
+	data = {100, 200, 100, 100, 500, 600};
+	edges = {{1, 2}, {2, 3}, {2, 4}, {4, 5}, {4, 6}};
 	ASSERT_EQ(400, MinSubGraphsDifference(data, edges));
 	data.clear();
-	data = { 205, 573, 985, 242, 830, 514, 592, 263, 142, 915 };
-	edges = { {2, 8}, {10, 5}, {1, 7}, {6, 9}, {4, 3}, {8, 10}, {5, 1}, {7, 6}, {9, 4} };
+	data = {205, 573, 985, 242, 830, 514, 592, 263, 142, 915};
+	edges = {{2, 8}, {10, 5}, {1, 7}, {6, 9}, {4, 3}, {8, 10}, {5, 1}, {7, 6}, {9, 4}};
 	ASSERT_EQ(99, MinSubGraphsDifference(data, edges));
 }
-TEST(GraphTests, PostmanProblemTest) {
+TEST(GraphTests, PostmanProblemTest)
+{
 	vector<size_t> data;
 	Graph<size_t, size_t> graph;
 	vector<vector<size_t>> edges;
 	map<shared_ptr<Vertex<size_t, size_t>>, long> costs;
-	data = { 716, 365, 206, 641, 841, 585, 801, 645, 208, 924, 920, 286, 554, 832, 359, 836, 247, 959, 31, 322, 709, 860, 890, 195, 575, 905, 314, 41, 669, 549, 950, 736, 265, 507, 729, 457, 91, 529, 102, 650, 805, 373, 287, 710, 556, 645, 546, 154, 956, 928 };
-	edges = { {14, 25}, {25, 13}, {13, 20}, {20, 24}, {43, 2}, {2, 48}, {48, 42}, {42, 5}, {27, 18}, {18, 30}, {30, 7}, {7, 36}, {37, 9}, {9, 23}, {23, 49}, {49, 15}, {31, 26}, {26, 29}, {29, 50}, {50, 21}, {41, 45}, {45, 10}, {10, 17}, {17, 34}, {28, 47}, {47, 44}, {44, 11}, {11, 16}, {3, 8}, {8, 39}, {39, 38}, {38, 22}, {19, 32}, {32, 12}, {12, 40}, {40, 46}, {1, 35}, {35, 4}, {4, 33}, {33, 6}, {25, 2}, {2, 27}, {7, 37}, {15, 50}, {21, 10}, {17, 28}, {16, 39}, {38, 19}, {40, 1} };
+	data = {716, 365, 206, 641, 841, 585, 801, 645, 208, 924, 920, 286, 554, 832, 359, 836, 247, 959, 31, 322, 709, 860, 890, 195, 575, 905, 314, 41, 669, 549, 950, 736, 265, 507, 729, 457, 91, 529, 102, 650, 805, 373, 287, 710, 556, 645, 546, 154, 956, 928};
+	edges = {{14, 25}, {25, 13}, {13, 20}, {20, 24}, {43, 2}, {2, 48}, {48, 42}, {42, 5}, {27, 18}, {18, 30}, {30, 7}, {7, 36}, {37, 9}, {9, 23}, {23, 49}, {49, 15}, {31, 26}, {26, 29}, {29, 50}, {50, 21}, {41, 45}, {45, 10}, {10, 17}, {17, 34}, {28, 47}, {47, 44}, {44, 11}, {11, 16}, {3, 8}, {8, 39}, {39, 38}, {38, 22}, {19, 32}, {32, 12}, {12, 40}, {40, 46}, {1, 35}, {35, 4}, {4, 33}, {33, 6}, {25, 2}, {2, 27}, {7, 37}, {15, 50}, {21, 10}, {17, 28}, {16, 39}, {38, 19}, {40, 1}};
 	// size_t result = MinSubGraphsDifference(data, edges); Segmentation fault. Maybe due to recursion
 	// assert(result == 525); Fail but difficult to check due to the sheer number of data points.
 	vector<long> data1;
 	vector<vector<long>> edges1;
 	data1.clear();
-	data1 = { 1, 3, 4 };
-	edges1 = { {1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3} };
+	data1 = {1, 3, 4};
+	edges1 = {{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}};
 	ASSERT_EQ(6, PostmanProblem(data1, edges1));
 	data1.clear();
-	data1 = { 5, 11, 12, 15, 16 };
-	edges1 = { {17, 4, 3}, {11, 12, 5}, {14, 2, 1}, {16, 14, 4}, {7, 8, 4}, {13, 5, 5}, {17, 15, 2}, {5, 3, 5}, {8, 6, 1}, {18, 10, 4}, {18, 1, 3}, {16, 1, 2}, {9, 2, 5}, {11, 6, 1}, {4, 9, 4}, {7, 20, 2}, {13, 19, 3}, {19, 12, 3}, {10, 20, 2} };
+	data1 = {5, 11, 12, 15, 16};
+	edges1 = {{17, 4, 3}, {11, 12, 5}, {14, 2, 1}, {16, 14, 4}, {7, 8, 4}, {13, 5, 5}, {17, 15, 2}, {5, 3, 5}, {8, 6, 1}, {18, 10, 4}, {18, 1, 3}, {16, 1, 2}, {9, 2, 5}, {11, 6, 1}, {4, 9, 4}, {7, 20, 2}, {13, 19, 3}, {19, 12, 3}, {10, 20, 2}};
 	ASSERT_EQ(54, PostmanProblem(data1, edges1));
 }
-TEST(GraphTests, UnbeatenPathsTest) {
+TEST(GraphTests, UnbeatenPathsTest)
+{
 	vector<size_t> data;
 	Graph<size_t, size_t> graph;
 	vector<vector<size_t>> edges;
-	edges = { {1, 2}, {2, 3}, {1, 4} };
-	data = { 3, 1, 2 };
+	edges = {{1, 2}, {2, 3}, {1, 4}};
+	data = {3, 1, 2};
 	ASSERT_EQ(data, UnbeatenPaths(4, edges, 1));
 	edges.clear();
 	data.clear();
-	edges = { {1, 2}, {2, 3} };
-	data = { 2, 2, 1 };
+	edges = {{1, 2}, {2, 3}};
+	data = {2, 2, 1};
 	ASSERT_EQ(data, UnbeatenPaths(4, edges, 2));
 	edges.clear();
 	data.clear();
-	edges = { {1, 3}, {1, 4}, {1, 5}, {2, 4}, {2, 5}, {3, 5} };
-	data = { 1, 2, 3, 4 };
+	edges = {{1, 3}, {1, 4}, {1, 5}, {2, 4}, {2, 5}, {3, 5}};
+	data = {1, 2, 3, 4};
 	ASSERT_EQ(data, UnbeatenPaths(5, edges, 1));
 	edges.clear();
 	data.clear();
 }
-TEST(GraphTests, EvenForestTest) {
+TEST(GraphTests, EvenForestTest)
+{
 	vector<size_t> data;
 	Graph<size_t, size_t> graph;
 	vector<vector<size_t>> edges;
-	edges = { {1, 2}, {1, 3}, {3, 4} };
+	edges = {{1, 2}, {1, 3}, {3, 4}};
 	ASSERT_EQ(1, evenForest(4, edges));
 	edges.clear();
 	data.clear();
-	edges = { {2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 1}, {7, 2}, {8, 6}, {9, 8}, {10, 8} };
+	edges = {{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 1}, {7, 2}, {8, 6}, {9, 8}, {10, 8}};
 	ASSERT_EQ(2, evenForest(10, edges));
 	edges.clear();
 	data.clear();
-	edges = { {2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 5}, {7, 1}, {8, 1}, {9, 2}, {10, 7}, {11, 10}, {12, 3}, {13, 7}, {14, 8}, {15, 12}, {16, 6}, {17, 6}, {18, 10}, {19, 1}, {20, 8} };
+	edges = {{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 5}, {7, 1}, {8, 1}, {9, 2}, {10, 7}, {11, 10}, {12, 3}, {13, 7}, {14, 8}, {15, 12}, {16, 6}, {17, 6}, {18, 10}, {19, 1}, {20, 8}};
 	ASSERT_EQ(4, evenForest(20, edges));
 }
-TEST(GraphTests, PrimMinimumSpanningTreeTest) {
+TEST(GraphTests, PrimMinimumSpanningTreeTest)
+{
 	vector<vector<long>> grid;
-	grid = { {1, 2, 3}, {1, 3, 4}, {4, 2, 6}, {5, 2, 2}, {2, 3, 5}, {3, 5, 7} };
+	grid = {{1, 2, 3}, {1, 3, 4}, {4, 2, 6}, {5, 2, 2}, {2, 3, 5}, {3, 5, 7}};
 	ASSERT_EQ(15, PrimMinimumSpanningTree(5, grid, 1));
 	grid.clear();
-	grid = { {1, 2, 20}, {1, 3, 50}, {1, 4, 70}, {1, 5, 90}, {2, 3, 30}, {3, 4, 40}, {4, 5, 60} };
+	grid = {{1, 2, 20}, {1, 3, 50}, {1, 4, 70}, {1, 5, 90}, {2, 3, 30}, {3, 4, 40}, {4, 5, 60}};
 	ASSERT_EQ(150, PrimMinimumSpanningTree(5, grid, 2));
 	grid.clear();
-	grid = { {2, 1, 1000}, {3, 4, 299}, {2, 4, 200}, {2, 4, 100}, {3, 2, 300}, {3, 2, 6} };
+	grid = {{2, 1, 1000}, {3, 4, 299}, {2, 4, 200}, {2, 4, 100}, {3, 2, 300}, {3, 2, 6}};
 	ASSERT_EQ(1106, PrimMinimumSpanningTree(4, grid, 2));
 }
 TEST(GraphTests, KruskalTest)
 {
-	vector<long> from{ 1, 1, 4, 2, 3, 3 }, to{ 2, 3, 1, 4, 2, 4 }, weights{ 5, 3, 6, 7, 4, 5 };
+	vector<long> from{1, 1, 4, 2, 3, 3}, to{2, 3, 1, 4, 2, 4}, weights{5, 3, 6, 7, 4, 5};
 	ASSERT_EQ(12, kruskals(4, from, to, weights));
 	from.clear();
 	to.clear();
 	weights.clear();
-	from = { 1, 3, 4, 1, 3 };
-	to = { 2, 2, 3, 4, 1 };
-	weights = { 1, 150, 99, 100, 200 };
+	from = {1, 3, 4, 1, 3};
+	to = {2, 2, 3, 4, 1};
+	weights = {1, 150, 99, 100, 200};
 	ASSERT_EQ(200, kruskals(4, from, to, weights));
 }
