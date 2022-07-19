@@ -8705,8 +8705,20 @@ size_t kMarsh(vector<string> &grid)
  * https://en.wikipedia.org/wiki/Nim
  * Theorem. In a normal Nim game, the player making the first move has a winning strategy if and only if the nim-sum of the sizes of the heaps is not zero.
  * Otherwise, the second player has a winning strategy.
+ *
  * [1, 2, 1]: [1, 0, 1]->[0,0,1]
  * [2, 3]: [2, 2]->[1, 2]->[1,1]->[0,1]
+ *
+ * In normal play, the winning strategy is to finish every move with a nim-sum of 0. This is always possible if the nim-sum is not zero before the move.
+ * If the nim-sum is zero, then the next player will lose if the other player does not make a mistake. To find out which move to make,
+ * let X be the nim-sum of all the heap sizes. Find a heap where the nim-sum of X and heap-size is less than the heap-size;
+ * the winning strategy is to play in such a heap, reducing that heap to the nim-sum of its original size with X.
+ * In the example above, taking the nim-sum of the sizes is X = 3 ⊕ 4 ⊕ 5 = 2. The nim-sums of the heap sizes A=3, B=4, and C=5 with X=2 are
+ * A ⊕ X = 3 ⊕ 2 = 1 [Since (011) ⊕ (010) = 001 ]
+ * B ⊕ X = 4 ⊕ 2 = 6
+ * C ⊕ X = 5 ⊕ 2 = 7
+ * The only heap that is reduced is heap A, so the winning move is to reduce the size of heap A to 1 (by removing two objects).
+ *
  * 100%
  */
 size_t ChocolateInBox(vector<size_t> &data)
