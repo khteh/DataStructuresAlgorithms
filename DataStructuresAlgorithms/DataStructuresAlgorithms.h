@@ -422,4 +422,3 @@ size_t kMarsh(vector<string> &);
 size_t MatrixPerimeter(vector<vector<size_t>> &, vector<string> &);
 size_t ChocolateInBox(vector<size_t> &);
 vector<size_t> ShortestPaths(size_t, vector<vector<size_t>> &, size_t);
-void TestVerticesSetCustomComparer();
