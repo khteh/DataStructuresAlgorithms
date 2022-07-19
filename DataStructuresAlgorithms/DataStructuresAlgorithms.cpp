@@ -5411,38 +5411,6 @@ long kruskals(int nodes, vector<long> &from, vector<long> &to, vector<long> &wei
 	}
 	return sum;
 }
-/* https://www.hackerrank.com/challenges/primsmstsub/problem
-   https://en.wikipedia.org/wiki/Prim%27s_algorithm
-   https://www.geeksforgeeks.org/prims-algorithm-using-priority_queue-stl/
-   https://stackoverflow.com/questions/1195872/when-should-i-use-kruskal-as-opposed-to-prim-and-vice-versa
-   Use Prim's algorithm when you have a graph with lots of edges, i.e., if the number of edges to vertices is high.
-   Prim's algorithm is significantly faster in the limit when you've got a really dense graph with many more edges than vertices.
-   100%
-*/
-size_t PrimMinimumSpanningTree(size_t nodes, vector<vector<long>> &edges, long start)
-{
-	Graph<long, long> graph;
-	for (size_t i = 0; i < edges.size(); i++)
-	{
-		shared_ptr<Vertex<long, long>> v1 = graph.GetVertex(edges[i][0]);
-		shared_ptr<Vertex<long, long>> v2 = graph.GetVertex(edges[i][1]);
-		if (!v1)
-			v1 = make_shared<Vertex<long, long>>(edges[i][0]);
-		if (!v2)
-			v2 = make_shared<Vertex<long, long>>(edges[i][1]);
-		graph.AddUndirectedEdge(v1, v2, edges[i][2]);
-	}
-	shared_ptr<Vertex<long, long>> startVertex = graph.GetVertex(start);
-	assert(startVertex);
-	cout << __FUNCTION__ << " graph (" << nodes << " nodes):" << endl;
-	for (size_t i = 0; i < nodes; i++)
-	{
-		shared_ptr<Vertex<long, long>> v = graph.GetVertex(i + 1);
-		assert(v);
-		graph.Print(v);
-	}
-	return graph.PrimMinimumSpanningTree(startVertex);
-}
 /* https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
  * Timeout! for 2 test cases with 50000 nodes. 70 out of 80 points.
  */
@@ -7268,27 +7236,30 @@ vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sou
 	return result;
 }
 /*
- * https://www.hackerrank.com/challenges/even-tree/problem
- * 100%
+ * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
+ * Timeout! WIP
  */
-size_t evenForest(size_t nodeCount, vector<vector<size_t>> &edges, size_t start)
+vector<size_t> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t start)
 {
-	vector<size_t> data(nodeCount);
+	vector<size_t> data(n);
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; });
 	Graph<size_t, size_t> graph(data);
-	assert(graph.Count() == nodeCount);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 	{
 		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex((*it)[0]);
 		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex((*it)[1]);
 		assert(v1);
 		assert(v2);
-		graph.AddUndirectedEdge(v1, v2, 0);
+		graph.AddUndirectedEdge(v1, v2, (*it)[2]);
 	}
-	// The root of the graph is Node 1
-	size_t cuts = graph.EvenForest(start);
-	return cuts;
+	vector<size_t> result;
+	for (size_t i = 1; i <= n; i++)
+	{
+		if (i != start)
+			result.push_back(graph.Dijkstra(start, i));
+	}
+	return result;
 }
 /*
  * https://www.hackerrank.com/challenges/johnland/problem
@@ -8318,72 +8289,86 @@ long SteadyGene(string const &gene)
 	 * 'G': 2
 	 * 'C': 3
 	 * 'T': 2
-	 * i: 0, j: 0 -> A
-	 * 'A': 0, j: 1
+	 *
+	 * i: 0, j: 0 [A]CGTCCGT
+	 * 'A': 0 -> j: 1
 	 * 'G': 2
 	 * 'C': 3
 	 * 'T': 2
-	 * i: 0, j: 1 -> AC
+	 *
+	 * i: 0, j: 1 [AC]GTCCGT
 	 * 'A': 0
 	 * 'G': 2
-	 * 'C': 2, j: 2
+	 * 'C': 2 -> j: 2
 	 * 'T': 2
-	 * i: 0, j: 2 -> A
-	 * 'A': 1, i: 1 count: 2
+	 *
+	 * i: 0, j: 2 [ACG]TCCGT
+	 * 'A': 1 -> i: 1 count: 2
 	 * 'G': 2
 	 * 'C': 2
 	 * 'T': 2
-	 * i: 1, j: 2 -> AC
+	 *
+	 * i: 1, j: 2 A[CG]TCCGT => AAGTCCGT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 3, i: 2 count: 1
+	 * 'C': 3 -> i: 2 count: 1
 	 * 'T': 2
-	 * i: 2, j: 2 -> ACG
+	 *
+	 * i: 2, j: 2 AC[G]TCCGT
 	 * 'A': 1
-	 * 'G': 1, j: 3
+	 * 'G': 1 -> j: 3
 	 * 'C': 3
 	 * 'T': 2
-	 * i: 2, j: 3 -> ACGT
+	 *
+	 * i: 2, j: 3 AC[GT]CCGT
 	 * 'A': 1
 	 * 'G': 1
 	 * 'C': 3
-	 * 'T': 1, j: 4
-	 * i: 2, j: 4 -> ACGTC
+	 * 'T': 1 -> j: 4
+	 *
+	 * i: 2, j: 4 AC[GTC]CGT
 	 * 'A': 1
 	 * 'G': 1
-	 * 'C': 2, j: 5
+	 * 'C': 2 -> j: 5
 	 * 'T': 1
-	 * i: 2, j: 5 -> ACG
+	 *
+	 * i: 2, j: 5 AC[GTCC]GT
 	 * 'A': 1
-	 * 'G': 2, i: 3 count: 3
+	 * 'G': 2 -> i: 3 count: 3
 	 * 'C': 2
 	 * 'T': 1
-	 * i: 3, j: 5 -> ACGT
+	 *
+	 * i: 3, j: 5 ACG[TCC]GT
 	 * 'A': 1
 	 * 'G': 2
 	 * 'C': 2
-	 * 'T': 2, i: 4 count: 2
-	 * i: 4, j: 5 -> ACGTC
+	 * 'T': 2 -> i: 4 count: 2
+	 *
+	 * i: 4, j: 5 ACGT[CC]GT => ACGTACGT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 3, i: 5 count: 1
+	 * 'C': 3 -> i: 5 count: 1
 	 * 'T': 2
-	 * i: 5, j: 5 -> ACGTCCGT
+	 *
+	 * i: 5, j: 5 ACGTC[C]GT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 2, j: 6
+	 * 'C': 2 -> j: 6
 	 * 'T': 2
-	 * i: 5, j: 6 -> ACGTCC
+	 *
+	 * i: 5, j: 6 ACGTC[CG]T => ACGTCAGT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 3, i: 6 count: 1
+	 * 'C': 3 -> i: 6 count: 1
 	 * 'T': 2
-	 * i: 6, j: 6 -> ACGTCCG
+	 *
+	 * i: 6, j: 6 ACGTCC[G]T
 	 * 'A': 1
-	 * 'G': 1, j: 7
+	 * 'G': 1 -> j: 7
 	 * 'C': 3
 	 * 'T': 2
-	 * i: 6, j: 7 -> ACGTCCGT
+	 *
+	 * i: 6, j: 7 ACGTCC[GT]
 	 * 'A': 1
 	 * 'G': 1
 	 * 'C': 3
@@ -8469,4 +8454,279 @@ vector<long> KaprekarNumbers(long p, long q)
 			result.push_back(i);
 	}
 	return result;
+}
+/*
+ * ....
+ * ..x.
+ * ..x.
+ * x...
+ *
+* 	0	1	2	3
+0	.	.	.	.
+1	.	.	x	.
+2	.	.	x	.
+3	x	.	.	.
+
+	0	1	2	3
+0	1   2   3   4
+1	5   6   x   6
+2	7   8   x   8
+3	x   8   9  10
+
+ * ..x.
+ * ....
+ * ....
+ * x...
+
+* 	0	1	2	3
+0	.	.	x	.
+1	.	.	.	.
+2	.	.	.	.
+3	x	.	.	.
+
+* 	0	1	2	3
+0	1   2   x   0
+1	1   2   3   4
+2	5   6   7   8
+3	x   0   1   2
+
+ * ....
+ * ..x.
+ * ....
+ * x...
+ *
+* 	0	1	2	3
+0	.	.	.	.
+1	.	.	x	.
+2	.	.	.	.
+3	x	.	.	.
+
+* 	0	1	2	3
+0	1	2	3	4
+1	5	6	x	6
+2	7	8	8	9
+3	x	9	9	10
+
+*/
+size_t MatrixPerimeter(vector<vector<size_t>> &area, vector<string> &grid)
+{
+	if (grid.empty() || area.empty() || area.size() < 2 || area[0].size() < 2)
+		return 0;
+	size_t r1 = area[0][0], c1 = area[0][1], r2 = area[1][0], c2 = area[1][1];
+	if (r1 < 0 || c1 < 0 || r2 < 0 || c2 < 0 || r2 < r1 || c2 < c1 || r2 >= grid.size() || c2 >= grid[0].size())
+		return 0;
+	size_t width = c2 - c1 + 1;
+	string str1 = grid[r1].substr(c1, width);
+	string str2 = grid[r2].substr(c1, width);
+	if (str1.find("x") != string::npos || str2.find("x") != string::npos)
+		return 0;
+	size_t perimeter = 2 * width;
+	size_t y = r1 + 1;
+	for (; y < r2; y++)
+	{
+		if (grid[y][c1] == 'x')
+			return 0;
+	}
+	if (y == r2 && (y - (r1 + 1)) > 0)
+		perimeter += r2 - (r1 + 1);
+	y = r1 + 1;
+	for (; y < r2; y++)
+	{
+		if (grid[y][c2] == 'x')
+			return 0;
+	}
+	if (y == r2 && (y - (r1 + 1)) > 0)
+		perimeter += r2 - (r1 + 1);
+	return perimeter;
+}
+/*
+ * https://www.hackerrank.com/challenges/mr-k-marsh/problem
+					Down					Right
+ * ....			2  3  0 3				3  2  1 0
+ * ..x.			1  2 -1 2				1  0 -1 0
+ * ..x.			0  1 -1 1				1  0 -1 0
+ * x...			-1 0  0 0				-1 2  1 0
+ *
+ * ....			0  1  0 3				3  2  1 0
+ * x.x.			-1 0 -1 2				-1 0 -1 0
+ * .x..			0 -1  1 1				0 -1  1 0
+ * x...			-1 0  0 0				-1 2  1 0
+ *
+ * ....			2  0  1 3				3  2  1 0
+ * .x..			1 -1  0 2				0 -1  1 0
+ * .xx.			0 -1 -1 1				0 -1 -1 0
+ * x...			-1 0  0 0				-1 2  1 0
+
+ * .x			0 -1					0 -1
+ * x.			-1 0					-1 0
+ *
+ * ....			0  0  0 1				3   2  1 0
+ * xxx.        -1 -1 -1 0				-1 -1 -1 0
+ *
+ * .x			3 -1					0 -1
+ * .x			2 -1					0 -1
+ * .x			1 -1					0 -1
+ * ..			0  0					1  0
+ *
+ * ..x..
+ * .x.x.
+ * ..x..
+ *
+ * ...x...
+ * .x...x.
+ * ...x...
+ *
+ * xxxx
+ * x..x
+ * x..x
+ * xxxx
+ *
+ * ......
+ * .xxxx.
+ * .x..x.
+ * .x..x.
+ * .xxxx.
+ * ......
+ */
+#if 1
+/*
+ * WIP - wrong answers
+ */
+size_t kMarsh(vector<string> &grid)
+{
+	vector<vector<long>> right(grid.size(), vector<long>(grid[0].size())), down(right);
+	for (size_t i = 0; i < grid.size(); i++)
+	{
+		size_t marsh = grid[i].find('x');
+		if (marsh != string::npos)
+		{
+			size_t j = 0;
+			for (; marsh != string::npos; marsh = grid[i].find('x', marsh))
+			{
+				down[i][marsh] = -1;
+				right[i][marsh] = -1;
+				// Fix the Right matrix
+				long k = marsh - j - 1;
+				for (; j < marsh; j++, k--)
+				{
+					if (right[i][j] != -1)
+						right[i][j] = k;
+				}
+				j = ++marsh;
+			}
+			// Fix Right matrix from the last marsh to the end of the row
+			long k = grid[i].size() - j - 1;
+			for (; j < grid[i].size(); j++, k--)
+				right[i][j] = k;
+		}
+		else
+		{
+			for (long j = 0; j < grid[i].size(); j++)
+				right[i][j] = grid[i].size() - j - 1;
+		}
+	}
+	// Fix the Down matrix
+	for (size_t col = 0; col < down[0].size(); col++)
+	{
+		long val = 0;
+		size_t lastrow = 0;
+		for (size_t row = 0; row < down.size(); row++)
+		{
+			if (down[row][col] == -1)
+			{
+				val = row - lastrow - 1;
+				for (; lastrow < row; lastrow++)
+				{
+					if (down[lastrow][col] != -1)
+						down[lastrow][col] = val--;
+				}
+				for (; lastrow < down.size() && down[lastrow][col] == -1; lastrow++)
+					;
+			}
+		}
+		if (!lastrow) // No marsh
+		{
+			for (size_t row = 0; row < down.size(); row++)
+				down[row][col] = down.size() - row - 1;
+		}
+		else
+		{
+			// Fix Down matrix from the last marsh to the end of the col
+			val = down.size() - lastrow - 1;
+			for (; lastrow < down.size(); lastrow++)
+			{
+				if (down[lastrow][col] != -1)
+					down[lastrow][col] = val--;
+			}
+		}
+	}
+	size_t perimeter = 0;
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[i].size(); j++)
+		{
+			size_t perimeter1 = 0, perimeter2 = 0;
+			// Down, Right
+			if (down[i][j] > 0 && right[i + down[i][j]][j] > 0)
+			{
+				size_t rightSteps = right[i + down[i][j]][j] - 1;
+				perimeter1 = 2 * (down[i][j] + 1) + 2 * rightSteps;
+			}
+			// Right, Down
+			if (right[i][j] > 0 && down[i][j + right[i][j]] > 0)
+			{
+				size_t downSteps = down[i][j + right[i][j]] - 1;
+				perimeter2 = 2 * (right[i][j] + 1) + 2 * downSteps;
+			}
+			if (perimeter1 && perimeter2)
+				perimeter = max(perimeter, min(perimeter1, perimeter2));
+		}
+	return perimeter;
+}
+#else
+/* WIP - Takes too long!*/
+size_t kMarsh(vector<string> &grid)
+{
+	size_t perimeter = 0;
+	for (size_t r1 = 0; r1 < grid.size(); r1++)
+		for (size_t r2 = r1 + 1; r2 < grid.size(); r2++)
+			for (size_t c1 = 0; c1 < grid[r1].size(); c1++)
+				for (size_t c2 = c1 + 1; c2 < grid[r2].size(); c2++)
+				{
+					vector<vector<size_t>> area = vector<vector<size_t>>{{r1, c1}, {r2, c2}};
+					size_t tmp = MatrixPerimeter(area, grid);
+					if (tmp > perimeter)
+						perimeter = tmp;
+				}
+	return perimeter;
+}
+#endif
+/*
+ * https://www.hackerrank.com/challenges/chocolate-in-box/problem
+ * https://en.wikipedia.org/wiki/Nim
+ * Theorem. In a normal Nim game, the player making the first move has a winning strategy if and only if the nim-sum of the sizes of the heaps is not zero.
+ * Otherwise, the second player has a winning strategy.
+ * [1, 2, 1]: [1, 0, 1]->[0,0,1]
+ * [2, 3]: [2, 2]->[1, 2]->[1,1]->[0,1]
+ * 100%
+ */
+size_t ChocolateInBox(vector<size_t> &data)
+{
+#ifdef _MSC_VER
+	size_t sum = parallel_reduce(data.begin(), data.end(), 0 /* Identity for XOR */);
+#elif defined(__GNUC__) || defined(__GNUG__)
+	long sum = parallel_reduce(
+		blocked_range<long>(0, data.size()), 0 /* Identity for XOR */,
+		[&](tbb::blocked_range<long> r, long running_total)
+		{
+			for (int i = r.begin(); i < r.end(); i++)
+				running_total ^= data[i];
+			return running_total;
+		},
+		std::plus<long>());
+#endif
+	size_t count = 0;
+	for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
+		if ((*it ^ sum) < *it)
+			count++;
+	return count;
 }
