@@ -19,6 +19,11 @@ Graph<TTag, TItem>::Graph()
 template <typename TTag, typename TItem>
 Graph<TTag, TItem>::Graph(vector<TItem> &data)
 {
+	AddVertices(data);
+}
+template <typename TTag, typename TItem>
+void Graph<TTag, TItem>::AddVertices(vector<TItem> &data)
+{
 	for (typename vector<TItem>::iterator it = data.begin(); it != data.end(); it++)
 		AddVertex(*it, *it); // tag = item
 }
@@ -353,6 +358,10 @@ TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root, TItem sum)
 		(*it)->MinSubGraphsDifference(root, sum, diffs);
 	return diffs.empty() ? numeric_limits<size_t>::max() : *diffs.begin();
 }
+/*
+ * https://www.hackerrank.com/challenges/even-tree/problem
+ * 100%
+ */
 template <typename TTag, typename TItem>
 long Graph<TTag, TItem>::EvenForest(TTag root)
 {

@@ -275,34 +275,99 @@ TEST(GraphTests, UnbeatenPathsTest)
 	edges.clear();
 	data.clear();
 }
-TEST(GraphTests, EvenForestTest)
+class UnsignedGraph : public testing::TestWithParam<tuple<size_t, vector<vector<size_t>>, size_t, size_t>>
 {
-	vector<size_t> data;
-	Graph<size_t, size_t> graph;
-	vector<vector<size_t>> edges;
-	edges = {{1, 2}, {1, 3}, {3, 4}};
-	ASSERT_EQ(1, EvenForest(4, edges));
-	edges.clear();
-	data.clear();
-	edges = {{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 1}, {7, 2}, {8, 6}, {9, 8}, {10, 8}};
-	ASSERT_EQ(2, EvenForest(10, edges));
-	edges.clear();
-	data.clear();
-	edges = {{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 5}, {7, 1}, {8, 1}, {9, 2}, {10, 7}, {11, 10}, {12, 3}, {13, 7}, {14, 8}, {15, 12}, {16, 6}, {17, 6}, {18, 10}, {19, 1}, {20, 8}};
-	ASSERT_EQ(4, EvenForest(20, edges));
-}
-TEST(GraphTests, PrimMinimumSpanningTreeTest)
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_edges = get<1>(GetParam());
+		_nodes = get<2>(GetParam());
+		_start = get<3>(GetParam());
+		vector<size_t> data(_nodes);
+		ranges::generate(data, [n = 1]() mutable
+						 { return n++; });
+		_graph.AddVertices(data);
+		ASSERT_EQ(_nodes, _graph.Count());
+		for (vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
+		{
+			shared_ptr<Vertex<size_t, size_t>> v1 = _graph.GetVertex((*it)[0]);
+			shared_ptr<Vertex<size_t, size_t>> v2 = _graph.GetVertex((*it)[1]);
+			ASSERT_TRUE(v1);
+			ASSERT_TRUE(v2);
+			_graph.AddUndirectedEdge(v1, v2, (*it).size() == 3 ? (*it)[2] : 0);
+		}
+	}
+
+protected:
+	size_t _nodes, _start, _expected;
+	vector<vector<size_t>> _edges;
+	Graph<size_t, size_t> _graph;
+};
+/*
+ * https://www.hackerrank.com/challenges/even-tree/problem
+ * 100%
+ */
+TEST_P(UnsignedGraph, EvenForestTests)
 {
-	vector<vector<long>> grid;
-	grid = {{1, 2, 3}, {1, 3, 4}, {4, 2, 6}, {5, 2, 2}, {2, 3, 5}, {3, 5, 7}};
-	ASSERT_EQ(15, PrimMinimumSpanningTree(5, grid, 1));
-	grid.clear();
-	grid = {{1, 2, 20}, {1, 3, 50}, {1, 4, 70}, {1, 5, 90}, {2, 3, 30}, {3, 4, 40}, {4, 5, 60}};
-	ASSERT_EQ(150, PrimMinimumSpanningTree(5, grid, 2));
-	grid.clear();
-	grid = {{2, 1, 1000}, {3, 4, 299}, {2, 4, 200}, {2, 4, 100}, {3, 2, 300}, {3, 2, 6}};
-	ASSERT_EQ(1106, PrimMinimumSpanningTree(4, grid, 2));
+	// The root of the graph is Node 1
+	ASSERT_EQ(this->_expected, this->_graph.EvenForest(this->_start));
 }
+INSTANTIATE_TEST_SUITE_P(
+	GraphGroup,
+	UnsignedGraph,
+	::testing::Values(make_tuple<size_t, vector<vector<size_t>>, size_t, size_t>(1, vector<vector<size_t>>{{1, 2}, {1, 3}, {3, 4}}, 4, 1),
+					  make_tuple<size_t, vector<vector<size_t>>, size_t, size_t>(2, vector<vector<size_t>>{{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 1}, {7, 2}, {8, 6}, {9, 8}, {10, 8}}, 10, 1),
+					  make_tuple<size_t, vector<vector<size_t>>, size_t, size_t>(4, vector<vector<size_t>>{{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 5}, {7, 1}, {8, 1}, {9, 2}, {10, 7}, {11, 10}, {12, 3}, {13, 7}, {14, 8}, {15, 12}, {16, 6}, {17, 6}, {18, 10}, {19, 1}, {20, 8}}, 20, 1)));
+class SignedGraph : public testing::TestWithParam<tuple<size_t, vector<vector<long>>, size_t, long>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_edges = get<1>(GetParam());
+		_nodes = get<2>(GetParam());
+		_start = get<3>(GetParam());
+		vector<long> data(_nodes);
+		ranges::generate(data, [n = 1]() mutable
+						 { return n++; });
+		_graph.AddVertices(data);
+		ASSERT_EQ(_nodes, _graph.Count());
+		for (vector<vector<long>>::iterator it = _edges.begin(); it != _edges.end(); it++)
+		{
+			shared_ptr<Vertex<long, long>> v1 = _graph.GetVertex((*it)[0]);
+			shared_ptr<Vertex<long, long>> v2 = _graph.GetVertex((*it)[1]);
+			ASSERT_TRUE(v1);
+			ASSERT_TRUE(v2);
+			_graph.AddUndirectedEdge(v1, v2, (*it).size() == 3 ? (*it)[2] : 0);
+		}
+	}
+
+protected:
+	size_t _nodes, _expected;
+	long _start;
+	vector<vector<long>> _edges;
+	Graph<long, long> _graph;
+};
+/* https://www.hackerrank.com/challenges/primsmstsub/problem
+   https://en.wikipedia.org/wiki/Prim%27s_algorithm
+   https://www.geeksforgeeks.org/prims-algorithm-using-priority_queue-stl/
+   https://stackoverflow.com/questions/1195872/when-should-i-use-kruskal-as-opposed-to-prim-and-vice-versa
+   Use Prim's algorithm when you have a graph with lots of edges, i.e., if the number of edges to vertices is high.
+   Prim's algorithm is significantly faster in the limit when you've got a really dense graph with many more edges than vertices.
+   100%
+*/
+TEST_P(SignedGraph, PrimMinimumSpanningTreeTest)
+{
+	ASSERT_EQ(this->_expected, this->_graph.PrimMinimumSpanningTree(this->_graph.GetVertex(this->_start)));
+}
+INSTANTIATE_TEST_SUITE_P(
+	GraphGroup,
+	SignedGraph,
+	::testing::Values(make_tuple<size_t, vector<vector<long>>, size_t, long>(15, vector<vector<long>>{{1, 2, 3}, {1, 3, 4}, {4, 2, 6}, {5, 2, 2}, {2, 3, 5}, {3, 5, 7}}, 5, 1),
+					  make_tuple<size_t, vector<vector<long>>, size_t, long>(150, vector<vector<long>>{{1, 2, 20}, {1, 3, 50}, {1, 4, 70}, {1, 5, 90}, {2, 3, 30}, {3, 4, 40}, {4, 5, 60}}, 5, 2),
+					  make_tuple<size_t, vector<vector<long>>, size_t, long>(1106, vector<vector<long>>{{2, 1, 1000}, {3, 4, 299}, {2, 4, 200}, {2, 4, 100}, {3, 2, 300}, {3, 2, 6}}, 4, 2)));
+
 TEST(GraphTests, KruskalTest)
 {
 	vector<long> from{1, 1, 4, 2, 3, 3}, to{2, 3, 1, 4, 2, 4}, weights{5, 3, 6, 7, 4, 5};
