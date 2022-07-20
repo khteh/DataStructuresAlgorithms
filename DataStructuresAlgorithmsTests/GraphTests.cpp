@@ -275,34 +275,42 @@ TEST(GraphTests, UnbeatenPathsTest)
 	edges.clear();
 	data.clear();
 }
-class UnsignedGraph : public testing::TestWithParam<tuple<size_t, vector<vector<size_t>>, size_t, size_t>>
+template <typename T>
+class GraphFixture
 {
-public:
-	void SetUp() override
+protected:
+	void SetUp(size_t expected, vector<vector<T>> edges, size_t nodes, T start)
 	{
-		_expected = get<0>(GetParam());
-		_edges = get<1>(GetParam());
-		_nodes = get<2>(GetParam());
-		_start = get<3>(GetParam());
-		vector<size_t> data(_nodes);
+		_expected = expected;
+		_start = start;
+		_nodes = nodes;
+		_edges = edges;
+		vector<T> data(_nodes);
 		ranges::generate(data, [n = 1]() mutable
 						 { return n++; });
 		_graph.AddVertices(data);
 		ASSERT_EQ(_nodes, _graph.Count());
-		for (vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
+		for (typename vector<vector<T>>::iterator it = _edges.begin(); it != _edges.end(); it++)
 		{
-			shared_ptr<Vertex<size_t, size_t>> v1 = _graph.GetVertex((*it)[0]);
-			shared_ptr<Vertex<size_t, size_t>> v2 = _graph.GetVertex((*it)[1]);
+			shared_ptr<Vertex<T, T>> v1 = _graph.GetVertex((*it)[0]);
+			shared_ptr<Vertex<T, T>> v2 = _graph.GetVertex((*it)[1]);
 			ASSERT_TRUE(v1);
 			ASSERT_TRUE(v2);
 			_graph.AddUndirectedEdge(v1, v2, (*it).size() == 3 ? (*it)[2] : 0);
 		}
 	}
-
-protected:
-	size_t _nodes, _start, _expected;
-	vector<vector<size_t>> _edges;
-	Graph<size_t, size_t> _graph;
+	size_t _nodes, _expected;
+	T _start;
+	vector<vector<T>> _edges;
+	Graph<T, T> _graph;
+};
+class UnsignedGraph : public GraphFixture<size_t>, public testing::TestWithParam<tuple<size_t, vector<vector<size_t>>, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		GraphFixture<size_t>::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
+	}
 };
 /*
  * https://www.hackerrank.com/challenges/even-tree/problem
@@ -319,35 +327,13 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple<size_t, vector<vector<size_t>>, size_t, size_t>(1, vector<vector<size_t>>{{1, 2}, {1, 3}, {3, 4}}, 4, 1),
 					  make_tuple<size_t, vector<vector<size_t>>, size_t, size_t>(2, vector<vector<size_t>>{{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 1}, {7, 2}, {8, 6}, {9, 8}, {10, 8}}, 10, 1),
 					  make_tuple<size_t, vector<vector<size_t>>, size_t, size_t>(4, vector<vector<size_t>>{{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 5}, {7, 1}, {8, 1}, {9, 2}, {10, 7}, {11, 10}, {12, 3}, {13, 7}, {14, 8}, {15, 12}, {16, 6}, {17, 6}, {18, 10}, {19, 1}, {20, 8}}, 20, 1)));
-class SignedGraph : public testing::TestWithParam<tuple<size_t, vector<vector<long>>, size_t, long>>
+class SignedGraph : public GraphFixture<long>, public testing::TestWithParam<tuple<size_t, vector<vector<long>>, size_t, long>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_edges = get<1>(GetParam());
-		_nodes = get<2>(GetParam());
-		_start = get<3>(GetParam());
-		vector<long> data(_nodes);
-		ranges::generate(data, [n = 1]() mutable
-						 { return n++; });
-		_graph.AddVertices(data);
-		ASSERT_EQ(_nodes, _graph.Count());
-		for (vector<vector<long>>::iterator it = _edges.begin(); it != _edges.end(); it++)
-		{
-			shared_ptr<Vertex<long, long>> v1 = _graph.GetVertex((*it)[0]);
-			shared_ptr<Vertex<long, long>> v2 = _graph.GetVertex((*it)[1]);
-			ASSERT_TRUE(v1);
-			ASSERT_TRUE(v2);
-			_graph.AddUndirectedEdge(v1, v2, (*it).size() == 3 ? (*it)[2] : 0);
-		}
+		GraphFixture<long>::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
 	}
-
-protected:
-	size_t _nodes, _expected;
-	long _start;
-	vector<vector<long>> _edges;
-	Graph<long, long> _graph;
 };
 /* https://www.hackerrank.com/challenges/primsmstsub/problem
    https://en.wikipedia.org/wiki/Prim%27s_algorithm
