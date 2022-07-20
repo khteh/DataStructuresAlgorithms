@@ -8703,11 +8703,11 @@ size_t kMarsh(vector<string> &grid)
 /*
  * https://www.hackerrank.com/challenges/chocolate-in-box/problem
  * https://en.wikipedia.org/wiki/Nim
+ * Normal play: Player to take the LAST object wins.
+ * Misère play: Player to take the LAST object loses.
+ *
  * Theorem. In a normal Nim game, the player making the first move has a winning strategy if and only if the nim-sum of the sizes of the heaps is not zero.
  * Otherwise, the second player has a winning strategy.
- *
- * [1, 2, 1]: [1, 0, 1]->[0,0,1]
- * [2, 3]: [2, 2]->[1, 2]->[1,1]->[0,1]
  *
  * In normal play, the winning strategy is to finish every move with a nim-sum of 0. This is always possible if the nim-sum is not zero before the move.
  * If the nim-sum is zero, then the next player will lose if the other player does not make a mistake. To find out which move to make,
@@ -8719,9 +8719,16 @@ size_t kMarsh(vector<string> &grid)
  * C ⊕ X = 5 ⊕ 2 = 7
  * The only heap that is reduced is heap A, so the winning move is to reduce the size of heap A to 1 (by removing two objects).
  *
+ * Normal play:
+ * [1, 2, 1]: [1, 0, 1]->[0,0,1]
+ *    [2, 3]: [2, 2]->[1, 2]->[1,1]->[0,1]
+ *
+ * Misère play:
+ * [1, 2, 1]: [1, 1, 1]->[0,1,1]->[0,0,1]
+ *    [2, 3]: [2, 2]->[1,2]->[1,1]->[0,1]
  * 100%
  */
-size_t ChocolateInBox(vector<size_t> &data)
+size_t NormalPlayNim(vector<size_t> &data)
 {
 #ifdef _MSC_VER
 	size_t sum = parallel_reduce(data.begin(), data.end(), 0 /* Identity for XOR */);
@@ -8736,6 +8743,8 @@ size_t ChocolateInBox(vector<size_t> &data)
 		},
 		std::plus<long>());
 #endif
+	if (!sum)
+		return 0;
 	size_t count = 0;
 	for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
 		if ((*it ^ sum) < *it)

@@ -1933,22 +1933,22 @@ int main(int argc, char *argv[])
 	strings = {"x.x", ".x.", "x.x"};
 	assert(kMarsh(strings) == 0);
 	udata.clear();
-	assert(ChocolateInBox(udata) == 0);
+	assert(NormalPlayNim(udata) == 0);
 	udata.clear();
 	udata = {1};
-	assert(ChocolateInBox(udata) == 1);
+	assert(NormalPlayNim(udata) == 1);
 	udata.clear();
 	udata = {1, 1};
-	assert(ChocolateInBox(udata) == 0);
+	assert(NormalPlayNim(udata) == 0);
 	udata.clear();
 	udata = {1, 1, 1};
-	assert(ChocolateInBox(udata) == 3); // Take 1 from any of the 3 heaps
+	assert(NormalPlayNim(udata) == 3); // Take 1 from any of the 3 heaps
 	udata.clear();
 	udata = {1, 2, 1};
-	assert(ChocolateInBox(udata) == 1); // Remove 2 from the heap with 2 elements
+	assert(NormalPlayNim(udata) == 1); // Remove 2 from the heap with 2 elements
 	udata.clear();
 	udata = {2, 3};
-	assert(ChocolateInBox(udata) == 1);
+	assert(NormalPlayNim(udata) == 1);
 	cpp20readonlyranges();
 	cpp20ranges();
 	cpp20variants();
