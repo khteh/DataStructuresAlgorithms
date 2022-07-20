@@ -8723,9 +8723,9 @@ size_t kMarsh(vector<string> &grid)
  * [1, 2, 1]: [1, 0, 1]->[0,0,1]	(Nim-sum: 2)
  *    [2, 3]: [2, 2]->[1, 2]->[1,1]->[0,1] (Nim-sum: 1)
  *
- * Misère play:
- * [1, 2, 1]: [1, 1, 1]->[0,1,1]->[0,0,1]
- *    [2, 3]: [2, 2]->[1,2]->[1,0]
+ * Misère play (Same strategy as Normal play):
+ * [1, 2, 1]: [1, 1, 1]->[0,1,1]->[0,0,1] (Nim-sum: 2)
+ *    [2, 3]: [2, 2]->[1,2]->[1,0]	(Nim-sum: 1)
  * 100%
  */
 size_t NormalPlayNim(vector<size_t> &data)
