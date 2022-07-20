@@ -8720,28 +8720,30 @@ size_t kMarsh(vector<string> &grid)
  * The only heap that is reduced is heap A, so the winning move is to reduce the size of heap A to 1 (by removing two objects).
  *
  * Normal play:
- * [1, 2, 1]: [1, 0, 1]->[0,0,1]
- *    [2, 3]: [2, 2]->[1, 2]->[1,1]->[0,1]
+ * [1, 2, 1]: [1, 0, 1]->[0,0,1]	(Nim-sum: 2)
+ *    [2, 3]: [2, 2]->[1, 2]->[1,1]->[0,1] (Nim-sum: 1)
  *
  * Misère play:
  * [1, 2, 1]: [1, 1, 1]->[0,1,1]->[0,0,1]
- *    [2, 3]: [2, 2]->[1,2]->[1,1]->[0,1]
+ *    [2, 3]: [2, 2]->[1,2]->[1,0]
  * 100%
  */
 size_t NormalPlayNim(vector<size_t> &data)
 {
 #ifdef _MSC_VER
-	size_t sum = parallel_reduce(data.begin(), data.end(), 0 /* Identity for XOR */);
+XXX:
+	Check how to perform XOR on Windows Visual Studio
+		size_t sum = parallel_reduce(data.begin(), data.end(), 0 /* Identity for XOR */);
 #elif defined(__GNUC__) || defined(__GNUG__)
-	long sum = parallel_reduce(
-		blocked_range<long>(0, data.size()), 0 /* Identity for XOR */,
-		[&](tbb::blocked_range<long> r, long running_total)
+	size_t sum = parallel_reduce(
+		blocked_range<size_t>(0, data.size()), 0 /* Identity for XOR */,
+		[&](tbb::blocked_range<size_t> r, size_t running_total)
 		{
 			for (int i = r.begin(); i < r.end(); i++)
 				running_total ^= data[i];
 			return running_total;
 		},
-		std::plus<long>());
+		std::bit_xor<size_t>());
 #endif
 	if (!sum)
 		return 0;
