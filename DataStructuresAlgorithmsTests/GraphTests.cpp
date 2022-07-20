@@ -309,7 +309,7 @@ class UnsignedGraph : public GraphFixture<size_t>, public testing::TestWithParam
 public:
 	void SetUp() override
 	{
-		GraphFixture<size_t>::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
+		GraphFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
 	}
 };
 /*
@@ -332,7 +332,7 @@ class SignedGraph : public GraphFixture<long>, public testing::TestWithParam<tup
 public:
 	void SetUp() override
 	{
-		GraphFixture<long>::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
+		GraphFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
 	}
 };
 /* https://www.hackerrank.com/challenges/primsmstsub/problem
