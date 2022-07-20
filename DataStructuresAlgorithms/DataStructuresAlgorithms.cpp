@@ -8731,8 +8731,8 @@ size_t kMarsh(vector<string> &grid)
 size_t NormalPlayNim(vector<size_t> &data)
 {
 #ifdef _MSC_VER
-XXX:
-	Check how to perform XOR on Windows Visual Studio
+	XXX
+		// https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
 		size_t sum = parallel_reduce(data.begin(), data.end(), 0 /* Identity for XOR */);
 #elif defined(__GNUC__) || defined(__GNUG__)
 	size_t sum = parallel_reduce(
