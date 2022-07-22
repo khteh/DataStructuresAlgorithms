@@ -1182,18 +1182,6 @@ int main(int argc, char *argv[])
 	a.clear();
 	a = {2, 2, 1};
 	assert(MinAbsSum(a) == 1);
-	a.clear();
-	a = {1, -2, 0, 9, -1, -2};
-	assert(NumberSolitaire(a) == 8);
-	a.clear();
-	a = {1, -2, 4, 3, -1, -3, -7, 4, -9};
-	assert(NumberSolitaire(a) == 3);
-	a.clear();
-	a = {0, -4, -5, -2, -7, -9, -3, -10};
-	assert(NumberSolitaire(a) == -12);
-	a.clear();
-	a = {-1, -4, -5, -2, -7, -9, -3, -10};
-	assert(NumberSolitaire(a) == -13);
 	PlayTreasureGame();
 	assert(countPaths(2, 2, 1, 1, 2) == 2);		   // 2
 	assert(countPaths(2, 2, 1, 1, 3) == 0);		   // 0

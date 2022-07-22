@@ -4099,18 +4099,21 @@ long MinAbsSum(vector<long> &data)
 	}
 	return min;
 }
-// https://codility.com/demo/take-sample-test/number_solitaire/
-// https://codesays.com/2015/solution-to-number-solitaire-by-codility/
-// data: 1 -2 0 9 -1 -2 -3 9
-// memo : 1, -1, MAX(-1, 1) = 1, MAX(10, 8, 10) = 10, MAX(9, 0, -2, 0) = 9, MAX(7, 8, -1, -3, -1) = 8, MAX(5, 6, 7, -2, -4, -2) = 7, MAX(16, 17, 18, 19, 10, 8, 10) = 19
+/* https://codility.com/demo/take-sample-test/number_solitaire/
+ * https://codesays.com/2015/solution-to-number-solitaire-by-codility/
+ * Return the maximal result that can be achieved on the board represented by data
+ *       0  1 2 3  4  5  6 7
+ * data: 1 -2 0 9 -1 -2 -3 9
+ * dp  : 1,-1, MAX(-1, 1) = 1, MAX(10, 8, 10) = 10, MAX(9, 0, -2, 0) = 9, MAX(7, 8, -1, -3, -1) = 8, MAX(5, 6, 7, -2, -4, -2) = 7, MAX(16, 17, 18, 19, 10, 8, 10) = 19
+ */
 long NumberSolitaire(vector<long> &data)
 {
-	vector<long> memo(data.size(), numeric_limits<long>::min());
-	memo[0] = data[0];
+	vector<long> dp(data.size(), numeric_limits<long>::min());
+	dp[0] = data[0];
 	for (long i = 1; i < (long)data.size(); i++)
 		for (long j = 1; j < 7 && (i - j) >= 0; j++)
-			memo[i] = max(memo[i], data[i] + memo[i - j]);
-	return memo[data.size() - 1];
+			dp[i] = max(dp[i], data[i] + dp[i - j]);
+	return dp[data.size() - 1];
 }
 /* A zero - indexed array A consisting of N integers is given.It contains daily prices of a stock share for a period of N consecutive days.
  * If a single share was bought on day P and sold on day Q, where 0 ≤ P ≤ Q < N, then the profit of such transaction is equal to A[Q] − A[P], provided that A[Q] ≥ A[P].

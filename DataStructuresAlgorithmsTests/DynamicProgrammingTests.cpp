@@ -5,7 +5,7 @@ TEST(DynamicProgrammingTests, LargestNumberCompositionProductWithDynamicProgramm
 	ASSERT_EQ(1, LargestNumberCompositionProductWithDynamicProgramming(2));
 	ASSERT_EQ(36, LargestNumberCompositionProductWithDynamicProgramming(10));
 }
-class WordBreakTestFixture : public testing::TestWithParam<tuple<bool, string, set<string>>>
+class WordBreakFixture : public testing::TestWithParam<tuple<bool, string, set<string>>>
 {
 public:
 	void SetUp() override
@@ -24,17 +24,17 @@ protected:
 	set<string> _strs;
 	bool _expected;
 };
-TEST_P(WordBreakTestFixture, WordBreakDynamicProgrammingTests)
+TEST_P(WordBreakFixture, WordBreakDynamicProgrammingTests)
 {
 	ASSERT_EQ(this->_expected, this->WordBreakDynamicProgrammingTest());
 }
 INSTANTIATE_TEST_SUITE_P(
 	DynamicProgrammingTests,
-	WordBreakTestFixture,
+	WordBreakFixture,
 	::testing::Values(make_tuple(true, "HelloWorld", set<string>{"Hello", "World"}), make_tuple(false, "catsandog", set<string>{"cats", "dog", "sand", "and", "cat"}),
 					  make_tuple(true, "catsanddog", set<string>{"cats", "dog", "sand", "and", "cat"}), make_tuple(true, "catanddog", set<string>{"cats", "dog", "sand", "and", "cat"}),
 					  make_tuple(true, "applepenapple", set<string>{"apple", "pen"}), make_tuple(true, "aaaaaaa", set<string>{"aaaa", "aaa"})));
-class WordBreak2TestFixture : public testing::TestWithParam<tuple<vector<string>, string, set<string>>>
+class WordBreak2Fixture : public testing::TestWithParam<tuple<vector<string>, string, set<string>>>
 {
 public:
 	void SetUp() override
@@ -55,13 +55,13 @@ protected:
 	set<string> _strs;
 	vector<string> _expected;
 };
-TEST_P(WordBreak2TestFixture, WordBreak2DynamicProgrammingTests)
+TEST_P(WordBreak2Fixture, WordBreak2DynamicProgrammingTests)
 {
 	ASSERT_EQ(this->_expected, this->WordBreakDynamicProgrammingTest());
 }
 INSTANTIATE_TEST_SUITE_P(
 	DynamicProgrammingTests,
-	WordBreak2TestFixture,
+	WordBreak2Fixture,
 	::testing::Values(make_tuple(vector<string>{"Hello World"}, "HelloWorld", set<string>{"Hello", "World"}),
 					  make_tuple(vector<string>{}, "catsandog", set<string>{"cats", "dog", "sand", "and", "cat"}),
 					  make_tuple(vector<string>{"cat sand dog", "cats and dog"}, "catsanddog", set<string>{"cats", "dog", "sand", "and", "cat"}),
@@ -69,7 +69,7 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(vector<string>{"apple pen apple"}, "applepenapple", set<string>{"apple", "pen"}),
 					  make_tuple(vector<string>{"aaa aaaa", "aaaa aaa"}, "aaaaaaa", set<string>{"aaaa", "aaa"})));
 
-class AbbreviationTestFixture : public testing::TestWithParam<tuple<bool, string, string>>
+class AbbreviationFixture : public testing::TestWithParam<tuple<bool, string, string>>
 {
 public:
 	void SetUp() override
@@ -87,19 +87,19 @@ protected:
 	string _str1, _str2;
 	bool _expected;
 };
-TEST_P(AbbreviationTestFixture, AbbreviationTests)
+TEST_P(AbbreviationFixture, AbbreviationTests)
 {
 	ASSERT_EQ(this->_expected, this->AbbreviationTest());
 }
 INSTANTIATE_TEST_SUITE_P(
 	DynamicProgrammingTests,
-	AbbreviationTestFixture,
+	AbbreviationFixture,
 	::testing::Values(make_tuple(true, "AbcDE", "ABDE"), make_tuple(false, "AbcDE", "AFDE"), make_tuple(true, "AbcDE", "ACDE"), make_tuple(true, "AbcDE", "ADE"),
 					  make_tuple(false, "AbcDE", "ADDE"), make_tuple(true, "aaaa", "A"), make_tuple(true, "abcdef", "A"), make_tuple(false, "bbbbb", "A"),
 					  make_tuple(true, "aaBaa", "B"), make_tuple(true, "daBcd", "ABC"), make_tuple(true, "bBccC", "BBC"), make_tuple(false, "KXzQ", "K"),
 					  make_tuple(false, "beFgH", "EFG"), make_tuple(false, "ababbaAbAB", "AABABB"), make_tuple(true, "aAbAb", "ABAB"), make_tuple(false, "baaBa", "BAAA"),
 					  make_tuple(true, "abAAb", "AAA"), make_tuple(false, "babaABbbAb", "ABAA")));
-class FindSubsequenceTestFixture : public testing::TestWithParam<tuple<size_t, string, string>>
+class FindSubsequenceFixture : public testing::TestWithParam<tuple<size_t, string, string>>
 {
 public:
 	void SetUp() override
@@ -117,13 +117,13 @@ protected:
 	string _str1, _str2;
 	size_t _expected;
 };
-TEST_P(FindSubsequenceTestFixture, FindSubsequenceDynamicProgrammingTest)
+TEST_P(FindSubsequenceFixture, FindSubsequenceDynamicProgrammingTest)
 {
 	ASSERT_EQ(this->_expected, this->FindSubsequenceDynamicProgrammingTest());
 }
 INSTANTIATE_TEST_SUITE_P(
 	DynamicProgrammingTests,
-	FindSubsequenceTestFixture,
+	FindSubsequenceFixture,
 	::testing::Values(make_tuple(2, "1221", "12"), make_tuple(0, "1234", "56"), make_tuple(15, "kkkkkkz", "kkkk")));
 TEST(DynamicProgrammingTests, fibonacciDynamicProgrammingTests)
 {
@@ -169,3 +169,29 @@ TEST(DynamicProgrammingTests, factorialDynamicProgrammingTests)
 	ASSERT_EQ(15511210043330985984000000, factorialDynamicProgramming(25)); // Only 64-bit on GNU C++. "constant too big" compilation error on MSVC
 #endif
 }
+class NumberSolitaireFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	long NumberSolitaireTest()
+	{
+		return NumberSolitaire(_data);
+	}
+
+protected:
+	vector<long> _data;
+	long _expected;
+};
+TEST_P(NumberSolitaireFixture, NumberSolitaireTests)
+{
+	ASSERT_EQ(this->_expected, this->NumberSolitaireTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	DynamicProgrammingTests,
+	NumberSolitaireFixture,
+	::testing::Values(make_tuple(8, vector<long>{1, -2, 0, 9, -1, -2}), make_tuple(3, vector<long>{1, -2, 4, 3, -1, -3, -7, 4, -9}),
+					  make_tuple(-12, vector<long>{0, -4, -5, -2, -7, -9, -3, -10}), make_tuple(-13, vector<long>{-1, -4, -5, -2, -7, -9, -3, -10})));
