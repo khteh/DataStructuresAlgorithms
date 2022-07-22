@@ -311,6 +311,10 @@ public:
 	{
 		GraphFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
 	}
+	size_t EvenForestTest()
+	{
+		return _graph.EvenForest(_start);
+	}
 };
 /*
  * https://www.hackerrank.com/challenges/even-tree/problem
@@ -319,7 +323,7 @@ public:
 TEST_P(UnsignedGraph, EvenForestTests)
 {
 	// The root of the graph is Node 1
-	ASSERT_EQ(this->_expected, this->_graph.EvenForest(this->_start));
+	ASSERT_EQ(this->_expected, this->EvenForestTest());
 }
 INSTANTIATE_TEST_SUITE_P(
 	GraphTests,
@@ -334,6 +338,10 @@ public:
 	{
 		GraphFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
 	}
+	size_t PrimMinimumSpanningTreeTest()
+	{
+		return _graph.PrimMinimumSpanningTree(_graph.GetVertex(_start));
+	}
 };
 /* https://www.hackerrank.com/challenges/primsmstsub/problem
    https://en.wikipedia.org/wiki/Prim%27s_algorithm
@@ -343,9 +351,9 @@ public:
    Prim's algorithm is significantly faster in the limit when you've got a really dense graph with many more edges than vertices.
    100%
 */
-TEST_P(SignedGraph, PrimMinimumSpanningTreeTest)
+TEST_P(SignedGraph, PrimMinimumSpanningTreeTests)
 {
-	ASSERT_EQ(this->_expected, this->_graph.PrimMinimumSpanningTree(this->_graph.GetVertex(this->_start)));
+	ASSERT_EQ(this->_expected, this->PrimMinimumSpanningTreeTest());
 }
 INSTANTIATE_TEST_SUITE_P(
 	GraphTests,
