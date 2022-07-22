@@ -33,14 +33,27 @@ TEST(ArithmerticOperationsTests, MultiplyWithPlusSignTest)
 	ASSERT_EQ(50, arithmetic.MultiplyWithPlusSign(10, 5));
 	ASSERT_EQ(-50, arithmetic.MultiplyWithPlusSign(10, -5));
 }
-class DivideWithPlusSignTestFixture : public testing::TestWithParam<tuple<long, long, long>>
+template <typename T>
+class ArithmerticOperationsFixture
+{
+public:
+	void SetUp(T expected, T var1, T var2)
+	{
+		_expected = expected;
+		_var1 = var1;
+		_var2 = var2;
+	}
+
+protected:
+	Arithmetic _arithmetic;
+	T _var1, _var2, _expected;
+};
+class DivideWithPlusSignTestFixture : public ArithmerticOperationsFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_var1 = get<1>(GetParam());
-		_var2 = get<2>(GetParam());
+		ArithmerticOperationsFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
 	long DivideWithPlusSignTest()
 	{
@@ -50,11 +63,6 @@ public:
 	{
 		return _arithmetic.divide(_var1, _var2);
 	}
-
-protected:
-	Arithmetic _arithmetic;
-	long _var1, _var2;
-	long _expected;
 };
 TEST_P(DivideWithPlusSignTestFixture, DivideWithPlusSignTests)
 {
@@ -69,24 +77,17 @@ INSTANTIATE_TEST_SUITE_P(
 	DivideWithPlusSignTestFixture,
 	::testing::Values(make_tuple(3, 10, 3), make_tuple(-3, 10, -3), make_tuple(-3, -10, 3), make_tuple(3, -10, -3), make_tuple(10, -10, -1), make_tuple(-1, -1, 1), make_tuple(-1, 1, -1), make_tuple(1, -1, -1),
 					  make_tuple(2147483648L, -2147483648, -1), make_tuple(-2147483648, -2147483648, 1), make_tuple(-2147483648, 2147483648L, -1)));
-class AddWithoutArithmeticTestFixture : public testing::TestWithParam<tuple<long long, long long, long long>>
+class AddWithoutArithmeticTestFixture : public ArithmerticOperationsFixture<long long>, public testing::TestWithParam<tuple<long long, long long, long long>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_var1 = get<1>(GetParam());
-		_var2 = get<2>(GetParam());
+		ArithmerticOperationsFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
 	long long AddWithoutArithmeticTest()
 	{
 		return _arithmetic.AddWithoutArithmetic(_var1, _var2);
 	}
-
-protected:
-	Arithmetic _arithmetic;
-	long long _var1, _var2;
-	long long _expected;
 };
 TEST_P(AddWithoutArithmeticTestFixture, AddWithoutArithmeticTests)
 {
