@@ -33,45 +33,69 @@ TEST(ArithmerticOperationsTests, MultiplyWithPlusSignTest)
 	ASSERT_EQ(50, arithmetic.MultiplyWithPlusSign(10, 5));
 	ASSERT_EQ(-50, arithmetic.MultiplyWithPlusSign(10, -5));
 }
-TEST(ArithmerticOperationsTests, DivideWithPlusSignTests)
+class DivideWithPlusSignTestFixture : public testing::TestWithParam<tuple<long, long, long>>
 {
-	Arithmetic arithmetic;
-	ASSERT_EQ(3, arithmetic.DivideWithPlusSign(10, 3));
-	ASSERT_EQ(-3, arithmetic.DivideWithPlusSign(10, -3));
-	ASSERT_EQ(-3, arithmetic.DivideWithPlusSign(-10, 3));
-	ASSERT_EQ(3, arithmetic.DivideWithPlusSign(-10, -3));
-	ASSERT_EQ(10, arithmetic.DivideWithPlusSign(-10, -1));
-	ASSERT_EQ(-1, arithmetic.DivideWithPlusSign(-1, 1));
-	ASSERT_EQ(-1, arithmetic.DivideWithPlusSign(1, -1));
-	ASSERT_EQ(1, arithmetic.DivideWithPlusSign(-1, -1));
-	ASSERT_EQ((long)2147483648, arithmetic.DivideWithPlusSign(-2147483648, -1));
-	ASSERT_EQ(-2147483648, arithmetic.DivideWithPlusSign(-2147483648, 1));
-	ASSERT_EQ(-2147483648, arithmetic.DivideWithPlusSign(2147483648, -1)); // Takes very long time to Arithmetic.ToggleSign( of 64-bit value
-}
-TEST(ArithmerticOperationsTests, DivisionTests)
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_var1 = get<1>(GetParam());
+		_var2 = get<2>(GetParam());
+	}
+	long DivideWithPlusSignTest()
+	{
+		return _arithmetic.DivideWithPlusSign(_var1, _var2);
+	}
+	long DivisionTest()
+	{
+		return _arithmetic.divide(_var1, _var2);
+	}
+
+protected:
+	Arithmetic _arithmetic;
+	long _var1, _var2;
+	long _expected;
+};
+TEST_P(DivideWithPlusSignTestFixture, DivideWithPlusSignTests)
 {
-	Arithmetic arithmetic;
-	ASSERT_EQ(3, arithmetic.divide(10, 3));
-	ASSERT_EQ(-3, arithmetic.divide(10, -3));
-	ASSERT_EQ(-3, arithmetic.divide(-10, 3));
-	ASSERT_EQ(3, arithmetic.divide(-10, -3));
-	ASSERT_EQ(-1, arithmetic.divide(-1, 1));
-	ASSERT_EQ(-1, arithmetic.divide(1, -1));
-	ASSERT_EQ(1, arithmetic.divide(-1, -1));
-	ASSERT_EQ((long)2147483648, arithmetic.divide(-2147483648, -1));
-	ASSERT_EQ(-2147483648, arithmetic.divide(-2147483648, 1));
-	ASSERT_EQ(-2147483648, arithmetic.divide(2147483648, -1)); // Takes very long time to Arithmetic.ToggleSign( of 64-bit value
+	ASSERT_EQ(this->_expected, this->DivideWithPlusSignTest());
 }
-TEST(ArithmerticOperationsTests, AddWithoutArithmeticTests)
+TEST_P(DivideWithPlusSignTestFixture, DivisionTests)
 {
-	Arithmetic arithmetic;
-	cout << "Test addition without using arithmetic symbol: " << endl;
-	ASSERT_EQ(0, arithmetic.AddWithoutArithmetic(0, 0));
-	ASSERT_EQ(0, arithmetic.AddWithoutArithmetic(-1, 1));
-	ASSERT_EQ(0x1dd9b7dde, arithmetic.AddWithoutArithmetic(0xdeadbeef, 0xfeedbeef));
-	ASSERT_EQ(0xdeadbeef, arithmetic.AddWithoutArithmetic(0xdeadbeef, 0));
-	ASSERT_EQ(0xfeedbeef, arithmetic.AddWithoutArithmetic(0, 0xfeedbeef));
+	ASSERT_EQ(this->_expected, this->DivisionTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	ArithmerticOperationsTests,
+	DivideWithPlusSignTestFixture,
+	::testing::Values(make_tuple(3, 10, 3), make_tuple(-3, 10, -3), make_tuple(-3, -10, 3), make_tuple(3, -10, -3), make_tuple(10, -10, -1), make_tuple(-1, -1, 1), make_tuple(-1, 1, -1), make_tuple(1, -1, -1),
+					  make_tuple(2147483648L, -2147483648, -1), make_tuple(-2147483648, -2147483648, 1), make_tuple(-2147483648, 2147483648L, -1)));
+class AddWithoutArithmeticTestFixture : public testing::TestWithParam<tuple<long long, long long, long long>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_var1 = get<1>(GetParam());
+		_var2 = get<2>(GetParam());
+	}
+	long long AddWithoutArithmeticTest()
+	{
+		return _arithmetic.AddWithoutArithmetic(_var1, _var2);
+	}
+
+protected:
+	Arithmetic _arithmetic;
+	long long _var1, _var2;
+	long long _expected;
+};
+TEST_P(AddWithoutArithmeticTestFixture, AddWithoutArithmeticTests)
+{
+	ASSERT_EQ(this->_expected, this->AddWithoutArithmeticTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	ArithmerticOperationsTests,
+	AddWithoutArithmeticTestFixture,
+	::testing::Values(make_tuple(0, 0, 0), make_tuple(0, -1, 1), make_tuple(0x1dd9b7dde, 0xdeadbeef, 0xfeedbeef), make_tuple(0xdeadbeef, 0xdeadbeef, 0), make_tuple(0xfeedbeef, 0, 0xfeedbeef)));
 TEST(ArithmerticOperationsTests, NumberStringSumTests)
 {
 	Arithmetic arithmetic;
