@@ -1,119 +1,130 @@
 #include "pch.h"
 using namespace std;
-TEST(DynamicProgrammingTests, LargestNumberCompositionProductWithDynamicProgrammingTest) {
+TEST(DynamicProgrammingTests, LargestNumberCompositionProductWithDynamicProgrammingTest)
+{
 	ASSERT_EQ(1, LargestNumberCompositionProductWithDynamicProgramming(2));
 	ASSERT_EQ(36, LargestNumberCompositionProductWithDynamicProgramming(10));
 }
-TEST(DynamicProgrammingTests, WordBreakDynamicProgrammingTests) {
-	set<string> stringset;
-	vector<string> strings;
-	stringset = { "Hello", "World" };
-	ASSERT_TRUE(WordBreakDynamicProgramming(string("HelloWorld"), stringset));
-	WordBreakDynamicProgramming(string("HelloWorld"), stringset, strings);
-	ASSERT_FALSE(strings.empty());
-	ASSERT_EQ(1, strings.size());
-	ASSERT_EQ("Hello World", strings[0]);
-
-	stringset.clear();
-	stringset = { "cats", "dog", "sand", "and", "cat" };
-	ASSERT_FALSE(WordBreakDynamicProgramming(string("catsandog"), stringset));
-	ASSERT_TRUE(WordBreakDynamicProgramming(string("catsanddog"), stringset));
-	ASSERT_TRUE(WordBreakDynamicProgramming(string("catanddog"), stringset));
-	strings.clear();
-	WordBreakDynamicProgramming(string("catsandog"), stringset, strings);
-	ASSERT_TRUE(strings.empty());
-	strings.clear();
-	WordBreakDynamicProgramming(string("catsanddog"), stringset, strings);
-	ASSERT_FALSE(strings.empty());
-	ASSERT_EQ(2, strings.size());
-	strings.clear();
-	WordBreakDynamicProgramming(string("catanddog"), stringset, strings);
-	ASSERT_EQ(1, strings.size());
-	ASSERT_EQ("cat and dog", strings[0]);
-
-	stringset.clear();
-	stringset = { "apple", "pen" };
-	ASSERT_TRUE(WordBreakDynamicProgramming(string("applepenapple"), stringset));
-	strings.clear();
-	WordBreakDynamicProgramming(string("applepenapple"), stringset, strings);
-	ASSERT_FALSE(strings.empty());
-	ASSERT_EQ(1, strings.size());
-	ASSERT_EQ("apple pen apple", strings[0]);
-
-	stringset.clear();
-	stringset = { "aaaa", "aaa" };
-	ASSERT_TRUE(WordBreakDynamicProgramming(string("aaaaaaa"), stringset));
-	strings.clear();
-	WordBreakDynamicProgramming(string("aaaaaaa"), stringset, strings);
-	ASSERT_FALSE(strings.empty());
-	ASSERT_EQ(2, strings.size());
-}
-TEST(DynamicProgrammingTests, AbbreviationTests) {
-	string line, line1;
-	line = "AbcDE";
-	line1 = "ABDE";
-	ASSERT_TRUE(Abbreviation(line, line1));
-	line = "AbcDE";
-	line1 = "AFDE";
-	ASSERT_FALSE(Abbreviation(line, line1));
-	line = "AbcDE";
-	line1 = "ACDE";
-	ASSERT_TRUE(Abbreviation(line, line1));
-	line = "AbcDE";
-	line1 = "ADE";
-	ASSERT_TRUE(Abbreviation(line, line1));
-	line = "AbcDE";
-	line1 = "ADDE";
-	ASSERT_FALSE(Abbreviation(line, line1));
-	line = "aaaa";
-	line1 = "A";
-	ASSERT_TRUE(Abbreviation(line, line1));
-	line = "abcdef";
-	line1 = "A";
-	ASSERT_TRUE(Abbreviation(line, line1));
-	line = "bbbbb";
-	line1 = "A";
-	ASSERT_FALSE(Abbreviation(line, line1));
-	line = "aaBaa";
-	line1 = "B";
-	ASSERT_TRUE(Abbreviation(line, line1));
-	line = "daBcd";
-	line1 = "ABC";
-	ASSERT_TRUE(Abbreviation(line, line1));
-	line = "bBccC";
-	line1 = "BBC";
-	ASSERT_TRUE(Abbreviation(line, line1));
-	line = "bbBccC";
-	line1 = "BBC";
-	ASSERT_TRUE(Abbreviation(line, line1));
-	line = "KXzQ";
-	line1 = "K";
-	ASSERT_FALSE(Abbreviation(line, line1));
-	line = "beFgH";
-	line1 = "EFG";
-	ASSERT_FALSE(Abbreviation(line, line1));
-	line = "ababbaAbAB";
-	line1 = "AABABB";
-	ASSERT_FALSE(Abbreviation(line, line1));
-	line = "aAbAb";
-	line1 = "ABAB";
-	ASSERT_TRUE(Abbreviation(line, line1));
-	line = "baaBa";
-	line1 = "BAAA";
-	ASSERT_FALSE(Abbreviation(line, line1));
-	line = "abAAb";
-	line1 = "AAA";
-	ASSERT_TRUE(Abbreviation(line, line1));
-	line = "babaABbbAb";
-	line1 = "ABAA";
-	ASSERT_FALSE(Abbreviation(line, line1));
-}
-TEST(DynamicProgrammingTests, FindSubsequenceDynamicProgrammingTests)
+class WordBreakTestFixture : public testing::TestWithParam<tuple<bool, string, set<string>>>
 {
-	ASSERT_EQ(2, FindSubsequenceDynamicProgramming(string("1221"), string("12")));
-	ASSERT_EQ(0, FindSubsequenceDynamicProgramming(string("1234"), string("56")));
-	ASSERT_EQ(15, FindSubsequenceDynamicProgramming(string("kkkkkkz"), string("kkkk")));
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_str1 = get<1>(GetParam());
+		_strs = get<2>(GetParam());
+	}
+	bool WordBreakDynamicProgrammingTest()
+	{
+		return WordBreakDynamicProgramming(_str1, _strs);
+	}
+
+protected:
+	string _str1;
+	set<string> _strs;
+	bool _expected;
+};
+TEST_P(WordBreakTestFixture, WordBreakDynamicProgrammingTests)
+{
+	ASSERT_EQ(this->_expected, this->WordBreakDynamicProgrammingTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	DynamicProgrammingTests,
+	WordBreakTestFixture,
+	::testing::Values(make_tuple(true, "HelloWorld", set<string>{"Hello", "World"}), make_tuple(false, "catsandog", set<string>{"cats", "dog", "sand", "and", "cat"}),
+					  make_tuple(true, "catsanddog", set<string>{"cats", "dog", "sand", "and", "cat"}), make_tuple(true, "catanddog", set<string>{"cats", "dog", "sand", "and", "cat"}),
+					  make_tuple(true, "applepenapple", set<string>{"apple", "pen"}), make_tuple(true, "aaaaaaa", set<string>{"aaaa", "aaa"})));
+class WordBreak2TestFixture : public testing::TestWithParam<tuple<vector<string>, string, set<string>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_str1 = get<1>(GetParam());
+		_strs = get<2>(GetParam());
+	}
+	vector<string> WordBreakDynamicProgrammingTest()
+	{
+		vector<string> result;
+		WordBreakDynamicProgramming(_str1, _strs, result);
+		return result;
+	}
+
+protected:
+	string _str1;
+	set<string> _strs;
+	vector<string> _expected;
+};
+TEST_P(WordBreak2TestFixture, WordBreak2DynamicProgrammingTests)
+{
+	ASSERT_EQ(this->_expected, this->WordBreakDynamicProgrammingTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	DynamicProgrammingTests,
+	WordBreak2TestFixture,
+	::testing::Values(make_tuple(vector<string>{"Hello World"}, "HelloWorld", set<string>{"Hello", "World"}),
+					  make_tuple(vector<string>{}, "catsandog", set<string>{"cats", "dog", "sand", "and", "cat"}),
+					  make_tuple(vector<string>{"cat sand dog", "cats and dog"}, "catsanddog", set<string>{"cats", "dog", "sand", "and", "cat"}),
+					  make_tuple(vector<string>{"cat and dog"}, "catanddog", set<string>{"cats", "dog", "sand", "and", "cat"}),
+					  make_tuple(vector<string>{"apple pen apple"}, "applepenapple", set<string>{"apple", "pen"}),
+					  make_tuple(vector<string>{"aaa aaaa", "aaaa aaa"}, "aaaaaaa", set<string>{"aaaa", "aaa"})));
+
+class AbbreviationTestFixture : public testing::TestWithParam<tuple<bool, string, string>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_str1 = get<1>(GetParam());
+		_str2 = get<2>(GetParam());
+	}
+	bool AbbreviationTest()
+	{
+		return Abbreviation(_str1, _str2);
+	}
+
+protected:
+	string _str1, _str2;
+	bool _expected;
+};
+TEST_P(AbbreviationTestFixture, AbbreviationTests)
+{
+	ASSERT_EQ(this->_expected, this->AbbreviationTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	DynamicProgrammingTests,
+	AbbreviationTestFixture,
+	::testing::Values(make_tuple(true, "AbcDE", "ABDE"), make_tuple(false, "AbcDE", "AFDE"), make_tuple(true, "AbcDE", "ACDE"), make_tuple(true, "AbcDE", "ADE"),
+					  make_tuple(false, "AbcDE", "ADDE"), make_tuple(true, "aaaa", "A"), make_tuple(true, "abcdef", "A"), make_tuple(false, "bbbbb", "A"),
+					  make_tuple(true, "aaBaa", "B"), make_tuple(true, "daBcd", "ABC"), make_tuple(true, "bBccC", "BBC"), make_tuple(false, "KXzQ", "K"),
+					  make_tuple(false, "beFgH", "EFG"), make_tuple(false, "ababbaAbAB", "AABABB"), make_tuple(true, "aAbAb", "ABAB"), make_tuple(false, "baaBa", "BAAA"),
+					  make_tuple(true, "abAAb", "AAA"), make_tuple(false, "babaABbbAb", "ABAA")));
+class FindSubsequenceTestFixture : public testing::TestWithParam<tuple<size_t, string, string>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_str1 = get<1>(GetParam());
+		_str2 = get<2>(GetParam());
+	}
+	size_t FindSubsequenceDynamicProgrammingTest()
+	{
+		return FindSubsequenceDynamicProgramming(_str1, _str2);
+	}
+
+protected:
+	string _str1, _str2;
+	size_t _expected;
+};
+TEST_P(FindSubsequenceTestFixture, FindSubsequenceDynamicProgrammingTest)
+{
+	ASSERT_EQ(this->_expected, this->FindSubsequenceDynamicProgrammingTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	DynamicProgrammingTests,
+	FindSubsequenceTestFixture,
+	::testing::Values(make_tuple(2, "1221", "12"), make_tuple(0, "1234", "56"), make_tuple(15, "kkkkkkz", "kkkk")));
 TEST(DynamicProgrammingTests, fibonacciDynamicProgrammingTests)
 {
 	ASSERT_EQ(-1, fibonacciDynamicProgramming(-1));
