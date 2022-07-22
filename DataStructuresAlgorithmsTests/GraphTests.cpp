@@ -322,7 +322,7 @@ TEST_P(UnsignedGraph, EvenForestTests)
 	ASSERT_EQ(this->_expected, this->_graph.EvenForest(this->_start));
 }
 INSTANTIATE_TEST_SUITE_P(
-	GraphGroup,
+	GraphTests,
 	UnsignedGraph,
 	::testing::Values(make_tuple<size_t, vector<vector<size_t>>, size_t, size_t>(1, vector<vector<size_t>>{{1, 2}, {1, 3}, {3, 4}}, 4, 1),
 					  make_tuple<size_t, vector<vector<size_t>>, size_t, size_t>(2, vector<vector<size_t>>{{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 1}, {7, 2}, {8, 6}, {9, 8}, {10, 8}}, 10, 1),
@@ -348,7 +348,7 @@ TEST_P(SignedGraph, PrimMinimumSpanningTreeTest)
 	ASSERT_EQ(this->_expected, this->_graph.PrimMinimumSpanningTree(this->_graph.GetVertex(this->_start)));
 }
 INSTANTIATE_TEST_SUITE_P(
-	GraphGroup,
+	GraphTests,
 	SignedGraph,
 	::testing::Values(make_tuple<size_t, vector<vector<long>>, size_t, long>(15, vector<vector<long>>{{1, 2, 3}, {1, 3, 4}, {4, 2, 6}, {5, 2, 2}, {2, 3, 5}, {3, 5, 7}}, 5, 1),
 					  make_tuple<size_t, vector<vector<long>>, size_t, long>(150, vector<vector<long>>{{1, 2, 20}, {1, 3, 50}, {1, 4, 70}, {1, 5, 90}, {2, 3, 30}, {3, 4, 40}, {4, 5, 60}}, 5, 2),
