@@ -1,70 +1,71 @@
 ﻿#include "pch.h"
 using namespace std;
-TEST(RangeTests, ConsecutiveLargestSumTest)
+class ConsecutiveLargestSumTestFixture : public testing::TestWithParam<tuple<long, vector<long>, vector<long>>>
 {
-	vector<long> a = {2, 3, -6}, b;
-	long lResult = ConsecutiveLargestSum(a, b);
-	ASSERT_EQ(5, lResult);
-	a = {2, 3};
-	ASSERT_EQ(a, b);
-	a.clear();
-	b.clear();
-	a = {2, 3, -6, 4, 5, 6, -20};
-	lResult = ConsecutiveLargestSum(a, b);
-	ASSERT_EQ(15, lResult);
-	a = {4, 5, 6};
-	ASSERT_EQ(a, b);
-	a.clear();
-	b.clear();
-	a = {0, -1, 0, 0, 1, 0, -1, -1}, b;
-	ASSERT_EQ(1, ConsecutiveLargestSum(a, b));
-	a = {0, 0, 1};
-	ASSERT_EQ(a, b);
-	a.clear();
-	b.clear();
-	a = {-1, -1, -1, -1, -1, -1, 1, 1};
-	ASSERT_EQ(2, ConsecutiveLargestSum(a, b));
-	a = {1, 1};
-	ASSERT_EQ(a, b);
-	a.clear();
-	b.clear();
-	a = {-2, -3, 4, -1, -2, 1, 5, -3};
-	ASSERT_EQ(7, ConsecutiveLargestSum(a, b));
-	a = {4, -1, -2, 1, 5};
-	ASSERT_EQ(a, b);
-}
-TEST(RangeTests, ConsecutiveLargestProductTest)
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_expectedCollection = get<1>(GetParam());
+		_range = get<2>(GetParam());
+	}
+	long ConsecutiveLargestSumTest()
+	{
+		return ConsecutiveLargestSum(_range, _collectionResult);
+	}
+
+protected:
+	long _expected;
+	vector<long> _range, _expectedCollection, _collectionResult;
+};
+TEST_P(ConsecutiveLargestSumTestFixture, ConsecutiveLargestSumTests)
 {
-	vector<long> a = {2, 3, -2, 4};
-	ASSERT_EQ(6, ConsecutiveLargestProduct(a));
-	a.clear();
-	a = {-2, 0, -1};
-	ASSERT_EQ(0, ConsecutiveLargestProduct(a));
-	a.clear();
-	a = {-2, -1, 0};
-	ASSERT_EQ(2, ConsecutiveLargestProduct(a));
-	a.clear();
-	a = {-3, -1, -1};
-	ASSERT_EQ(3, ConsecutiveLargestProduct(a));
-	a.clear();
-	a = {0, 2};
-	ASSERT_EQ(2, ConsecutiveLargestProduct(a));
-	a.clear();
-	a = {3, -1, 4};
-	ASSERT_EQ(4, ConsecutiveLargestProduct(a));
-	a.clear();
-	a = {-1, -1};
-	ASSERT_EQ(1, ConsecutiveLargestProduct(a));
-	a.clear();
-	a = {0, -2, -3};
-	ASSERT_EQ(6, ConsecutiveLargestProduct(a));
-	a.clear();
-	a = {2, -5, -2, -4, 3};
-	ASSERT_EQ(24, ConsecutiveLargestProduct(a));
-	a.clear();
-	a = {2, 0, -3, 2, 1, 0, 1, -2};
-	ASSERT_EQ(2, ConsecutiveLargestProduct(a));
+	ASSERT_EQ(this->_expected, this->ConsecutiveLargestSumTest());
+	ASSERT_EQ(this->_expectedCollection, this->_collectionResult);
 }
+INSTANTIATE_TEST_SUITE_P(
+	RangeTests,
+	ConsecutiveLargestSumTestFixture,
+	::testing::Values(make_tuple(5, vector<long>{2, 3}, vector<long>{2, 3, -6}),
+					  make_tuple(15, vector<long>{4, 5, 6}, vector<long>{2, 3, -6, 4, 5, 6, -20}),
+					  make_tuple(1, vector<long>{0, 0, 1}, vector<long>{0, -1, 0, 0, 1, 0, -1, -1}),
+					  make_tuple(2, vector<long>{1, 1}, vector<long>{-1, -1, -1, -1, -1, -1, 1, 1}),
+					  make_tuple(7, vector<long>{4, -1, -2, 1, 5}, vector<long>{-2, -3, 4, -1, -2, 1, 5, -3})));
+class ConsecutiveLargestProductTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_range = get<1>(GetParam());
+	}
+	long ConsecutiveLargestProductTest()
+	{
+		return ConsecutiveLargestProduct(_range);
+	}
+
+protected:
+	long _expected;
+	vector<long> _range;
+	;
+};
+TEST_P(ConsecutiveLargestProductTestFixture, ConsecutiveLargestProductTests)
+{
+	ASSERT_EQ(this->_expected, this->ConsecutiveLargestProductTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	RangeTests,
+	ConsecutiveLargestProductTestFixture,
+	::testing::Values(make_tuple(6, vector<long>{2, 3, -2, 4}),
+					  make_tuple(0, vector<long>{-2, 0, -1}),
+					  make_tuple(2, vector<long>{-2, -1, 0}),
+					  make_tuple(3, vector<long>{-3, -1, -1}),
+					  make_tuple(2, vector<long>{0, 2}),
+					  make_tuple(4, vector<long>{3, -1, 4}),
+					  make_tuple(1, vector<long>{-1, -1}),
+					  make_tuple(6, vector<long>{0, -2, -3}),
+					  make_tuple(24, vector<long>{2, -5, -2, -4, 3}),
+					  make_tuple(2, vector<long>{2, 0, -3, 2, 1, 0, 1, -2})));
 TEST(RangeTests, ConsecutiveSumMinCountTest)
 {
 	vector<long> a = {2, 3, 1, 2, 4, 3};
