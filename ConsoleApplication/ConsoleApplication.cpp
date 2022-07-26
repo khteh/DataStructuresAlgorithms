@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
 	unsigned long long mask = 0;
 	vector<string> strings, strings1;
 	set<string> stringset, stringset1;
+	set<long> aset;
 	vector<long> a, b, sortData;
 	vector<long double> ld;
 	vector<int> data, data1;

@@ -8756,3 +8756,44 @@ size_t NormalPlayNim(vector<size_t> &data)
 			count++;
 	return count;
 }
+/*
+ * https://www.hackerrank.com/challenges/manasa-and-stones/problem
+ * 100%
+ * 3 1 1
+ * 000 : 0 1 2
+ * 001 : 0 1 2
+ * 010 : 0 1 2
+ * 011 : 0 1 2
+
+ * 3 1 2
+ * 000 : 0 1 2
+ * 001 : 0 1 3
+ * 010 : 0 2 3
+ * 011 : 0 2 4
+ *
+ * 4 10 10
+ * 0000 : 0 10 20 30
+ * 0001 : 0 10 20 30
+ * ...
+ *
+ * 4 10 100
+ * 0000 : 0 10 20 30
+ * 0001 : 0 10 20 120
+ * 0010 : 0 10 110 120
+ * 0011 : 0 10 110 210
+ * 0100 : 0 100 110 120
+ * 0101 : 0 100 110 210
+ * 0110 : 0 100 200 210
+ * 0111 : 0 100 200 300
+ */
+vector<long> LastNumbers(size_t n, long a, long b)
+{
+	vector<long> result;
+	long diff = abs(a - b), num = min(a, b) * (n - 1), maximum = max(a, b) * (n - 1);
+	if (a == b)
+		return vector<long>{num};
+	result.resize(((maximum - num) / diff) + 1);
+	ranges::generate(result, [n = num, diff]() mutable
+					 { long result = n; n += diff; return result; });
+	return result;
+}

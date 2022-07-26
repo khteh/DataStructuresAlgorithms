@@ -435,3 +435,11 @@ TEST(RangeTests, PickNumbersFromRangesTests)
 	a = {1, 2, 2, 3, 1, 2};
 	ASSERT_EQ(5, PickingNumbers(a));
 }
+TEST(RangeTests, LastNumbersTests)
+{
+	vector<long> a = {2, 3, 4};
+	ASSERT_EQ(a, LastNumbers(3, 1, 2));
+	a.clear();
+	a = {30, 120, 210, 300};
+	ASSERT_EQ(a, LastNumbers(4, 10, 100));
+}
