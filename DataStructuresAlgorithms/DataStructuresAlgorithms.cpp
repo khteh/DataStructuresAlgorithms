@@ -495,7 +495,7 @@ hh = 9 - 7 = 2 {4 7 9}
 l = max(3, 6+6) = 12
 h = max(6+2, 3+8) = 11
 */
-size_t sherlockAndCost(vector<size_t> &data)
+size_t SherlockAndCost(vector<size_t> &data)
 {
 	/*
 		lh: low to high from data[i - 1]=1 to data[i]
@@ -2320,7 +2320,7 @@ void trim(string &str)
  * diff: 7 6 5 4 3 2 3
  * pairs:1 2 3 4 . .    <= 2 pairs: {[3,5], [2,6]}
  */
-size_t sumpairs(vector<long> &numbers, long sum)
+size_t sumpairs(long sum, vector<long> &numbers)
 {
 	size_t count = 0;
 	long diff;
@@ -2341,7 +2341,7 @@ size_t sumpairs(vector<long> &numbers, long sum)
 /* https://leetcode.com/problems/3sum/
  * 100%
  */
-vector<vector<long>> threeSum(vector<long> &nums)
+vector<vector<long>> TripletsZeroSum(vector<long> &nums)
 {
 	set<vector<long>> result;
 	if (nums.empty() || nums.size() < 3)
@@ -2368,7 +2368,7 @@ vector<vector<long>> threeSum(vector<long> &nums)
 /* https://leetcode.com/problems/4sum/
  * 100%
  */
-vector<vector<long>> fourSum(vector<long> &nums, long target)
+vector<vector<long>> QuadrupletsSum(long target, vector<long> &nums)
 {
 	set<vector<long>> result;
 	if (nums.empty() || nums.size() < 4)
@@ -2399,7 +2399,7 @@ vector<vector<long>> fourSum(vector<long> &nums, long target)
  * tmp:  2 3 4 5 6 7
  * count:1 2 3 4 5  	=> 5 pairs
  */
-size_t diffpairs(vector<long> &numbers, long diff)
+size_t NumberDiffPairs(long diff, vector<long> &numbers)
 {
 	size_t count = 0;
 	set<long> pairs(numbers.begin(), numbers.end());
@@ -2412,7 +2412,7 @@ size_t diffpairs(vector<long> &numbers, long diff)
 	}
 	return count;
 }
-size_t diffpairs(set<long> &numbers, long diff)
+size_t NumberDiffPairs(long diff, set<long> &numbers)
 {
 	size_t count = 0;
 	long tmp;
@@ -2423,7 +2423,6 @@ size_t diffpairs(set<long> &numbers, long diff)
 		srcIt = numbers.find(tmp);
 		if (srcIt != numbers.end())
 			count++;
-		// cout << *it << ", " << *srcIt << endl;
 	}
 	return count;
 }
@@ -4925,11 +4924,23 @@ long ChocolatesByNumbers(long n, long m)
  * i: 1 -> [5]
  * i: 0
  */
-long MinimumBribes(vector<long> &data, size_t maxBribes)
+long MinimumBribes(size_t maxBribes, vector<long> &data)
 {
 	long bribes = 0;
 	for (long i = data.size() - 1; i >= 0; i--)
 	{
+		/*
+		 * 0 1 2 3 4 5 6 7 <- i
+		 * 1 2 5 3 7 8 6 4
+		 * i: 7 -> bribes: [5, 7, 8, 6]
+		 * i: 6 -> bribes: [7, 8]
+		 * i: 5 -> bribes: []
+		 * i: 4 -> bribes: []
+		 * i: 3 -> bribes: [5]
+		 * i: 2 -> bribes: []
+		 * i: 1 -> bribes: []
+		 * i: 0 -> bribes: []
+		 */
 		if (data[i] - (i + 1) > (long)maxBribes)
 			return -1;
 		for (long j = max(0L, data[i] - (long)maxBribes); j < i; j++)
@@ -5568,6 +5579,10 @@ long PostmanProblem(vector<long> &k, vector<vector<long>> &roads)
 }
 /* https://www.hackerrank.com/challenges/almost-sorted/problem
    100%
+4 2
+2 4 : swap
+2 -2
+
 3 1 2
 1 2 3 : No
 2 -1 -1
@@ -6784,102 +6799,40 @@ vector<string> wordBreakDFS(const string &s, set<string> &words)
 	return wordBreakDFS(s, words, strings);
 }
 /* https://leetcode.com/problems/contains-duplicate-iii/
-* Given an integer array nums and two integers k and t, return true if there are two distinct indices i and j in the array such that abs(nums[i] - nums[j]) <= t and abs(i - j) <= k.
+* Given an integer array nums and two integers k and t, return true if there are two distinct indices i and j in the array such that
+* abs(nums[i] - nums[j]) <= t and abs(i - j) <= k.
 * 100%
-* Use bucket sort theory.
-* nums are distributed to bucket of size t.
-* (1) All values within the same bucket will have a diff or distance <= t.
-* (2) Neighbouring buckets will have a diff or distance ranging from t to 2*t.
-* Observations:
-* (1) Positive values will have even distribution of size t
-* (2) Need to adjust the distribution of negative numbers
-* (3) t+1 to avoid division by zero
-t:1
-w = t+1 = 2
- i i/w* desired**
--7 -3	-4
--6 -3	-3
--5 -2   -3
--4 -2   -2
--3 -1   -2
--2 -1   -1
--1  0   -1 => (i - 1) / w
- 0  0    0
- 1  0    0
- 2  1    1
- 3  1    1
- 4  2    2
- 5  2    2
- 6  3	 3
- 7  3	 3
- 8  4	 4
 
-t:2
-w = t+1 = 3
-i  i/w* desired**
--6 -2	-2    -6 -2 / 3 = -2
--5 -1   -2    -5 -2 / 3 = -2
--4 -1   -2    -4 -2 / 3 = -2
--3 -1   -1    -3 -2 / 3 = -1
--2  0   -1    -2 -2 / 3 = -1
--1  0   -1 => -1 -2 / 3 = -1
- 0  0    0
- 1  0    0
- 2  0    0
- 3  1    1
- 4  1    1
- 5  1    1
- 6  2	 2
- 7  2 	 2
- 8  2	 2
-
- Test cases:
-[2147483647,-1,2147483647]
+Test cases:
+[2147483647,-1,2147483647] => false
 k: 1
 t: 2147483647
-w = t + 1 = 2147483648
- i 			i/w*
--1 			(-1 /2147483648) - 1 = -1
-2147483647  (2147483647)/2147483648 = 0;
 
-[10,-1,10]
+[2147483647,-1,2147483647] => false
+k: 1
+t: -2147483648L (0xFFFF_FFFF_8000_0000)
+
+[10,-1,10] => false
 k: 1
 t: 10
-w: t+1 = 11
- i i/w*
--1 (-1 / 11) - 1 = -1
-10 (10) / 11 = 0;
 
-[-2147483648,2147483647] => [0x80000_000, 0x7FFF_FFFF]
+[-2147483648,2147483647] => [0x80000_000, 0x7FFF_FFFF] => false
 k: 1
 t: 1
-w: t+1 = 2
-
- i 				i/w*
--2147483648		(-2147483648 / 2) - 1 = -0x40000000 - 1 = -0x40000001 (<0)
-2147483647		(2147483647) / 2 > 0
 */
 bool ContainsNearbyAlmostDuplicate(vector<long> &nums, long k, long t)
 {
-	map<long, long> buckets;
+	multiset<long> buckets;
 	if (k > 0 && t >= 0)
 	{ // Absolute diff. t >= 0. k = 0 means diff is 0.
-		long w = t + 1;
 		for (size_t i = 0; i < nums.size(); i++)
 		{
-			long bucket = nums[i] < 0 ? (nums[i] / w) - 1 : nums[i] / w;
-			if (buckets.find(bucket) != buckets.end()) // (1) All values within the same bucket will have a diff or distance <= t.
+			if (i > k)
+				buckets.erase(nums[i - k - 1]);
+			multiset<long>::iterator it = buckets.lower_bound(nums[i] - t); // >= nums[i] - t
+			if (it != buckets.end() && *it <= (nums[i] + t))
 				return true;
-			if (buckets.find(bucket - 1) != buckets.end() && (unsigned long)abs(buckets[bucket - 1] - nums[i]) <= (unsigned long)t)
-				return true;
-			if (buckets.find(bucket + 1) != buckets.end() && (unsigned long)abs(buckets[bucket + 1] - nums[i]) <= (unsigned long)t)
-				return true;
-			buckets.emplace(bucket, nums[i]);
-			if ((long)i >= k)
-			{ // ">=" as i will be +1 in the next loop and i will be > k
-				long bucket = nums[i - k] < 0 ? (nums[i - k] - 1) / w : nums[i - k] / w;
-				buckets.erase(bucket);
-			}
+			buckets.emplace(nums[i]);
 		}
 	}
 	return false;
@@ -6958,8 +6911,9 @@ string getHint(const string &secret, const string &guess)
  * 1 17 5 10 13 11 12 5 16 8
  * 1 17 5 13 11 12 5 16 8
  */
-void WiggleMaxLength(vector<long> &nums, vector<long> &result)
+vector<long> WiggleMaxLength(vector<long> &nums)
 {
+	vector<long> result;
 	bool direction = false; // false: down. true: up
 	for (size_t i = 0; i < nums.size(); i++)
 	{
@@ -6982,6 +6936,7 @@ void WiggleMaxLength(vector<long> &nums, vector<long> &result)
 			direction = true;
 		}
 	}
+	return result;
 }
 /* https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/
  * If we treat null's as leaves, then the binary tree will always be full. A full binary tree has a good property that # of leaves = # of nonleaves + 1.
@@ -7018,7 +6973,7 @@ size_t LargestNumberCompositionProductWithDynamicProgramming(size_t n)
 /* https://leetcode.com/problems/maximum-product-of-word-lengths/
  * 100%
  */
-size_t maxProductOfNonOverlappingWordLengths(vector<string> &words)
+size_t MaxProductOfNonOverlappingWordLengths(vector<string> &words)
 {
 	size_t result = 0;
 	map<size_t, size_t> patterns;
@@ -8393,7 +8348,7 @@ long SteadyGene(string const &gene)
  * https://www.hackerrank.com/challenges/picking-numbers/problem
  * 100%
  */
-size_t PickingNumbers(vector<long> &a)
+size_t PickNumbersFromRange(vector<long> &a)
 {
 	size_t max = 0;
 	for (size_t i = 0; i < a.size(); i++)

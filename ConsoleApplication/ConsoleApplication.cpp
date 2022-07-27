@@ -229,6 +229,8 @@ int main(int argc, char *argv[])
 	cout << "int -" << hex << i << ": " << -i << dec << " " << -i << ", ~" << i << ": " << hex << ~i << " " << dec << ~i << endl;
 	ui = 3;
 	// cout << "uint -" << hex << ui << ": " << -ui << dec << " " << -ui << ", ~" << ui << ": " << hex << ~ui << " " << dec << ~ui << endl;
+	assert(1 == abs(-INT_MIN - 0x7FFFFFFF));
+	assert(1 == abs(0x7FFFFFFF - -INT_MIN));
 
 	/*
 	 * 0x8000_0000 + 1 = -0x7FFF_FFFF = 0x8000_0001
