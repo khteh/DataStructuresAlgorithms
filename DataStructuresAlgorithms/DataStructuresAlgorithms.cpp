@@ -1603,13 +1603,13 @@ i j       k    (==mid)
 i   j     k    (<mid)
 
 0 1 1 1 2 0 2 2
-  i   j     k  (==mid)
-
-0 1 1 1 2 0 2 2
-  i     j   k  (>mid)
+  i   j   k    (==mid)
 
 0 1 1 1 2 0 2 2
   i     j k    (>mid)
+
+0 1 1 1 0 2 2 2
+  i     j,k    (>mid)
 
 0 1 1 1 0 2 2 2
   i     j,k    (<mid)
