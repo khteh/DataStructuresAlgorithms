@@ -72,6 +72,7 @@ using namespace tbb;
 #include "ListRangeSum.h"
 #include "LongestCommonSubsequence.h"
 #include "Knapsack.h"
+#include "Range.h"
 #include "Sort.h"
 #include "Poker.h"
 #include "VariantVisitor.h"
@@ -125,14 +126,6 @@ typedef struct ZeroFactorsFiveCount
 			return count > other.count;
 	}
 } zerofactorsfivecount_t;
-typedef enum class Direction
-{
-	Up,
-	Down,
-	Left,
-	Right,
-	NoChange
-} direction_t;
 typedef struct Position
 {
 	Position() : row(-1), col(-1) {}
@@ -184,11 +177,7 @@ double round(double num, int n);
 bool isUniqueString(string const &);
 vector<string> findUnique(vector<string> const &, vector<string> const &);
 bool CanShuffleWithoutRepeat(string &);
-long ConsecutiveLargestSum(vector<long> &, vector<long> &);
-long ConsecutiveLargestProduct(vector<long> &);
 long ConsecutiveLargestSumOfFactors(vector<zerofactors_t> &data, vector<zerofactors_t> &result, int value);
-long ConsecutiveSumMinCount(long, vector<long> &);
-long LongestNonNegativeSumSlice(vector<long> &);
 size_t CountDistinctSlices(vector<long> &);
 size_t CountTriangles(vector<long> &);
 // Greedy Algorithms
@@ -197,8 +186,6 @@ size_t TieRopes(vector<size_t> &, size_t);
 long MinAbsSum(vector<long> &);
 long NumberSolitaire(vector<long> &);
 long MaxProfit(vector<long> &);
-size_t StockMax(vector<long> &);
-long StockMaxProfit(vector<long> &);
 string decimal_to_binary(long);
 long binary_to_decimal(const string &);
 void decimal_to_binary(long, vector<bool> &, size_t);
@@ -214,7 +201,6 @@ bool areAnagrams(string const &, string const &);
 size_t FindAnagrams(vector<string> const &, vector<vector<string>> &);
 bool SherlockValidString(string const &);
 size_t sherlockAndAnagrams(string const &);
-size_t SherlockAndCost(vector<size_t> &);
 bool isPalindrome(string const &);
 bool isPalindrome1(string const &);
 bool isPalindrome2(string const &);
@@ -273,7 +259,6 @@ void TestURNG(URNG &);
 void TestRandom();
 void MinHeapifyDown(vector<long> &, size_t);
 void MaxHeapifyDown(vector<long> &, size_t);
-long MinimumBribes(size_t, vector<long> &);
 long countInversions(vector<long> &);
 size_t MergeCountInversions(vector<long> &, vector<long> &, size_t, size_t, size_t);
 void DutchPartitioning(vector<long> &, long);
@@ -289,11 +274,6 @@ size_t Count1Bits(long);
 void WordsLadder(const string &, const string &, set<string> &, vector<string> &);
 void GetPermutations(string &);
 void trim(string &);
-size_t sumpairs(long, vector<long> &);
-vector<vector<long>> TripletsZeroSum(vector<long> &);
-vector<vector<long>> QuadrupletsSum(long, vector<long> &);
-size_t NumberDiffPairs(long, vector<long> &);
-size_t NumberDiffPairs(long, set<long> &);
 size_t minDiffPairs(vector<long> &, long);
 size_t greaterthansumpairs(vector<long> &, long);
 string uncompress(string const &);
@@ -337,7 +317,6 @@ bool JSONValidation(string);
 vector<char> AddVectors(vector<char> &, vector<char> &);
 long MaxLengths(vector<string> &);
 void ExceptionTest();
-size_t LongestUpDownAlternatingSubSequence(const vector<long> &, vector<long> &);
 void PlayTreasureGame();
 size_t countPaths(size_t, size_t, size_t, size_t, size_t);
 vector<shared_ptr<Node<string>>> shortest_cycle_path(shared_ptr<Node<string>>);
@@ -370,7 +349,6 @@ long getLowestPathCost(size_t g_nodes, vector<long> &, vector<long> &, vector<lo
 size_t SurfaceArea3D(vector<vector<long>> &);
 size_t MinSubGraphsDifference(vector<size_t> &, vector<vector<size_t>> &);
 long PostmanProblem(vector<long> &, vector<vector<long>> &);
-string AlmostSorted(vector<long> &);
 string DecryptPassword(const string &);
 unsigned long long substrings(const string &);
 size_t steadyGene(string &);
@@ -393,12 +371,9 @@ bool WordBreakDynamicProgramming(const string &, set<string> &);
 void WordBreakDynamicProgramming(const string &, set<string> &, vector<string> &);
 vector<string> wordBreakDFS(const string &, set<string> &);
 vector<string> wordBreakDFS(string, set<string> &, map<string, vector<string>> &);
-bool ContainsNearbyAlmostDuplicate(vector<long> &, long, long);
 string getHint(const string &, const string &);
-vector<long> WiggleMaxLength(vector<long> &);
 bool IsValidPreOrderTreeSerialization(const string &);
 size_t LargestNumberCompositionProductWithDynamicProgramming(size_t);
-size_t MaxProductOfNonOverlappingWordLengths(vector<string> &);
 vector<string> findItinerary(vector<vector<string>> &, const string &);
 void EulerianPath(string, map<string, multiset<string>> &, vector<string> &);
 size_t eggDrops(size_t, size_t);
@@ -406,7 +381,6 @@ vector<string> fizzBuzz(size_t);
 vector<long> bfs(size_t, size_t, vector<vector<size_t>> &, size_t);
 vector<size_t> UnbeatenPaths(size_t, vector<vector<size_t>> &, size_t);
 string roadsInHackerland(size_t, vector<vector<size_t>> &);
-size_t VectorEqualSplit(vector<int> &);
 bool Abbreviation(string &, string &);
 void cpp20readonlyranges();
 void cpp20ranges();
@@ -414,7 +388,6 @@ void cpp20variants();
 size_t MoveDisksToTowerOfHanoi1(size_t, vector<long> &);
 long double VectorSlicesSum(vector<long double> &);
 long SteadyGene(string const &);
-size_t PickNumbersFromRange(vector<long> &);
 size_t IntervalSelection(vector<vector<size_t>> &);
 string TwentyFourHourTimeConversion(string &);
 vector<long> KaprekarNumbers(long, long);
@@ -422,4 +395,3 @@ size_t kMarsh(vector<string> &);
 size_t MatrixPerimeter(vector<vector<size_t>> &, vector<string> &);
 size_t NormalPlayNim(vector<size_t> &);
 vector<size_t> ShortestPaths(size_t, vector<vector<size_t>> &, size_t);
-vector<long> LastNumbers(size_t, long, long);

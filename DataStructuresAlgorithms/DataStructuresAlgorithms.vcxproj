@@ -177,6 +177,7 @@
     <ClInclude Include="ListRangeSum.h" />
     <ClInclude Include="LongestCommonSubsequence.h" />
     <ClInclude Include="LRUCache.h" />
+    <ClInclude Include="Range.h" />
     <ClInclude Include="Sort.h" />
     <ClInclude Include="Square.h" />
     <ClInclude Include="TreasureGame.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="ListRangeSum.cpp" />
     <ClCompile Include="LongestCommonSubsequence.cpp" />
     <ClCompile Include="LRUCache.cpp" />
+    <ClCompile Include="Range.cpp" />
     <ClCompile Include="Sort.cpp" />
     <ClCompile Include="Square.cpp" />
     <ClCompile Include="TreasureGame.cpp" />

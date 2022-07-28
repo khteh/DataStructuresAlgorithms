@@ -11,10 +11,11 @@ public:
 	}
 	long ConsecutiveLargestSumTest()
 	{
-		return ConsecutiveLargestSum(_range, _collectionResult);
+		return _rangeObj.ConsecutiveLargestSum(_range, _collectionResult);
 	}
 
 protected:
+	Range _rangeObj;
 	long _expected;
 	vector<long> _range, _expectedCollection, _collectionResult;
 };
@@ -41,10 +42,11 @@ public:
 	}
 	long ConsecutiveLargestProductTest()
 	{
-		return ConsecutiveLargestProduct(_range);
+		return _rangeObj.ConsecutiveLargestProduct(_range);
 	}
 
 protected:
+	Range _rangeObj;
 	long _expected;
 	vector<long> _range;
 };
@@ -76,10 +78,11 @@ public:
 	}
 	long ConsecutiveSumMinCountTest()
 	{
-		return ConsecutiveSumMinCount(_target, _range);
+		return _rangeObj.ConsecutiveSumMinCount(_target, _range);
 	}
 
 protected:
+	Range _rangeObj;
 	long _expected, _target;
 	vector<long> _range;
 };
@@ -101,10 +104,11 @@ public:
 	}
 	long LongestNonNegativeSumSliceTest()
 	{
-		return LongestNonNegativeSumSlice(_range);
+		return _rangeObj.LongestNonNegativeSumSlice(_range);
 	}
 
 protected:
+	Range _rangeObj;
 	long _expected;
 	vector<long> _range;
 };
@@ -130,10 +134,11 @@ public:
 	}
 	size_t LongestUpDownAlternatingSubSequenceTest()
 	{
-		return LongestUpDownAlternatingSubSequence(_range, _collectionResult);
+		return _rangeObj.LongestUpDownAlternatingSubSequence(_range, _collectionResult);
 	}
 
 protected:
+	Range _rangeObj;
 	size_t _expected;
 	vector<long> _range, _expectedCollection, _collectionResult;
 };
@@ -157,10 +162,11 @@ public:
 	}
 	size_t SumPairsTest()
 	{
-		return sumpairs(_sum, _range);
+		return _rangeObj.SumPairs(_sum, _range);
 	}
 
 protected:
+	Range _rangeObj;
 	size_t _expected;
 	vector<long> _range;
 	long _sum;
@@ -185,10 +191,11 @@ public:
 	}
 	vector<vector<long>> TripletsZeroSumTest()
 	{
-		return TripletsZeroSum(_range);
+		return _rangeObj.TripletsZeroSum(_range);
 	}
 
 protected:
+	Range _rangeObj;
 	vector<vector<long>> _expected;
 	vector<long> _range;
 	long _sum;
@@ -213,10 +220,11 @@ public:
 	}
 	vector<vector<long>> QuadrupletsSumTest()
 	{
-		return QuadrupletsSum(_sum, _range);
+		return _rangeObj.QuadrupletsSum(_sum, _range);
 	}
 
 protected:
+	Range _rangeObj;
 	vector<vector<long>> _expected;
 	vector<long> _range;
 	long _sum;
@@ -241,10 +249,11 @@ public:
 	}
 	size_t NumberDiffPairsTest()
 	{
-		return NumberDiffPairs(_sum, _range);
+		return _rangeObj.NumberDiffPairs(_sum, _range);
 	}
 
 protected:
+	Range _rangeObj;
 	size_t _expected;
 	set<long> _range;
 	long _sum;
@@ -271,10 +280,11 @@ public:
 	}
 	size_t StockMaxTest()
 	{
-		return StockMax(_range);
+		return _rangeObj.StockMax(_range);
 	}
 
 protected:
+	Range _rangeObj;
 	size_t _expected;
 	vector<long> _range;
 };
@@ -303,10 +313,11 @@ public:
 	}
 	long StockMaxProfitTest()
 	{
-		return StockMaxProfit(_range);
+		return _rangeObj.StockMaxProfit(_range);
 	}
 
 protected:
+	Range _rangeObj;
 	long _expected;
 	vector<long> _range;
 };
@@ -328,10 +339,11 @@ public:
 	}
 	size_t SherlockAndCostTest()
 	{
-		return SherlockAndCost(_range);
+		return _rangeObj.SherlockAndCost(_range);
 	}
 
 protected:
+	Range _rangeObj;
 	size_t _expected;
 	vector<size_t> _range;
 };
@@ -362,10 +374,11 @@ public:
 	}
 	vector<long> WiggleMaxLengthTest()
 	{
-		return WiggleMaxLength(_range);
+		return _rangeObj.WiggleMaxLength(_range);
 	}
 
 protected:
+	Range _rangeObj;
 	vector<long> _expected;
 	vector<long> _range;
 };
@@ -396,10 +409,11 @@ public:
 	}
 	bool ContainsNearbyAlmostDuplicateTest()
 	{
-		return ContainsNearbyAlmostDuplicate(_range, _k, _t);
+		return _rangeObj.ContainsNearbyAlmostDuplicate(_range, _k, _t);
 	}
 
 protected:
+	Range _rangeObj;
 	long _k, _t;
 	bool _expected;
 	vector<long> _range;
@@ -439,10 +453,11 @@ public:
 	}
 	size_t VectorEqualSplitTest()
 	{
-		return VectorEqualSplit(_range);
+		return _rangeObj.VectorEqualSplit(_range);
 	}
 
 protected:
+	Range _rangeObj;
 	size_t _expected;
 	vector<int> _range;
 };
@@ -485,10 +500,11 @@ public:
 	}
 	size_t MaxProductOfNonOverlappingWordLengthsTest()
 	{
-		return MaxProductOfNonOverlappingWordLengths(_range);
+		return _rangeObj.MaxProductOfNonOverlappingWordLengths(_range);
 	}
 
 protected:
+	Range _rangeObj;
 	size_t _expected;
 	vector<string> _range;
 };
@@ -512,10 +528,11 @@ public:
 	}
 	string AlmostSortedTest()
 	{
-		return AlmostSorted(_range);
+		return _rangeObj.AlmostSorted(_range);
 	}
 
 protected:
+	Range _rangeObj;
 	string _expected;
 	vector<long> _range;
 };
@@ -541,10 +558,11 @@ public:
 	}
 	long MinimumBribesTest()
 	{
-		return MinimumBribes(_bribes, _range);
+		return _rangeObj.MinimumBribes(_bribes, _range);
 	}
 
 protected:
+	Range _rangeObj;
 	long _expected;
 	size_t _bribes;
 	vector<long> _range;
@@ -568,10 +586,11 @@ public:
 	}
 	long PickNumbersFromRangeTest()
 	{
-		return PickNumbersFromRange(_range);
+		return _rangeObj.PickNumbersFromRange(_range);
 	}
 
 protected:
+	Range _rangeObj;
 	size_t _expected;
 	vector<long> _range;
 };
@@ -595,10 +614,11 @@ public:
 	}
 	vector<long> LastNumbersTest()
 	{
-		return LastNumbers(_n, _a, _b);
+		return _rangeObj.LastNumbers(_n, _a, _b);
 	}
 
 protected:
+	Range _rangeObj;
 	vector<long> _expected;
 	size_t _n;
 	long _a, _b;
