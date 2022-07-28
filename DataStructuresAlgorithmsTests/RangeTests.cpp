@@ -329,6 +329,34 @@ INSTANTIATE_TEST_SUITE_P(
 	RangeTests,
 	StockMaxProfitTestFixture,
 	::testing::Values(make_tuple(6, vector<long>{1, 2, 3, 0, 2, 5}), make_tuple(6, vector<long>{1, 2, 3, 0, 1, 5}), make_tuple(9, vector<long>{1, 2, 6, 0, 1, 5})));
+class StockMaxProfit2TestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_range = get<1>(GetParam());
+	}
+	long StockMaxProfit2Test()
+	{
+		return _rangeObj.StockMaxProfit2(_range);
+	}
+
+protected:
+	Range _rangeObj;
+	long _expected;
+	vector<long> _range;
+};
+TEST_P(StockMaxProfit2TestFixture, StockMaxProfit2Tests)
+{
+	ASSERT_EQ(this->_expected, this->StockMaxProfit2Test());
+}
+INSTANTIATE_TEST_SUITE_P(
+	RangeTests,
+	StockMaxProfit2TestFixture,
+	::testing::Values(make_tuple(7, vector<long>{7, 1, 5, 3, 6, 4}), make_tuple(4, vector<long>{1, 2, 3, 4, 5}), make_tuple(0, vector<long>{5, 4, 3, 2, 1}),
+					  make_tuple(1, vector<long>{1, 2}), make_tuple(0, vector<long>{1, 1})));
+
 class SherlockAndCostTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>>>
 {
 public:

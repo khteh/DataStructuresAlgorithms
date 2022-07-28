@@ -1,7 +1,7 @@
 #include "Range.h"
 // https://en.wikipedia.org/wiki/Maximum_subarray_problem
 // Kadane's algorithm
-long Range::ConsecutiveLargestSum(vector<long>& data, vector<long>& result)
+long Range::ConsecutiveLargestSum(vector<long> &data, vector<long> &result)
 {
 	vector<long> tmp;
 	map<long, vector<long>> results;
@@ -28,7 +28,7 @@ long Range::ConsecutiveLargestSum(vector<long>& data, vector<long>& result)
 /* https://leetcode.com/problems/maximum-product-subarray/
  * 100%
  */
-long Range::ConsecutiveLargestProduct(vector<long>& data)
+long Range::ConsecutiveLargestProduct(vector<long> &data)
 {
 	vector<long> tmp;
 	map<long, vector<long>> results;
@@ -89,7 +89,7 @@ long Range::ConsecutiveLargestProduct(vector<long>& data)
    j i   sum: 8 count: 2
 	 i,j sum: 4 count: 1
 */
-long Range::ConsecutiveSumMinCount(long target, vector<long>& data)
+long Range::ConsecutiveSumMinCount(long target, vector<long> &data)
 {
 	size_t count = numeric_limits<size_t>::max();
 	long sum = 0;
@@ -108,7 +108,7 @@ long Range::ConsecutiveSumMinCount(long target, vector<long>& data)
 // https://app.codility.com/programmers/challenges/ferrum2018/
 // Find the longest sequence when the graph crosses a previous point. The crossing point is when negative becomes positive and vice versa
 // 100%
-long Range::LongestNonNegativeSumSlice(vector<long>& data)
+long Range::LongestNonNegativeSumSlice(vector<long> &data)
 {
 	// -1, -1, -1, -1, -1, -1, 1 (max_len = max(1, 6 - 4) = 2), 1 (max_len = max(2, 7 - 3) = 4)
 	//  1,  1,  1,  1,  1,  1,-1 (max_len = max(6, 6 - 4) = 6),-1 (max_len = max(6, 7 - 3) = 6)
@@ -129,7 +129,7 @@ long Range::LongestNonNegativeSumSlice(vector<long>& data)
 	}
 	return max_len;
 }
-size_t Range::LongestUpDownAlternatingSubSequence(const vector<long>& data, vector<long>& result)
+size_t Range::LongestUpDownAlternatingSubSequence(const vector<long> &data, vector<long> &result)
 {
 	map<size_t, vector<long>> sequences;
 	direction_t direction = Direction::NoChange, flag = Direction::NoChange;
@@ -139,7 +139,7 @@ size_t Range::LongestUpDownAlternatingSubSequence(const vector<long>& data, vect
 		for (vector<long>::const_iterator it = data.begin() + 1; it != data.end(); it++, index++)
 		{
 			flag = *it > *(it - 1) ? Direction::Up : *it < *(it - 1) ? Direction::Down
-				: Direction::NoChange;
+																	 : Direction::NoChange;
 			if (flag != direction)
 			{
 				count++;
@@ -169,7 +169,7 @@ size_t Range::LongestUpDownAlternatingSubSequence(const vector<long>& data, vect
  * diff: 7 6 5 4 3 2 3
  * pairs:1 2 3 4 . .    <= 2 pairs: {[3,5], [2,6]}
  */
-size_t Range::SumPairs(long sum, vector<long>& numbers)
+size_t Range::SumPairs(long sum, vector<long> &numbers)
 {
 	size_t count = 0;
 	long diff;
@@ -190,7 +190,7 @@ size_t Range::SumPairs(long sum, vector<long>& numbers)
 /* https://leetcode.com/problems/3sum/
  * 100%
  */
-vector<vector<long>> Range::TripletsZeroSum(vector<long>& nums)
+vector<vector<long>> Range::TripletsZeroSum(vector<long> &nums)
 {
 	set<vector<long>> result;
 	if (nums.empty() || nums.size() < 3)
@@ -217,7 +217,7 @@ vector<vector<long>> Range::TripletsZeroSum(vector<long>& nums)
 /* https://leetcode.com/problems/4sum/
  * 100%
  */
-vector<vector<long>> Range::QuadrupletsSum(long target, vector<long>& nums)
+vector<vector<long>> Range::QuadrupletsSum(long target, vector<long> &nums)
 {
 	set<vector<long>> result;
 	if (nums.empty() || nums.size() < 4)
@@ -248,7 +248,7 @@ vector<vector<long>> Range::QuadrupletsSum(long target, vector<long>& nums)
  * tmp:  2 3 4 5 6 7
  * count:1 2 3 4 5  	=> 5 pairs
  */
-size_t Range::NumberDiffPairs(long diff, vector<long>& numbers)
+size_t Range::NumberDiffPairs(long diff, vector<long> &numbers)
 {
 	size_t count = 0;
 	set<long> pairs(numbers.begin(), numbers.end());
@@ -261,7 +261,7 @@ size_t Range::NumberDiffPairs(long diff, vector<long>& numbers)
 	}
 	return count;
 }
-size_t Range::NumberDiffPairs(long diff, set<long>& numbers)
+size_t Range::NumberDiffPairs(long diff, set<long> &numbers)
 {
 	size_t count = 0;
 	long tmp;
@@ -279,7 +279,7 @@ size_t Range::NumberDiffPairs(long diff, set<long>& numbers)
  * 100%
  * { 1, 2, 100 } : (100 - 1 = 99) + (100 - 2 = 98) = 197
  */
-size_t Range::StockMax(vector<long>& prices)
+size_t Range::StockMax(vector<long> &prices)
 {
 	size_t profit = 0;
 	size_t maxIndex = 0;
@@ -310,7 +310,7 @@ size_t Range::StockMax(vector<long>& prices)
 * stay[i] = max(stay[i - 1], sold[i - 1]); // Stay put, or rest from sold state
 * bought[i] = max(bought[i - 1], stay[i - 1] - prices[i]); // Stay put, or buy again (Cannot buy immediately after sell)
 * sold[i] = bought[i - 1] + prices[i]; // Sell
-* 
+*
 * stay[0] = 0; // At the start, you don't have any stock if you just rest
 * bought[0] = -prices[0]; // After buy, you should have -prices[0] profit. Be positive!
 * sold[0] = 0;
@@ -320,23 +320,51 @@ stay:   0  0  1  2 2
 bought: -1 -1 -1 1 1
 sold:   0  1  2 -1 3
 */
-long Range::StockMaxProfit(vector<long>& prices)
+long Range::StockMaxProfit(vector<long> &prices)
 {
 	if (prices.size() < 2)
 		return 0;
 	long profit = 0;
-	vector<long> stay(prices.size(), 0), bought(prices.size(), 0), sold(prices.size(), 0);
-	stay[0] = 0;
-	bought[0] = -prices[0];
-	sold[0] = 0;
+	vector<long> stay, bought, sold;
+	stay.push_back(0);
+	bought.push_back(-prices[0]);
+	sold.push_back(0);
 	for (size_t i = 1; i < prices.size(); i++)
 	{
-		stay[i] = max(stay[i - 1], sold[i - 1]);
-		bought[i] = max(bought[i - 1], stay[i - 1] - prices[i]);
-		sold[i] = bought[i - 1] + prices[i];
+		stay.push_back(max(stay[i - 1], sold[i - 1]));
+		bought.push_back(max(bought[i - 1], stay[i - 1] - prices[i]));
+		sold.push_back(bought[i - 1] + prices[i]);
 	}
 	return max(stay.back(), sold.back());
 }
+/*
+ * https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/
+ * 100%
+ * [7,1,5,3,6,4]
+ * 5 - 1 = 4
+ * 6 - 3 = 3 : profit: 7
+ *
+ * [1,2,3,4,5]
+ * profit: 4
+ */
+long Range::StockMaxProfit2(vector<long> &prices)
+{
+	long profit = 0, current = prices[0], bought = prices[0];
+	for (size_t i = 1; i < prices.size(); i++)
+	{
+		for (; i < prices.size() && prices[i] >= prices[i - 1]; i++)
+			current = prices[i];
+		if (current > bought)
+			profit += (current - bought);
+		if (i < prices.size())
+		{
+			bought = prices[i];
+			current = bought;
+		}
+	}
+	return profit;
+}
+
 /*
 	https://www.hackerrank.com/challenges/sherlock-and-cost/problem
 	100%
@@ -355,7 +383,7 @@ hh = 9 - 7 = 2 {4 7 9}
 l = max(3, 6+6) = 12
 h = max(6+2, 3+8) = 11
 */
-size_t Range::SherlockAndCost(vector<size_t>& data)
+size_t Range::SherlockAndCost(vector<size_t> &data)
 {
 	/*
 		lh: low to high from data[i - 1]=1 to data[i]
@@ -388,7 +416,7 @@ size_t Range::SherlockAndCost(vector<size_t>& data)
  * 1 17 5 10 13 11 12 5 16 8
  * 1 17 5 13 11 12 5 16 8
  */
-vector<long> Range::WiggleMaxLength(vector<long>& nums)
+vector<long> Range::WiggleMaxLength(vector<long> &nums)
 {
 	vector<long> result;
 	bool direction = false; // false: down. true: up
@@ -437,7 +465,7 @@ t: 10
 k: 1
 t: 1
 */
-bool Range::ContainsNearbyAlmostDuplicate(vector<long>& nums, long k, long t)
+bool Range::ContainsNearbyAlmostDuplicate(vector<long> &nums, long k, long t)
 {
 	multiset<long> buckets;
 	if (k > 0 && t >= 0)
@@ -460,7 +488,7 @@ bool Range::ContainsNearbyAlmostDuplicate(vector<long>& nums, long k, long t)
  * Do NOT change the data type from int to long!
  * Only tested working with int type.
  */
-size_t Range::VectorEqualSplit(vector<int>& data)
+size_t Range::VectorEqualSplit(vector<int> &data)
 {
 	set<int> unique(data.begin(), data.end());
 	size_t result = 0;
@@ -500,7 +528,7 @@ size_t Range::VectorEqualSplit(vector<int>& data)
 /* https://leetcode.com/problems/maximum-product-of-word-lengths/
  * 100%
  */
-size_t Range::MaxProductOfNonOverlappingWordLengths(vector<string>& words)
+size_t Range::MaxProductOfNonOverlappingWordLengths(vector<string> &words)
 {
 	size_t result = 0;
 	map<size_t, size_t> patterns;
@@ -566,7 +594,7 @@ size_t Range::MaxProductOfNonOverlappingWordLengths(vector<string>& words)
 1 2 3 4 5 6 : No
 1 1 -2 0 0 0
 */
-string Range::AlmostSorted(vector<long>& arr)
+string Range::AlmostSorted(vector<long> &arr)
 {
 	ostringstream oss;
 	vector<long> sorted(arr);
@@ -586,9 +614,9 @@ string Range::AlmostSorted(vector<long>& arr)
 			if (diff[index] < 0 && sum == 0)
 			{
 				size_t positives = ranges::count_if(diff, [](long i)
-					{ return i > 0; });
+													{ return i > 0; });
 				size_t negatives = ranges::count_if(diff, [](long i)
-					{ return i < 0; });
+													{ return i < 0; });
 				if (diff[index] + diff[0] != 0)
 					return "no";
 				else if (positives == 1 && negatives == 1)
@@ -645,7 +673,7 @@ string Range::AlmostSorted(vector<long>& arr)
  * i: 1 -> [5]
  * i: 0
  */
-long Range::MinimumBribes(size_t maxBribes, vector<long>& data)
+long Range::MinimumBribes(size_t maxBribes, vector<long> &data)
 {
 	long bribes = 0;
 	for (long i = data.size() - 1; i >= 0; i--)
@@ -674,20 +702,20 @@ long Range::MinimumBribes(size_t maxBribes, vector<long>& data)
  * https://www.hackerrank.com/challenges/picking-numbers/problem
  * 100%
  */
-size_t Range::PickNumbersFromRange(vector<long>& a)
+size_t Range::PickNumbersFromRange(vector<long> &a)
 {
 	size_t max = 0;
 	for (size_t i = 0; i < a.size(); i++)
 	{
 		long value = a[i];
 		size_t cnt = ranges::count_if(a, [&value](long j)
-			{ return j == value; });
+									  { return j == value; });
 		size_t oneless = 0;
 		if (value > 0)
 			oneless = ranges::count_if(a, [&value](long j)
-				{ return j == (value - 1); });
+									   { return j == (value - 1); });
 		size_t onemore = ranges::count_if(a, [&value](long j)
-			{ return j == (value + 1); });
+										  { return j == (value + 1); });
 		cnt = cnt + oneless > cnt + onemore ? cnt + oneless : cnt + onemore;
 		if (cnt > max)
 			max = cnt;
@@ -732,6 +760,6 @@ vector<long> Range::LastNumbers(size_t n, long a, long b)
 		return vector<long>{num};
 	result.resize(((maximum - num) / diff) + 1);
 	ranges::generate(result, [n = num, diff]() mutable
-		{ long result = n; n += diff; return result; });
+					 { long result = n; n += diff; return result; });
 	return result;
 }
