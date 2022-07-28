@@ -307,10 +307,10 @@ size_t Range::StockMax(vector<long>& prices)
 * bought -> bought
 * sold -> stay
 *
-* state[i] = max profit:
 * stay[i] = max(stay[i - 1], sold[i - 1]); // Stay put, or rest from sold state
 * bought[i] = max(bought[i - 1], stay[i - 1] - prices[i]); // Stay put, or buy again (Cannot buy immediately after sell)
 * sold[i] = bought[i - 1] + prices[i]; // Sell
+* 
 * stay[0] = 0; // At the start, you don't have any stock if you just rest
 * bought[0] = -prices[0]; // After buy, you should have -prices[0] profit. Be positive!
 * sold[0] = 0;
