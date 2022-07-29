@@ -170,7 +170,7 @@ T Matrix<T>::LargestSumSubmatrix(vector<vector<size_t>> &matrix)
  * 100%
  */
 template <typename T>
-bool Matrix<T>::SearchMatrix(vector<vector<T>> &matrix, T target)
+bool Matrix<T>::SearchMatrix(T target, vector<vector<T>> const &matrix) const
 {
 	if (matrix.empty())
 		return false;
@@ -226,7 +226,7 @@ bool Matrix<T>::SearchMatrix(vector<vector<T>> &matrix, T target)
 	return false;
 }
 template <typename T>
-bool Matrix<T>::SearchMatrixRow(vector<vector<T>> &matrix, T target, size_t row, T start, T end)
+bool Matrix<T>::SearchMatrixRow(vector<vector<T>> const &matrix, T target, size_t row, T start, T end) const
 {
 	if (start >= 0 && end < (long)matrix[row].size() && start <= end)
 	{
@@ -243,7 +243,7 @@ bool Matrix<T>::SearchMatrixRow(vector<vector<T>> &matrix, T target, size_t row,
 	return false;
 }
 template <typename T>
-bool Matrix<T>::SearchMatrixCol(vector<vector<T>> &matrix, T target, size_t col, T start, T end)
+bool Matrix<T>::SearchMatrixCol(vector<vector<T>> const &matrix, T target, size_t col, T start, T end) const
 {
 	if (start >= 0 && end < (long)matrix.size() && start <= end)
 	{
@@ -396,7 +396,7 @@ void Matrix<T>::RotateMatrixRTimesAntiClockwise(vector<vector<T>> &matrix, size_
  * 100%
  */
 template <typename T>
-bool Matrix<T>::SearchMatrix1(vector<vector<T>> &matrix, T target)
+bool Matrix<T>::SearchMatrix1(T target, vector<vector<T>> const &matrix) const
 {
 	if (matrix.empty())
 		return false;

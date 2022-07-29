@@ -67,6 +67,7 @@ using namespace tbb;
 #include "DisJointSet.h"
 #include "Edge.h"
 #include "LRUCache.h"
+#include "Search.h"
 #include "Twitter.h"
 #include "Matrix.h"
 #include "ListRangeSum.h"
@@ -213,8 +214,6 @@ bool SolvabilityOfTheTilesGame(vector<size_t> &);
 void RotateRightArray(vector<int> &, int);
 vector<int> RotateLeftArray(vector<int> &, int);
 vector<size_t> FindSubString(string const &, string const);
-void KMPSearch(string const &, string const &, vector<size_t> &);
-void KMPTable(string const &, vector<long> &);
 void copy_on_write_string();
 unsigned long long fibonacci(long);
 unsigned long long fibonacciDynamicProgramming(long);
@@ -242,12 +241,6 @@ bool isPrime(unsigned long);
 size_t CommonPrimeDivisors(vector<long> &, vector<long> &);
 unsigned long long findMax(vector<unsigned long long> const &);
 void Merge(vector<long> &, vector<long> &);
-size_t BinarySearch(vector<size_t> &, size_t);
-long BinarySearchMinimum(vector<long> &data, long, long);
-int BinarySearchCountUpper(vector<long> &, long, long, long);
-int BinarySearchCountLower(vector<long> &, long, long, long);
-int BinarySearch(vector<string> &, const string &);
-vector<long> searchRange(vector<size_t> &, size_t);
 void parentheses(vector<string> &, size_t);
 void parentheses(vector<string> &, string &, size_t, long, long);
 long LongestValidParentheses(const string &);
@@ -355,7 +348,6 @@ size_t steadyGene(string &);
 size_t TwoCrosses(vector<string> &);
 vector<long> absolutePermutation(size_t, size_t);
 vector<string> bomberMan(size_t, vector<string> &);
-bool gridSearch(vector<string> &, vector<string> &);
 size_t SnakesAndLaddersGame(vector<vector<size_t>> &, vector<vector<size_t>> &);
 size_t SnakesAndLaddersGameFast(vector<vector<size_t>> &, vector<vector<size_t>> &);
 size_t LengthOfLongestUniqueSubstring(const string &);

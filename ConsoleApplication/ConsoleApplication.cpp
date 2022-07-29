@@ -396,11 +396,6 @@ int main(int argc, char *argv[])
 	assert(udata.size() == 4); // 0 6 7 8
 	assert(udata1 == udata);
 
-	udata.clear();
-	KMPSearch("ABC ABCDAB ABCDABCDABDE", "ABCDABD", udata);
-	assert(!udata.empty());
-	assert(udata.size() == 1);
-	assert(udata[0] == 15);
 	assert(Count1Bits(10) == 2);
 	assert(Count1Bits(12) == 2);
 	assert(Count1Bits(7) == 3);
@@ -1569,9 +1564,6 @@ int main(int argc, char *argv[])
 	assert(shortPalindrome(string("kkkkkkz")) == 15);
 	assert(shortPalindrome(string("ghhggh")) == 4);
 	assert(shortPalindrome(string("cbbdcacccdaddbaabbaacbacacaaddaaacdbccccccbbadbbcdddddddaccbdbddcbacaaadbbdcbcbcdabdddbbcdccaacdccab")) == 242745);
-	strings = {"123412", "561212", "123634", "781288"};
-	strings1 = {"12", "34"};
-	assert(gridSearch(strings, strings1));
 	strings.clear();
 	vector<vector<size_t>> ladders = {{32, 62}, {42, 68}, {12, 98}};
 	vector<vector<size_t>> snakes = {{95, 13}, {97, 25}, {93, 37}, {79, 27}, {75, 19}, {49, 47}, {67, 17}};
