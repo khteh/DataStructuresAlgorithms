@@ -7750,3 +7750,27 @@ size_t NormalPlayNim(vector<size_t> &data)
 			count++;
 	return count;
 }
+/*
+ * https://www.hackerrank.com/challenges/counter-game/problem?isFullScreen=true
+ * 100%
+ */
+bool CounterGame(long n)
+{
+	bool flag = false;
+	for (; n > 1; flag = !flag)
+	{
+		bool isPowerOfTwo = !(n & (n - 1));
+		if (isPowerOfTwo)
+			n /= 2;
+		else
+		{
+			unsigned long m = 1UL << (sizeof(long) * 8 - 1);
+			for (; !(m & n); m >>= 1)
+				;
+			n -= m;
+		}
+		if (n == 1)
+			return flag;
+	}
+	return flag;
+}

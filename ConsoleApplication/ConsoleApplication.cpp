@@ -1932,6 +1932,10 @@ int main(int argc, char *argv[])
 	udata.clear();
 	udata = {2, 3};
 	assert(NormalPlayNim(udata) == 1);
+	assert(CounterGame(6));
+	assert(!CounterGame(8));
+	assert(!CounterGame(132));
+	assert(CounterGame(1246326493));
 	cpp20readonlyranges();
 	cpp20ranges();
 	cpp20variants();
