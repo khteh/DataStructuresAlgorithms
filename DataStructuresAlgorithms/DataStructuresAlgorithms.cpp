@@ -7751,7 +7751,7 @@ size_t NormalPlayNim(vector<size_t> &data)
 	return count;
 }
 /*
- * https://www.hackerrank.com/challenges/counter-game/problem?isFullScreen=true
+ * https://www.hackerrank.com/challenges/counter-game/problem
  * 100%
  */
 bool CounterGame(long n)
