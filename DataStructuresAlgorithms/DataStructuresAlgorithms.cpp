@@ -7831,8 +7831,6 @@ size_t EqualDistribution(vector<long> &data)
 /*
  * https://www.hackerrank.com/challenges/happy-ladybugs/problem
  * 100%
- * ababa_ => _babaa => bba_aa => bb_aaa
- * aabab_ => aa_abb => aaa_bb
  */
 bool HappyLadyBugs(string &str)
 {
