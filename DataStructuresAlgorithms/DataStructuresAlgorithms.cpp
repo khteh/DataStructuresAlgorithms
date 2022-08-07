@@ -5,6 +5,31 @@ namespace ranges = std::ranges;
 #if defined(__GNUC__) || defined(__GNUG__)
 using namespace tbb;
 #endif
+long **my2DAlloc(long rows, long cols)
+{
+	size_t header = rows * sizeof(long *);			// Store the row pointers [i]
+	size_t data = rows * cols * sizeof(long);		// Store the data
+	long **rowptr = (long **)malloc(header + data); // row pointers + data buffers
+	long *dataptr = (long *)(rowptr + rows);		// Pointer arithmetic to get the first location of data buffer
+	for (int i = 0; i < rows; i++)
+		rowptr[i] = dataptr + i * cols;
+	return rowptr;
+}
+long ***my3DAlloc(long rows, long cols, long heights)
+{
+	size_t header = rows * sizeof(long *) + rows * cols * sizeof(long *); // Store the row pointers [i] and every cell of the 2D-plane is pointer to the Z-buffer [i][j]
+	size_t data = rows * cols * heights * sizeof(long);					  // data
+	long ***ptrs = (long ***)malloc(header + data);						  // row pointers + 2-D plane of pointers to Z-plane data
+	long **columns = (long **)(ptrs + rows);							  // Pointer arithmetic to get the first location of 2D plane of Z-plane pointers [i][j]
+	long *dataPtr = (long *)(ptrs + rows + rows * cols);				  // Pointer arithmetic to get the first location of data buffer
+	for (long i = 0; i < rows; i++)
+	{
+		ptrs[i] = columns + i * cols;
+		for (long j = 0; j < cols; j++)
+			ptrs[i][j] = dataPtr + i * cols * heights + j * heights;
+	}
+	return ptrs;
+}
 void testPointerReference(int *&ptr)
 {
 	free(ptr);
@@ -1412,31 +1437,6 @@ void DutchPartitioning(vector<long> &data, long mid)
 			j++;
 	}
 }
-long **my2DAlloc(long rows, long cols)
-{
-	size_t header = rows * sizeof(long *);			// Store the row pointers [i]
-	size_t data = rows * cols * sizeof(long);		// Store the data
-	long **rowptr = (long **)malloc(header + data); // row pointers + data buffers
-	long *dataptr = (long *)(rowptr + rows);		// Pointer arithmetic to get the first location of data buffer
-	for (int i = 0; i < rows; i++)
-		rowptr[i] = dataptr + i * cols;
-	return rowptr;
-}
-long ***my3DAlloc(long rows, long cols, long heights)
-{
-	size_t header = rows * sizeof(long *) + rows * cols * sizeof(long *); // Store the row pointers [i] and every cell of the 2D-plane is pointer to the Z-buffer [i][j]
-	size_t data = rows * cols * heights * sizeof(long);					  // data
-	long ***ptrs = (long ***)malloc(header + data);						  // row pointers + 2-D plane of pointers to Z-plane data
-	long **columns = (long **)(ptrs + rows);							  // Pointer arithmetic to get the first location of 2D plane of Z-plane pointers [i][j]
-	long *dataPtr = (long *)(ptrs + rows + rows * cols);				  // Pointer arithmetic to get the first location of data buffer
-	for (long i = 0; i < rows; i++)
-	{
-		ptrs[i] = columns + i * cols;
-		for (long j = 0; j < cols; j++)
-			ptrs[i][j] = dataPtr + i * cols * heights + j * heights;
-	}
-	return ptrs;
-}
 /* http://www.cplusplus.com/reference/cstdlib/rand/
  * A typical way to generate trivial pseudo-random numbers in a determined range using rand is to use
  * the modulo of the returned value by the range span and add the initial value of the range:
@@ -1642,7 +1642,7 @@ long gcd(long a, long b)
 		return a >= b ? gcd_euclidean(a, b) : gcd_euclidean(b, a);
 }
 /* http://en.wikipedia.org/wiki/Least_common_multiple */
-/* he smallest positive integer that is divisible by both a and b.[1] If either a or b is 0, LCM(a, b) is defined to be zero. */
+/* The smallest positive integer that is divisible by both a and b.[1] If either a or b is 0, LCM(a, b) is defined to be zero. */
 long lcm(long a, long b)
 {
 	return (!a || !b) ? 0 : (a * b) / gcd(a, b);
@@ -4479,20 +4479,18 @@ string timeInWords(int h, int m)
 	str << hour.str();
 	return str.str();
 }
-// https://www.hackerrank.com/challenges/xor-quadruples/problem
-// 100% Functionality. However, time out as it is O(N^3)
-size_t beautifulQuadruples(int a, int b, int c, int d)
+/* https://www.hackerrank.com/challenges/xor-quadruples/problem
+ * 100% Functionality. However, time out as it is O(N^3)
+ */
+size_t BeautifulQuadruples(long a, long b, long c, long d)
 {
-	/*
-	 * Write your code here.
-	 */
-	set<multiset<int>> quadruples;
-	for (int i = 1; i <= a; i++)
-		for (int j = 1; j <= b; j++)
-			for (int k = 1; k <= c; k++)
-				for (int l = 1; l <= d; l++)
+	set<multiset<long>> quadruples;
+	for (long i = 1; i <= a; i++)
+		for (long j = 1; j <= b; j++)
+			for (long k = 1; k <= c; k++)
+				for (long l = 1; l <= d; l++)
 					if ((i ^ j ^ k ^ l) != 0)
-						quadruples.emplace(multiset<int>{i, j, k, l});
+						quadruples.emplace(multiset<long>{i, j, k, l});
 	return quadruples.size();
 }
 // https://www.hackerrank.com/challenges/red-knights-shortest-path/problem
@@ -5749,7 +5747,7 @@ stack:   3 2 -4 -20 <= 3+2-20
 sign:	+ * + /
 stack:   3 6 5 1 <= 6+1 = 7
 */
-long basicCalculator(const string &s)
+long BasicCalculator(const string &s)
 {
 	stack<long> numbers;
 	char sign = '+';
@@ -6795,6 +6793,14 @@ void cpp20ranges()
 	ranges::sort(nodes, {}, &Node<int>::Item);
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
+	vector<long> a;
+	a.resize(10);
+	ranges::generate(a, [n = 1]() mutable
+					 { return n++; });
+	ranges::transform(a, a, a.begin(), std::plus{}); // This is binary_transform using 2 vectors. In this case, it uses duplicate vector a.
+	cout << "After transform with std::plus: ";
+	ranges::copy(a, ostream_iterator<long>(cout, ", "));
+	cout << endl;
 }
 class VariantException
 {
@@ -7312,7 +7318,7 @@ long SteadyGene(string const &gene)
 	 * 'T': 2
 	 *
 	 * i: 0, j: 0 [A]CGTCCGT
-	 * 'A': 0 -> j: 1
+	 * 'A': 0 -> j:1
 	 * 'G': 2
 	 * 'C': 3
 	 * 'T': 2
@@ -7320,11 +7326,11 @@ long SteadyGene(string const &gene)
 	 * i: 0, j: 1 [AC]GTCCGT
 	 * 'A': 0
 	 * 'G': 2
-	 * 'C': 2 -> j: 2
+	 * 'C': 2 -> j:2
 	 * 'T': 2
 	 *
 	 * i: 0, j: 2 [ACG]TCCGT
-	 * 'A': 1 -> i: 1 count: 2
+	 * 'A': 1 -> count: 2, i:1, j:2
 	 * 'G': 2
 	 * 'C': 2
 	 * 'T': 2
@@ -7332,12 +7338,12 @@ long SteadyGene(string const &gene)
 	 * i: 1, j: 2 A[CG]TCCGT => AAGTCCGT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 3 -> i: 2 count: 1
+	 * 'C': 3 -> count: 1, i:2 j:2
 	 * 'T': 2
 	 *
 	 * i: 2, j: 2 AC[G]TCCGT
 	 * 'A': 1
-	 * 'G': 1 -> j: 3
+	 * 'G': 1 -> j:3, i:2
 	 * 'C': 3
 	 * 'T': 2
 	 *
@@ -7345,17 +7351,17 @@ long SteadyGene(string const &gene)
 	 * 'A': 1
 	 * 'G': 1
 	 * 'C': 3
-	 * 'T': 1 -> j: 4
+	 * 'T': 1 -> j:4, i:2
 	 *
 	 * i: 2, j: 4 AC[GTC]CGT
 	 * 'A': 1
 	 * 'G': 1
-	 * 'C': 2 -> j: 5
+	 * 'C': 2 -> j:5, i:2
 	 * 'T': 1
 	 *
 	 * i: 2, j: 5 AC[GTCC]GT
 	 * 'A': 1
-	 * 'G': 2 -> i: 3 count: 3
+	 * 'G': 2 -> count: 3, i:3 j:5
 	 * 'C': 2
 	 * 'T': 1
 	 *
@@ -7363,29 +7369,29 @@ long SteadyGene(string const &gene)
 	 * 'A': 1
 	 * 'G': 2
 	 * 'C': 2
-	 * 'T': 2 -> i: 4 count: 2
+	 * 'T': 2 -> count: 2, i:4, j:5
 	 *
 	 * i: 4, j: 5 ACGT[CC]GT => ACGTACGT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 3 -> i: 5 count: 1
+	 * 'C': 3 -> count: 1, i:5, j:5
 	 * 'T': 2
 	 *
 	 * i: 5, j: 5 ACGTC[C]GT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 2 -> j: 6
+	 * 'C': 2 -> j:6
 	 * 'T': 2
 	 *
 	 * i: 5, j: 6 ACGTC[CG]T => ACGTCAGT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 3 -> i: 6 count: 1
+	 * 'C': 3 -> count: 1, i:6 j:6
 	 * 'T': 2
 	 *
 	 * i: 6, j: 6 ACGTCC[G]T
 	 * 'A': 1
-	 * 'G': 1 -> j: 7
+	 * 'G': 1 -> j:7
 	 * 'C': 3
 	 * 'T': 2
 	 *
@@ -7393,7 +7399,7 @@ long SteadyGene(string const &gene)
 	 * 'A': 1
 	 * 'G': 1
 	 * 'C': 3
-	 * 'T': 1, j: 8
+	 * 'T': 1, j:8
 	 */
 	for (long i = 0, j = 0; i < gene.size() && j < gene.size();)
 	{
@@ -7773,4 +7779,89 @@ bool CounterGame(long n)
 			return flag;
 	}
 	return flag;
+}
+/*
+ * Can add 1, 2 or 5 for all except the selected element. == deduct from the selected element.
+ *
+ * 1 1 5 => 0 0 4 => (0 0 0)
+ *
+ * 2 2 3 7 => 0 0 1 5 => (0 0 1 0) => 0 0 0 1 => (0 0 0 0)
+ *
+ * 7 10 12 => 0 3 5 => (0 3 0) => 0 0 3 => (0 0 1) => (0 0 0)
+ *
+ * 1 2 3 4 => 0 1 2 3 => (0 1 2 1) => (0 1 1 0) => (0 0 0 1) => (0 0 0 0)
+ */
+size_t EqualDistribution(vector<long> &data)
+{
+	size_t count = 0;
+	ranges::sort(data);
+	long min = data[0];
+	ranges::transform(data, data.begin(), [min](long n) mutable
+					  { return n - min; });
+	set<long> unique(data.begin(), data.end());
+	for (; !unique.empty() && unique.size() > 1;)
+	{
+		vector<long>::iterator it = ranges::max_element(data);
+		long diff = data.back() - data.front();
+		if (!(diff % 8))
+			count += (diff / 8) * 3;
+		else if (!(diff % 7))
+			count += (diff / 7) * 2;
+		else if (!(diff % 6))
+			count += (diff / 6) * 2;
+		else if (!(diff % 5))
+			count += (diff / 5);
+		else if (!(diff % 3))
+			count += (diff / 3) * 2;
+		else if (!(diff % 2))
+			count += (diff / 2);
+		else
+		{
+			if (diff > 5)
+				diff = 5;
+			count++;
+		}
+		*it -= diff;
+		ranges::sort(data);
+		unique.clear();
+		unique.insert(data.begin(), data.end());
+	}
+	return count;
+}
+/*
+ * https://www.hackerrank.com/challenges/happy-ladybugs/problem
+ * 100%
+ * ababa_ => _babaa => bba_aa => bb_aaa
+ * aabab_ => aa_abb => aaa_bb
+ */
+bool HappyLadyBugs(string &str)
+{
+	map<char, size_t> counts;
+	for (size_t i = 0; i < str.size(); i++)
+	{
+		pair<map<char, size_t>::iterator, bool> result = counts.emplace(str[i], 1);
+		if (!result.second)
+			counts[str[i]]++;
+	}
+	if (counts.size() == 1 && counts.begin()->first == '_')
+		return true;
+	if (counts.find('_') == counts.end())
+	{
+		set<char> groups;
+		char current = '\0';
+		for (string::iterator it = str.begin(); it != str.end(); it++)
+		{
+			if (current == '\0' || (*it != current && groups.find(*it) == groups.end()))
+			{
+				current = *it;
+				groups.emplace(current);
+			}
+			else if (*it != current)
+				return false;
+		}
+	}
+	for (map<char, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+		if (it->second == 1 && it->first != '_')
+			return false;
+	return true;
 }

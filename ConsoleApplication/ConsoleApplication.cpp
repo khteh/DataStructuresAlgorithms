@@ -257,6 +257,10 @@ int main(int argc, char *argv[])
 	assert(std::chrono::system_clock::duration::max().count() == numeric_limits<long long>::max());
 	assert(signedTicks == ticks);
 	cout << "Current timestamp (ticks since Epoch): " << ticks << ", signed ticks: " << signedTicks << endl;
+	cpp20readonlyranges();
+	cpp20ranges();
+	cpp20variants();
+
 	grid = {{1, 3, 5}, {2, 4, 6}, {7, 8, 9}};
 	// grid.back() = {7,8,9}
 	assert(grid.back().back() == 9);
@@ -1457,8 +1461,9 @@ int main(int argc, char *argv[])
 	assert(timeInWords(12, 29) == "twenty nine minutes past twelve");
 	assert(timeInWords(6, 30) == "half past six");
 	assert(timeInWords(1, 1) == "one minute past one");
-	assert(beautifulQuadruples(1, 1, 1, 1) == 0);
-	assert(beautifulQuadruples(3, 3, 3, 3) == 9);
+	assert(BeautifulQuadruples(1, 1, 1, 1) == 0);
+	assert(BeautifulQuadruples(1, 2, 3, 4) == 11);
+	assert(BeautifulQuadruples(3, 3, 3, 3) == 9);
 	vector<string> paths = findShortestPath(5, 4, 1, 0, 3);
 	assert(paths.size() == 2);
 	assert(paths[0] == "2");
@@ -1519,15 +1524,6 @@ int main(int argc, char *argv[])
 	assert(substrings(string("123")) == 164);
 	assert(substrings(string("1234")) == 1670);
 	assert(substrings(string("972698438521")) == 445677619);
-#if 0
-	assert(steadyGene(string("ACGT")) == 0);
-	assert(steadyGene(string("AAAA")) == 3);
-	assert(steadyGene(string("ACAA")) == 2);
-	assert(steadyGene(string("ACTGAAAG")) == 2);
-	assert(steadyGene(string("GAAATAAA")) == 5);
-	assert(steadyGene(string("TGATGCCGTCCCCTCAACTTGAGTGCTCCTAATGCGTTGC")) == 5);
-	//assert(steadyGene(string("ACAAAAATAAACAAAAACAAAAAAAAAATAAATACAATAAAAAAAAAAAATGAAATACAACAACAAATAAAATAAAAACGACTAAAAAATAAAAAAAAAAAAAAAAAGAGTACTAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAACACAATCAAAATAAACAAAAAAAAAAAAACCAAAATAATCAACAAAAAAAAAAAAAACAAAAACAACAACAAACAAAAAAAAACACAAACAAAAAAAAAAAAAAAACAAAACAAACAAAAAAAAAAAAACAAAAAAACAAAAAAAAAAAAAAAAACAAAAAAAAAAATAAAAAAAAAAAAAAAAAAAAAACAAACAAAAAAAAAAAATACAAAAAGCTATAAAAAAAAAAAAATTAAAAAACAAAAAAAAATAAAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAAAAAAGAAAAACAAAAAAAAAAAAAAAAACAACCAAAAAACAAAAAAAAACTAAAAAAAAAAAAAAAAAAAAAAAAAAATAACAAAAAACACAAAAAAAAAAAAGAAAGAAAAAAAACACAAAAAAAAACAAACAAAAAAAAAAAAAAAAAAAGAAAACAAAAAAACAAAAAAAACAAAAAAAAAACAAAAATTGGACAAAAAAAAACAAAAAAAAAAAACAAAAAAAGTAAAACAAATAAAAAAACAAAAAAAACAAAAAAAAAAAAAAAAAACAAAAAAGAAACAAAAAACAAAAAAAAATAACAAAACCAAAAAACAAATAAAAAACAAAAAAAATAACACAAAAAAAAAAAGAAACAAAAAAAAAAAAAAAAAAAAAAATTATAAAAAAAAAAAAAAAACAAAAAAAAAAAAAACAAAAAAAAAAGGAAAAAAAAAAAAAAAAAAAAAAAAAAATAACTAAACAAAAAAAAACAAACAAAAAATCAAAAAAAAAAAAGAAAAAAGAATAAGCAACAAAAACACAAAAAAAAAAAAAAAAAAAAAAAACATAAACAATAATAAAAAAAAAACAAAAAAAACAAAAGAACAACAAAAAACAAAACTAAACAAATAAAAAAAAAAAAACAAAAACTACAAAAAAAAAAAGAAAAAAAAAGAAAAAAAAACAAATAAAAGAAAAAAAAAAAAAAAAAAAACACAAAAAAAAAAATAAAAAAAAAAAAAAAAACAAAATAAACAAAAACAAAGAAAAAAACAAACAAAAAAAAAAAACAAAAAACTAAAAACAAAAAAAAAACAAAACACAAAAAAAAAAAAAAATAAAAAAAAAACAAAAAAACAAAAAGGAAAAAAAAAAAAGAACAAAAAAAAAAACAACAGAAAAAAGAAAAGAAAAAAAAAAAAAGACCACAAAATAAAAAAAAACAACAAACAAAAAAAAACAAAACAAAAAAACGAACAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAAAAAAAGGCAAAAACAAAAAAAACAAAACAAAACAAAAAAACAAAAAAAAATTAAGATAAAGAACAAAAAAAGAAGAGAAAAAATTAACAAAAAAAAAAAAATAAAAAATACAAAAAGAAATAAAAAATACAACACACAACAAAAACGAAAAAAAAAAAAAAAACACAAAATAGAAAAAAAAAAAAAACAAAAAAAAAAAAAAGAAAAAAACAAAAAAAAAAAAATAAAAAAAAACGACACAGAAACAAAAAATAACAAAAAAAAAAAAAATAAAAAAAAAACAAAAAAAAAACAAAAAATAAAAAAAAAAACAAACAAAAAAAAAAAAAAAATAAAAAAAAAAAAAGCAAAACATAAACAAGAAAAAAAAAAAAAGTACAAATAACAAAACAAAAAAGACACTAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAACCACAAAACAAAAAAATAAAGCAAAAAAAAAAAAAAAAAAAAAAAAAAAATAAATGAAAAAAAAAAGAAAACCAAAAAAATAAAAGA")) == 1393); stack overflow!
-#endif
 	strings.clear();
 	strings = {"GGGGGGGGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GGGGGGGGG"};
 	assert(TwoCrosses(strings) == 1);
@@ -1652,12 +1648,12 @@ int main(int argc, char *argv[])
 	a.clear();
 	b.clear();
 	assert(median(a, b) == 0);
-	assert(basicCalculator(string("3+2*2-1")) == 6);
-	assert(basicCalculator(string("3+2")) == 5);
-	assert(basicCalculator(string("3-2")) == 1);
-	assert(basicCalculator(string("3*2+2")) == 8);
-	assert(basicCalculator(string("3+2-4*5")) == -15);
-	assert(basicCalculator(string("3*2+5/4")) == 7);
+	assert(BasicCalculator(string("3+2*2-1")) == 6);
+	assert(BasicCalculator(string("3+2")) == 5);
+	assert(BasicCalculator(string("3-2")) == 1);
+	assert(BasicCalculator(string("3*2+2")) == 8);
+	assert(BasicCalculator(string("3+2-4*5")) == -15);
+	assert(BasicCalculator(string("3*2+5/4")) == 7);
 	a.clear();
 	a = {1, 2, 3, 4};
 	a = productExceptSelf(a);
@@ -1936,9 +1932,43 @@ int main(int argc, char *argv[])
 	assert(!CounterGame(8));
 	assert(!CounterGame(132));
 	assert(CounterGame(1246326493));
-	cpp20readonlyranges();
-	cpp20ranges();
-	cpp20variants();
+	a.clear();
+	a = {1, 1, 5};
+	assert(EqualDistribution(a) == 2);
+	a.clear();
+	a = {2, 2, 3, 7};
+	assert(EqualDistribution(a) == 2);
+	a.clear();
+	a = {10, 7, 12};
+	assert(EqualDistribution(a) == 3);
+	a.clear();
+	a = {1, 2, 3, 4};
+	assert(EqualDistribution(a) == 4);
+	a.clear();
+	a = {851, 183, 48, 473, 610, 678, 725, 87, 95, 50, 311, 258, 854};
+#if 0
+	assert(EqualDistribution(a) == 927);
+	a.clear();
+	a = {249, 666, 500, 101, 227, 85, 963, 681, 331, 119, 448, 587, 668, 398, 802};
+	assert(EqualDistribution(a) == 1123);
+	a.clear();
+	a = {512, 125, 928, 381, 890, 90, 512, 789, 469, 473, 908, 990, 195, 763, 102, 643, 458, 366, 684, 857, 126, 534, 974, 875, 459, 892, 686, 373, 127, 297, 576, 991, 774, 856, 372, 664, 946, 237, 806, 767, 62, 714, 758, 258, 477, 860, 253, 287, 579, 289, 496};
+	assert(EqualDistribution(a) == 5104);
+#endif
+	str = "_";
+	assert(HappyLadyBugs(str));
+	str = "RBRB";
+	assert(!HappyLadyBugs(str));
+	str = "aaaa";
+	assert(HappyLadyBugs(str));
+	str = "aaa";
+	assert(HappyLadyBugs(str));
+	str = "aa";
+	assert(HappyLadyBugs(str));
+	str = "a";
+	assert(!HappyLadyBugs(str));
+	str = "aa_";
+	assert(HappyLadyBugs(str));
 	/***** The End *****/
 	return 0;
 }
