@@ -27,3 +27,11 @@ C++-latest data structures and algorithms using only standard libraries. This an
   - libtbb-dev (Intel® Threading Building Blocks)
   - libgtest-dev
   - ninja-build
+
+### Build
+
+- Press `CTRL + SHFT + B` and select one of the options
+
+### RUn
+
+- Press `CTRL + F5`
