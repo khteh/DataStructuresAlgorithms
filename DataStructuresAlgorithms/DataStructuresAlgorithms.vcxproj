@@ -178,6 +178,7 @@
     <ClInclude Include="LongestCommonSubsequence.h" />
     <ClInclude Include="LRUCache.h" />
     <ClInclude Include="Range.h" />
+    <ClInclude Include="Search.h" />
     <ClInclude Include="Sort.h" />
     <ClInclude Include="Square.h" />
     <ClInclude Include="TreasureGame.h" />

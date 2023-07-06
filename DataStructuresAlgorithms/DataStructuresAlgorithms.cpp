@@ -262,6 +262,7 @@ cbacdcbc
 c
  b
   acd c b
+  acdb
 
 cbacdbcd
 c
