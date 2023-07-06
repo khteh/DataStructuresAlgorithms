@@ -17,7 +17,7 @@ C++-latest data structures and algorithms using only standard libraries. This an
 - To convert Visual Studio solution `.sln` and included `.vcxproj` to `CMakeLists.txt`:
 
   - https://github.com/pavelliavonau/cmakeconverter
-  - `cmake-converter -s DataStructuresAlgorithms.sln `
+  - `cmake-converter -s DataStructuresAlgorithms.sln`
 
 - Install the following packages on Ubuntu:
 
@@ -27,3 +27,11 @@ C++-latest data structures and algorithms using only standard libraries. This an
   - libtbb-dev (Intel® Threading Building Blocks)
   - libgtest-dev
   - ninja-build
+
+### Build
+
+- Press `CTRL + SHFT + B` and select one of the options
+
+### Run
+
+- Press `CTRL + F5`

@@ -40,7 +40,7 @@
   <ItemGroup>
     <ClCompile Include="AnagramTests.cpp" />
     <ClCompile Include="ArithmeticOperationTests.cpp" />
-    <ClCompile Include="BinarySearchTests.cpp" />
+    <ClCompile Include="SearchTests.cpp" />
     <ClCompile Include="BinarySearchTreeTests.cpp" />
     <ClCompile Include="BinaryTreeTests.cpp" />
     <ClCompile Include="CircularLinkedListTests.cpp" />

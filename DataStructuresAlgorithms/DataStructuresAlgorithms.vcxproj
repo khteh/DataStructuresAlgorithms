@@ -194,6 +194,7 @@
     <ClInclude Include="Poker.h" />
     <ClInclude Include="PrefixTrie.h" />
     <ClInclude Include="PriorityQueueMedian.h" />
+    <ClInclude Include="Search.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SuffixTree.h" />
@@ -239,6 +240,7 @@
     <ClCompile Include="Poker.cpp" />
     <ClCompile Include="PrefixTrie.cpp" />
     <ClCompile Include="PriorityQueueMedian.cpp" />
+    <ClInclude Include="Search.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

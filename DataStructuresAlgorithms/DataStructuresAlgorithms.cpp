@@ -5,6 +5,31 @@ namespace ranges = std::ranges;
 #if defined(__GNUC__) || defined(__GNUG__)
 using namespace tbb;
 #endif
+long **my2DAlloc(long rows, long cols)
+{
+	size_t header = rows * sizeof(long *);			// Store the row pointers [i]
+	size_t data = rows * cols * sizeof(long);		// Store the data
+	long **rowptr = (long **)malloc(header + data); // row pointers + data buffers
+	long *dataptr = (long *)(rowptr + rows);		// Pointer arithmetic to get the first location of data buffer
+	for (int i = 0; i < rows; i++)
+		rowptr[i] = dataptr + i * cols;
+	return rowptr;
+}
+long ***my3DAlloc(long rows, long cols, long heights)
+{
+	size_t header = rows * sizeof(long *) + rows * cols * sizeof(long *); // Store the row pointers [i] and every cell of the 2D-plane is pointer to the Z-buffer [i][j]
+	size_t data = rows * cols * heights * sizeof(long);					  // data
+	long ***ptrs = (long ***)malloc(header + data);						  // row pointers + 2-D plane of pointers to Z-plane data
+	long **columns = (long **)(ptrs + rows);							  // Pointer arithmetic to get the first location of 2D plane of Z-plane pointers [i][j]
+	long *dataPtr = (long *)(ptrs + rows + rows * cols);				  // Pointer arithmetic to get the first location of data buffer
+	for (long i = 0; i < rows; i++)
+	{
+		ptrs[i] = columns + i * cols;
+		for (long j = 0; j < cols; j++)
+			ptrs[i][j] = dataPtr + i * cols * heights + j * heights;
+	}
+	return ptrs;
+}
 void testPointerReference(int *&ptr)
 {
 	free(ptr);
@@ -650,56 +675,6 @@ vector<size_t> FindSubString(string const &s1, string const s2)
 				result.push_back(i);
 		}
 	return result;
-}
-/* https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm
- */
-void KMPTable(string const &w, vector<long> &T)
-{
-	// the first few values are fixed but different from what the algorithm might suggest
-	T.resize(w.size() + 1);
-	T[0] = -1;
-	long pos = 1, cnd = 0;
-	for (; pos < (long)w.size(); pos++, cnd++)
-	{
-		if (w[pos] == w[cnd])
-			T[pos] = T[cnd];
-		else
-		{
-			T[pos] = cnd;
-			cnd = T[cnd]; // To increase performance
-			for (; cnd >= 0 && w[pos] != w[cnd]; cnd = T[cnd])
-				;
-		}
-	}
-	T[pos] = cnd; // (only needed when all word occurrences are searched)
-}
-void KMPSearch(string const &s, string const &w, vector<size_t> &result)
-{
-	vector<long> T;
-	KMPTable(w, T);
-	for (long j = 0, k = 0; j < (long)s.size();)
-	{
-		if (w[k] == s[j])
-		{
-			j++;
-			k++;
-			if (k == w.size())
-			{
-				// (occurrence found, if only first occurrence is needed, m ← j - k  may be returned here)
-				result.push_back(j - k);
-				k = T[k]; // (T[length(W)] can't be -1)
-			}
-		}
-		else
-		{
-			k = T[k];
-			if (k < 0)
-			{
-				j++;
-				k++;
-			}
-		}
-	}
 }
 void copy_on_write_string()
 {
@@ -1411,173 +1386,6 @@ void OrderArrayIntoNegativePositiveSeries(vector<long> &arr)
 	}
 }
 
-// Binary Search (http://en.wikipedia.org/wiki/Binary_search_algorithm)
-// Dichotomic Divide And Conquer: O(Log n). In case of duplicates, the algorithm drops to linear search O(n)
-// Assumption: source is sorted in increasing order and rotated a number of times
-// Ex: Input: find 5 in array (15 16 19 20 25 1 3 4 5 7 10 14)
-//			                   L             M              U
-// 4 8 9 9 9 10 12 13 1 2 2 3
-// L            M           U
-size_t BinarySearch(vector<size_t> &data, size_t toSearch)
-{
-	for (size_t lower = 0, middle = 0, upper = data.size() - 1; lower <= upper;)
-	{
-		middle = lower + (upper - lower) / 2 + (upper - lower) % 2;
-		if (toSearch == data[middle])
-			return middle;
-		else if (toSearch == data[lower])
-			return lower;
-		else if (toSearch == data[upper])
-			return upper;
-		else if (data[lower] <= data[middle])
-		{
-			// 5 6 7 8 1 2 3
-			// L     M     U
-			if (toSearch > data[lower] && toSearch < data[middle]) // Ex: toSearch=7
-				upper = middle - 1;
-			else // Ex: toSearch=2
-				lower = middle + 1;
-		}
-		else
-		{ // Lower >= Middle
-			// 6 7 8 9 1 2 3 4 5
-			// L       M       U
-			if (toSearch > data[middle] && toSearch < data[upper]) // Ex: toSearch=3
-				lower = middle + 1;
-			else // Ex: toSearch=8
-				upper = middle - 1;
-		}
-	}
-	return -1;
-}
-/* https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
- * 100%
- */
-long BinarySearchMinimum(vector<long> &data, long start, long end)
-{
-	if (start == end)
-		return data[start];
-	else if (end - start == 1)
-		return min(data[start], data[end]);
-	else if (start < end)
-	{
-		size_t middle = start + (end - start) / 2 + (end - start) % 2;
-		long data1 = BinarySearchMinimum(data, start, middle - 1);
-		long data2 = BinarySearchMinimum(data, middle + 1, end);
-		return min(data[middle], min(data1, data2));
-	}
-	return numeric_limits<long>::min();
-}
-/* https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
- * 100%
- */
-vector<long> searchRange(vector<size_t> &nums, size_t target)
-{
-	long start = 0, end = nums.size() - 1, middle = end / 2 + end % 2;
-	vector<long> result{-1, -1}; // result[0] = start (inclusive); result[1] = end (exclusive)
-	if (nums.empty())
-		return result;
-	for (; start <= end && (result[0] == -1 || result[1] == -1);)
-	{
-		if (target > nums[start] && target < nums[middle])
-		{
-			size_t data = nums[middle - 1];
-			for (end = middle - 1; end >= start && nums[end] == data; end--)
-				;
-			if (start > end)
-				return result;
-			end++;
-			middle = start + (end - start) / 2 + (end - start) % 2;
-		}
-		else if (target > nums[middle] && target < nums[end])
-		{
-			size_t data = nums[middle + 1];
-			for (start = middle + 1; start <= end && nums[start] == data; start++)
-				;
-			if (start > end)
-				return result;
-			start--;
-			middle = start + (end - start) / 2 + (end - start) % 2;
-		}
-		else if (target < nums[start] || target > nums[end])
-			return result;
-		long index = -1;
-		if (target == nums[start])
-			index = start;
-		else if (target == nums[end])
-			index = end;
-		else if (target == nums[middle])
-			index = middle;
-		if (index > -1)
-		{
-			for (start = index; start >= 0 && nums[start] == target; start--)
-				result[0] = start;
-			for (end = index; end < (long)nums.size() && nums[end] == target; end++)
-				result[1] = end;
-		}
-	}
-	return result;
-}
-/*
- * Binary search for the upper bound of sorted list with duplicate items.
- * Returns the last index of the repeated items found in the sorted list
- */
-int BinarySearchCountUpper(vector<long> &source, long toSearch, long start, long end)
-{
-	int mid = start + (end - start) / 2 + (end - start) % 2;
-	if (end < start)
-		return 0;
-	if (source[mid] == toSearch && (mid == end || source[mid + 1] != toSearch))
-		// 1 2 3 4 [4] 5
-		return mid;
-	else if (source[mid] <= toSearch)
-		// 1 2 3 [3] 4 4 4 (toSearch: 4)
-		return BinarySearchCountUpper(source, toSearch, mid + 1, end);
-	else
-		// 1 2 3 [4] 4 4 (toSearch: 3)
-		return BinarySearchCountUpper(source, toSearch, start, mid - 1);
-}
-/*
- * Binary search for the lower bound of sorted list with duplicate items.
- * Returns the first index of the repeated items found in the sorted list
- */
-int BinarySearchCountLower(vector<long> &source, long toSearch, long start, long end)
-{
-	int mid = start + (end - start) / 2 + (end - start) % 2;
-	if (end < start)
-		return 0;
-	if (source[mid] == toSearch && (mid == start || source[mid - 1] != toSearch))
-		// 1 [2] 2 3 4 5
-		return mid;
-	else if (source[mid] < toSearch)
-		// 1 2 3 [3] 4 4 4 (toSearch: 4)
-		return BinarySearchCountLower(source, toSearch, mid + 1, end);
-	else
-		return BinarySearchCountLower(source, toSearch, start, mid - 1);
-}
-int BinarySearch(vector<string> &source, const string &toSearch)
-{
-	int lower, middle, upper;
-	lower = 0;
-	upper = source.size() - 1;
-	while (lower <= upper)
-	{
-		while (lower <= upper && source[upper].empty())
-			upper--;
-		if (lower > upper)
-			return -1;
-		middle = lower + (upper - lower) / 2 + (upper - lower) % 2;
-		while (source[middle].empty())
-			middle++;
-		if (source[middle] == toSearch)
-			return middle;
-		else if (toSearch < source[middle])
-			upper = middle - 1;
-		else
-			lower = middle + 1;
-	}
-	return -1;
-}
 /* https://en.wikipedia.org/wiki/Dutch_national_flag_problem
 * https://leetcode.com/problems/sort-colors/
 * 100%
@@ -1629,31 +1437,6 @@ void DutchPartitioning(vector<long> &data, long mid)
 		else // if (data[j] == mid)
 			j++;
 	}
-}
-long **my2DAlloc(long rows, long cols)
-{
-	size_t header = rows * sizeof(long *);			// Store the row pointers [i]
-	size_t data = rows * cols * sizeof(long);		// Store the data
-	long **rowptr = (long **)malloc(header + data); // row pointers + data buffers
-	long *dataptr = (long *)(rowptr + rows);		// Pointer arithmetic to get the first location of data buffer
-	for (int i = 0; i < rows; i++)
-		rowptr[i] = dataptr + i * cols;
-	return rowptr;
-}
-long ***my3DAlloc(long rows, long cols, long heights)
-{
-	size_t header = rows * sizeof(long *) + rows * cols * sizeof(long *); // Store the row pointers [i] and every cell of the 2D-plane is pointer to the Z-buffer [i][j]
-	size_t data = rows * cols * heights * sizeof(long);					  // data
-	long ***ptrs = (long ***)malloc(header + data);						  // row pointers + 2-D plane of pointers to Z-plane data
-	long **columns = (long **)(ptrs + rows);							  // Pointer arithmetic to get the first location of 2D plane of Z-plane pointers [i][j]
-	long *dataPtr = (long *)(ptrs + rows + rows * cols);				  // Pointer arithmetic to get the first location of data buffer
-	for (long i = 0; i < rows; i++)
-	{
-		ptrs[i] = columns + i * cols;
-		for (long j = 0; j < cols; j++)
-			ptrs[i][j] = dataPtr + i * cols * heights + j * heights;
-	}
-	return ptrs;
 }
 /* http://www.cplusplus.com/reference/cstdlib/rand/
  * A typical way to generate trivial pseudo-random numbers in a determined range using rand is to use
@@ -1860,7 +1643,7 @@ long gcd(long a, long b)
 		return a >= b ? gcd_euclidean(a, b) : gcd_euclidean(b, a);
 }
 /* http://en.wikipedia.org/wiki/Least_common_multiple */
-/* he smallest positive integer that is divisible by both a and b.[1] If either a or b is 0, LCM(a, b) is defined to be zero. */
+/* The smallest positive integer that is divisible by both a and b.[1] If either a or b is 0, LCM(a, b) is defined to be zero. */
 long lcm(long a, long b)
 {
 	return (!a || !b) ? 0 : (a * b) / gcd(a, b);
@@ -4697,20 +4480,18 @@ string timeInWords(int h, int m)
 	str << hour.str();
 	return str.str();
 }
-// https://www.hackerrank.com/challenges/xor-quadruples/problem
-// 100% Functionality. However, time out as it is O(N^3)
-size_t beautifulQuadruples(int a, int b, int c, int d)
+/* https://www.hackerrank.com/challenges/xor-quadruples/problem
+ * 100% Functionality. However, time out as it is O(N^3)
+ */
+size_t BeautifulQuadruples(long a, long b, long c, long d)
 {
-	/*
-	 * Write your code here.
-	 */
-	set<multiset<int>> quadruples;
-	for (int i = 1; i <= a; i++)
-		for (int j = 1; j <= b; j++)
-			for (int k = 1; k <= c; k++)
-				for (int l = 1; l <= d; l++)
+	set<multiset<long>> quadruples;
+	for (long i = 1; i <= a; i++)
+		for (long j = 1; j <= b; j++)
+			for (long k = 1; k <= c; k++)
+				for (long l = 1; l <= d; l++)
 					if ((i ^ j ^ k ^ l) != 0)
-						quadruples.emplace(multiset<int>{i, j, k, l});
+						quadruples.emplace(multiset<long>{i, j, k, l});
 	return quadruples.size();
 }
 // https://www.hackerrank.com/challenges/red-knights-shortest-path/problem
@@ -5529,56 +5310,6 @@ vector<string> bomberMan(size_t n, vector<string> &grid)
 		}
 	return grid;
 }
-// https://www.hackerrank.com/challenges/the-grid-search/problem
-// 100%
-bool gridSearch(vector<string> &grid, vector<string> &pattern)
-{
-	size_t i = 0;
-	size_t found = 0;
-	set<size_t> locations;
-	for (size_t j = 0; j < grid.size() && i < pattern.size();)
-	{
-		bool resetI = false;
-		set<size_t> locations1;
-		for (size_t offset = 0, tmp = 0; offset < grid[j].size() && tmp != string::npos; offset++)
-		{
-			tmp = grid[j].find(pattern[i], offset);
-			if (tmp != string::npos)
-				locations1.insert(tmp);
-		}
-		if (locations1.empty() && !locations.empty())
-		{
-			locations.clear();
-			found = 0;
-			i = 0;
-			resetI = true;
-		}
-		else if (!locations1.empty() && locations.empty())
-			locations = locations1;
-		else if (!locations1.empty() && !locations.empty())
-		{
-			set<size_t> intersections;
-			set_intersection(locations1.begin(), locations1.end(), locations.begin(), locations.end(), inserter(intersections, intersections.begin()));
-			if (intersections.empty())
-			{
-				locations.clear();
-				found = 0;
-				i = 0;
-				resetI = true;
-			}
-			else
-				locations = intersections;
-		}
-		if (!locations.empty())
-		{
-			found++;
-			i++;
-		}
-		if (!resetI) // Do not advance row if we have to search for pattern from the start of the pattern block
-			j++;
-	}
-	return i == pattern.size() && found == pattern.size();
-}
 /*
  * https://www.hackerrank.com/challenges/the-quickest-way-up/problem
  * http://theoryofprogramming.com/2014/12/25/snakes-and-ladders-game-code/
@@ -6017,7 +5748,7 @@ stack:   3 2 -4 -20 <= 3+2-20
 sign:	+ * + /
 stack:   3 6 5 1 <= 6+1 = 7
 */
-long basicCalculator(const string &s)
+long BasicCalculator(const string &s)
 {
 	stack<long> numbers;
 	char sign = '+';
@@ -7063,6 +6794,14 @@ void cpp20ranges()
 	ranges::sort(nodes, {}, &Node<int>::Item);
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
+	vector<long> a;
+	a.resize(10);
+	ranges::generate(a, [n = 1]() mutable
+					 { return n++; });
+	ranges::transform(a, a, a.begin(), std::plus{}); // This is binary_transform using 2 vectors. In this case, it uses duplicate vector a.
+	cout << "After transform with std::plus: ";
+	ranges::copy(a, ostream_iterator<long>(cout, ", "));
+	cout << endl;
 }
 class VariantException
 {
@@ -7580,7 +7319,7 @@ long SteadyGene(string const &gene)
 	 * 'T': 2
 	 *
 	 * i: 0, j: 0 [A]CGTCCGT
-	 * 'A': 0 -> j: 1
+	 * 'A': 0 -> j:1
 	 * 'G': 2
 	 * 'C': 3
 	 * 'T': 2
@@ -7588,11 +7327,11 @@ long SteadyGene(string const &gene)
 	 * i: 0, j: 1 [AC]GTCCGT
 	 * 'A': 0
 	 * 'G': 2
-	 * 'C': 2 -> j: 2
+	 * 'C': 2 -> j:2
 	 * 'T': 2
 	 *
 	 * i: 0, j: 2 [ACG]TCCGT
-	 * 'A': 1 -> i: 1 count: 2
+	 * 'A': 1 -> count: 2, i:1, j:2
 	 * 'G': 2
 	 * 'C': 2
 	 * 'T': 2
@@ -7600,12 +7339,12 @@ long SteadyGene(string const &gene)
 	 * i: 1, j: 2 A[CG]TCCGT => AAGTCCGT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 3 -> i: 2 count: 1
+	 * 'C': 3 -> count: 1, i:2 j:2
 	 * 'T': 2
 	 *
 	 * i: 2, j: 2 AC[G]TCCGT
 	 * 'A': 1
-	 * 'G': 1 -> j: 3
+	 * 'G': 1 -> j:3, i:2
 	 * 'C': 3
 	 * 'T': 2
 	 *
@@ -7613,17 +7352,17 @@ long SteadyGene(string const &gene)
 	 * 'A': 1
 	 * 'G': 1
 	 * 'C': 3
-	 * 'T': 1 -> j: 4
+	 * 'T': 1 -> j:4, i:2
 	 *
 	 * i: 2, j: 4 AC[GTC]CGT
 	 * 'A': 1
 	 * 'G': 1
-	 * 'C': 2 -> j: 5
+	 * 'C': 2 -> j:5, i:2
 	 * 'T': 1
 	 *
 	 * i: 2, j: 5 AC[GTCC]GT
 	 * 'A': 1
-	 * 'G': 2 -> i: 3 count: 3
+	 * 'G': 2 -> count: 3, i:3 j:5
 	 * 'C': 2
 	 * 'T': 1
 	 *
@@ -7631,29 +7370,29 @@ long SteadyGene(string const &gene)
 	 * 'A': 1
 	 * 'G': 2
 	 * 'C': 2
-	 * 'T': 2 -> i: 4 count: 2
+	 * 'T': 2 -> count: 2, i:4, j:5
 	 *
 	 * i: 4, j: 5 ACGT[CC]GT => ACGTACGT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 3 -> i: 5 count: 1
+	 * 'C': 3 -> count: 1, i:5, j:5
 	 * 'T': 2
 	 *
 	 * i: 5, j: 5 ACGTC[C]GT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 2 -> j: 6
+	 * 'C': 2 -> j:6
 	 * 'T': 2
 	 *
 	 * i: 5, j: 6 ACGTC[CG]T => ACGTCAGT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 3 -> i: 6 count: 1
+	 * 'C': 3 -> count: 1, i:6 j:6
 	 * 'T': 2
 	 *
 	 * i: 6, j: 6 ACGTCC[G]T
 	 * 'A': 1
-	 * 'G': 1 -> j: 7
+	 * 'G': 1 -> j:7
 	 * 'C': 3
 	 * 'T': 2
 	 *
@@ -7661,7 +7400,7 @@ long SteadyGene(string const &gene)
 	 * 'A': 1
 	 * 'G': 1
 	 * 'C': 3
-	 * 'T': 1, j: 8
+	 * 'T': 1, j:8
 	 */
 	for (long i = 0, j = 0; i < gene.size() && j < gene.size();)
 	{
@@ -8017,4 +7756,111 @@ size_t NormalPlayNim(vector<size_t> &data)
 		if ((*it ^ sum) < *it)
 			count++;
 	return count;
+}
+/*
+ * https://www.hackerrank.com/challenges/counter-game/problem
+ * 100%
+ */
+bool CounterGame(long n)
+{
+	bool flag = false;
+	for (; n > 1; flag = !flag)
+	{
+		bool isPowerOfTwo = !(n & (n - 1));
+		if (isPowerOfTwo)
+			n /= 2;
+		else
+		{
+			unsigned long m = 1UL << (sizeof(long) * 8 - 1);
+			for (; !(m & n); m >>= 1)
+				;
+			n -= m;
+		}
+		if (n == 1)
+			return flag;
+	}
+	return flag;
+}
+/*
+ * Can add 1, 2 or 5 for all except the selected element. == deduct from the selected element.
+ *
+ * 1 1 5 => 0 0 4 => (0 0 0)
+ *
+ * 2 2 3 7 => 0 0 1 5 => (0 0 1 0) => 0 0 0 1 => (0 0 0 0)
+ *
+ * 7 10 12 => 0 3 5 => (0 3 0) => 0 0 3 => (0 0 1) => (0 0 0)
+ *
+ * 1 2 3 4 => 0 1 2 3 => (0 1 2 1) => (0 1 1 0) => (0 0 0 1) => (0 0 0 0)
+ */
+size_t EqualDistribution(vector<long> &data)
+{
+	size_t count = 0;
+	ranges::sort(data);
+	long min = data[0];
+	ranges::transform(data, data.begin(), [min](long n) mutable
+					  { return n - min; });
+	set<long> unique(data.begin(), data.end());
+	for (; !unique.empty() && unique.size() > 1;)
+	{
+		vector<long>::iterator it = ranges::max_element(data);
+		long diff = data.back() - data.front();
+		if (!(diff % 8))
+			count += (diff / 8) * 3;
+		else if (!(diff % 7))
+			count += (diff / 7) * 2;
+		else if (!(diff % 6))
+			count += (diff / 6) * 2;
+		else if (!(diff % 5))
+			count += (diff / 5);
+		else if (!(diff % 3))
+			count += (diff / 3) * 2;
+		else if (!(diff % 2))
+			count += (diff / 2);
+		else
+		{
+			if (diff > 5)
+				diff = 5;
+			count++;
+		}
+		*it -= diff;
+		ranges::sort(data);
+		unique.clear();
+		unique.insert(data.begin(), data.end());
+	}
+	return count;
+}
+/*
+ * https://www.hackerrank.com/challenges/happy-ladybugs/problem
+ * 100%
+ */
+bool HappyLadyBugs(string &str)
+{
+	map<char, size_t> counts;
+	for (size_t i = 0; i < str.size(); i++)
+	{
+		pair<map<char, size_t>::iterator, bool> result = counts.emplace(str[i], 1);
+		if (!result.second)
+			counts[str[i]]++;
+	}
+	if (counts.size() == 1 && counts.begin()->first == '_')
+		return true;
+	if (counts.find('_') == counts.end())
+	{
+		set<char> groups;
+		char current = '\0';
+		for (string::iterator it = str.begin(); it != str.end(); it++)
+		{
+			if (current == '\0' || (*it != current && groups.find(*it) == groups.end()))
+			{
+				current = *it;
+				groups.emplace(current);
+			}
+			else if (*it != current)
+				return false;
+		}
+	}
+	for (map<char, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+		if (it->second == 1 && it->first != '_')
+			return false;
+	return true;
 }
