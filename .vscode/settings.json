@@ -75,7 +75,7 @@
   },
   "testMate.cpp.test.advancedExecutables": [
     {
-      "pattern": "x64/{Debug,Release}/DataStructuresAlgorithmsTests",
+      "pattern": "x64/{Debug,Release}/test",
       "gtest": {
         "debug.enableOutputColouring": true
       }

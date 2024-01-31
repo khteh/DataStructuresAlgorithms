@@ -1,8 +1,8 @@
 set(PROJECT_NAME ConsoleApplication)
 
-################################################################################
+# ###############################################################################
 # Source groups
-################################################################################
+# ###############################################################################
 set(Header_Files
     "ConsoleApplication.h"
 )
@@ -18,18 +18,19 @@ set(ALL_FILES
     ${Source_Files}
 )
 
-################################################################################
+# ###############################################################################
 # Target
-################################################################################
+# ###############################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE ConsoleApplication)
 
-#set_target_properties(${PROJECT_NAME} PROPERTIES
-#    VS_GLOBAL_KEYWORD "Win32Proj"
-#)
+# set_target_properties(${PROJECT_NAME} PROPERTIES
+# VS_GLOBAL_KEYWORD "Win32Proj"
+# )
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 20)
+
 if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
     set_target_properties(${PROJECT_NAME} PROPERTIES
         INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
@@ -39,16 +40,17 @@ elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
     )
 endif()
-################################################################################
+
+# ###############################################################################
 # Compile definitions
-################################################################################
+# ###############################################################################
 if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         "$<$<CONFIG:Debug>:"
-            "_DEBUG"
+        "_DEBUG"
         ">"
         "$<$<CONFIG:Release>:"
-            "NDEBUG"
+        "NDEBUG"
         ">"
         "WIN32;"
         "_CONSOLE;"
@@ -58,10 +60,10 @@ if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
 elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         "$<$<CONFIG:Debug>:"
-            "_DEBUG"
+        "_DEBUG"
         ">"
         "$<$<CONFIG:Release>:"
-            "NDEBUG"
+        "NDEBUG"
         ">"
         "_CONSOLE;"
         "UNICODE;"
@@ -69,15 +71,15 @@ elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
     )
 endif()
 
-################################################################################
+# ###############################################################################
 # Compile and link options
-################################################################################
+# ###############################################################################
 if(MSVC)
     if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Release>:
-                /Oi;
-                /Gy
+            /Oi;
+            /Gy
             >
             /permissive-;
             /sdl;
@@ -88,8 +90,8 @@ if(MSVC)
     elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Release>:
-                /Oi;
-                /Gy
+            /Oi;
+            /Gy
             >
             /permissive-;
             /sdl;
@@ -98,11 +100,12 @@ if(MSVC)
             ${DEFAULT_CXX_EXCEPTION_HANDLING}
         )
     endif()
+
     if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         target_link_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Release>:
-                /OPT:REF;
-                /OPT:ICF
+            /OPT:REF;
+            /OPT:ICF
             >
             /DEBUG;
             /SUBSYSTEM:CONSOLE
@@ -110,8 +113,8 @@ if(MSVC)
     elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_link_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Release>:
-                /OPT:REF;
-                /OPT:ICF
+            /OPT:REF;
+            /OPT:ICF
             >
             /DEBUG;
             /SUBSYSTEM:CONSOLE
@@ -119,11 +122,10 @@ if(MSVC)
     endif()
 endif()
 
-################################################################################
+# ###############################################################################
 # Dependencies
-################################################################################
+# ###############################################################################
 # Link with other targets.
 target_link_libraries(${PROJECT_NAME} PRIVATE
     DataStructuresAlgorithms
 )
-

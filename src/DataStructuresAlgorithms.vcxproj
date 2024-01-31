@@ -22,13 +22,13 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{153DF1CE-50A7-419E-B21C-4E1865E779B2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>DataStructuresAlgorithms</RootNamespace>
+    <RootNamespace>src</RootNamespace>
     <SccProjectName>SAK</SccProjectName>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
     <SccProvider>SAK</SccProvider>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>DataStructuresAlgorithms</ProjectName>
+    <ProjectName>src</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -185,7 +185,7 @@
     <ClInclude Include="Error.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="Heap.h" />
-    <ClInclude Include="DataStructuresAlgorithms.h" />
+    <ClInclude Include="src.h" />
     <ClInclude Include="MyQueue.h" />
     <ClInclude Include="MyStack.h" />
     <ClInclude Include="NameHidingExample.h" />
@@ -217,7 +217,7 @@
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="FunctionObject.cpp" />
     <ClCompile Include="IntervalMap.cpp" />
-    <ClCompile Include="DataStructuresAlgorithms.cpp" />
+    <ClCompile Include="src.cpp" />
     <ClCompile Include="KDTree.cpp" />
     <ClCompile Include="Knapsack.cpp" />
     <ClCompile Include="LinkedList.cpp" />
