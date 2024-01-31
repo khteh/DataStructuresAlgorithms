@@ -1970,5 +1970,7 @@ int main(int argc, char *argv[])
 	str = "aa_";
 	assert(HappyLadyBugs(str));
 	/***** The End *****/
+	cout << "Press ENTER to exit";
+	getline(cin, str);
 	return 0;
 }
