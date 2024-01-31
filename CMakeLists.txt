@@ -85,6 +85,6 @@ set(BUILD_STATIC_LIBS ON)
 # ###############################################################################
 # Sub-projects
 # ###############################################################################
-add_subdirectory(ConsoleApplication)
+add_subdirectory(Console)
 add_subdirectory(src)
 add_subdirectory(test)

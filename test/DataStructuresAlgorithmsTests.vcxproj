@@ -86,7 +86,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\src.vcxproj">
+    <ProjectReference Include="..\src\DataStructuresAlgorithms.vcxproj">
       <Project>{153df1ce-50a7-419e-b21c-4e1865e779b2}</Project>
     </ProjectReference>
   </ItemGroup>

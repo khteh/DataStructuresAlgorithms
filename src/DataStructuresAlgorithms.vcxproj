@@ -217,7 +217,7 @@
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="FunctionObject.cpp" />
     <ClCompile Include="IntervalMap.cpp" />
-    <ClCompile Include="src.cpp" />
+    <ClCompile Include="DataStructuresAlgorithms.cpp" />
     <ClCompile Include="KDTree.cpp" />
     <ClCompile Include="Knapsack.cpp" />
     <ClCompile Include="LinkedList.cpp" />

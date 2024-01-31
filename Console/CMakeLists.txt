@@ -1,15 +1,15 @@
-set(PROJECT_NAME ConsoleApplication)
+set(PROJECT_NAME Console)
 
 # ###############################################################################
 # Source groups
 # ###############################################################################
 set(Header_Files
-    "ConsoleApplication.h"
+    "Console.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
 set(Source_Files
-    "ConsoleApplication.cpp"
+    "Console.cpp"
 )
 source_group("Source Files" FILES ${Source_Files})
 
@@ -24,7 +24,7 @@ set(ALL_FILES
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
-set(ROOT_NAMESPACE ConsoleApplication)
+set(ROOT_NAMESPACE Console)
 
 # set_target_properties(${PROJECT_NAME} PROPERTIES
 # VS_GLOBAL_KEYWORD "Win32Proj"
