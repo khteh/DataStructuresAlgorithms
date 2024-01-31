@@ -5,6 +5,7 @@ C++-latest data structures and algorithms using only standard libraries. This an
 ## Windows
 
 - Use Visual Studio 2022, latest Windows SDK and ISO C++20 Standard.
+- Download googletest from https://github.com/google/googletest/releases and extract to C:\Projects\C++\googletest
 
 ## Ubuntu
 
@@ -27,6 +28,8 @@ C++-latest data structures and algorithms using only standard libraries. This an
   - libtbb-dev (Intel® Threading Building Blocks)
   - libgtest-dev
   - ninja-build
+
+- Download googletest from https://github.com/google/googletest/releases and extract to /usr/src/googletest
 
 ### Build
 
