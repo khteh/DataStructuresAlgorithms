@@ -30,6 +30,7 @@ set(Sources
     "LRUCacheTests.cpp"
     "MatrixTests.cpp"
     "MaxZeroProductTests.cpp"
+    "MaxNonDivisableSubsetTests.cpp"
     "NumbersTests.cpp"
     "PalindromeTests.cpp"
     "pch.cpp"

@@ -389,3 +389,4 @@ vector<size_t> ShortestPaths(size_t, vector<vector<size_t>> &, size_t);
 bool CounterGame(long);
 size_t EqualDistribution(vector<long> &);
 bool HappyLadyBugs(string &);
+size_t MaxNonDivisableSubset(vector<size_t> &, size_t);

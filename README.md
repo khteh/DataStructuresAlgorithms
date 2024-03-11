@@ -4,7 +4,7 @@ C++-latest data structures and algorithms using only standard libraries. This an
 
 ## Windows
 
-- Use Visual Studio 2022, latest Windows SDK and ISO C++20 Standard.
+- Use Visual Studio 2022, latest Windows SDK and ISO C++23 Standard.
 - Download googletest from https://github.com/google/googletest/releases and extract to C:\Projects\C++\googletest
 
 ## Ubuntu

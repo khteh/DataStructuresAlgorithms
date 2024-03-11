@@ -196,7 +196,7 @@ if(MSVC)
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
             /MP;
-            /std:c++20;
+            /std:C++23;
             /Od;
             /GT;
             /arch:AVX;
@@ -206,7 +206,7 @@ if(MSVC)
             /Y-
             >
             $<$<CONFIG:Release>:
-            /std:c++20;
+            /std:C++23;
             /O2;
             /Gy;
             ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
@@ -218,14 +218,14 @@ if(MSVC)
     elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
-            /std:c++20;
+            /std:C++23;
             /permissive-;
             /sdl;
             /arch:AVX;
             /Y-
             >
             $<$<CONFIG:Release>:
-            /std:c++20;
+            /std:C++23;
             /O2;
             /Oi;
             /Gy
@@ -239,11 +239,11 @@ if(MSVC)
     if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         target_link_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
-            /std:c++20;
+            /std:C++23;
             /INCREMENTAL
             >
             $<$<CONFIG:Release>:
-            /std:c++20;
+            /std:C++23;
             /OPT:REF;
             /OPT:ICF;
             /INCREMENTAL:NO
@@ -254,7 +254,7 @@ if(MSVC)
     elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_link_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Release>:
-            /std:c++20;
+            /std:C++23;
             /DEBUG;
             /OPT:REF;
             /OPT:ICF;

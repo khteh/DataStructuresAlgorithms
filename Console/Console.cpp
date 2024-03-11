@@ -1969,6 +1969,16 @@ int main(int argc, char *argv[])
 	assert(!HappyLadyBugs(str));
 	str = "aa_";
 	assert(HappyLadyBugs(str));
+	udata.resize(6);
+	ranges::generate(udata, [n = 1]() mutable
+					 { return n++; });
+	assert(MaxNonDivisableSubset(udata, 3) == 3);
+	udata.clear();
+	udata = {12 ,6 ,1, 9, 13, 15, 10, 21, 14, 32, 5, 8, 23, 19};
+	assert(MaxNonDivisableSubset(udata, 6) == 8);
+	udata.clear();
+	udata = {1, 7, 2, 4};
+	assert(MaxNonDivisableSubset(udata, 3) == 3);
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

@@ -20,7 +20,7 @@ InterleavingIterator<T>::~InterleavingIterator()
 template <typename T>
 bool InterleavingIterator<T>::HasNext()
 {
-	current_ < size_;
+	return current_ < size_;
 }
 
 template <typename T>
