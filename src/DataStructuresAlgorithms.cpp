@@ -7872,7 +7872,11 @@ size_t MaxNonDivisableSubset(vector<size_t> &data, size_t k)
 {
 	vector<size_t> counts(k, 0);
 	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
-		counts[(*it) % k]++;
+		counts[(*it) % k]++; // Index is the remainder: num mod k
+	/* 
+	 * case p = 0; q = 0: At most one number in S` from S which is perfectly divisible by k. Cannot have both 3 and 6 which are evenly divisible by k=3 in S` as 3+6 = 9 is divisible by k.
+	 * case K is even and p=k-q: Cannot have two numbers which have remainder k/2 and k/2 be in S` at the same time. For example, [21, 63, 75], k = 6 => 21+63=84, 21+75=96, 63+75=138 all are divisible by 
+	 */
 	size_t result = min(counts[0], (size_t)1); // case p = 0; q = 0
 	bool even = !(k % 2);
 	for (size_t p = 1; p <= k/2; p++)
