@@ -3603,7 +3603,7 @@ long MinAbsSum(vector<long> &data)
  * Return the maximal result that can be achieved on the board represented by data
  *       0  1 2 3  4  5  6 7
  * data: 1 -2 0 9 -1 -2 -3 9
- * dp  : 1,-1, MAX(-1, 1) = 1, MAX(10, 8, 10) = 10, MAX(9, 0, -2, 0) = 9, MAX(7, 8, -1, -3, -1) = 8, MAX(5, 6, 7, -2, -4, -2) = 7, MAX(16, 17, 18, 19, 10, 8, 10) = 19
+ * dp  : 1,-1, MAX(-1, 1) = 1, MAX(10, 8, 10) = 10, MAX(0, -2, 0, 9) = 9, MAX(-1, -3, -1, 8, 7) = 8, MAX(-2, -4, -2, 7, 6, 5) = 7, MAX(10, 8, 10, 19, 18, 17, 16) = 19
  */
 long NumberSolitaire(vector<long> &data)
 {
