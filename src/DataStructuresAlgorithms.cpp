@@ -7887,7 +7887,7 @@ size_t MaxNonDivisableSubset(vector<size_t> &data, size_t k)
 }
 /*
  * https://www.hackerrank.com/challenges/minimum-loss/problem
- * Timeout
+ * 100%
  */
 long MinimumLoss(vector<long>& data)
 {
