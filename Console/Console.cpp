@@ -1979,6 +1979,15 @@ int main(int argc, char *argv[])
 	udata.clear();
 	udata = {1, 7, 2, 4};
 	assert(MaxNonDivisableSubset(udata, 3) == 3);
+	a.clear();
+	a = {20, 15, 8, 2, 12};
+	assert(MinimumLoss(a) == 3);
+	a.clear();
+	a = {20, 7, 8, 2, 5};
+	assert(MinimumLoss(a) == 2);
+	a.clear();
+	a = {2, 3, 4, 1};
+	assert(MinimumLoss(a) == 1);
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

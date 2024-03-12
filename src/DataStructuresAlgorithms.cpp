@@ -3617,7 +3617,7 @@ long NumberSolitaire(vector<long> &data)
 /* A zero - indexed array A consisting of N integers is given.It contains daily prices of a stock share for a period of N consecutive days.
  * If a single share was bought on day P and sold on day Q, where 0 ≤ P ≤ Q < N, then the profit of such transaction is equal to A[Q] − A[P], provided that A[Q] ≥ A[P].
  * Otherwise, the transaction brings loss of A[P] − A[Q].
- * For example, consider the following array A consisting of six elements such that :
+ * For example, consider the following array A consisting of six elements such that:
  * A[0] = 23171
  * A[1] = 21011
  * A[2] = 21123
@@ -7884,4 +7884,22 @@ size_t MaxNonDivisableSubset(vector<size_t> &data, size_t k)
 	for (size_t p = 1; p <= k/2; p++)
 		result += (!even || p != k / 2) ? max(counts[p], counts[k - p]) : min(counts[p], (size_t)1);
 	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/minimum-loss/problem
+ * Timeout
+ */
+long MinimumLoss(vector<long>& data)
+{
+	map<long, size_t, greater<long>> prices;
+	for (size_t i = 0; i < data.size(); i++)
+		prices.emplace(data[i], i);
+	long minPrice = numeric_limits<long>::max();
+	for (map<long, size_t, greater<long>>::iterator it = prices.begin(); it != prices.end(); it++) {
+		long index = it->second;
+		map<long, size_t, greater<long>>::iterator it1 = std::find_if(next(it), prices.end(), [index](const auto& it2) {return it2.second > index; });
+		if (it1 != prices.end() && it1->first < it->first)
+			minPrice = min((it->first - it1->first), minPrice);
+	}
+	return minPrice;
 }

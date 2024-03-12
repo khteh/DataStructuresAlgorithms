@@ -390,3 +390,4 @@ bool CounterGame(long);
 size_t EqualDistribution(vector<long> &);
 bool HappyLadyBugs(string &);
 size_t MaxNonDivisableSubset(vector<size_t> &, size_t);
+long MinimumLoss(vector<long>&);
