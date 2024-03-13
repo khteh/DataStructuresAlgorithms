@@ -3642,11 +3642,33 @@ long MaxProfit(vector<long> &data)
 	}
 	return delta;
 }
-// You are a game developer working on a game that randomly generates levels. A level is an undirected graph of rooms, each connected by doors.
-// The player starts in one room, and there is a treasure in another room. Some doors are locked, and each lock is opened by a unique key.
-// A room may contain one of those unique keys, or the treasure, or nothing. Implement a representation for a level and write code that,
-// given a level and starting room, returns true if the treasure can be reached by the player—likely requiring them to find certain other keys first—or
-// false if there is no solution.
+/*
+ * https://www.hackerrank.com/challenges/minimum-loss/problem
+ * 100%
+ */
+long MinimumLoss(vector<long> &data)
+{
+	map<long, size_t, greater<long>> prices;
+	for (size_t i = 0; i < data.size(); i++)
+		prices.emplace(data[i], i);
+	long minPrice = numeric_limits<long>::max();
+	for (map<long, size_t, greater<long>>::iterator it = prices.begin(); it != prices.end(); it++)
+	{
+		long index = it->second;
+		map<long, size_t, greater<long>>::iterator it1 = std::find_if(next(it), prices.end(), [index](const auto &it2)
+																	  { return it2.second > index; });
+		if (it1 != prices.end() && it1->first < it->first)
+			minPrice = min((it->first - it1->first), minPrice);
+	}
+	return minPrice;
+}
+/*
+ * You are a game developer working on a game that randomly generates levels. A level is an undirected graph of rooms, each connected by doors.
+ * The player starts in one room, and there is a treasure in another room. Some doors are locked, and each lock is opened by a unique key.
+ * A room may contain one of those unique keys, or the treasure, or nothing. Implement a representation for a level and write code that,
+ * given a level and starting room, returns true if the treasure can be reached by the player—likely requiring them to find certain other keys first—or
+ * false if there is no solution.
+ */
 void PlayTreasureGame()
 {
 	TreasureGame game;
@@ -7873,7 +7895,7 @@ size_t MaxNonDivisableSubset(vector<size_t> &data, size_t k)
 	vector<size_t> counts(k, 0);
 	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
 		counts[(*it) % k]++; // Index is the remainder: num mod k
-	/* 
+	/*
 	 * Case 1: if (!((A+B) % k)), (A mod k) = 0 and (B mod k) = 0
 	 *         p = 0; q = 0: At most one number in S` from S which is perfectly divisible by k. Cannot have both 3 and 6 which are evenly divisible by k=3 in S` as 3+6 = 9 is divisible by k.
 	 * Case 2: if ((A+B) % k), p + q = k
@@ -7881,25 +7903,7 @@ size_t MaxNonDivisableSubset(vector<size_t> &data, size_t k)
 	 */
 	size_t result = min(counts[0], (size_t)1); // case p = 0; q = 0
 	bool even = !(k % 2);
-	for (size_t p = 1; p <= k/2; p++)
+	for (size_t p = 1; p <= k / 2; p++)
 		result += (!even || p != k / 2) ? max(counts[p], counts[k - p]) : min(counts[p], (size_t)1);
 	return result;
-}
-/*
- * https://www.hackerrank.com/challenges/minimum-loss/problem
- * 100%
- */
-long MinimumLoss(vector<long>& data)
-{
-	map<long, size_t, greater<long>> prices;
-	for (size_t i = 0; i < data.size(); i++)
-		prices.emplace(data[i], i);
-	long minPrice = numeric_limits<long>::max();
-	for (map<long, size_t, greater<long>>::iterator it = prices.begin(); it != prices.end(); it++) {
-		long index = it->second;
-		map<long, size_t, greater<long>>::iterator it1 = std::find_if(next(it), prices.end(), [index](const auto& it2) {return it2.second > index; });
-		if (it1 != prices.end() && it1->first < it->first)
-			minPrice = min((it->first - it1->first), minPrice);
-	}
-	return minPrice;
 }
