@@ -7907,6 +7907,7 @@ size_t MaxNonDivisableSubset(vector<size_t> &data, size_t k)
 		result += (!even || p != k / 2) ? max(counts[p], counts[k - p]) : min(counts[p], (size_t)1);
 	return result;
 }
+// https://www.hackerrank.com/challenges/queens-attack-2/problem?isFullScreen=true
 size_t QueensAttack(size_t rows, size_t cols, size_t r_q /*[1,rows]*/, size_t c_q/*[1,cols]*/, vector<vector<size_t>>& obstacles)
 {
 	size_t count = 0;
