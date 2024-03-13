@@ -1988,6 +1988,11 @@ int main(int argc, char *argv[])
 	a.clear();
 	a = {2, 3, 4, 1};
 	assert(MinimumLoss(a) == 1);
+	// size_t QueensAttack(size_t rows, size_t cols, size_t r_q /*[1,rows]*/, size_t c_q/*[1,cols]*/, vector<vector<size_t>>& obstacles)
+	ugrid.resize(0);
+	assert(QueensAttack(4, 4, 4, 4, ugrid) == 9);
+	ugrid = {{5,5}, {4,2}, {2,3}};
+	assert(QueensAttack(5, 5, 4, 3, ugrid) == 10);
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

@@ -7907,3 +7907,56 @@ size_t MaxNonDivisableSubset(vector<size_t> &data, size_t k)
 		result += (!even || p != k / 2) ? max(counts[p], counts[k - p]) : min(counts[p], (size_t)1);
 	return result;
 }
+size_t QueensAttack(size_t rows, size_t cols, size_t r_q /*[1,rows]*/, size_t c_q/*[1,cols]*/, vector<vector<size_t>>& obstacles)
+{
+	size_t count = 0;
+	map<size_t, size_t> r_obstacles, c_obstacles;
+	r_q--;
+	c_q--;
+	for (size_t r = 0; r < obstacles.size(); r++)
+	{
+		r_obstacles.emplace(obstacles[r][0] - 1, obstacles[r][1] - 1);
+		c_obstacles.emplace(obstacles[r][1] - 1, obstacles[r][0] - 1);
+	}
+	// UP
+	map<size_t, size_t>::iterator it = find_if(c_obstacles.begin(), c_obstacles.end(), [r_q, c_q](const auto &it1) {return it1.first == c_q && it1.second > r_q;});
+	count += it == c_obstacles.end() ? rows  - r_q - 1 : it->second - r_q - 1;
+	// Down
+	it = find_if(c_obstacles.begin(), c_obstacles.end(), [r_q, c_q](const auto &it1) {return it1.first == c_q && it1.second < r_q;});
+	count += it == c_obstacles.end() ? r_q : r_q - it->second - 1;
+	// Left
+	it = find_if(r_obstacles.begin(), r_obstacles.end(), [c_q, r_q](const auto &it1) {return it1.first == r_q && it1.second < c_q;});
+	count += (it == r_obstacles.end()) ? c_q : c_q - it->second - 1;
+	// Right
+	it = find_if(r_obstacles.begin(), r_obstacles.end(), [c_q, r_q](const auto &it1) {return it1.first == r_q && it1.second > c_q;});
+	count += (it == r_obstacles.end()) ? cols - c_q - 1: it->second - c_q - 1;
+	// Top-left
+	int r = r_q + 1;
+	int c = c_q - 1;
+	for (; r < rows && c >= 0; r++, c--) {
+		if (r_obstacles.find(r) == r_obstacles.end() || r_obstacles[r] != c)
+			count++;
+	}
+	// Top-right
+	r = r_q + 1;
+	c = c_q + 1;
+	for (; r < rows && c < cols; r++, c++) {
+		if (r_obstacles.find(r) == r_obstacles.end() || r_obstacles[r] != c)
+			count++;
+	}
+	// Bottom-left
+	r = r_q - 1;
+	c = c_q - 1;
+	for (; r >= 0 && c >= 0; r--, c--) {
+		if (r_obstacles.find(r) == r_obstacles.end() || r_obstacles[r] != c)
+			count++;
+	}
+	// Bottom-right
+	r = r_q - 1;
+	c = c_q + 1;
+	for (; r >= 0 && c < cols; r--, c++) {
+		if (r_obstacles.find(r) == r_obstacles.end() || r_obstacles[r] != c)
+			count++;
+	}
+	return count;
+}
