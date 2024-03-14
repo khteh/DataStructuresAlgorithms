@@ -68,7 +68,9 @@
     "streambuf": "cpp",
     "thread": "cpp",
     "cfenv": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "format": "cpp",
+    "__bit_reference": "cpp"
   },
   "cmake.configureSettings": {
     "gtest_build_samples": "ON"

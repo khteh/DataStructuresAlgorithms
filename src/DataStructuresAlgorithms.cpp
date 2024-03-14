@@ -7908,10 +7908,68 @@ size_t MaxNonDivisableSubset(vector<size_t> &data, size_t k)
 	return result;
 }
 /*
+ * https://www.hackerrank.com/challenges/hackerland-radio-transmitters/problem
+ */
+size_t HackerlandRadioTransmitters(vector<size_t> &data, long k)
+{
+	size_t count = 0;
+	ranges::sort(data);
+	set<size_t> dataset(data.begin(), data.end());
+	vector<bool> houses(data.back() + 1, false);
+	for (size_t i = 0; i <= data.back(); i++)
+		houses[i] = dataset.find(i) != dataset.end();
+	size_t uncoveredHouses = 0;
+	for (size_t i = data.front(); i < houses.size(); i++)
+	{
+		if (++uncoveredHouses == k * 2 + 1)
+		{
+			count++;
+			uncoveredHouses = 0;
+		}
+	}
+	if (uncoveredHouses > 0)
+		count++;
+#if 0
+	long coverage = k;
+	bool down = true;
+	bool restart = false;
+	for (size_t i = data.front(); i < houses.size(); i++)
+	{
+		if (houses[i])
+			uncoveredHouses++;
+		if (coverage == 0 && houses[i])
+		{
+			count++;
+			uncoveredHouses = 0;
+			down = false;
+		}
+		else if (coverage == k && houses[i])
+		{
+			down = true;
+			count++;
+			uncoveredHouses = 0;
+			restart = true;
+		}
+		if (!restart && coverage > 0 && coverage <= k)
+		{
+			if (down)
+				coverage--;
+			else
+				coverage++;
+		}
+		else if (restart)
+			restart = false;
+	}
+	if (uncoveredHouses <= k)
+		count++;
+#endif
+	return count;
+}
+/*
  * https://www.hackerrank.com/challenges/queens-attack-2/problem
- 
- */ 
-size_t QueensAttack(size_t rows, size_t r_q /*[1,rows]*/, size_t c_q/*[1,cols]*/, vector<vector<size_t>>& obstacles)
+ * 6/22 test cases failed :(
+ */
+size_t QueensAttack(size_t rows, size_t r_q /*[1,rows]*/, size_t c_q /*[1,cols]*/, vector<vector<size_t>> &obstacles)
 {
 	size_t cols = rows;
 	size_t count = 0;
@@ -7920,47 +7978,56 @@ size_t QueensAttack(size_t rows, size_t r_q /*[1,rows]*/, size_t c_q/*[1,cols]*/
 	c_q--;
 	for (size_t r = 0; r < obstacles.size(); r++)
 	{
- 		r_obstacles[obstacles[r][0] - 1].insert(obstacles[r][1] - 1);
+		r_obstacles[obstacles[r][0] - 1].insert(obstacles[r][1] - 1);
 		c_obstacles[obstacles[r][1] - 1].insert(obstacles[r][0] - 1);
 	}
 	// UP
 	map<size_t, set<size_t>>::iterator it;
 	set<size_t>::iterator it1;
 	if (c_obstacles.empty() || it == c_obstacles.end())
-		count += rows  - r_q - 1;
-	else {
+		count += rows - r_q - 1;
+	else
+	{
 		it = c_obstacles.find(c_q);
-		it1 = find_if(it->second.begin(), it->second.end(), [r_q](const auto &r) {return r > r_q;});
-		count += it1 == it->second.end() ? rows  - r_q - 1 : *it1 - r_q - 1;
+		it1 = find_if(it->second.begin(), it->second.end(), [r_q](const auto &r)
+					  { return r > r_q; });
+		count += it1 == it->second.end() ? rows - r_q - 1 : *it1 - r_q - 1;
 	}
 	// Down
 	if (c_obstacles.empty() || it == c_obstacles.end())
 		count += r_q;
-	else {
+	else
+	{
 		it = c_obstacles.find(c_q);
-		it1 = find_if(it->second.begin(), it->second.end(), [r_q](const auto &r) {return r < r_q;});
+		it1 = find_if(it->second.begin(), it->second.end(), [r_q](const auto &r)
+					  { return r < r_q; });
 		count += it1 == it->second.end() ? r_q : r_q - *it1 - 1;
 	}
 	// Left
 	if (r_obstacles.empty() || it == r_obstacles.end())
 		count += c_q;
-	else {
+	else
+	{
 		it = r_obstacles.find(r_q);
-		it1 = find_if(it->second.begin(), it->second.end(), [c_q](const auto &c) {return c < c_q;});
+		it1 = find_if(it->second.begin(), it->second.end(), [c_q](const auto &c)
+					  { return c < c_q; });
 		count += it1 == it->second.end() ? c_q : c_q - *it1 - 1;
 	}
 	// Right
 	if (r_obstacles.empty() || it == r_obstacles.end())
 		count += cols - c_q - 1;
-	else {
+	else
+	{
 		it = r_obstacles.find(r_q);
-		it1 = find_if(it->second.begin(), it->second.end(), [c_q](const auto &c) {return c > c_q;});
+		it1 = find_if(it->second.begin(), it->second.end(), [c_q](const auto &c)
+					  { return c > c_q; });
 		count += it1 == it->second.end() ? cols - c_q - 1 : *it1 - c_q - 1;
 	}
 	// Top-left
 	int r = r_q + 1;
 	int c = c_q - 1;
-	for (; r < rows && c >= 0; r++, c--) {
+	for (; r < rows && c >= 0; r++, c--)
+	{
 		if (r_obstacles.find(r) == r_obstacles.end() || r_obstacles[r].find(c) == r_obstacles[r].end())
 			count++;
 		else
@@ -7969,7 +8036,8 @@ size_t QueensAttack(size_t rows, size_t r_q /*[1,rows]*/, size_t c_q/*[1,cols]*/
 	// Top-right
 	r = r_q + 1;
 	c = c_q + 1;
-	for (; r < rows && c < cols; r++, c++) {
+	for (; r < rows && c < cols; r++, c++)
+	{
 		if (r_obstacles.find(r) == r_obstacles.end() || r_obstacles[r].find(c) == r_obstacles[r].end())
 			count++;
 		else
@@ -7978,7 +8046,8 @@ size_t QueensAttack(size_t rows, size_t r_q /*[1,rows]*/, size_t c_q/*[1,cols]*/
 	// Bottom-left
 	r = r_q - 1;
 	c = c_q - 1;
-	for (; r >= 0 && c >= 0; r--, c--) {
+	for (; r >= 0 && c >= 0; r--, c--)
+	{
 		if (r_obstacles.find(r) == r_obstacles.end() || r_obstacles[r].find(c) == r_obstacles[r].end())
 			count++;
 		else
@@ -7987,7 +8056,8 @@ size_t QueensAttack(size_t rows, size_t r_q /*[1,rows]*/, size_t c_q/*[1,cols]*/
 	// Bottom-right
 	r = r_q - 1;
 	c = c_q + 1;
-	for (; r >= 0 && c < cols; r--, c++) {
+	for (; r >= 0 && c < cols; r--, c++)
+	{
 		if (r_obstacles.find(r) == r_obstacles.end() || r_obstacles[r].find(c) == r_obstacles[r].end())
 			count++;
 		else

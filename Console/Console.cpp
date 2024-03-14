@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
 	mt19937_64 engine(sequence);
 	int i, j, *iPtr;
 	unsigned long long mask = 0;
+	set<size_t> uset;
 	vector<string> strings, strings1;
 	set<string> stringset, stringset1;
 	set<long> aset;
@@ -1974,7 +1975,7 @@ int main(int argc, char *argv[])
 					 { return n++; });
 	assert(MaxNonDivisableSubset(udata, 3) == 3);
 	udata.clear();
-	udata = {12 ,6 ,1, 9, 13, 15, 10, 21, 14, 32, 5, 8, 23, 19};
+	udata = {12, 6, 1, 9, 13, 15, 10, 21, 14, 32, 5, 8, 23, 19};
 	assert(MaxNonDivisableSubset(udata, 6) == 8);
 	udata.clear();
 	udata = {1, 7, 2, 4};
@@ -1991,10 +1992,21 @@ int main(int argc, char *argv[])
 	// size_t QueensAttack(size_t rows, size_t cols, size_t r_q /*[1,rows]*/, size_t c_q/*[1,cols]*/, vector<vector<size_t>>& obstacles)
 	ugrid.resize(0);
 	assert(QueensAttack(4, 4, 4, ugrid) == 9);
-	ugrid = {{5,5}, {4,2}, {2,3}};
+	ugrid = {{5, 5}, {4, 2}, {2, 3}};
 	assert(QueensAttack(5, 4, 3, ugrid) == 10);
 	ugrid = {{20001, 20002}, {20001, 20004}, {20000, 20003}, {20002, 20003}, {20000, 20004}, {20000, 20002}, {20002, 20004}, {20002, 20002}, {564, 323}};
 	assert(QueensAttack(88587, 20001, 20003, ugrid) == 0);
+	ugrid.clear();
+	assert(QueensAttack(1, 1, 1, ugrid) == 0);
+	udata.clear();
+	udata = {1, 2, 3, 5, 9};
+	assert(HackerlandRadioTransmitters(udata, 1) == 3);
+	udata.clear();
+	udata = {1, 2, 3, 4, 5};
+	assert(HackerlandRadioTransmitters(udata, 1) == 2);
+	udata.clear();
+	udata = {7, 2, 4, 6, 5, 9, 12, 11};
+	assert(HackerlandRadioTransmitters(udata, 2) == 3);
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);
