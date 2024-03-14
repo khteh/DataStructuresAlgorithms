@@ -2007,6 +2007,9 @@ int main(int argc, char *argv[])
 	udata.clear();
 	udata = {7, 2, 4, 6, 5, 9, 12, 11};
 	assert(HackerlandRadioTransmitters(udata, 2) == 3);
+	udata.clear();
+	udata = {9, 5, 4, 2, 6, 15, 12};
+	assert(HackerlandRadioTransmitters(udata, 2) == 4);
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

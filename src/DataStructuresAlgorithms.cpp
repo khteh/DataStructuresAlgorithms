@@ -7909,6 +7909,10 @@ size_t MaxNonDivisableSubset(vector<size_t> &data, size_t k)
 }
 /*
  * https://www.hackerrank.com/challenges/hackerland-radio-transmitters/problem
+0 [1 2 3] 4 [5] 6 7 8 [9]
+9, 5, 4, 2, 6, 15, 12 => {[2], 3, [4, 5, 6]}, {7, 8, [9], 10, 11}, {[12], 13, 14, [15]}
+1: 3
+2: 5
  */
 size_t HackerlandRadioTransmitters(vector<size_t> &data, long k)
 {
@@ -7918,16 +7922,20 @@ size_t HackerlandRadioTransmitters(vector<size_t> &data, long k)
 	vector<bool> houses(data.back() + 1, false);
 	for (size_t i = 0; i <= data.back(); i++)
 		houses[i] = dataset.find(i) != dataset.end();
-	size_t uncoveredHouses = 0;
+	size_t uncoveredHouses = 0, houseCount = 0;
 	for (size_t i = data.front(); i < houses.size(); i++)
 	{
+		if (houses[i])
+			houseCount++;
 		if (++uncoveredHouses == k * 2 + 1)
 		{
-			count++;
+			if (houseCount > 0)
+				count++;
 			uncoveredHouses = 0;
+			houseCount = 0;
 		}
 	}
-	if (uncoveredHouses > 0)
+	if (uncoveredHouses > 0 && houseCount > 0)
 		count++;
 #if 0
 	long coverage = k;
