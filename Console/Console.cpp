@@ -1990,9 +1990,11 @@ int main(int argc, char *argv[])
 	assert(MinimumLoss(a) == 1);
 	// size_t QueensAttack(size_t rows, size_t cols, size_t r_q /*[1,rows]*/, size_t c_q/*[1,cols]*/, vector<vector<size_t>>& obstacles)
 	ugrid.resize(0);
-	assert(QueensAttack(4, 4, 4, 4, ugrid) == 9);
+	assert(QueensAttack(4, 4, 4, ugrid) == 9);
 	ugrid = {{5,5}, {4,2}, {2,3}};
-	assert(QueensAttack(5, 5, 4, 3, ugrid) == 10);
+	assert(QueensAttack(5, 4, 3, ugrid) == 10);
+	ugrid = {{20001, 20002}, {20001, 20004}, {20000, 20003}, {20002, 20003}, {20000, 20004}, {20000, 20002}, {20002, 20004}, {20002, 20002}, {564, 323}};
+	assert(QueensAttack(88587, 20001, 20003, ugrid) == 0);
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

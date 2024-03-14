@@ -391,4 +391,4 @@ bool CounterGame(long);
 size_t EqualDistribution(vector<long> &);
 bool HappyLadyBugs(string &);
 size_t MaxNonDivisableSubset(vector<size_t> &, size_t);
-size_t QueensAttack(size_t, size_t, size_t/*[1,rows]*/, size_t/*[1,cols]*/, vector<vector<size_t>>&);
+size_t QueensAttack(size_t, size_t/*[1,rows]*/, size_t/*[1,cols]*/, vector<vector<size_t>>&);
