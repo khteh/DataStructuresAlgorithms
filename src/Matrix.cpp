@@ -25,18 +25,18 @@ https://www.youtube.com/watch?v=PwDqpOMwg6U
 */
 template <typename T>
 Matrix<T>::Matrix(vector<vector<T>> &matrix)
-	: matrix_(matrix.size(), vector<T>(matrix.empty() ? 0 : matrix[0].size())) // Defaults to zero initial value
+	: _matrix(matrix.size(), vector<T>(matrix.empty() ? 0 : matrix[0].size())) // Defaults to zero initial value
 {
 	for (size_t i = 0; i < matrix.size(); i++)
 		for (size_t j = 0; j < matrix[i].size(); j++)
 		{
-			matrix_[i][j] = matrix[i][j];
+			_matrix[i][j] = matrix[i][j];
 			if (i > 0)
-				matrix_[i][j] += matrix_[i - 1][j];
+				_matrix[i][j] += _matrix[i - 1][j];
 			if (j > 0)
-				matrix_[i][j] += matrix_[i][j - 1];
+				_matrix[i][j] += _matrix[i][j - 1];
 			if (i > 0 && j > 0)
-				matrix_[i][j] -= matrix_[i - 1][j - 1];
+				_matrix[i][j] -= _matrix[i - 1][j - 1];
 		}
 }
 // -1  0 -1
@@ -133,28 +133,28 @@ T Matrix<T>::MatrixPatternCount(vector<vector<T>> &data)
 template <typename T>
 T Matrix<T>::Sum(vector<vector<size_t>> &area)
 {
-	if (matrix_.empty() || area.empty() || area.size() < 2 || area[0].size() < 2)
+	if (_matrix.empty() || area.empty() || area.size() < 2 || area[0].size() < 2)
 		return 0;
 	size_t r1 = area[0][0], c1 = area[0][1], r2 = area[1][0], c2 = area[1][1];
-	if (r1 < 0 || c1 < 0 || r2 < 0 || c2 < 0 || r2 < r1 || c2 < c1 || r2 >= matrix_.size() || c2 >= matrix_[0].size())
+	if (r1 < 0 || c1 < 0 || r2 < 0 || c2 < 0 || r2 < r1 || c2 < c1 || r2 >= _matrix.size() || c2 >= _matrix[0].size())
 		return 0;
-	T sum = matrix_[r2][c2];
+	T sum = _matrix[r2][c2];
 	if (r1 > 0)
-		sum -= matrix_[r1 - 1][c2];
+		sum -= _matrix[r1 - 1][c2];
 	if (c1 > 0)
-		sum -= matrix_[r2][c1 - 1];
+		sum -= _matrix[r2][c1 - 1];
 	if (r1 > 0 && c1 > 0)
-		sum += matrix_[r1 - 1][c1 - 1];
+		sum += _matrix[r1 - 1][c1 - 1];
 	return sum;
 }
 template <typename T>
 T Matrix<T>::LargestSumSubmatrix(vector<vector<size_t>> &matrix)
 {
 	T sum = numeric_limits<T>::min();
-	for (size_t r1 = 0; r1 < matrix_.size(); r1++)
-		for (size_t r2 = r1; r2 < matrix_.size(); r2++)
-			for (size_t c1 = 0; c1 < matrix_[r1].size(); c1++)
-				for (size_t c2 = c1; c2 < matrix_[r2].size(); c2++)
+	for (size_t r1 = 0; r1 < _matrix.size(); r1++)
+		for (size_t r2 = r1; r2 < _matrix.size(); r2++)
+			for (size_t c1 = 0; c1 < _matrix[r1].size(); c1++)
+				for (size_t c2 = c1; c2 < _matrix[r2].size(); c2++)
 				{
 					vector<vector<size_t>> area = vector<vector<size_t>>{{r1, c1}, {r2, c2}};
 					T tmp = Sum(area);
@@ -413,4 +413,41 @@ bool Matrix<T>::SearchMatrix1(T target, vector<vector<T>> const &matrix) const
 			break;
 	}
 	return false;
+}
+/*
+ * https://www.hackerrank.com/challenges/queens-attack-2/problem
+ * 100%
+ */
+template <typename T>
+T Matrix<T>::ChessQueensMoveCount(T dimension, T r_q /*[1,dimension]*/, T c_q /*[1,dimension]*/, vector<vector<size_t>> &obstacles)
+{
+	r_q--;
+	c_q--;
+	T count = 0, bottom = -1, left = -1, top = dimension, right = dimension, top_left = min(dimension - r_q - 1l, c_q), top_right = min(dimension - r_q - 1l, dimension - c_q - 1l), bottom_left = min(r_q, c_q), bottom_right = min(r_q, dimension - c_q - 1l);
+	for (vector<vector<size_t>>::const_iterator it = obstacles.begin(); it != obstacles.end(); it++)
+	{
+		T r /*y*/ = (*it)[0] - 1, c /*x*/ = (*it)[1] - 1;
+		if (c == c_q && r > r_q && r < top) // TOP
+			top = r;
+		else if (c == c_q && r < r_q && r > bottom) // Bottom
+			bottom = r;
+		else if (r == r_q && c < c_q && c > left) // Left
+			left = c;
+		else if (r == r_q && c > c_q && c < right) // Right
+			right = c;
+		else if (c < c_q && r > r_q && r - r_q == c_q - c && r - r_q < top_left) // Top-left
+			top_left = r - r_q - 1;
+		else if (c > c_q && r > r_q && r - r_q == c - c_q && r - r_q < top_right) // Top-right
+			top_right = r - r_q - 1;
+		else if (c < c_q && r < r_q && r_q - r == c_q - c && r_q - r < bottom_left) // Bottom-Left
+			bottom_left = r_q - r - 1;
+		else if (c > c_q && r < r_q && r_q - r == c - c_q && r_q - r < bottom_right) // Bottom-Right
+			bottom_right = r_q - r - 1;
+	}
+	count += top - r_q - 1;
+	count += bottom >= 0 ? r_q - bottom - 1 : r_q;
+	count += left >= 0 ? c_q - left - 1 : c_q;
+	count += right - c_q - 1;
+	count += top_left + top_right + bottom_left + bottom_right;
+	return count;
 }

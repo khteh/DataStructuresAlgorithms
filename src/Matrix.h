@@ -11,7 +11,7 @@ template <typename T>
 class Matrix
 {
 private:
-	vector<vector<T>> matrix_;
+	vector<vector<T>> _matrix;
 
 public:
 	Matrix();
@@ -29,4 +29,5 @@ public:
 	void RotateMatrix90DegressClockwise(vector<vector<T>> &);
 	void RotateMatrixRTimesAntiClockwise(vector<vector<T>> &, size_t);
 	vector<T> MatrixSprialOrder(vector<vector<T>> &);
+	T ChessQueensMoveCount(T, T /*[1,rows]*/, T /*[1,cols]*/, vector<vector<size_t>> &);	
 };

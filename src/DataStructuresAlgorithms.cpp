@@ -3655,8 +3655,8 @@ long MinimumLoss(vector<long> &data)
 	for (map<long, size_t, greater<long>>::iterator it = prices.begin(); it != prices.end(); it++)
 	{
 		long index = it->second;
-		map<long, size_t, greater<long>>::iterator it1 = std::find_if(next(it), prices.end(), [index](const auto &it2)
-																	  { return it2.second > index; });
+		map<long, size_t, greater<long>>::iterator it1 = find_if(next(it), prices.end(), [index](const auto &it2)
+																 { return it2.second > index; });
 		if (it1 != prices.end() && it1->first < it->first)
 			minPrice = min((it->first - it1->first), minPrice);
 	}
@@ -7909,8 +7909,53 @@ size_t MaxNonDivisableSubset(vector<size_t> &data, size_t k)
 }
 /*
  * https://www.hackerrank.com/challenges/hackerland-radio-transmitters/problem
-0 [1 2 3] 4 [5] 6 7 8 [9]
-9, 5, 4, 2, 6, 15, 12 => {[2], 3, [4, 5, 6]}, {7, 8, [9], 10, 11}, {[12], 13, 14, [15]}
+(k:1) 0 [1 2 3] 4 [5] 6 7 8 [9]
+		   ^       ^         ^
+(k:1) 1 * 2 + 1 = 3
+	  000: 0
+	  001: 1
+	  010: 1
+	  011: 1
+	  100: 1 1-4: 1
+	  101: 2
+	  110: 2
+	  111: 2 5-7: 2
+
+(k:2) 2*2 + 1 = 5
+	  00000: 0
+	  00001: 1
+	  00010: 1
+	  00011: 1
+	  00100: 1
+	  00101: 1
+	  00110: 1
+	  00111: 1
+	  01000: 1 1-8: 1
+	  01001: 2
+	  01010: 2
+	  01011: 2 9-11: 2
+	  01100: 1
+	  01101: 1
+	  01110: 1
+	  01111: 1
+	  10000: 1 12-16: 1
+	  10001: 2
+	  10010: 2
+	  10011: 2 17-19: 2
+	  10100: 1
+	  10101: 1
+	  10110: 1
+	  10111: 1
+	  11000: 1 20-24: 1
+	  11001: 2
+	  11010: 2
+	  11011: 2 25-27: 2
+	  11100: 1
+	  11101: 1
+	  11110: 1
+	  11111: 1 28-31: 1
+9, 5, 4, 2, 6, 15, 12 (k:2) => {[2], 3, [4, 5, 6]}, {7, 8, [9], 10, 11}, {[12], 13, 14, [15]}
+										 ^                  ^
 1: 3
 2: 5
  */
@@ -7971,105 +8016,5 @@ size_t HackerlandRadioTransmitters(vector<size_t> &data, long k)
 	if (uncoveredHouses <= k)
 		count++;
 #endif
-	return count;
-}
-/*
- * https://www.hackerrank.com/challenges/queens-attack-2/problem
- * 6/22 test cases failed :(
- */
-size_t QueensAttack(size_t rows, size_t r_q /*[1,rows]*/, size_t c_q /*[1,cols]*/, vector<vector<size_t>> &obstacles)
-{
-	size_t cols = rows;
-	size_t count = 0;
-	map<size_t, set<size_t>> r_obstacles, c_obstacles;
-	r_q--;
-	c_q--;
-	for (size_t r = 0; r < obstacles.size(); r++)
-	{
-		r_obstacles[obstacles[r][0] - 1].insert(obstacles[r][1] - 1);
-		c_obstacles[obstacles[r][1] - 1].insert(obstacles[r][0] - 1);
-	}
-	// UP
-	map<size_t, set<size_t>>::iterator it;
-	set<size_t>::iterator it1;
-	if (c_obstacles.empty() || it == c_obstacles.end())
-		count += rows - r_q - 1;
-	else
-	{
-		it = c_obstacles.find(c_q);
-		it1 = find_if(it->second.begin(), it->second.end(), [r_q](const auto &r)
-					  { return r > r_q; });
-		count += it1 == it->second.end() ? rows - r_q - 1 : *it1 - r_q - 1;
-	}
-	// Down
-	if (c_obstacles.empty() || it == c_obstacles.end())
-		count += r_q;
-	else
-	{
-		it = c_obstacles.find(c_q);
-		it1 = find_if(it->second.begin(), it->second.end(), [r_q](const auto &r)
-					  { return r < r_q; });
-		count += it1 == it->second.end() ? r_q : r_q - *it1 - 1;
-	}
-	// Left
-	if (r_obstacles.empty() || it == r_obstacles.end())
-		count += c_q;
-	else
-	{
-		it = r_obstacles.find(r_q);
-		it1 = find_if(it->second.begin(), it->second.end(), [c_q](const auto &c)
-					  { return c < c_q; });
-		count += it1 == it->second.end() ? c_q : c_q - *it1 - 1;
-	}
-	// Right
-	if (r_obstacles.empty() || it == r_obstacles.end())
-		count += cols - c_q - 1;
-	else
-	{
-		it = r_obstacles.find(r_q);
-		it1 = find_if(it->second.begin(), it->second.end(), [c_q](const auto &c)
-					  { return c > c_q; });
-		count += it1 == it->second.end() ? cols - c_q - 1 : *it1 - c_q - 1;
-	}
-	// Top-left
-	int r = r_q + 1;
-	int c = c_q - 1;
-	for (; r < rows && c >= 0; r++, c--)
-	{
-		if (r_obstacles.find(r) == r_obstacles.end() || r_obstacles[r].find(c) == r_obstacles[r].end())
-			count++;
-		else
-			break; // Break on first obstacle
-	}
-	// Top-right
-	r = r_q + 1;
-	c = c_q + 1;
-	for (; r < rows && c < cols; r++, c++)
-	{
-		if (r_obstacles.find(r) == r_obstacles.end() || r_obstacles[r].find(c) == r_obstacles[r].end())
-			count++;
-		else
-			break; // Break on first obstacle
-	}
-	// Bottom-left
-	r = r_q - 1;
-	c = c_q - 1;
-	for (; r >= 0 && c >= 0; r--, c--)
-	{
-		if (r_obstacles.find(r) == r_obstacles.end() || r_obstacles[r].find(c) == r_obstacles[r].end())
-			count++;
-		else
-			break; // Break on first obstacle
-	}
-	// Bottom-right
-	r = r_q - 1;
-	c = c_q + 1;
-	for (; r >= 0 && c < cols; r--, c++)
-	{
-		if (r_obstacles.find(r) == r_obstacles.end() || r_obstacles[r].find(c) == r_obstacles[r].end())
-			count++;
-		else
-			break; // Break on first obstacle
-	}
 	return count;
 }

@@ -70,7 +70,16 @@
     "cfenv": "cpp",
     "typeinfo": "cpp",
     "format": "cpp",
-    "__bit_reference": "cpp"
+    "__bit_reference": "cpp",
+    "__hash_table": "cpp",
+    "__split_buffer": "cpp",
+    "__tree": "cpp",
+    "filesystem": "cpp",
+    "__node_handle": "cpp",
+    "queue": "cpp",
+    "stack": "cpp",
+    "charconv": "cpp",
+    "__nullptr": "cpp"
   },
   "cmake.configureSettings": {
     "gtest_build_samples": "ON"
@@ -82,5 +91,27 @@
         "debug.enableOutputColouring": true
       }
     }
-  ]
+  ],
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": "googletest.failed",
+        "settings": {
+          "foreground": "#f00"
+        }
+      },
+      {
+        "scope": "googletest.passed",
+        "settings": {
+          "foreground": "#0f0"
+        }
+      },
+      {
+        "scope": "googletest.run",
+        "settings": {
+          "foreground": "#0f0"
+        }
+      }
+    ]
+  }
 }
