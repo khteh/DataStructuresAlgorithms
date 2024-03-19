@@ -715,7 +715,7 @@ TEST_P(MaxNonDivisableSubsetTestFixture, MaxNonDivisableSubsetTests)
 	ASSERT_EQ(this->_expected, this->MaxNonDivisableSubsetTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	MaxNonDivisableSubsetTests,
+	RangeTests,
 	MaxNonDivisableSubsetTestFixture,
 	::testing::Values(make_tuple(3, 3, vector<size_t>{1, 2, 3, 4, 5, 6}),
 					  make_tuple(6, 8, vector<size_t>{12, 6, 1, 9, 13, 15, 10, 21, 14, 32, 5, 8, 23, 19}),
@@ -746,7 +746,7 @@ TEST_P(HackerlandRadioTransmittersTestFixture, HackerlandRadioTransmittersTests)
 	ASSERT_EQ(this->_expected, this->HackerlandRadioTransmittersTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	HackerlandRadioTransmittersTests,
+	RangeTests,
 	HackerlandRadioTransmittersTestFixture,
 	::testing::Values(make_tuple(1, 3, vector<size_t>{1, 2, 3, 5, 9}),
 					  make_tuple(1, 2, vector<size_t>{1, 2, 3, 4, 5}),
