@@ -270,6 +270,34 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(5, 2, set<long>{1, 3, 5, 8, 6, 4, 2}),
 					  make_tuple(3, 2, set<long>{1, 5, 3, 4, 2}),
 					  make_tuple(5, 2, set<long>{1, 3, 5, 8, 6, 4, 2})));
+class MinimumLossTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	long MinimumLossTest()
+	{
+		return _rangeObj.MinimumLoss(_data);
+	}
+
+protected:
+	Range _rangeObj;
+	vector<long> _data;
+	long _expected;
+};
+TEST_P(MinimumLossTestFixture, MinimumLossTests)
+{
+	ASSERT_EQ(this->_expected, this->MinimumLossTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MinimumLossTests,
+	MinimumLossTestFixture,
+	::testing::Values(make_tuple(2, vector<long>{5, 10, 3}),
+					  make_tuple(2, vector<long>{20, 7, 8, 2, 5}),
+					  make_tuple(1, vector<long>{2, 3, 4, 1})));
 class StockMaxTestFixture : public testing::TestWithParam<tuple<size_t, vector<long>>>
 {
 public:
@@ -298,10 +326,12 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(0, vector<long>{5, 3, 2}),
 					  make_tuple(197, vector<long>{1, 2, 100}), // (100 - 1 = 99) + (100 - 2 = 98) = 197
 					  make_tuple(3, vector<long>{1, 3, 1, 2})));
+
 TEST(RangeTests, MaxProfitTest)
 {
+	Range range;
 	vector<long> a = {23171, 21011, 21123, 21366, 21013, 21367};
-	ASSERT_EQ(356, MaxProfit(a));
+	ASSERT_EQ(356, range.MaxProfit(a));
 }
 class StockMaxProfitTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
 {
@@ -659,3 +689,66 @@ INSTANTIATE_TEST_SUITE_P(
 	RangeTests,
 	LastNumbersTestFixture,
 	::testing::Values(make_tuple(vector<long>{2, 3, 4}, 3, 1, 2), make_tuple(vector<long>{30, 120, 210, 300}, 4, 10, 100)));
+
+class MaxNonDivisableSubsetTestFixture : public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_k = get<0>(GetParam());
+		_expected = get<1>(GetParam());
+		_data = get<2>(GetParam());
+	}
+	size_t MaxNonDivisableSubsetTest()
+	{
+		return _rangeObj.MaxNonDivisableSubset(_data, _k);
+	}
+
+protected:
+	Range _rangeObj;
+	vector<size_t> _data;
+	size_t _k;
+	size_t _expected;
+};
+TEST_P(MaxNonDivisableSubsetTestFixture, MaxNonDivisableSubsetTests)
+{
+	ASSERT_EQ(this->_expected, this->MaxNonDivisableSubsetTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MaxNonDivisableSubsetTests,
+	MaxNonDivisableSubsetTestFixture,
+	::testing::Values(make_tuple(3, 3, vector<size_t>{1, 2, 3, 4, 5, 6}),
+					  make_tuple(6, 8, vector<size_t>{12, 6, 1, 9, 13, 15, 10, 21, 14, 32, 5, 8, 23, 19}),
+					  make_tuple(3, 3, vector<size_t>{1, 7, 2, 4})));
+
+class HackerlandRadioTransmittersTestFixture : public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_k = get<0>(GetParam());
+		_expected = get<1>(GetParam());
+		_data = get<2>(GetParam());
+	}
+	size_t HackerlandRadioTransmittersTest()
+	{
+		return _rangeObj.HackerlandRadioTransmitters(_data, _k);
+	}
+
+protected:
+	Range _rangeObj;
+	vector<size_t> _data;
+	size_t _k;
+	size_t _expected;
+};
+TEST_P(HackerlandRadioTransmittersTestFixture, HackerlandRadioTransmittersTests)
+{
+	ASSERT_EQ(this->_expected, this->HackerlandRadioTransmittersTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	HackerlandRadioTransmittersTests,
+	HackerlandRadioTransmittersTestFixture,
+	::testing::Values(make_tuple(1, 3, vector<size_t>{1, 2, 3, 5, 9}),
+					  make_tuple(1, 2, vector<size_t>{1, 2, 3, 4, 5}),
+					  make_tuple(2, 3, vector<size_t>{7, 2, 4, 6, 5, 9, 12, 11}),
+					  make_tuple(2, 4, vector<size_t>{9, 5, 4, 2, 6, 15, 12})));

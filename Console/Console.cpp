@@ -1970,25 +1970,6 @@ int main(int argc, char *argv[])
 	assert(!HappyLadyBugs(str));
 	str = "aa_";
 	assert(HappyLadyBugs(str));
-	udata.resize(6);
-	ranges::generate(udata, [n = 1]() mutable
-					 { return n++; });
-	assert(MaxNonDivisableSubset(udata, 3) == 3);
-	udata.clear();
-	udata = {12, 6, 1, 9, 13, 15, 10, 21, 14, 32, 5, 8, 23, 19};
-	assert(MaxNonDivisableSubset(udata, 6) == 8);
-	udata.clear();
-	udata = {1, 7, 2, 4};
-	assert(MaxNonDivisableSubset(udata, 3) == 3);
-	a.clear();
-	a = {20, 15, 8, 2, 12};
-	assert(MinimumLoss(a) == 3);
-	a.clear();
-	a = {20, 7, 8, 2, 5};
-	assert(MinimumLoss(a) == 2);
-	a.clear();
-	a = {2, 3, 4, 1};
-	assert(MinimumLoss(a) == 1);
 
 	ugrid.clear();
 	ugrid.resize(0);
@@ -2004,19 +1985,6 @@ int main(int argc, char *argv[])
 	ugrid.clear();
 	ugrid.resize(0);
 	assert(matrix.ChessQueensMoveCount(100000, 4187, 5068, ugrid) == 308369);
-
-	udata.clear();
-	udata = {1, 2, 3, 5, 9};
-	assert(HackerlandRadioTransmitters(udata, 1) == 3);
-	udata.clear();
-	udata = {1, 2, 3, 4, 5};
-	assert(HackerlandRadioTransmitters(udata, 1) == 2);
-	udata.clear();
-	udata = {7, 2, 4, 6, 5, 9, 12, 11};
-	assert(HackerlandRadioTransmitters(udata, 2) == 3);
-	udata.clear();
-	udata = {9, 5, 4, 2, 6, 15, 12};
-	// assert(HackerlandRadioTransmitters(udata, 2) == 4); // Fails. WIP
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

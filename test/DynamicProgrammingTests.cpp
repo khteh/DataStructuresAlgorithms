@@ -179,10 +179,11 @@ public:
 	}
 	long NumberSolitaireTest()
 	{
-		return NumberSolitaire(_data);
+		return _rangeObj.NumberSolitaire(_data);
 	}
 
 protected:
+	Range _rangeObj;
 	vector<long> _data;
 	long _expected;
 };

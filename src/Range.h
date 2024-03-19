@@ -25,6 +25,7 @@ typedef enum class Direction
 class Range
 {
 public:
+	long NumberSolitaire(vector<long> &);
 	long ConsecutiveLargestSum(vector<long> &, vector<long> &);
 	long ConsecutiveLargestProduct(vector<long> &);
 	long ConsecutiveSumMinCount(long, vector<long> &);
@@ -36,6 +37,8 @@ public:
 	size_t NumberDiffPairs(long, vector<long> &);
 	size_t NumberDiffPairs(long, set<long> &);
 	size_t StockMax(vector<long> &);
+	long MaxProfit(vector<long> &);
+	long MinimumLoss(vector<long> &);
 	long StockMaxProfit(vector<long> &);
 	long StockMaxProfit2(vector<long> &);
 	size_t SherlockAndCost(vector<size_t> &);
@@ -47,4 +50,6 @@ public:
 	long MinimumBribes(size_t, vector<long> &);
 	size_t PickNumbersFromRange(vector<long> &);
 	vector<long> LastNumbers(size_t, long, long);
+	size_t MaxNonDivisableSubset(vector<size_t> &, size_t);
+	size_t HackerlandRadioTransmitters(vector<size_t> &, long);
 };

@@ -58,8 +58,6 @@
     <ClCompile Include="LongestCommonSubsequenceTests.cpp" />
     <ClCompile Include="LRUCacheTests.cpp" />
     <ClCompile Include="MatrixTests.cpp" />
-    <ClCompile Include="MaxNonDivisableSubsetTests.cpp">
-    <ClCompile Include="MinimumLossTests.cpp">
     <ClCompile Include="MaxZeroProductTests.cpp" />
     <ClCompile Include="ArrayNegativePositiveSeriesTests.cpp" />
     <ClCompile Include="NumbersTests.cpp" />

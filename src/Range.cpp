@@ -299,6 +299,55 @@ size_t Range::StockMax(vector<long> &prices)
 	}
 	return profit;
 }
+/* A zero - indexed array A consisting of N integers is given.It contains daily prices of a stock share for a period of N consecutive days.
+ * If a single share was bought on day P and sold on day Q, where 0 ≤ P ≤ Q < N, then the profit of such transaction is equal to A[Q] − A[P], provided that A[Q] ≥ A[P].
+ * Otherwise, the transaction brings loss of A[P] − A[Q].
+ * For example, consider the following array A consisting of six elements such that:
+ * A[0] = 23171
+ * A[1] = 21011
+ * A[2] = 21123
+ * A[3] = 21366
+ * A[4] = 21013
+ * A[5] = 21367
+ * If a share was bought on day 0 and sold on day 2, a loss of 2048 would occur because A[2] − A[0] = 21123 − 23171 = −2048.
+ * If a share was bought on day 4 and sold on day 5, a profit of 354 would occur because A[5] − A[4] = 21367 − 21013 = 354.
+ * Maximum possible profit was 356. It would occur if a share was bought on day 1 and sold on day 5.
+ * 100%
+ */
+long Range::MaxProfit(vector<long> &data)
+{
+	long min = numeric_limits<long>::max();
+	long delta = 0;
+	for (vector<long>::iterator it = data.begin(); it != data.end(); it++)
+	{
+		if (*it < min)
+			min = *it;
+		if ((*it - min) > delta)
+			delta = (*it - min);
+	}
+	return delta;
+}
+/*
+ * https://www.hackerrank.com/challenges/minimum-loss/problem
+ * 100%
+ */
+long Range::MinimumLoss(vector<long> &data)
+{
+	map<long, size_t, greater<long>> prices;
+	for (size_t i = 0; i < data.size(); i++)
+		prices.emplace(data[i], i);
+	long minPrice = numeric_limits<long>::max();
+	for (map<long, size_t, greater<long>>::iterator it = prices.begin(); it != prices.end(); it++)
+	{
+		long index = it->second;
+		map<long, size_t, greater<long>>::iterator it1 = find_if(next(it), prices.end(), [index](const auto &it2)
+																 { return it2.second > index; });
+		if (it1 != prices.end() && it1->first < it->first)
+			minPrice = min((it->first - it1->first), minPrice);
+	}
+	return minPrice;
+}
+
 /* https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
 * 100%
 * State machine of 3 states: (stay, bought, sold). Keep track of amount of profit at every state.
@@ -363,6 +412,22 @@ long Range::StockMaxProfit2(vector<long> &prices)
 		}
 	}
 	return profit;
+}
+/* https://codility.com/demo/take-sample-test/number_solitaire/
+ * https://codesays.com/2015/solution-to-number-solitaire-by-codility/
+ * Return the maximal result that can be achieved on the board represented by data
+ *       0  1 2 3  4  5  6 7
+ * data: 1 -2 0 9 -1 -2 -3 9
+ * dp  : 1,-1, MAX(-1, 1) = 1, MAX(10, 8, 10) = 10, MAX(0, -2, 0, 9) = 9, MAX(-1, -3, -1, 8, 7) = 8, MAX(-2, -4, -2, 7, 6, 5) = 7, MAX(10, 8, 10, 19, 18, 17, 16) = 19
+ */
+long Range::NumberSolitaire(vector<long> &data)
+{
+	vector<long> dp(data.size(), numeric_limits<long>::min());
+	dp[0] = data[0];
+	for (long i = 1; i < (long)data.size(); i++)
+		for (long j = 1; j < 7 && (i - j) >= 0; j++)
+			dp[i] = max(dp[i], data[i] + dp[i - j]);
+	return dp[data.size() - 1];
 }
 
 /*
@@ -762,4 +827,63 @@ vector<long> Range::LastNumbers(size_t n, long a, long b)
 	ranges::generate(result, [n = num, diff]() mutable
 					 { long result = n; n += diff; return result; });
 	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/non-divisible-subset/problem
+ * 100%
+ */
+size_t Range::MaxNonDivisableSubset(vector<size_t> &data, size_t k)
+{
+	vector<size_t> counts(k, 0);
+	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
+		counts[(*it) % k]++; // Index is the remainder: num mod k
+	/*
+	 * Case 1: if (!((A+B) % k)), (A mod k) = 0 and (B mod k) = 0
+	 *         p = 0; q = 0: At most one number in S` from S which is perfectly divisible by k. Cannot have both 3 and 6 which are evenly divisible by k=3 in S` as 3+6 = 9 is divisible by k.
+	 * Case 2: if ((A+B) % k), p + q = k
+	 * case k is even and p=k-q: Cannot have two numbers which have remainder k/2 and k/2 be in S` at the same time. For example, [21, 63, 75], k = 6 => 21+63=84, 21+75=96, 63+75=138 all are divisible by k.
+	 */
+	size_t result = min(counts[0], (size_t)1); // case p = 0; q = 0
+	bool even = !(k % 2);
+	for (size_t p = 1; p <= k / 2; p++)
+		result += (!even || p != k / 2) ? max(counts[p], counts[k - p]) : min(counts[p], (size_t)1);
+	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/hackerland-radio-transmitters/problem
+ * 100%
+(k:1) 1 2 3 5 9
+ * 1, 2, 3, 5, 9 (k:1)
+ *    c
+ *          c
+ * 1, 2, 3, 4, 5 (k:1)
+ *    c
+ *             c
+(k:2) 9, 5, 4, 2, 6, 15, 12  => [2], [4, 5, 6], [9], [12], [15]
+ * 2, 4, 5, 6, 9, 12, 15
+ *    c
+ *             c
+ *                 c
+ *                     c
+(k: 2) 7, 2, 4, 6, 5, 9, 12, 11 => [2], [4], [5], [6], [7], [9], [11], [12]
+ * 2, 4, 5, 6, 7, 9, 11, 12
+ *    c
+ *                c
+ *                        c
+ */
+size_t Range::HackerlandRadioTransmitters(vector<size_t> &data, long k)
+{
+	ranges::sort(data);
+	set<size_t> dataset(data.begin(), data.end());
+	vector<size_t> installations;
+	for (vector<size_t>::const_iterator it = data.begin(); it != data.end();)
+	{
+		size_t center = *it + k;
+		for (; dataset.find(center) == dataset.end(); center--)
+			;
+		installations.push_back(center);
+		for (size_t end = center + k; it != data.end() && *it <= end; it++)
+			;
+	}
+	return installations.size();
 }
