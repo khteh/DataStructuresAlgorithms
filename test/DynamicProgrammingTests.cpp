@@ -124,7 +124,8 @@ TEST_P(FindSubsequenceFixture, FindSubsequenceDynamicProgrammingTest)
 INSTANTIATE_TEST_SUITE_P(
 	DynamicProgrammingTests,
 	FindSubsequenceFixture,
-	::testing::Values(make_tuple(2, "1221", "12"), make_tuple(0, "1234", "56"), make_tuple(15, "kkkkkkz", "kkkk")));
+	::testing::Values(make_tuple(2, "1221", "12"), make_tuple(0, "1234", "56"), make_tuple(15, "kkkkkkz", "kkkk"), make_tuple(6, "kkkkkkz", "kkkkk"), make_tuple(1, "kkkkkkz", "kkkkkk"), make_tuple(0, "DeadBeef", "FeedBeef"), make_tuple(1, "DeadBeef", "Beef"), make_tuple(1, "DeadBeef", "dBeef")));
+
 TEST(DynamicProgrammingTests, fibonacciDynamicProgrammingTests)
 {
 	ASSERT_EQ(-1, fibonacciDynamicProgramming(-1));

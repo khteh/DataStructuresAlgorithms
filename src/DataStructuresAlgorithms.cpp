@@ -4097,6 +4097,7 @@ size_t FindSubsequenceRecursive(const string &str, const string &tomatch)
 	return result;
 }
 /*
+* s: "1221", tomatch: "12"
 * s1 is tomatch1
 * 				j:0	j:1(s1=2)	j:2(s1=12)
 				0	1			2
@@ -4105,6 +4106,22 @@ i:1(s=1)	1	1	0			0
 i:2(s=21)	2	1	1			0
 i:3(s=221)	2	1	2			0
 i:4(s=1221)	1	1	2			2
+*
+* https://en.wikipedia.org/wiki/Binomial_coefficient: (n!)/k!(n - k)!
+* s: kkkkkk s1: kkkk = 6 choose 4 = 6! / 4! * 2! = 15
+* s: kkkkkk s1: kkkkk = 6 choose 5 = 6! / 5! = 6
+* s: DeadBeef s1: FeedBeef
+* 					j:0	j:1(s1=f)	j:2(s1=ef)	j:3(s1=eef)	j:4(s1=Beef) j:5(s1=dBeef)	j:6(s1=edBeef)	j:7(s1=eedBeef)	j:8(s1=FeedBeef)
+					0	1			2
+i:0				0	1	0			0			0			0			 0				0				0				0
+i:1(s=f)		1	1   1			0			0			0			 0				0				0				0
+i:2(s=ef)		2	1   1			1			0			0			 0				0				0				0
+i:3(s=eef)		2	1	1			2			1			0			 0				0				0				0
+i:4(s=Beef)		1	1	1			2			1			1			 0				0				0				0
+i:5(s=dBeef)	1	1	1			2			1			1			 1				0				0				0
+i:6(s=adBeef)	1	1	1			2			1			1			 1				0				0				0
+i:7(s=eadBeef)	1	1	1			3			3			1			 1				0				0				0
+i:8(s=DeadBeef)	1	1	1			3			3			1			 1				0				0				0
 */
 size_t FindSubsequenceDynamicProgramming(const string &str, const string &tomatch)
 {
