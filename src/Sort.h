@@ -16,23 +16,26 @@ template <typename T>
 class Sort
 {
 private:
-	void Merge(vector<T>&, vector<T>&, size_t, size_t, size_t);
-	size_t Partition(vector<T>&, size_t, size_t, size_t);
-	size_t MergeCountInversions(vector<T>&, vector<T>&, size_t, size_t, size_t);
+	void Merge(vector<T> &, vector<T> &, size_t, size_t, size_t);
+	size_t Partition(vector<T> &, size_t, size_t, size_t);
+	size_t MergeCountInversions(vector<T> &, vector<T> &, size_t, size_t, size_t);
+
 public:
-	void BubbleSort(vector<T>&);
-	void QuickSort(vector<T>&, long, long);
-	void SelectionSort(vector<T>&);
-	void InsertionSort(vector<T>&);
-	void HeapSort(vector<T>&);
-	void CountingSort(vector<T>&) requires arithmetic_type<T>;
-	string StringCountingSort(vector<vector<string>>&);
-	void TopDownMergeSort(vector<T>&, vector<T>&, size_t, size_t);
-	void BottomUpMergeSort(vector<T>&, vector<T>&);
-	void WiggleSort(vector<T>&);
-	void SortNumbers(vector<T>&) requires arithmetic_type<T>;
-	size_t SortSwapCount(vector<T>&);
-	bool CanFinishCourseTopologicalSort(size_t, vector<vector<T>>&, vector<T>&);
-	size_t TopDownMergeSortCountConversions(vector<T>&, vector<T>&, size_t, size_t);
+	void BubbleSort(vector<T> &);
+	void QuickSort(vector<T> &, long, long);
+	void SelectionSort(vector<T> &);
+	void InsertionSort(vector<T> &);
+	void HeapSort(vector<T> &);
+	void CountingSort(vector<T> &)
+		requires arithmetic_type<T>;
+	string StringCountingSort(vector<vector<string>> &);
+	void TopDownMergeSort(vector<T> &, vector<T> &, size_t, size_t);
+	void BottomUpMergeSort(vector<T> &, vector<T> &);
+	void WiggleSort(vector<T> &);
+	void SortNumbers(vector<T> &)
+		requires arithmetic_type<T>;
+	size_t SortSwapCount(vector<T> &);
+	bool CanFinishCourseTopologicalSort(size_t, vector<vector<T>> &, vector<T> &);
+	size_t TopDownMergeSortCountConversions(vector<T> &, vector<T> &, size_t, size_t);
 	static bool LexicographicSort(string, string);
 };

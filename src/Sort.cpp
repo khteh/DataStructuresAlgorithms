@@ -391,57 +391,45 @@ size_t Sort<T>::MergeCountInversions(vector<T> &source, vector<T> &dest, size_t 
 	return inversions;
 }
 /*
- Count the minimum number of swaps needed to sort the data in either ascending or descending order
- data:         2 5 3 1
- sorted index: 1 3 2 0 <= 3 links (0:1 - 1:3 - 3:0) 2 swaps
-
- #index link #swaps
-	 2		1
-	 3		2
-	 4		3
-	 5		4
- Not optimized for big data input
-* https://www.hackerrank.com/challenges/lilys-homework/problem?isFullScreen=true
-* Times out!
-*/
+ * Count the minimum number of swaps needed to sort the data in either ascending or descending order
+ * https://www.hackerrank.com/challenges/lilys-homework/problem?isFullScreen=true
+ * 100%
+ */
 template <typename T>
 size_t Sort<T>::SortSwapCount(vector<T> &data)
 {
 	size_t result = 0, resultDescend = 0;
-	set<size_t> visited, visitedDescend;
-	set<T> sorted(data.begin(), data.end());
-	set<T, greater<T>> sortedDescend(data.begin(), data.end());
+	vector<T> unsorted(data);
+	ranges::sort(data);
+	map<T, T> ascending;
+	map<T, T, greater<T>> descending;
 	for (size_t i = 0; i < data.size(); i++)
 	{
-		if (distance(sorted.begin(), sorted.find(data[i])) != i)
+		ascending.emplace(unsorted[i], data[i]);
+		descending.emplace(unsorted[i], data[data.size() - 1 - i]);
+	}
+	/*
+	{2, 1} => {2, 5} => {2, 2}
+	{5, 2} => {5, 5}
+	{3, 3}
+	{1, 5} => {1, 1}
+	*/
+	for (typename map<T, T>::iterator it = ascending.begin(); it != ascending.end(); it++)
+	{
+		for (T value = it->second; it->first != value; value = it->second)
 		{
-			long offset = i;
-			long cnt = 0;
-			do
-			{
-				offset = distance(sorted.begin(), sorted.find(data[offset]));
-				if (visited.find(offset) == visited.end())
-				{
-					cnt++;
-					visited.insert(offset);
-				}
-			} while (offset != i);
-			result += cnt > 0 ? cnt - 1 : 0;
+			result++;					   // value: 1, 2
+			it->second = ascending[value]; // {2, 1} => { 2, 5 }, {5, 2} => {5, 5}
+			ascending[value] = value;	   // {1, 5} => {1, 1}, {2, 5} => {2, 2}
 		}
-		if (distance(sortedDescend.begin(), sortedDescend.find(data[i])) != i)
+	}
+	for (typename map<T, T, greater<T>>::iterator it = descending.begin(); it != descending.end(); it++)
+	{
+		for (T value = it->second; it->first != value; value = it->second)
 		{
-			long offset = i;
-			size_t cnt = 0;
-			do
-			{
-				offset = distance(sortedDescend.begin(), sortedDescend.find(data[offset]));
-				if (visitedDescend.find(offset) == visitedDescend.end())
-				{
-					cnt++;
-					visitedDescend.insert(offset);
-				}
-			} while (offset != i);
-			resultDescend += cnt > 0 ? cnt - 1 : 0;
+			resultDescend++;				// value: 1, 2
+			it->second = descending[value]; // {2, 1} => { 2, 5 }, {5, 2} => {5, 5}
+			descending[value] = value;		// {1, 5} => {1, 1}, {2, 5} => {2, 2}
 		}
 	}
 	return min(result, resultDescend);
