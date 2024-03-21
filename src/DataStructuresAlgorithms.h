@@ -388,4 +388,4 @@ vector<size_t> ShortestPaths(size_t, vector<vector<size_t>> &, size_t);
 bool CounterGame(long);
 size_t EqualDistribution(vector<long> &);
 bool HappyLadyBugs(string &);
-long ChessQueensMoveCount(long, long /*[1,rows]*/, long /*[1,cols]*/, vector<vector<size_t>> &);
+size_t ActivityNotifications(vector<long>&, size_t);

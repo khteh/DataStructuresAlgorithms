@@ -130,7 +130,8 @@ void Sort<T>::HeapSort(vector<T> &data)
 // https://en.wikipedia.org/wiki/Counting_sort
 // each of which has a non-negative integer key whose maximum value is at most k
 template <typename T>
-void Sort<T>::CountingSort(vector<T> &data) requires arithmetic_type<T>
+void Sort<T>::CountingSort(vector<T> &data)
+	requires arithmetic_type<T>
 {
 	vector<T> input(data);
 	T min = numeric_limits<T>::max(), max = 0;
@@ -388,8 +389,9 @@ size_t Sort<T>::MergeCountInversions(vector<T> &source, vector<T> &dest, size_t 
 		}
 	}
 	return inversions;
-} /*
-	Count the minimum number of swaps needed to sort the data in either ascending or descending order
+}
+/*
+ Count the minimum number of swaps needed to sort the data in either ascending or descending order
  data:         2 5 3 1
  sorted index: 1 3 2 0 <= 3 links (0:1 - 1:3 - 3:0) 2 swaps
 
@@ -399,7 +401,9 @@ size_t Sort<T>::MergeCountInversions(vector<T> &source, vector<T> &dest, size_t 
 	 4		3
 	 5		4
  Not optimized for big data input
- */
+* https://www.hackerrank.com/challenges/lilys-homework/problem?isFullScreen=true
+* Times out!
+*/
 template <typename T>
 size_t Sort<T>::SortSwapCount(vector<T> &data)
 {
@@ -485,7 +489,8 @@ bool Sort<T>::CanFinishCourseTopologicalSort(size_t numCourses, vector<vector<T>
 // Sort numbers into consecutive positive/negative numbers
 // http://www.careercup.com/question?id=5183920823861248
 template <typename T>
-void Sort<T>::SortNumbers(vector<T> &data) requires arithmetic_type<T>
+void Sort<T>::SortNumbers(vector<T> &data)
+	requires arithmetic_type<T>
 {
 	size_t j;
 	T tmp = T();

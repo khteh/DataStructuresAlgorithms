@@ -1985,6 +1985,17 @@ int main(int argc, char *argv[])
 	ugrid.clear();
 	ugrid.resize(0);
 	assert(matrix.ChessQueensMoveCount(100000, 4187, 5068, ugrid) == 308369);
+
+	a.clear();
+	a = {10, 20, 30, 40, 50};
+	assert(ActivityNotifications(a, 3) == 1);
+	a.clear();
+	a = {2, 3, 4, 2, 3, 6, 8, 4, 5};
+	assert(ActivityNotifications(a, 5) == 2);
+	a.clear();
+	a = {1, 2, 3, 4, 4};
+	assert(ActivityNotifications(a, 4) == 0);
+
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

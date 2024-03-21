@@ -7,7 +7,7 @@ TEST(PrefixTrieTests, PrefixTrieTest)
 	cout << "Prefix-Trie tests..." << endl;
 	prefixTrie.InsertString("apple");	   // 5
 	prefixTrie.InsertString("appendix");   // 5 ("app" common not included)
-	prefixTrie.InsertString("appetite");   // 4 ("app" common not included)
+	prefixTrie.InsertString("appetite");   // 4 ("appe" common not included)
 	prefixTrie.InsertString("to");		   // 2
 	prefixTrie.InsertString("topple");	   // 4 ("to" common not included)
 	prefixTrie.InsertString("tea");		   // 2 ("t" common not included)
