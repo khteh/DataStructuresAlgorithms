@@ -406,6 +406,7 @@ size_t sherlockAndAnagrams(string const &s)
 	return FindAnagrams(strings, anagrams);
 }
 /*
+ * This is loose palindrome detection. Returns true for any string which can be a palindrome by rearranging the characters.
  * 1 2 3 2 1 Odd count; #odd = 1
  * XXX This will return true but NOT palindrome: "13221"
  */
@@ -422,6 +423,7 @@ bool isPalindrome(string const &s)
 	return true;
 }
 /*
+ * This is loose palindrome detection. Returns true for any string which can be a palindrome by rearranging the characters.
  * 12321 => 11223
  *   count: 12121 : true
  * 123421 => 112234

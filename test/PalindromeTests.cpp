@@ -9,12 +9,14 @@ TEST(PalindromeTests, PalindromeTest)
 	ASSERT_FALSE(isPalindrome("xxxaabbccrry"));
 	//	assert(!isPalindrome("aaaabbcc"));
 	ASSERT_TRUE(isPalindrome("mmo"));
-	ASSERT_FALSE(isPalindrome2("mmo"));
-	ASSERT_TRUE(isPalindrome("yakak"));
-	ASSERT_FALSE(isPalindrome2("yakak"));
-	ASSERT_FALSE(isPalindrome("travel"));
 	ASSERT_TRUE(isPalindrome1("mmo"));
+	ASSERT_FALSE(isPalindrome2("mmo"));
+
+	ASSERT_TRUE(isPalindrome("yakak"));
 	ASSERT_TRUE(isPalindrome1("yakak"));
+	ASSERT_FALSE(isPalindrome2("yakak"));
+
+	ASSERT_FALSE(isPalindrome("travel"));
 	ASSERT_FALSE(isPalindrome1("travel"));
 	ASSERT_TRUE(isPalindrome("12121"));
 	ASSERT_TRUE(isPalindrome("12321"));
