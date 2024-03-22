@@ -764,11 +764,19 @@ unsigned long long factorialDynamicProgramming(long n)
 		;
 	return result;
 }
+/*
+ * https://en.wikipedia.org/wiki/Binomial_coefficient
+ */
+unsigned long long BinomialCoefficients(size_t n, size_t k)
+{
+	return factorial(n) / (factorial(k) * factorial(n - k));
+}
 long SequenceSum(long n)
 {
 	// return (n <= 0) ? 0 : n + SequenceSum(n - 1);
 	return (n + 1) * (n) / 2;
 }
+
 /*
  Trailing zeros are contributed by pairs of 5 and 2, because 5*2 = 10.
  To count the number of pairs, we just have to count the number of multiples of 5.
@@ -1551,7 +1559,7 @@ void randomSubset(vector<long> &source, size_t count, vector<long> &result)
  * So, if there are X 2s between 0 and 99, then we know there are 2x twos between 0 and 199.
  * Between 0 and 299, we have 3x twos from the last two digits, and another 100 2s from the first digit.
  */
-size_t countDigits(char digit, size_t n)
+size_t CountDigits(char digit, size_t n)
 {
 	unsigned long power = 1, MSBs = 0;
 	if (digit < 0 || digit > 9)
@@ -1570,20 +1578,19 @@ size_t countDigits(char digit, size_t n)
 		MSBs = (n % power) + 1;
 
 	// Count digit from all other digits
-	return (n / power) * countDigits(digit, power - 1) + countDigits(digit, n % power) + MSBs;
+	return (n / power) * CountDigits(digit, power - 1) + CountDigits(digit, n % power) + MSBs;
 }
 /* https://leetcode.com/problems/count-numbers-with-unique-digits/
  * 100%
  * Given a non-negative integer n, count all numbers with unique digits, x, where 0 ≤ x < 10^n. 0 <= n <= 8
- * MSB: 1-9 count=9
- * next: 0-9 exclude MSB count=9
- * next: 0-9 count = 10 - 2 = 8
+ *
+ * MSB: 1-9 count:9 (MSB cannot have '0' digit)
+ * next: 0-9 exclude MSB count:9
+ * next: 0-9 count:10 - 2 = 8
  * count: 9,9,8,7,6,5,4,3,2,1,0
  *
  * i:		 0 1 2 3 4 5 6 7 8 9 10
  * lastCount: 9 9 8 7 6 5 4 3 2 1 0(-1)
- *
- * MSB cannot have '0' digit
  *
  * n: 1 [0,10) 0-9
  * 10
@@ -1610,7 +1617,7 @@ size_t countDigits(char digit, size_t n)
  *
  * Starting from MSB will give more unique numbers
  */
-size_t countNumbersWithUniqueDigits(size_t n)
+size_t CountNumbersWithUniqueDigits(size_t n)
 {
 	size_t count = 1;
 	if (n >= 0 && n <= 1)
@@ -1624,7 +1631,7 @@ size_t countNumbersWithUniqueDigits(size_t n)
 			if (i >= 1)
 				lastCount--;
 		}
-		return count + countNumbersWithUniqueDigits(n - 1);
+		return count + CountNumbersWithUniqueDigits(n - 1);
 	}
 	return 0;
 }
