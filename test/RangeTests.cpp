@@ -25,7 +25,7 @@ TEST_P(ConsecutiveLargestSumTestFixture, ConsecutiveLargestSumTests)
 	ASSERT_EQ(this->_expectedCollection, this->_collectionResult);
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	ConsecutiveLargestSumTests,
 	ConsecutiveLargestSumTestFixture,
 	::testing::Values(make_tuple(5, vector<long>{2, 3}, vector<long>{2, 3, -6}),
 					  make_tuple(15, vector<long>{4, 5, 6}, vector<long>{2, 3, -6, 4, 5, 6, -20}),
@@ -55,7 +55,7 @@ TEST_P(ConsecutiveLargestProductTestFixture, ConsecutiveLargestProductTests)
 	ASSERT_EQ(this->_expected, this->ConsecutiveLargestProductTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	ConsecutiveLargestProductTests,
 	ConsecutiveLargestProductTestFixture,
 	::testing::Values(make_tuple(6, vector<long>{2, 3, -2, 4}),
 					  make_tuple(0, vector<long>{-2, 0, -1}),
@@ -91,7 +91,7 @@ TEST_P(ConsecutiveSumMinCountTestFixture, ConsecutiveSumMinCountTests)
 	ASSERT_EQ(this->_expected, this->ConsecutiveSumMinCountTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	ConsecutiveSumMinCountTests,
 	ConsecutiveSumMinCountTestFixture,
 	::testing::Values(make_tuple(2, 7, vector<long>{2, 3, 1, 2, 4, 3}), make_tuple(-1, 1, vector<long>{}), make_tuple(2, 5, vector<long>{1, 4, 4}), make_tuple(1, 4, vector<long>{1, 4, 4})));
 class LongestNonNegativeSumSliceTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
@@ -117,7 +117,7 @@ TEST_P(LongestNonNegativeSumSliceTestFixture, LongestNonNegativeSumSliceTests)
 	ASSERT_EQ(this->_expected, this->LongestNonNegativeSumSliceTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	LongestNonNegativeSumSliceTests,
 	LongestNonNegativeSumSliceTestFixture,
 	::testing::Values(make_tuple(7, vector<long>{-1, -1, 1, -1, 1, 0, 1, -1, -1}),
 					  make_tuple(4, vector<long>{1, 1, -1, -1, -1, -1, -1, 1, 1}),
@@ -148,7 +148,7 @@ TEST_P(LongestUpDownAlternatingSubSequenceTestFixture, LongestUpDownAlternatingS
 	ASSERT_EQ(this->_expectedCollection, this->_collectionResult);
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	LongestUpDownAlternatingSubSequenceTests,
 	LongestUpDownAlternatingSubSequenceTestFixture,
 	::testing::Values(make_tuple(9, vector<long>{2, 51, 50, 60, 55, 70, 68, 80, 76}, vector<long>{1, 2, 51, 50, 60, 55, 70, 68, 80, 76, 75, 12, 45})));
 class SumPairsTestFixture : public testing::TestWithParam<tuple<size_t, long, vector<long>>>
@@ -176,7 +176,7 @@ TEST_P(SumPairsTestFixture, SumPairsTests)
 	ASSERT_EQ(this->_expected, this->SumPairsTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	SumPairsTests,
 	SumPairsTestFixture,
 	::testing::Values(make_tuple(2, 8, vector<long>{1, 2, 3, 4, 5, 6, 5}),
 					  make_tuple(3, 12, vector<long>{5, 7, 9, 13, 11, 6, 6, 3, 3}),
@@ -205,7 +205,7 @@ TEST_P(TripletsZeroSumTestFixture, TripletsZeroSumTests)
 	ASSERT_EQ(this->_expected, this->TripletsZeroSumTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	TripletsZeroSumTests,
 	TripletsZeroSumTestFixture,
 	::testing::Values(make_tuple(vector<vector<long>>{{-1, -1, 2}, {-1, 0, 1}}, vector<long>{-1, 0, 1, 2, -1, -4}),
 					  make_tuple(vector<vector<long>>{{0, 0, 0}}, vector<long>{0, 0, 0})));
@@ -234,7 +234,7 @@ TEST_P(QuadrupletsSumTestFixture, QuadrupletsSumTests)
 	ASSERT_EQ(this->_expected, this->QuadrupletsSumTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	QuadrupletsSumTests,
 	QuadrupletsSumTestFixture,
 	::testing::Values(make_tuple(vector<vector<long>>{{-2, -1, 1, 2}, {-2, 0, 0, 2}, {-1, 0, 0, 1}}, 0, vector<long>{1, 0, -1, 0, -2, 2}),
 					  make_tuple(vector<vector<long>>{{-3, -1, 2, 4}}, 2, vector<long>{-3, -1, 0, 2, 4, 5})));
@@ -263,7 +263,7 @@ TEST_P(NumberDiffPairsTestFixture, NumberDiffPairsTests)
 	ASSERT_EQ(this->_expected, this->NumberDiffPairsTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	NumberDiffPairsTests,
 	NumberDiffPairsTestFixture,
 	::testing::Values(make_tuple(6, 3, set<long>{1, 2, 3, 5, 6, 8, 9, 11, 12, 13}),
 					  make_tuple(3, 2, set<long>{1, 5, 3, 4, 2}),
@@ -321,7 +321,7 @@ TEST_P(StockMaxTestFixture, StockMaxTests)
 	ASSERT_EQ(this->_expected, this->StockMaxTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	StockMaxTests,
 	StockMaxTestFixture,
 	::testing::Values(make_tuple(0, vector<long>{5, 3, 2}),
 					  make_tuple(197, vector<long>{1, 2, 100}), // (100 - 1 = 99) + (100 - 2 = 98) = 197
@@ -356,7 +356,7 @@ TEST_P(StockMaxProfitTestFixture, StockMaxProfitTests)
 	ASSERT_EQ(this->_expected, this->StockMaxProfitTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	StockMaxProfitTests,
 	StockMaxProfitTestFixture,
 	::testing::Values(make_tuple(6, vector<long>{1, 2, 3, 0, 2, 5}), make_tuple(6, vector<long>{1, 2, 3, 0, 1, 5}), make_tuple(9, vector<long>{1, 2, 6, 0, 1, 5})));
 class StockMaxProfit2TestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
@@ -382,7 +382,7 @@ TEST_P(StockMaxProfit2TestFixture, StockMaxProfit2Tests)
 	ASSERT_EQ(this->_expected, this->StockMaxProfit2Test());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	StockMaxProfit2Tests,
 	StockMaxProfit2TestFixture,
 	::testing::Values(make_tuple(7, vector<long>{7, 1, 5, 3, 6, 4}), make_tuple(4, vector<long>{1, 2, 3, 4, 5}), make_tuple(0, vector<long>{5, 4, 3, 2, 1}),
 					  make_tuple(1, vector<long>{1, 2}), make_tuple(0, vector<long>{1, 1})));
@@ -410,7 +410,7 @@ TEST_P(SherlockAndCostTestFixture, SherlockAndCostTests)
 	ASSERT_EQ(this->_expected, this->SherlockAndCostTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	SherlockAndCostTests,
 	SherlockAndCostTestFixture,
 	::testing::Values(make_tuple(2, vector<size_t>{1, 2, 3}),
 					  make_tuple(12, vector<size_t>{4, 7, 9}),
@@ -445,7 +445,7 @@ TEST_P(WiggleMaxLengthTestFixture, WiggleMaxLengthTests)
 	ASSERT_EQ(this->_expected, this->WiggleMaxLengthTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	WiggleMaxLengthTests,
 	WiggleMaxLengthTestFixture,
 	::testing::Values(make_tuple(vector<long>{1, 7, 4, 9, 2, 5}, vector<long>{1, 7, 4, 9, 2, 5}),
 					  make_tuple(vector<long>{0}, vector<long>{0}),
@@ -481,7 +481,7 @@ TEST_P(ContainsNearbyAlmostDuplicateTestFixture, ContainsNearbyAlmostDuplicateTe
 	ASSERT_EQ(this->_expected, this->ContainsNearbyAlmostDuplicateTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	ContainsNearbyAlmostDuplicateTests,
 	ContainsNearbyAlmostDuplicateTestFixture,
 	::testing::Values(make_tuple(true, vector<long>{1, 2, 3, 1}, 3, 0),
 					  make_tuple(true, vector<long>{1, 0, 1, 1}, 1, 2),
@@ -538,7 +538,7 @@ TEST_P(VectorEqualSplitTestFixture, VectorEqualSplitTests)
  * (4) [0] [0]
  */
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	VectorEqualSplitTests,
 	VectorEqualSplitTestFixture,
 	::testing::Values(make_tuple(0, vector<int>{1}), make_tuple(0, vector<int>{1, 2}), make_tuple(1, vector<int>{1, 1}), make_tuple(1, vector<int>{0, 0}),
 					  make_tuple(2, vector<int>{0, 0, 0}), make_tuple(0, vector<int>{1, 1, 1}), make_tuple(0, vector<int>{2, 2, 2}), make_tuple(0, vector<int>{1, 1, 1, 1, 1}),
@@ -571,7 +571,7 @@ TEST_P(MaxProductOfNonOverlappingWordLengthsTestFixture, MaxProductOfNonOverlapp
 	ASSERT_EQ(this->_expected, this->MaxProductOfNonOverlappingWordLengthsTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	MaxProductOfNonOverlappingWordLengthsTests,
 	MaxProductOfNonOverlappingWordLengthsTestFixture,
 	::testing::Values(make_tuple(16, vector<string>{"abcw", "baz", "foo", "bar", "xtfn", "abcdef"}), // "abcw", "xtfn"
 					  make_tuple(4, vector<string>{"a", "ab", "abc", "d", "cd", "bcd", "abcd"}),	 // "ab", "cd"
@@ -599,7 +599,7 @@ TEST_P(AlmostSortedTestFixture, AlmostSortedTests)
 	ASSERT_EQ(this->_expected, this->AlmostSortedTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	AlmostSortedTests,
 	AlmostSortedTestFixture,
 	::testing::Values(make_tuple("swap 1 2", vector<long>{4, 2}), // Index starts from 1, not 0.
 					  make_tuple("no", vector<long>{3, 1, 2}),
@@ -630,7 +630,7 @@ TEST_P(MinimumBribesTestFixture, MinimumBribesTests)
 	ASSERT_EQ(this->_expected, this->MinimumBribesTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	MinimumBribesTests,
 	MinimumBribesTestFixture,
 	::testing::Values(make_tuple(3, 2, vector<long>{2, 1, 5, 3, 4}), make_tuple(-1, 2, vector<long>{2, 5, 1, 3, 4}), make_tuple(4, 3, vector<long>{2, 5, 1, 3, 4}),
 					  make_tuple(5, 4, vector<long>{5, 2, 1, 3, 4}), make_tuple(7, 2, vector<long>{1, 2, 5, 3, 7, 8, 6, 4})));
@@ -657,7 +657,7 @@ TEST_P(PickNumbersFromRangeTestFixture, PickNumbersFromRangeTests)
 	ASSERT_EQ(this->_expected, this->PickNumbersFromRangeTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	PickNumbersFromRangeTests,
 	PickNumbersFromRangeTestFixture,
 	::testing::Values(make_tuple(5, vector<long>{1, 1, 2, 2, 4, 4, 5, 5, 5}), make_tuple(3, vector<long>{4, 6, 5, 3, 3, 1}), make_tuple(5, vector<long>{1, 2, 2, 3, 1, 2})));
 class LastNumbersTestFixture : public testing::TestWithParam<tuple<vector<long>, size_t, long, long>>
@@ -686,7 +686,7 @@ TEST_P(LastNumbersTestFixture, LastNumbersTests)
 	ASSERT_EQ(this->_expected, this->LastNumbersTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	LastNumbersTests,
 	LastNumbersTestFixture,
 	::testing::Values(make_tuple(vector<long>{2, 3, 4}, 3, 1, 2), make_tuple(vector<long>{30, 120, 210, 300}, 4, 10, 100)));
 
@@ -715,7 +715,7 @@ TEST_P(MaxNonDivisableSubsetTestFixture, MaxNonDivisableSubsetTests)
 	ASSERT_EQ(this->_expected, this->MaxNonDivisableSubsetTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	MaxNonDivisableSubsetTests,
 	MaxNonDivisableSubsetTestFixture,
 	::testing::Values(make_tuple(3, 3, vector<size_t>{1, 2, 3, 4, 5, 6}),
 					  make_tuple(6, 8, vector<size_t>{12, 6, 1, 9, 13, 15, 10, 21, 14, 32, 5, 8, 23, 19}),
@@ -746,7 +746,7 @@ TEST_P(HackerlandRadioTransmittersTestFixture, HackerlandRadioTransmittersTests)
 	ASSERT_EQ(this->_expected, this->HackerlandRadioTransmittersTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	RangeTests,
+	HackerlandRadioTransmittersTests,
 	HackerlandRadioTransmittersTestFixture,
 	::testing::Values(make_tuple(1, 3, vector<size_t>{1, 2, 3, 5, 9}),
 					  make_tuple(1, 2, vector<size_t>{1, 2, 3, 4, 5}),
