@@ -399,14 +399,14 @@ template <typename T>
 size_t Sort<T>::SortSwapCount(vector<T> &data)
 {
 	size_t result = 0, resultDescend = 0;
-	vector<T> unsorted(data);
-	ranges::sort(data);
+	vector<T> sorted(data);
+	ranges::sort(sorted);
 	map<T, T> ascending;
 	map<T, T, greater<T>> descending;
 	for (size_t i = 0; i < data.size(); i++)
 	{
-		ascending.emplace(unsorted[i], data[i]);
-		descending.emplace(unsorted[i], data[data.size() - 1 - i]);
+		ascending.emplace(data[i], sorted[i]);
+		descending.emplace(data[i], sorted[sorted.size() - 1 - i]);
 	}
 	/*
 	{2, 1} => {2, 5} => {2, 2}
@@ -419,17 +419,23 @@ size_t Sort<T>::SortSwapCount(vector<T> &data)
 		for (T value = it->second; it->first != value; value = it->second)
 		{
 			result++;					   // value: 1, 2
-			it->second = ascending[value]; // {2, 1} => { 2, 5 }, {5, 2} => {5, 5}
+			it->second = ascending[value]; // {2, 1} => {2, 5}, {5, 2} => {5, 5}
 			ascending[value] = value;	   // {1, 5} => {1, 1}, {2, 5} => {2, 2}
 		}
 	}
+	/*
+	{1, 1}
+	{3, 2} => {3, 5} => {3, 3}
+	{5, 3} => {5, 5}
+	{2, 5} => {2, 2}
+	*/
 	for (typename map<T, T, greater<T>>::iterator it = descending.begin(); it != descending.end(); it++)
 	{
 		for (T value = it->second; it->first != value; value = it->second)
 		{
-			resultDescend++;				// value: 1, 2
-			it->second = descending[value]; // {2, 1} => { 2, 5 }, {5, 2} => {5, 5}
-			descending[value] = value;		// {1, 5} => {1, 1}, {2, 5} => {2, 2}
+			resultDescend++;				// value: 2, 5
+			it->second = descending[value]; // {3, 2} => {3, 5}, {5, 3} => {5, 5}
+			descending[value] = value;		// {2, 5} => {2, 2}
 		}
 	}
 	return min(result, resultDescend);
