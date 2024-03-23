@@ -54,39 +54,43 @@ TEST(PalindromeTests, PalindromeTest)
 	ASSERT_NE(palindromes.find("skeeggeeks"), palindromes.end());
 	ASSERT_NE(palindromes.find("aazaa"), palindromes.end());
 }
-TEST(HighestValuePalindromeTests, PalindromeTest)
+class HighestValuePalindromeTestFixture : public testing::TestWithParam<tuple<string, string, size_t>>
 {
-	string str = "1";
-	HighestValuePalindrome(str, 5);
-	ASSERT_EQ(str, "9");
-	str = "11";
-	HighestValuePalindrome(str, 5);
-	ASSERT_EQ(str, "99");
-	str = "111";
-	HighestValuePalindrome(str, 5);
-	ASSERT_EQ(str, "999");
-	str = "1111";
-	HighestValuePalindrome(str, 5);
-	ASSERT_EQ(str, "9999");
-	str = "11111";
-	HighestValuePalindrome(str, 5);
-	ASSERT_EQ(str, "99999");
-	str = "111111";
-	HighestValuePalindrome(str, 5);
-	ASSERT_EQ(str, "991199");
-	str = "1231";
-	HighestValuePalindrome(str, 3);
-	ASSERT_EQ(str, "9339");
-	str = "3943";
-	HighestValuePalindrome(str, 1);
-	ASSERT_EQ(str, "3993");
-	str = "092282";
-	HighestValuePalindrome(str, 3);
-	ASSERT_EQ(str, "992299");
-	str = "932239";
-	HighestValuePalindrome(str, 2);
-	ASSERT_EQ(str, "992299");
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_k = get<2>(GetParam());
+	}
+	void HighestValuePalindromeTest()
+	{
+		HighestValuePalindrome(_data, _k);
+	}
+
+protected:
+	string _expected, _data;
+	size_t _k;
+};
+TEST_P(HighestValuePalindromeTestFixture, HighestValuePalindromeTests)
+{
+	this->HighestValuePalindromeTest();
+	ASSERT_EQ(this->_expected, this->_data);
 }
+INSTANTIATE_TEST_SUITE_P(
+	HighestValuePalindromeTests,
+	HighestValuePalindromeTestFixture,
+	::testing::Values(make_tuple("9", "1", 5),
+					  make_tuple("99", "11", 5),
+					  make_tuple("999", "111", 5),
+					  make_tuple("9999", "1111", 5),
+					  make_tuple("99999", "11111", 5),
+					  make_tuple("991199", "111111", 5),
+					  make_tuple("9339", "1231", 3),
+					  make_tuple("3993", "3943", 1),
+					  make_tuple("992299", "092282", 3),
+					  make_tuple("992299", "932239", 2)));
+
 class IsPalindromeFixture
 {
 public:
