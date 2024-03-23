@@ -1,13 +1,37 @@
 #include "pch.h"
 using namespace std;
+class FindBiggestPalindromeSubstringTestFixture : public testing::TestWithParam<tuple<string, string>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	string FindBiggestPalindromeSubstringTest()
+	{
+		return FindBiggestPalindromeSubstring(_data);
+	}
+
+protected:
+	string _expected, _data;
+};
+TEST_P(FindBiggestPalindromeSubstringTestFixture, FindBiggestPalindromeSubstringTests)
+{
+	ASSERT_EQ(this->_expected, this->FindBiggestPalindromeSubstringTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	FindBiggestPalindromeSubstringTests,
+	FindBiggestPalindromeSubstringTestFixture,
+	::testing::Values(make_tuple("ABCDCBA", "AABCDCBA"),
+					  make_tuple("ABCDDCBA", "AABCDDCBA"),
+					  make_tuple("ABCBA", "DEFABCBAYT"),
+					  make_tuple("ABCCBA", "DEFABCCBAYT")));
+
 TEST(PalindromeTests, PalindromeTest)
 {
 	set<string> palindromes;
 	//	assert(!IsPalindrome("aaaabbcc"));
-	ASSERT_EQ("ABCDCBA", FindBiggestPalindromeSubstring("AABCDCBA"));
-	ASSERT_EQ("ABCDDCBA", FindBiggestPalindromeSubstring("AABCDDCBA"));
-	ASSERT_EQ("ABCBA", FindBiggestPalindromeSubstring("DEFABCBAYT"));
-	ASSERT_EQ("ABCCBA", FindBiggestPalindromeSubstring("DEFABCCBAYT"));
 	ASSERT_EQ(11, PalindromeAnagramCount("02002"));
 	ASSERT_EQ(11, PalindromeAnagramCount1("02002"));
 	FindPalindromeSubstrings("a", palindromes);
