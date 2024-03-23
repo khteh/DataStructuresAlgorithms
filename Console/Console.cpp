@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
 	int i, j, *iPtr;
+	unsigned int ui;
 	unsigned long long mask = 0;
 	set<size_t> uset;
 	vector<string> strings, strings1;
@@ -121,8 +122,8 @@ int main(int argc, char *argv[])
 	cout << "https://en.wikipedia.org/wiki/Machine_epsilon: Float: " << numeric_limits<float>::epsilon() << ", Double: " << numeric_limits<double>::epsilon() << endl;
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
-	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << ", numeric_limits<int>::max(): " << numeric_limits<int>::max() << ", numeric_limits<int>::min() * -1 = " << numeric_limits<int>::min() * -1 << endl;
-	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << ", numeric_limits<long>::max(): " << numeric_limits<long>::max() << ", numeric_limits<long>::min() * -1 = " << numeric_limits<long>::min() * -1 << endl;
+	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << " (0x" << hex << numeric_limits<int>::min() << dec << "), numeric_limits<int>::max(): " << numeric_limits<int>::max() << " (0x" << hex << numeric_limits<int>::max() << "), numeric_limits<int>::min() *-1 = " << numeric_limits<int>::min() * -1 << endl;
+	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << " (0x" << hex << numeric_limits<long>::min() << dec << "), numeric_limits<long>::max(): " << numeric_limits<long>::max() << " (0x" << hex << numeric_limits<long>::max() << dec << "), numeric_limits<long>::min() * -1 = " << numeric_limits<long>::min() * -1 << endl;
 	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	// assert(numeric_limits<int>::min() / -1 == numeric_limits<int>::min()); Integer overflow as 0x8000_0000 positive is > numeric_limits<int>::max()
 	assert(numeric_limits<int>::max() * -1 == numeric_limits<int>::min() + 1); // 0x7FFFF_FFFF * -1 = -0x7FFF_FFFF = 0x8000_0001
@@ -165,7 +166,9 @@ int main(int argc, char *argv[])
 	assert(ll == 0x80000000);
 	cout << "(int)0x7FFFFFFF + 1: " << i << ", long long: " << (long long)(i) << endl; // sign extended to 64-bit
 	cout << "(long long)0x7FFFFFFF + 1: " << ll << endl;
-
+	ui = 0xFFFFFFFF;
+	assert(ui == numeric_limits<unsigned int>::max());
+	cout << "Unsigned int 0xFFFFFFFF: " << ui << endl;
 	i = 0x80000000;
 	ll = i;
 	assert(ll < 0); // sign extended to 64-bit
@@ -225,10 +228,10 @@ int main(int argc, char *argv[])
 	i = -INT_MIN; // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4146?view=msvc-160
 	assert(j == (i - 0x7FFFFFFF));
 
-	size_t ui = numeric_limits<size_t>::max() + 1;
-	assert(!ui);
+	size_t ul = numeric_limits<size_t>::max() + 1;
+	assert(!ul);
 	cout << "int -" << hex << i << ": " << -i << dec << " " << -i << ", ~" << i << ": " << hex << ~i << " " << dec << ~i << endl;
-	ui = 3;
+	ul = 3;
 	// cout << "uint -" << hex << ui << ": " << -ui << dec << " " << -ui << ", ~" << ui << ": " << hex << ~ui << " " << dec << ~ui << endl;
 	assert(1 == abs(-INT_MIN - 0x7FFFFFFF));
 	assert(1 == abs(0x7FFFFFFF - -INT_MIN));
