@@ -410,7 +410,7 @@ size_t sherlockAndAnagrams(string const &s)
  * 1 2 3 2 1 Odd count; #odd = 1
  * XXX This will return true but NOT palindrome: "13221"
  */
-bool isPalindrome(string const &s)
+bool IsPalindrome(string const &s)
 {
 	size_t odd = 0;
 	size_t length = s.length();
@@ -433,7 +433,7 @@ bool isPalindrome(string const &s)
  * 121212 => 111222
  *   count:  123 : Even length -> false
  */
-bool isPalindrome1(string const &s)
+bool IsPalindrome1(string const &s)
 {
 	size_t count = 1, odd = 0;
 	size_t length = s.length();
@@ -453,7 +453,7 @@ bool isPalindrome1(string const &s)
 	return true;
 }
 // https://en.wikipedia.org/wiki/Palindrome
-bool isPalindrome2(string const &s)
+bool IsPalindrome2(string const &s)
 {
 	for (size_t i = 0, j = s.size() - 1; i <= j;)
 	{
@@ -475,7 +475,7 @@ bool isPalindrome2(string const &s)
 	return true;
 }
 // https://www.hackerrank.com/challenges/sherlock-and-valid-string/problem
-// adapt from isPalindrome()
+// adapt from IsPalindrome()
 // 100%
 bool SherlockValidString(string const &s)
 {
@@ -608,7 +608,7 @@ size_t PalindromeAnagramCount(string const &str)
 			substr = str.substr(i, j);
 			if (j == 1 || (j == 2 && substr[0] == substr[1]))
 				result++;
-			else if (isPalindrome(substr))
+			else if (IsPalindrome(substr))
 			{
 				palindromes.push_back(substr);
 				result++;
@@ -658,6 +658,63 @@ size_t PalindromeAnagramCount1(string const &str)
 		counts.clear();
 	}
 	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/richie-rich/problem
+ * 100%
+ */
+void HighestValuePalindrome(string &s, size_t k)
+{
+	bool IsPalindrome = true;
+	set<size_t> tofix; // Record # characters and positions to fix
+	for (long i = 0, j = s.size() - 1; i <= j; i++, j--)
+	{
+		if (i != j && s[i] != s[j])
+			tofix.emplace(i);
+	}
+	if (tofix.size() > k)
+	{
+		s = "-1";
+		return;
+	}
+	size_t spare = k - tofix.size(); // Check if we have spare
+	/*
+	 * (k:3 spare: 2) 1 2 3 1 => 1 3 3 1 => 9 3 3 9
+	 * (k:1 spare: 0) 3 9 4 3 => 3 9 9 3
+	 * (k:3 spare: 1) 0 9 2 2 8 2 => 2 9 2 2 9 2 => 9 9 2 2 9 9
+	 */
+	// Firstly, fix the string to be a valid palindrome
+	for (set<size_t>::iterator it = tofix.begin(); it != tofix.end(); it++)
+	{
+		if (s[*it] > s[s.size() - *it - 1])
+			s[s.size() - *it - 1] = s[*it];
+		else if (s[*it] < s[s.size() - *it - 1])
+			s[*it] = s[s.size() - *it - 1];
+	}
+	// Change the string value if we have any spare
+	for (long i = 0, j = s.size() - 1; i <= j && spare > 0; i++, j--)
+	{
+		if (tofix.find(i) == tofix.end())
+		{
+			if (i == j && spare >= 1 && s[i] != '9')
+			{
+				s[i] = '9';
+				spare -= 1;
+			}
+			else if (i != j && spare >= 2 && s[i] != '9' && s[j] != '9')
+			{
+				s[i] = '9';
+				s[j] = '9';
+				spare -= 2;
+			}
+		}
+		else if (tofix.find(i) != tofix.end() && spare > 0 && s[i] != '9' && s[j] != '9')
+		{
+			s[i] = '9';
+			s[j] = '9';
+			spare--;
+		}
+	}
 }
 // Write a code to test whether string s2 is obtained by rotating the string s1 by n places.
 bool AreRotatedStrings(string const &s1, string const &s2, size_t n)

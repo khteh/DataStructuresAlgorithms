@@ -7,17 +7,17 @@ public:
 	{
 		_expected = get<0>(GetParam());
 		_expectedCollection = get<1>(GetParam());
-		_range = get<2>(GetParam());
+		_data = get<2>(GetParam());
 	}
 	long ConsecutiveLargestSumTest()
 	{
-		return _rangeObj.ConsecutiveLargestSum(_range, _collectionResult);
+		return _rangeObj.ConsecutiveLargestSum(_data, _collectionResult);
 	}
 
 protected:
 	Range _rangeObj;
 	long _expected;
-	vector<long> _range, _expectedCollection, _collectionResult;
+	vector<long> _data, _expectedCollection, _collectionResult;
 };
 TEST_P(ConsecutiveLargestSumTestFixture, ConsecutiveLargestSumTests)
 {
@@ -38,17 +38,17 @@ public:
 	void SetUp() override
 	{
 		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		_data = get<1>(GetParam());
 	}
 	long ConsecutiveLargestProductTest()
 	{
-		return _rangeObj.ConsecutiveLargestProduct(_range);
+		return _rangeObj.ConsecutiveLargestProduct(_data);
 	}
 
 protected:
 	Range _rangeObj;
 	long _expected;
-	vector<long> _range;
+	vector<long> _data;
 };
 TEST_P(ConsecutiveLargestProductTestFixture, ConsecutiveLargestProductTests)
 {
@@ -74,17 +74,17 @@ public:
 	{
 		_expected = get<0>(GetParam());
 		_target = get<1>(GetParam());
-		_range = get<2>(GetParam());
+		_data = get<2>(GetParam());
 	}
 	long ConsecutiveSumMinCountTest()
 	{
-		return _rangeObj.ConsecutiveSumMinCount(_target, _range);
+		return _rangeObj.ConsecutiveSumMinCount(_target, _data);
 	}
 
 protected:
 	Range _rangeObj;
 	long _expected, _target;
-	vector<long> _range;
+	vector<long> _data;
 };
 TEST_P(ConsecutiveSumMinCountTestFixture, ConsecutiveSumMinCountTests)
 {
@@ -100,17 +100,17 @@ public:
 	void SetUp() override
 	{
 		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		_data = get<1>(GetParam());
 	}
 	long LongestNonNegativeSumSliceTest()
 	{
-		return _rangeObj.LongestNonNegativeSumSlice(_range);
+		return _rangeObj.LongestNonNegativeSumSlice(_data);
 	}
 
 protected:
 	Range _rangeObj;
 	long _expected;
-	vector<long> _range;
+	vector<long> _data;
 };
 TEST_P(LongestNonNegativeSumSliceTestFixture, LongestNonNegativeSumSliceTests)
 {
@@ -130,17 +130,17 @@ public:
 	{
 		_expected = get<0>(GetParam());
 		_expectedCollection = get<1>(GetParam());
-		_range = get<2>(GetParam());
+		_data = get<2>(GetParam());
 	}
 	size_t LongestUpDownAlternatingSubSequenceTest()
 	{
-		return _rangeObj.LongestUpDownAlternatingSubSequence(_range, _collectionResult);
+		return _rangeObj.LongestUpDownAlternatingSubSequence(_data, _collectionResult);
 	}
 
 protected:
 	Range _rangeObj;
 	size_t _expected;
-	vector<long> _range, _expectedCollection, _collectionResult;
+	vector<long> _data, _expectedCollection, _collectionResult;
 };
 TEST_P(LongestUpDownAlternatingSubSequenceTestFixture, LongestUpDownAlternatingSubSequenceTests)
 {
@@ -158,17 +158,17 @@ public:
 	{
 		_expected = get<0>(GetParam());
 		_sum = get<1>(GetParam());
-		_range = get<2>(GetParam());
+		_data = get<2>(GetParam());
 	}
 	size_t SumPairsTest()
 	{
-		return _rangeObj.SumPairs(_sum, _range);
+		return _rangeObj.SumPairs(_sum, _data);
 	}
 
 protected:
 	Range _rangeObj;
 	size_t _expected;
-	vector<long> _range;
+	vector<long> _data;
 	long _sum;
 };
 TEST_P(SumPairsTestFixture, SumPairsTests)
@@ -187,17 +187,17 @@ public:
 	void SetUp() override
 	{
 		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		_data = get<1>(GetParam());
 	}
 	vector<vector<long>> TripletsZeroSumTest()
 	{
-		return _rangeObj.TripletsZeroSum(_range);
+		return _rangeObj.TripletsZeroSum(_data);
 	}
 
 protected:
 	Range _rangeObj;
 	vector<vector<long>> _expected;
-	vector<long> _range;
+	vector<long> _data;
 	long _sum;
 };
 TEST_P(TripletsZeroSumTestFixture, TripletsZeroSumTests)
@@ -216,17 +216,17 @@ public:
 	{
 		_expected = get<0>(GetParam());
 		_sum = get<1>(GetParam());
-		_range = get<2>(GetParam());
+		_data = get<2>(GetParam());
 	}
 	vector<vector<long>> QuadrupletsSumTest()
 	{
-		return _rangeObj.QuadrupletsSum(_sum, _range);
+		return _rangeObj.QuadrupletsSum(_sum, _data);
 	}
 
 protected:
 	Range _rangeObj;
 	vector<vector<long>> _expected;
-	vector<long> _range;
+	vector<long> _data;
 	long _sum;
 };
 TEST_P(QuadrupletsSumTestFixture, QuadrupletsSumTests)
@@ -245,17 +245,17 @@ public:
 	{
 		_expected = get<0>(GetParam());
 		_sum = get<1>(GetParam());
-		_range = get<2>(GetParam());
+		_data = get<2>(GetParam());
 	}
 	size_t NumberDiffPairsTest()
 	{
-		return _rangeObj.NumberDiffPairs(_sum, _range);
+		return _rangeObj.NumberDiffPairs(_sum, _data);
 	}
 
 protected:
 	Range _rangeObj;
 	size_t _expected;
-	set<long> _range;
+	set<long> _data;
 	long _sum;
 };
 TEST_P(NumberDiffPairsTestFixture, NumberDiffPairsTests)
@@ -270,23 +270,33 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(5, 2, set<long>{1, 3, 5, 8, 6, 4, 2}),
 					  make_tuple(3, 2, set<long>{1, 5, 3, 4, 2}),
 					  make_tuple(5, 2, set<long>{1, 3, 5, 8, 6, 4, 2})));
-class MinimumLossTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+template <typename T1, typename T2>
+class RangeTestFixture
+{
+public:
+	void SetUp(T1 expected, vector<T2> data)
+	{
+		_expected = expected;
+		_data = data;
+	}
+
+protected:
+	Range _rangeObj;
+	vector<T2> _data;
+	T1 _expected;
+};
+
+class MinimumLossTestFixture : public RangeTestFixture<long, long>, public testing::TestWithParam<tuple<long, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_data = get<1>(GetParam());
+		RangeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	long MinimumLossTest()
 	{
 		return _rangeObj.MinimumLoss(_data);
 	}
-
-protected:
-	Range _rangeObj;
-	vector<long> _data;
-	long _expected;
 };
 TEST_P(MinimumLossTestFixture, MinimumLossTests)
 {
@@ -298,23 +308,17 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(2, vector<long>{5, 10, 3}),
 					  make_tuple(2, vector<long>{20, 7, 8, 2, 5}),
 					  make_tuple(1, vector<long>{2, 3, 4, 1})));
-class StockMaxTestFixture : public testing::TestWithParam<tuple<size_t, vector<long>>>
+class StockMaxTestFixture : public RangeTestFixture<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		RangeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	size_t StockMaxTest()
 	{
-		return _rangeObj.StockMax(_range);
+		return _rangeObj.StockMax(_data);
 	}
-
-protected:
-	Range _rangeObj;
-	size_t _expected;
-	vector<long> _range;
 };
 TEST_P(StockMaxTestFixture, StockMaxTests)
 {
@@ -333,23 +337,17 @@ TEST(RangeTests, MaxProfitTest)
 	vector<long> a = {23171, 21011, 21123, 21366, 21013, 21367};
 	ASSERT_EQ(356, range.MaxProfit(a));
 }
-class StockMaxProfitTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+class StockMaxProfitTestFixture : public RangeTestFixture<long, long>, public testing::TestWithParam<tuple<long, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		RangeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	long StockMaxProfitTest()
 	{
-		return _rangeObj.StockMaxProfit(_range);
+		return _rangeObj.StockMaxProfit(_data);
 	}
-
-protected:
-	Range _rangeObj;
-	long _expected;
-	vector<long> _range;
 };
 TEST_P(StockMaxProfitTestFixture, StockMaxProfitTests)
 {
@@ -359,23 +357,17 @@ INSTANTIATE_TEST_SUITE_P(
 	StockMaxProfitTests,
 	StockMaxProfitTestFixture,
 	::testing::Values(make_tuple(6, vector<long>{1, 2, 3, 0, 2, 5}), make_tuple(6, vector<long>{1, 2, 3, 0, 1, 5}), make_tuple(9, vector<long>{1, 2, 6, 0, 1, 5})));
-class StockMaxProfit2TestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+class StockMaxProfit2TestFixture : public RangeTestFixture<long, long>, public testing::TestWithParam<tuple<long, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		RangeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	long StockMaxProfit2Test()
 	{
-		return _rangeObj.StockMaxProfit2(_range);
+		return _rangeObj.StockMaxProfit2(_data);
 	}
-
-protected:
-	Range _rangeObj;
-	long _expected;
-	vector<long> _range;
 };
 TEST_P(StockMaxProfit2TestFixture, StockMaxProfit2Tests)
 {
@@ -387,23 +379,17 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(7, vector<long>{7, 1, 5, 3, 6, 4}), make_tuple(4, vector<long>{1, 2, 3, 4, 5}), make_tuple(0, vector<long>{5, 4, 3, 2, 1}),
 					  make_tuple(1, vector<long>{1, 2}), make_tuple(0, vector<long>{1, 1})));
 
-class SherlockAndCostTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+class SherlockAndCostTestFixture : public RangeTestFixture<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		RangeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	size_t SherlockAndCostTest()
 	{
-		return _rangeObj.SherlockAndCost(_range);
+		return _rangeObj.SherlockAndCost(_data);
 	}
-
-protected:
-	Range _rangeObj;
-	size_t _expected;
-	vector<size_t> _range;
 };
 TEST_P(SherlockAndCostTestFixture, SherlockAndCostTests)
 {
@@ -428,17 +414,17 @@ public:
 	void SetUp() override
 	{
 		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		_data = get<1>(GetParam());
 	}
 	vector<long> WiggleMaxLengthTest()
 	{
-		return _rangeObj.WiggleMaxLength(_range);
+		return _rangeObj.WiggleMaxLength(_data);
 	}
 
 protected:
 	Range _rangeObj;
 	vector<long> _expected;
-	vector<long> _range;
+	vector<long> _data;
 };
 TEST_P(WiggleMaxLengthTestFixture, WiggleMaxLengthTests)
 {
@@ -461,20 +447,20 @@ public:
 	void SetUp() override
 	{
 		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		_data = get<1>(GetParam());
 		_k = get<2>(GetParam());
 		_t = get<3>(GetParam());
 	}
 	bool ContainsNearbyAlmostDuplicateTest()
 	{
-		return _rangeObj.ContainsNearbyAlmostDuplicate(_range, _k, _t);
+		return _rangeObj.ContainsNearbyAlmostDuplicate(_data, _k, _t);
 	}
 
 protected:
 	Range _rangeObj;
 	long _k, _t;
 	bool _expected;
-	vector<long> _range;
+	vector<long> _data;
 };
 TEST_P(ContainsNearbyAlmostDuplicateTestFixture, ContainsNearbyAlmostDuplicateTests)
 {
@@ -501,23 +487,17 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 3),
 					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 4),
 					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 5)));
-class VectorEqualSplitTestFixture : public testing::TestWithParam<tuple<size_t, vector<int>>>
+class VectorEqualSplitTestFixture : public RangeTestFixture<size_t, int>, public testing::TestWithParam<tuple<size_t, vector<int>>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		RangeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	size_t VectorEqualSplitTest()
 	{
-		return _rangeObj.VectorEqualSplit(_range);
+		return _rangeObj.VectorEqualSplit(_data);
 	}
-
-protected:
-	Range _rangeObj;
-	size_t _expected;
-	vector<int> _range;
 };
 TEST_P(VectorEqualSplitTestFixture, VectorEqualSplitTests)
 {
@@ -548,23 +528,17 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(4, vector<int>{16384, 8192, 8192, 16384, 8192, 8192, 32768, 32768}),
 					  make_tuple(1, vector<int>{8760958, 8760957, 547560, 547560, 547560, 273780, 273780, 2190239, 4380479, 4380479, 4380478}),
 					  make_tuple(4, vector<int>{0, 0, 0, 0, 0})));
-class MaxProductOfNonOverlappingWordLengthsTestFixture : public testing::TestWithParam<tuple<size_t, vector<string>>>
+class MaxProductOfNonOverlappingWordLengthsTestFixture : public RangeTestFixture<size_t, string>, public testing::TestWithParam<tuple<size_t, vector<string>>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		RangeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	size_t MaxProductOfNonOverlappingWordLengthsTest()
 	{
-		return _rangeObj.MaxProductOfNonOverlappingWordLengths(_range);
+		return _rangeObj.MaxProductOfNonOverlappingWordLengths(_data);
 	}
-
-protected:
-	Range _rangeObj;
-	size_t _expected;
-	vector<string> _range;
 };
 TEST_P(MaxProductOfNonOverlappingWordLengthsTestFixture, MaxProductOfNonOverlappingWordLengthsTests)
 {
@@ -576,23 +550,17 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(16, vector<string>{"abcw", "baz", "foo", "bar", "xtfn", "abcdef"}), // "abcw", "xtfn"
 					  make_tuple(4, vector<string>{"a", "ab", "abc", "d", "cd", "bcd", "abcd"}),	 // "ab", "cd"
 					  make_tuple(0, vector<string>{"a", "aa", "aaa", "aaaa"})));
-class AlmostSortedTestFixture : public testing::TestWithParam<tuple<string, vector<long>>>
+class AlmostSortedTestFixture : public RangeTestFixture<string, long>, public testing::TestWithParam<tuple<string, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		RangeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	string AlmostSortedTest()
 	{
-		return _rangeObj.AlmostSorted(_range);
+		return _rangeObj.AlmostSorted(_data);
 	}
-
-protected:
-	Range _rangeObj;
-	string _expected;
-	vector<long> _range;
 };
 TEST_P(AlmostSortedTestFixture, AlmostSortedTests)
 {
@@ -612,18 +580,18 @@ public:
 	{
 		_expected = get<0>(GetParam());
 		_bribes = get<1>(GetParam());
-		_range = get<2>(GetParam());
+		_data = get<2>(GetParam());
 	}
 	long MinimumBribesTest()
 	{
-		return _rangeObj.MinimumBribes(_bribes, _range);
+		return _rangeObj.MinimumBribes(_bribes, _data);
 	}
 
 protected:
 	Range _rangeObj;
 	long _expected;
 	size_t _bribes;
-	vector<long> _range;
+	vector<long> _data;
 };
 TEST_P(MinimumBribesTestFixture, MinimumBribesTests)
 {
@@ -634,23 +602,17 @@ INSTANTIATE_TEST_SUITE_P(
 	MinimumBribesTestFixture,
 	::testing::Values(make_tuple(3, 2, vector<long>{2, 1, 5, 3, 4}), make_tuple(-1, 2, vector<long>{2, 5, 1, 3, 4}), make_tuple(4, 3, vector<long>{2, 5, 1, 3, 4}),
 					  make_tuple(5, 4, vector<long>{5, 2, 1, 3, 4}), make_tuple(7, 2, vector<long>{1, 2, 5, 3, 7, 8, 6, 4})));
-class PickNumbersFromRangeTestFixture : public testing::TestWithParam<tuple<size_t, vector<long>>>
+class PickNumbersFromRangeTestFixture : public RangeTestFixture<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_range = get<1>(GetParam());
+		RangeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	long PickNumbersFromRangeTest()
 	{
-		return _rangeObj.PickNumbersFromRange(_range);
+		return _rangeObj.PickNumbersFromRange(_data);
 	}
-
-protected:
-	Range _rangeObj;
-	size_t _expected;
-	vector<long> _range;
 };
 TEST_P(PickNumbersFromRangeTestFixture, PickNumbersFromRangeTests)
 {
@@ -690,25 +652,34 @@ INSTANTIATE_TEST_SUITE_P(
 	LastNumbersTestFixture,
 	::testing::Values(make_tuple(vector<long>{2, 3, 4}, 3, 1, 2), make_tuple(vector<long>{30, 120, 210, 300}, 4, 10, 100)));
 
-class MaxNonDivisableSubsetTestFixture : public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+template <typename T1, typename T2, typename T3>
+class RangeWithKFixture
+{
+public:
+	void SetUp(T1 expected, T2 k, vector<T3> data)
+	{
+		_expected = expected;
+		_k = k;
+		_data = data;
+	}
+
+protected:
+	Range _rangeObj;
+	vector<T3> _data;
+	T2 _k;
+	T1 _expected;
+};
+class MaxNonDivisableSubsetTestFixture : public RangeWithKFixture<size_t, size_t, size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
 public:
 	void SetUp() override
 	{
-		_k = get<0>(GetParam());
-		_expected = get<1>(GetParam());
-		_data = get<2>(GetParam());
+		RangeWithKFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
 	size_t MaxNonDivisableSubsetTest()
 	{
 		return _rangeObj.MaxNonDivisableSubset(_data, _k);
 	}
-
-protected:
-	Range _rangeObj;
-	vector<size_t> _data;
-	size_t _k;
-	size_t _expected;
 };
 TEST_P(MaxNonDivisableSubsetTestFixture, MaxNonDivisableSubsetTests)
 {
@@ -718,29 +689,21 @@ INSTANTIATE_TEST_SUITE_P(
 	MaxNonDivisableSubsetTests,
 	MaxNonDivisableSubsetTestFixture,
 	::testing::Values(make_tuple(3, 3, vector<size_t>{1, 2, 3, 4, 5, 6}),
-					  make_tuple(6, 8, vector<size_t>{12, 6, 1, 9, 13, 15, 10, 21, 14, 32, 5, 8, 23, 19}),
+					  make_tuple(8, 6, vector<size_t>{12, 6, 1, 9, 13, 15, 10, 21, 14, 32, 5, 8, 23, 19}),
 					  make_tuple(3, 3, vector<size_t>{1, 7, 2, 4})));
-
-class HackerlandRadioTransmittersTestFixture : public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+class HackerlandRadioTransmittersTestFixture : public RangeWithKFixture<size_t, size_t, size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
 public:
 	void SetUp() override
 	{
-		_k = get<0>(GetParam());
-		_expected = get<1>(GetParam());
-		_data = get<2>(GetParam());
+		RangeWithKFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
 	size_t HackerlandRadioTransmittersTest()
 	{
 		return _rangeObj.HackerlandRadioTransmitters(_data, _k);
 	}
-
-protected:
-	Range _rangeObj;
-	vector<size_t> _data;
-	size_t _k;
-	size_t _expected;
 };
+
 TEST_P(HackerlandRadioTransmittersTestFixture, HackerlandRadioTransmittersTests)
 {
 	ASSERT_EQ(this->_expected, this->HackerlandRadioTransmittersTest());
@@ -748,7 +711,7 @@ TEST_P(HackerlandRadioTransmittersTestFixture, HackerlandRadioTransmittersTests)
 INSTANTIATE_TEST_SUITE_P(
 	HackerlandRadioTransmittersTests,
 	HackerlandRadioTransmittersTestFixture,
-	::testing::Values(make_tuple(1, 3, vector<size_t>{1, 2, 3, 5, 9}),
-					  make_tuple(1, 2, vector<size_t>{1, 2, 3, 4, 5}),
-					  make_tuple(2, 3, vector<size_t>{7, 2, 4, 6, 5, 9, 12, 11}),
-					  make_tuple(2, 4, vector<size_t>{9, 5, 4, 2, 6, 15, 12})));
+	::testing::Values(make_tuple(3, 1, vector<size_t>{1, 2, 3, 5, 9}),
+					  make_tuple(2, 1, vector<size_t>{1, 2, 3, 4, 5}),
+					  make_tuple(3, 2, vector<size_t>{7, 2, 4, 6, 5, 9, 12, 11}),
+					  make_tuple(4, 2, vector<size_t>{9, 5, 4, 2, 6, 15, 12})));
