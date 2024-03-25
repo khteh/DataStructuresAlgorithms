@@ -87,7 +87,7 @@
   },
   "testMate.cpp.test.advancedExecutables": [
     {
-      "pattern": "x64/{Debug,Release}/test",
+      "pattern": "x64/{Debug,Release}/*{test,Test,TEST}*",
       "gtest": {
         "debug.enableOutputColouring": true
       }
