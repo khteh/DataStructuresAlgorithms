@@ -4084,19 +4084,44 @@ size_t IncreasingSequences(vector<long> &a, vector<long> &b)
 [1]
 [1 2]
 [1 2 5 6]
-[1 2 3 6] replaces [1 2 5 6]
-[1 2 3 4] replaces [1 2 3 6]
+[1 2 3 6] 5 >= 3 replaces [1 2 5 6]
+[1 2 3 4] 6 >= 4 replaces [1 2 3 6]
+
+3, 2, 4, 1, 5
+[3]
+[2]
+[2 4]
+[1 4]
+[1 4 5]
+
+0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15 => 0 2 6 9 13 15
+[0]
+[0 8]
+[0 4]
+[0 4 12]
+[0 2 12]
+[0 2 10]
+[0 2 6]
+[0 2 6 14]
+[0 1 6 14]
+[0 1 6 9]
+[0 1 5 9]
+[0 1 5 9 13]
+[0 1 3 9 13]
+[0 1 3 9 11]
+[0 1 3 7 11]
+[0 1 3 7 11 15]
 */
 size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &data)
 {
-	vector<size_t> tails;
+	vector<size_t> tails; // Note: This records the tails of the subsequences. Not the actual longest increasing subsequence!
 	if (!data.empty())
 	{
 		tails.push_back(data[0]);
 		for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
 		{
 			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), *it); // Look for element >= data[i]
-			if (it1 != tails.end())														 // data[i] < *it1
+			if (it1 != tails.end())														 // *it1 >= data[i]
 				*it1 = *it;																 // *it1 = data[i]
 			else
 				tails.push_back(*it);
@@ -4104,6 +4129,65 @@ size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &data)
 	}
 	return tails.size();
 }
+/*
+[1 2 5 3]
+[1]
+[2]
+[5]
+[5 3]
+
+[1 2 5 6 3 4]
+[1]
+[2]
+[5]
+[6]
+[6 3]
+[6 4]
+
+3, 2, 4, 1, 5 => 3 2 1
+[3]
+[3 2]
+[4 2]
+[4 2 1]
+[5 2 1]
+
+0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15 => 12 10 9 5 3
+[0]
+[8]
+[8 4]
+[12 4]
+[12 4 2]
+[12 10 2]
+[12 10 6]
+[14 10 6]
+[14 10 6 1]
+[14 10 9 1]
+[14 10 9 5]
+[14 13 9 5]
+[14 13 9 5 3]
+[14 13 11 5 3]
+[14 13 11 7 3]
+[15 13 11 7 3]
+*/
+size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &data)
+{
+	vector<size_t> tails; // Note: This records the tails of the subsequences. Not the actual longest decreasing subsequence!
+	if (!data.empty())
+	{
+		tails.push_back(data[0]);
+		for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
+		{
+			vector<size_t>::iterator it1 = ranges::find_if(tails, [it](const auto &value)
+														   { return value <= *it; }); // Look for element <= data[i]
+			if (it1 != tails.end())													  // *it1 <= data[i]
+				*it1 = *it;
+			else
+				tails.push_back(*it);
+		}
+	}
+	return tails.size();
+}
+
 bool increasingTriplet(vector<size_t> &data)
 {
 	vector<size_t> tails;
@@ -4111,8 +4195,8 @@ bool increasingTriplet(vector<size_t> &data)
 	{
 		for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
 		{
-			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), *it); // >= data[i]
-			if (it1 != tails.end())														 // data[i] < *it1
+			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), *it); // Look for element >= data[i]
+			if (it1 != tails.end())														 // *it1 > data[i]
 				*it1 = *it;																 // *it1 = data[i]
 			else
 				tails.push_back(*it);
@@ -4417,7 +4501,7 @@ vector<size_t> ClimbLeaderBoard(vector<long> &scores, vector<long> &alice)
 	scores.erase(unique.begin(), unique.end());
 	for (size_t i = 0; i < alice.size(); i++)
 	{
-		vector<long>::iterator it = upper_bound(scores.begin(), scores.end(), alice[i]);
+		vector<long>::iterator it = upper_bound(scores.begin(), scores.end(), alice[i]); // Look for element > alice[i]
 		result.push_back(distance(it, scores.end()) + 1);
 		scores.insert(it, alice[i]);
 	}
@@ -7897,4 +7981,18 @@ size_t ActivityNotifications(vector<long> &data, size_t d)
 			count++;
 	}
 	return count;
+}
+/*
+ * https://www.hackerrank.com/challenges/permutation-game/problem
+ */
+string PermutationGame(vector<size_t> &data)
+{
+	bool turn = false; // False: Alice's turn; True: Bob's turn
+	vector<size_t> ascending, descending;
+	// Find the next move
+	for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
+	{
+	}
+	bool ascending_odd = ascending.size() % 2, descending_odd = descending.size() % 2;
+	return ((ascending_odd && descending_odd) || (!ascending_odd && !descending_odd)) ? "Alice" : "Bob";
 }

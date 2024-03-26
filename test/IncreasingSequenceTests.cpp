@@ -45,22 +45,32 @@ TEST(IncreasingTripletTests, IncreasingTripletTest)
 	a = {1, 1, 1, 1, 1};
 	ASSERT_TRUE(!increasingTriplet(a));
 }
-class LongestIncreasingSubsequenceNlogNTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+template <typename T1, typename T2>
+class LongestSubsequenceFixture
+{
+public:
+	void SetUp(T1 expected, vector<T2> data)
+	{
+		_expected = expected;
+		_data = data;
+	}
+
+protected:
+	T1 _expected;
+	vector<T2> _data;
+};
+
+class LongestIncreasingSubsequenceNlogNTestFixture : public LongestSubsequenceFixture<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_data = get<1>(GetParam());
+		LongestSubsequenceFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	size_t LongestIncreasingSubsequenceNlogNTest()
 	{
 		return LongestIncreasingSubsequenceNlogN(_data);
 	}
-
-protected:
-	size_t _expected;
-	vector<size_t> _data;
 };
 TEST_P(LongestIncreasingSubsequenceNlogNTestFixture, LongestIncreasingSubsequenceNlogNTests)
 {
@@ -70,5 +80,27 @@ INSTANTIATE_TEST_SUITE_P(
 	LongestIncreasingSubsequenceNlogNTests,
 	LongestIncreasingSubsequenceNlogNTestFixture,
 	::testing::Values(make_tuple(6, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
+					  make_tuple(3, vector<size_t>{3, 2, 4, 1, 5}),
+					  make_tuple(1, vector<size_t>{1, 1, 1, 1, 1})));
+class LongestDecreasingSubsequenceNlogNTestFixture : public LongestSubsequenceFixture<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		LongestSubsequenceFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	size_t LongestDecreasingSubsequenceNlogNTest()
+	{
+		return LongestDecreasingSubsequenceNlogN(_data);
+	}
+};
+TEST_P(LongestDecreasingSubsequenceNlogNTestFixture, LongestDecreasingSubsequenceNlogNTests)
+{
+	ASSERT_EQ(this->_expected, this->LongestDecreasingSubsequenceNlogNTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LongestDecreasingSubsequenceNlogNTests,
+	LongestDecreasingSubsequenceNlogNTestFixture,
+	::testing::Values(make_tuple(5, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
 					  make_tuple(3, vector<size_t>{3, 2, 4, 1, 5}),
 					  make_tuple(1, vector<size_t>{1, 1, 1, 1, 1})));

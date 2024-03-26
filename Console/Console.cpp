@@ -1998,9 +1998,19 @@ int main(int argc, char *argv[])
 	a.clear();
 	a = {1, 2, 3, 4, 4};
 	assert(ActivityNotifications(a, 4) == 0);
+#if 0
+	udata.clear();
+	udata = {1, 3, 2};
+	assert(PermutationGame(udata) == "Alice");
 
+	udata.clear();
+	udata = {5, 3, 2, 1, 4};
+	assert(PermutationGame(udata) == "Bob");
+#endif
+	// cout << "LongestDecreasingSubsequenceNlogN: " << LongestDecreasingSubsequenceNlogN(udata) << endl;
 	/***** The End *****/
-	cout << "Press ENTER to exit";
+	cout
+		<< "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }
