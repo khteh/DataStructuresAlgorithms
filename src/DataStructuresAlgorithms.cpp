@@ -4020,7 +4020,7 @@ vector<string> ZigZagEscape(vector<long> &left, vector<long> &right, size_t lInd
  * fixRecord           0    0    0 (swap = 0)
  *
  */
-int IncreasingSequences(vector<long> &a, vector<long> &b)
+size_t IncreasingSequences(vector<long> &a, vector<long> &b)
 {
 	bool outOfSequence = false;
 	// swapRecord[i]: min swaps to make A[0:i] and B[0:i] increasing if we swap A[i] and B[i]
@@ -4065,41 +4065,6 @@ int IncreasingSequences(vector<long> &a, vector<long> &b)
 	return outOfSequence ? -1 : min(swapRecord, fixRecord);
 }
 /*
-  https://www.hackerrank.com/challenges/longest-increasing-subsequent/problem
-  https://www.tutorialspoint.com/cplusplus-program-to-find-the-longest-increasing-subsequence-of-a-given-sequence
-  Times out for >= 1 million data points
-		1 2 5 3
-		  i
-lengths:1 2		<= max = 2
-			i
-lengths:1 2 3	<= max = 3
-			  i
-lengths:1 2 3 3
-----
-		5 2 3 1
-		  i
-lengths:1 1		<= max = 1
-			i
-lengths:1 1 2	<= max = 2
-			  i
-lengths:1 1 2 1
-*/
-size_t LongestIncreasingSubsequence(vector<size_t> &data)
-{
-	size_t max = 0;
-	vector<size_t> lengths(data.size(), 0);
-	lengths[0] = 1;
-	for (size_t i = 1; i < data.size(); i++)
-	{
-		for (size_t j = 0; j < i; j++)
-			if (data[j] < data[i] && lengths[j] > lengths[i])
-				lengths[i] = lengths[j];
-		if (++lengths[i] > max)
-			max = lengths[i];
-	}
-	return max;
-}
-/*
    https://www.hackerrank.com/challenges/longest-increasing-subsequent/problem
    100%
    https://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/
@@ -4114,6 +4079,13 @@ size_t LongestIncreasingSubsequence(vector<size_t> &data)
 [1 2]
 [1 2 5]
 [1 2 3] replaces [1 2 5]
+
+[1 2 5 6 3 4]
+[1]
+[1 2]
+[1 2 5 6]
+[1 2 3 6] replaces [1 2 5 6]
+[1 2 3 4] replaces [1 2 3 6]
 */
 size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &data)
 {
@@ -4124,10 +4096,10 @@ size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &data)
 		for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
 		{
 			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), *it); // Look for element >= data[i]
-			if (it1 == tails.end())														 // If not present change the tail element to v[i]
-				tails.push_back(*it);
+			if (it1 != tails.end())														 // data[i] < *it1
+				*it1 = *it;																 // *it1 = data[i]
 			else
-				*it1 = *it;
+				tails.push_back(*it);
 		}
 	}
 	return tails.size();
@@ -4140,10 +4112,10 @@ bool increasingTriplet(vector<size_t> &data)
 		for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
 		{
 			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), *it); // >= data[i]
-			if (it1 == tails.end())
-				tails.push_back(*it);
+			if (it1 != tails.end())														 // data[i] < *it1
+				*it1 = *it;																 // *it1 = data[i]
 			else
-				*it1 = *it;
+				tails.push_back(*it);
 		}
 	}
 	return tails.size() >= 3;

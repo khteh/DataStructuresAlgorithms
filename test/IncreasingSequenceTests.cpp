@@ -1,109 +1,74 @@
 #include "pch.h"
 using namespace std;
-TEST(IncreasingSequenceTests, IncreasingSequenceTest)
+class IncreasingSequencesTestFixture : public testing::TestWithParam<tuple<size_t, vector<long>, vector<long>>>
 {
-	vector<long> a, b;
-	a.clear();
-	b.clear();
-	a = {5, 3, 7, 7, 10};
-	b = {1, 6, 6, 9, 9};
-	ASSERT_EQ(2, IncreasingSequences(a, b));
-	a.clear();
-	b.clear();
-	a = {1, 5, 6};
-	b = {-2, 0, 2};
-	ASSERT_EQ(0, IncreasingSequences(a, b));
-	a.clear();
-	b.clear();
-	a = {2, 5};
-	b = {1, 6};
-	ASSERT_EQ(0, IncreasingSequences(a, b));
-	a.clear();
-	b.clear();
-	a = {5, -3, 6, 4, 8};
-	b = {2, 6, -5, 1, 0};
-	ASSERT_EQ(-1, IncreasingSequences(a, b));
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_p = get<1>(GetParam());
+		_q = get<2>(GetParam());
+	}
+	size_t IncreasingSequencesTest()
+	{
+		return IncreasingSequences(_p, _q);
+	}
 
-	a.clear();
-	b.clear();
-	a = {0, 0, 0};
-	b = {1, 2, 3};
-	ASSERT_EQ(-1, IncreasingSequences(a, b));
-
-	a.clear();
-	b.clear();
-	a = {0, 1, 1, 2};
-	b = {5, 4, 4, 3};
-	ASSERT_EQ(-1, IncreasingSequences(a, b)); // a increasing; b decreasing
-
-	a.clear();
-	b.clear();
-	a = {0, 1, 1, 2};
-	b = {3, 4, 4, 5};
-	ASSERT_EQ(-1, IncreasingSequences(a, b)); // a increasing; b increasing
-
-	a.clear();
-	b.clear();
-	a = {2, 1, 1, 0};
-	b = {5, 4, 4, 3};
-	ASSERT_EQ(-1, IncreasingSequences(a, b)); // a decreasing; b decreasing
-
-	a.clear();
-	b.clear();
-	a = {0, 2, 2, 4, 6, 6, 8, 10, 10};
-	b = {1, 2, 2, 3, 4, 4, 5, 6, 6};
-	ASSERT_EQ(-1, IncreasingSequences(a, b));
-
-	a.clear();
-	b.clear();
-	a = {0, 1, 1, 2, 3, 3, 4, 5, 5};
-	b = {10, 10, 9, 8, 8, 7, 6, 6, 5};
-	ASSERT_EQ(-1, IncreasingSequences(a, b));
-
-	a.clear();
-	b.clear();
-	a = {0, -1, -2};
-	b = {-2, 1, 2};
-	ASSERT_EQ(-1, IncreasingSequences(a, b));
-	// Performance tests
-	a.clear();
-	b.clear();
-	a.resize(100000);
-	b.resize(100000);
-	iota(a.begin(), a.end(), 0);
-	iota(b.begin(), b.end(), -1000000000); // a and b increasing
-	ASSERT_EQ(0, IncreasingSequences(a, b));
-
-	a.clear();
-	b.clear();
-	a.resize(100000);
-	b.resize(100000);
-	iota(a.begin(), a.end(), -50000);
-	iota(b.begin(), b.end(), 50000);
-	ranges::sort(a, ranges::greater()); // a and b decreasing
-	ranges::sort(b, ranges::greater());
-	ASSERT_EQ(-1, IncreasingSequences(a, b));
-
-	a.clear();
-	b.clear();
-	a.resize(100000);
-	b.resize(100000);
-	iota(a.begin(), a.end(), 0);		   // a increasing
-	iota(b.begin(), b.end(), -1000000000); // b decreasing
-	ranges::sort(b, ranges::greater());
-	ASSERT_EQ(-1, IncreasingSequences(a, b));
+protected:
+	size_t _expected;
+	vector<long> _p, _q;
+};
+TEST_P(IncreasingSequencesTestFixture, IncreasingSequencesTests)
+{
+	ASSERT_EQ(this->_expected, this->IncreasingSequencesTest());
 }
-TEST(IncreasingSequenceTests, LongestIncreasingSubsequenceTest)
+INSTANTIATE_TEST_SUITE_P(
+	IncreasingSequencesTests,
+	IncreasingSequencesTestFixture,
+	::testing::Values(make_tuple(2, vector<long>{5, 3, 7, 7, 10}, vector<long>{1, 6, 6, 9, 9}),
+					  make_tuple(0, vector<long>{1, 5, 6}, vector<long>{-2, 0, 2}),
+					  make_tuple(0, vector<long>{2, 5}, vector<long>{1, 6}),
+					  make_tuple(-1, vector<long>{5, -3, 6, 4, 8}, vector<long>{2, 6, -5, 1, 0}),
+					  make_tuple(-1, vector<long>{0, 0, 0}, vector<long>{1, 2, 3}),
+					  make_tuple(-1, vector<long>{0, 1, 1, 2}, vector<long>{5, 4, 4, 3}),
+					  make_tuple(-1, vector<long>{0, 1, 1, 2}, vector<long>{3, 4, 4, 5}),
+					  make_tuple(-1, vector<long>{2, 1, 1, 0}, vector<long>{5, 4, 4, 3}),
+					  make_tuple(-1, vector<long>{0, 2, 2, 4, 6, 6, 8, 10, 10}, vector<long>{1, 2, 2, 3, 4, 4, 5, 6, 6}),
+					  make_tuple(-1, vector<long>{0, 1, 1, 2, 3, 3, 4, 5, 5}, vector<long>{10, 10, 9, 8, 8, 7, 6, 6, 5}),
+					  make_tuple(-1, vector<long>{0, -1, -2}, vector<long>{-2, 1, 2})));
+
+TEST(IncreasingTripletTests, IncreasingTripletTest)
 {
-	vector<size_t> a = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
-	ASSERT_EQ(6, LongestIncreasingSubsequence(a));		// 0, 2, 6, 9, 13, 15
-	ASSERT_EQ(6, LongestIncreasingSubsequenceNlogN(a)); // 0, 2, 6, 9, 13, 15
-	a.clear();
-	a = {3, 2, 4, 1, 5};
+	vector<size_t> a = {3, 2, 4, 1, 5};
 	ASSERT_TRUE(increasingTriplet(a));
-	ASSERT_EQ(3, LongestIncreasingSubsequenceNlogN(a)); // 3,4,5
 	a.clear();
 	a = {1, 1, 1, 1, 1};
 	ASSERT_TRUE(!increasingTriplet(a));
-	ASSERT_EQ(1, LongestIncreasingSubsequenceNlogN(a)); // 1
 }
+class LongestIncreasingSubsequenceNlogNTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	size_t LongestIncreasingSubsequenceNlogNTest()
+	{
+		return LongestIncreasingSubsequenceNlogN(_data);
+	}
+
+protected:
+	size_t _expected;
+	vector<size_t> _data;
+};
+TEST_P(LongestIncreasingSubsequenceNlogNTestFixture, LongestIncreasingSubsequenceNlogNTests)
+{
+	ASSERT_EQ(this->_expected, this->LongestIncreasingSubsequenceNlogNTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LongestIncreasingSubsequenceNlogNTests,
+	LongestIncreasingSubsequenceNlogNTestFixture,
+	::testing::Values(make_tuple(6, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
+					  make_tuple(3, vector<size_t>{3, 2, 4, 1, 5}),
+					  make_tuple(1, vector<size_t>{1, 1, 1, 1, 1})));
