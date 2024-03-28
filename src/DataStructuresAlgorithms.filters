@@ -146,6 +146,9 @@
     <ClCompile Include="DiamondProblem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Dijkstra.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="DisJointSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

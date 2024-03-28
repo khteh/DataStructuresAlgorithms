@@ -61,6 +61,7 @@ set(Sources
     "CircularLinkedList.cpp"
     "DataStructuresAlgorithms.cpp"
     "DiamondProblem.cpp"
+    "Dijkstra.cpp"
     "DisJointSet.cpp"
     "Edge.cpp"
     "Employee.cpp"

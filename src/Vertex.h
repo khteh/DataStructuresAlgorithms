@@ -41,8 +41,17 @@ public:
 	bool operator>(Vertex<TTag, TItem> &);
 
 protected:
-	TTag tag_;
-	TItem item_;
-	long cost_;
-	map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours_; // neighbours and costs from this vertex to them
+	TTag _tag;
+	TItem _item;
+	long _cost;
+	map<shared_ptr<Vertex<TTag, TItem>>, long> _neighbours; // neighbours and costs from this vertex to them
+};
+template <typename TTag, typename TItem> // TTag is used as a unique ID. Graph vertices can have duplicate values of TItem
+class PreviousVertex
+{
+public:
+	PreviousVertex();
+	PreviousVertex(shared_ptr<Vertex<TTag, TItem>>, long);
+	shared_ptr<Vertex<TTag, TItem>> Previous;
+	long Cost;
 };

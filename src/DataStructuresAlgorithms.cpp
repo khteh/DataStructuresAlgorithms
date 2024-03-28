@@ -4073,24 +4073,28 @@ size_t IncreasingSequences(vector<long> &a, vector<long> &b)
 2. If A[i] is largest among all end candidates of active lists, we will clone the largest active
    list, and extend it by A[i].
 3. If A[i] is in between, we will find a list with largest end element that is smaller than A[i].
-   Clone and extend this list by A[i]. We will discard all other lists of same length as that of this modified list.
+   Clone and extend this list by A[i]. We will discard all other lists of same length as this modified list.
 [1 2 5 3]
 [1]
-[1 2]
-[1 2 5]
-[1 2 3] replaces [1 2 5]
+[1 2] <- Rule (2)
+[1 2 5] <- Rule (2)
+[1 2 3] <- Rule (3) Discard [1 2 5]
 
 [1 2 5 6 3 4]
 [1]
-[1 2]
-[1 2 5 6]
-[1 2 3 6] 5 >= 3 replaces [1 2 5 6]
-[1 2 3 4] 6 >= 4 replaces [1 2 3 6]
+[1 2] 		<- Rule (2)
+[1 2 5 6]	<- Rule (2)
+[1 2 3]		<- Rule (3)
+[1 2 3 4]   <- Rule (2)
+
+[1 2 3 6]   <- Rule (3) Discard [1 2 5 6]
+[1 2 3 4] 	<- Rule (3) Discard [1 2 5 6]
 
 3, 2, 4, 1, 5
 [3]
 [2]
-[2 4]
+[2 4] or [3 4] => [2 4 5] or [3 4 5]
+[1]
 [1 4]
 [1 4 5]
 
@@ -7981,18 +7985,4 @@ size_t ActivityNotifications(vector<long> &data, size_t d)
 			count++;
 	}
 	return count;
-}
-/*
- * https://www.hackerrank.com/challenges/permutation-game/problem
- */
-string PermutationGame(vector<size_t> &data)
-{
-	bool turn = false; // False: Alice's turn; True: Bob's turn
-	vector<size_t> ascending, descending;
-	// Find the next move
-	for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
-	{
-	}
-	bool ascending_odd = ascending.size() % 2, descending_odd = descending.size() % 2;
-	return ((ascending_odd && descending_odd) || (!ascending_odd && !descending_odd)) ? "Alice" : "Bob";
 }

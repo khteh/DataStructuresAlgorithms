@@ -5,58 +5,58 @@ template class Vertex<long, long>;
 template class Vertex<size_t, size_t>;
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex()
-	: tag_(TTag()), item_(TItem()), cost_(numeric_limits<long>::max())
+	: _tag(TTag()), _item(TItem()), _cost(numeric_limits<long>::max())
 {
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag)
-	: tag_(tag), item_(TItem()), cost_(numeric_limits<long>::max())
+	: _tag(tag), _item(TItem()), _cost(numeric_limits<long>::max())
 {
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag, TItem item)
-	: tag_(tag), item_(item), cost_(numeric_limits<long>::max())
+	: _tag(tag), _item(item), _cost(numeric_limits<long>::max())
 {
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag, TItem item, map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours)
-	: tag_(tag), item_(item), cost_(numeric_limits<long>::max()), neighbours_(neighbours)
+	: _tag(tag), _item(item), _cost(numeric_limits<long>::max()), _neighbours(neighbours)
 {
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::~Vertex()
 {
-	neighbours_.clear();
+	_neighbours.clear();
 }
 template <typename TTag, typename TItem>
 TTag Vertex<TTag, TItem>::GetTag() const
 {
-	return tag_;
+	return _tag;
 }
 template <typename TTag, typename TItem>
 TItem Vertex<TTag, TItem>::GetItem() const
 {
-	return item_;
+	return _item;
 }
 template <typename TTag, typename TItem>
 void Vertex<TTag, TItem>::AddNeighbour(shared_ptr<Vertex<TTag, TItem>> to, long cost)
 {
-	if (neighbours_.find(to) == neighbours_.end())
-		neighbours_.emplace(to, cost);
-	else if (neighbours_[to] > cost)
-		neighbours_[to] = cost;
+	if (_neighbours.find(to) == _neighbours.end())
+		_neighbours.emplace(to, cost);
+	else if (_neighbours[to] > cost)
+		_neighbours[to] = cost;
 }
 template <typename TTag, typename TItem>
 void Vertex<TTag, TItem>::RemoveNeighbour(shared_ptr<Vertex<TTag, TItem>> to)
 {
-	neighbours_.erase(to);
+	_neighbours.erase(to);
 }
 template <typename TTag, typename TItem>
 vector<shared_ptr<Vertex<TTag, TItem>>> Vertex<TTag, TItem>::GetNeighbours()
 {
 	vector<shared_ptr<Vertex<TTag, TItem>>> vertices;
 	ranges::transform(
-		neighbours_,
+		_neighbours,
 		back_inserter(vertices),
 		[](const typename map<shared_ptr<Vertex<TTag, TItem>>, long>::value_type &pair)
 		{ return pair.first; });
@@ -65,17 +65,17 @@ vector<shared_ptr<Vertex<TTag, TItem>>> Vertex<TTag, TItem>::GetNeighbours()
 template <typename TTag, typename TItem>
 map<shared_ptr<Vertex<TTag, TItem>>, long> Vertex<TTag, TItem>::GetNeighboursWithCost()
 {
-	return neighbours_;
+	return _neighbours;
 }
 template <typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::HasNeighbours() const
 {
-	return !neighbours_.empty();
+	return !_neighbours.empty();
 }
 template <typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::HasNeighbour(TTag tag) const
 {
-	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
+	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = _neighbours.begin(); it != _neighbours.end(); it++)
 		if (it->first->GetTag() == tag)
 			return true;
 	return false;
@@ -83,7 +83,7 @@ bool Vertex<TTag, TItem>::HasNeighbour(TTag tag) const
 template <typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::HasNeighbour(TTag tag, TItem item) const
 {
-	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
+	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = _neighbours.begin(); it != _neighbours.end(); it++)
 		if (it->first->GetTag() == tag && it->first->GetItem() == item)
 			return true;
 	return false;
@@ -91,19 +91,19 @@ bool Vertex<TTag, TItem>::HasNeighbour(TTag tag, TItem item) const
 template <typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::HasNeighbour(shared_ptr<Vertex<TTag, TItem>> v) const
 {
-	return neighbours_.find(v) != neighbours_.end();
+	return _neighbours.find(v) != _neighbours.end();
 }
 template <typename TTag, typename TItem>
 size_t Vertex<TTag, TItem>::NeighbourCount() const
 {
-	return neighbours_.size();
+	return _neighbours.size();
 }
 template <typename TTag, typename TItem>
 size_t Vertex<TTag, TItem>::EvenForestDescendentsCount(TTag parent, set<string> &cuts) const
 {
 	ostringstream oss;
 	size_t count = 1; // Include itself
-	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
+	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = _neighbours.begin(); it != _neighbours.end(); it++)
 	{
 		if (it->first->GetTag() != parent)
 		{
@@ -125,13 +125,13 @@ long Vertex<TTag, TItem>::GetCost(shared_ptr<Vertex<TTag, TItem>> v)
 {
 	if (v->GetTag() == GetTag() && v->GetItem() == GetItem())
 		return 0;
-	return neighbours_.find(v) != neighbours_.end() ? neighbours_[v] : -1;
+	return _neighbours.find(v) != _neighbours.end() ? _neighbours[v] : -1;
 }
 template <typename TTag, typename TItem>
 TItem Vertex<TTag, TItem>::MinSubGraphsDifference(TTag parent, TItem sum, set<TItem> &diffs) const
 {
-	TItem localSum = item_;
-	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = neighbours_.begin(); it != neighbours_.end(); it++)
+	TItem localSum = _item;
+	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = _neighbours.begin(); it != _neighbours.end(); it++)
 	{
 		if (it->first->GetTag() != parent)
 			localSum += it->first->MinSubGraphsDifference(GetTag(), sum, diffs);
@@ -141,28 +141,28 @@ TItem Vertex<TTag, TItem>::MinSubGraphsDifference(TTag parent, TItem sum, set<TI
 	return localSum;
 }
 template <typename TTag, typename TItem>
-long Vertex<TTag, TItem>::GetTotalCost() const { return cost_; }
+long Vertex<TTag, TItem>::GetTotalCost() const { return _cost; }
 
 template <typename TTag, typename TItem>
-void Vertex<TTag, TItem>::SetTotalCost(long cost) { cost_ = cost; }
+void Vertex<TTag, TItem>::SetTotalCost(long cost) { _cost = cost; }
 
 template <typename TTag, typename TItem>
 void Vertex<TTag, TItem>::ResetTotalCost()
 {
-	cost_ = numeric_limits<long>::max();
+	_cost = numeric_limits<long>::max();
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem> &Vertex<TTag, TItem>::operator=(Vertex<TTag, TItem> &rhs)
 {
-	tag_ = rhs.tag_;
-	item_ = rhs.item_;
+	_tag = rhs._tag;
+	_item = rhs._item;
 	return *this;
 }
 
 template <typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::operator==(Vertex<TTag, TItem> &rhs)
 {
-	return item_ == rhs.item_ && tag_ == rhs.tag_;
+	return _item == rhs._item && _tag == rhs._tag;
 }
 
 template <typename TTag, typename TItem>
@@ -174,11 +174,21 @@ bool Vertex<TTag, TItem>::operator!=(Vertex<TTag, TItem> &rhs)
 template <typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::operator<(Vertex<TTag, TItem> &rhs)
 {
-	return item_ < rhs.item_;
+	return _item < rhs._item;
 }
 
 template <typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::operator>(Vertex<TTag, TItem> &rhs)
 {
-	return item_ > rhs.item_;
+	return _item > rhs._item;
+}
+template class PreviousVertex<long, long>;
+template class PreviousVertex<size_t, size_t>;
+template <typename TTag, typename TItem>
+PreviousVertex<TTag, TItem>::PreviousVertex() : Previous(nullptr)
+{
+}
+template <typename TTag, typename TItem>
+PreviousVertex<TTag, TItem>::PreviousVertex(shared_ptr<Vertex<TTag, TItem>> previous, long cost) : Previous(previous), Cost(cost)
+{
 }

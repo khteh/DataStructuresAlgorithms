@@ -391,4 +391,3 @@ bool CounterGame(long);
 size_t EqualDistribution(vector<long> &);
 bool HappyLadyBugs(string &);
 size_t ActivityNotifications(vector<long> &, size_t);
-string PermutationGame(vector<size_t> &);

@@ -24,10 +24,10 @@ using namespace std;
 #Nodes = 2*height + 1 (at least); 2^(h+1) - 1 (at most)
 #nodes + 1 = 2^(h+1)
 ln(#nodes + 1) = h + 1
-h = ln(#nodes + 1) - 1
+height = ln(#nodes + 1) - 1
 Left child: 2i + 1
 Right child: 2i + 2
-Parent: |(i - 1)/2|, assuming root at i=0
+Parent: |(i - 1) / 2|, assuming root at i=0
  */
 template class Tree<int>;
 template class Tree<long>;
@@ -514,7 +514,8 @@ bool Tree<T>::MatchTree(const shared_ptr<Node<T>> &p, const shared_ptr<Node<T>> 
 }
 
 template <typename T>
-void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, vector<string> &result) requires arithmetic_type<T>
+void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, vector<string> &result)
+	requires arithmetic_type<T>
 {
 	vector<T> values;
 	if (node)
@@ -522,7 +523,8 @@ void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, vector<string> &re
 }
 
 template <typename T>
-void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, long level, vector<T> values, vector<string> &result) requires arithmetic_type<T>
+void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, long level, vector<T> values, vector<string> &result)
+	requires arithmetic_type<T>
 {
 	/*
 	Binary Search Tree (tree1) content:
@@ -704,12 +706,14 @@ bool Tree<T>::IsBalancedTree() const
 }
 
 template <typename T>
-T Tree<T>::MinDiffInBST() const requires arithmetic_type<T>
+T Tree<T>::MinDiffInBST() const
+	requires arithmetic_type<T>
 {
 	return m_root ? MinDiffInBST(nullptr, m_root) : -1;
 }
 template <typename T>
-T Tree<T>::MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> current) const requires arithmetic_type<T>
+T Tree<T>::MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> current) const
+	requires arithmetic_type<T>
 {
 	T minimum = numeric_limits<T>::max();
 	// Use In-Order traversal to find min diff between any 2 nodes
@@ -732,7 +736,8 @@ T Tree<T>::MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> curren
 	return minimum;
 }
 template <typename T>
-T Tree<T>::MinSubTreesDifference() const requires arithmetic_type<T>
+T Tree<T>::MinSubTreesDifference() const
+	requires arithmetic_type<T>
 {
 	return m_root ? m_root->MinSubTreesDifference() : T();
 }
@@ -1001,7 +1006,8 @@ bool Tree<T>::isValidBST() const
 // Return the arithmetic total.
 // Tree nodes are arithmetic operators. Only leaf nodes are values (long in this case).
 template <typename T>
-T Tree<T>::TreeArithmeticTotal(shared_ptr<Node<string>> node) requires arithmetic_type<T>
+T Tree<T>::TreeArithmeticTotal(shared_ptr<Node<string>> node)
+	requires arithmetic_type<T>
 {
 	T result = T();
 	if (node->isLeaf())

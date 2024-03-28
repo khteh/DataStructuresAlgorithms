@@ -35,68 +35,68 @@ Graph<TTag, TItem>::~Graph()
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::Clear()
 {
-	vertices_.clear();
+	_vertices.clear();
 }
 template <typename TTag, typename TItem>
 size_t Graph<TTag, TItem>::Count() const
 {
-	return vertices_.size();
+	return _vertices.size();
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddVertex(shared_ptr<Vertex<TTag, TItem>> v)
 {
-	vertices_.emplace(v->GetTag(), v);
+	_vertices.emplace(v->GetTag(), v);
 }
 template <typename TTag, typename TItem>
 shared_ptr<Vertex<TTag, TItem>> Graph<TTag, TItem>::AddVertex(TTag tag)
 {
-	vertices_.emplace(tag, make_shared<Vertex<TTag, TItem>>(tag));
-	return vertices_[tag];
+	_vertices.emplace(tag, make_shared<Vertex<TTag, TItem>>(tag));
+	return _vertices[tag];
 }
 template <typename TTag, typename TItem>
 shared_ptr<Vertex<TTag, TItem>> Graph<TTag, TItem>::AddVertex(TTag tag, TItem item)
 {
-	vertices_.emplace(tag, make_shared<Vertex<TTag, TItem>>(tag, item));
-	return vertices_[tag];
+	_vertices.emplace(tag, make_shared<Vertex<TTag, TItem>>(tag, item));
+	return _vertices[tag];
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddDirectedEdge(shared_ptr<Vertex<TTag, TItem>> from, shared_ptr<Vertex<TTag, TItem>> to, long cost)
 {
-	if (vertices_.find(from->GetTag()) == vertices_.end())
-		vertices_.emplace(from->GetTag(), from);
-	if (vertices_.find(to->GetTag()) == vertices_.end())
-		vertices_.emplace(to->GetTag(), to);
+	if (_vertices.find(from->GetTag()) == _vertices.end())
+		_vertices.emplace(from->GetTag(), from);
+	if (_vertices.find(to->GetTag()) == _vertices.end())
+		_vertices.emplace(to->GetTag(), to);
 	from->AddNeighbour(to, cost);
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddUndirectedEdge(shared_ptr<Vertex<TTag, TItem>> from, shared_ptr<Vertex<TTag, TItem>> to, long cost)
 {
-	if (vertices_.find(from->GetTag()) == vertices_.end())
-		vertices_.emplace(from->GetTag(), from);
-	if (vertices_.find(to->GetTag()) == vertices_.end())
-		vertices_.emplace(to->GetTag(), to);
+	if (_vertices.find(from->GetTag()) == _vertices.end())
+		_vertices.emplace(from->GetTag(), from);
+	if (_vertices.find(to->GetTag()) == _vertices.end())
+		_vertices.emplace(to->GetTag(), to);
 	from->AddNeighbour(to, cost);
 	to->AddNeighbour(from, cost);
 }
 template <typename TTag, typename TItem>
 bool Graph<TTag, TItem>::HasVertex(TTag tag)
 {
-	return vertices_.find(tag) != vertices_.end();
+	return _vertices.find(tag) != _vertices.end();
 }
 template <typename TTag, typename TItem>
 shared_ptr<Vertex<TTag, TItem>> Graph<TTag, TItem>::GetVertex(TTag tag)
 {
-	return vertices_.find(tag) != vertices_.end() ? vertices_[tag] : nullptr;
+	return _vertices.find(tag) != _vertices.end() ? _vertices[tag] : nullptr;
 }
 template <typename TTag, typename TItem>
 bool Graph<TTag, TItem>::Remove(TTag tag)
 {
 	shared_ptr<Vertex<TTag, TItem>> vertex;
-	if (vertices_.find(tag) == vertices_.end())
+	if (_vertices.find(tag) == _vertices.end())
 		return false;
-	vertex = vertices_[tag];
-	vertices_.erase(tag);
-	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices_.begin(); it != vertices_.end(); it++)
+	vertex = _vertices[tag];
+	_vertices.erase(tag);
+	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = _vertices.begin(); it != _vertices.end(); it++)
 		if (it->second->HasNeighbour(tag))
 			it->second->RemoveNeighbour(vertex);
 	return true;

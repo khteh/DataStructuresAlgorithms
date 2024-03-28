@@ -44,5 +44,5 @@ public:
 	void Print(shared_ptr<Vertex<TTag, TItem>>);
 
 private:
-	map<TTag, shared_ptr<Vertex<TTag, TItem>>> vertices_;
+	map<TTag, shared_ptr<Vertex<TTag, TItem>>> _vertices;
 };

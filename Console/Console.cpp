@@ -2007,10 +2007,26 @@ int main(int argc, char *argv[])
 	udata = {5, 3, 2, 1, 4};
 	assert(PermutationGame(udata) == "Bob");
 #endif
-	// cout << "LongestDecreasingSubsequenceNlogN: " << LongestDecreasingSubsequenceNlogN(udata) << endl;
+	udata.clear();
+	udata = {1, 3, 2};
+	cout << "{1, 3, 2}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
+	udata.clear();
+	udata = {5, 3, 2, 1, 4};
+	cout << "{5, 3, 2, 1, 4}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
+	udata.clear();
+	udata = {4, 2, 5, 6};
+	cout << "{4, 2, 5, 6}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
+	udata.clear();
+	udata = {9, 7, 5, 6};
+	cout << "{9, 7, 5, 6}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
+	udata.clear();
+	udata = {6, 4, 2, 1, 3, 5, 7};
+	cout << "{6, 4, 2, 1, 3, 5, 7}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
+	udata.clear();
+	udata = {6, 4, 2, 3, 5, 7, 9};
+	cout << "{6, 4, 2, 3, 5, 7, 9}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
 	/***** The End *****/
-	cout
-		<< "Press ENTER to exit";
+	cout << "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }

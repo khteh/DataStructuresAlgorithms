@@ -80,7 +80,10 @@
     "stack": "cpp",
     "charconv": "cpp",
     "__nullptr": "cpp",
-    "__string": "cpp"
+    "__string": "cpp",
+    "__locale": "cpp",
+    "ios": "cpp",
+    "locale": "cpp"
   },
   "cmake.configureSettings": {
     "gtest_build_samples": "ON"
