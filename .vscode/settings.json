@@ -83,7 +83,8 @@
     "__string": "cpp",
     "__locale": "cpp",
     "ios": "cpp",
-    "locale": "cpp"
+    "locale": "cpp",
+    "target": "cpp"
   },
   "cmake.configureSettings": {
     "gtest_build_samples": "ON"

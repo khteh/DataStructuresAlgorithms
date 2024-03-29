@@ -35,6 +35,7 @@ public:
 	size_t NeighbourCount() const;
 	size_t EvenForestDescendentsCount(TTag, set<string> &) const;
 	Vertex<TTag, TItem> &operator=(Vertex<TTag, TItem> &);
+	bool operator<(const Vertex<TTag, TItem> &) const;
 	bool operator==(Vertex<TTag, TItem> &);
 	bool operator!=(Vertex<TTag, TItem> &);
 	bool operator<(Vertex<TTag, TItem> &);
@@ -45,13 +46,4 @@ protected:
 	TItem _item;
 	long _cost;
 	map<shared_ptr<Vertex<TTag, TItem>>, long> _neighbours; // neighbours and costs from this vertex to them
-};
-template <typename TTag, typename TItem> // TTag is used as a unique ID. Graph vertices can have duplicate values of TItem
-class PreviousVertex
-{
-public:
-	PreviousVertex();
-	PreviousVertex(shared_ptr<Vertex<TTag, TItem>>, long);
-	shared_ptr<Vertex<TTag, TItem>> Previous;
-	long Cost;
 };

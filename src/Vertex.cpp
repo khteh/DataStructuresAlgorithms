@@ -158,6 +158,11 @@ Vertex<TTag, TItem> &Vertex<TTag, TItem>::operator=(Vertex<TTag, TItem> &rhs)
 	_item = rhs._item;
 	return *this;
 }
+template <typename TTag, typename TItem>
+bool Vertex<TTag, TItem>::operator<(const Vertex<TTag, TItem> &other) const
+{
+	return _item < other._item;
+}
 
 template <typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::operator==(Vertex<TTag, TItem> &rhs)
@@ -181,14 +186,4 @@ template <typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::operator>(Vertex<TTag, TItem> &rhs)
 {
 	return _item > rhs._item;
-}
-template class PreviousVertex<long, long>;
-template class PreviousVertex<size_t, size_t>;
-template <typename TTag, typename TItem>
-PreviousVertex<TTag, TItem>::PreviousVertex() : Previous(nullptr)
-{
-}
-template <typename TTag, typename TItem>
-PreviousVertex<TTag, TItem>::PreviousVertex(shared_ptr<Vertex<TTag, TItem>> previous, long cost) : Previous(previous), Cost(cost)
-{
 }

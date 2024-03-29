@@ -2025,6 +2025,9 @@ int main(int argc, char *argv[])
 	udata.clear();
 	udata = {6, 4, 2, 3, 5, 7, 9};
 	cout << "{6, 4, 2, 3, 5, 7, 9}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
+	multimap<int, string> mmap = {{123, "123"}, {456, "456"}, {123, "789"}};
+	for (multimap<int, string>::iterator it = mmap.begin(); it != mmap.end(); it++)
+		cout << it->first << ": " << it->second << endl;
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);
