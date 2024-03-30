@@ -42,6 +42,7 @@ using namespace tbb;
 #include <chrono>
 #include <concepts>
 #include "Arithmetic.h"
+#include "Dijkstra.h"
 #include "NameHidingExample.h"
 #include "Singleton.h"
 #include "Graph.h"

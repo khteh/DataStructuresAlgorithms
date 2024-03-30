@@ -11,12 +11,17 @@ using namespace tbb;
 #endif
 template class DEdge<long>;
 template class DEdge<size_t>;
+template class DEdge<string>;
 template class DVertex<long>;
 template class DVertex<size_t>;
+template class DVertex<string>;
+template class Dijkstra<long>;
+template class Dijkstra<size_t>;
+template class Dijkstra<string>;
 
 ////////////////////////////////// DVertex<T> //////////////////////////////////////////////////
 template <typename T>
-DVertex<T>::DVertex() : _cost(numeric_limits<long>::max()), _previous(nullptr)
+DVertex<T>::DVertex(T value) : _value(value), _cost(numeric_limits<long>::max()), _previous(nullptr)
 {
 }
 template <typename T>
@@ -75,9 +80,14 @@ typename set<DEdge<T>>::const_iterator DVertex<T>::EdgeEnd() const
     return _edges.cend();
 }
 template <typename T>
-void DVertex<T>::UpdatePreviousVertex(DVertex<T> previous, long cost)
+void DVertex<T>::UpdatePreviousVertex(shared_ptr<DVertex<T>> previous, long cost)
 {
-    _previous = make_shared<DVertex<T>>(previous);
+    _previous = previous;
+    _cost = cost;
+}
+template <typename T>
+void DVertex<T>::UpdateCost(long cost)
+{
     _cost = cost;
 }
 template <typename T>
@@ -165,7 +175,7 @@ void Dijkstra<T>::AddVertices(vector<T> &data)
 template <typename T>
 void Dijkstra<T>::AddVertex(T v)
 {
-    _vertices.emplace(v, DVertex<T>(v));
+    _vertices.emplace(v, make_shared<DVertex<T>>(v));
 }
 template <typename T>
 void Dijkstra<T>::AddUndirectedEdge(T from, T to, long cost)
@@ -174,7 +184,8 @@ void Dijkstra<T>::AddUndirectedEdge(T from, T to, long cost)
         AddVertex(from);
     if (_vertices.find(to) == _vertices.end())
         AddVertex(to);
-    _vertices[from].AddEdge(make_shared<DVertex<T>>(to), cost);
+    _vertices[from]->AddEdge(_vertices[to], cost);
+    _vertices[to]->AddEdge(_vertices[from], cost);
 }
 template <typename T>
 Dijkstra<T>::~Dijkstra()
@@ -193,6 +204,12 @@ size_t Dijkstra<T>::Count() const
     return _vertices.size();
 }
 template <typename T>
+void Dijkstra<T>::InitVertices()
+{
+    for (typename map<T, shared_ptr<DVertex<T>>>::iterator it = _vertices.begin(); it != _vertices.end(); it++)
+        (*it).second->UpdatePreviousVertex(nullptr, numeric_limits<int>::max());
+}
+template <typename T>
 long Dijkstra<T>::ShortestPath(T start, T end, vector<shared_ptr<DVertex<T>>> &result)
 {
     if (_vertices.find(start) == _vertices.end() || _vertices.find(end) == _vertices.end())
@@ -202,45 +219,43 @@ long Dijkstra<T>::ShortestPath(T start, T end, vector<shared_ptr<DVertex<T>>> &r
     //    _hops.emplace(it->second, DVertex<T>());
     set<shared_ptr<DVertex<T>>> visited;
     //_hops[DVertex<T>(start)] = DVertex<T>(nullptr, 0);
-    multimap<long, shared_ptr<DVertex<T>>> costs; // Priority Queue wich min cost at *begin()
-    costs.emplace(0, make_shared<DVertex<T>>(start, 0));
-    for (; !costs.empty() && !end;)
+    multimap<long, shared_ptr<DVertex<T>>> costs; // Priority Queue with min cost at *begin()
+    _vertices[start]->UpdateCost(0);              // San Fran, null, 0
+    costs.emplace(0, _vertices[start]);           // San Fran, 0
+    for (; !costs.empty();)
     {
-        typename multimap<long, shared_ptr<DVertex<T>>>::iterator currentIt = costs.begin();
-        shared_ptr<DVertex<T>> current = currentIt->second;
+        shared_ptr<DVertex<T>> current = costs.begin()->second; // San Fran
+        costs.erase(costs.begin());
         if (visited.find(current) == visited.end())
         {
-            visited.empalce(current);
+            visited.emplace(current);
             if (current->Value() == end)
             {
                 result.insert(result.begin(), current);
                 for (shared_ptr<DVertex<T>> n = current->PreviousVertex(); n; n = n->PreviousVertex())
                     result.insert(result.begin(), n);
-                break;
+                return _vertices[end]->Cost();
             }
-            long currentCost = current->Cost(); //_hops[current->second].Cost;
-            for (typename vector<DEdge<T>>::const_iterator it = current->EdgeStart(); it != current->EdgeEnd(); it++)
+            long currentCost = current->Cost(); //_hops[current->second].Cost;  0
+            for (typename set<DEdge<T>>::const_iterator it = current->EdgeStart(); it != current->EdgeEnd(); it++)
             {
-                shared_ptr<DVertex<T>> nextVertex = it->NextVertex();
+                // Current shortest distance to the connected node
+                shared_ptr<DVertex<T>> nextVertex = it->NextVertex(); // L.A
                 // Get current min cost to the connected vertex
-                long cost = nextVertex->Cost(); //_hops[it->NextVertex()].Cost;
+                long cost = nextVertex->Cost(); //_hops[it->NextVertex()].Cost; // MaxValue
                 // New accumulated cost to the next vertex
-                long newCost = currentCost + it->Cost();
+                long newCost = currentCost + it->Cost(); // 347
                 if (newCost < cost)
                 {
                     //_hops[it->NextVertex()].UpdatePreviousVertex(current->second, newCost);
                     nextVertex->UpdatePreviousVertex(current, newCost);
                     // Update the costs queue of the next Vertex
-                    typename multimap<long, shared_ptr<DVertex<T>>>::iterator it1 = ranges::find_if(costs, [nextVertex](const auto &it2)
-                                                                                                    { return it2->second->Value() == nextVertex->Value(); }); // Look for element <= data[i]
-                    if (it1 != costs.end())
-                    {
-                        costs.erase(it1);
-                        costs.emplace(newCost, nextVertex);
-                    }
+                    erase_if(costs, [nextVertex](const auto &it1)
+                             { return it1.second->Value() == nextVertex->Value(); });
+                    costs.emplace(newCost, nextVertex);
                 }
             }
         }
     }
-    return 0;
+    return -1;
 }

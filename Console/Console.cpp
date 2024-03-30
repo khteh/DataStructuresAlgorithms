@@ -2028,8 +2028,32 @@ int main(int argc, char *argv[])
 	multimap<int, string> mmap = {{123, "123"}, {456, "456"}, {123, "789"}};
 	for (multimap<int, string>::iterator it = mmap.begin(); it != mmap.end(); it++)
 		cout << it->first << ": " << it->second << endl;
+	Dijkstra<string> dijkstra;
+	strings.clear();
+	strings = {"San Francisco", "Los Angeles", "Dallas", "New York", "Chicago"};
+	dijkstra.AddVertices(strings);
+	dijkstra.AddUndirectedEdge("San Francisco", "Los Angeles", 347);
+	dijkstra.AddUndirectedEdge("San Francisco", "Dallas", 1480);
+	dijkstra.AddUndirectedEdge("San Francisco", "Chicago", 1853);
+	dijkstra.AddUndirectedEdge("Los Angeles", "Dallas", 1237);
+	dijkstra.AddUndirectedEdge("Dallas", "Chicago", 802);
+	dijkstra.AddUndirectedEdge("Dallas", "New York", 1370);
+	dijkstra.AddUndirectedEdge("Chicago", "New York", 712);
+	vector<shared_ptr<DVertex<string>>> dijkstraResult;
+	assert(dijkstra.ShortestPath("San Francisco", "New York", dijkstraResult) == 2565);
+	assert(!dijkstraResult.empty());
+	for (vector<shared_ptr<DVertex<string>>>::const_iterator it = dijkstraResult.begin(); it != dijkstraResult.end(); it++)
+		cout << (*it)->Value() << " -> ";
+	cout << endl;
+	// vector<size_t> ShortestPaths(size_t n, vector<vector<size_t>> & edges, size_t start)
+	ugrid.clear();
+	ugrid = {{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}};
+	udata.clear();
+	udata = {24, 3, 15};
+	assert(udata == ShortestPaths(4, ugrid, 1));
 	/***** The End *****/
-	cout << "Press ENTER to exit";
+	cout
+		<< "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }

@@ -6407,6 +6407,8 @@ vector<size_t> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t sta
 	vector<size_t> data(n);
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; });
+	vector<size_t> result;
+#if 0					 
 	Graph<size_t, size_t> graph(data);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 	{
@@ -6416,11 +6418,23 @@ vector<size_t> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t sta
 		assert(v2);
 		graph.AddUndirectedEdge(v1, v2, (*it)[2]);
 	}
-	vector<size_t> result;
 	for (size_t i = 1; i <= n; i++)
 	{
 		if (i != start)
 			result.push_back(graph.Dijkstra(start, i));
+	}
+#endif
+	Dijkstra<size_t> dijkstra(data);
+	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
+		dijkstra.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
+	for (size_t i = 1; i <= n; i++)
+	{
+		if (i != start)
+		{
+			vector<shared_ptr<DVertex<size_t>>> path;
+			result.push_back(dijkstra.ShortestPath(start, i, path));
+			dijkstra.InitVertices();
+		}
 	}
 	return result;
 }
