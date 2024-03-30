@@ -234,7 +234,7 @@ long Dijkstra<T>::ShortestPath(T start, T end, vector<shared_ptr<DVertex<T>>> &r
                 result.insert(result.begin(), current);
                 for (shared_ptr<DVertex<T>> n = current->PreviousVertex(); n; n = n->PreviousVertex())
                     result.insert(result.begin(), n);
-                return _vertices[end]->Cost();
+                return current->Cost();
             }
             long currentCost = current->Cost(); //_hops[current->second].Cost;  0
             for (typename set<DEdge<T>>::const_iterator it = current->EdgeStart(); it != current->EdgeEnd(); it++)
