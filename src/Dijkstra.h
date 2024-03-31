@@ -76,9 +76,9 @@ public:
     void AddVertex(T);
     void AddUndirectedEdge(T, T, long);
     long ShortestPath(T, T, vector<shared_ptr<DVertex<T>>> &);
+    long ShortestPathStateless(T, T, vector<shared_ptr<DVertex<T>>> &);
 
 private:
     map<T, shared_ptr<DVertex<T>>> _vertices;
-    // map<DVertex<T>, DVertex<T>> _hops;
     vector<shared_ptr<DVertex<T>>> _result;
 };

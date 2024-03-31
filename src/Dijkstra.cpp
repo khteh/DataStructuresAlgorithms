@@ -19,6 +19,9 @@ template class Dijkstra<long>;
 template class Dijkstra<size_t>;
 template class Dijkstra<string>;
 
+/*
+ * Idea from https://andrewlock.net/implementing-dijkstras-algorithm-for-finding-the-shortest-path-between-two-nodes-using-priorityqueue-in-dotnet-9/
+ */
 ////////////////////////////////// DVertex<T> //////////////////////////////////////////////////
 template <typename T>
 DVertex<T>::DVertex(T value) : _value(value), _cost(numeric_limits<long>::max()), _previous(nullptr)
@@ -199,7 +202,7 @@ template <typename T>
 void Dijkstra<T>::Clear()
 {
     _vertices.clear();
-    //_hops.clear();
+    // hops.clear();
 }
 template <typename T>
 size_t Dijkstra<T>::Count() const
@@ -218,11 +221,7 @@ long Dijkstra<T>::ShortestPath(T start, T end, vector<shared_ptr<DVertex<T>>> &r
     if (_vertices.find(start) == _vertices.end() || _vertices.find(end) == _vertices.end())
         return -1;
     InitVertices();
-    // Initialize all the costs to max, and the "previous" vertex to null
-    // for (typename map<T, DVertex<T>>::iterator it = _vertices.begin(); it != _vertices.end(); it++)
-    //    _hops.emplace(it->second, DVertex<T>());
     set<shared_ptr<DVertex<T>>> visited;
-    //_hops[DVertex<T>(start)] = DVertex<T>(nullptr, 0);
     multimap<long, shared_ptr<DVertex<T>>> costs; // Priority Queue with min cost at *begin()
     _vertices[start]->UpdateCost(0);              // San Fran, null, 0
     costs.emplace(0, _vertices[start]);           // San Fran, 0
@@ -240,20 +239,68 @@ long Dijkstra<T>::ShortestPath(T start, T end, vector<shared_ptr<DVertex<T>>> &r
                     result.insert(result.begin(), n);
                 return current->Cost();
             }
-            long currentCost = current->Cost(); //_hops[current->second].Cost;  0
+            long currentCost = current->Cost();
             for (typename set<DEdge<T>>::const_iterator it = current->EdgeStart(); it != current->EdgeEnd(); it++)
             {
                 // Current shortest distance to the connected node
                 shared_ptr<DVertex<T>> nextVertex = it->NextVertex(); // L.A
                 // Get current min cost to the connected vertex
-                long cost = nextVertex->Cost(); //_hops[it->NextVertex()].Cost; // MaxValue
+                long cost = nextVertex->Cost();
                 // New accumulated cost to the next vertex
                 long newCost = currentCost + it->Cost(); // 347
                 if (newCost < cost)
                 {
-                    //_hops[it->NextVertex()].UpdatePreviousVertex(current->second, newCost);
                     nextVertex->UpdatePreviousVertex(current, newCost);
                     // Update the costs queue of the next Vertex
+                    erase_if(costs, [nextVertex](const auto &it1)
+                             { return it1.second->Value() == nextVertex->Value(); });
+                    costs.emplace(newCost, nextVertex);
+                }
+            }
+        }
+    }
+    return -1;
+}
+template <typename T>
+long Dijkstra<T>::ShortestPathStateless(T start, T end, vector<shared_ptr<DVertex<T>>> &result)
+{
+    if (_vertices.find(start) == _vertices.end() || _vertices.find(end) == _vertices.end())
+        return -1;
+    map<T, shared_ptr<DVertex<T>>> hops;
+    // Initialize all the costs to max, and the "previous" vertex to null
+    for (typename map<T, shared_ptr<DVertex<T>>>::iterator it = _vertices.begin(); it != _vertices.end(); it++)
+        hops.emplace(it->first, make_shared<DVertex<T>>(it->first)); // Value is NOT important. Only the previous vertex pointer and MAX cost are important!
+    set<shared_ptr<DVertex<T>>> visited;
+    hops[start]->UpdateCost(0);                   // = DVertex<T>(nullptr, 0);
+    multimap<long, shared_ptr<DVertex<T>>> costs; // Priority Queue with min cost at *begin()
+    costs.emplace(0, _vertices[start]);           // San Fran, 0
+    for (; !costs.empty();)
+    {
+        shared_ptr<DVertex<T>> current = costs.begin()->second; // San Fran
+        costs.erase(costs.begin());
+        if (visited.find(current) == visited.end())
+        {
+            visited.emplace(current);
+            if (current->Value() == end)
+            {
+                result.insert(result.begin(), current);
+                for (shared_ptr<DVertex<T>> n = hops[end]->PreviousVertex(); n; n = n->PreviousVertex())
+                    result.insert(result.begin(), n);
+                return hops[end]->Cost();
+            }
+            long currentCost = hops[current->Value()]->Cost(); // 0
+            for (typename set<DEdge<T>>::const_iterator it = current->EdgeStart(); it != current->EdgeEnd(); it++)
+            {
+                // Current shortest distance to the connected node
+                shared_ptr<DVertex<T>> nextVertex = it->NextVertex(); // L.A
+                // Get current min cost to the connected vertex
+                long cost = hops[nextVertex->Value()]->Cost(); // MaxValue
+                // New accumulated cost to the next vertex
+                long newCost = currentCost + it->Cost(); // 347
+                if (newCost < cost)
+                {
+                    hops[nextVertex->Value()]->UpdatePreviousVertex(current, newCost);
+                    //  Update the costs queue of the next Vertex
                     erase_if(costs, [nextVertex](const auto &it1)
                              { return it1.second->Value() == nextVertex->Value(); });
                     costs.emplace(newCost, nextVertex);

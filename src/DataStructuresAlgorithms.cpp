@@ -6370,6 +6370,7 @@ vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sou
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; });
 	Graph<size_t, size_t> graph(data);
+	assert(graph.Count() == n);
 	for (map<size_t, set<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 	{
 		shared_ptr<Vertex<size_t, size_t>> v = graph.GetVertex(it->first);
@@ -6402,13 +6403,14 @@ vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sou
  * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
  * Timeout! WIP
  */
-vector<size_t> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t start)
+vector<long> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t start)
 {
 	vector<size_t> data(n);
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; });
-	vector<size_t> result;
+	vector<long> result;
 	Graph<size_t, size_t> graph(data);
+	assert(graph.Count() == n);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 	{
 		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex((*it)[0]);
@@ -6424,12 +6426,16 @@ vector<size_t> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t sta
 	}
 	return result;
 }
-vector<size_t> ShortestPaths1(size_t n, vector<vector<size_t>> &edges, size_t start)
+/*
+ * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
+ * Timeout! WIP
+ */
+vector<long> ShortestPaths1(size_t n, vector<vector<size_t>> &edges, size_t start)
 {
 	vector<size_t> data(n);
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; });
-	vector<size_t> result;
+	vector<long> result;
 	Dijkstra<size_t> dijkstra(data);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 		dijkstra.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
@@ -6446,6 +6452,33 @@ vector<size_t> ShortestPaths1(size_t n, vector<vector<size_t>> &edges, size_t st
 	}
 	return result;
 }
+/*
+ * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
+ * Timeout! WIP
+ */
+vector<long> ShortestPaths2(size_t n, vector<vector<size_t>> &edges, size_t start)
+{
+	vector<size_t> data(n);
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
+	vector<long> result;
+	Dijkstra<size_t> dijkstra(data);
+	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
+		dijkstra.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
+	for (size_t i = 1; i <= n; i++)
+	{
+		if (i != start)
+		{
+			vector<shared_ptr<DVertex<size_t>>> path;
+			result.push_back(dijkstra.ShortestPathStateless(start, i, path));
+			for (vector<shared_ptr<DVertex<size_t>>>::const_iterator it = path.begin(); it != path.end(); it++)
+				cout << (*it)->Value() << " -> ";
+			cout << " cost: " << result.back() << endl;
+		}
+	}
+	return result;
+}
+
 /*
  * https://www.hackerrank.com/challenges/johnland/problem
  * Timeout!
@@ -6497,7 +6530,7 @@ string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 		cout << "parallel_for blocked range [" << r.begin() << "," << r.end() << "]" << endl;
 		m.unlock();
 		for (size_t i = r.begin(); i < r.end(); i++)
-			for (size_t j = 1; j <= n; j++)
+			for (size_t j = i + 1; j <= n; j++)
 			{
 				if (i != j)
 				{
@@ -6512,15 +6545,18 @@ string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 						m.unlock();
 						long cost = graph.Dijkstra(i, j);
 						m.lock();
-						distance += cost;
+						if (cost >= 0)
+							distance += cost;
 						m.unlock();
-					} else
+					}
+					else
 						m.unlock();
 				}
-				 } });
+			} });
 #endif
 	string binary = decimal_to_binary(distance ? distance : -1);
-	return binary.substr(binary.find_first_not_of('0'));
+	size_t offset = binary.find_first_not_of('0');
+	return binary.substr(offset != string::npos ? offset : 0);
 }
 string RoadsInHackerland1(size_t n, vector<vector<size_t>> &edges)
 {
@@ -6549,7 +6585,69 @@ string RoadsInHackerland1(size_t n, vector<vector<size_t>> &edges)
 					distance += costCache[oss2.str()];
 				else
 				{
-					size_t cost = graph.Dijkstra(i, j);
+					vector<shared_ptr<DVertex<size_t>>> path;
+					long cost = dijkstra.ShortestPath(i, j, path);
+					costCache[oss1.str()] = cost;
+					costCache[oss2.str()] = cost;
+					distance += cost;
+				}
+			}
+		} });
+#elif defined(__GNUC__) || defined(__GNUG__)
+	set<string> computed;
+	for (size_t i = 1; i < n; i++)
+		for (size_t j = i + 1; j <= n; j++)
+		{
+			if (i != j)
+			{
+				ostringstream oss1, oss2;
+				oss1 << i << "-" << j;
+				oss2 << j << "-" << i;
+				if (computed.find(oss1.str()) == computed.end() && computed.find(oss2.str()) == computed.end())
+				{
+					computed.emplace(oss1.str());
+					computed.emplace(oss2.str());
+					vector<shared_ptr<DVertex<size_t>>> path;
+					long cost = dijkstra.ShortestPath(i, j, path);
+					dijkstra.InitVertices(); // This prevents the routine from being used in multi-threading mode.
+					distance += cost;
+				}
+			}
+		}
+#endif
+	string binary = decimal_to_binary(distance ? distance : -1);
+	size_t offset = binary.find_first_not_of('0');
+	return binary.substr(offset != string::npos ? offset : 0);
+}
+string RoadsInHackerland2(size_t n, vector<vector<size_t>> &edges)
+{
+	vector<size_t> data(n);
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
+	Dijkstra<size_t> dijkstra(data);
+	assert(dijkstra.Count() == n);
+	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
+		dijkstra.AddUndirectedEdge((*it)[0], (*it)[1], 1 << (*it)[2]);
+	size_t distance = 0;
+#ifdef _MSC_VER
+	map<string, long> costCache;
+	parallel_for(size_t(1), n, [&](size_t i)
+				 {
+		for (size_t j = i + 1; j <= n; j++)
+		{
+			if (i != j)
+			{
+				ostringstream oss1, oss2;
+				oss1 << i << "-" << j;
+				oss2 << j << "-" << i;
+				if (costCache.find(oss1.str()) != costCache.end())
+					distance += costCache[oss1.str()];
+				else if (costCache.find(oss2.str()) != costCache.end())
+					distance += costCache[oss2.str()];
+				else
+				{
+					vector<shared_ptr<DVertex<size_t>>> path;
+					long cost = dijkstra.ShortestPathStateless(i, j, path);
 					costCache[oss1.str()] = cost;
 					costCache[oss2.str()] = cost;
 					distance += cost;
@@ -6559,38 +6657,35 @@ string RoadsInHackerland1(size_t n, vector<vector<size_t>> &edges)
 #elif defined(__GNUC__) || defined(__GNUG__)
 	mutex m;
 	set<string> computed;
-	// parallel_for(blocked_range<size_t>(1, n, 2), [&](blocked_range<size_t> r)
-	//			 {
-	// m.lock();
-	// cout << "parallel_for blocked range [" << r.begin() << "," << r.end() << "]" << endl;
-	// m.unlock();
-	// for (size_t i = r.begin(); i < r.end(); i++)
-	for (size_t i = 1; i < n; i++)
-		for (size_t j = i + 1; j <= n; j++)
-		{
-			if (i != j)
+	parallel_for(blocked_range<size_t>(1, n, 2), [&](blocked_range<size_t> r)
+				 {
+		m.lock();
+		cout << "parallel_for blocked range [" << r.begin() << "," << r.end() << "]" << endl;
+		m.unlock();
+		for (size_t i = r.begin(); i < r.end(); i++)
+			for (size_t j = i + 1; j <= n; j++)
 			{
-				ostringstream oss1, oss2;
-				oss1 << i << "-" << j;
-				oss2 << j << "-" << i;
-				// m.lock();
-				if (computed.find(oss1.str()) == computed.end() && computed.find(oss2.str()) == computed.end())
+				if (i != j)
 				{
-					computed.emplace(oss1.str());
-					computed.emplace(oss2.str());
-					// m.unlock();
-					vector<shared_ptr<DVertex<size_t>>> path;
-					long cost = dijkstra.ShortestPath(i, j, path);
-					dijkstra.InitVertices(); // This prevents the routine from being used in multi-threading mode.
-					// m.lock();
-					distance += cost;
-					// m.unlock();
+					ostringstream oss1, oss2;
+					oss1 << i << "-" << j;
+					oss2 << j << "-" << i;
+					m.lock();
+					if (computed.find(oss1.str()) == computed.end() && computed.find(oss2.str()) == computed.end())
+					{
+						computed.emplace(oss1.str());
+						computed.emplace(oss2.str());
+						m.unlock();
+						vector<shared_ptr<DVertex<size_t>>> path;
+						long cost = dijkstra.ShortestPathStateless(i, j, path);
+						m.lock();
+						distance += cost;
+						m.unlock();
+					}
+					else
+						m.unlock();
 				}
-				// else
-				//	m.unlock();
-			}
-		}
-		//});
+			} });
 #endif
 	string binary = decimal_to_binary(distance ? distance : -1);
 	size_t offset = binary.find_first_not_of('0');

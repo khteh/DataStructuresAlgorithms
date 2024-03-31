@@ -185,12 +185,15 @@ template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem>>, long> &costs)
 {
 	set<shared_ptr<Vertex<TTag, TItem>>> spt; // spt: Shortest Path Tree
-	set<shared_ptr<Vertex<TTag, TItem>>> vertices;
 	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(source);
+	multimap<long, shared_ptr<Vertex<TTag, TItem>>> costsPQ; // Priority Queue with min cost at *begin()
 	assert(vertex);
 	costs.emplace(vertex, 0);
-	for (; vertex;)
+	costsPQ.emplace(0, vertex);
+	for (; !costsPQ.empty();)
 	{
+		vertex = costsPQ.begin()->second;
+		costsPQ.erase(costsPQ.begin());
 		spt.emplace(vertex);
 		// Update dist value of the adjacent vertices of the picked vertex.
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
@@ -204,37 +207,35 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 			 */
 			if (spt.find(*it) == spt.end())
 			{
+				long uCost = vertex->GetCost(*it);
 				long vCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
-				if (costs[vertex] + vertex->GetCost(*it) < vCost)
-					costs[*it] = costs[vertex] + vertex->GetCost(*it);
-				vertices.insert(*it);
+				if (costs[vertex] + uCost < vCost)
+				{
+					costs[*it] = costs[vertex] + uCost;
+					erase_if(costsPQ, [it](const auto &it1)
+							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
+					costsPQ.emplace(costs[vertex] + uCost, *it);
+				}
 			}
 		}
-		vertex = nullptr;
-		long min = numeric_limits<long>::max();
-		for (typename set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
-			if (costs[*it] < min)
-			{
-				min = costs[*it];
-				vertex = *it;
-			}
-		if (vertex)
-			vertices.erase(vertex);
 	}
 }
 template <typename TTag, typename TItem>
 long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 {
 	set<shared_ptr<Vertex<TTag, TItem>>> spt; // spt: Shortest Path Tree
-	set<shared_ptr<Vertex<TTag, TItem>>> vertices;
 	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(src);
 	shared_ptr<Vertex<TTag, TItem>> destination = GetVertex(dest);
+	multimap<long, shared_ptr<Vertex<TTag, TItem>>> costsPQ; // Priority Queue with min cost at *begin()
 	assert(vertex);
 	assert(destination);
 	map<shared_ptr<Vertex<TTag, TItem>>, long> costs;
 	costs.emplace(vertex, 0);
-	for (; vertex && destination && vertex != destination;)
+	costsPQ.emplace(0, vertex);
+	for (; !costsPQ.empty() && vertex != destination;)
 	{
+		vertex = costsPQ.begin()->second;
+		costsPQ.erase(costsPQ.begin());
 		spt.emplace(vertex);
 		// Update cost of the adjacent vertices of the picked vertex.
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
@@ -248,24 +249,19 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 			 */
 			if (spt.find(*it) == spt.end())
 			{
+				long uCost = vertex->GetCost(*it);
 				long vCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
-				if (costs[vertex] + vertex->GetCost(*it) < vCost)
-					costs[*it] = costs[vertex] + vertex->GetCost(*it);
-				vertices.insert(*it);
+				if (costs[vertex] + uCost < vCost)
+				{
+					costs[*it] = costs[vertex] + uCost;
+					erase_if(costsPQ, [it](const auto &it1)
+							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
+					costsPQ.emplace(costs[vertex] + uCost, *it);
+				}
 			}
 		}
-		vertex = nullptr;
-		long min = numeric_limits<long>::max();
-		for (typename set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
-			if (costs[*it] < min)
-			{
-				min = costs[*it];
-				vertex = *it;
-			}
-		if (vertex)
-			vertices.erase(vertex);
 	}
-	return vertex ? costs[vertex] : -1;
+	return vertex && vertex == destination && costs.find(vertex) != costs.end() ? costs[vertex] : -1;
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>> &result, shared_ptr<Vertex<TTag, TItem>> &start)

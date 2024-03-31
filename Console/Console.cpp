@@ -1762,6 +1762,134 @@ int main(int argc, char *argv[])
 	edges = {{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}};
 	assert("1000100" == RoadsInHackerland(5, edges));
 	assert("1000100" == RoadsInHackerland1(5, edges));
+	edges.clear();
+	edges = {{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}};
+	assert("1000100" == RoadsInHackerland2(5, edges));
+	edges.clear();
+	edges = {
+		{5, 12, 18},
+		{17, 2, 5},
+		{7, 18, 3},
+		{17, 6, 0},
+		{15, 12, 16},
+		{2, 3, 8},
+		{14, 9, 20},
+		{4, 9, 11},
+		{13, 1, 21},
+		{13, 12, 15},
+		{15, 12, 10},
+		{6, 16, 9},
+		{11, 18, 2},
+		{9, 16, 17},
+		{12, 4, 4},
+		{7, 4, 19},
+		{17, 1, 12},
+		{10, 14, 7},
+		{8, 5, 13},
+		{18, 3, 14},
+		{4, 11, 6},
+		{15, 3, 1},
+		{12, 5, 22},
+	};
+	assert("10100011101101000001001000" == RoadsInHackerland(18, edges));
+	assert("10100011101101000001001000" == RoadsInHackerland1(18, edges));
+	edges.clear();
+	edges = {
+		{5, 12, 18},
+		{17, 2, 5},
+		{7, 18, 3},
+		{17, 6, 0},
+		{15, 12, 16},
+		{2, 3, 8},
+		{14, 9, 20},
+		{4, 9, 11},
+		{13, 1, 21},
+		{13, 12, 15},
+		{15, 12, 10},
+		{6, 16, 9},
+		{11, 18, 2},
+		{9, 16, 17},
+		{12, 4, 4},
+		{7, 4, 19},
+		{17, 1, 12},
+		{10, 14, 7},
+		{8, 5, 13},
+		{18, 3, 14},
+		{4, 11, 6},
+		{15, 3, 1},
+		{12, 5, 22},
+	};
+	assert("10100011101101000001001000" == RoadsInHackerland2(18, edges));
+	edges.clear();
+	edges = {
+		{4, 11, 27},
+		{7, 9, 14},
+		{13, 6, 23},
+		{18, 10, 3},
+		{19, 4, 19},
+		{2, 7, 6},
+		{11, 13, 20},
+		{6, 15, 0},
+		{14, 18, 2},
+		{16, 5, 26},
+		{2, 20, 10},
+		{16, 17, 21},
+		{6, 2, 9},
+		{11, 5, 25},
+		{20, 19, 28},
+		{14, 4, 29},
+		{10, 4, 24},
+		{9, 7, 8},
+		{7, 1, 15},
+		{12, 13, 7},
+		{8, 3, 22},
+		{8, 13, 4},
+		{17, 14, 1},
+		{8, 15, 11},
+		{1, 10, 5},
+		{18, 15, 18},
+		{7, 13, 17},
+		{12, 9, 16},
+		{14, 6, 12},
+		{9, 2, 13},
+	};
+	assert("1010100000000011001101110101111" == RoadsInHackerland(20, edges));
+	assert("1010100000000011001101110101111" == RoadsInHackerland1(20, edges));
+	edges.clear();
+	edges = {
+		{4, 11, 27},
+		{7, 9, 14},
+		{13, 6, 23},
+		{18, 10, 3},
+		{19, 4, 19},
+		{2, 7, 6},
+		{11, 13, 20},
+		{6, 15, 0},
+		{14, 18, 2},
+		{16, 5, 26},
+		{2, 20, 10},
+		{16, 17, 21},
+		{6, 2, 9},
+		{11, 5, 25},
+		{20, 19, 28},
+		{14, 4, 29},
+		{10, 4, 24},
+		{9, 7, 8},
+		{7, 1, 15},
+		{12, 13, 7},
+		{8, 3, 22},
+		{8, 13, 4},
+		{17, 14, 1},
+		{8, 15, 11},
+		{1, 10, 5},
+		{18, 15, 18},
+		{7, 13, 17},
+		{12, 9, 16},
+		{14, 6, 12},
+		{9, 2, 13},
+	};
+	assert("1010100000000011001101110101111" == RoadsInHackerland2(20, edges));
+
 	a.clear();
 	a = {1};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 0);
@@ -2042,16 +2170,29 @@ int main(int argc, char *argv[])
 	dijkstra.AddUndirectedEdge("Chicago", "New York", 712);
 	vector<shared_ptr<DVertex<string>>> dijkstraResult;
 	assert(dijkstra.ShortestPath("San Francisco", "New York", dijkstraResult) == 2565);
+	assert(dijkstra.ShortestPathStateless("San Francisco", "New York", dijkstraResult) == 2565);
 	assert(!dijkstraResult.empty());
 	for (vector<shared_ptr<DVertex<string>>>::const_iterator it = dijkstraResult.begin(); it != dijkstraResult.end(); it++)
 		cout << (*it)->Value() << " -> ";
 	cout << endl;
-	// vector<size_t> ShortestPaths(size_t n, vector<vector<size_t>> & edges, size_t start)
+	ugrid.clear();
+	ugrid = {{1, 2, 10}, {1, 3, 6}, {2, 4, 8}};
+	a.clear();
+	a = {10l, 16l, 8l, -1l};
+	assert(a == ShortestPaths(5, ugrid, 2));
+	assert(a == ShortestPaths1(5, ugrid, 2));
+	ugrid.clear();
+	ugrid = {{1, 2, 10}, {1, 3, 6}, {2, 4, 8}};
+	assert(a == ShortestPaths2(5, ugrid, 2));
 	ugrid.clear();
 	ugrid = {{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}};
-	udata.clear();
-	udata = {24, 3, 15};
-	assert(udata == ShortestPaths(4, ugrid, 1));
+	a.clear();
+	a = {24l, 3l, 15l};
+	assert(a == ShortestPaths(4, ugrid, 1));
+	assert(a == ShortestPaths1(4, ugrid, 1));
+	ugrid.clear();
+	ugrid = {{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}};
+	assert(a == ShortestPaths2(4, ugrid, 1));
 	ugrid.clear();
 	ugrid = {
 		{1, 7, 45},
@@ -2108,12 +2249,21 @@ int main(int argc, char *argv[])
 		{12, 7, 13},
 		{3, 7, 10},
 		{1, 7, 2}};
+	a.clear();
+	a = {20, 25, 25, 68, 86, 39, 22, 70, 36, 53, 91, 35, 88, 27, 30, 43, 54, 74, 41};
+	assert(a == ShortestPaths(20, ugrid, 17));
+	assert(a == ShortestPaths1(20, ugrid, 17));
+	assert(a == ShortestPaths2(20, ugrid, 17));
 	udata.clear();
-	udata = {20, 25, 25, 68, 86, 39, 22, 70, 36, 53, 91, 35, 88, 27, 30, 43, 54, 74, 41};
-	assert(udata == ShortestPaths(20, ugrid, 17));
-	assert(udata == ShortestPaths1(20, ugrid, 17));
+	ugrid.clear();
+	ugrid = {{1, 2},
+			 {2, 3},
+			 {1, 4}};
+	udata = {3, 1, 2};
+	assert(udata == UnbeatenPaths(4, ugrid, 1));
 	/***** The End *****/
-	cout << "Press ENTER to exit";
+	cout
+		<< "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }
