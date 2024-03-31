@@ -37,8 +37,14 @@ template <typename T>
 void DVertex<T>::AddEdge(shared_ptr<DVertex<T>> vertex, long cost)
 {
     DEdge<T> edge(vertex, cost);
-    if (_edges.find(edge) == _edges.end())
+    typename set<DEdge<T>>::const_iterator it = _edges.find(edge);
+    if (it == _edges.end())
         _edges.emplace(edge);
+    else if (it->Cost() > cost)
+    {
+        _edges.erase(it);
+        _edges.emplace(edge);
+    }
 }
 template <typename T>
 bool DVertex<T>::operator<(const DVertex<T> &other) const
@@ -51,19 +57,16 @@ bool DVertex<T>::operator==(DVertex<T> &rhs)
 {
     return _value == rhs._value;
 }
-
 template <typename T>
 bool DVertex<T>::operator!=(DVertex<T> &rhs)
 {
     return !(*this == rhs);
 }
-
 template <typename T>
 bool DVertex<T>::operator<(DVertex<T> &rhs)
 {
     return _value < rhs._value;
 }
-
 template <typename T>
 bool DVertex<T>::operator>(DVertex<T> &rhs)
 {
@@ -214,6 +217,7 @@ long Dijkstra<T>::ShortestPath(T start, T end, vector<shared_ptr<DVertex<T>>> &r
 {
     if (_vertices.find(start) == _vertices.end() || _vertices.find(end) == _vertices.end())
         return -1;
+    InitVertices();
     // Initialize all the costs to max, and the "previous" vertex to null
     // for (typename map<T, DVertex<T>>::iterator it = _vertices.begin(); it != _vertices.end(); it++)
     //    _hops.emplace(it->second, DVertex<T>());

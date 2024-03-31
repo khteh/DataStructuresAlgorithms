@@ -6408,7 +6408,6 @@ vector<size_t> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t sta
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; });
 	vector<size_t> result;
-#if 0					 
 	Graph<size_t, size_t> graph(data);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 	{
@@ -6423,7 +6422,14 @@ vector<size_t> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t sta
 		if (i != start)
 			result.push_back(graph.Dijkstra(start, i));
 	}
-#endif
+	return result;
+}
+vector<size_t> ShortestPaths1(size_t n, vector<vector<size_t>> &edges, size_t start)
+{
+	vector<size_t> data(n);
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
+	vector<size_t> result;
 	Dijkstra<size_t> dijkstra(data);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 		dijkstra.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
@@ -6433,7 +6439,9 @@ vector<size_t> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t sta
 		{
 			vector<shared_ptr<DVertex<size_t>>> path;
 			result.push_back(dijkstra.ShortestPath(start, i, path));
-			dijkstra.InitVertices();
+			for (vector<shared_ptr<DVertex<size_t>>>::const_iterator it = path.begin(); it != path.end(); it++)
+				cout << (*it)->Value() << " -> ";
+			cout << " cost: " << result.back() << endl;
 		}
 	}
 	return result;
@@ -6442,7 +6450,7 @@ vector<size_t> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t sta
  * https://www.hackerrank.com/challenges/johnland/problem
  * Timeout!
  */
-string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
+string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 {
 	vector<size_t> data(n);
 	ranges::generate(data, [n = 1]() mutable
@@ -6514,6 +6522,81 @@ string roadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 	string binary = decimal_to_binary(distance ? distance : -1);
 	return binary.substr(binary.find_first_not_of('0'));
 }
+string RoadsInHackerland1(size_t n, vector<vector<size_t>> &edges)
+{
+	vector<size_t> data(n);
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
+	Dijkstra<size_t> dijkstra(data);
+	assert(dijkstra.Count() == n);
+	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
+		dijkstra.AddUndirectedEdge((*it)[0], (*it)[1], 1 << (*it)[2]);
+	size_t distance = 0;
+#ifdef _MSC_VER
+	map<string, long> costCache;
+	parallel_for(size_t(1), n, [&](size_t i)
+				 {
+		for (size_t j = i + 1; j <= n; j++)
+		{
+			if (i != j)
+			{
+				ostringstream oss1, oss2;
+				oss1 << i << "-" << j;
+				oss2 << j << "-" << i;
+				if (costCache.find(oss1.str()) != costCache.end())
+					distance += costCache[oss1.str()];
+				else if (costCache.find(oss2.str()) != costCache.end())
+					distance += costCache[oss2.str()];
+				else
+				{
+					size_t cost = graph.Dijkstra(i, j);
+					costCache[oss1.str()] = cost;
+					costCache[oss2.str()] = cost;
+					distance += cost;
+				}
+			}
+		} });
+#elif defined(__GNUC__) || defined(__GNUG__)
+	mutex m;
+	set<string> computed;
+	// parallel_for(blocked_range<size_t>(1, n, 2), [&](blocked_range<size_t> r)
+	//			 {
+	// m.lock();
+	// cout << "parallel_for blocked range [" << r.begin() << "," << r.end() << "]" << endl;
+	// m.unlock();
+	// for (size_t i = r.begin(); i < r.end(); i++)
+	for (size_t i = 1; i < n; i++)
+		for (size_t j = i + 1; j <= n; j++)
+		{
+			if (i != j)
+			{
+				ostringstream oss1, oss2;
+				oss1 << i << "-" << j;
+				oss2 << j << "-" << i;
+				// m.lock();
+				if (computed.find(oss1.str()) == computed.end() && computed.find(oss2.str()) == computed.end())
+				{
+					computed.emplace(oss1.str());
+					computed.emplace(oss2.str());
+					// m.unlock();
+					vector<shared_ptr<DVertex<size_t>>> path;
+					long cost = dijkstra.ShortestPath(i, j, path);
+					dijkstra.InitVertices(); // This prevents the routine from being used in multi-threading mode.
+					// m.lock();
+					distance += cost;
+					// m.unlock();
+				}
+				// else
+				//	m.unlock();
+			}
+		}
+		//});
+#endif
+	string binary = decimal_to_binary(distance ? distance : -1);
+	size_t offset = binary.find_first_not_of('0');
+	return binary.substr(offset != string::npos ? offset : 0);
+}
+
 /*
  * https://www.cppstories.com/2022/ranges-alg-part-one/
  */
