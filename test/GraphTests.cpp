@@ -392,6 +392,7 @@ public:
 				else
 				{
 					size_t cost = _graph.Dijkstra(i, j);
+					_dijkstra.InitVertices(); // This prevents the routine from being used in multi-threading mode.
 					costCache[oss1.str()] = cost;
 					costCache[oss2.str()] = cost;
 					distance += cost;

@@ -2181,8 +2181,6 @@ int main(int argc, char *argv[])
 	a = {10l, 16l, 8l, -1l};
 	assert(a == ShortestPaths(5, ugrid, 2));
 	assert(a == ShortestPaths1(5, ugrid, 2));
-	ugrid.clear();
-	ugrid = {{1, 2, 10}, {1, 3, 6}, {2, 4, 8}};
 	assert(a == ShortestPaths2(5, ugrid, 2));
 	ugrid.clear();
 	ugrid = {{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}};
@@ -2190,8 +2188,6 @@ int main(int argc, char *argv[])
 	a = {24l, 3l, 15l};
 	assert(a == ShortestPaths(4, ugrid, 1));
 	assert(a == ShortestPaths1(4, ugrid, 1));
-	ugrid.clear();
-	ugrid = {{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}};
 	assert(a == ShortestPaths2(4, ugrid, 1));
 	ugrid.clear();
 	ugrid = {

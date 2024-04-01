@@ -133,9 +133,9 @@ shared_ptr<DVertex<T>> DEdge<T>::NextVertex() const
     return _vertex;
 }
 template <typename T>
-bool DEdge<T>::operator<(const DEdge<T> &other) const
+bool DEdge<T>::operator<(const DEdge<T> &rhs) const
 {
-    return _vertex < other._vertex;
+    return _vertex < rhs._vertex;
 }
 
 template <typename T>
@@ -245,7 +245,7 @@ long Dijkstra<T>::ShortestPath(T start, T end, vector<shared_ptr<DVertex<T>>> &r
                 // Current shortest distance to the connected node
                 shared_ptr<DVertex<T>> nextVertex = it->NextVertex(); // L.A
                 // Get current min cost to the connected vertex
-                long cost = nextVertex->Cost();
+                long cost = nextVertex->Cost(); // Default to Max
                 // New accumulated cost to the next vertex
                 long newCost = currentCost + it->Cost(); // 347
                 if (newCost < cost)

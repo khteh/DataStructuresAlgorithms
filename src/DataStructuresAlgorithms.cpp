@@ -6587,6 +6587,7 @@ string RoadsInHackerland1(size_t n, vector<vector<size_t>> &edges)
 				{
 					vector<shared_ptr<DVertex<size_t>>> path;
 					long cost = dijkstra.ShortestPath(i, j, path);
+					dijkstra.InitVertices(); // This prevents the routine from being used in multi-threading mode.
 					costCache[oss1.str()] = cost;
 					costCache[oss2.str()] = cost;
 					distance += cost;
