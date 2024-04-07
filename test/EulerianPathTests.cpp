@@ -1,29 +1,31 @@
 #include "pch.h"
 using namespace std;
-TEST(EulerianPathTests, EulerianPathTest) {
-	vector<string> strings, strings1;
-	vector<vector<string>> sgrid;
-	sgrid = { {"MUC", "LHR"}, {"JFK", "MUC"}, {"SFO", "SJC"}, {"LHR", "SFO"} };
-	strings = findItinerary(sgrid, string("JFK"));
-	ASSERT_FALSE(strings.empty());
-	ASSERT_EQ(5, strings.size());
-	strings1.clear();
-	strings1 = { "JFK", "MUC", "LHR", "SFO", "SJC" };
-	ASSERT_EQ(strings1, strings);
-	sgrid.clear();
-	sgrid = { {"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"} };
-	strings = findItinerary(sgrid, string("JFK"));
-	ASSERT_FALSE(strings.empty());
-	ASSERT_EQ(6, strings.size());
-	strings1.clear();
-	strings1 = { "JFK", "ATL", "JFK", "SFO", "ATL", "SFO" };
-	ASSERT_EQ(strings1, strings);
-	sgrid.clear();
-	sgrid = { {"EZE", "AXA"}, {"TIA", "ANU"}, {"ANU", "JFK"}, {"JFK", "ANU"}, {"ANU", "EZE"}, {"TIA", "ANU"}, {"AXA", "TIA"}, {"TIA", "JFK"}, {"ANU", "TIA"}, {"JFK", "TIA"} };
-	strings = findItinerary(sgrid, string("JFK"));
-	ASSERT_FALSE(strings.empty());
-	ASSERT_EQ(11, strings.size());
-	strings1.clear();
-	strings1 = { "JFK", "ANU", "EZE", "AXA", "TIA", "ANU", "JFK", "TIA", "ANU", "TIA", "JFK" };
-	ASSERT_EQ(strings1, strings);
+class EulerianPathTestFixture : public testing::TestWithParam<tuple<vector<string>, vector<vector<string>>, string>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_paths = get<1>(GetParam());
+		_start = get<2>(GetParam());
+	}
+	vector<string> EulerianPathTest()
+	{
+		return FindItinerary(_paths, _start);
+	}
+
+protected:
+	vector<string> _expected;
+	vector<vector<string>> _paths;
+	string _start;
+};
+TEST_P(EulerianPathTestFixture, EulerianPathTests)
+{
+	ASSERT_EQ(this->_expected, this->EulerianPathTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	EulerianPathTests,
+	EulerianPathTestFixture,
+	::testing::Values(make_tuple(vector<string>{"JFK", "MUC", "LHR", "SFO", "SJC"}, vector<vector<string>>{{"MUC", "LHR"}, {"JFK", "MUC"}, {"SFO", "SJC"}, {"LHR", "SFO"}}, "JFK"),
+					  make_tuple(vector<string>{"JFK", "ATL", "JFK", "SFO", "ATL", "SFO"}, vector<vector<string>>{{"JFK", "SFO"}, {"JFK", "ATL"}, {"SFO", "ATL"}, {"ATL", "JFK"}, {"ATL", "SFO"}}, "JFK"),
+					  make_tuple(vector<string>{"JFK", "ANU", "EZE", "AXA", "TIA", "ANU", "JFK", "TIA", "ANU", "TIA", "JFK"}, vector<vector<string>>{{"EZE", "AXA"}, {"TIA", "ANU"}, {"ANU", "JFK"}, {"JFK", "ANU"}, {"ANU", "EZE"}, {"TIA", "ANU"}, {"AXA", "TIA"}, {"TIA", "JFK"}, {"ANU", "TIA"}, {"JFK", "TIA"}}, "JFK")));

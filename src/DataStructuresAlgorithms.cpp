@@ -6207,7 +6207,7 @@ size_t LargestNumberCompositionProductWithDynamicProgramming(size_t n)
  * (5) ATL -> SFO
  * JFK -> ATL -> JFK -> SFO -> ATL -> SFO
  */
-vector<string> findItinerary(vector<vector<string>> &tickets, const string &start)
+vector<string> FindItinerary(vector<vector<string>> &tickets, const string &start)
 {
 	map<string, multiset<string>> vertices;
 	vector<string> itinerary;

@@ -367,7 +367,7 @@ vector<string> wordBreakDFS(string, set<string> &, map<string, vector<string>> &
 string getHint(const string &, const string &);
 bool IsValidPreOrderTreeSerialization(const string &);
 size_t LargestNumberCompositionProductWithDynamicProgramming(size_t);
-vector<string> findItinerary(vector<vector<string>> &, const string &);
+vector<string> FindItinerary(vector<vector<string>> &, const string &);
 void EulerianPath(string, map<string, multiset<string>> &, vector<string> &);
 size_t eggDrops(size_t, size_t);
 vector<string> fizzBuzz(size_t);
