@@ -8172,8 +8172,6 @@ size_t ActivityNotifications(vector<long> &data, size_t d)
 	vector<long>::iterator it = data.begin();
 	for (size_t i = d, j = 0; i < data.size() && j < data.size() - d; i++, j++, it++)
 	{
-		// size_t j = i - d;
-		//  ranges::sort(data.begin() + j, data.begin() + j + d);
 		ranges::sort(it, it + d);
 		double median = odd ? data[j + half] : (double)(data[j + half] + data[j + half - 1]) / 2l;
 		if (data[i] >= 2 * median)
