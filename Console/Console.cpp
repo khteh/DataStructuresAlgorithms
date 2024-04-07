@@ -2257,9 +2257,14 @@ int main(int argc, char *argv[])
 			 {1, 4}};
 	udata = {3, 1, 2};
 	assert(udata == UnbeatenPaths(4, ugrid, 1));
+	assert(MaxSizePalindromeCount("week", 0, 3) == 2);
+	assert(MaxSizePalindromeCount("week", 1, 2) == 1);
+	assert(MaxSizePalindromeCount("abab", 0, 3) == 2);
+	assert(MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 20, 20) == 1);
+	assert(MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 3, 4) == 2);
+	assert(MaxSizePalindromeCount("daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16) == 2);
 	/***** The End *****/
-	cout
-		<< "Press ENTER to exit";
+	cout << "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }

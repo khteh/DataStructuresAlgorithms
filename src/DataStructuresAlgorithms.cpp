@@ -503,18 +503,18 @@ bool SherlockValidString(string const &s)
 }
 /*
  * "" -> ""
- * "a" -> "a"
+ * "a" -> ""
  * "ab" -> "a"
  * "aa" -> "aa"
  */
 string FindBiggestPalindromeSubstring(string const &s)
 {
 	string tmp, palindrome;
-	for (size_t i = 1; i < s.size() - 1; i++)
+	for (int i = 1; i < s.size() - 1; i++)
 	{
 		if (s[i] == s[i + 1])
 		{ // Even palindrome: abba
-			for (int j = i, k = i + 1; j >= 0; j--, k++)
+			for (int j = i, k = i + 1; j >= 0 && k < s.size(); j--, k++)
 			{
 				if (s[j] == s[k])
 				{
@@ -527,8 +527,8 @@ string FindBiggestPalindromeSubstring(string const &s)
 			}
 		}
 		else if (s[i - 1] == s[i + 1])
-		{ // Odd palindrome
-			for (int j = i - 1, k = i + 1; j >= 0; j--, k++)
+		{ // Odd palindrome: aba
+			for (int j = i - 1, k = i + 1; j >= 0 && k < s.size(); j--, k++)
 			{
 				if (s[j] == s[k])
 				{
@@ -589,12 +589,13 @@ void FindPalindromeSubstrings(string const &s, set<string> &result)
 		}
 	}
 }
-// https://app.codility.com/programmers/task/winter_lights/
-// WinterLights
-// Given a string of digits, count the number of subwords(consistent subsequences) that are anagrams of any palindrome.
-// Task Score: 40 %
-// Correctness: 100 %
-// Performance: 25 %
+/* https://app.codility.com/programmers/task/winter_lights/
+ * WinterLights
+ * Given a string of digits, count the number of subwords(consistent subsequences) that are anagrams of any palindrome.
+ * Task Score: 40 %
+ * Correctness: 100 %
+ * Performance: 25 %
+ */
 size_t PalindromeAnagramCount(string const &str)
 {
 	size_t result = 0;
@@ -6045,6 +6046,7 @@ bool WordBreakDynamicProgramming(const string &s, set<string> &words)
 	return valid.back();
 }
 /* https://leetcode.com/problems/word-break-ii/
+ * 100%
  */
 void WordBreakDynamicProgramming(const string &s, set<string> &words, vector<string> &result)
 {
@@ -8178,4 +8180,84 @@ size_t ActivityNotifications(vector<long> &data, size_t d)
 			count++;
 	}
 	return count;
+}
+/*
+ * https://www.hackerrank.com/challenges/maximum-palindromes/problem
+ * amim: mam mim => 1 pair, 2 singulars
+ * amninm: mninm mnanm nmimn nmamn => 2 pairs, 2 singulars
+ * week: ewe eke (2x1, 1x2)
+ * abab: abba baab (2x2) total: 2x(2-1)
+ * ababamim: (2x3, 3x1, 1x1): 3 pairs => 3 combinations
+ *           abmmba ambbma => 2 x (3-2) = 2
+ *           bammab bmaamb 2*size-4 = 2*2 = 4
+ *           mbaabm mabbam
+ * ababamimweek: (2x4, 3x1, 1x2): 4 pairs total: 2*size-4 = 2*4
+ *               abmeemba abemmeba ambeebma amebbema aebmmbea aembbmea: 6
+ *               bameemab bmaeeamb beammaeb
+ *               eabmmbae ebammabe emabbame
+ *               mabeebam mbaeeabm mea
+ * ababamimweekdd: (2x5, 3x1, 1x2): 4 pairs total:
+ *               abba baab
+ *               mabbam mbaabm abmmba
+ *
+ *               abmeemba abemmeba ambeebma amebbema aebmmbea aembbmea: 6
+ *
+ * Only need to consider the first half. The second half is just a mirror.
+ * aa:		 aa => 1 pair, 0 singular
+ * aabb:   	 ab ba => 2 pairs, 0 singluar => 1*2 = 2
+ * aabbcc:   3 pairs, 0 singular => 2*3 = 6
+ * 			 abc acb
+ *           bac bca
+ *           cab cba: 2 * 3 = 6
+ * aabbccdd: 4 pairs, 0 singular => 6*4 = 24
+ * 			 abcd abdc acbd acdb adcb adbc: 2 * (4-1) = 2*3 = 6
+ * 			 bacd badc bcad bcda bdca bdac
+ *           c...
+ *       	 d... total; 6*4 = 24
+ *
+ * aabbccddee: 5 pairs, 0 singular => (4*6)*5 = 24*5
+ * 			(abcde abced abdce abdec abecd abedc) (acbde acbed acdbe acdeb acebd acedb) (ad... ) (ae...)
+ */
+size_t MaxSizePalindromeCount(string const &s, size_t l, size_t r)
+{
+	string str = s.substr(l, r - l + 1);
+	map<char, size_t> chars;
+	if (str.empty())
+		return 0;
+	else if (l == r && l >= 0 && l < s.size())
+		return 1;
+	for (string::const_iterator it = str.begin(); it != str.end(); it++)
+	{
+		pair<map<char, size_t>::iterator, bool> result = chars.emplace(*it, 1);
+		if (!result.second)
+			chars[*it]++;
+	}
+	size_t pairs = 0, singulars = 0;
+	for (typename map<char, size_t>::const_iterator it = chars.begin(); it != chars.end(); it++)
+	{
+		if (it->second == 1)
+			singulars++;
+		else
+			pairs += BinomialCoefficients(it->second, 2);
+	}
+	size_t count = pairs >= 1 ? 1 : 0;
+	for (size_t i = 2; i <= pairs; i++)
+		count *= i;
+	return count > 0 ? count * (singulars > 0 ? singulars : 1) : singulars;
+}
+/*
+ * https://www.hackerrank.com/challenges/the-power-sum/problem
+ * sum = x^power
+ * logx(sum)  = power
+ * x = pow(sum, 1.0/power)
+ * 100%
+ */
+size_t PowerSum(size_t sum, size_t power, size_t i)
+{
+	size_t n = pow(i, power);
+	if (n > sum)
+		return 0;
+	else if (n == sum)
+		return 1;
+	return PowerSum(sum, power, i + 1) + PowerSum(sum - n, power, i + 1);
 }

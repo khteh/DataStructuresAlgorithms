@@ -211,8 +211,7 @@ vector<vector<long>> Range::TripletsZeroSum(vector<long> &nums)
 				k--;
 		}
 	}
-	vector<vector<long>> result1(result.begin(), result.end());
-	return result1;
+	return vector<vector<long>>(result.begin(), result.end());
 }
 /* https://leetcode.com/problems/4sum/
  * 100%
@@ -239,8 +238,7 @@ vector<vector<long>> Range::QuadrupletsSum(long target, vector<long> &nums)
 					m--;
 			}
 	}
-	vector<vector<long>> result1(result.begin(), result.end());
-	return result1;
+	return vector<vector<long>>(result.begin(), result.end());
 }
 /* https://www.hackerrank.com/challenges/pairs/problem
  * 100%

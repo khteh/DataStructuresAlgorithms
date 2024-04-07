@@ -121,3 +121,31 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(6, 4, 2),
 					  make_tuple(252, 10, 5),
 					  make_tuple(184756, 20, 10)));
+
+class PowerSumTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_sum = get<1>(GetParam());
+		_power = get<2>(GetParam());
+	}
+	size_t PowerSumTest()
+	{
+		return PowerSum(_sum, _power, 1);
+	}
+
+protected:
+	size_t _expected, _sum, _power;
+};
+TEST_P(PowerSumTestFixture, PowerSumTests)
+{
+	ASSERT_EQ(this->_expected, this->PowerSumTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	PowerSumTests,
+	PowerSumTestFixture,
+	::testing::Values(make_tuple(1, 10, 2),
+					  make_tuple(3, 100, 2),
+					  make_tuple(1, 100, 3)));
