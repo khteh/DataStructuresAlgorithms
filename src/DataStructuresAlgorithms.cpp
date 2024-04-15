@@ -4023,7 +4023,7 @@ vector<string> ZigZagEscape(vector<long> &left, vector<long> &right, size_t lInd
  */
 size_t IncreasingSequences(vector<long> &a, vector<long> &b)
 {
-	bool outOfSequence = false;
+	bool outOfSequence = false, isSwap = false;
 	// swapRecord[i]: min swaps to make A[0:i] and B[0:i] increasing if we swap A[i] and B[i]
 	// fixRecord[i] : min swaps to make A[0:i] and B[0:i] increasing if we do not swap A[i] and B[i]
 	size_t swapRecord = 0, fixRecord = 0;
@@ -4032,17 +4032,13 @@ size_t IncreasingSequences(vector<long> &a, vector<long> &b)
 	if (a.size() == 1)
 		return 0;
 	vector<long> A, B;
-	bool isSwap = false;
 	A.push_back(a[0]);
 	B.push_back(b[0]);
 	for (size_t i = 1; i < a.size(); i++)
 	{
 		if (a[i - 1] >= b[i] || b[i - 1] >= a[i])
-		{
 			// In this case, the ith manipulation should be same as the i-1th manipulation
-			// fixRecord = fixRecord;
 			swapRecord++;
-		}
 		else if (a[i - 1] >= a[i] || b[i - 1] >= b[i])
 		{
 			// In this case, the ith manipulation should be the opposite of the i-1th manipulation
@@ -6763,8 +6759,8 @@ void cpp20readonlyranges()
 	// 4. find_if
 	cout << "C++23 find_if:" << endl;
 	// standard version:
-	auto it = find_if(nodes.begin(), nodes.end(), [](Node<int> &n)
-					  { return n.Item() >= 0; });
+	vector<Node<int>>::iterator it = find_if(nodes.begin(), nodes.end(), [](Node<int> &n)
+											 { return n.Item() >= 0; });
 	assert(it != nodes.end());
 	assert(it->Item() == 0);
 
@@ -7099,15 +7095,6 @@ void cpp20ranges()
 	ranges::copy(a, ostream_iterator<long>(cout, ", "));
 	cout << endl;
 }
-class VariantException
-{
-public:
-	explicit VariantException(long i)
-	{
-		throw long(i);
-	}
-	operator long() { throw long(123); }
-};
 /*
  * https://www.cppstories.com/2018/06/variant/
  * https://www.cppstories.com/2018/09/visit-variants/
@@ -8014,18 +8001,18 @@ size_t kMarsh(vector<string> &grid)
  * let X be the nim-sum of all the heap sizes. Find a heap where the nim-sum of X and heap-size is less than the heap-size;
  * the winning strategy is to play in such a heap, reducing that heap to the nim-sum of its original size with X.
  * In the example above, taking the nim-sum of the sizes is X = 3 ⊕ 4 ⊕ 5 = 2. The nim-sums of the heap sizes A=3, B=4, and C=5 with X=2 are
- * A ⊕ X = 3 ⊕ 2 = 1 [Since (011) ⊕ (010) = 001 ]
+ * A ⊕ X = 3 ⊕ 2 = 1 [Since (011) ⊕ (010) = 001 ] <= the nim-sum of X and heap-size is less than the heap-size
  * B ⊕ X = 4 ⊕ 2 = 6
  * C ⊕ X = 5 ⊕ 2 = 7
  * The only heap that is reduced is heap A, so the winning move is to reduce the size of heap A to 1 (by removing two objects).
  *
  * Normal play:
- * [1, 2, 1]: [1, 0, 1]->[0,0,1]	(Nim-sum: 2)
- *    [2, 3]: [2, 2]->[1, 2]->[1,1]->[0,1] (Nim-sum: 1)
+ * [1, 2, 1] -> [1, 0, 1] -> [0,0,1]	(Nim-sum: 2)
+ *    [2, 3] -> [2, 2] -> [1, 2] -> [1,1] -> [0,1] (Nim-sum: 1)
  *
  * Misère play (Same strategy as Normal play):
- * [1, 2, 1]: [1, 1, 1]->[0,1,1]->[0,0,1] (Nim-sum: 2)
- *    [2, 3]: [2, 2]->[1,2]->[1,0]	(Nim-sum: 1)
+ * [1, 2, 1] -> [1, 1, 1] -> [0,1,1] -> [0,0,1] (Nim-sum: 2)
+ *    [2, 3] -> [2, 2] -> [1, 2] -> [1,0]	(Nim-sum: 1)
  * 100%
  */
 size_t NormalPlayNim(vector<size_t> &data)
@@ -8045,7 +8032,7 @@ size_t NormalPlayNim(vector<size_t> &data)
 		},
 		std::bit_xor<size_t>());
 #endif
-	if (!sum)
+	if (!sum) // In a normal Nim game, the player making the first move has a winning strategy if and only if the nim-sum of the sizes of the heaps is not zero.
 		return 0;
 	size_t count = 0;
 	for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
@@ -8169,13 +8156,20 @@ size_t ActivityNotifications(vector<long> &data, size_t d)
 	size_t count = 0;
 	bool odd = d % 2;
 	size_t half = d / 2;
-	vector<long>::iterator it = data.begin();
-	for (size_t i = d, j = 0; i < data.size() && j < data.size() - d; i++, j++, it++)
+	// vector<long>::iterator it = data.begin();
+	multiset<long> window(data.begin(), data.begin() + d);
+	// multiset<long>::iterator it1 = window.begin();
+	// advance(it1, half);
+	//  for (size_t i = d, j = 0; i < data.size() && j < data.size() - d; i++, j++, it++)
+	for (size_t i = d; i < data.size();)
 	{
-		ranges::sort(it, it + d);
-		double median = odd ? data[j + half] : (double)(data[j + half] + data[j + half - 1]) / 2l;
-		if (data[i] >= 2 * median)
+		// ranges::sort(it, it + d);
+		// double median = odd ? data[j + half] : (double)(data[j + half] + data[j + half - 1]) / 2l;
+		double m = odd ? *(next(window.begin(), half)) : (double)(*(next(window.begin(), half)) + *(next(window.begin(), -1))) / 2l;
+		if (data[i] >= 2 * m)
 			count++;
+		window.erase(window.find(data[i - d]));
+		window.insert(data[++i]);
 	}
 	return count;
 }
@@ -8258,4 +8252,102 @@ size_t PowerSum(size_t sum, size_t power, size_t i)
 	else if (n == sum)
 		return 1;
 	return PowerSum(sum, power, i + 1) + PowerSum(sum - n, power, i + 1);
+}
+/*
+https://www.hackerrank.com/challenges/morgan-and-a-string/problem
+WIP
+*/
+string MorganAndString(string const &a, string const &b)
+{
+	string result;
+	if (a.empty())
+		return b;
+	else if (b.empty())
+		return a;
+	size_t i = 0, j = 0;
+	for (; i < a.size() && j < b.size();)
+	{
+		if (a[i] < b[j])
+			result.append(1, a[i++]);
+		else if (b[j] < a[i])
+			result.append(1, b[j++]);
+		else // a[i] == b[j]
+		{
+			size_t m = i, n = j;
+			for (; a[m] == a[i] && m < a.size(); m++)
+				;
+			for (; b[n] == b[j] && n < b.size(); n++)
+				;
+			if (m == a.size() && n == b.size())
+			{
+				result.append(a.substr(i));
+				result.append(b.substr(j));
+				i = m;
+				j = n;
+			}
+			else if (m == a.size() && n < b.size())
+			{
+				/*
+				b[n] < b[j]
+				BB BA B
+				BB  A BA
+					BABB
+
+				B BA B
+				B  A BA
+				B    BAB
+				*/
+				result.append(1, b[n] < b[j] ? b[j++] : a[i++]);
+				/*
+				b[n] > b[j]
+				BB BC B
+				 B BC BB
+				   BC BBBC
+
+				B BC B
+				  BC BB
+				   C BBC
+				*/
+			}
+			else if (n == b.size() && m < a.size())
+			{
+				/*
+				a[m] < a[i]
+				BA BB B
+				 A BB BA
+					  BABB
+
+				BA B B
+				A B BA
+					BAB
+				*/
+				result.append(1, a[m] < a[i] ? a[i++] : b[j++]);
+				/*
+				a[n] > a[i]
+				BC BB B
+				BC  B BB
+				BC    BBB
+					  BBBC
+				*/
+			}
+			else
+			{
+				/*
+				BA BC B
+				 A BC BA
+				   BC BABC
+
+				BC BA B
+				BC  A BA
+					BABC
+				*/
+				result.append(1, a[m] < b[n] ? a[i++] : b[j++]);
+			}
+		}
+	}
+	if (i < a.size())
+		result.append(a.substr(i));
+	else if (j < b.size())
+		result.append(b.substr(j));
+	return result;
 }

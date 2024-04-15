@@ -162,6 +162,15 @@ typedef struct buildmax_comparator
 		return oss1.str() > oss2.str();
 	}
 } buildmax_comparator_t;
+class VariantException
+{
+public:
+	explicit VariantException(long i)
+	{
+		throw long(i);
+	}
+	operator long() { throw long(123); }
+};
 float MachineEpsilon(float value);
 float FloatMachineEpsilonApproximation();
 double MachineEpsilon(double value);
@@ -398,3 +407,4 @@ bool HappyLadyBugs(string &);
 size_t ActivityNotifications(vector<long> &, size_t);
 size_t MaxSizePalindromeCount(string const &, size_t, size_t);
 size_t PowerSum(size_t, size_t, size_t i = 1);
+string MorganAndString(string const &, string const &);
