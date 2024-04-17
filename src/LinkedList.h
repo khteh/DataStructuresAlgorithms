@@ -16,6 +16,7 @@ protected:
 	void SetHead(shared_ptr<Node<T>>);
 	shared_ptr<Node<T>> Split(shared_ptr<Node<T>>, size_t);
 	void Merge(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
+
 public:
 	LinkedList();
 	LinkedList(shared_ptr<Node<T>>);
@@ -43,8 +44,10 @@ public:
 	bool operator!=(LinkedList<T> &);
 	bool operator<(LinkedList<T> &);
 	bool operator>(LinkedList<T> &);
+	shared_ptr<Node<T>> operator[](size_t) const;
 	// Implement an algorithm to find the nth to last element of a singly linked list.
 	shared_ptr<Node<T>> NthElementFromBack(long);
 	shared_ptr<Node<T>> RemoveNthElementFromBack(long);
-	shared_ptr<Node<T>> AddNumbers(shared_ptr<Node<T>>, shared_ptr<Node<T>>, T carry = 0) requires integral_type<T>;
+	shared_ptr<Node<T>> AddNumbers(shared_ptr<Node<T>>, shared_ptr<Node<T>>, T carry = 0)
+		requires integral_type<T>;
 };

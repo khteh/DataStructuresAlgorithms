@@ -167,6 +167,15 @@ bool LinkedList<T>::operator>(LinkedList<T> &other)
 	return Length() > other.Length();
 }
 template <typename T>
+shared_ptr<Node<T>> LinkedList<T>::operator[](size_t index) const
+{
+	size_t i = 0;
+	shared_ptr<Node<T>> node = m_head;
+	for (; node && i != index; node = node->Next(), i++)
+		;
+	return node;
+}
+template <typename T>
 void LinkedList<T>::Clear()
 {
 	for (shared_ptr<Node<T>> n = m_head; n;)
@@ -468,6 +477,8 @@ void LinkedList<T>::RemoveAllDuplicates()
 	if (!head && foundDuplicate)
 		m_head = nullptr;
 }
+// 0->1->2->3->4->5->6->7->8->9
+// 10 9  8  7  6  5  4  3  2  1
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::NthElementFromBack(long n) // n starts from 1
 {
@@ -512,8 +523,9 @@ shared_ptr<Node<T>> LinkedList<T>::RemoveNthElementFromBack(long n) // n starts 
 //   p1:   3 -> 1 -> 5
 //   p2:   5 -> 9 -> 2
 // Output: 8 -> 0 -> 8
-template<typename T>
-shared_ptr<Node<T>> LinkedList<T>::AddNumbers(shared_ptr<Node<T>> p1, shared_ptr<Node<T>> p2, T carry) requires integral_type<T>
+template <typename T>
+shared_ptr<Node<T>> LinkedList<T>::AddNumbers(shared_ptr<Node<T>> p1, shared_ptr<Node<T>> p2, T carry)
+	requires integral_type<T>
 {
 	if (p1 || p2 || carry > T())
 	{
