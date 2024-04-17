@@ -477,8 +477,10 @@ void LinkedList<T>::RemoveAllDuplicates()
 	if (!head && foundDuplicate)
 		m_head = nullptr;
 }
-// 0->1->2->3->4->5->6->7->8->9
-// 10 9  8  7  6  5  4  3  2  1
+/*
+ * 0->1->2->3->4->5->6->7->8->9
+ * 10 9  8  7  6  5  4  3  2  1
+ */
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::NthElementFromBack(long n) // n starts from 1
 {
