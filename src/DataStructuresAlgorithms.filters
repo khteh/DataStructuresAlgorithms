@@ -164,6 +164,9 @@
     <ClCompile Include="FunctionObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameTheory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -78,6 +78,7 @@ using namespace tbb;
 #include "Sort.h"
 #include "Poker.h"
 #include "VariantVisitor.h"
+#include "GameTheory.h"
 using namespace std;
 #ifdef _MSC_VER
 using namespace concurrency;
@@ -397,11 +398,9 @@ string TwentyFourHourTimeConversion(string &);
 vector<long> KaprekarNumbers(long, long);
 size_t kMarsh(vector<string> &);
 size_t MatrixPerimeter(vector<vector<size_t>> &, vector<string> &);
-size_t NormalPlayNim(vector<size_t> &);
 vector<long> ShortestPaths(size_t, vector<vector<size_t>> &, size_t);
 vector<long> ShortestPaths1(size_t, vector<vector<size_t>> &, size_t);
 vector<long> ShortestPaths2(size_t, vector<vector<size_t>> &, size_t);
-bool CounterGame(long);
 size_t EqualDistribution(vector<long> &);
 bool HappyLadyBugs(string &);
 size_t ActivityNotifications(vector<long> &, size_t);

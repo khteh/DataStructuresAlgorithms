@@ -2044,27 +2044,6 @@ int main(int argc, char *argv[])
 	strings.clear();
 	strings = {"x.x", ".x.", "x.x"};
 	assert(kMarsh(strings) == 0);
-	udata.clear();
-	assert(NormalPlayNim(udata) == 0);
-	udata.clear();
-	udata = {1};
-	assert(NormalPlayNim(udata) == 1);
-	udata.clear();
-	udata = {1, 1};
-	assert(NormalPlayNim(udata) == 0);
-	udata.clear();
-	udata = {1, 1, 1};
-	assert(NormalPlayNim(udata) == 3); // Take 1 from any of the 3 heaps
-	udata.clear();
-	udata = {1, 2, 1};
-	assert(NormalPlayNim(udata) == 1); // Remove 2 from the heap with 2 elements
-	udata.clear();
-	udata = {2, 3};
-	assert(NormalPlayNim(udata) == 1);
-	assert(CounterGame(6));
-	assert(!CounterGame(8));
-	assert(!CounterGame(132));
-	assert(CounterGame(1246326493));
 	a.clear();
 	a = {1, 1, 5};
 	assert(EqualDistribution(a) == 2);

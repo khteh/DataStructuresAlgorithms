@@ -18,6 +18,7 @@ set(Sources
     "DisJointSetTests.cpp"
     "DynamicProgrammingTests.cpp"
     "EulerianPathTests.cpp"
+    "GameTheoryTests.cpp"
     "GraphTests.cpp"
     "GreedyAlgorithmTests.cpp"
     "HeapTests.cpp"

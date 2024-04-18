@@ -231,6 +231,7 @@
     <ClCompile Include="TreasureGame.cpp" />
     <ClCompile Include="Employee.cpp" />
     <ClCompile Include="Error.cpp" />
+    <ClCompile Include="GameTheory.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Heap.cpp" />
     <ClCompile Include="MyQueue.cpp" />

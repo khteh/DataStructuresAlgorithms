@@ -67,6 +67,7 @@ set(Sources
     "Employee.cpp"
     "Error.cpp"
     "FunctionObject.cpp"
+    "GameTheory.cpp"
     "Graph.cpp"
     "Heap.cpp"
     "InterleavingIterator.cpp"
