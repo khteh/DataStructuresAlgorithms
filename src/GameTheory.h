@@ -2,6 +2,7 @@
 #include <limits>
 #include <vector>
 #include <sstream>
+#include <ranges>
 #ifdef _MSC_VER
 #include <ppl.h>
 using namespace concurrency;
@@ -15,7 +16,8 @@ using namespace std;
 class GameTheory
 {
 public:
-    size_t NormalPlayNim(vector<size_t> &);
+    size_t NormalPlayNim(vector<size_t> const &);
+    size_t MisèrePlayNim(vector<size_t> const &);
     bool CounterGame(long n);
     string GameOfStones(size_t);
 };
