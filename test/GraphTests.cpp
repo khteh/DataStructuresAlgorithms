@@ -230,9 +230,9 @@ public:
 		size_t distance = 0;
 #ifdef _MSC_VER
 		map<string, long> costCache;
-		parallel_for(size_t(1), n, [&](size_t i)
+		parallel_for(size_t(1), _nodes, [&](size_t i)
 					 {
-		for (size_t j = i + 1; j <= n; j++)
+		for (size_t j = i + 1; j <= _nodes; j++)
 		{
 			if (i != j)
 			{
@@ -376,9 +376,9 @@ public:
 		size_t distance = 0;
 #ifdef _MSC_VER
 		map<string, long> costCache;
-		parallel_for(size_t(1), n, [&](size_t i)
+		parallel_for(size_t(1), _nodes, [&](size_t i)
 					 {
-		for (size_t j = i + 1; j <= n; j++)
+		for (size_t j = i + 1; j <= _nodes; j++)
 		{
 			if (i != j)
 			{
@@ -511,9 +511,9 @@ public:
 		size_t distance = 0;
 #ifdef _MSC_VER
 		map<string, long> costCache;
-		parallel_for(size_t(1), n, [&](size_t i)
+		parallel_for(size_t(1), _nodes, [&](size_t i)
 					 {
-		for (size_t j = i + 1; j <= n; j++)
+		for (size_t j = i + 1; j <= _nodes; j++)
 		{
 			if (i != j)
 			{
@@ -527,7 +527,7 @@ public:
 				else
 				{
 					vector<shared_ptr<DVertex<size_t>>> path;
-					long cost = dijkstra.ShortestPathStateless(i, j, path);
+					long cost = _dijkstra.ShortestPathStateless(i, j, path);
 					costCache[oss1.str()] = cost;
 					costCache[oss2.str()] = cost;
 					distance += cost;

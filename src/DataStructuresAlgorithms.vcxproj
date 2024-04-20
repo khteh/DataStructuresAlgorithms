@@ -165,6 +165,9 @@
     <ClInclude Include="CallHandler.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="CircularLinkedList.h" />
+    <ClInclude Include="DataStructuresAlgorithms.h" />
+    <ClInclude Include="Dijkstra.h" />
+    <ClInclude Include="GameTheory.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="DiamondProblem.h" />
     <ClInclude Include="DisJointSet.h" />
@@ -211,9 +214,9 @@
     <ClCompile Include="CallHandler.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="CircularLinkedList.cpp" />
+    <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="DiamondProblem.cpp" />
-    <ClCompile Include="Dijsktra.cpp" />
     <ClCompile Include="DisJointSet.cpp" />
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="FunctionObject.cpp" />
