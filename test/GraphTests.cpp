@@ -78,25 +78,42 @@ TEST(GraphTests, BredthFirstSearchTest)
 		}
 		cout << endl;
 	}
-	vector<vector<size_t>> edges2 = {{1, 2}, {1, 3}, {3, 4}};
-	vector<long> expectedDistances = {6, 6, 12, -1};
-	vector<long> distances = bfs(5, 3, edges2, 1);
-	ASSERT_EQ(expectedDistances, distances);
-	edges2.clear();
-	expectedDistances.clear();
-	distances.clear();
-	edges2 = {{1, 2}, {1, 3}};
-	expectedDistances = {6, 6, -1};
-	distances = bfs(4, 3, edges2, 1);
-	ASSERT_EQ(expectedDistances, distances);
-	edges2.clear();
-	expectedDistances.clear();
-	distances.clear();
-	edges2 = {{2, 3}};
-	expectedDistances = {-1, 6};
-	distances = bfs(3, 1, edges2, 2);
-	ASSERT_EQ(expectedDistances, distances);
 }
+class BFSShortestPathsTestFixture : public testing::TestWithParam<tuple<vector<long>, size_t, vector<vector<size_t>>, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_vertices = get<1>(GetParam());
+		_edges = get<2>(GetParam());
+		_start = get<3>(GetParam());
+	}
+	vector<long> BFSShortestPathsTest()
+	{
+		_graph.Clear();
+		return _graph.BFSShortestPaths(_vertices, _edges, _start);
+	}
+
+protected:
+	Graph<size_t, size_t> _graph;
+	vector<long> _expected;
+	vector<vector<size_t>> _edges;
+	size_t _vertices, _start;
+};
+TEST_P(BFSShortestPathsTestFixture, BFSShortestPathsTests)
+{
+	ASSERT_EQ(this->_expected, this->BFSShortestPathsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	BFSShortestPathsTests,
+	BFSShortestPathsTestFixture,
+	::testing::Values(make_tuple(vector<long>{6, 6, 12, -1}, 5, vector<vector<size_t>>{{1, 2}, {1, 3}, {3, 4}}, 1),
+					  make_tuple(vector<long>{6, 6, 6, -1}, 5, vector<vector<size_t>>{{1, 2}, {1, 3}, {3, 4}, {1, 4}}, 1),
+					  make_tuple(
+						  vector<long>{6, 6, -1}, 4, vector<vector<size_t>>{{1, 2}, {1, 3}}, 1),
+					  make_tuple(vector<long>{-1, 6}, 3, vector<vector<size_t>>{{2, 3}}, 2),
+					  make_tuple(vector<long>{6, -1, -1, -1, -1, -1, 12, -1, 12}, 10, vector<vector<size_t>>{{3, 1}, {10, 1}, {10, 1}, {3, 1}, {1, 8}, {5, 2}}, 3)));
 TEST(GraphTests, DijkstraTest)
 {
 	vector<size_t> data(5);

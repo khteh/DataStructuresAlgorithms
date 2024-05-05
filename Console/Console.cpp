@@ -2097,15 +2097,15 @@ int main(int argc, char *argv[])
 	ugrid.resize(0);
 	assert(matrix.ChessQueensMoveCount(100000, 4187, 5068, ugrid) == 308369);
 
-	a.clear();
-	a = {10, 20, 30, 40, 50};
-	assert(ActivityNotifications(a, 3) == 1);
-	a.clear();
-	a = {2, 3, 4, 2, 3, 6, 8, 4, 5};
-	assert(ActivityNotifications(a, 5) == 2);
-	a.clear();
-	a = {1, 2, 3, 4, 4};
-	assert(ActivityNotifications(a, 4) == 0);
+	udata.clear();
+	udata = {10, 20, 30, 40, 50};
+	assert(ActivityNotifications(udata, 3) == 1);
+	udata.clear();
+	udata = {2, 3, 4, 2, 3, 6, 8, 4, 5};
+	assert(ActivityNotifications(udata, 5) == 2);
+	udata.clear();
+	udata = {1, 2, 3, 4, 4};
+	assert(ActivityNotifications(udata, 4) == 0);
 #if 0
 	udata.clear();
 	udata = {1, 3, 2};
@@ -2251,6 +2251,37 @@ int main(int argc, char *argv[])
 	assert(MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 20, 20) == 1);
 	assert(MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 3, 4) == 2);
 	// assert(MaxSizePalindromeCount("daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16) == 2); This fails. WIP
+	// vector<long> bfs(size_t nodecount, size_t edgecount, vector<vector<size_t>> &edges, size_t s)
+	ugrid.clear();
+	ugrid = {{1, 2}, {1, 3}, {3, 4}};
+	a.clear();
+	a = {6, 6, 12, -1};
+	graph.Clear();
+	assert(a == graph.BFSShortestPaths(5, ugrid, 1));
+	ugrid.clear();
+	ugrid = {{1, 2}, {1, 3}, {3, 4}, {1, 4}};
+	a.clear();
+	a = {6, 6, 6, -1};
+	graph.Clear();
+	assert(a == graph.BFSShortestPaths(5, ugrid, 1));
+	ugrid.clear();
+	ugrid = {{1, 2}, {1, 3}};
+	a.clear();
+	a = {6, 6, -1};
+	graph.Clear();
+	assert(a == graph.BFSShortestPaths(4, ugrid, 1));
+	ugrid.clear();
+	ugrid = {{2, 3}};
+	a.clear();
+	a = {-1, 6};
+	graph.Clear();
+	assert(a == graph.BFSShortestPaths(3, ugrid, 2));
+	ugrid.clear();
+	ugrid = {{3, 1}, {10, 1}, {10, 1}, {3, 1}, {1, 8}, {5, 2}};
+	a.clear();
+	a = {6, -1, -1, -1, -1, -1, 12, -1, 12};
+	graph.Clear();
+	assert(a == graph.BFSShortestPaths(10, ugrid, 3));
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

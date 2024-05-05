@@ -69,6 +69,15 @@ void Graph<TTag, TItem>::AddDirectedEdge(shared_ptr<Vertex<TTag, TItem>> from, s
 	from->AddNeighbour(to, cost);
 }
 template <typename TTag, typename TItem>
+void Graph<TTag, TItem>::AddDirectedEdge(TTag from, TTag to, long cost)
+{
+	if (_vertices.find(from) == _vertices.end())
+		_vertices.emplace(from, make_shared<Vertex<TTag, TItem>>(from, from));
+	if (_vertices.find(to) == _vertices.end())
+		_vertices.emplace(to, make_shared<Vertex<TTag, TItem>>(to, to));
+	_vertices[from]->AddNeighbour(_vertices[to], cost);
+}
+template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddUndirectedEdge(shared_ptr<Vertex<TTag, TItem>> from, shared_ptr<Vertex<TTag, TItem>> to, long cost)
 {
 	if (_vertices.find(from->GetTag()) == _vertices.end())
@@ -78,6 +87,17 @@ void Graph<TTag, TItem>::AddUndirectedEdge(shared_ptr<Vertex<TTag, TItem>> from,
 	from->AddNeighbour(to, cost);
 	to->AddNeighbour(from, cost);
 }
+template <typename TTag, typename TItem>
+void Graph<TTag, TItem>::AddUndirectedEdge(TTag from, TTag to, long cost)
+{
+	if (_vertices.find(from) == _vertices.end())
+		_vertices.emplace(from, make_shared<Vertex<TTag, TItem>>(from, from));
+	if (_vertices.find(to) == _vertices.end())
+		_vertices.emplace(to, make_shared<Vertex<TTag, TItem>>(to, to));
+	_vertices[from]->AddNeighbour(_vertices[to], cost);
+	_vertices[to]->AddNeighbour(_vertices[from], cost);
+}
+
 template <typename TTag, typename TItem>
 bool Graph<TTag, TItem>::HasVertex(TTag tag)
 {
@@ -263,6 +283,38 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 	}
 	return vertex && vertex == destination && costs.find(vertex) != costs.end() ? costs[vertex] : -1;
 }
+/*
+ * https://www.hackerrank.com/challenges/bfsshortreach
+ * 100%
+ */
+template <typename TTag, typename TItem>
+vector<long> Graph<TTag, TItem>::BFSShortestPaths(size_t nodecount, vector<vector<TTag>> &edges, TTag s)
+{
+	for (typename vector<vector<TTag>>::iterator it = edges.begin(); it != edges.end(); it++)
+		AddUndirectedEdge((*it)[0], (*it)[1], 6);
+	// assert(Count() == nodecount); Some nodes are not coneected.
+	map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>> vertices; // Get BFS vertices
+	GetBFSNodes(vertices, _vertices[s]);
+	assert(!vertices.empty());
+	cout << "Graph content by level:" << endl;
+	map<TTag, long> distances;
+	for (typename map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>>::const_iterator it = vertices.begin(); it != vertices.end(); it++)
+	{
+		cout << "Level " << it->first << ": ";
+		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+		{
+			cout << (*it1)->GetItem() << " ";
+			distances.emplace((*it1)->GetItem(), (it->first) * 6);
+			cout << " (distance: " << distances[(*it1)->GetItem()] << "), ";
+		}
+		cout << endl;
+	}
+	vector<long> result;
+	for (size_t i = 1; i <= nodecount; i++)
+		if (i != s)
+			result.push_back(distances.find(i) == distances.end() ? -1 : distances[i]);
+	return result;
+}
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>> &result, shared_ptr<Vertex<TTag, TItem>> &start)
 {
@@ -270,27 +322,29 @@ void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, 
 	{
 		unsigned long level = 0;
 		result.emplace(level, vector<shared_ptr<Vertex<TTag, TItem>>>{start});
+		set<shared_ptr<Vertex<TTag, TItem>>> visited;
 		for (; !result[level].empty(); level++)
 		{
 			vector<shared_ptr<Vertex<TTag, TItem>>> vertices;
-			for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++)
+			for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator parent = result[level].begin(); parent != result[level].end(); parent++)
 			{
-				if (*it)
+				if (*parent && visited.find(*parent) == visited.end())
 				{
-					vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = (*it)->GetNeighbours();
+					visited.emplace(*parent);
+					vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = (*parent)->GetNeighbours();
 					if (level > 0)
 					{ // Don't insert the parents. This happens for UnDirected Graph
-						for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it1 = neighbours.begin(); it1 != neighbours.end(); it1++)
+						for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator child = neighbours.begin(); child != neighbours.end(); child++)
 						{
 							bool isBackPointer = false;
 							for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it2 = result[level - 1].begin(); it2 != result[level - 1].end(); it2++)
-								if (*it2 == *it1)
+								if (*it2 == *child)
 								{
 									isBackPointer = true;
 									break;
 								}
 							if (!isBackPointer)
-								vertices.push_back(*it1);
+								vertices.push_back(*child);
 						}
 					}
 					else

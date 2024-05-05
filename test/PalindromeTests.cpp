@@ -28,7 +28,7 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple("ABCBA", "DEFABCBAYT"),
 					  make_tuple("ABCCBA", "DEFABCCBAYT")));
 
-TEST(PalindromeTests, PalindromeTest)
+TEST(PalindromeTests, FindPalindromeSubstringsTests)
 {
 	set<string> palindromes;
 	//	assert(!IsPalindrome("aaaabbcc"));

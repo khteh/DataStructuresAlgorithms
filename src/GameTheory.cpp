@@ -24,14 +24,14 @@
  * so all remaining heaps have exactly one object each), so the players are forced to alternate removing exactly one object until the game ends. In normal play,
  * the player leaves an even number of non-zero heaps, so the same player takes last; in misère play, the player leaves an odd number of non-zero heaps, so the other player takes last.
  *
- * Normal play - leaves even number of heaps with exactly only 1 object each:
+ * Normal play - Leaves even number of heaps with exactly only 1 object each:
  * [1, 1, 1] -> [0, 1, 1] -> [0, 0, 1]  (Nim-sum: 1)
  * [1, 2, 1] -> [1, 0, 1] -> [0,0,1]	(Nim-sum: 2)
  *    [2, 3] -> [2, 2] -> [1, 2] -> [1,1] -> [0,1] (Nim-sum: 1)
  * [3, 4, 5] -> [1, 4, 5] -> [1, 4, 2] -> [1, 3, 2] -> [1, 2, 2] -> [0, 2, 2] -> [0, 1, 2] -> [0, 1, 1] (Nim-sum: 2)
  * [9 8 4 4 4 7] (Nim-sum: 2)
  *
- * Misère play (Same strategy as Normal play) - leaves odd number of heaps with exactly only 1 object each:
+ * Misère play (Same strategy as Normal play) - Leaves odd number of heaps with exactly only 1 object each:
  * [1, 2, 3] -> [0, 2, 3] -> [0, 2, 2] -> [0, 1, 2] -> [0, 1, 0] (Nim-sum: 0)
  * [1, 2, 1] -> [1, 1, 1] -> [0,1,1] -> [0,0,1] (Nim-sum: 2)
  *    [2, 3] -> [2, 2] -> [1, 2] -> [1,0]	(Nim-sum: 1)
@@ -91,7 +91,19 @@ size_t GameTheory::MisèrePlayNim(vector<size_t> const &data)
                                                         { return value > 1; }); // Look for element <= data[i]
     return ((!sum && it != data.end()) || sum == 1 && it == data.end()) ? 1 /* Second*/ : 0 /* First*/;
 }
-
+/*
+ * https://www.hackerrank.com/challenges/nimble-game-1/problem
+ * Haven't figured out the logic.
+ * 100%
+ */
+size_t GameTheory::NimbleGame(vector<size_t> const &data)
+{
+    size_t sum = 0;
+    for (size_t i = 0; i < data.size(); i++)
+        if (data[i] % 2)
+            sum ^= i;
+    return sum ? 0 /*"First" */ : 1 /*"Second"*/;
+}
 /*
  * https://www.hackerrank.com/challenges/counter-game/problem
  * 100%

@@ -18,6 +18,7 @@ class GameTheory
 public:
     size_t NormalPlayNim(vector<size_t> const &);
     size_t MisèrePlayNim(vector<size_t> const &);
+    size_t NimbleGame(vector<size_t> const &);
     bool CounterGame(long n);
     string GameOfStones(size_t);
 };

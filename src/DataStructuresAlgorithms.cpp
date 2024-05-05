@@ -6300,53 +6300,6 @@ vector<string> fizzBuzz(size_t n)
 	return result;
 }
 /*
- * https://www.hackerrank.com/challenges/bfsshortreach
- * Time out and wrong answer. WIP.
- */
-vector<long> bfs(size_t nodecount, size_t edgecount, vector<vector<size_t>> &edges, size_t s)
-{
-	vector<size_t> data(nodecount);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
-	Graph<size_t, size_t> graph(data);
-	assert(graph.Count() == nodecount);
-	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
-	{
-		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex((*it)[0]);
-		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex((*it)[1]);
-		assert(v1);
-		assert(v2);
-		graph.AddUndirectedEdge(v1, v2, 6);
-	}
-	shared_ptr<Vertex<size_t, size_t>> start = graph.GetVertex(s);
-	map<size_t, vector<shared_ptr<Vertex<size_t, size_t>>>> vertices; // Get BFS vertices
-	graph.GetBFSNodes(vertices, start);
-	assert(!vertices.empty());
-	cout << "Graph content by level:" << endl;
-	map<size_t, long> distances;
-	for (map<size_t, vector<shared_ptr<Vertex<size_t, size_t>>>>::const_iterator it = vertices.begin(); it != vertices.end(); it++)
-	{
-		cout << "Level " << it->first << ": ";
-		for (vector<shared_ptr<Vertex<size_t, size_t>>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
-		{
-			cout << (*it1)->GetItem() << " ";
-			if (distances.find((*it1)->GetItem()) == distances.end())
-				distances.emplace((*it1)->GetItem(), (it->first) * 6);
-			else
-				distances[(*it1)->GetItem()] += (it->first) * 6;
-			cout << " (distance: " << distances[(*it1)->GetItem()] << "), ";
-		}
-		cout << endl;
-	}
-	vector<long> result;
-	for (size_t i = 1; i <= nodecount; i++)
-	{
-		if (i != s)
-			result.push_back(distances.find(i) == distances.end() ? -1 : distances[i]);
-	}
-	return result;
-}
-/*
  * https://www.hackerrank.com/challenges/rust-murderer/problem
  * Time out and wrong answer. WIP.
  */
@@ -8074,13 +8027,13 @@ bool HappyLadyBugs(string &str)
  * https://www.hackerrank.com/challenges/fraudulent-activity-notifications/problem
  * Times out!
  */
-size_t ActivityNotifications(vector<long> &data, size_t d)
+size_t ActivityNotifications(vector<size_t> const &data, size_t d)
 {
 	size_t count = 0;
 	bool odd = d % 2;
 	size_t half = d / 2;
 	// vector<long>::iterator it = data.begin();
-	multiset<long> window(data.begin(), data.begin() + d);
+	multiset<size_t> window(data.begin(), data.begin() + d);
 	// multiset<long>::iterator it1 = window.begin();
 	// advance(it1, half);
 	//  for (size_t i = d, j = 0; i < data.size() && j < data.size() - d; i++, j++, it++)
@@ -8095,6 +8048,53 @@ size_t ActivityNotifications(vector<long> &data, size_t d)
 		window.insert(data[++i]);
 	}
 	return count;
+}
+/*
+ * [5 1 3 2 4], d: 3, middle: 2, shift: 0
+ * i: 	   1 3 5    1 2 3
+ * fSum:   1 2 3    1 2 3
+ * median: 0 6 11   0 4
+ * result:            1
+ *
+ * [2 3 4 2 3 6 8 4 5], d: 5, middle: 3, shift: 0
+ * frequencies: {2:2, 3:2, 4:2, 5:1, 6:1, 8:1}
+ * it: 	   2				3				4				2
+ * it1:	   6				8				4				5
+ * i: 	   [2 3 4  5 6 8]  [2 3 4  5 6 8]  [2 3 4  5 6 8]  [2 3 4  5 6 8]
+ * fSum:    2 4 6  7		1 3 5			1 2 4  5		1 2 3  4
+ * median:  0 6 10			0 6 10			0 0 8			0 0 8
+ * result:    1				  1
+ */
+size_t ActivityNotifications2(vector<size_t> const &data, size_t d, size_t max)
+{
+	if (data.size() < d)
+		return 0;
+	vector<size_t> frequencies(max + 1, 0);
+	for (vector<size_t>::const_iterator it = data.begin(); it < next(data.begin(), d); it++)
+		frequencies[*it]++;																/* {5: 1, 1: 1, 3: 1}*/
+	size_t middle = d / 2 + 1, fSum = 0, result = 0, median = 0, shift = d % 2 ? 0 : 1; /* middle: 2, shift: 0 */
+	for (vector<size_t>::const_iterator it = data.begin(), it1 = next(it, d); it1 < data.end(); it++, it1++)
+	{
+		median = 0;
+		fSum = 0;
+		for (size_t i = 0; i < max; i++)
+		{
+			fSum += frequencies[i];
+			if (!median && fSum >= middle - shift)
+				median += i;
+			if (fSum >= middle)
+			{
+				median += i;
+				if (median <= *it1)
+					result++;
+				break;
+			}
+		}
+		if (frequencies[*it] > 0)
+			frequencies[*it]--;
+		frequencies[*it1]++;
+	}
+	return result;
 }
 /*
  * https://www.hackerrank.com/challenges/maximum-palindromes/problem

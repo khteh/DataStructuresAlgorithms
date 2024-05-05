@@ -29,13 +29,16 @@ public:
 	shared_ptr<Vertex<TTag, TItem>> AddVertex(TTag);
 	shared_ptr<Vertex<TTag, TItem>> AddVertex(TTag, TItem);
 	void AddDirectedEdge(shared_ptr<Vertex<TTag, TItem>>, shared_ptr<Vertex<TTag, TItem>>, long);
+	void AddDirectedEdge(TTag from, TTag to, long cost);
 	void AddUndirectedEdge(shared_ptr<Vertex<TTag, TItem>>, shared_ptr<Vertex<TTag, TItem>>, long);
+	void AddUndirectedEdge(TTag from, TTag to, long cost);
 	bool HasVertex(TTag);
 	shared_ptr<Vertex<TTag, TItem>> GetVertex(TTag);
 	bool Remove(TTag);
 	size_t PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem>>);
 	void Dijkstra(TTag, map<shared_ptr<Vertex<TTag, TItem>>, long> &);
 	long Dijkstra(TTag, TTag);
+	vector<long> BFSShortestPaths(size_t nodecount, vector<vector<TTag>> &, TTag);
 	void GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>> &, shared_ptr<Vertex<TTag, TItem>> &);
 	long GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>> &, shared_ptr<Vertex<TTag, TItem>>, shared_ptr<Vertex<TTag, TItem>>);
 	TItem MinSubGraphsDifference(TTag, TItem);
