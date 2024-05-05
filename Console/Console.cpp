@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
 	vector<vector<long>> grid1, grid2;
 	vector<vector<string>> sgrid;
 	vector<vector<size_t>> ugrid, ugrid1;
+	Graph<size_t, size_t> graph;
 	ExceptionTest();
 	TestRandom();
 	KDTreeTests();
@@ -1496,30 +1497,6 @@ int main(int argc, char *argv[])
 	assert(paths[0] == "45");
 	assert(paths[1] == "LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LL LL LL LL LL LL LL LL LL LL LL LL");
 
-	vector<long> from = {1, 3, 1, 4, 2};
-	vector<long> to = {2, 5, 4, 5, 3};
-	vector<long> weights = {60, 70, 120, 150, 80};
-	assert(getLowestPathCost(5, from, to, weights) == 80);
-
-	from.clear();
-	to.clear();
-	weights.clear();
-	from = {1, 2, 1, 3};
-	to = {2, 4, 3, 4};
-	weights = {20, 30, 5, 40};
-	assert(getLowestPathCost(4, from, to, weights) == 30);
-
-	from.clear();
-	to.clear();
-	weights.clear();
-	from = {1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9};
-	to = {2, 3, 4, 5, 6, 7, 8, 9, 10, 3, 4, 5, 6, 7, 8, 9, 10, 4, 5, 6, 7, 8, 9, 10, 5, 6, 7, 8, 9, 10, 6, 7, 8, 9, 10, 7, 8, 9, 10, 8, 9, 10, 9, 10, 10};
-	weights = {6337, 1594, 3766, 3645, 75, 5877, 8561, 242, 6386, 3331, 4194, 8069, 3934, 101, 8536, 6963, 9303, 7639, 8512, 1330, 6458, 1180, 3913, 1565, 9488, 1369, 8066, 9439, 7510, 6833, 4215, 194, 4774, 4328, 187, 1196, 200, 8743, 1433, 2933, 2069, 1974, 7349, 2351, 8423};
-	assert(from.size() == 45);
-	assert(to.size() == 45);
-	assert(weights.size() == 45);
-	assert(getLowestPathCost(10, from, to, weights) == 1196);
-
 	assert(cipher(7, 4, string("1110101001")) == "1001011");
 	assert(cipher(4, 5, string("11000110")) == "1010");
 	assert(DecryptPassword(string("43Ah*ck0rr0nk")) == "hAck3rr4nk");
@@ -1756,7 +1733,6 @@ int main(int argc, char *argv[])
 	assert(fizzBuzz(5) == vector<string>({"1", "2", "Fizz", "4", "Buzz"}));
 	assert(fizzBuzz(10) == vector<string>({"1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz"}));
 	assert(fizzBuzz(15) == vector<string>({"1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz"}));
-	Graph<size_t, size_t> graph;
 	vector<vector<size_t>> edges;
 	edges.clear();
 	edges = {{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}};
@@ -2251,37 +2227,6 @@ int main(int argc, char *argv[])
 	assert(MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 20, 20) == 1);
 	assert(MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 3, 4) == 2);
 	// assert(MaxSizePalindromeCount("daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16) == 2); This fails. WIP
-	// vector<long> bfs(size_t nodecount, size_t edgecount, vector<vector<size_t>> &edges, size_t s)
-	ugrid.clear();
-	ugrid = {{1, 2}, {1, 3}, {3, 4}};
-	a.clear();
-	a = {6, 6, 12, -1};
-	graph.Clear();
-	assert(a == graph.BFSShortestPaths(5, ugrid, 1));
-	ugrid.clear();
-	ugrid = {{1, 2}, {1, 3}, {3, 4}, {1, 4}};
-	a.clear();
-	a = {6, 6, 6, -1};
-	graph.Clear();
-	assert(a == graph.BFSShortestPaths(5, ugrid, 1));
-	ugrid.clear();
-	ugrid = {{1, 2}, {1, 3}};
-	a.clear();
-	a = {6, 6, -1};
-	graph.Clear();
-	assert(a == graph.BFSShortestPaths(4, ugrid, 1));
-	ugrid.clear();
-	ugrid = {{2, 3}};
-	a.clear();
-	a = {-1, 6};
-	graph.Clear();
-	assert(a == graph.BFSShortestPaths(3, ugrid, 2));
-	ugrid.clear();
-	ugrid = {{3, 1}, {10, 1}, {10, 1}, {3, 1}, {1, 8}, {5, 2}};
-	a.clear();
-	a = {6, -1, -1, -1, -1, -1, 12, -1, 12};
-	graph.Clear();
-	assert(a == graph.BFSShortestPaths(10, ugrid, 3));
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

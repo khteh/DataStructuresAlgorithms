@@ -357,12 +357,13 @@ void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, 
 	}
 }
 /* https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
- * Timeout! for 2 test cases with 50000 nodes. 70 out of 80 points.
+ * 100%
  */
 template <typename TTag, typename TItem>
-long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>> &spt, shared_ptr<Vertex<TTag, TItem>> vertex, shared_ptr<Vertex<TTag, TItem>> destination)
+long Graph<TTag, TItem>::GetPathsCosts(shared_ptr<Vertex<TTag, TItem>> vertex, shared_ptr<Vertex<TTag, TItem>> destination)
 {
-	set<shared_ptr<Vertex<TTag, TItem>>> vertices;
+	set<shared_ptr<Vertex<TTag, TItem>>> spt;
+	multimap<long, shared_ptr<Vertex<TTag, TItem>>> vertices;
 	vertex->SetTotalCost(0);
 	for (; vertex && destination && vertex != destination;)
 	{
@@ -371,32 +372,40 @@ long Graph<TTag, TItem>::GetPathsCosts(set<shared_ptr<Vertex<TTag, TItem>>> &spt
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
 		{
-			// Update dist[v] only if it:
-			// (1) is not in sptSet
-			// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
-			// (3) and total weight of path from src to v through u is smaller than current value of dist[v]
-			// long cost = vertex->GetCost(*it);
-			long cost = vertex->GetTotalCost();
-			long cost1 = vertex->GetCost(*it);
-			long nextHopCost = cost1 - cost;
-			long newTotalCost = nextHopCost > 0 ? cost + nextHopCost : cost;
-			if (newTotalCost < (*it)->GetTotalCost())
-				(*it)->SetTotalCost(newTotalCost);
 			if (spt.find(*it) == spt.end())
-				vertices.insert(*it);
-		}
-		vertex = nullptr;
-		long min = numeric_limits<long>::max();
-		for (typename set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = vertices.begin(); it != vertices.end(); it++)
-			if ((*it)->GetTotalCost() < min)
 			{
-				min = (*it)->GetTotalCost();
-				vertex = *it;
+				// Update dist[v] only if it:
+				// (1) is not in sptSet
+				// (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
+				// (3) and total weight of path from src to v through u is smaller than current value of dist[v]
+				// long cost = vertex->GetCost(*it);
+				long cost = vertex->GetTotalCost();
+				long cost1 = vertex->GetCost(*it);
+				long nextHopCost = cost1 - cost;
+				long newTotalCost = nextHopCost > 0 ? cost + nextHopCost : cost;
+				if (newTotalCost < (*it)->GetTotalCost())
+					(*it)->SetTotalCost(newTotalCost);
+				vertices.emplace(newTotalCost, *it);
 			}
-		if (vertex)
-			vertices.erase(vertex);
+		}
+		vertex = vertices.empty() ? nullptr : vertices.begin()->second;
+		if (!vertices.empty())
+			vertices.erase(vertices.begin());
 	}
 	return vertex ? vertex->GetTotalCost() : -1;
+}
+/* https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
+ * 100%
+ */
+template <typename TTag, typename TItem>
+long Graph<TTag, TItem>::GetLowestPathCost(size_t nodecount, vector<TTag> &from, vector<TTag> &to, vector<long> &weight)
+{
+	if (from.size() != to.size() || from.size() != weight.size())
+		throw runtime_error("from, to and weight data point counts must match!");
+	for (size_t i = 0; i < from.size(); i++)
+		AddUndirectedEdge(from[i], to[i], weight[i]);
+	assert(Count() == nodecount);
+	return GetPathsCosts(_vertices[1], _vertices[nodecount]);
 }
 template <typename TTag, typename TItem>
 TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root, TItem sum)

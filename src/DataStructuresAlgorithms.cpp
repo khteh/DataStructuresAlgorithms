@@ -4897,35 +4897,6 @@ long kruskals(int nodes, vector<long> &from, vector<long> &to, vector<long> &wei
 	}
 	return sum;
 }
-/* https://www.hackerrank.com/challenges/jack-goes-to-rapture/problem
- * Timeout! for 2 test cases with 50000 nodes. 70 out of 80 points.
- */
-long getLowestPathCost(size_t nodecount, vector<long> &g_from, vector<long> &g_to, vector<long> &g_weight)
-{
-	// Breadth-First-Search algorithm
-	vector<long> data(nodecount);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
-	Graph<long, long> graph(data);
-	for (size_t i = 0; i < g_from.size(); i++)
-	{
-		shared_ptr<Vertex<long, long>> v1 = graph.GetVertex(g_from[i]);
-		shared_ptr<Vertex<long, long>> v2 = graph.GetVertex(g_to[i]);
-		assert(v1);
-		assert(v2);
-		graph.AddUndirectedEdge(v1, v2, g_weight[i]);
-	}
-	// cout << __FUNCTION__ << " graph (" << g_nodes << " nodes):" << endl;
-	// for (size_t i = 1; i <= g_nodes; i++)
-	//	graph.Print(graph.GetVertex(i));
-	// cout << endl;
-	set<shared_ptr<Vertex<long, long>>> spt;
-	long cost = graph.GetPathsCosts(spt, graph.GetVertex(1), graph.GetVertex(nodecount));
-	// cout << "Vertex\tDistance from Source" << endl;
-	// for (set<shared_ptr<Vertex<long, long>>>::iterator it = spt.begin(); it != spt.end(); it++)
-	//	cout << (*it)->GetTag() << "\t" << (*it)->GetTotalCost() << endl;
-	return cost;
-}
 // https://www.hackerrank.com/challenges/3d-surface-area/problem
 // 100%
 size_t SurfaceArea3D(vector<vector<long>> &data)
