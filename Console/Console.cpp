@@ -531,33 +531,33 @@ int main(int argc, char *argv[])
 	assert(SequenceSum(0) == 0);
 	assert(SequenceSum(1) == 1);
 	assert(SequenceSum(5) == 15);
-	assert(fibonacci(-1) == -1);
-	assert(fibonacci(0) == 0);
-	assert(fibonacci(1) == 1);
-	assert(fibonacci(2) == 1);
-	assert(fibonacci(3) == 2);
-	assert(fibonacci(4) == 3);
-	assert(fibonacci(5) == 5);
-	assert(fibonacci(6) == 8);
-	assert(fibonacci(7) == 13);
-	assert(fibonacci(8) == 21);
-	assert(fibonacci(9) == 34);
-	// assert(fibonacci(90) == 2880067194370816120ULL); Times out!!!
-	assert(fibonacciModified(0, 1, 4) == "5");
-	assert(fibonacciModified(0, 1, 5) == "27");
-	assert(fibonacciModified(0, 1, 6) == "734");
-	assert(fibonacciModified(0, 1, 7) == "538783");
-	assert(fibonacciModified(0, 1, 8) == "290287121823");
-	assert(fibonacciModified(0, 1, 9) == "84266613096281243382112");
-	assert(fibonacciModified(2, 0, 0) == "2");
-	assert(fibonacciModified(2, 0, 1) == "0");
-	assert(fibonacciModified(2, 0, 2) == "2");
-	assert(fibonacciModified(2, 0, 3) == "4");
-	assert(fibonacciModified(2, 0, 4) == "18");
-	assert(fibonacciModified(2, 0, 5) == "328");
-	assert(fibonacciModified(2, 0, 6) == "107602");
-	assert(fibonacciModified(2, 0, 7) == "11578190732");
-	assert(fibonacciModified(2, 0, 11) == "104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308");
+	assert(Fibonacci(-1) == -1);
+	assert(Fibonacci(0) == 0);
+	assert(Fibonacci(1) == 1);
+	assert(Fibonacci(2) == 1);
+	assert(Fibonacci(3) == 2);
+	assert(Fibonacci(4) == 3);
+	assert(Fibonacci(5) == 5);
+	assert(Fibonacci(6) == 8);
+	assert(Fibonacci(7) == 13);
+	assert(Fibonacci(8) == 21);
+	assert(Fibonacci(9) == 34);
+	// assert(Fibonacci(90) == 2880067194370816120ULL); Times out!!!
+	assert(FibonacciModified(0, 1, 4) == "5");
+	assert(FibonacciModified(0, 1, 5) == "27");
+	assert(FibonacciModified(0, 1, 6) == "734");
+	assert(FibonacciModified(0, 1, 7) == "538783");
+	assert(FibonacciModified(0, 1, 8) == "290287121823");
+	assert(FibonacciModified(0, 1, 9) == "84266613096281243382112");
+	assert(FibonacciModified(2, 0, 0) == "2");
+	assert(FibonacciModified(2, 0, 1) == "0");
+	assert(FibonacciModified(2, 0, 2) == "2");
+	assert(FibonacciModified(2, 0, 3) == "4");
+	assert(FibonacciModified(2, 0, 4) == "18");
+	assert(FibonacciModified(2, 0, 5) == "328");
+	assert(FibonacciModified(2, 0, 6) == "107602");
+	assert(FibonacciModified(2, 0, 7) == "11578190732");
+	assert(FibonacciModified(2, 0, 11) == "104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308");
 
 	ostringstream oss;
 	unsigned long long factorialResult = factorial(26);
@@ -2227,8 +2227,18 @@ int main(int argc, char *argv[])
 	assert(MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 20, 20) == 1);
 	assert(MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 3, 4) == 2);
 	// assert(MaxSizePalindromeCount("daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16) == 2); This fails. WIP
+	udata.clear();
+	udata = {5, 8, 14};
+	assert(SherlockAndMinimax(udata, 4, 9) == 4);
+	udata.clear();
+	udata = {3, 5, 7, 9};
+	assert(SherlockAndMinimax(udata, 6, 8) == 6);
+	udata.clear();
+	udata = {263044060, 323471968, 60083128, 764550014, 209332334, 735326740, 558683912, 626871620, 232673588, 428805364, 221674872, 261029278, 139767646, 146996700, 200921412, 121542678, 96223500, 239197414, 407346706, 143348970, 60722446, 664904326, 352123022, 291011666, 594294166, 397870656, 60694236, 376586636, 486260888, 114933906, 493037208, 5321608, 90019990, 601686988, 712093982, 575851770, 411329684, 462785470, 563110618, 232790384, 511246848, 521904074, 550301294, 142371172, 241067834, 14042944, 249208926, 36834004, 69321106, 467588012, 92173320, 360474676, 221615472, 340320496, 62541478, 360772498, 372355942, 445408968, 342087972, 685617022, 307398890, 437939090, 720057720, 718957462, 387059594, 583359512, 589920332, 500463226, 770726204, 434976772, 567860154, 510626506, 614077600, 620953322, 570332092, 623026436, 502427638, 640333172, 370673998};
+	// assert(SherlockAndMinimax(udata, 70283784, 302962359) == 173959056); Times out!
 	/***** The End *****/
-	cout << "Press ENTER to exit";
+	cout
+		<< "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }

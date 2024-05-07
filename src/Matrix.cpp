@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Matrix.h"
 template class Matrix<long>;
+template class Matrix<size_t>;
 template <typename T>
 Matrix<T>::Matrix() {}
 /*
@@ -52,11 +53,11 @@ void Matrix<T>::MatrixDistance(vector<vector<T>> &data, size_t x, size_t y)
 			for (size_t j = 0; j < data[0].size(); j++)
 			{
 				if (x != i && y != j)
-					data[i][j] = abs((T)(x - i)) + abs((T)(y - j));
+					data[i][j] = abs((long)(x - i)) + abs((long)(y - j));
 				else if (x == i && y != j)
-					data[i][j] = abs((T)(y - j));
+					data[i][j] = abs((long)(y - j));
 				else if (x != i && y == j)
-					data[i][j] = abs((T)(x - i));
+					data[i][j] = abs((long)(x - i));
 			}
 		}
 	}
@@ -265,7 +266,7 @@ bool Matrix<T>::SearchMatrixCol(vector<vector<T>> const &matrix, T target, size_
 template <typename T>
 vector<T> Matrix<T>::MatrixSprialOrder(vector<vector<T>> &matrix)
 {
-	vector<long> result;
+	vector<T> result;
 	int row = 0, col = 0;
 	int left = 0, right = matrix[0].size() - 1, top = 0, bottom = matrix.size() - 1;
 	for (row = top, col = left; top <= bottom && left <= right;)
@@ -449,5 +450,58 @@ T Matrix<T>::ChessQueensMoveCount(T dimension, T r_q /*[1,dimension]*/, T c_q /*
 	count += left >= 0 ? c_q - left - 1 : c_q;
 	count += right - c_q - 1;
 	count += top_left + top_right + bottom_left + bottom_right;
+	return count;
+}
+/*
+ * https://www.hackerrank.com/challenges/gridland-metro/problem
+ * 100%
+ */
+template <typename T>
+size_t Matrix<T>::GridlandMetro(T rows, T cols, vector<vector<T>> const &tracks)
+{
+	size_t count = 0;
+	map<T, vector<pair<T, T>>> occupied;
+	for (typename vector<vector<T>>::const_iterator it = tracks.begin(); it != tracks.end(); it++)
+	{
+		if (occupied.find((*it)[0] - 1) == occupied.end())
+			occupied[(*it)[0] - 1].push_back(pair<T, T>((*it)[1] - 1, (*it)[2] - 1));
+		else
+		{
+			bool found = false;
+			T start = (*it)[1] - 1, finish = (*it)[2] - 1;
+			for (typename vector<pair<T, T>>::iterator it1 = occupied[(*it)[0] - 1].begin(); !found && it1 != occupied[(*it)[0] - 1].end(); it1++)
+			{
+				if (start >= it1->first && finish <= it1->second) // subset
+					found = true;
+				else if (start >= it1->first && start <= it1->second) // extend the front
+				{
+					found = true;
+					it1->second = finish;
+				}
+				else if (start < it1->first && finish <= it1->second) // extend the back
+				{
+					found = true;
+					it1->first = start;
+				}
+				else if (start < it1->first && finish > it1->second) // superset
+				{
+					found = true;
+					it1->first = start;
+					it1->second = finish;
+				}
+			}
+			if (!found)
+				occupied[(*it)[0] - 1].push_back(pair<T, T>((*it)[1] - 1, (*it)[2] - 1));
+		}
+	}
+	for (typename map<T, vector<pair<T, T>>>::const_iterator it = occupied.begin(); it != occupied.end(); it++)
+	{
+		size_t tracklength = 0;
+		for (typename vector<pair<T, T>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+			tracklength += it1->second - it1->first + 1;
+		count += cols - tracklength;
+	}
+	if (rows > occupied.size())
+		count += (rows - occupied.size()) * cols;
 	return count;
 }

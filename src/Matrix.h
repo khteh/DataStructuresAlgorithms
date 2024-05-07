@@ -29,5 +29,6 @@ public:
 	void RotateMatrix90DegressClockwise(vector<vector<T>> &);
 	void RotateMatrixRTimesAntiClockwise(vector<vector<T>> &, size_t);
 	vector<T> MatrixSprialOrder(vector<vector<T>> &);
-	T ChessQueensMoveCount(T, T /*[1,rows]*/, T /*[1,cols]*/, vector<vector<size_t>> &);	
+	T ChessQueensMoveCount(T, T /*[1,rows]*/, T /*[1,cols]*/, vector<vector<size_t>> &);
+	size_t GridlandMetro(T, T, vector<vector<T>> const &);
 };

@@ -735,6 +735,7 @@ public:
 			ASSERT_TRUE(v1);
 			ASSERT_TRUE(v2);
 			_graph.AddUndirectedEdge(v1, v2, (*it).size() == 3 ? (*it)[2] : 0);
+			_graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it).size() == 3 ? (*it)[2] : 0);
 		}
 	}
 	vector<long> ShortestPathsTest()
@@ -778,13 +779,11 @@ public:
 	{
 		vector<long> result;
 		for (size_t i = 1; i <= _nodes; i++)
-		{
 			if (i != _start)
 			{
 				vector<shared_ptr<DVertex<size_t>>> path;
 				result.push_back(_dijkstra.ShortestPath(_start, i, path));
 			}
-		}
 		return result;
 	}
 };

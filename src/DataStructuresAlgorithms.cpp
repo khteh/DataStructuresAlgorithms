@@ -751,14 +751,14 @@ void copy_on_write_string()
 	cout << hex << "s1 @ " << (void *)(cptr) << endl;
 	cout << "s2 @ " << (void *)(cptr1) << endl;
 }
-unsigned long long fibonacci(long n)
+unsigned long long Fibonacci(long n)
 {
 	// {0 1 1 2 ...}
-	return (n <= 1) ? n : fibonacci(n - 2) + fibonacci(n - 1);
+	return (n <= 1) ? n : Fibonacci(n - 2) + Fibonacci(n - 1);
 }
 /* Bottom-up Dynamic Programming
  */
-unsigned long long fibonacciDynamicProgramming(long n)
+unsigned long long FibonacciDynamicProgramming(long n)
 {
 	/* 0 1 2 3
 	 * {0 1 1 2 3 5 8}
@@ -774,7 +774,7 @@ unsigned long long fibonacciDynamicProgramming(long n)
 /* https://www.hackerrank.com/challenges/fibonacci-modified/problem
  * Timeout for n >= 20
  */
-string fibonacciModified(long t1, long t2, long n)
+string FibonacciModified(long t1, long t2, long n)
 {
 	// Index: 0 1 2 3 4 5  6   7	  8
 	// Value: 0 1 1 2 5 27 734 538783 ...
@@ -783,12 +783,12 @@ string fibonacciModified(long t1, long t2, long n)
 	else if (n == 1)
 		return to_string(t2);
 	Arithmetic arithmetic;
-	string s1 = fibonacciModified(t1, t2, n - 2);
-	string s2 = fibonacciModified(t1, t2, n - 1);
+	string s1 = FibonacciModified(t1, t2, n - 2);
+	string s2 = FibonacciModified(t1, t2, n - 1);
 	string s3 = arithmetic.NumberStringMultiplication(s2, s2);
 	return arithmetic.NumberStringSum(s1, s3);
 }
-string fibonacciModifiedDynamicProgramming(long t1, long t2, long n)
+string FibonacciModifiedDynamicProgramming(long t1, long t2, long n)
 {
 	// Index: 0 1 2 3 4 5  6   7	  8
 	// Value: 0 1 1 2 5 27 734 538783 ...
@@ -2289,10 +2289,10 @@ pair<B, A> flip_pair(const pair<A, B> &p)
 	return pair<B, A>(p.second, p.first);
 }
 
-template <typename A, typename B>
-multimap<B, A> flip_map(const map<A, B> &src)
+template <typename A, typename B, typename Compare = std::less<typename iterator_traits<B>::value_type>>
+multimap<B, A, Compare> flip_map(const map<A, B> &src)
 {
-	multimap<B, A> dst;
+	multimap<B, A, Compare> dst;
 	ranges::transform(src, inserter(dst, dst.begin()), flip_pair<A, B>);
 	return dst;
 }
@@ -4234,17 +4234,16 @@ i:4(s=1221)	1	1	2			2
 * s: kkkkkk s1: kkkk = 6 choose 4 = 6! / 4! * 2! = 15
 * s: kkkkkk s1: kkkkk = 6 choose 5 = 6! / 5! = 6
 * s: DeadBeef s1: FeedBeef
-* 					j:0	j:1(s1=f)	j:2(s1=ef)	j:3(s1=eef)	j:4(s1=Beef) j:5(s1=dBeef)	j:6(s1=edBeef)	j:7(s1=eedBeef)	j:8(s1=FeedBeef)
-					0	1			2
-i:0				0	1	0			0			0			0			 0				0				0				0
-i:1(s=f)		1	1   1			0			0			0			 0				0				0				0
-i:2(s=ef)		2	1   1			1			0			0			 0				0				0				0
-i:3(s=eef)		2	1	1			2			1			0			 0				0				0				0
-i:4(s=Beef)		1	1	1			2			1			1			 0				0				0				0
-i:5(s=dBeef)	1	1	1			2			1			1			 1				0				0				0
-i:6(s=adBeef)	1	1	1			2			1			1			 1				0				0				0
-i:7(s=eadBeef)	1	1	1			3			3			1			 1				0				0				0
-i:8(s=DeadBeef)	1	1	1			3			3			1			 1				0				0				0
+* 				j:0	j:1(s1=f)	j:2(s1=ef)	j:3(s1=eef)	j:4(s1=Beef) j:5(s1=dBeef)	j:6(s1=edBeef)	j:7(s1=eedBeef)	j:8(s1=FeedBeef)
+i:0				1	0			0			0			0			 0				0				0				0
+i:1(s=f)		1   1			0			0			0			 0				0				0				0
+i:2(s=ef)		1   1			1			1			0			 0				0				0				0
+i:3(s=eef)		1	1			2			2			0			 0				0				0				0
+i:4(s=Beef)		1	1			2			2			1			 0				0				0				0
+i:5(s=dBeef)	1	1			2			2			1			 1				0				0				0
+i:6(s=adBeef)	1	1			2			2			1			 1				0				0				0
+i:7(s=eadBeef)	1	1			3			3			1			 1				1				0				0
+i:8(s=DeadBeef)	1	1			3			3			1			 1				1				0				0
 */
 size_t FindSubsequenceDynamicProgramming(const string &str, const string &tomatch)
 {
@@ -4267,7 +4266,7 @@ size_t FindSubsequenceDynamicProgramming(const string &str, const string &tomatc
 			{
 				/*
 					In cell [row][col] write the value found at [row-1][col].
-					Intuitively this means "The number of matches for 221 / 2 includes all the matches for 21 / 2."
+					Intuitively this means "The number of matches for "abc" / "c" includes all the matches for "bc" / "c"
 				*/
 				counts[i][j] = counts[i - 1][j];
 				if (s[0] == tomatch1[0])
@@ -6334,13 +6333,7 @@ vector<long> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t start
 	Graph<size_t, size_t> graph(data);
 	assert(graph.Count() == n);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
-	{
-		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex((*it)[0]);
-		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex((*it)[1]);
-		assert(v1);
-		assert(v2);
-		graph.AddUndirectedEdge(v1, v2, (*it)[2]);
-	}
+		graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
 	for (size_t i = 1; i <= n; i++)
 	{
 		if (i != start)
@@ -6413,11 +6406,7 @@ string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 	Graph<size_t, size_t> graph(data);
 	assert(graph.Count() == n);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
-	{
-		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex((*it)[0]);
-		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex((*it)[1]);
-		graph.AddUndirectedEdge(v1, v2, 1 << (*it)[2]);
-	}
+		graph.AddUndirectedEdge((*it)[0], (*it)[1], 1 << (*it)[2]);
 	size_t distance = 0;
 #ifdef _MSC_VER
 	map<string, long> costCache;
@@ -8244,4 +8233,23 @@ string MorganAndString(string const &a, string const &b)
 	else if (j < b.size())
 		result.append(b.substr(j));
 	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/sherlock-and-minimax
+ * Times out! WIP
+ */
+size_t SherlockAndMinimax(vector<size_t> &data, size_t p, size_t q)
+{
+	size_t min = numeric_limits<size_t>::max();
+	map<size_t, size_t> mins;
+	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
+		for (size_t i = p; i <= q; i++)
+		{
+			size_t diff = abs((long)*it - (long)i);
+			pair<map<size_t, size_t>::iterator, bool> result = mins.emplace(i, diff);
+			if (!result.second && result.first->second > diff)
+				result.first->second = diff;
+		}
+	multimap<size_t, size_t, greater<size_t>> maxs = flip_map<size_t, size_t, greater<size_t>>(mins);
+	return maxs.begin()->second;
 }

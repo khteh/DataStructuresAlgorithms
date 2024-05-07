@@ -117,47 +117,67 @@ protected:
 	string _str1, _str2;
 	size_t _expected;
 };
-TEST_P(FindSubsequenceFixture, FindSubsequenceDynamicProgrammingTest)
+TEST_P(FindSubsequenceFixture, FindSubsequenceDynamicProgrammingTests)
 {
 	ASSERT_EQ(this->_expected, this->FindSubsequenceDynamicProgrammingTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	DynamicProgrammingTests,
+	FindSubsequenceDynamicProgrammingTests,
 	FindSubsequenceFixture,
-	::testing::Values(make_tuple(2, "1221", "12"), make_tuple(0, "1234", "56"), make_tuple(15, "kkkkkkz", "kkkk"), make_tuple(6, "kkkkkkz", "kkkkk"), make_tuple(1, "kkkkkkz", "kkkkkk"), make_tuple(0, "DeadBeef", "FeedBeef"), make_tuple(1, "DeadBeef", "Beef"), make_tuple(1, "DeadBeef", "dBeef")));
+	::testing::Values(make_tuple(2, "1221", "12"), make_tuple(0, "1234", "56"), make_tuple(15, "kkkkkkz", "kkkk"), make_tuple(6, "kkkkkkz", "kkkkk"), make_tuple(1, "kkkkkkz", "kkkkkk"), make_tuple(0, "DeadBeef", "FeedBeef"), make_tuple(1, "DeadBeef", "Beef"), make_tuple(1, "DeadBeef", "dBeef"), make_tuple(0, "DeadBeef", "eedBeef"), make_tuple(1, "DeadBeef", "edBeef")));
+class FibonacciDynamicProgrammingFixture : public testing::TestWithParam<tuple<long, unsigned long long>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	unsigned long long FibonacciDynamicProgrammingTest()
+	{
+		return FibonacciDynamicProgramming(_data);
+	}
 
-TEST(DynamicProgrammingTests, fibonacciDynamicProgrammingTests)
+protected:
+	long _data;
+	unsigned long long _expected;
+};
+TEST_P(FibonacciDynamicProgrammingFixture, FibonacciDynamicProgrammingTests)
 {
-	ASSERT_EQ(-1, fibonacciDynamicProgramming(-1));
-	ASSERT_EQ(0, fibonacciDynamicProgramming(0));
-	ASSERT_EQ(1, fibonacciDynamicProgramming(1));
-	ASSERT_EQ(1, fibonacciDynamicProgramming(2));
-	ASSERT_EQ(2, fibonacciDynamicProgramming(3));
-	ASSERT_EQ(3, fibonacciDynamicProgramming(4));
-	ASSERT_EQ(5, fibonacciDynamicProgramming(5));
-	ASSERT_EQ(8, fibonacciDynamicProgramming(6));
-	ASSERT_EQ(13, fibonacciDynamicProgramming(7));
-	ASSERT_EQ(21, fibonacciDynamicProgramming(8));
-	ASSERT_EQ(34, fibonacciDynamicProgramming(9));
-	ASSERT_EQ(2880067194370816120ULL, fibonacciDynamicProgramming(90));
+	ASSERT_EQ(this->_expected, this->FibonacciDynamicProgrammingTest());
 }
-TEST(DynamicProgrammingTests, fibonacciModifiedDynamicProgrammingTests)
+INSTANTIATE_TEST_SUITE_P(
+	FibonacciDynamicProgrammingTests,
+	FibonacciDynamicProgrammingFixture,
+	::testing::Values(make_tuple(-1, -1), make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(5, 5), make_tuple(8, 6), make_tuple(13, 7), make_tuple(21, 8), make_tuple(34, 9), make_tuple(2880067194370816120ULL, 90)));
+class FibonacciModifiedDynamicProgrammingFixture : public testing::TestWithParam<tuple<string, long, long, long>>
 {
-	ASSERT_EQ("5", fibonacciModifiedDynamicProgramming(0, 1, 4));
-	ASSERT_EQ("27", fibonacciModifiedDynamicProgramming(0, 1, 5));
-	ASSERT_EQ("734", fibonacciModifiedDynamicProgramming(0, 1, 6));
-	ASSERT_EQ("538783", fibonacciModifiedDynamicProgramming(0, 1, 7));
-	ASSERT_EQ("290287121823", fibonacciModifiedDynamicProgramming(0, 1, 8));
-	ASSERT_EQ("2", fibonacciModifiedDynamicProgramming(2, 0, 0));
-	ASSERT_EQ("0", fibonacciModifiedDynamicProgramming(2, 0, 1));
-	ASSERT_EQ("2", fibonacciModifiedDynamicProgramming(2, 0, 2));
-	ASSERT_EQ("4", fibonacciModifiedDynamicProgramming(2, 0, 3));
-	ASSERT_EQ("18", fibonacciModifiedDynamicProgramming(2, 0, 4));
-	ASSERT_EQ("328", fibonacciModifiedDynamicProgramming(2, 0, 5));
-	ASSERT_EQ("107602", fibonacciModifiedDynamicProgramming(2, 0, 6));
-	ASSERT_EQ("11578190732", fibonacciModifiedDynamicProgramming(2, 0, 7));
-	ASSERT_EQ("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", fibonacciModifiedDynamicProgramming(2, 0, 11));
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_t1 = get<1>(GetParam());
+		_t2 = get<2>(GetParam());
+		_n = get<3>(GetParam());
+	}
+	string FibonacciModifiedDynamicProgrammingTest()
+	{
+		return FibonacciModifiedDynamicProgramming(_t1, _t2, _n);
+	}
+
+protected:
+	long _t1, _t2, _n;
+	string _expected;
+};
+TEST_P(FibonacciModifiedDynamicProgrammingFixture, FibonacciModifiedDynamicProgrammingTests)
+{
+	ASSERT_EQ(this->_expected, this->FibonacciModifiedDynamicProgrammingTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	FibonacciModifiedDynamicProgrammingTests,
+	FibonacciModifiedDynamicProgrammingFixture,
+	::testing::Values(make_tuple("5", 0, 1, 4), make_tuple("27", 0, 1, 5), make_tuple("734", 0, 1, 6), make_tuple("538783", 0, 1, 7), make_tuple("290287121823", 0, 1, 8), make_tuple("2", 2, 0, 0), make_tuple("0", 2, 0, 1), make_tuple("2", 2, 0, 2), make_tuple("4", 2, 0, 3), make_tuple("18", 2, 0, 4), make_tuple("328", 2, 0, 5), make_tuple("107602", 2, 0, 6), make_tuple("11578190732", 2, 0, 7), make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)));
+
 TEST(DynamicProgrammingTests, factorialDynamicProgrammingTests)
 {
 	ASSERT_EQ(1, factorialDynamicProgramming(1));
