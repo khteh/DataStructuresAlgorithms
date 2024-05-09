@@ -1458,14 +1458,14 @@ int main(int argc, char *argv[])
 	assert(encryption(str) == "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau");
 	a.clear();
 	a = {3, 1, 5, 4, 2};
-	assert(calculateMedian(a) == 3);
+	assert(CalculateMedian(a) == 3);
 	a.clear();
 	a = {3, 1, 5, 4, 2, 6};
-	assert(calculateMedian(a) == 3);
-	assert(timeInWords(5, 47) == "thirteen minutes to six");
-	assert(timeInWords(12, 29) == "twenty nine minutes past twelve");
-	assert(timeInWords(6, 30) == "half past six");
-	assert(timeInWords(1, 1) == "one minute past one");
+	assert(CalculateMedian(a) == 3);
+	assert(TimeInWords(5, 47) == "thirteen minutes to six");
+	assert(TimeInWords(12, 29) == "twenty nine minutes past twelve");
+	assert(TimeInWords(6, 30) == "half past six");
+	assert(TimeInWords(1, 1) == "one minute past one");
 	assert(BeautifulQuadruples(1, 1, 1, 1) == 0);
 	assert(BeautifulQuadruples(1, 2, 3, 4) == 11);
 	assert(BeautifulQuadruples(3, 3, 3, 3) == 9);
@@ -2020,29 +2020,6 @@ int main(int argc, char *argv[])
 	strings.clear();
 	strings = {"x.x", ".x.", "x.x"};
 	assert(kMarsh(strings) == 0);
-	a.clear();
-	a = {1, 1, 5};
-	assert(EqualDistribution(a) == 2);
-	a.clear();
-	a = {2, 2, 3, 7};
-	assert(EqualDistribution(a) == 2);
-	a.clear();
-	a = {10, 7, 12};
-	assert(EqualDistribution(a) == 3);
-	a.clear();
-	a = {1, 2, 3, 4};
-	assert(EqualDistribution(a) == 4);
-	a.clear();
-	a = {851, 183, 48, 473, 610, 678, 725, 87, 95, 50, 311, 258, 854};
-#if 0
-	assert(EqualDistribution(a) == 927);
-	a.clear();
-	a = {249, 666, 500, 101, 227, 85, 963, 681, 331, 119, 448, 587, 668, 398, 802};
-	assert(EqualDistribution(a) == 1123);
-	a.clear();
-	a = {512, 125, 928, 381, 890, 90, 512, 789, 469, 473, 908, 990, 195, 763, 102, 643, 458, 366, 684, 857, 126, 534, 974, 875, 459, 892, 686, 373, 127, 297, 576, 991, 774, 856, 372, 664, 946, 237, 806, 767, 62, 714, 758, 258, 477, 860, 253, 287, 579, 289, 496};
-	assert(EqualDistribution(a) == 5104);
-#endif
 	str = "_";
 	assert(HappyLadyBugs(str));
 	str = "RBRB";
@@ -2076,12 +2053,15 @@ int main(int argc, char *argv[])
 	udata.clear();
 	udata = {10, 20, 30, 40, 50};
 	assert(ActivityNotifications(udata, 3) == 1);
+	assert(ActivityNotifications1(udata, 3) == 1);
 	udata.clear();
 	udata = {2, 3, 4, 2, 3, 6, 8, 4, 5};
 	assert(ActivityNotifications(udata, 5) == 2);
+	assert(ActivityNotifications1(udata, 5) == 2);
 	udata.clear();
 	udata = {1, 2, 3, 4, 4};
 	assert(ActivityNotifications(udata, 4) == 0);
+	assert(ActivityNotifications1(udata, 4) == 0);
 #if 0
 	udata.clear();
 	udata = {1, 3, 2};

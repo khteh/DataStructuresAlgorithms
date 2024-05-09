@@ -1,52 +1,130 @@
 #include "pch.h"
 using namespace std;
-TEST(GreedyAlgorithmTests, MaxNonOverlappingSegmentsTest)
+template <typename T>
+class GreedyAlgorithmFixture
 {
-	vector<size_t> a, b;
-	a.clear();
-	a = {1, 3, 7, 9, 9};
-	b.clear();
-	b = {5, 6, 8, 9, 10};
-	ASSERT_EQ(3, MaxNonOverlappingSegments(a, b));
-	a.clear();
-	a = {1, 6, 7, 9, 10};
-	b.clear();
-	b = {5, 6, 8, 9, 10};
-	ASSERT_EQ(5, MaxNonOverlappingSegments(a, b)); // No overlapping segments
-	a.clear();
-	a.resize(6);
-	ranges::generate(a, [i = 1]() mutable
-					 { return i++; });
-	b.clear();
-	b.resize(6);
-	ranges::generate(b, [i = 5]() mutable
-					 { return i++; });
-	ASSERT_EQ(2, MaxNonOverlappingSegments(a, b));
-}
-TEST(GreedyAlgorithmTests, TieRopesTest)
+protected:
+	Greedy<T> _greedy;
+	vector<T> _dataCollection1, _dataCollection2;
+	T _expected, _data1;
+};
+
+class MaxNonOverlappingSegmentsTestFixture : public GreedyAlgorithmFixture<size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>, vector<size_t>>>
 {
-	vector<size_t> a = {1, 2, 3, 4, 1, 1, 3};
-	ASSERT_EQ(3, TieRopes(a, 4));
-}
-TEST(GreedyAlgorithmTests, getMinimumCostTest)
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_dataCollection1 = get<1>(GetParam());
+		_dataCollection2 = get<2>(GetParam());
+	}
+	size_t MaxNonOverlappingSegmentsTest()
+	{
+		return _greedy.MaxNonOverlappingSegments(_dataCollection1, _dataCollection2);
+	}
+};
+TEST_P(MaxNonOverlappingSegmentsTestFixture, MaxNonOverlappingSegmentsTests)
 {
-	vector<size_t> a = {2, 5, 6};
-	ASSERT_EQ(15, getMinimumCost(2, a));
-	a.clear();
-	a = {1, 3, 5, 7, 9};
-	ASSERT_EQ(29, getMinimumCost(3, a));
+	ASSERT_EQ(this->_expected, this->MaxNonOverlappingSegmentsTest());
 }
-TEST(GreedyAlgorithmTests, maxMinTest)
+INSTANTIATE_TEST_SUITE_P(
+	MaxNonOverlappingSegmentsTests,
+	MaxNonOverlappingSegmentsTestFixture,
+	::testing::Values(make_tuple(3, vector<size_t>{1, 3, 7, 9, 9}, vector<size_t>{5, 6, 8, 9, 10}),
+					  make_tuple(5, vector<size_t>{1, 6, 7, 9, 10}, vector<size_t>{5, 6, 8, 9, 10}),
+					  make_tuple(2, vector<size_t>{1, 2, 3, 4, 5, 6}, vector<size_t>{5, 6, 7, 8, 9, 10})));
+class TieRopesTestTestFixture : public GreedyAlgorithmFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
-	vector<size_t> a = {10, 100, 300, 200, 1000, 20, 30};
-	ASSERT_EQ(20, maxMin(3, a));
-	a.clear();
-	a = {1, 2, 3, 4, 10, 20, 30, 40, 100, 200};
-	ASSERT_EQ(3, maxMin(4, a));
-	a.clear();
-	a = {1, 2, 1, 2, 1};
-	ASSERT_EQ(0, maxMin(2, a));
-	a.clear();
-	a = {100, 200, 300, 350, 400, 401, 402};
-	ASSERT_EQ(2, maxMin(3, a));
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data1 = get<1>(GetParam());
+		_dataCollection1 = get<2>(GetParam());
+	}
+	size_t TieRopesTestTest()
+	{
+		return _greedy.TieRopes(_data1, _dataCollection1);
+	}
+};
+TEST_P(TieRopesTestTestFixture, TieRopesTestTests)
+{
+	ASSERT_EQ(this->_expected, this->TieRopesTestTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	TieRopesTestTests,
+	TieRopesTestTestFixture,
+	::testing::Values(make_tuple(3, 4, vector<size_t>{1, 2, 3, 4, 1, 1, 3})));
+class GetMinimumCostTestTestFixture : public GreedyAlgorithmFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data1 = get<1>(GetParam());
+		_dataCollection1 = get<2>(GetParam());
+	}
+	size_t GetMinimumCostTest()
+	{
+		return _greedy.GetMinimumCost(_data1, _dataCollection1);
+	}
+};
+TEST_P(GetMinimumCostTestTestFixture, GetMinimumCostTests)
+{
+	ASSERT_EQ(this->_expected, this->GetMinimumCostTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	GetMinimumCostTests,
+	GetMinimumCostTestTestFixture,
+	::testing::Values(make_tuple(15, 2, vector<size_t>{2, 5, 6}), make_tuple(29, 3, vector<size_t>{1, 3, 5, 7, 9})));
+class MaxMinTestFixture : public GreedyAlgorithmFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data1 = get<1>(GetParam());
+		_dataCollection1 = get<2>(GetParam());
+	}
+	size_t MaxMinTest()
+	{
+		return _greedy.MaxMin(_data1, _dataCollection1);
+	}
+};
+TEST_P(MaxMinTestFixture, MaxMinTests)
+{
+	ASSERT_EQ(this->_expected, this->MaxMinTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MaxMinTests,
+	MaxMinTestFixture,
+	::testing::Values(make_tuple(20, 3, vector<size_t>{10, 100, 300, 200, 1000, 20, 30}), make_tuple(3, 4, vector<size_t>{1, 2, 3, 4, 10, 20, 30, 40, 100, 200}), make_tuple(0, 2, vector<size_t>{1, 2, 1, 2, 1}), make_tuple(2, 3, vector<size_t>{100, 200, 300, 350, 400, 401, 402})));
+
+class EqualDistributionTestFixture : public GreedyAlgorithmFixture<size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_dataCollection1 = get<1>(GetParam());
+	}
+	size_t EqualDistributionTest()
+	{
+		return _greedy.EqualDistribution(_dataCollection1);
+	}
+};
+TEST_P(EqualDistributionTestFixture, EqualDistributionTests)
+{
+	ASSERT_EQ(this->_expected, this->EqualDistributionTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	EqualDistributionTests,
+	EqualDistributionTestFixture,
+	::testing::Values(make_tuple(2, vector<size_t>{1, 1, 5}),
+					  make_tuple(2, vector<size_t>{2, 2, 3, 7}),
+					  make_tuple(3, vector<size_t>{10, 7, 12}),
+					  make_tuple(4, vector<size_t>{1, 2, 3, 4}),
+					  make_tuple(8, vector<size_t>{1, 3, 5, 7, 9}),
+					  make_tuple(927, vector<size_t>{851, 183, 48, 473, 610, 678, 725, 87, 95, 50, 311, 258, 854}),
+					  make_tuple(1123, vector<size_t>{249, 666, 500, 101, 227, 85, 963, 681, 331, 119, 448, 587, 668, 398, 802}),
+					  make_tuple(5104, vector<size_t>{512, 125, 928, 381, 890, 90, 512, 789, 469, 473, 908, 990, 195, 763, 102, 643, 458, 366, 684, 857, 126, 534, 974, 875, 459, 892, 686, 373, 127, 297, 576, 991, 774, 856, 372, 664, 946, 237, 806, 767, 62, 714, 758, 258, 477, 860, 253, 287, 579, 289, 496})));

@@ -187,6 +187,7 @@
     <ClInclude Include="Employee.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="Graph.h" />
+    <ClInclude Include="Greedy.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="src.h" />
     <ClInclude Include="MyQueue.h" />
@@ -236,6 +237,7 @@
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="GameTheory.cpp" />
     <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="Greedy.cpp" />
     <ClCompile Include="Heap.cpp" />
     <ClCompile Include="MyQueue.cpp" />
     <ClCompile Include="MyStack.cpp" />

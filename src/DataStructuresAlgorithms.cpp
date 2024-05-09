@@ -2600,7 +2600,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 					}
 				}
 			} // if (grid[i][j] == 1) {
-		}	  // for (size_t j = 0; j < grid[0].size(); j++) {
+		} // for (size_t j = 0; j < grid[0].size(); j++) {
 	for (map<long, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
 		if (it->second > max)
 			max = it->second;
@@ -3456,130 +3456,6 @@ size_t CountTriangles(vector<long> &data)
 	}
 	return result;
 }
-/* https://app.codility.com/programmers/lessons/16-greedy_algorithms/max_nonoverlapping_segments/
- * 100%
- */
-size_t MaxNonOverlappingSegments(vector<size_t> &head, vector<size_t> &tail)
-{
-	size_t count = 0, last_nonoverlapping_tail;
-	if (!head.empty() && !tail.empty() && head.size() == tail.size())
-	{
-		last_nonoverlapping_tail = tail[0];
-		count++;
-		for (size_t i = 1; i < head.size(); i++)
-		{
-			if (head[i] > last_nonoverlapping_tail)
-			{
-				last_nonoverlapping_tail = tail[i];
-				count++;
-			}
-		}
-	}
-	return count;
-}
-/* https://app.codility.com/programmers/lessons/16-greedy_algorithms/tie_ropes/
- * 100%
- * A[0] = 1
- * A[1] = 2
- * A[2] = 3
- * A[3] = 4
- * A[4] = 1
- * A[5] = 1
- * A[6] = 3
- * n: 4
- * {0,1,2},{3},{4,5,6}
- */
-size_t TieRopes(vector<size_t> &data, size_t n)
-{
-	size_t result = 0;
-	for (vector<size_t>::iterator it = data.begin(); it != data.end();)
-	{
-		size_t sum = 0;
-		for (; sum < n && it != data.end(); sum += *it++)
-			;
-		if (sum >= n)
-			result++;
-	}
-	return result;
-}
-// https://www.hackerrank.com/challenges/greedy-florist/problem
-// XXX: 0%
-// 3 2
-// 2 5 6 : 1..2 [1]
-// 5 3
-// 1 3 5 7 9 : 1..2 [2]
-// 5 3
-// 1 3 5 7 9
-size_t getMinimumCost(size_t k, vector<size_t> &c)
-{
-	size_t price = 0;
-	if (!c.empty())
-	{
-		size_t flowers = c.size();
-		if (flowers > k)
-		{
-			size_t solos = 0;
-			while ((flowers - solos) % k)
-			{
-				solos++;
-				k--;
-			}
-			size_t perperson = (c.size() - solos) / k;
-			ranges::sort(c);
-			size_t soloCnt = 0;
-			for (vector<size_t>::reverse_iterator it = c.rbegin(); it != c.rend() && soloCnt < solos; it++, soloCnt++)
-				price += *it;
-			for (size_t firstflower = c.size() - 1 - solos; k > 0; k--, firstflower--)
-			{
-				price += c[firstflower];
-				for (size_t i = 1; i < perperson; i++)
-				{
-					if (firstflower == perperson - 1)
-						price += c[firstflower - i] * (i + 1);
-					else
-						price += c[firstflower - perperson * i] * (i + 1);
-				}
-			}
-		}
-		else
-		{
-#ifdef _MSC_VER
-			price = parallel_reduce(c.begin(), c.end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
-			price = parallel_reduce(
-				blocked_range<size_t>(0, c.size()), 0,
-				[&](tbb::blocked_range<size_t> r, size_t running_total)
-				{
-					for (int i = r.begin(); i < r.end(); ++i)
-						running_total += c[i];
-					return running_total;
-				},
-				std::plus<size_t>());
-#endif
-		}
-	}
-	return price;
-}
-// https://www.hackerrank.com/challenges/angry-children/problem
-// 100%
-size_t maxMin(size_t k, vector<size_t> &arr)
-{
-	ranges::sort(arr);
-	size_t unfair = numeric_limits<size_t>::max();
-	size_t max = 0;
-	for (size_t i = 0; i < arr.size() && max < arr.size() - 1; i++)
-	{
-		for (max = i + k - 1; max >= arr.size(); max--)
-			;
-		if (i != max)
-		{
-			size_t diff = abs(abs((long)arr[max]) - abs((long)arr[i]));
-			if (diff < unfair)
-				unfair = diff;
-		}
-	}
-	return unfair;
-}
 string decimal_to_binary(long decimal)
 {
 	if (decimal > 0)
@@ -4264,13 +4140,9 @@ size_t FindSubsequenceDynamicProgramming(const string &str, const string &tomatc
 				counts[i][j] = 0;
 			else if (i > 0 && j > 0)
 			{
-				/*
-					In cell [row][col] write the value found at [row-1][col].
-					Intuitively this means "The number of matches for "abc" / "c" includes all the matches for "bc" / "c"
-				*/
-				counts[i][j] = counts[i - 1][j];
+				counts[i][j] = counts[i - 1][j]; // Preserve previously matched character
 				if (s[0] == tomatch1[0])
-					counts[i][j] += counts[i - 1][j - 1];
+					counts[i][j] += counts[i - 1][j - 1]; // It's a match! Increment from last match count.
 			}
 		}
 	}
@@ -4362,8 +4234,10 @@ void RotateRightArray(vector<int> &data, int n)
 	reverse(data.begin(), data.begin() + n);
 	reverse(data.begin() + n, data.end());
 }
-// https://www.hackerrank.com/challenges/ctci-array-left-rotation/problem?
-// 100%
+/*
+ * https://www.hackerrank.com/challenges/ctci-array-left-rotation/problem?
+ * 100%
+ */
 vector<int> RotateLeftArray(vector<int> &a, int d)
 {
 	vector<int> result;
@@ -4372,8 +4246,10 @@ vector<int> RotateLeftArray(vector<int> &a, int d)
 	return result;
 }
 
-// https://app.codility.com/programmers/lessons/5-prefix_sums/count_div/
-// Pending. Only 87%
+/*
+ * https://app.codility.com/programmers/lessons/5-prefix_sums/count_div/
+ * Pending. Only 87%
+ */
 size_t CountDiv(size_t a, size_t b, size_t k)
 {
 	if (b < a || k > b)
@@ -4395,9 +4271,11 @@ size_t CountDiv(size_t a, size_t b, size_t k)
 		return !(k % 10) ? floor(result) : round(result);
 	}
 }
-// https://app.codility.com/programmers/lessons/12-euclidean_algorithm/chocolates_by_numbers/
-// Correctness: 100%
-// 87% due to timeout. For example: ChocolatesByNumbers(415633212, 234332);
+/*
+ * https://app.codility.com/programmers/lessons/12-euclidean_algorithm/chocolates_by_numbers/
+ * Correctness: 100%
+ * 87% due to timeout. For example: ChocolatesByNumbers(415633212, 234332);
+ */
 long ChocolatesByNumbers(long n, long m)
 {
 	long count = 0;
@@ -4422,9 +4300,11 @@ long ChocolatesByNumbers(long n, long m)
 	}
 	return count;
 }
-// https://www.hackerrank.com/challenges/frequency-queries/problem
-// 5/15 failed
-// Test case 5 data included in solution as queryFrequencyInput.txt
+/*
+ * https://www.hackerrank.com/challenges/frequency-queries/problem
+ * 5/15 failed
+ * Test case 5 data included in solution as queryFrequencyInput.txt
+ */
 vector<int> freqQuery(vector<vector<int>> &queries)
 {
 	unordered_map<int, int> frequency;	 // frequency of data
@@ -4460,8 +4340,10 @@ vector<int> freqQuery(vector<vector<int>> &queries)
 	}
 	return result;
 }
-// https://www.hackerrank.com/challenges/encryption/problem
-// 100%
+/*
+ * https://www.hackerrank.com/challenges/encryption/problem
+ * 100%
+ */
 string encryption(string &s)
 {
 	vector<vector<char>> result;
@@ -4491,8 +4373,10 @@ string encryption(string &s)
 	}
 	return oss.str();
 }
-// https://www.hackerrank.com/challenges/climbing-the-leaderboard/problem
-// 100%
+/*
+ * https://www.hackerrank.com/challenges/climbing-the-leaderboard/problem
+ * 100%
+ */
 vector<size_t> ClimbLeaderBoard(vector<long> &scores, vector<long> &alice)
 {
 	vector<size_t> result;
@@ -4507,18 +4391,18 @@ vector<size_t> ClimbLeaderBoard(vector<long> &scores, vector<long> &alice)
 	}
 	return result;
 }
-long calculateMedian(vector<long> &data)
+long CalculateMedian(vector<long> &data)
 {
 	const auto middleItr = data.begin() + data.size() / 2; // +data.size() % 2;
 	nth_element(data.begin(), middleItr, data.end());
-	if (data.size() % 2 == 0)
+	if (!(data.size() % 2))
 	{
 		const auto leftMiddleItr = ranges::max_element(data.begin(), middleItr);
 		return (*leftMiddleItr + *middleItr) / 2;
 	}
 	return *middleItr;
 }
-string timeInWords(int h, int m)
+string TimeInWords(int h, int m)
 {
 	static map<int, string> numbers = {
 		{1, "one"},
@@ -5750,7 +5634,7 @@ double median(vector<long> &a, vector<long> &b)
 				result = max(a[i - 1], b[j - 1]);
 			found = true;
 		}
-	}			   // for
+	} // for
 	if (count % 2) // Odd number of total elements in both the sorted list
 		return result;
 	else if (i == (long)a.size()) // No element from a is included in the right partition
@@ -7901,54 +7785,6 @@ size_t kMarsh(vector<string> &grid)
 }
 #endif
 /*
- * Can add 1, 2 or 5 for all except the selected element. == deduct from the selected element.
- *
- * 1 1 5 => 0 0 4 => (0 0 0)
- *
- * 2 2 3 7 => 0 0 1 5 => (0 0 1 0) => 0 0 0 1 => (0 0 0 0)
- *
- * 7 10 12 => 0 3 5 => (0 3 0) => 0 0 3 => (0 0 1) => (0 0 0)
- *
- * 1 2 3 4 => 0 1 2 3 => (0 1 2 1) => (0 1 1 0) => (0 0 0 1) => (0 0 0 0)
- */
-size_t EqualDistribution(vector<long> &data)
-{
-	size_t count = 0;
-	ranges::sort(data);
-	long min = data[0];
-	ranges::transform(data, data.begin(), [min](long n) mutable
-					  { return n - min; });
-	set<long> unique(data.begin(), data.end());
-	for (; !unique.empty() && unique.size() > 1;)
-	{
-		vector<long>::iterator it = ranges::max_element(data);
-		long diff = data.back() - data.front();
-		if (!(diff % 8))
-			count += (diff / 8) * 3;
-		else if (!(diff % 7))
-			count += (diff / 7) * 2;
-		else if (!(diff % 6))
-			count += (diff / 6) * 2;
-		else if (!(diff % 5))
-			count += (diff / 5);
-		else if (!(diff % 3))
-			count += (diff / 3) * 2;
-		else if (!(diff % 2))
-			count += (diff / 2);
-		else
-		{
-			if (diff > 5)
-				diff = 5;
-			count++;
-		}
-		*it -= diff;
-		ranges::sort(data);
-		unique.clear();
-		unique.insert(data.begin(), data.end());
-	}
-	return count;
-}
-/*
  * https://www.hackerrank.com/challenges/happy-ladybugs/problem
  * 100%
  */
@@ -8006,6 +7842,31 @@ size_t ActivityNotifications(vector<size_t> const &data, size_t d)
 			count++;
 		window.erase(window.find(data[i - d]));
 		window.insert(data[++i]);
+	}
+	return count;
+}
+/*
+ * https://www.hackerrank.com/challenges/fraudulent-activity-notifications/problem
+ * Uses CalculateMedian(vector<long> &data) defined above
+ * Times out!
+ */
+size_t ActivityNotifications1(vector<size_t> &data, size_t d)
+{
+	size_t count = 0;
+	for (vector<size_t>::iterator it = data.begin(), it1 = next(it, d); it1 < data.end(); it++, it1++)
+	{
+		const auto middleItr = next(it, d / 2);
+		nth_element(it, middleItr, it1);
+		double median = numeric_limits<double>::max();
+		if (!(d % 2))
+		{
+			const auto leftMiddleItr = ranges::max_element(it, middleItr);
+			median = (double)(*leftMiddleItr + *middleItr) / 2l;
+		}
+		else
+			median = *middleItr;
+		if (*it1 >= 2 * median)
+			count++;
 	}
 	return count;
 }

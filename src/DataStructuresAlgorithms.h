@@ -46,6 +46,7 @@ using namespace tbb;
 #include "NameHidingExample.h"
 #include "Singleton.h"
 #include "Graph.h"
+#include "Greedy.h"
 #include "Tower.h"
 #include "MyStack.h"
 #include "MyQueue.h"
@@ -201,7 +202,6 @@ long ConsecutiveLargestSumOfFactors(vector<zerofactors_t> &, vector<zerofactors_
 size_t CountDistinctSlices(vector<long> &);
 size_t CountTriangles(vector<long> &);
 // Greedy Algorithms
-size_t MaxNonOverlappingSegments(vector<size_t> &, vector<size_t> &);
 size_t TieRopes(vector<size_t> &, size_t);
 long MinAbsSum(vector<long> &);
 long NumberSolitaire(vector<long> &);
@@ -341,13 +341,11 @@ void cpluplus17();
 long MaxProductOfThree(vector<long> &);
 size_t CountDiv(size_t, size_t, size_t);
 long ChocolatesByNumbers(long, long);
-size_t getMinimumCost(size_t, vector<size_t> &);
-size_t maxMin(size_t, vector<size_t> &);
 vector<int> freqQuery(vector<vector<int>> &);
 string encryption(string &);
 vector<size_t> ClimbLeaderBoard(vector<long> &, vector<long> &);
-long calculateMedian(vector<long> &);
-string timeInWords(int, int);
+long CalculateMedian(vector<long> &);
+string TimeInWords(int, int);
 size_t BeautifulQuadruples(long, long, long, long);
 long kruskals(int, vector<long> &, vector<long> &, vector<long> &);
 long getLowestPathCost(size_t g_nodes, vector<long> &, vector<long> &, vector<long> &);
@@ -400,9 +398,9 @@ size_t MatrixPerimeter(vector<vector<size_t>> &, vector<string> &);
 vector<long> ShortestPaths(size_t, vector<vector<size_t>> &, size_t);
 vector<long> ShortestPaths1(size_t, vector<vector<size_t>> &, size_t);
 vector<long> ShortestPaths2(size_t, vector<vector<size_t>> &, size_t);
-size_t EqualDistribution(vector<long> &);
 bool HappyLadyBugs(string &);
 size_t ActivityNotifications(vector<size_t> const &, size_t);
+size_t ActivityNotifications1(vector<size_t> &, size_t);
 size_t ActivityNotifications2(vector<size_t> const &, size_t);
 size_t MaxSizePalindromeCount(string const &, size_t, size_t);
 size_t PowerSum(size_t, size_t, size_t i = 1);

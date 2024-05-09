@@ -45,6 +45,9 @@
     <ClInclude Include="Graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Greedy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Heap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -168,6 +171,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Graph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Greedy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Heap.cpp">
