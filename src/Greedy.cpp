@@ -48,64 +48,85 @@ T Greedy<T>::TieRopes(T n, vector<T> &data)
     }
     return result;
 }
-// https://www.hackerrank.com/challenges/greedy-florist/problem
-// XXX: 0%
-// 3 2
-// 2 5 6 : 1..2 [1]
-// 5 3
-// 1 3 5 7 9 : 1..2 [2]
-// 5 3
-// 1 3 5 7 9
+/*
+ * https://www.hackerrank.com/challenges/greedy-florist/problem
+ * 100%
+[1 2 3 4] k: 3 => 3 people; 4 flowers. 1 extra flower
+[4 3 2 1]
+i:0 => 4
+i:1 => 4+3 = 7
+i:2 => 7+2 = 9
+i:3 => 9 + 2 * 1 = 11
+
+P1: $4 + (1+1) * 1 = $6
+P2: 3rd: 2
+P3: 4th: 3
+
+[2 5 6] k: 3
+[6 5 2]
+i:0 => 6
+i:1 => 6+5 = 11
+i:2 => 11 + 2 = 13
+
+2 + 5 + 6 = 13
+
+[2 5 6] k: 2 => 2 people; 3 flowers.
+[6 5 2]
+i:0 => 6
+i:1 => 6+5 = 11
+i:2 => 11 + 2*2 = 15
+
+P1: $6 + (1+1) * 2 = $10
+P2: 3rd: $5
+
+[1 3 5 7 9] k: 3 => 3 people; 5 flowers. 2 extra flowers
+[9 7 5 3 1]
+i:0 => 9
+i:1 => 9+7 = 16
+i:2 => 16+5 = 21
+i:3 => 21 + 2*3 = 27
+i:4 => 27 + 2*1 = $29
+
+P1: 1st: $9 + (1+1) * 1 = $11
+P2: 3rd: $7 + (1+1) * 3 = $13
+P3: 5th: $5
+total: 9 + 2 + 7 + 6 + 5 = $29
+
+[1 2 3 4 5 6 7 8 9 10] k: 3 => 3 people; 10 flowers. 1 extra flower
+[10 9 8 7 6 5 4 3 2 1]
+i:0 -> 10
+i:1 -> 10+9 = 19
+i:2 -> 19+8 = 27
+i:3 -> 27 + 2*7 = 41
+i:4 -> 41 + 2*6 = 53
+i:5 -> 53 + 2*5 = 63
+i:6 -> 63 + 3*4 = 75
+i:7 -> 75 + 3*3 = 84
+i:8 -> 84 + 3*2 = 90
+i:9 -> 90 + 4*1 = 94
+
+P1: 10 + (1+1)*1 + (2+1)*2 = 10 + 2 + 6 = $18
+P2: 9 + (1+1)*3 + (2+1)*4 = 9 + 6 + 12 = $27
+P3: 8 + (1+1)*5 + (2+1)*6 = 8 + 10 + 18 = $36
+extra: (3 + 1) * $7 = $28 => total: $109
+
+P1: 10 + (1+1)*1 + (2+1)*2 + (3+1) * 3 = 10 + 2 + 6 + 12 = $30
+P2: 9 + (1+1)*4 + (2+1)*5 = 9 + 8 + 15 = $32
+P3: 8 + (1+1)*6 + (2+1)*7 = 8 + 12 + 21 = $41
+total: $103
+*/
 template <typename T>
-T Greedy<T>::GetMinimumCost(T k, vector<T> &c)
+T Greedy<T>::GetMinimumCost(T n, vector<T> &costs)
 {
-    size_t price = 0;
-    if (!c.empty())
+    size_t total = 0;
+    ranges::sort(costs, greater<size_t>());
+    for (size_t i = 0, multiplier = 1; i < costs.size(); i++)
     {
-        size_t flowers = c.size();
-        if (flowers > k)
-        {
-            size_t solos = 0;
-            while ((flowers - solos) % k)
-            {
-                solos++;
-                k--;
-            }
-            size_t perperson = (c.size() - solos) / k;
-            ranges::sort(c);
-            size_t soloCnt = 0;
-            for (vector<size_t>::reverse_iterator it = c.rbegin(); it != c.rend() && soloCnt < solos; it++, soloCnt++)
-                price += *it;
-            for (size_t firstflower = c.size() - 1 - solos; k > 0; k--, firstflower--)
-            {
-                price += c[firstflower];
-                for (size_t i = 1; i < perperson; i++)
-                {
-                    if (firstflower == perperson - 1)
-                        price += c[firstflower - i] * (i + 1);
-                    else
-                        price += c[firstflower - perperson * i] * (i + 1);
-                }
-            }
-        }
-        else
-        {
-#ifdef _MSC_VER
-            price = parallel_reduce(c.begin(), c.end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
-            price = parallel_reduce(
-                blocked_range<size_t>(0, c.size()), 0,
-                [&](tbb::blocked_range<size_t> r, size_t running_total)
-                {
-                    for (int i = r.begin(); i < r.end(); ++i)
-                        running_total += c[i];
-                    return running_total;
-                },
-                std::plus<size_t>());
-#endif
-        }
+        if (i > 0 && !(i % n))
+            multiplier++;
+        total += multiplier * costs[i];
     }
-    return price;
+    return total;
 }
 /*
  * https://www.hackerrank.com/challenges/angry-children/problem
