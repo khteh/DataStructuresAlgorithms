@@ -23,9 +23,9 @@ int main(int argc, char *argv[])
 	unsigned int ui;
 	unsigned long long mask = 0;
 	set<size_t> uset;
-	vector<string> strings, strings1;
 	set<string> stringset, stringset1;
 	set<long> aset;
+	vector<string> strings, strings1;
 	vector<long> a, b, sortData;
 	vector<long double> ld;
 	vector<int> data, data1;
@@ -36,13 +36,18 @@ int main(int argc, char *argv[])
 	PriorityQueueMedian<long> pqueue;
 	vector<vector<unsigned long>> grid;
 	vector<vector<long>> grid1, grid2;
+	vector<vector<char>> cgrid1, cgrid2;
 	vector<vector<string>> sgrid;
 	vector<vector<size_t>> ugrid, ugrid1;
 	Graph<size_t, size_t> graph;
 	ExceptionTest();
 	TestRandom();
 	KDTreeTests();
-	stringset.erase("Does not exist");
+	strings = {"111", "100", "100"};
+	cgrid1.resize(strings.size());
+	for (size_t i = 0; i < strings.size(); i++)
+		copy(strings[i].begin(), strings[i].end(), std::back_inserter(cgrid1[i]));
+	assert(stringset.erase("Does not exist") == 0); // Erasing non-existing element does NOT throw
 	str = to_string(0);
 	istringstream(str) >> i;
 	assert(i == 0);
@@ -284,7 +289,6 @@ int main(int argc, char *argv[])
 		}
 		cout << endl;
 	}
-	vector<vector<char>> maze;
 	str = "ab2c3";
 	assert(uncompress(str) == "ababcababcababc");
 	cout << "uncompress(" << quoted(str) << "): " << uncompress(str) << endl;
@@ -735,12 +739,12 @@ int main(int argc, char *argv[])
 	for (i = 2; i > 0; i--) // Smallest disk is "1"
 	{
 		towers[0]->Add(i);
-		assert(towers[0]->TopDisk() == i);
+		assert(towers[0]->TopDisc() == i);
 	}
 	assert(!towers[0]->isEmpty());
 	assert(towers[1]->isEmpty());
 	assert(towers[2]->isEmpty());
-	size = towers[0]->MoveDisks(2, towers[2], towers[1]);
+	size = towers[0]->MoveDiscs(2, towers[2], towers[1]);
 	assert(size == 3); // size = #moves
 	assert(towers[0]->isEmpty());
 	assert(towers[1]->isEmpty());
@@ -750,21 +754,21 @@ int main(int argc, char *argv[])
 	for (i = 10; i > 0; i--) // Smallest disk is "1"
 	{
 		towers[0]->Add(i);
-		assert(towers[0]->TopDisk() == i);
+		assert(towers[0]->TopDisc() == i);
 	}
 	assert(!towers[0]->isEmpty());
 	assert(towers[1]->isEmpty());
 	assert(towers[2]->isEmpty());
 	cout << "Tower 0 before move: " << endl;
 	towers[0]->print();
-	size = towers[0]->MoveDisks(5, towers[2], towers[1]);
+	size = towers[0]->MoveDiscs(5, towers[2], towers[1]);
 	cout << "Tower 0,1,2 after " << size << " moves: " << endl;
 	towers[0]->print();
-	assert(towers[0]->TopDisk() == 6);
+	assert(towers[0]->TopDisc() == 6);
 	towers[1]->print();
-	assert(towers[1]->TopDisk() == numeric_limits<size_t>::max());
+	assert(towers[1]->TopDisc() == numeric_limits<size_t>::max());
 	towers[2]->print();
-	assert(towers[2]->TopDisk() == 1);
+	assert(towers[2]->TopDisc() == 1);
 	towers.clear();
 	// Test 2D memory buffer allocation
 	cout << "Test 2D memory buffer allocation...." << endl;
@@ -1322,8 +1326,8 @@ int main(int argc, char *argv[])
 	cout << numeric_limits<int>::lowest() << endl;
 	IntervalMap<int, char> imap(0);
 	imap.emplace(0, 2, 'A'); // [0,1]: 'A'
-	imap.emplace(4, 6, 'A'); // [4,5]: 'A'
-	imap.emplace(2, 4, 'A'); // [2,3]: 'A'
+	imap.emplace(2, 4, 'A'); // [2,3]: 'B'
+	imap.emplace(4, 6, 'A'); // [4,5]: 'C'
 	assert(imap.size() == 5);
 	assert(imap[0] == 'A');
 	assert(imap[1] == 'A');
@@ -1869,45 +1873,59 @@ int main(int argc, char *argv[])
 	a.clear();
 	a = {1};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 0);
+	assert(ResetTowerOfHanoi(4, a) == 0);
 	a.clear();
 	a = {2};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 1);
+	assert(ResetTowerOfHanoi(4, a) == 1);
 	a.clear();
 	a = {2, 1};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 1);
+	assert(ResetTowerOfHanoi(4, a) == 1);
 	a.clear();
 	a = {2, 3};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 2);
+	assert(ResetTowerOfHanoi(4, a) == 2);
 	a.clear();
 	a = {4, 3, 2, 1};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 3);
+	assert(ResetTowerOfHanoi(4, a) == 3);
 	a.clear();
 	a = {1, 4, 1};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 3);
+	assert(ResetTowerOfHanoi(4, a) == 3);
 	a.clear();
 	a = {4, 2, 2, 1};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 4);
+	assert(ResetTowerOfHanoi(4, a) == 4);
 	a.clear();
 	a = {1, 3, 3};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 5);
+	assert(ResetTowerOfHanoi(4, a) == 5);
 	a.clear();
 	a = {2, 1, 3, 2};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 7);
+	assert(ResetTowerOfHanoi(4, a) == 7);
 	a.clear();
 	a = {2, 4, 4, 4};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 8);
+	assert(ResetTowerOfHanoi(4, a) == 8);
 	a.clear();
 	a = {2, 4, 2, 4};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 6);
+	assert(ResetTowerOfHanoi(4, a) == 6);
 	a.clear();
 	a = {3, 1, 2, 1, 4};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 10);
+	assert(ResetTowerOfHanoi(4, a) == 10);
 	a.clear();
 	a = {1, 1, 3, 1, 4};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 11);
+	assert(ResetTowerOfHanoi(4, a) == 11);
 	a.clear();
 	a = {1, 4, 2, 4, 2, 2};
 	// assert(MoveDisksToTowerOfHanoi1(4, a) == 14); WIP
+	assert(ResetTowerOfHanoi(4, a) == 14);
 	ld.clear();
 	ld = {1, 2, 3};
 	assert(VectorSlicesSum(ld) == 44);
@@ -2217,6 +2235,100 @@ int main(int argc, char *argv[])
 	udata = {263044060, 323471968, 60083128, 764550014, 209332334, 735326740, 558683912, 626871620, 232673588, 428805364, 221674872, 261029278, 139767646, 146996700, 200921412, 121542678, 96223500, 239197414, 407346706, 143348970, 60722446, 664904326, 352123022, 291011666, 594294166, 397870656, 60694236, 376586636, 486260888, 114933906, 493037208, 5321608, 90019990, 601686988, 712093982, 575851770, 411329684, 462785470, 563110618, 232790384, 511246848, 521904074, 550301294, 142371172, 241067834, 14042944, 249208926, 36834004, 69321106, 467588012, 92173320, 360474676, 221615472, 340320496, 62541478, 360772498, 372355942, 445408968, 342087972, 685617022, 307398890, 437939090, 720057720, 718957462, 387059594, 583359512, 589920332, 500463226, 770726204, 434976772, 567860154, 510626506, 614077600, 620953322, 570332092, 623026436, 502427638, 640333172, 370673998};
 	// assert(SherlockAndMinimax(udata, 70283784, 302962359) == 173959056); Times out!
 	// ::testing::Values(make_tuple(15, 2, vector<size_t>{2, 5, 6}), make_tuple(29, 3, vector<size_t>{1, 3, 5, 7, 9})));
+	ugrid.clear();
+	ugrid = {{1, 2}, {2, 3}};
+	assert(DistinctPairs(4, ugrid) == 3);
+	ugrid.clear();
+	ugrid = {{0, 1}, {2, 3}, {0, 4}};
+	assert(DistinctPairs(5, ugrid) == 6);
+	ugrid.clear();
+	ugrid = {{0, 2}};
+	assert(DistinctPairs(4, ugrid) == 5);
+	ugrid.clear();
+	ugrid = {
+		{0, 2},
+		{1, 8},
+		{1, 4},
+		{2, 8},
+		{2, 6},
+		{3, 5},
+		{6, 9},
+	};
+	assert(DistinctPairs(10, ugrid) == 23);
+	ugrid.clear();
+	ugrid = {
+		{0, 11},
+		{2, 4},
+		{2, 95},
+		{3, 48},
+		{4, 85},
+		{4, 95},
+		{5, 67},
+		{5, 83},
+		{5, 42},
+		{6, 76},
+		{9, 31},
+		{9, 22},
+		{9, 55},
+		{10, 61},
+		{10, 38},
+		{11, 96},
+		{11, 41},
+		{12, 60},
+		{12, 69},
+		{14, 80},
+		{14, 99},
+		{14, 46},
+		{15, 42},
+		{15, 75},
+		{16, 87},
+		{16, 71},
+		{18, 99},
+		{18, 44},
+		{19, 26},
+		{19, 59},
+		{19, 60},
+		{20, 89},
+		{21, 69},
+		{22, 96},
+		{22, 60},
+		{23, 88},
+		{24, 73},
+		{27, 29},
+		{30, 32},
+		{31, 62},
+		{32, 71},
+		{33, 43},
+		{33, 47},
+		{35, 51},
+		{35, 75},
+		{37, 89},
+		{37, 95},
+		{38, 83},
+		{39, 53},
+		{41, 84},
+		{42, 76},
+		{44, 85},
+		{45, 47},
+		{46, 65},
+		{47, 49},
+		{47, 94},
+		{50, 55},
+		{51, 99},
+		{53, 99},
+		{56, 78},
+		{66, 99},
+		{71, 78},
+		{73, 98},
+		{76, 88},
+		{78, 97},
+		{80, 90},
+		{83, 95},
+		{85, 92},
+		{88, 99},
+		{88, 94},
+	};
+	// assert(DistinctPairs(100, ugrid) == 3984); WIP
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

@@ -46,12 +46,12 @@ void IntervalMap<K, V>::print() const
 		cout << it->first << ": " << it->second << endl;
 	cout << endl;
 }
-// Assign value val to interval [keyBegin, keyEnd).
-// Overwrite previous values in this interval.
-// Conforming to the C++ Standard Library conventions, the interval
-// includes keyBegin, but excludes keyEnd.
-// If !( keyBegin < keyEnd ), this designates an empty interval,
-// and assign must do nothing.
+/*
+ * Assign value val to interval [keyBegin, keyEnd).
+ * Overwrite previous values in this interval.
+ * Conforming to the C++ Standard Library conventions, the interval includes keyBegin, but excludes keyEnd.
+ * If !( keyBegin < keyEnd ), this designates an empty interval, and assign must do nothing.
+ */
 template <typename K, typename V>
 void IntervalMap<K, V>::emplace(K const &keyBegin, K const &keyEnd, V const &val)
 {

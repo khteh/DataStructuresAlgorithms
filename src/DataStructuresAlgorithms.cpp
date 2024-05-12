@@ -2296,8 +2296,11 @@ multimap<B, A, Compare> flip_map(const map<A, B> &src)
 	ranges::transform(src, inserter(dst, dst.begin()), flip_pair<A, B>);
 	return dst;
 }
-// https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
-// 100%
+/*
+ * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+ * 100%
+ * This is more useful to check matching grids compared to using DisJointSet
+ */
 size_t ConnectedCellsInAGridLinkedList(vector<vector<long>> &grid)
 {
 	map<string, shared_ptr<Node<string>>> nodes;
@@ -2472,7 +2475,13 @@ size_t ConnectedCellsInAGridLinkedList(vector<vector<long>> &grid)
 	size_t max = 0;
 	for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end(); it++)
 	{
+		vector<string> d;
+		(*it)->ToVector(d); // This is useful to find matching grids
 		//(*it)->Print();
+		// cout << "vector: ";
+		// ranges::copy(d, ostream_iterator<string>(cout, " "));
+		// cout << endl;
+		// cout << "Length: " << (*it)->Length() << endl;
 		if ((*it)->Length() > max)
 			max = (*it)->Length();
 	}
@@ -2480,8 +2489,10 @@ size_t ConnectedCellsInAGridLinkedList(vector<vector<long>> &grid)
 	clusters.clear();
 	return max;
 }
-// https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
-// 100%
+/*
+ * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+ * 100%
+ */
 size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 {
 	vector<long> data(grid.size() * grid[0].size());
@@ -2602,9 +2613,12 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 			} // if (grid[i][j] == 1) {
 		} // for (size_t j = 0; j < grid[0].size(); j++) {
 	for (map<long, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+	{
+		cout << "Length: " << it->second << endl;
 		if (it->second > max)
 			max = it->second;
-	// disjointSet.Print(data, grid[0].size());
+	}
+	disjointSet.Print(data, grid[0].size());
 	return max;
 }
 /* https://leetcode.com/problems/word-search/
@@ -7074,12 +7088,122 @@ bool Abbreviation(string &s1, string &s2)
 			table[i][j] = (table[i - 1][j - 1] && toupper(s1[i - 1]) == s2[j - 1]) || (table[i - 1][j] && islower(s1[i - 1]));
 	return table[s1.size()][s2.size()];
 }
+size_t MoveDisc(pair<size_t, size_t> const &from, map<size_t, set<size_t>> &towers, size_t discCount)
+{
+	for (size_t diff = 1; diff <= discCount; diff++)
+		for (map<size_t, set<size_t>>::iterator it = towers.begin(); it != towers.end(); it++)
+		{								 // Try to move to empty pole
+			if (it->first != from.first) // Skip same pole
+			{
+				if (it->second.empty()) // Move to empty pole except the destination pole unless it is the biggest disc
+				{
+					if (!(it->first == 1 && from.second < discCount)) // Don't move smaller discs to empty pole 1
+					{
+						it->second.insert(from.second);
+						towers[from.first].erase(from.second);
+						return 1;
+					}
+				}
+				else if (from.second + diff == *it->second.begin())
+				{
+					/*
+					(1) What happens if this is tower 1 to move 2?
+					(2) What happens if this disc hides bigger discs in the pole?
+					*/
+					if (it->first == 1)
+					{
+						size_t i = discCount;
+						for (; i > from.second && towers[1].find(i) != towers[1].end(); i--)
+							;
+						if (i != from.second)
+							continue;
+					}
+					else
+					{
+						map<size_t, set<size_t>>::iterator it1 = find_if(next(it), towers.end(), [](const auto &it2)
+																		 { return it2.second.empty(); });
+						if (it1 != towers.end())
+						{
+							it1->second.insert(from.second);
+							towers[from.first].erase(from.second);
+							return 1;
+						}
+					}
+					it->second.insert(from.second);
+					towers[from.first].erase(from.second);
+					return 1;
+				}
+			}
+		}
+	return 0;
+}
+/*
+ * [4 3 2 1]
+ * Towers: 1 2 3 4
+ * Disks : 4 3 2 1 (3 moves):
+ *
+ * {1: [5 3 1], 2: [4 2]}
+ * {1: [5 3 1], 2: [6 4 2]}
+ */
+pair<size_t, size_t> NextMove(map<size_t, set<size_t>> &towers, size_t towerCount, size_t discCount)
+{
+	pair<size_t, size_t> nextDisc;
+	bool found = false, done = true;
+	for (size_t tower = 2; done && tower <= towerCount; tower++)
+		if (!towers[tower].empty())
+			done = false;
+	if (done)
+		return nextDisc;
+	for (size_t disc = discCount; !found && disc > 0; disc--)
+		if (towers[1].find(disc) == towers[1].end())
+		{
+			if (!towers[1].empty() && *towers[1].begin() < disc)
+				return pair<size_t, size_t>{1, *towers[1].begin()};
+			for (size_t tower = 2; !found && tower <= towerCount; tower++)
+				if (towers[tower].find(disc) != towers[tower].end())
+				{
+					nextDisc = pair<size_t, size_t>{tower, *towers[tower].begin() != disc ? *towers[tower].begin() : disc}; // Move the top discs away if current disc below them
+					if (!towers[1].empty() && *towers[1].begin() < nextDisc.second)
+						nextDisc = pair<size_t, size_t>{1, *towers[1].begin()}; // Move the smaller discs away from destination tower
+					found = true;
+				}
+		}
+	return nextDisc;
+}
 /*
  * https://www.hackerrank.com/challenges/gena/problem
  * vector index # is the size of disk
  * vector element is tower #
  * WIP
+ * [4 3 2 1]
+ * Towers: 1 2 3 4
+ * Disks : 4 3 2 1 (3 moves):
+ *
+ * [1 4 1]
+ * Towers: 1      2 3 4
+ * Disks : [3, 1]      2 {1: [3, 1], 4: [2]}
+
+ * Towers: 1 2 3 4 => [2 4 1] {1: [3], 2: [1], 4: [2]}
+ * Disks : 3 1   2
+
+ * Towers: 1 	  2 3 4 => [2 1 1] {1: [3,2], 2: [1]}
+ * Disks : [3, 2] 1
+ *
+ * Towers: 1 	     2 3 4 => [1 1 1] {1: [3,2,1]}
+ * Disks : [3, 2, 1]
  */
+size_t ResetTowerOfHanoi(size_t towerCount, vector<long> &poles)
+{
+	size_t moves = 0;
+	map<size_t, set<size_t>> towers;
+	for (size_t i = 1; i <= towerCount; i++)
+		towers.emplace(i, set<size_t>{});
+	for (long disc = poles.size(); disc > 0; disc--) // 1-based index
+		towers[(size_t)poles[disc - 1]].insert((size_t)disc);
+	for (pair<size_t, long> disc = NextMove(towers, towerCount, poles.size()); disc.second > 0; disc = NextMove(towers, towerCount, poles.size()))
+		moves += MoveDisc(disc, towers, poles.size());
+	return moves;
+}
 size_t MoveDisksToTowerOfHanoi1(size_t towerCount, vector<long> &posts)
 {
 	long nextOnTower1 = posts.size();
@@ -7105,28 +7229,28 @@ size_t MoveDisksToTowerOfHanoi1(size_t towerCount, vector<long> &posts)
 	for (map<long, shared_ptr<Tower<long>>>::iterator it = towers.begin(); it != towers.end(); it++)
 		it->second->print();
 	size_t moves = 0;
-	for (; towers[1]->DiskCount() != posts.size();)
+	for (; towers[1]->DiscCount() != posts.size();)
 	{
 		// Sort towers with biggest disk to smallest disk
 		// ranges::sort(towerList, [](shared_ptr<Tower<long>> t1, shared_ptr<Tower<long>> t2)
-		//			 { return (!t1->isEmpty() && !t2->isEmpty() && t1->TopDisk() > t2->TopDisk()) || (!t1->isEmpty() && t2->isEmpty()); });
+		//			 { return (!t1->isEmpty() && !t2->isEmpty() && t1->TopDisc() > t2->TopDisc()) || (!t1->isEmpty() && t2->isEmpty()); });
 		/*
 		 * (1) Tower 1 empty
 		 * (2) Tower 1 has the biggest disk
 		 */
-		if (!towers[1]->isEmpty() && towers[1]->TopDisk() != nextOnTower1)
+		if (!towers[1]->isEmpty() && towers[1]->TopDisc() != nextOnTower1)
 		{
 			/*
 			 * Move the top disk on Tower 1 away if it is less than nextOnTower1
 			 */
-			if (towers[1]->TopDisk() < nextOnTower1)
+			if (towers[1]->TopDisc() < nextOnTower1)
 			{
 				vector<shared_ptr<Tower<long>>>::iterator it = ranges::find_if(towerList, [](shared_ptr<Tower<long>> tower)
 																			   { return tower->isEmpty(); });
 				if (it != towerList.end())
 				{
-					towerDisks[1].erase(towers[1]->TopDisk());
-					towerDisks[(*it)->Index()].emplace(towers[1]->TopDisk());
+					towerDisks[1].erase(towers[1]->TopDisc());
+					towerDisks[(*it)->Index()].emplace(towers[1]->TopDisc());
 					towers[1]->MoveTopTo(*it);
 					moves++;
 				}
@@ -7137,13 +7261,13 @@ size_t MoveDisksToTowerOfHanoi1(size_t towerCount, vector<long> &posts)
 					for (map<long, set<long>>::iterator it = towerDisks.begin(); it != towerDisks.end() && towerWithTopDisk == -1; it++)
 						if (it->second.find(nextOnTower1) != it->second.end())
 							towerWithTopDisk = it->first;
-					for (long disk = towers[1]->TopDisk(); it == towerList.end();)
+					for (long disk = towers[1]->TopDisc(); it == towerList.end();)
 						it = ranges::find_if(towerList, [&disk](shared_ptr<Tower<long>> tower)
-											 { return tower->TopDisk() > disk; });
+											 { return tower->TopDisc() > disk; });
 					if ((*it)->Index() != towerWithTopDisk)
 					{
-						towerDisks[1].erase(towers[1]->TopDisk());
-						towerDisks[(*it)->Index()].emplace(towers[1]->TopDisk());
+						towerDisks[1].erase(towers[1]->TopDisc());
+						towerDisks[(*it)->Index()].emplace(towers[1]->TopDisc());
 						towers[1]->MoveTopTo(*it);
 						moves++;
 					}
@@ -7152,11 +7276,11 @@ size_t MoveDisksToTowerOfHanoi1(size_t towerCount, vector<long> &posts)
 						for (long disk = 1; disk < nextOnTower1; disk++)
 						{
 							if (vector<shared_ptr<Tower<long>>>::iterator it = ranges::find_if(towerList, [&disk, &towerWithTopDisk](shared_ptr<Tower<long>> tower)
-																							   { return tower->TopDisk() == disk && tower->Index() != 1 && tower->Index() != towerWithTopDisk; });
+																							   { return tower->TopDisc() == disk && tower->Index() != 1 && tower->Index() != towerWithTopDisk; });
 								it != towerList.end())
 							{
 								if (vector<shared_ptr<Tower<long>>>::iterator it1 = ranges::find_if(towerList, [&disk, &towerWithTopDisk](shared_ptr<Tower<long>> tower)
-																									{ return tower->TopDisk() > disk && tower->Index() != 1 && tower->Index() != towerWithTopDisk; });
+																									{ return tower->TopDisc() > disk && tower->Index() != 1 && tower->Index() != towerWithTopDisk; });
 									it1 != towerList.end())
 								{
 									towerDisks[(*it)->Index()].erase(disk);
@@ -7176,11 +7300,11 @@ size_t MoveDisksToTowerOfHanoi1(size_t towerCount, vector<long> &posts)
 				 * Look for the next biggest disk to move towards Tower 1
 				 */
 				if (vector<shared_ptr<Tower<long>>>::iterator it = ranges::find_if(towerList, [&nextOnTower1](shared_ptr<Tower<long>> tower)
-																				   { return tower->TopDisk() == nextOnTower1; });
-					it != towerList.end() && towers[1]->TopDisk() > nextOnTower1)
+																				   { return tower->TopDisc() == nextOnTower1; });
+					it != towerList.end() && towers[1]->TopDisc() > nextOnTower1)
 				{
-					towerDisks[(*it)->Index()].erase((*it)->TopDisk());
-					towerDisks[1].emplace((*it)->TopDisk());
+					towerDisks[(*it)->Index()].erase((*it)->TopDisc());
+					towerDisks[1].emplace((*it)->TopDisc());
 					(*it)->MoveTopTo(towers[1]);
 					moves++;
 					nextOnTower1--;
@@ -7192,23 +7316,23 @@ size_t MoveDisksToTowerOfHanoi1(size_t towerCount, vector<long> &posts)
 					{
 						if (it->second.find(nextOnTower1) != it->second.end())
 						{
-							long disk = towers[it->first]->TopDisk();
+							long disk = towers[it->first]->TopDisc();
 							if (vector<shared_ptr<Tower<long>>>::iterator it1 = ranges::find_if(towerList, [&disk](shared_ptr<Tower<long>> tower)
 																								{ return tower->Index() != 1 && tower->isEmpty(); });
 								it1 != towerList.end())
 							{
-								towerDisks[it->first].erase(towers[it->first]->TopDisk());
-								towerDisks[(*it1)->Index()].emplace(towers[it->first]->TopDisk());
+								towerDisks[it->first].erase(towers[it->first]->TopDisc());
+								towerDisks[(*it1)->Index()].emplace(towers[it->first]->TopDisc());
 								towers[it->first]->MoveTopTo(*it1);
 								moves++;
 								break;
 							}
 							else if (vector<shared_ptr<Tower<long>>>::iterator it1 = ranges::find_if(towerList, [&disk](shared_ptr<Tower<long>> tower)
-																									 { return tower->Index() != 1 && tower->TopDisk() > disk; });
+																									 { return tower->Index() != 1 && tower->TopDisc() > disk; });
 									 it1 != towerList.end())
 							{
-								towerDisks[it->first].erase(towers[it->first]->TopDisk());
-								towerDisks[(*it1)->Index()].emplace(towers[it->first]->TopDisk());
+								towerDisks[it->first].erase(towers[it->first]->TopDisc());
+								towerDisks[(*it1)->Index()].emplace(towers[it->first]->TopDisc());
 								towers[it->first]->MoveTopTo(*it1);
 								moves++;
 								break;
@@ -7221,11 +7345,11 @@ size_t MoveDisksToTowerOfHanoi1(size_t towerCount, vector<long> &posts)
 		else if (towers[1]->isEmpty())
 		{
 			if (vector<shared_ptr<Tower<long>>>::iterator it = ranges::find_if(towerList, [&nextOnTower1](shared_ptr<Tower<long>> tower)
-																			   { return tower->TopDisk() == nextOnTower1; });
+																			   { return tower->TopDisc() == nextOnTower1; });
 				it != towerList.end())
 			{
-				towerDisks[(*it)->Index()].erase((*it)->TopDisk());
-				towerDisks[1].emplace((*it)->TopDisk());
+				towerDisks[(*it)->Index()].erase((*it)->TopDisc());
+				towerDisks[1].emplace((*it)->TopDisc());
 				(*it)->MoveTopTo(towers[1]);
 				moves++;
 				nextOnTower1--;
@@ -7242,7 +7366,7 @@ size_t MoveDisksToTowerOfHanoi1(size_t towerCount, vector<long> &posts)
 					if (it->second.find(nextOnTower1) != it->second.end())
 					{
 						towerWithMaxDisk = it->first;
-						long disk = towers[it->first]->TopDisk();
+						long disk = towers[it->first]->TopDisc();
 						for (long d = disk; d < nextOnTower1; d++)
 						{
 							long originTower = it->first;
@@ -7252,19 +7376,19 @@ size_t MoveDisksToTowerOfHanoi1(size_t towerCount, vector<long> &posts)
 							{
 								it->second.erase(disk);
 								towerDisks[(*it1)->Index()].emplace(disk);
-								cout << "Move disk " << towers[it->first]->TopDisk() << " from Tower " << towers[it->first]->Index() << " to Tower " << (*it1)->Index() << endl;
+								cout << "Move disk " << towers[it->first]->TopDisc() << " from Tower " << towers[it->first]->Index() << " to Tower " << (*it1)->Index() << endl;
 								towers[it->first]->MoveTopTo(*it1);
 								moves++;
 								flag = true;
 								break;
 							}
 							else if (vector<shared_ptr<Tower<long>>>::iterator it1 = ranges::find_if(towerList, [&d, &originTower](shared_ptr<Tower<long>> tower)
-																									 { return tower->Index() != 1 && tower->Index() != originTower && tower->TopDisk() == d; });
+																									 { return tower->Index() != 1 && tower->Index() != originTower && tower->TopDisc() == d; });
 									 it1 != towerList.end())
 							{
 								it->second.erase(disk);
 								towerDisks[(*it1)->Index()].emplace(disk);
-								cout << "Move disk " << towers[it->first]->TopDisk() << " from Tower " << towers[it->first]->Index() << " to Tower " << (*it1)->Index() << endl;
+								cout << "Move disk " << towers[it->first]->TopDisc() << " from Tower " << towers[it->first]->Index() << " to Tower " << (*it1)->Index() << endl;
 								towers[it->first]->MoveTopTo(*it1);
 								moves++;
 								flag = true;
@@ -7278,16 +7402,16 @@ size_t MoveDisksToTowerOfHanoi1(size_t towerCount, vector<long> &posts)
 					for (long disk = 1; disk < nextOnTower1; disk++)
 					{
 						if (vector<shared_ptr<Tower<long>>>::iterator it = ranges::find_if(towerList, [&disk, &towerWithMaxDisk](shared_ptr<Tower<long>> tower)
-																						   { return tower->Index() != 1 && tower->Index() != towerWithMaxDisk && tower->TopDisk() == disk; });
+																						   { return tower->Index() != 1 && tower->Index() != towerWithMaxDisk && tower->TopDisc() == disk; });
 							it != towerList.end())
 						{
 							if (vector<shared_ptr<Tower<long>>>::iterator it1 = ranges::find_if(towerList, [&disk, &towerWithMaxDisk](shared_ptr<Tower<long>> tower)
-																								{ return tower->Index() != 1 && tower->Index() != towerWithMaxDisk && tower->TopDisk() > disk; });
+																								{ return tower->Index() != 1 && tower->Index() != towerWithMaxDisk && tower->TopDisc() > disk; });
 								it1 != towerList.end())
 							{
 								towerDisks[(*it)->Index()].erase(disk);
 								towerDisks[(*it1)->Index()].emplace(disk);
-								cout << "Move disk " << towers[(*it)->Index()]->TopDisk() << " from Tower " << (*it)->Index() << " to Tower " << (*it1)->Index() << endl;
+								cout << "Move disk " << towers[(*it)->Index()]->TopDisc() << " from Tower " << (*it)->Index() << " to Tower " << (*it1)->Index() << endl;
 								(*it)->MoveTopTo(*it1);
 								moves++;
 								break;
@@ -8113,4 +8237,60 @@ size_t SherlockAndMinimax(vector<size_t> &data, size_t p, size_t q)
 		}
 	multimap<size_t, size_t, greater<size_t>> maxs = flip_map<size_t, size_t, greater<size_t>>(mins);
 	return maxs.begin()->second;
+}
+/*
+ * https://www.hackerrank.com/challenges/journey-to-the-moon/problem
+ * WIP
+ * [0, 1] [2, 3] [0, 4] => [0, 1, 4] * [2, 3] = 6
+ *
+ * [1, 2] [2, 3] n: 4 => [1, 2, 3] * [0] = 3
+ *				 n: 5 => [1, 2, 3] * [0] [4] =>
+
+ * [0, 2], n: 4 => [0, 2] * [1] [3] =>
+ * [0, 2] [1] [3] => [0, 1] [0, 3] [2, 1] [2, 3] [1, 3]
+ *
+ * [0, 2] [1, 8] [1, 4] [2, 8] [2, 6] [3, 5] [6, 9] => [0, 2, 8, 6, 9] [1, 8, 4] [3, 5] XXX
+ * [0, 2, 6, 8, 1, 4, 9] [3, 5] [7] => 2 * 7 + 1 * 7 + 1 * 2 = 23
+ */
+size_t DistinctPairs(size_t n, vector<vector<size_t>> const &astronauts)
+{
+	set<size_t> ids;
+	vector<set<size_t>> groups;
+	for (size_t i = 0; i < n; i++)
+		ids.emplace(i);
+	for (vector<vector<size_t>>::const_iterator it = astronauts.begin(); it != astronauts.end(); it++)
+	{
+		ids.erase((*it)[0]);
+		ids.erase((*it)[1]);
+		bool found = false;
+		for (vector<set<size_t>>::iterator it1 = groups.begin(); !found && it1 != groups.end(); it1++)
+			if (it1->find((*it)[0]) != it1->end() || it1->find((*it)[1]) != it1->end())
+			{
+				it1->insert((*it)[0]);
+				it1->insert((*it)[1]);
+				found = true;
+			}
+		if (!found)
+			groups.push_back(set<size_t>{(*it)[0], (*it)[1]});
+	}
+	for (vector<set<size_t>>::iterator it = groups.begin(); it != groups.end(); it++)
+		for (vector<set<size_t>>::iterator it1 = next(it, 1); it1 != groups.end();)
+		{
+			set<size_t> duplicates;
+			set_intersection(it->begin(), it->end(), it1->begin(), it1->end(), inserter(duplicates, duplicates.begin()));
+			if (!duplicates.empty())
+			{
+				it->insert(it1->begin(), it1->end());
+				it1 = groups.erase(it1);
+			}
+			else
+				it1++;
+		}
+	size_t pairs = groups.size() > 1 ? 1 : 0, pairs1 = 0;
+	for (vector<set<size_t>>::iterator it = groups.begin(); it != groups.end(); it++)
+	{
+		pairs *= it->size();
+		pairs1 += ids.size() * it->size();
+	}
+	return BinomialCoefficients(ids.size(), 2) + pairs + pairs1;
 }
