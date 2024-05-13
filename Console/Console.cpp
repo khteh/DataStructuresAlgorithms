@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 	unsigned long long mask = 0;
 	set<size_t> uset;
 	set<string> stringset, stringset1;
-	set<long> aset;
+	set<long> lset;
 	vector<string> strings, strings1;
 	vector<long> a, b, sortData;
 	vector<long double> ld;
@@ -1869,7 +1869,6 @@ int main(int argc, char *argv[])
 		{9, 2, 13},
 	};
 	assert("1010100000000011001101110101111" == RoadsInHackerland2(20, edges));
-
 	a.clear();
 	a = {1};
 	assert(MoveDisksToTowerOfHanoi1(4, a) == 0);

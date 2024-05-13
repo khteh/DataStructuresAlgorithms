@@ -6,8 +6,7 @@ TEST(LinkedListTests, SplitLinkedListTest)
 	random_device device;
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
-ranges:
-	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
 	uniform_int_distribution<long> uniformDistribution;
@@ -140,8 +139,7 @@ TEST(LinkedListTests, LinkedListJoinTest)
 	random_device device;
 	vector<unsigned int> seeds;
 	seeds.resize(mt19937_64::state_size);
-ranges:
-	generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 engine(sequence);
 	uniform_int_distribution<long> uniformDistribution;
@@ -497,23 +495,33 @@ TEST(LinkedListTests, LinkedListRotateRightTest)
 	ll2.ToVector(a);
 	ASSERT_EQ(b, a);
 }
-TEST(LinkedListTests, ConnectedCellsInAGridTest)
+class ConnectedCellsInAGridLinkedListTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
 {
-	vector<vector<long>> grid = {{1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0}};
-	ASSERT_EQ(5, ConnectedCellsInAGridLinkedList(grid));
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_grid = get<1>(GetParam());
+	}
+	size_t ConnectedCellsInAGridLinkedListTest()
+	{
+		return ConnectedCellsInAGridLinkedList(_grid);
+	}
 
-	grid = {{0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}};
-	ASSERT_EQ(8, ConnectedCellsInAGridLinkedList(grid));
-
-	grid = {{1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1}};
-	ASSERT_EQ(5, ConnectedCellsInAGridLinkedList(grid));
-
-	grid = {{0, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 1, 0, 1, 0}, {0, 1, 0, 1, 1}, {0, 1, 1, 1, 0}};
-	ASSERT_EQ(15, ConnectedCellsInAGridLinkedList(grid));
-
-	grid = {{1, 1, 1, 0, 1}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 0}, {0, 1, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 1, 0}};
-	ASSERT_EQ(9, ConnectedCellsInAGridLinkedList(grid));
-
-	grid = {{1, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 0, 0, 1, 0, 0}};
-	ASSERT_EQ(1, ConnectedCellsInAGridLinkedList(grid));
+protected:
+	vector<vector<long>> _grid;
+	size_t _expected;
+};
+TEST_P(ConnectedCellsInAGridLinkedListTestFixture, ConnectedCellsInAGridLinkedListTests)
+{
+	ASSERT_EQ(this->_expected, this->ConnectedCellsInAGridLinkedListTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	LinkedListTests,
+	ConnectedCellsInAGridLinkedListTestFixture,
+	::testing::Values(make_tuple(5, vector<vector<long>>{{1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0}}),
+					  make_tuple(8, vector<vector<long>>{{0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}}),
+					  make_tuple(5, vector<vector<long>>{{1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1}}),
+					  make_tuple(15, vector<vector<long>>{{0, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 1, 0, 1, 0}, {0, 1, 0, 1, 1}, {0, 1, 1, 1, 0}}),
+					  make_tuple(9, vector<vector<long>>{{1, 1, 1, 0, 1}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 0}, {0, 1, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 1, 0}}),
+					  make_tuple(1, vector<vector<long>>{{1, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 0, 0, 1, 0, 0}})));

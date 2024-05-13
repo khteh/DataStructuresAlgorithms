@@ -2472,15 +2472,16 @@ size_t ConnectedCellsInAGridLinkedList(vector<vector<long>> &grid)
 				joins.clear();
 			} // if (grid[i][j] == 1) {
 		}
+	cout << clusters.size() << " clusters" << endl;
 	size_t max = 0;
 	for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end(); it++)
 	{
 		vector<string> d;
 		(*it)->ToVector(d); // This is useful to find matching grids
 		//(*it)->Print();
-		// cout << "vector: ";
-		// ranges::copy(d, ostream_iterator<string>(cout, " "));
-		// cout << endl;
+		cout << "vector: ";
+		ranges::copy(d, ostream_iterator<string>(cout, " "));
+		cout << endl;
 		// cout << "Length: " << (*it)->Length() << endl;
 		if ((*it)->Length() > max)
 			max = (*it)->Length();
@@ -2614,11 +2615,19 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 		} // for (size_t j = 0; j < grid[0].size(); j++) {
 	for (map<long, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
 	{
-		cout << "Length: " << it->second << endl;
+		// cout << "Length: " << it->second << endl;
 		if (it->second > max)
 			max = it->second;
 	}
 	disjointSet.Print(data, grid[0].size());
+	map<long, vector<long>> sets;
+	disjointSet.GetSets(data, sets);
+	for (map<long, vector<long>>::const_iterator it = sets.begin(); it != sets.end(); it++)
+	{
+		cout << it->first << ": ";
+		ranges::copy(it->second, ostream_iterator<long>(cout, " "));
+		cout << endl;
+	}
 	return max;
 }
 /* https://leetcode.com/problems/word-search/
