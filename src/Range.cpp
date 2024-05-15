@@ -89,10 +89,10 @@ long Range::ConsecutiveLargestProduct(vector<long> &data)
    j i   sum: 8 count: 2
 	 i,j sum: 4 count: 1
 */
-long Range::ConsecutiveSumMinCount(long target, vector<long> &data)
+size_t Range::MinSumSubSequence(size_t target, vector<size_t> &data)
 {
 	size_t count = numeric_limits<size_t>::max();
-	long sum = 0;
+	size_t sum = 0;
 	for (size_t i = 0, j = 0; i < data.size(); i++)
 	{
 		sum += data[i];
@@ -104,10 +104,12 @@ long Range::ConsecutiveSumMinCount(long target, vector<long> &data)
 	}
 	return count == numeric_limits<size_t>::max() ? -1 : count;
 }
-// https://app.codility.com/programmers/task/longest_nonnegative_sum_slice/
-// https://app.codility.com/programmers/challenges/ferrum2018/
-// Find the longest sequence when the graph crosses a previous point. The crossing point is when negative becomes positive and vice versa
-// 100%
+/*
+ * https://app.codility.com/programmers/task/longest_nonnegative_sum_slice/
+ * https://app.codility.com/programmers/challenges/ferrum2018/
+ * Find the longest sequence when the graph crosses a previous point. The crossing point is when negative becomes positive and vice versa
+ * 100%
+ */
 long Range::LongestNonNegativeSumSlice(vector<long> &data)
 {
 	// -1, -1, -1, -1, -1, -1, 1 (max_len = max(1, 6 - 4) = 2), 1 (max_len = max(2, 7 - 3) = 4)
@@ -169,12 +171,12 @@ size_t Range::LongestUpDownAlternatingSubSequence(const vector<long> &data, vect
  * diff: 7 6 5 4 3 2 3
  * pairs:1 2 3 4 . .    <= 2 pairs: {[3,5], [2,6]}
  */
-size_t Range::SumPairs(long sum, vector<long> &numbers)
+size_t Range::SumPairs(size_t sum, vector<size_t> &data)
 {
 	size_t count = 0;
-	long diff;
-	set<long> pairs, duplicates;
-	for (vector<long>::const_iterator it = numbers.begin(); it != numbers.end(); it++)
+	size_t diff;
+	set<size_t> pairs, duplicates;
+	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
 		diff = sum - *it;
 		if (pairs.find(diff) != pairs.end() && duplicates.find(diff) == duplicates.end())
@@ -184,6 +186,50 @@ size_t Range::SumPairs(long sum, vector<long> &numbers)
 		}
 		else
 			pairs.emplace(*it);
+	}
+	return count;
+}
+/* 0 1 2 3 4 5 6 7 8 9
+ *         ^ (10 / 2 - 1)
+ * (0,9), (0,8)	2
+ * (1,9), (1,8), (1,7), 3
+ * (2,9), (2,8), (2,7), (2,6), 4
+ * (3,9), (3,8), (3,7), (3,6), (3,5) 5
+ * (4,9), (4,8), (4,7), (4,6), (4,5), (4,4) 6
+ * (5,9), (5,8), (5,7), (5,6), (5,5) 5
+ * (6,9), (6,8), (6,7), (6,6) 4
+ * (7,9), (7,8), (7,7) 3
+ * (8,9), (8,8) 2
+ * (9,9) 1
+ * Count = 35
+
+ * 0 1 2 3 4 5 6 7 8 9 10
+ *         ^ (11 / 2 - 1)
+ * (0,10), (0,9), (0,8)	3
+ * (1,10), (1,9), (1,8), (1,7), 4
+ * (2,10), (2,9), (2,8), (2,7), (2,6), 5
+ * (3,10), (3,9), (3,8), (3,7), (3,6), (3,5) 6
+ * (4,10), (4,9), (4,8), (4,7), (4,6), (4,5), (4,4) 7
+ * (5,10), (5,9), (5,8), (5,7), (5,6), (5,5) 6
+ * (6,10), (6,9), (6,8), (6,7), (6,6) 5
+ * (7,10), (7,9), (7,8), (7,7) 4
+ * (8,10), (8,9), (8,8) 3
+ * (9,10), (9,9) 2
+ * Count = 45
+ */
+size_t Range::GreaterThanSumPairs(size_t sum, vector<size_t> &data)
+{
+	size_t count = 0, count1;
+	for (size_t i = 0; i <= data.size() / 2 - 1; i++)
+	{
+		count1 = 0;
+		for (long j = data.size() - 1; j >= 0 && data[i] + data[j] >= sum && i <= j; j--)
+			count1++;
+		if (!i && count1)
+			count += count1 - 1;
+		if (i != data.size() / 2 - 1)
+			count1 *= 2;
+		count += count1;
 	}
 	return count;
 }

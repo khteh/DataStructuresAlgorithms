@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
 	vector<vector<string>> sgrid;
 	vector<vector<size_t>> ugrid, ugrid1;
 	Graph<size_t, size_t> graph;
+	Range range;
 	ExceptionTest();
 	TestRandom();
 	KDTreeTests();
@@ -652,41 +653,6 @@ int main(int argc, char *argv[])
 	a.clear();
 	a = {1, 1};
 	assert(minDiffPairs(a, 1) == 0);
-	// 0 1 2 3 4 5 6 7 8 9
-	//         ^ (10 / 2 - 1)
-	// (0,9), (0,8)			2
-	// (1,9), (1,8), (1,7), 3
-	// (2,9), (2,8), (2,7), (2,6), 4
-	// (3,9), (3,8), (3,7), (3,6), (3,5) 5
-	// (4,9), (4,8), (4,7), (4,6), (4,5), (4,4) 6
-	// (5,9), (5,8), (5,7), (5,6), (5,5) 5
-	// (6,9), (6,8), (6,7), (6,6) 4
-	// (7,9), (7,8), (7,7) 3
-	// (8,9), (8,8) 2
-	// (9,9) 1
-	// Count = 35
-	a.clear();
-	a.resize(10);
-	iota(a.begin(), a.end(), 0);
-	assert(greaterthansumpairs(a, 8) == 35);
-
-	// 0 1 2 3 4 5 6 7 8 9 10
-	//         ^ (11 / 2 - 1)
-	// (0,10), (0,9), (0,8)	3
-	// (1,10), (1,9), (1,8), (1,7), 4
-	// (2,10), (2,9), (2,8), (2,7), (2,6), 5
-	// (3,10), (3,9), (3,8), (3,7), (3,6), (3,5) 6
-	// (4,10), (4,9), (4,8), (4,7), (4,6), (4,5), (4,4) 7
-	// (5,10), (5,9), (5,8), (5,7), (5,6), (5,5) 6
-	// (6,10), (6,9), (6,8), (6,7), (6,6) 5
-	// (7,10), (7,9), (7,8), (7,7) 4
-	// (8,10), (8,9), (8,8) 3
-	// (9,10), (9,9) 2
-	// Count = 45
-	a.clear();
-	a.resize(11);
-	iota(a.begin(), a.end(), 0);
-	assert(greaterthansumpairs(a, 8) == 45);
 
 	// Test Recursive algorithm
 	strings.clear();
@@ -1871,60 +1837,74 @@ int main(int argc, char *argv[])
 	assert("1010100000000011001101110101111" == RoadsInHackerland2(20, edges));
 	udata.clear();
 	udata = {1};
-	assert(ResetTowerOfHanoi(4, udata) == 0);
-	// assert(ResetTowerOfHanoi1(4, udata) == 0);
+	// assert(ResetTowerOfHanoi(4, udata) == 0);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 0);
+	assert(ResetTowerOfHanoi2(4, udata) == 0);
 	udata.clear();
 	udata = {2};
-	assert(ResetTowerOfHanoi(4, udata) == 1);
-	// assert(ResetTowerOfHanoi1(4, udata) == 1);
+	// assert(ResetTowerOfHanoi(4, udata) == 1);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 1);
+	assert(ResetTowerOfHanoi2(4, udata) == 1);
 	udata.clear();
 	udata = {2, 1};
-	assert(ResetTowerOfHanoi(4, udata) == 1);
-	// assert(ResetTowerOfHanoi1(4, udata) == 1);
+	// assert(ResetTowerOfHanoi(4, udata) == 1);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 1);
+	assert(ResetTowerOfHanoi2(4, udata) == 1);
 	udata.clear();
 	udata = {2, 3};
-	assert(ResetTowerOfHanoi(4, udata) == 2);
-	// assert(ResetTowerOfHanoi1(4, udata) == 2);
+	// assert(ResetTowerOfHanoi(4, udata) == 2);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 2);
+	assert(ResetTowerOfHanoi2(4, udata) == 2);
 	udata.clear();
 	udata = {4, 3, 2, 1};
-	assert(ResetTowerOfHanoi(4, udata) == 3);
-	// assert(ResetTowerOfHanoi1(4, udata) == 3);
+	// assert(ResetTowerOfHanoi(4, udata) == 3);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 3);
+	assert(ResetTowerOfHanoi2(4, udata) == 3);
 	udata.clear();
 	udata = {1, 4, 1};
-	assert(ResetTowerOfHanoi(4, udata) == 3);
-	// assert(ResetTowerOfHanoi1(4, udata) == 3);
+	// assert(ResetTowerOfHanoi(4, udata) == 3);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 3);
+	assert(ResetTowerOfHanoi2(4, udata) == 3);
 	udata.clear();
 	udata = {4, 2, 2, 1};
-	assert(ResetTowerOfHanoi(4, udata) == 4);
-	// assert(ResetTowerOfHanoi1(4, udata) == 4);
+	// assert(ResetTowerOfHanoi(4, udata) == 4);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 4);
+	assert(ResetTowerOfHanoi2(4, udata) == 4);
 	udata.clear();
 	udata = {1, 3, 3};
-	assert(ResetTowerOfHanoi(4, udata) == 5);
-	// assert(ResetTowerOfHanoi1(4, udata) == 5);
+	// assert(ResetTowerOfHanoi(4, udata) == 5);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 5);
+	assert(ResetTowerOfHanoi2(4, udata) == 5);
 	udata.clear();
 	udata = {2, 1, 3, 2};
-	assert(ResetTowerOfHanoi(4, udata) == 7);
-	// assert(ResetTowerOfHanoi1(4, udata) == 7);
+	// assert(ResetTowerOfHanoi(4, udata) == 7);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 7);
+	assert(ResetTowerOfHanoi2(4, udata) == 7);
 	udata.clear();
 	udata = {2, 4, 4, 4};
-	assert(ResetTowerOfHanoi(4, udata) == 8);
-	// assert(ResetTowerOfHanoi1(4, udata) == 8);
+	// assert(ResetTowerOfHanoi(4, udata) == 8);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 8);
+	assert(ResetTowerOfHanoi2(4, udata) == 8);
 	udata.clear();
 	udata = {2, 4, 2, 4};
-	assert(ResetTowerOfHanoi(4, udata) == 6);
-	// assert(ResetTowerOfHanoi1(4, udata) == 6);
+	// assert(ResetTowerOfHanoi(4, udata) == 6);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 6);
+	assert(ResetTowerOfHanoi2(4, udata) == 6);
 	udata.clear();
 	udata = {3, 1, 2, 1, 4};
-	assert(ResetTowerOfHanoi(4, udata) == 10);
-	// assert(ResetTowerOfHanoi1(4, udata) == 10);
+	// assert(ResetTowerOfHanoi(4, udata) == 10);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 10);
+	assert(ResetTowerOfHanoi2(4, udata) == 10);
 	udata.clear();
 	udata = {1, 1, 3, 1, 4};
-	assert(ResetTowerOfHanoi(4, udata) == 11);
-	// assert(ResetTowerOfHanoi1(4, udata) == 11);
+	// assert(ResetTowerOfHanoi(4, udata) == 11);
+	//  assert(ResetTowerOfHanoi1(4, udata) == 11);
+	assert(ResetTowerOfHanoi2(4, udata) == 11);
 	udata.clear();
 	udata = {1, 4, 2, 4, 2, 2};
-	assert(ResetTowerOfHanoi(4, udata) == 14); // WIP
-	// assert(ResetTowerOfHanoi1(4, udata) == 14);
+	// assert(ResetTowerOfHanoi(4, udata) == 14); // WIP
+	//  assert(ResetTowerOfHanoi1(4, udata) == 14); WIP
+	// assert(ResetTowerOfHanoi2(4, udata) == 14); WIP
 	ld.clear();
 	ld = {1, 2, 3};
 	assert(VectorSlicesSum(ld) == 44);
@@ -2328,6 +2308,15 @@ int main(int argc, char *argv[])
 		{88, 94},
 	};
 	// assert(DistinctPairs(100, ugrid) == 3984); WIP
+	udata.clear();
+	udata = {1, 2, 3};
+	assert(SubsequenceMaximumSum(udata, 2) == 1);
+	udata.clear();
+	udata = {3, 3, 9, 9, 5};
+	assert(SubsequenceMaximumSum(udata, 7) == 6);
+	udata.clear();
+	udata = {846930887, 1681692778, 1714636916, 1957747794, 424238336, 719885387, 1649760493, 596516650, 1189641422, 1025202363, 1350490028, 783368691, 1102520060, 2044897764, 1967513927, 1365180541, 1540383427, 304089173, 1303455737, 35005212, 521595369, 294702568, 1726956430, 336465783, 861021531, 278722863, 233665124, 2145174068, 468703136, 1101513930, 1801979803, 1315634023, 635723059, 1369133070, 1125898168, 1059961394, 2089018457, 628175012, 1656478043, 1131176230, 1653377374, 859484422, 1914544920, 608413785, 756898538, 1734575199, 1973594325, 149798316, 2038664371, 1129566414};
+	assert(SubsequenceMaximumSum(udata, 1804289384) == 1802192837);
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

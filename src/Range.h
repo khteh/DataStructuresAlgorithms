@@ -28,12 +28,13 @@ public:
 	long NumberSolitaire(vector<long> &);
 	long ConsecutiveLargestSum(vector<long> &, vector<long> &);
 	long ConsecutiveLargestProduct(vector<long> &);
-	long ConsecutiveSumMinCount(long, vector<long> &);
+	size_t MinSumSubSequence(size_t, vector<size_t> &);
 	long LongestNonNegativeSumSlice(vector<long> &);
-	size_t LongestUpDownAlternatingSubSequence(const vector<long> &, vector<long> &);
-	size_t SumPairs(long, vector<long> &);
+	size_t SumPairs(size_t, vector<size_t> &);
+	size_t GreaterThanSumPairs(size_t, vector<size_t> &);
 	vector<vector<long>> TripletsZeroSum(vector<long> &);
 	vector<vector<long>> QuadrupletsSum(long, vector<long> &);
+	size_t LongestUpDownAlternatingSubSequence(const vector<long> &, vector<long> &);
 	size_t NumberDiffPairs(long, vector<long> &);
 	size_t NumberDiffPairs(long, set<long> &);
 	size_t StockMax(vector<long> &);
