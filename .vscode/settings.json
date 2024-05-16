@@ -84,7 +84,8 @@
     "__locale": "cpp",
     "ios": "cpp",
     "locale": "cpp",
-    "target": "cpp"
+    "target": "cpp",
+    "cinttypes": "cpp"
   },
   "cmake.configureSettings": {
     "gtest_build_samples": "ON"
