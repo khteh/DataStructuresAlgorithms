@@ -33,6 +33,28 @@ protected:
 	T2 _param;
 	T1 _expected;
 };
+class SumPairsTestFixture : public RangeTestFixture2<size_t, size_t, size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		RangeTestFixture2::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	size_t SumPairsTest()
+	{
+		return _rangeObj.SumPairs(_param, _data);
+	}
+};
+TEST_P(SumPairsTestFixture, SumPairsTests)
+{
+	ASSERT_EQ(this->_expected, this->SumPairsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	SumPairsTests,
+	SumPairsTestFixture,
+	::testing::Values(make_tuple(2, 8, vector<size_t>{1, 2, 3, 4, 5, 6, 5}),
+					  make_tuple(3, 12, vector<size_t>{5, 7, 9, 13, 11, 6, 6, 3, 3}),
+					  make_tuple(4, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})));
 class MinimumLossTestFixture : public RangeTestFixture1<long, long>, public testing::TestWithParam<tuple<long, vector<long>>>
 {
 public:
@@ -87,28 +109,6 @@ public:
 		return _rangeObj.StockMax(_data);
 	}
 };
-class SumPairsTestFixture : public RangeTestFixture2<size_t, size_t, size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
-{
-public:
-	void SetUp() override
-	{
-		RangeTestFixture2::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
-	}
-	size_t SumPairsTest()
-	{
-		return _rangeObj.SumPairs(_param, _data);
-	}
-};
-TEST_P(SumPairsTestFixture, SumPairsTests)
-{
-	ASSERT_EQ(this->_expected, this->SumPairsTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	SumPairsTests,
-	SumPairsTestFixture,
-	::testing::Values(make_tuple(2, 8, vector<size_t>{1, 2, 3, 4, 5, 6, 5}),
-					  make_tuple(3, 12, vector<size_t>{5, 7, 9, 13, 11, 6, 6, 3, 3}),
-					  make_tuple(4, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})));
 class GreaterThanSumPairsTestFixture : public RangeTestFixture2<size_t, size_t, size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
 public:

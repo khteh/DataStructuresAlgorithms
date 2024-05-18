@@ -97,7 +97,7 @@ elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
 endif()
 
 # set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY_STR})
-set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 20)
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 23)
 
 # ###############################################################################
 # Compile definitions

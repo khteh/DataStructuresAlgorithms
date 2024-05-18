@@ -147,3 +147,72 @@ Align 4: alignment - 1 = 3; ~(alignment - 1) = ~3 = 1100
 
 9: 9 + 3 = 12 / 4 = 3  1100 & 1100 = 1100
 10:10 + 3 = 13 / 4 = 3 1101 & 1100 = 1100
+
+--------------- GoogleTest with variable template parameters -----------------------------
+https://stackoverflow.com/questions/78494481/c-invoke-member-function-which-expects-input-params-passed-by-reference#78494481
+Impediment: Not able to use mixture of input parameters by value and reference
+
+template <typename R, typename... Args>
+class SUTTestFixture : public testing::TestWithParam<tuple<R, Args...>>
+{
+public:
+	void SetUp() override
+	{
+		return get<1>(this->GetParam());
+	}
+	R Expected()
+	{
+		return get<0>(this->GetParam());
+	}
+	template <typename Method>
+	R Actual(Method &&method)
+	{
+		// Peel Expected off the front, and then call _rangeObj.Method(args...)
+		return apply([&](auto &&, auto &&...args)
+					 { return invoke(forward<Method>(method), _rangeObj, forward<decltype(args)>(args)...); }, this->GetParam());
+	}
+
+protected:
+	Range _rangeObj;
+};
+
+class TestFixture1 : public SUTTestFixture<long, vector<long>>
+{
+};
+
+class TestFixture2 : public SUTTestFixture<size_t, size_t, vector<size_t>>
+{
+};
+TEST_P(TestFixture2, SumPairsTests)
+{
+	EXPECT_EQ(Expected(), Actual(&Range::SumPairs));
+}
+
+// INSTANTIATE_TEST_SUITE_P(TestFunction1, TestFixture1, testing::Combine(testing::Values(1L), testing::Values(std::vector{1L})));
+INSTANTIATE_TEST_SUITE_P(SumPairsTests, TestFixture2, ::testing::Values(make_tuple(2, 8, vector<size_t>{1, 2, 3, 4, 5, 6, 5}), make_tuple(3, 12, vector<size_t>{5, 7, 9, 13, 11, 6, 6, 3, 3}), make_tuple(4, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})));
+#if 0
+INSTANTIATE_TEST_SUITE_P(TestFunction2, TestFixture2, testing::Combine(testing::Values(1uz), testing::Values(1uz), testing::Values(std::vector{1uz})));
+
+TEST_P(TestFixture2, Foo)
+{
+	EXPECT_EQ(Expected(), Actual(&SUT::Function2));
+}
+#endif
+-----------------------------------------------------------
+--------------- GoogleTest with auto-generated number range -----------------------------
+https://stackoverflow.com/questions/78489208/c-googletest-instantiate-test-suite-p-combine-values-and-valuesin
+INSTANTIATE_TEST_SUITE_P(
+	SumPairsTests,
+	SumPairsTestFixture,
+	::testing::Combine(
+		::testing::Values(make_tuple(2, 8, vector<size_t>{1, 2, 3, 4, 5, 6, 5}),
+					  make_tuple(3, 12, vector<size_t>{5, 7, 9, 13, 11, 6, 6, 3, 3}),
+					  //make_tuple(4, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+		::testing::ValuesIn([]() -> std::generator
+							{
+				// whatever you like here, e.g.
+				co_yield 4;
+				co_yield 10;
+				co_yield std::ranges::elements_of(ranges::iota(0, 10)); }()))
+);
+-----------------------------------------------------------

@@ -1,8 +1,13 @@
-cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.27.4 FATAL_ERROR)
 
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 
 project(DataStructuresAlgorithms CXX)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_BUILD_TYPE debug)
+
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++23 -Os")
 
 # ###############################################################################
 # Set target arch type if empty. Visual studio solution generator provides it.
@@ -80,6 +85,7 @@ enable_testing()
 # Use solution folders feature
 # ###############################################################################
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 set(BUILD_STATIC_LIBS ON)
 
 # ###############################################################################

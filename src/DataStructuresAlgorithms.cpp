@@ -7616,15 +7616,19 @@ size_t ResetTowerOfHanoi(size_t towerCount, vector<size_t> &poles)
 /*
  * https://www.hackerrank.com/challenges/summing-pieces/problem
 
- 1 2 3
+ 1 2 3 (n = 3)
 [1] [2] [3]
 [1 2] [3]
 [1] [2 3]
 [1 2 3]
 
-1: 7
-2: 8
-3: 7
+p: previous value
+y: starts from n-2 and decrementing by one
+#: Total value contributions
+1: 7 = 2^n - 1
+2: 8 = p + 2^y - 2^0 = 7 + 2^(3-2) - 1 = 7 + 2 - 1
+3: 7 = p + 2^y - 2^1 = 8 + 2^(3-3) - 2^1 = 8 + 1 - 2 = 7
+Result: 1 * 7 + 2 * 8 + 3 * 7 = 7 + 16 + 21 = 44
 
  * [1 3 6 7]:
  * [(1),(3),(6),(7)]
@@ -7636,6 +7640,7 @@ size_t ResetTowerOfHanoi(size_t towerCount, vector<size_t> &poles)
  * [(1),(3,6,7)]
  * [(1,3,6,7)]
  *
+ * #: Total value contributions
  * 1 - 15
  * 3 - 18
  * 6 - 18
@@ -8482,23 +8487,128 @@ size_t DistinctPairs(size_t n, vector<vector<size_t>> const &astronauts)
 }
 /*
  * https://www.hackerrank.com/challenges/maximum-subarray-sum/problem
+ * modulo: 5, [1 2 3 4 5 6 7 8 9]
+ * 1: 1
+ * 2: 2
+ * 3: 3
+ * 4: 4
+ * 5: 0
+ * 6: 1
+ * 7: 2
+ * 8: 3
+ * 9: 4
+ *
+ * [1 2]: 3  3
+ * [1 3]: 4  4
+ * [1 4]: 5  0
+ * [1 5]: 6  1
+ * [1 6]: 7  2
+ * [1 7]: 8  3
+ * [1 8]: 9  4
+ * [1 9]: 10 0
+ *
+ * [2 3]: 5  0
+ * [2 4]: 6  1
+ * [2 5]: 7  2
+ * [2 6]: 8  3
+ * [2 7]: 9  4
+ * [2 8]: 10 0
+ * [2 9]: 11 1
+ *
+ * [3 4]: 7  2
+ * [3 5]: 8  3
+ * [3 6]: 9  4
+ * [3 7]: 10 0
+ * [3 8]: 11 1
+ * [3 9]: 12 2
+ *
+ * [4 5]: 9  4
+ * [4 6]: 10 0
+ * [4 7]: 11 1
+ * [4 8]: 12 2
+ * [4 9]: 13 3
+ *
+ * [5 6]: 11 1
+ * [5 7]: 12 2
+ * [5 8]: 13 3
+ * [5 9]: 14 4
+ *
+ * [6 7]: 13 3
+ * [6 8]: 14 4
+ * [6 9]: 15 0
+ *
+ * [7 8]: 15 0
+ * [7 9]: 16 1
+ *
+ * [8 9]: 17 2
+ *
+ * 1:
+ * sum: 1, maxSum: 1, sums: [1]
+ *
+ * 2:
+ * sum: 3, maxSum: 3, sums: [1 3]
+ *
+ * 3:
+ * sum: 1, maxSum: 3, *it1: 3, max1: (1 - 3 + 5) % m = 3 sums: [1 1]
+ *
+ * 4:
+ * sum: 0, maxSum: 4, *it1: 1, max1: (0 - 1 + 5) % m = 4 sums: [0 1]
+ *
+ * 5:
+ * sum: 0, maxSum: 4, *it1: 1, max1: (0 - 1 + 5) % m = 4 sums: [0 0]
+ *
+ * 6:
+ * sum: 1, maxSum: 4, sums: [0 0 1]
+ *
+ * 7:
+ * sum: 3, maxSum: 4, sums: [0 0 1 3]
+ *
+ * 8:
+ * sum: 1, maxSum: 4, *it1: 3, max1: (1 - 3 + 5) % m = 3 sums: [0 0 1 1]
+ *
+ * 9:
+ * sum: 0, maxSum: 4, *it1: 1, max1: (0 - 1 + 5) % m = 4 sums: [0 0 0 1]
  * WIP
  */
 size_t SubsequenceMaximumSum(vector<size_t> &data, size_t modulo)
 {
+#if 0
 	size_t max = numeric_limits<size_t>::min();
 	ranges::sort(data);
-	for (size_t i = 0; i <= data.size() / 2 - 1; i++)
+	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
-		if ((data[i] % modulo) > max)
-			max = data[i] % modulo;
-		for (long j = data.size() - 1; j >= 0 && i <= j; j--)
+		size_t m = *it % modulo;
+		if (max < m)
+			max = m;
+		size_t currentMax = numeric_limits<size_t>::min();
+		unsigned long long sum = *it;
+		for (vector<size_t>::const_iterator it1 = next(it, 1); it1 != data.end(); it1++)
 		{
-			if ((data[j] % modulo) > max)
-				max = data[j] % modulo;
-			if ((data[i] + data[j]) % modulo > max)
-				max = (data[i] + data[j]) % modulo;
+			sum += *it1;
+			m = sum % modulo;
+			if (m < currentMax) // We have reached a cycle
+				break;
+			currentMax = m;
+			if (max < m)
+				max = m;
 		}
 	}
 	return max;
+#endif
+	size_t maxSum = numeric_limits<size_t>::min(), sum = numeric_limits<size_t>::min();
+	vector<size_t> sums;
+	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
+	{
+		sum += *it;
+		sum %= modulo;
+		maxSum = max(maxSum, sum);
+		vector<size_t>::const_iterator it1 = upper_bound(sums.begin(), sums.end(), sum);
+		if (it1 != sums.end())
+		{
+			size_t max1 = (sum - *it1 + modulo) % modulo; // WTF does this do?
+			maxSum = max(maxSum, max1);
+		}
+		sums.insert(it1, sum); // Inserts sum before it1.
+	}
+	return maxSum;
 }
