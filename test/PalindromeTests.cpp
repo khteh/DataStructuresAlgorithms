@@ -1,20 +1,32 @@
 #include "pch.h"
 using namespace std;
-class FindBiggestPalindromeSubstringTestFixture : public testing::TestWithParam<tuple<string, string>>
+template <typename T>
+class PalindromeTestFixture
+{
+public:
+	void SetUp(T expected, string data)
+	{
+		_expected = expected;
+		_data = data;
+	}
+
+protected:
+	Palindrome _palindrome;
+	T _expected;
+	string _data;
+};
+
+class FindBiggestPalindromeSubstringTestFixture : public PalindromeTestFixture<string>, public testing::TestWithParam<tuple<string, string>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_data = get<1>(GetParam());
+		PalindromeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	string FindBiggestPalindromeSubstringTest()
 	{
-		return FindBiggestPalindromeSubstring(_data);
+		return _palindrome.FindBiggestPalindromeSubstring(_data);
 	}
-
-protected:
-	string _expected, _data;
 };
 TEST_P(FindBiggestPalindromeSubstringTestFixture, FindBiggestPalindromeSubstringTests)
 {
@@ -28,32 +40,70 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple("ABCBA", "DEFABCBAYT"),
 					  make_tuple("ABCCBA", "DEFABCCBAYT")));
 
-TEST(PalindromeTests, FindPalindromeSubstringsTests)
+class PalindromeAnagramCountTestFixture : public PalindromeTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, string>>
 {
-	set<string> palindromes;
-	//	assert(!IsPalindrome("aaaabbcc"));
-	ASSERT_EQ(11, PalindromeAnagramCount("02002"));
-	ASSERT_EQ(11, PalindromeAnagramCount1("02002"));
-	FindPalindromeSubstrings("a", palindromes);
-	ASSERT_TRUE(palindromes.empty());
-	palindromes.clear();
-	FindPalindromeSubstrings("aa", palindromes);
-	ASSERT_EQ(1, palindromes.size());
-	ASSERT_NE(palindromes.find("aa"), palindromes.end());
-	palindromes.clear();
-	FindPalindromeSubstrings("aaa", palindromes);
-	ASSERT_EQ(2, palindromes.size());
-	ASSERT_NE(palindromes.find("aa"), palindromes.end());
-	ASSERT_NE(palindromes.find("aaa"), palindromes.end());
-	palindromes.clear();
-	FindPalindromeSubstrings("aba", palindromes);
-	ASSERT_EQ(1, palindromes.size());
-	ASSERT_NE(palindromes.find("aba"), palindromes.end());
-	palindromes.clear();
-	FindPalindromeSubstrings("aaazaaksforskeeggeeks", palindromes);
-	ASSERT_NE(palindromes.find("skeeggeeks"), palindromes.end());
-	ASSERT_NE(palindromes.find("aazaa"), palindromes.end());
+public:
+	void SetUp() override
+	{
+		PalindromeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	size_t PalindromeAnagramCountTest()
+	{
+		return _palindrome.PalindromeAnagramCount(_data);
+	}
+};
+TEST_P(PalindromeAnagramCountTestFixture, PalindromeAnagramCountTests)
+{
+	ASSERT_EQ(this->_expected, this->PalindromeAnagramCountTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	PalindromeAnagramCountTests,
+	PalindromeAnagramCountTestFixture,
+	::testing::Values(make_tuple(11, "02002")));
+class PalindromeAnagramCount1TestFixture : public PalindromeTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, string>>
+{
+public:
+	void SetUp() override
+	{
+		PalindromeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	size_t PalindromeAnagramCount1Test()
+	{
+		return _palindrome.PalindromeAnagramCount1(_data);
+	}
+};
+TEST_P(PalindromeAnagramCount1TestFixture, PalindromeAnagramCount1Tests)
+{
+	ASSERT_EQ(this->_expected, this->PalindromeAnagramCount1Test());
+}
+INSTANTIATE_TEST_SUITE_P(
+	PalindromeAnagramCount1Tests,
+	PalindromeAnagramCount1TestFixture,
+	::testing::Values(make_tuple(11, "02002")));
+
+class FindPalindromeSubstringsTestFixture : public PalindromeTestFixture<set<string>>, public testing::TestWithParam<tuple<set<string>, string>>
+{
+public:
+	void SetUp() override
+	{
+		PalindromeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	set<string> FindPalindromeSubstringsTest()
+	{
+		set<string> result;
+		_palindrome.FindPalindromeSubstrings(_data, result);
+		return result;
+	}
+};
+TEST_P(FindPalindromeSubstringsTestFixture, FindPalindromeSubstringsTests)
+{
+	ASSERT_EQ(this->_expected, this->FindPalindromeSubstringsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	FindPalindromeSubstringsTests,
+	FindPalindromeSubstringsTestFixture,
+	::testing::Values(make_tuple(set<string>{}, "a"), make_tuple(set<string>{"aa"}, "aa"), make_tuple(set<string>{"aa", "aaa"}, "aaa"), make_tuple(set<string>{"aba"}, "aba"), make_tuple(set<string>{"aa", "aaa", "aazaa", "aza", "ee", "eeggee", "egge", "gg", "keeggeek", "skeeggeeks"}, "aaazaaksforskeeggeeks")));
+
 class HighestValuePalindromeTestFixture : public testing::TestWithParam<tuple<string, string, size_t>>
 {
 public:
@@ -65,10 +115,11 @@ public:
 	}
 	void HighestValuePalindromeTest()
 	{
-		HighestValuePalindrome(_data, _k);
+		_palindrome.HighestValuePalindrome(_data, _k);
 	}
 
 protected:
+	Palindrome _palindrome;
 	string _expected, _data;
 	size_t _k;
 };
@@ -91,46 +142,32 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple("992299", "092282", 3),
 					  make_tuple("992299", "932239", 2)));
 
-class IsPalindromeFixture
-{
-public:
-	void SetUp(bool expected, string data)
-	{
-		_expected = expected;
-		_data = data;
-	}
-
-protected:
-	bool _expected;
-	string _data;
-};
-
-class IsPalindromeTestFixture : public IsPalindromeFixture, public testing::TestWithParam<tuple<bool, string>>
+class IsPalindromeTestFixture : public PalindromeTestFixture<bool>, public testing::TestWithParam<tuple<bool, string>>
 {
 public:
 	void SetUp() override
 	{
-		IsPalindromeFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		PalindromeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	bool IsPalindromeTest()
 	{
-		return IsPalindrome(_data);
+		return _palindrome.IsPalindrome(_data);
 	}
 };
 TEST_P(IsPalindromeTestFixture, IsPalindromeTests)
 {
 	ASSERT_EQ(this->_expected, this->IsPalindromeTest());
 }
-class IsPalindrome1TestFixture : public IsPalindromeFixture, public testing::TestWithParam<tuple<bool, string>>
+class IsPalindrome1TestFixture : public PalindromeTestFixture<bool>, public testing::TestWithParam<tuple<bool, string>>
 {
 public:
 	void SetUp() override
 	{
-		IsPalindromeFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		PalindromeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	bool IsPalindrome1Test()
 	{
-		return IsPalindrome1(_data);
+		return _palindrome.IsPalindrome1(_data);
 	}
 };
 
@@ -138,17 +175,17 @@ TEST_P(IsPalindrome1TestFixture, IsPalindrome1Tests)
 {
 	ASSERT_EQ(this->_expected, this->IsPalindrome1Test());
 }
-class IsPalindrome2TestFixture : public IsPalindromeFixture, public testing::TestWithParam<tuple<bool, string>>
+class IsPalindrome2TestFixture : public PalindromeTestFixture<bool>, public testing::TestWithParam<tuple<bool, string>>
 {
 public:
 	void SetUp() override
 	{
-		IsPalindromeFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		PalindromeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	// https://en.wikipedia.org/wiki/Palindrome
 	bool IsPalindrome2Test()
 	{
-		return IsPalindrome2(_data);
+		return _palindrome.IsPalindrome2(_data);
 	}
 };
 
@@ -207,3 +244,61 @@ INSTANTIATE_TEST_SUITE_P(
 		make_tuple(true, "put it up"),
 		make_tuple(true, "Was it a car or a cat I saw?"),
 		make_tuple(true, "No 'x' in Nixon")));
+class ShortPalindromeTestFixture : public PalindromeTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, string>>
+{
+public:
+	void SetUp() override
+	{
+		PalindromeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	size_t ShortPalindromeTest()
+	{
+		return _palindrome.ShortPalindrome(_data);
+	}
+};
+
+TEST_P(ShortPalindromeTestFixture, ShortPalindromeTests)
+{
+	ASSERT_EQ(this->_expected, this->ShortPalindromeTest());
+}
+
+INSTANTIATE_TEST_SUITE_P(
+	ShortPalindromeTests,
+	ShortPalindromeTestFixture,
+	::testing::Values(make_tuple(15, "kkkkkkz"),
+					  make_tuple(4, "ghhggh"),
+					  make_tuple(242745, "cbbdcacccdaddbaabbaacbacacaaddaaacdbccccccbbadbbcdddddddaccbdbddcbacaaadbbdcbcbcdabdddbbcdccaacdccab")));
+class MaxSizePalindromeCountTestFixture : public testing::TestWithParam<tuple<size_t, string, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_l = get<2>(GetParam());
+		_r = get<3>(GetParam());
+	}
+	size_t MaxSizePalindromeCountTest()
+	{
+		return _palindrome.MaxSizePalindromeCount(_data, _l, _r);
+	}
+
+protected:
+	Palindrome _palindrome;
+	string _data;
+	size_t _expected, _l, _r;
+};
+TEST_P(MaxSizePalindromeCountTestFixture, MaxSizePalindromeCountTests)
+{
+	ASSERT_EQ(this->_expected, this->MaxSizePalindromeCountTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MaxSizePalindromeCountTests,
+	MaxSizePalindromeCountTestFixture,
+	::testing::Values(make_tuple(2, "week", 0, 3),
+					  make_tuple(1, "week", 1, 2),
+					  make_tuple(2, "abab", 0, 3),
+					  make_tuple(1, "wuhmbspjnfviogqzldrcxtaeyk", 20, 20),
+					  make_tuple(2, "wuhmbspjnfviogqzldrcxtaeyk", 3, 4)
+					  /*make_tuple(2, "daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16), Fails. WIP*/
+					  ));

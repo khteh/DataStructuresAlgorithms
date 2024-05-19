@@ -75,6 +75,7 @@ using namespace tbb;
 #include "ListRangeSum.h"
 #include "LongestCommonSubsequence.h"
 #include "Knapsack.h"
+#include "Palindrome.h"
 #include "Range.h"
 #include "Sort.h"
 #include "Poker.h"
@@ -220,14 +221,6 @@ bool areAnagrams(string const &, string const &);
 size_t FindAnagrams(vector<string> const &, vector<vector<string>> &);
 bool SherlockValidString(string const &);
 size_t sherlockAndAnagrams(string const &);
-bool IsPalindrome(string const &);
-bool IsPalindrome1(string const &);
-bool IsPalindrome2(string const &);
-string FindBiggestPalindromeSubstring(string const &);
-void FindPalindromeSubstrings(string const &, set<string> &);
-size_t PalindromeAnagramCount(string const &);
-size_t PalindromeAnagramCount1(string const &);
-void HighestValuePalindrome(string &, size_t);
 bool AreRotatedStrings(string const &, string const &, size_t);
 bool SolvabilityOfTheTilesGame(vector<size_t> &);
 void RotateRightArray(vector<int> &, int);
@@ -335,7 +328,6 @@ size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &);
 bool increasingTriplet(vector<size_t> &);
 size_t FindSubsequenceRecursive(const string &, const string &);
 size_t FindSubsequenceDynamicProgramming(const string &, const string &);
-size_t shortPalindrome(const string &);
 void cpluplus17();
 long MaxProductOfThree(vector<long> &);
 size_t CountDiv(size_t, size_t, size_t);
@@ -405,7 +397,6 @@ bool HappyLadyBugs(string &);
 size_t ActivityNotifications(vector<size_t> const &, size_t);
 size_t ActivityNotifications1(vector<size_t> &, size_t);
 size_t ActivityNotifications2(vector<size_t> const &, size_t);
-size_t MaxSizePalindromeCount(string const &, size_t, size_t);
 size_t PowerSum(size_t, size_t, size_t i = 1);
 string MorganAndString(string const &, string const &);
 size_t SherlockAndMinimax(vector<size_t> &, size_t, size_t);

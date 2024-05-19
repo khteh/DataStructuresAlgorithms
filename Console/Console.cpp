@@ -1508,9 +1508,6 @@ int main(int argc, char *argv[])
 	assert(FindSubsequenceRecursive(string("1221"), string("12")) == 2);
 	assert(FindSubsequenceRecursive(string("1234"), string("56")) == 0);
 	assert(FindSubsequenceRecursive(string("kkkkkkz"), string("kkkk")) == 15);
-	assert(shortPalindrome(string("kkkkkkz")) == 15);
-	assert(shortPalindrome(string("ghhggh")) == 4);
-	assert(shortPalindrome(string("cbbdcacccdaddbaabbaacbacacaaddaaacdbccccccbbadbbcdddddddaccbdbddcbacaaadbbdcbcbcdabdddbbcdccaacdccab")) == 242745);
 	strings.clear();
 	vector<vector<size_t>> ladders = {{32, 62}, {42, 68}, {12, 98}};
 	vector<vector<size_t>> snakes = {{95, 13}, {97, 25}, {93, 37}, {79, 27}, {75, 19}, {49, 47}, {67, 17}};
@@ -2198,12 +2195,6 @@ int main(int argc, char *argv[])
 	assert(MorganAndString("B", "BC") == "BBC");
 	assert(MorganAndString("JACK", "DANIEL") == "DAJACKNIEL");
 	assert(MorganAndString("ABACABA", "ABACABA") == "AABABACABACABA");
-	assert(MaxSizePalindromeCount("week", 0, 3) == 2);
-	assert(MaxSizePalindromeCount("week", 1, 2) == 1);
-	assert(MaxSizePalindromeCount("abab", 0, 3) == 2);
-	assert(MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 20, 20) == 1);
-	assert(MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 3, 4) == 2);
-	// assert(MaxSizePalindromeCount("daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16) == 2); This fails. WIP
 	udata.clear();
 	udata = {5, 8, 14};
 	assert(SherlockAndMinimax(udata, 4, 9) == 4);
