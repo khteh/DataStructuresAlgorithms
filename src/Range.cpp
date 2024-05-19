@@ -32,9 +32,9 @@ long Range::ConsecutiveMaximumSum(vector<long> &data, vector<long> &result)
  * (2) Fact: a % m = (a + m) % m
  *                 = a % m + m % m
  *
- * a[i]: 1 2 9  4  -8  6 7 3 9 -7 11 12 (m: 15)
- * sums: 1 3 12 1   8 14 6 9 3 11  6  3 (S[j] % m)
- *  max: 1 3 12 13 13 14 ...
+ * a[i]: 1 2 -5 4 -8   6 7  3  -7 11 12 (m: 15)
+ * sums: 1 3 13 2  9   0 7  10  3 14 11 (S[j] % m)
+ *  max: 1 3 13 14 ...
  * S(i...j] = (S[j] - S[i]) % m
  *
  * To make the value positive, + m
@@ -56,11 +56,39 @@ long Range::ConsecutiveMaximumSum(vector<long> &data, vector<long> &result)
  * To maximize, subtract the smallest number of S[i] greater than S[j] from S[j]
  *
  * 100%
+ *
+ * Using vector::insert gives a sorted list
+ * a[i] sum maxSum	sums
+ * 1	1	1		[1]
+ * 2	3	3		[1 3]
+ * -5	13	13		[1 3 13]
+ * 4	2	14		[1 (2) 3 13]
+ * -8	9   14		[1 1 3 (9) 13]
+ * 6	0	14		[(0) 1 1 3 9 13]
+ * 7	7	14		[0 1 1 3 (7) 9 13]	max(14, 13)
+ * 3	10	14		[0 1 1 3 7 9 (10) 13]
+ * -7	3	14		[0 1 1 3 (3) 7 9 10 13] max(14, 11)
+ * 11	14	14		[0 1 1 3 3 7 9 10 13 14]
+ * 12	11	14		[0 1 1 3 3 7 9 10 (11) 13 14]
+ *
+ * Using vector::push_back results in unsorted list
+ * a[i] sum maxSum	sums
+ * 1	1	1		[1]
+ * 2	3	3		[1 3]
+ * -5	13	13		[1 3 13]
+ * 4	2	14		[1 3 13 2]
+ * -8	9   14		[1 3 13 2 9]
+ * 6	0	14		[1 3 13 2 9 0]
+ * 7	7	14		[1 3 13 2 9 0 7] <= max(14, 9) Diff here compared to vector::insert
+ * 3	10	14		[1 3 13 2 9 0 7 10]
+ * -7	3	14		[1 3 13 2 9 0 7 10 3] <= max(14, 5) Diff here compared to vector::insert
+ * 11	14	14		[1 3 13 2 9 0 7 10 3 14]
+ * 12	11	14		[1 3 13 2 9 0 7 10 3 14 11]
  */
 size_t Range::ConsecutiveMaximumSumModulo(vector<long> &data, size_t modulo)
 {
 	size_t maxSum = numeric_limits<size_t>::min(), sum = numeric_limits<size_t>::min();
-	vector<size_t> sums; // Using set<size_t> will time out!
+	vector<size_t> sums; // Using set<size_t> will cause time out!
 	for (vector<long>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
 		sum += *it;
@@ -72,7 +100,7 @@ size_t Range::ConsecutiveMaximumSumModulo(vector<long> &data, size_t modulo)
 			size_t max1 = (sum - *it1 + modulo) % modulo;
 			maxSum = max(maxSum, max1);
 		}
-		sums.insert(it1, sum); // Using push_back(sum) will result in wrong answers
+		sums.insert(it1, sum); // Insert item before it1
 	}
 	return maxSum;
 }
