@@ -198,7 +198,7 @@ long MaxZeroProduct(vector<int> const &, size_t count = 3);
 bool isUniqueString(string const &);
 vector<string> findUnique(vector<string> const &, vector<string> const &);
 bool CanShuffleWithoutRepeat(string &);
-long ConsecutiveLargestSumOfFactors(vector<zerofactors_t> &, vector<zerofactors_t> &, int);
+long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t> &, vector<zerofactors_t> &, int);
 size_t CountDistinctSlices(vector<long> &);
 size_t CountTriangles(vector<long> &);
 // Greedy Algorithms
@@ -410,4 +410,3 @@ size_t PowerSum(size_t, size_t, size_t i = 1);
 string MorganAndString(string const &, string const &);
 size_t SherlockAndMinimax(vector<size_t> &, size_t, size_t);
 size_t DistinctPairs(size_t, vector<vector<size_t>> const &);
-size_t SubsequenceMaximumSum(vector<size_t> &, size_t);

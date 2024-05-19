@@ -1,9 +1,9 @@
 #include "Range.h"
 // https://en.wikipedia.org/wiki/Maximum_subarray_problem
 // Kadane's algorithm
-long Range::ConsecutiveLargestSum(vector<long> &data, vector<long> &result)
+long Range::ConsecutiveMaximumSum(vector<long> &data, vector<long> &result)
 {
-	vector<long> tmp;
+	vector<long> kadane;
 	map<long, vector<long>> results;
 	long max_ending_here = 0, max_so_far = 0; // max_so_far = max of all max_ending_here's found
 	for (vector<long>::iterator it = data.begin(); it != data.end(); it++)
@@ -12,18 +12,69 @@ long Range::ConsecutiveLargestSum(vector<long> &data, vector<long> &result)
 		if (max_ending_here < 0)
 		{
 			max_ending_here = 0;
-			tmp.clear();
+			kadane.clear();
 		}
 		else
-			tmp.push_back(*it);
+			kadane.push_back(*it);
 		if (max_so_far < max_ending_here)
 		{
 			max_so_far = max_ending_here;
-			results.emplace(max_so_far, tmp);
+			results.emplace(max_so_far, kadane);
 		}
 	}
 	result = results[max_so_far];
 	return max_so_far;
+}
+/*
+ * https://www.hackerrank.com/challenges/maximum-subarray-sum/problem
+ * https://www.youtube.com/watch?v=u_ft5jCDZXk&t=577s
+ * (1) Use (Kadane's algorithm) % m
+ * (2) Fact: a % m = (a + m) % m
+ *                 = a % m + m % m
+ *
+ * a[i]: 1 2 3 4 -8  6  7  8 9 5 11 12 (m: 15)
+ * sums: 1 3 6 10 2  8  0  8 2 7  3  0 (S[j] % m)
+ *  max: 1 3 6 10 10 13 14 14 ......
+ * S(i...j] = (S[j] - S[i]) % m
+ *
+ * To make the value positive, + m
+ * S(i...j] = (S[j] - S[i] + m) % m
+ *
+ * So, the problem simplifies to maximizing S[i...j]
+ *
+ * Analysis:
+ * S[j] = 8, j = 7
+ * 8 - 1 = 7
+ * 8 - 3 = 5
+ * 8 - 6 = 2
+ * 8 - 10 = -2 (+ 15 ) = 13 <- max
+ * 8 - 2 = 6
+ * 8 - 0 = 8
+ * 8 - 8 = 0
+ * 8 - 0 = 8
+ * Subtracting S[i] from S[j] with S[i] <= S[j] will ALWAYS yield <= S[j]
+ * To maximize, subtract the smallest number of S[i] greater than S[j] from S[j]
+ *
+ * 100%
+ */
+size_t Range::ConsecutiveMaximumSumModulo(vector<size_t> &data, size_t modulo)
+{
+	size_t maxSum = numeric_limits<size_t>::min(), sum = numeric_limits<size_t>::min();
+	vector<size_t> sums; // Using set<size_t> will time out!
+	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
+	{
+		sum += *it;
+		sum %= modulo;
+		maxSum = max(maxSum, sum);
+		vector<size_t>::const_iterator it1 = upper_bound(sums.begin(), sums.end(), sum);
+		if (it1 != sums.end())
+		{
+			size_t max1 = (sum - *it1 + modulo) % modulo;
+			maxSum = max(maxSum, max1);
+		}
+		sums.insert(it1, sum); // Using push_back(sum) will result in wrong answers
+	}
+	return maxSum;
 }
 /* https://leetcode.com/problems/maximum-product-subarray/
  * 100%
