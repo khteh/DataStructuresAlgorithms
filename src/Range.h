@@ -27,7 +27,7 @@ class Range
 public:
 	long NumberSolitaire(vector<long> &);
 	long ConsecutiveMaximumSum(vector<long> &, vector<long> &);
-	size_t ConsecutiveMaximumSumModulo(vector<size_t> &, size_t);
+	size_t ConsecutiveMaximumSumModulo(vector<long> &, size_t);
 	long ConsecutiveLargestProduct(vector<long> &);
 	size_t MinSumSubSequence(size_t, vector<size_t> &);
 	long LongestNonNegativeSumSlice(vector<long> &);

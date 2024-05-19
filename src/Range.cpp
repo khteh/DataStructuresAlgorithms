@@ -32,9 +32,9 @@ long Range::ConsecutiveMaximumSum(vector<long> &data, vector<long> &result)
  * (2) Fact: a % m = (a + m) % m
  *                 = a % m + m % m
  *
- * a[i]: 1 2 3 4 -8  6  7  8 9 5 11 12 (m: 15)
- * sums: 1 3 6 10 2  8  0  8 2 7  3  0 (S[j] % m)
- *  max: 1 3 6 10 10 13 14 14 ......
+ * a[i]: 1 2 9  4  -8  6 7 3 9 -7 11 12 (m: 15)
+ * sums: 1 3 12 1   8 14 6 9 3 11  6  3 (S[j] % m)
+ *  max: 1 3 12 13 13 14 ...
  * S(i...j] = (S[j] - S[i]) % m
  *
  * To make the value positive, + m
@@ -57,11 +57,11 @@ long Range::ConsecutiveMaximumSum(vector<long> &data, vector<long> &result)
  *
  * 100%
  */
-size_t Range::ConsecutiveMaximumSumModulo(vector<size_t> &data, size_t modulo)
+size_t Range::ConsecutiveMaximumSumModulo(vector<long> &data, size_t modulo)
 {
 	size_t maxSum = numeric_limits<size_t>::min(), sum = numeric_limits<size_t>::min();
 	vector<size_t> sums; // Using set<size_t> will time out!
-	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
+	for (vector<long>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
 		sum += *it;
 		sum %= modulo;
