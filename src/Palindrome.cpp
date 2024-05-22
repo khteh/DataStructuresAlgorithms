@@ -333,6 +333,10 @@ size_t Palindrome::ShortPalindrome(const string &s)
 }
 /*
  * https://www.hackerrank.com/challenges/maximum-palindromes/problem
+ * https://stackoverflow.com/questions/66807141/count-palindromic-permutations-mirrors-of-an-array
+ * https://www.youtube.com/watch?v=juGgfHsO-xM
+ * https://www.tutorialspoint.com/number-of-palindromic-permutations#:~:text=We%20can%20find%20palindromic%20permutations,string%20%E2%80%9Cxxyyyxxzzy%E2%80%9D%20is%205.
+ *
  * amim: mam mim => 1 pair, 2 singulars
  * amninm: mninm mnanm nmimn nmamn => 2 pairs, 2 singulars
  * week: ewe eke (2x1, 1x2)
@@ -367,7 +371,7 @@ size_t Palindrome::ShortPalindrome(const string &s)
  *
  * aabbccddee: 5 pairs, 0 singular => (4*6)*5 = 24*5
  * 			(abcde abced abdce abdec abecd abedc) (acbde acbed acdbe acdeb acebd acedb) (ad... ) (ae...)
- * WIP
+ * WIP: 18/32 test cases failed :(
  */
 size_t Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
 {
@@ -383,16 +387,23 @@ size_t Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
         if (!result.second)
             chars[*it]++;
     }
-    size_t pairs = 0, singulars = 0;
+    size_t singulars = 0;
+    vector<size_t> pairs;
+    size_t sum = 0;
+    long double divisor = 1;
     for (typename map<char, size_t>::const_iterator it = chars.begin(); it != chars.end(); it++)
     {
         if (it->second == 1)
             singulars++;
         else
-            pairs += BinomialCoefficients(it->second, 2);
+        {
+            // once you have settled the left half of a palindrome (finding all unique permutations of the numbers that end up in that left half) , the right half is fully determined
+            // size_t sumHalved = it->second / 2 - it->second % 2;
+            // sum += sumHalved;
+            pairs.push_back(it->second / 2 - it->second % 2);
+            // divisor = fmodl(divisor * factorial(sumHalved), modulo);
+            singulars += it->second % 2;
+        }
     }
-    size_t count = pairs >= 1 ? 1 : 0;
-    for (size_t i = 2; i <= pairs; i++)
-        count *= i;
-    return count > 0 ? count * (singulars > 0 ? singulars : 1) : singulars;
+    return MultinomialCoefficients(accumulate(pairs.begin(), pairs.end(), 0), pairs) * (singulars > 0 ? singulars : 1);
 }

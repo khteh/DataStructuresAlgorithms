@@ -542,10 +542,22 @@ unsigned long long factorialDynamicProgramming(long n)
 /*
  * https://en.wikipedia.org/wiki/Binomial_coefficient
  */
-unsigned long long BinomialCoefficients(size_t n, size_t k)
+long double BinomialCoefficients(size_t n, size_t k)
 {
 	return factorial(n) / (factorial(k) * factorial(n - k));
 }
+/*
+ * https://en.wikipedia.org/wiki/Multinomial_theorem
+ * Permutations of length-nword with n1 a's, n2 b's, ..., nk z's = n! / (n1! * n2! * ... * nk!)
+ */
+long double MultinomialCoefficients(size_t n, vector<size_t> const &k)
+{
+	long double divisor = 1;
+	for (vector<size_t>::const_iterator it = k.begin(); it != k.end(); it++)
+		divisor *= factorial(*it);
+	return factorial(n) / divisor;
+}
+
 long SequenceSum(long n)
 {
 	// return (n <= 0) ? 0 : n + SequenceSum(n - 1);
@@ -8094,4 +8106,25 @@ size_t DistinctPairs(size_t n, vector<vector<size_t>> const &astronauts)
 		pairs1 += ids.size() * it->size();
 	}
 	return BinomialCoefficients(ids.size(), 2) + pairs + pairs1;
+}
+size_t ShortPalindrome(const string &s)
+{
+	size_t count = 0;
+	// Count the occurrences of x, y and xy
+	map<string, size_t> counts, pairs;
+	for (size_t i = 0; i < s.size(); i++)
+	{
+		char x = s[i];
+		for (char y = 'a'; y < 'z'; y++)
+		{
+			ostringstream xy, xyy, xyyx;
+			xy << x << y;
+			xyy << y << x << x;
+			xyyx << xyy.str() << s[i];
+			counts[xy.str()]++;
+			counts[xyy.str()]++;
+			count += counts[xyyx.str()];
+			counts[xyyx.str()]++;
+		}
+	}
 }

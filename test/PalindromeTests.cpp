@@ -299,6 +299,12 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(1, "week", 1, 2),
 					  make_tuple(2, "abab", 0, 3),
 					  make_tuple(1, "wuhmbspjnfviogqzldrcxtaeyk", 20, 20),
-					  make_tuple(2, "wuhmbspjnfviogqzldrcxtaeyk", 3, 4)
-					  /*make_tuple(2, "daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16), Fails. WIP*/
-					  ));
+					  make_tuple(2, "wuhmbspjnfviogqzldrcxtaeyk", 3, 4),
+					  make_tuple(2, "daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16),
+					  make_tuple(8, "wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 30, 37),
+					  make_tuple(3, "wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 28, 32),
+					  make_tuple(60480, "wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 12, 33),
+					  // make_tuple(1995840, "wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 1, 29), Fails! WIP
+					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 0),
+					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 1),
+					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 2)));

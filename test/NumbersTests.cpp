@@ -109,7 +109,7 @@ public:
 
 protected:
 	unsigned long long _expected;
-	long _n, _k;
+	size_t _n, _k;
 };
 TEST_P(BinomialCoefficientsTestFixture, BinomialCoefficientsTests)
 {
@@ -121,7 +121,6 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(6, 4, 2),
 					  make_tuple(252, 10, 5),
 					  make_tuple(184756, 20, 10)));
-
 class PowerSumTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t>>
 {
 public:

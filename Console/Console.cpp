@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
 	vector<vector<size_t>> ugrid, ugrid1;
 	Graph<size_t, size_t> graph;
 	Range range;
+	Palindrome palindrome;
 	ExceptionTest();
 	TestRandom();
 	KDTreeTests();
@@ -101,6 +102,7 @@ int main(int argc, char *argv[])
 	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;
 	cout << "sizeof(void*): " << sizeof(void *) << endl;
 	cout << "sizeof(long double): " << sizeof(long double) << endl;
+	cout << "sizeof(unsigned long long): " << sizeof(unsigned long long) << endl;
 	assert(sizeof(char) == 1);
 	assert(sizeof(short) == 2);
 	assert(sizeof(int) == 4);
@@ -2299,6 +2301,31 @@ int main(int argc, char *argv[])
 		{88, 94},
 	};
 	// assert(DistinctPairs(100, ugrid) == 3984); WIP
+	/*
+	::testing::Values(make_tuple(2, "week", 0, 3),
+					  make_tuple(1, "week", 1, 2),
+					  make_tuple(2, "abab", 0, 3),
+					  make_tuple(1, "wuhmbspjnfviogqzldrcxtaeyk", 20, 20),
+					  make_tuple(2, "wuhmbspjnfviogqzldrcxtaeyk", 3, 4)
+					  // make_tuple(2, "daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16)
+	*/
+	assert(palindrome.MaxSizePalindromeCount("week", 0, 3) == 2);
+	assert(palindrome.MaxSizePalindromeCount("week", 1, 2) == 1);
+	assert(palindrome.MaxSizePalindromeCount("abab", 0, 3) == 2);
+	assert(palindrome.MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 20, 20) == 1);
+	assert(palindrome.MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 3, 4) == 2);
+	assert(palindrome.MaxSizePalindromeCount("daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16) == 2);
+	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 30, 37) == 8);
+	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 28, 32) == 3);
+	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 12, 33) == 60480);
+	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 1, 29) == 1995840);
+	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 0) == 1);
+	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 1) == 1);
+	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 2) == 1);
+	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 3, 19) == 1);
+	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 43) == 1);
+	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 43, 43) == 1);
+	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 15, 41) == 1);
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
