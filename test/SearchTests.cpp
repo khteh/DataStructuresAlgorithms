@@ -241,7 +241,7 @@ public:
 		_toSearch = get<1>(GetParam());
 		_range = get<2>(GetParam());
 	}
-	int StringGridPatternTest()
+	bool StringGridPatternTest()
 	{
 		return _search.GridSearch(_toSearch, _range);
 	}

@@ -8127,4 +8127,5 @@ size_t ShortPalindrome(const string &s)
 			counts[xyyx.str()]++;
 		}
 	}
+	return 0;
 }
