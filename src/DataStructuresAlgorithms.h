@@ -193,7 +193,7 @@ unsigned long long factorialDynamicProgramming(long);
 long FactorialTrailingZeroesCount(long);
 long SequenceSum(long);
 long double BinomialCoefficients(size_t, size_t);
-long double MultinomialCoefficients(size_t, vector<size_t> const &);
+unsigned long long MultinomialCoefficients(size_t, vector<size_t> const &);
 void MultiplesCount(int, long &, long &);
 long MaxZeroProductBruteForce(vector<int> const &);
 long MaxZeroProduct(vector<int> const &, size_t count = 3);

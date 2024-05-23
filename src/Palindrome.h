@@ -27,5 +27,5 @@ public:
     size_t PalindromeAnagramCount1(string const &);
     void HighestValuePalindrome(string &, size_t);
     size_t ShortPalindrome(const string &);
-    size_t MaxSizePalindromeCount(string const &, size_t, size_t);
+    long double MaxSizePalindromeCount(string const &, size_t, size_t);
 };

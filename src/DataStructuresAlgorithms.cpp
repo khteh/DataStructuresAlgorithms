@@ -550,9 +550,9 @@ long double BinomialCoefficients(size_t n, size_t k)
  * https://en.wikipedia.org/wiki/Multinomial_theorem
  * Permutations of length-nword with n1 a's, n2 b's, ..., nk z's = n! / (n1! * n2! * ... * nk!)
  */
-long double MultinomialCoefficients(size_t n, vector<size_t> const &k)
+unsigned long long MultinomialCoefficients(size_t n, vector<size_t> const &k)
 {
-	long double divisor = 1;
+	unsigned long long divisor = 1;
 	for (vector<size_t>::const_iterator it = k.begin(); it != k.end(); it++)
 		divisor *= factorial(*it);
 	return factorial(n) / divisor;

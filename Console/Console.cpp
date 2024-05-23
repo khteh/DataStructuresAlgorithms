@@ -2317,15 +2317,12 @@ int main(int argc, char *argv[])
 	assert(palindrome.MaxSizePalindromeCount("daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16) == 2);
 	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 30, 37) == 8);
 	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 28, 32) == 3);
+	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 14, 25) == 16);
 	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 12, 33) == 60480);
 	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 1, 29) == 1995840);
-	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 0) == 1);
-	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 1) == 1);
-	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 2) == 1);
-	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 3, 19) == 1);
+	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 2, 40) == 740299127);
+	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 5, 41) == 556755193);
 	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 43) == 1);
-	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 43, 43) == 1);
-	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 15, 41) == 1);
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

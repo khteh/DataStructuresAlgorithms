@@ -337,44 +337,11 @@ size_t Palindrome::ShortPalindrome(const string &s)
  * https://www.youtube.com/watch?v=juGgfHsO-xM
  * https://www.tutorialspoint.com/number-of-palindromic-permutations#:~:text=We%20can%20find%20palindromic%20permutations,string%20%E2%80%9Cxxyyyxxzzy%E2%80%9D%20is%205.
  *
- * amim: mam mim => 1 pair, 2 singulars
- * amninm: mninm mnanm nmimn nmamn => 2 pairs, 2 singulars
- * week: ewe eke (2x1, 1x2)
- * abab: abba baab (2x2) total: 2x(2-1)
- * ababamim: (2x3, 3x1, 1x1): 3 pairs => 3 combinations
- *           abmmba ambbma => 2 x (3-2) = 2
- *           bammab bmaamb 2*size-4 = 2*2 = 4
- *           mbaabm mabbam
- * ababamimweek: (2x4, 3x1, 1x2): 4 pairs total: 2*size-4 = 2*4
- *               abmeemba abemmeba ambeebma amebbema aebmmbea aembbmea: 6
- *               bameemab bmaeeamb beammaeb
- *               eabmmbae ebammabe emabbame
- *               mabeebam mbaeeabm mea
- * ababamimweekdd: (2x5, 3x1, 1x2): 4 pairs total:
- *               abba baab
- *               mabbam mbaabm abmmba
- *
- *               abmeemba abemmeba ambeebma amebbema aebmmbea aembbmea: 6
- *
- * Only need to consider the first half. The second half is just a mirror.
- * aa:		 aa => 1 pair, 0 singular
- * aabb:   	 ab ba => 2 pairs, 0 singluar => 1*2 = 2
- * aabbcc:   3 pairs, 0 singular => 2*3 = 6
- * 			 abc acb
- *           bac bca
- *           cab cba: 2 * 3 = 6
- * aabbccdd: 4 pairs, 0 singular => 6*4 = 24
- * 			 abcd abdc acbd acdb adcb adbc: 2 * (4-1) = 2*3 = 6
- * 			 bacd badc bcad bcda bdca bdac
- *           c...
- *       	 d... total; 6*4 = 24
- *
- * aabbccddee: 5 pairs, 0 singular => (4*6)*5 = 24*5
- * 			(abcde abced abdce abdec abecd abedc) (acbde acbed acdbe acdeb acebd acedb) (ad... ) (ae...)
- * WIP: 18/32 test cases failed :(
+ * WIP: 18/32 test cases failed and timeout for some! :(
  */
-size_t Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
+long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
 {
+    long double modulo = 1e9 + 7L;
     string str = s.substr(l, r - l + 1);
     map<char, size_t> chars;
     if (str.empty())
@@ -389,8 +356,7 @@ size_t Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
     }
     size_t singulars = 0;
     vector<size_t> pairs;
-    size_t sum = 0;
-    long double divisor = 1;
+    long double sum = 0, divisor = 1;
     for (typename map<char, size_t>::const_iterator it = chars.begin(); it != chars.end(); it++)
     {
         if (it->second == 1)
@@ -398,12 +364,16 @@ size_t Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
         else
         {
             // once you have settled the left half of a palindrome (finding all unique permutations of the numbers that end up in that left half) , the right half is fully determined
-            // size_t sumHalved = it->second / 2 - it->second % 2;
-            // sum += sumHalved;
-            pairs.push_back(it->second / 2 - it->second % 2);
-            // divisor = fmodl(divisor * factorial(sumHalved), modulo);
+            long double sumHalved = (it->second - it->second % 2) / 2;
+            sum += sumHalved;
+            pairs.push_back(sumHalved);
+            divisor = divisor * factorial(sumHalved);
             singulars += it->second % 2;
         }
     }
-    return MultinomialCoefficients(accumulate(pairs.begin(), pairs.end(), 0), pairs) * (singulars > 0 ? singulars : 1);
+    // return MultinomialCoefficients(accumulate(pairs.begin(), pairs.end(), 0), pairs) * (singulars > 0 ? singulars : 1);
+    sum = factorial(sum);
+    long double count = sum / divisor;
+    long double result = fmodl(count * (singulars > 0 ? singulars : 1), modulo);
+    return result;
 }
