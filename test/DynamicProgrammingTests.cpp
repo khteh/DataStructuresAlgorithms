@@ -178,16 +178,18 @@ INSTANTIATE_TEST_SUITE_P(
 	FibonacciModifiedDynamicProgrammingFixture,
 	::testing::Values(make_tuple("5", 0, 1, 4), make_tuple("27", 0, 1, 5), make_tuple("734", 0, 1, 6), make_tuple("538783", 0, 1, 7), make_tuple("290287121823", 0, 1, 8), make_tuple("2", 2, 0, 0), make_tuple("0", 2, 0, 1), make_tuple("2", 2, 0, 2), make_tuple("4", 2, 0, 3), make_tuple("18", 2, 0, 4), make_tuple("328", 2, 0, 5), make_tuple("107602", 2, 0, 6), make_tuple("11578190732", 2, 0, 7), make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)));
 
-TEST(DynamicProgrammingTests, factorialDynamicProgrammingTests)
+TEST(DynamicProgrammingTests, FactorialDynamicProgrammingTests)
 {
-	ASSERT_EQ(1, factorialDynamicProgramming(1));
-	ASSERT_EQ(2, factorialDynamicProgramming(2));
-	ASSERT_EQ(6, factorialDynamicProgramming(3));
-	ASSERT_EQ(24, factorialDynamicProgramming(4));
-	ASSERT_EQ(120, factorialDynamicProgramming(5));
-	ASSERT_EQ(2432902008176640000, factorialDynamicProgramming(20));
+	ASSERT_EQ(1, FactorialDynamicProgramming(1));
+	ASSERT_EQ(2, FactorialDynamicProgramming(2));
+	ASSERT_EQ(6, FactorialDynamicProgramming(3));
+	ASSERT_EQ(24, FactorialDynamicProgramming(4));
+	ASSERT_EQ(120, FactorialDynamicProgramming(5));
+	ASSERT_EQ(2432902008176640000, FactorialDynamicProgramming(20));
 #if defined(__GNUC__) || defined(__GNUG__)
-	ASSERT_EQ(15511210043330985984000000, factorialDynamicProgramming(25)); // Only 64-bit on GNU C++. "constant too big" compilation error on MSVC
+	// Comparing floating point values using the == operator is very error prone; two values that should be equal may not be due to arithmetic rounding errors.
+	ASSERT_LT(numeric_limits<long double>::epsilon(), abs(15511210043330985984000000L - FactorialDynamicProgramming(25)));
+// ASSERT_EQ(15511210043330985984000000, FactorialDynamicProgramming(25)); // Only 64-bit on GNU C++. "constant too big" compilation error on MSVC
 #endif
 }
 class NumberSolitaireFixture : public testing::TestWithParam<tuple<long, vector<long>>>

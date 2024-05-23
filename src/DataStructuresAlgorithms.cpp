@@ -468,20 +468,20 @@ void copy_on_write_string()
 	cout << hex << "s1 @ " << (void *)(cptr) << endl;
 	cout << "s2 @ " << (void *)(cptr1) << endl;
 }
-unsigned long long Fibonacci(long n)
+long double Fibonacci(long n)
 {
 	// {0 1 1 2 ...}
 	return (n <= 1) ? n : Fibonacci(n - 2) + Fibonacci(n - 1);
 }
 /* Bottom-up Dynamic Programming
  */
-unsigned long long FibonacciDynamicProgramming(long n)
+long double FibonacciDynamicProgramming(long n)
 {
 	/* 0 1 2 3
 	 * {0 1 1 2 3 5 8}
 	 * {0, 1}, {1, 1}, {1, 2}, {3, 2}, {3, 5}
 	 */
-	vector<unsigned long long> result = {0, 1};
+	vector<long double> result = {0, 1};
 	if (n <= 1)
 		return n;
 	for (size_t i = 2; i <= (size_t)n; i++)
@@ -522,17 +522,17 @@ string FibonacciModifiedDynamicProgramming(long t1, long t2, long n)
 // http://web2.0calc.com/
 // 64-bit max is 18446744073709551615
 // Overflow happens at 21!
-unsigned long long factorial(long n)
+long double Factorial(long n)
 {
-	return (n <= 0) ? 1 : n * factorial(n - 1);
+	return (n <= 0) ? 1 : n * Factorial(n - 1);
 }
-unsigned long long factorialDynamicProgramming(long n)
+long double FactorialDynamicProgramming(long n)
 {
 	/* 0 1 2 3 4
 	 * {1 1 2 6 24 ...}
 	 * result = 1,
 	 */
-	unsigned long long result = 1;
+	long double result = 1;
 	if (n <= 0)
 		return 1;
 	for (size_t i = 1; i <= (size_t)n; result *= i++)
@@ -544,18 +544,18 @@ unsigned long long factorialDynamicProgramming(long n)
  */
 long double BinomialCoefficients(size_t n, size_t k)
 {
-	return factorial(n) / (factorial(k) * factorial(n - k));
+	return Factorial(n) / (Factorial(k) * Factorial(n - k));
 }
 /*
  * https://en.wikipedia.org/wiki/Multinomial_theorem
  * Permutations of length-nword with n1 a's, n2 b's, ..., nk z's = n! / (n1! * n2! * ... * nk!)
  */
-unsigned long long MultinomialCoefficients(size_t n, vector<size_t> const &k)
+long double MultinomialCoefficients(size_t n, vector<size_t> const &k)
 {
-	unsigned long long divisor = 1;
+	long double divisor = 1;
 	for (vector<size_t>::const_iterator it = k.begin(); it != k.end(); it++)
-		divisor *= factorial(*it);
-	return factorial(n) / divisor;
+		divisor *= Factorial(*it);
+	return Factorial(n) / divisor;
 }
 
 long SequenceSum(long n)
@@ -7354,7 +7354,7 @@ where,
 long double VectorSlicesSum(vector<long double> &data)
 {
 	long double sum = 0;
-	long double modulo = 1e9 + 7L;
+	const long double modulo = 1e9 + 7L;
 	if (!data.empty())
 	{
 		long middle = data.size() / 2 + data.size() % 2;

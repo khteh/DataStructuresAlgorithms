@@ -336,12 +336,12 @@ size_t Palindrome::ShortPalindrome(const string &s)
  * https://stackoverflow.com/questions/66807141/count-palindromic-permutations-mirrors-of-an-array
  * https://www.youtube.com/watch?v=juGgfHsO-xM
  * https://www.tutorialspoint.com/number-of-palindromic-permutations#:~:text=We%20can%20find%20palindromic%20permutations,string%20%E2%80%9Cxxyyyxxzzy%E2%80%9D%20is%205.
- *
- * WIP: 18/32 test cases failed and timeout for some! :(
+ * https://chalkdustmagazine.com/features/counting-palindromes/
+ * WIP: 11/32 test cases failed and timeout for some! :(
  */
 long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
 {
-    long double modulo = 1e9 + 7L;
+    const long double modulo = 1e9 + 7L;
     string str = s.substr(l, r - l + 1);
     map<char, size_t> chars;
     if (str.empty())
@@ -367,13 +367,14 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
             long double sumHalved = (it->second - it->second % 2) / 2;
             sum += sumHalved;
             pairs.push_back(sumHalved);
-            divisor = divisor * factorial(sumHalved);
+            divisor = divisor * Factorial(sumHalved);
             singulars += it->second % 2;
         }
     }
     // return MultinomialCoefficients(accumulate(pairs.begin(), pairs.end(), 0), pairs) * (singulars > 0 ? singulars : 1);
-    sum = factorial(sum);
+    sum = Factorial(sum);
     long double count = sum / divisor;
     long double result = fmodl(count * (singulars > 0 ? singulars : 1), modulo);
+    cout << fixed << setprecision(0) << result << endl;
     return result;
 }

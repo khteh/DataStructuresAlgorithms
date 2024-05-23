@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 	assert(numeric_limits<int>::min() == numeric_limits<long>::min());
 	assert(numeric_limits<int>::max() == numeric_limits<long>::max());
 #endif
-	cout << "https://en.wikipedia.org/wiki/Machine_epsilon: Float: " << numeric_limits<float>::epsilon() << ", Double: " << numeric_limits<double>::epsilon() << endl;
+	cout << "https://en.wikipedia.org/wiki/Machine_epsilon: Float: " << numeric_limits<float>::epsilon() << ", Double: " << numeric_limits<double>::epsilon() << ", Long Double: " << numeric_limits<long double>::epsilon() << endl;
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
 	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << " (0x" << hex << numeric_limits<int>::min() << dec << "), numeric_limits<int>::max(): " << numeric_limits<int>::max() << " (0x" << hex << numeric_limits<int>::max() << "), numeric_limits<int>::min() *-1 = " << numeric_limits<int>::min() * -1 << endl;
@@ -529,12 +529,12 @@ int main(int argc, char *argv[])
 	d = round(0.1234, 2);
 	d = round(0.1234, 3);
 	d = round(0.1234, 4);
-	assert(factorial(1) == 1);
-	assert(factorial(2) == 2);
-	assert(factorial(3) == 6);
-	assert(factorial(4) == 24);
-	assert(factorial(5) == 120);
-	assert(factorial(20) == 2432902008176640000);
+	assert(Factorial(1) == 1);
+	assert(Factorial(2) == 2);
+	assert(Factorial(3) == 6);
+	assert(Factorial(4) == 24);
+	assert(Factorial(5) == 120);
+	assert(Factorial(20) == 2432902008176640000);
 	assert(SequenceSum(0) == 0);
 	assert(SequenceSum(1) == 1);
 	assert(SequenceSum(5) == 15);
@@ -567,14 +567,14 @@ int main(int argc, char *argv[])
 	assert(FibonacciModified(2, 0, 11) == "104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308");
 
 	ostringstream oss;
-	unsigned long long factorialResult = factorial(26);
+	unsigned long long factorialResult = Factorial(26);
 	cout << "26!: " << setiosflags(ios::fixed) << factorialResult << endl;
 	assert(FactorialTrailingZeroesCount(10) == 2);
 	assert(FactorialTrailingZeroesCount(25) == 6);
 	assert(FactorialTrailingZeroesCount(26) == 6);
-	cout << "10!: " << (double)factorial(10) << " has " << FactorialTrailingZeroesCount(10) << " trailing zeroes." << endl;
-	cout << "25!: " << (double)factorial(25) << " has " << FactorialTrailingZeroesCount(25) << " trailing zeroes." << endl;
-	cout << "26!: " << (double)factorial(26) << " has " << FactorialTrailingZeroesCount(26) << " trailing zeroes." << endl;
+	cout << "10!: " << (double)Factorial(10) << " has " << FactorialTrailingZeroesCount(10) << " trailing zeroes." << endl;
+	cout << "25!: " << (double)Factorial(25) << " has " << FactorialTrailingZeroesCount(25) << " trailing zeroes." << endl;
+	cout << "26!: " << (double)Factorial(26) << " has " << FactorialTrailingZeroesCount(26) << " trailing zeroes." << endl;
 	data.clear();
 	str = "abc";
 	a.clear();
@@ -2301,14 +2301,6 @@ int main(int argc, char *argv[])
 		{88, 94},
 	};
 	// assert(DistinctPairs(100, ugrid) == 3984); WIP
-	/*
-	::testing::Values(make_tuple(2, "week", 0, 3),
-					  make_tuple(1, "week", 1, 2),
-					  make_tuple(2, "abab", 0, 3),
-					  make_tuple(1, "wuhmbspjnfviogqzldrcxtaeyk", 20, 20),
-					  make_tuple(2, "wuhmbspjnfviogqzldrcxtaeyk", 3, 4)
-					  // make_tuple(2, "daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16)
-	*/
 	assert(palindrome.MaxSizePalindromeCount("week", 0, 3) == 2);
 	assert(palindrome.MaxSizePalindromeCount("week", 1, 2) == 1);
 	assert(palindrome.MaxSizePalindromeCount("abab", 0, 3) == 2);
@@ -2323,6 +2315,7 @@ int main(int argc, char *argv[])
 	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 2, 40) == 740299127);
 	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 5, 41) == 556755193);
 	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 43) == 1);
+	assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 19, 81) == 922261429);
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
