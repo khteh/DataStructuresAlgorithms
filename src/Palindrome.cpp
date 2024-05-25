@@ -288,47 +288,66 @@ void Palindrome::HighestValuePalindrome(string &s, size_t k)
 }
 /*
  * https://www.hackerrank.com/challenges/short-palindrome/problem
- * WIP Times out!
+ * ghhggh
+ * i    c   count   j       str123      str12       str1
+ * 0    'g' 0       -       0           0           ['g'] = 1
+ * 1    'h' 0       6('g')  0           [g][h]=1
+ *                  7['h']  0           [h][h]=0    ['h'] = 1
+ * 2    'h' 0       6['g']  ['g']=1     [g][h]=2
+ *                  7['h']  0           [h][h]=1    ['h'] = 2
+ * 3    'g' 1       6['g']  0           [g][g]=1
+ *                  7['h']  0           [h][g]=2    ['g'] = 2
+ * 4    'g' 2       6['g']  ['g']=2     [g][g]=3
+ *                  7['h']  ['h']=2     [h][g]=2    ['g'] = 3
+ * 5    'h' 4       6['g']  ['g']=4     [g][h]=4
+ *                  7['h']  ['h']=4     [h][h]=4    ['h'] = 3
+ *
+ * abbaab
+ * i    c   count   j       str123      str12       str1
+ * 0    'a' 0       -       0           0           ['a'] = 1
+ * 1    'b' 0       0['a']  0           [a][b]=1
+ *                  1['b']  0           [b][b]=0    ['b'] = 1
+ * 2    'b' 0       0]'a']  ['a']=1     [a][b]=2
+ *                  1['b']  ['b']=0     [b][b]=1    ['b'] = 2
+ * 3    'a' 1       0['a']  ['a']=1     [a][a]=1
+ *                  1['b']  ['b']=0     [b][a]=2    ['a'] = 2
+ * 4    'a' 2       0['a']  ['a']=2     [a][a]=3
+ *                  1['b']  ['b']=2     [b][a]=4    ['a'] = 3
+ * 5    'b' 4       0['a']  ['a']=4     [a][b]=5
+ *                  1['b']  ['b']=3     [b][b]=4    ['b'] = 3
+ *
+ * akakak
+ * i    c   count   j       str123      str12       str1
+ * 0    'a' 0       -       0           0           ['a'] = 1
+ * 1    'k' 0       0['a']  0           [a][k]=1
+ *                  ['k']   0           [k][k]=0    ['k'] = 1
+ * 2    'a' 0       0['a']  0           [a][a]=1
+ *                  ['k']   0           [k][a]=1    ['a'] = 2
+ * 3    'k' 0       0['a']  ['a']=1     [a][k]=3
+ *                  ['k']   ['k']=0     [k][k]=1    ['k'] = 2
+ * 4    'a' 1       0['a']  ['a']=2     [a][a]=3
+ *                  ['k']   ['k']=1     [k][a]=3    ['a'] = 3
+ * 5    'k' 2       0['a']  ['a']=5     [a][k]=6
+ *                  ['k']   ['k']=2     [k][k]=3    ['k'] = 3
+ *
+ * 100%
  */
 size_t Palindrome::ShortPalindrome(const string &s)
 {
-    set<char> chars(s.begin(), s.end());
-    set<string> patterns;
-    string str(chars.begin(), chars.end());
-    string permutation;
-    for (size_t i = 0; i < str.size(); i++)
-    {
-        permutation.clear();
-        permutation.push_back(str[i]);
-        permutation.push_back(str[i]);
-        permutation.push_back(str[i]);
-        permutation.push_back(str[i]);
-        patterns.insert(permutation);
-        for (size_t j = i + 1; j < str.size(); j++)
-        {
-            permutation.clear();
-            permutation.push_back(str[j]);
-            permutation.push_back(str[j]);
-            permutation.push_back(str[j]);
-            permutation.push_back(str[j]);
-            patterns.insert(permutation);
-            permutation.clear();
-            permutation.push_back(str[i]);
-            permutation.push_back(str[j]);
-            permutation.push_back(str[j]);
-            permutation.push_back(str[i]);
-            patterns.insert(permutation);
-            permutation.clear();
-            permutation.push_back(str[j]);
-            permutation.push_back(str[i]);
-            permutation.push_back(str[i]);
-            permutation.push_back(str[j]);
-            patterns.insert(permutation);
-        }
-    }
     size_t count = 0;
-    for (set<string>::iterator it = patterns.begin(); it != patterns.end(); it++)
-        count += FindSubsequenceDynamicProgramming(s, (string)(*it));
+    vector<size_t> str1(26, 0), str123(26, 0);
+    vector<vector<size_t>> str12(26, vector<size_t>(26, 0));
+    for (size_t i = 0; i < s.size(); i++)
+    {
+        size_t c = s[i] - 'a';
+        count += str123[c];
+        for (size_t j = 0; j < 26; j++) // j will provide the "previous" character
+        {
+            str123[j] += str12[j][c]; // "xb" += "bx" str123 tracks complete quad of a palindrome
+            str12[j][c] += str1[j];   // str12 tracks the first half the quad string of a palindrome
+        }
+        str1[c]++;
+    }
     return count;
 }
 /*
@@ -354,11 +373,10 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
         if (!result.second)
             chars[*it]++;
     }
-    size_t singulars = 0;
+    long double singulars = 0;
     vector<size_t> pairs;
     long double sum = 0, divisor = 1;
     for (typename map<char, size_t>::const_iterator it = chars.begin(); it != chars.end(); it++)
-    {
         if (it->second == 1)
             singulars++;
         else
@@ -370,7 +388,6 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
             divisor = divisor * Factorial(sumHalved);
             singulars += it->second % 2;
         }
-    }
     // return MultinomialCoefficients(accumulate(pairs.begin(), pairs.end(), 0), pairs) * (singulars > 0 ? singulars : 1);
     sum = Factorial(sum);
     long double count = sum / divisor;

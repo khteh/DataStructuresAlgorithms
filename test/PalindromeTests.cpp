@@ -267,6 +267,8 @@ INSTANTIATE_TEST_SUITE_P(
 	ShortPalindromeTestFixture,
 	::testing::Values(make_tuple(15, "kkkkkkz"),
 					  make_tuple(4, "ghhggh"),
+					  make_tuple(4, "abbaab"),
+					  make_tuple(2, "akakak"),
 					  make_tuple(242745, "cbbdcacccdaddbaabbaacbacacaaddaaacdbccccccbbadbbcdddddddaccbdbddcbacaaadbbdcbcbcdabdddbbcdccaacdccab")));
 class MaxSizePalindromeCountTestFixture : public testing::TestWithParam<tuple<size_t, string, size_t, size_t>>
 {
