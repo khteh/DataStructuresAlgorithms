@@ -288,6 +288,42 @@ void Palindrome::HighestValuePalindrome(string &s, size_t k)
 }
 /*
  * https://www.hackerrank.com/challenges/short-palindrome/problem
+ * abba
+ * i    c   count   j       str123      str12       str1
+ * 0    a   0       -       0           0           ['a'] = 1
+ * 1    b   0       0['a']  0           [a][b]=1
+ *                  1['b']  0           [b][b]=0    ['b'] = 1
+ * 2    b   0       0['a']  ['a']=1     [a][b]=2
+ *                  1['b']  ['b']=0     [b][b]=1    ['b'] = 2
+ * 3    a   1       0['a']  ['a']=1     [a][a]=1
+ *                  1['b']  ['b']=0     [b][a]=2    ['a'] = 2
+ *
+ * abxa
+ * i    c   count   j       str123      str12       str1
+ * 0    a   0       -       0           0           ['a'] = 1
+ * 1    b   0       0['a']  0           [a][b]=1
+ *                  1['b']  0           [b][b]=0
+ *                  23['x'] 0           [x][b]=0    ['b'] = 1
+ * 2    x   0       0['a']  ['a']=0     [a][x]=0
+ *                  1['b']  ['b']=0     [b][x]=0
+ *                  23['x'] ['x']=0     [x][x]=0    ['x'] = 1
+ * 3    a   0       0['a']  ['a']=0     [a][a]=1
+ *                  1['b']  ['b']=0     [b][a]=1
+ *                  23['x'] ['x']=0     [x][a]=1    ['a'] = 2
+ *
+ * abbx
+ * i    c   count   j       str123      str12       str1
+ * 0    a   0       -       0           0           ['a'] = 1
+ * 1    b   0       0['a']  0           [a][b]=1
+ *                  1['b']  0           [b][b]=0
+ *                  23['x'] 0           [x][b]=0    ['b'] = 1
+ * 2    b   0       0['a']  ['a']=1     [a][b]=2
+ *                  1['b']  ['b']=0     [b][x]=0
+ *                  23['x'] ['x']=0     [x][x]=0    ['b'] = 2
+ * 3    x   0       0['a']  ['a']=1     [a][x]=1
+ *                  1['b']  ['b']=0     [b][x]=2
+ *                  23['x'] ['x']=0     [x][x]=0    ['x'] = 1
+ *
  * ghhggh
  * i    c   count   j       str123      str12       str1
  * 0    'g' 0       -       0           0           ['g'] = 1
