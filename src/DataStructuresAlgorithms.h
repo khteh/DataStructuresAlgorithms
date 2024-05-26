@@ -399,5 +399,4 @@ size_t ActivityNotifications1(vector<size_t> &, size_t);
 size_t ActivityNotifications2(vector<size_t> const &, size_t);
 size_t PowerSum(size_t, size_t, size_t i = 1);
 string MorganAndString(string const &, string const &);
-size_t SherlockAndMinimax(vector<size_t> &, size_t, size_t);
 size_t DistinctPairs(size_t, vector<vector<size_t>> const &);

@@ -8033,25 +8033,6 @@ string MorganAndString(string const &a, string const &b)
 	return result;
 }
 /*
- * https://www.hackerrank.com/challenges/sherlock-and-minimax
- * Times out! WIP
- */
-size_t SherlockAndMinimax(vector<size_t> &data, size_t p, size_t q)
-{
-	size_t min = numeric_limits<size_t>::max();
-	map<size_t, size_t> mins;
-	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
-		for (size_t i = p; i <= q; i++)
-		{
-			size_t diff = abs((long)*it - (long)i);
-			pair<map<size_t, size_t>::iterator, bool> result = mins.emplace(i, diff);
-			if (!result.second && result.first->second > diff)
-				result.first->second = diff;
-		}
-	multimap<size_t, size_t, greater<size_t>> maxs = flip_map<size_t, size_t, greater<size_t>>(mins);
-	return maxs.begin()->second;
-}
-/*
  * https://www.hackerrank.com/challenges/journey-to-the-moon/problem
  * WIP
  * [0, 1] [2, 3] [0, 4] => [0, 1, 4] * [2, 3] = 6

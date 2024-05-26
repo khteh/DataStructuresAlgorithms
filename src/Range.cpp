@@ -1010,3 +1010,64 @@ size_t Range::HackerlandRadioTransmitters(vector<size_t> &data, long k)
 	}
 	return installations.size();
 }
+/*
+ * https://www.hackerrank.com/challenges/sherlock-and-minimax
+ * Find a value between p and q which provides the maximum of min(abs(data[i] - M))
+ *
+ * 100%
+ */
+size_t Range::SherlockAndMinimax(vector<size_t> &data, size_t p, size_t q)
+{
+	ranges::sort(data);
+	if (q < data[0])
+		return p;
+	else if (p > data[data.size() - 1])
+		return q;
+	long maxOfMin = numeric_limits<long>::min(), result, mid = data[0], diff;
+	if (p < data[0]) // Checkout the head of the data
+	{
+		maxOfMin = data[0] - p;
+		result = p;
+	}
+	for (size_t i = 0; i < data.size() && mid < q; i++)
+	{
+		mid = data[i] + (data[i + 1] - data[i]) / 2;
+		if (mid >= p && mid <= q)
+		{
+			diff = min(mid - data[i], data[i + 1] - mid);
+			if (diff > maxOfMin)
+			{
+				maxOfMin = diff;
+				result = mid;
+			}
+		}
+		else if (mid < p)
+		{
+			diff = data[i + 1] - p; // Expects data[i + 1] larger than p because it's a requirement that the result has to be within the range of [p, q]
+			if (diff > maxOfMin)
+			{
+				maxOfMin = diff;
+				result = p;
+			}
+		}
+		else if (mid > q)
+		{
+			diff = q - data[i]; // Expects data[i] smaller than q because it's a requirement that the result has to be within the range of [p, q]
+			if (diff > maxOfMin)
+			{
+				maxOfMin = diff;
+				result = q;
+			}
+		}
+	}
+	if (data[data.size() - 1] < q) // Check out the tail of the data
+	{
+		diff = q - data[data.size() - 1];
+		if (diff > maxOfMin)
+		{
+			maxOfMin = diff;
+			result = q;
+		}
+	}
+	return result;
+}

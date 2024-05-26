@@ -54,4 +54,5 @@ public:
 	vector<long> LastNumbers(size_t, long, long);
 	size_t MaxNonDivisableSubset(vector<size_t> &, size_t);
 	size_t HackerlandRadioTransmitters(vector<size_t> &, long);
+	size_t SherlockAndMinimax(vector<size_t> &, size_t, size_t);
 };
