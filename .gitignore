@@ -9,7 +9,7 @@
 *workspace
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
-
+nuget.config
 packages
 # Build results
 # Build results
