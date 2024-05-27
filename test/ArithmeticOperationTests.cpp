@@ -97,28 +97,63 @@ INSTANTIATE_TEST_SUITE_P(
 	ArithmerticOperationsTests,
 	AddWithoutArithmeticTestFixture,
 	::testing::Values(make_tuple(0, 0, 0), make_tuple(0, -1, 1), make_tuple(0x1dd9b7dde, 0xdeadbeef, 0xfeedbeef), make_tuple(0xdeadbeef, 0xdeadbeef, 0), make_tuple(0xfeedbeef, 0, 0xfeedbeef)));
-TEST(ArithmerticOperationsTests, NumberStringSumTests)
+class NumberStringSumTestFixture : public ArithmerticOperationsFixture<string>, public testing::TestWithParam<tuple<string, string, string>>
 {
-	Arithmetic arithmetic;
-	ASSERT_EQ("11111111100", arithmetic.NumberStringSum(string("1234567890"), string("9876543210")));
-	ASSERT_EQ("168", arithmetic.NumberStringSum(string("123"), string("45")));
-}
-TEST(ArithmerticOperationsTests, NumberStringMultiplicationTests)
+public:
+	void SetUp() override
+	{
+		ArithmerticOperationsFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	string NumberStringSumTest()
+	{
+		return _arithmetic.NumberStringSum(_var1, _var2);
+	}
+};
+TEST_P(NumberStringSumTestFixture, NumberStringSumTests)
 {
-	Arithmetic arithmetic;
-	string line = "-4";
-	string line1 = "5";
-	ASSERT_EQ("-20", arithmetic.NumberStringMultiplication(line, line1));
-	line = "3";
-	line1 = "-4";
-	ASSERT_EQ("-12", arithmetic.NumberStringMultiplication(line, line1));
-	line = "-7";
-	line1 = "-8";
-	ASSERT_EQ("56", arithmetic.NumberStringMultiplication(line, line1));
-	line = "123456";
-	line1 = "654321";
-	ASSERT_EQ("80779853376", arithmetic.NumberStringMultiplication(line, line1));
-	line = "456789";
-	line1 = "987654";
-	ASSERT_EQ("451149483006", arithmetic.NumberStringMultiplication(line, line1));
+	ASSERT_EQ(this->_expected, this->NumberStringSumTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	NumberStringSumTests,
+	NumberStringSumTestFixture,
+	::testing::Values(make_tuple("11111111100", "1234567890", "9876543210"), make_tuple("168", "123", "45")));
+class NumberStringMultiplicationTestFixture : public ArithmerticOperationsFixture<string>, public testing::TestWithParam<tuple<string, string, string>>
+{
+public:
+	void SetUp() override
+	{
+		ArithmerticOperationsFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	string NumberStringMultiplicationTest()
+	{
+		return _arithmetic.NumberStringMultiplication(_var1, _var2);
+	}
+};
+TEST_P(NumberStringMultiplicationTestFixture, NumberStringMultiplicationTests)
+{
+	ASSERT_EQ(this->_expected, this->NumberStringMultiplicationTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	NumberStringMultiplicationTests,
+	NumberStringMultiplicationTestFixture,
+	::testing::Values(make_tuple("-20", "-4", "5"), make_tuple("-12", "3", "-4"), make_tuple("56", "-7", "-8"), make_tuple("80779853376", "123456", "654321"), make_tuple("451149483006", "456789", "987654")));
+class XorSequenceTestFixture : public ArithmerticOperationsFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		ArithmerticOperationsFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	size_t XorSequenceTest()
+	{
+		return _arithmetic.XorSequence(_var1, _var2);
+	}
+};
+TEST_P(XorSequenceTestFixture, XorSequenceTests)
+{
+	ASSERT_EQ(this->_expected, this->XorSequenceTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	XorSequenceTests,
+	XorSequenceTestFixture,
+	::testing::Values(make_tuple(6, 1, 4), make_tuple(7, 2, 4), make_tuple(9, 2, 8), make_tuple(15, 5, 9), make_tuple(5, 3, 5), make_tuple(2, 4, 6), make_tuple(22, 15, 20)));

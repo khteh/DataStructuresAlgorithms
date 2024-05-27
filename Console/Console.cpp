@@ -99,6 +99,7 @@ int main(int argc, char *argv[])
 	str1 = str.substr(0, 0);
 	assert(str1.empty());
 	char cstr[8];
+	cout << "sizeof(size_t): " << sizeof(size_t) << ", sizeof(long): " << sizeof(long) << endl;
 	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;
 	cout << "sizeof(void*): " << sizeof(void *) << endl;
 	cout << "sizeof(long double): " << sizeof(long double) << endl;

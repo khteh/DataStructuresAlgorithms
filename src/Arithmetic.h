@@ -17,4 +17,5 @@ public:
 	long long AddWithoutArithmetic(long long, long long);
 	string NumberStringSum(const string &, const string &);
 	string NumberStringMultiplication(string &, string &);
+	size_t XorSequence(size_t, size_t);
 };

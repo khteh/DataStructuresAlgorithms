@@ -204,3 +204,90 @@ string Arithmetic::NumberStringMultiplication(string &num1, string &num2)
 		oss << result[i--];
 	return oss.str();
 }
+/*
+ * https://www.hackerrank.com/challenges/xor-se/problem
+ * 100%
+ * i	data[i]			result(data[i] ^ data[i-1])
+ * 0	0(same as i)	0(same as i)
+ * 1	1(always 1)		1(same as i)
+ * 2	3(always i+1)	2(Always 2)
+ * 3	0(always 0)		2(Always 2)
+ *
+ * 4	4(same as i)	6(Always i+2)
+ * 5	1(always 1)		7(Always i+2)
+ * 6	7(always i+1)	0(Always 0)
+ * 7	0(always 0)		0(Always 0)
+ *
+ * 8	8(same as i)	8(same as i)
+ * 9	1(always 1)		9(same as i)
+ * 10	11(always i+1)	2(Always 2)
+ * 11	0(always 0)		2(Always 2)
+ *
+ * 12	12(same as i)	14(Always i+2)
+ * 13	1(always 1)		15(Always i+2)
+ * 14	15(always i+1)	0(Always 0)
+ * 15	0(always 0)		0(Always 0)
+ *
+ * 16	16(same as i)	16(same as i)
+ * 17	1(always 1)		17(same as i)
+ * 18	19(always i+1)	2(Always 2)
+ * 19	0(always 0)		2(Always 2)
+ *
+ * 20	20(same as i)	22(Always i+2)
+ * 21	1(always 1)		23(Always i+2)
+ * 22	23(always i+1)	0(Always 0)
+ * 23	0(always 0)		0(Always 0)
+ *
+ * 24	24(same as i)	24(same as i)
+ * 25	1(always 1)		25(same as i)
+ * 26	27(always i+1)	2(Always 2)
+ * 27	0(always 0)		2(Always 2)
+ *
+ * Solution: generate result[0, l-1] and result[0, r]
+ * final result = data[0, l-1] ^ data[0, r]. It will cancel out the accumulated xor from 0 too l-1
+ */
+size_t Arithmetic::XorSequence(size_t l, size_t r)
+{
+	size_t left = 0, right = 0;
+	if (l > 0)
+		l--;
+	switch (l % 8)
+	{
+	case 0:
+	case 1:
+		left = l;
+		break;
+	case 2:
+	case 3:
+		left = 2;
+		break;
+	case 4:
+	case 5:
+		left = l + 2;
+		break;
+	case 6:
+	case 7:
+		left = 0;
+		break;
+	}
+	switch (r % 8)
+	{
+	case 0:
+	case 1:
+		right = r;
+		break;
+	case 2:
+	case 3:
+		right = 2;
+		break;
+	case 4:
+	case 5:
+		right = r + 2;
+		break;
+	case 6:
+	case 7:
+		right = 0;
+		break;
+	}
+	return left ^ right;
+}
