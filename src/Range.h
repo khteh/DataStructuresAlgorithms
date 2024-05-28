@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <sstream>
+#include <math.h>
 #ifdef _MSC_VER
 #include <ppl.h>
 using namespace concurrency;
@@ -55,4 +56,5 @@ public:
 	size_t MaxNonDivisableSubset(vector<size_t> &, size_t);
 	size_t HackerlandRadioTransmitters(vector<size_t> &, long);
 	size_t SherlockAndMinimax(vector<size_t> &, size_t, size_t);
+	size_t ChiefHopper(vector<size_t> const &);
 };

@@ -1071,3 +1071,34 @@ size_t Range::SherlockAndMinimax(vector<size_t> &data, size_t p, size_t q)
 	}
 	return result;
 }
+/*
+ * https://www.hackerrank.com/challenges/chief-hopper/problem
+ * 100%
+3 2
+3 3
+3 4
+2 3
+1 2
+
+4 3
+4 4
+3 3
+2 2
+2 4
+
+4 4
+3 4
+2 4
+
+3 1
+4 6
+2 4
+*
+ */
+size_t Range::ChiefHopper(vector<size_t> const &data)
+{
+	size_t e = 0;
+	for (vector<size_t>::const_reverse_iterator it = data.rbegin(); it != data.rend(); it++)
+		e = (size_t)ceil((e + *it) / 2.0);
+	return e;
+}

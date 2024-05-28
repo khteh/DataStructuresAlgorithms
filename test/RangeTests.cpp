@@ -783,3 +783,30 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(4, vector<size_t>{5, 8, 14}, 4, 9),
 					  make_tuple(6, vector<size_t>{3, 5, 7, 9}, 6, 8),
 					  make_tuple(173959056, vector<size_t>{263044060, 323471968, 60083128, 764550014, 209332334, 735326740, 558683912, 626871620, 232673588, 428805364, 221674872, 261029278, 139767646, 146996700, 200921412, 121542678, 96223500, 239197414, 407346706, 143348970, 60722446, 664904326, 352123022, 291011666, 594294166, 397870656, 60694236, 376586636, 486260888, 114933906, 493037208, 5321608, 90019990, 601686988, 712093982, 575851770, 411329684, 462785470, 563110618, 232790384, 511246848, 521904074, 550301294, 142371172, 241067834, 14042944, 249208926, 36834004, 69321106, 467588012, 92173320, 360474676, 221615472, 340320496, 62541478, 360772498, 372355942, 445408968, 342087972, 685617022, 307398890, 437939090, 720057720, 718957462, 387059594, 583359512, 589920332, 500463226, 770726204, 434976772, 567860154, 510626506, 614077600, 620953322, 570332092, 623026436, 502427638, 640333172, 370673998}, 70283784, 302962359)));
+
+class ChiefHopperTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	size_t ChiefHopperTest()
+	{
+		return _rangeObj.ChiefHopper(_data);
+	}
+
+protected:
+	Range _rangeObj;
+	vector<size_t> _data;
+	size_t _expected;
+};
+TEST_P(ChiefHopperTestFixture, ChiefHopperTests)
+{
+	ASSERT_EQ(this->_expected, this->ChiefHopperTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	ChiefHopperTests,
+	ChiefHopperTestFixture,
+	::testing::Values(make_tuple(3, vector<size_t>{2, 3, 4, 3, 2}), make_tuple(4, vector<size_t>{3, 4, 3, 2, 4}), make_tuple(4, vector<size_t>{4, 4, 4}), make_tuple(3, vector<size_t>{1, 6, 4})));
