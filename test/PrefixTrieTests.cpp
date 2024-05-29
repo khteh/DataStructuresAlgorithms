@@ -152,4 +152,30 @@ TEST(PrefixTrieTests, PrefixTrieTest)
 	ASSERT_FALSE(result.empty());
 	ASSERT_EQ(1, result.size());
 	prefixTrie.Clear();
+
+	prefixTrie.InsertString("ababaa");
+	result = prefixTrie.StartsWith(string("ababaa"));
+	ASSERT_EQ(1, result.size());
+	result = prefixTrie.StartsWith(string("babaa"));
+	ASSERT_TRUE(result.empty());
+	result = prefixTrie.StartsWith(string("abaa"));
+	ASSERT_TRUE(result.empty());
+	result = prefixTrie.StartsWith(string("baa"));
+	ASSERT_TRUE(result.empty());
+	result = prefixTrie.StartsWith(string("aa"));
+	ASSERT_TRUE(result.empty());
+	result = prefixTrie.StartsWith(string("a"));
+	ASSERT_EQ(1, result.size());
+	longestCommonPrefix = prefixTrie.LongestCommonPrefix("ababaa");
+	ASSERT_EQ("ababaa", longestCommonPrefix);
+	longestCommonPrefix = prefixTrie.LongestCommonPrefix("babaa");
+	ASSERT_TRUE(longestCommonPrefix.empty());
+	longestCommonPrefix = prefixTrie.LongestCommonPrefix("abaa");
+	ASSERT_TRUE(longestCommonPrefix.empty());
+	longestCommonPrefix = prefixTrie.LongestCommonPrefix("baa");
+	ASSERT_TRUE(longestCommonPrefix.empty());
+	longestCommonPrefix = prefixTrie.LongestCommonPrefix("aa");
+	ASSERT_TRUE(longestCommonPrefix.empty());
+	longestCommonPrefix = prefixTrie.LongestCommonPrefix("a");
+	ASSERT_EQ("ababaa", longestCommonPrefix);
 }

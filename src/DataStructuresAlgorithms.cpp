@@ -8088,25 +8088,24 @@ size_t DistinctPairs(size_t n, vector<vector<size_t>> const &astronauts)
 	}
 	return BinomialCoefficients(ids.size(), 2) + pairs + pairs1;
 }
-size_t ShortPalindrome(const string &s)
+/*
+ * https://www.hackerrank.com/challenges/making-candies/problem
+ */
+size_t MinimumSteps2HitTarget(size_t m, size_t w, size_t cost, long target)
 {
-	size_t count = 0;
-	// Count the occurrences of x, y and xy
-	map<string, size_t> counts, pairs;
-	for (size_t i = 0; i < s.size(); i++)
+	size_t steps = 0;
+	for (size_t i = 0; i < target;)
 	{
-		char x = s[i];
-		for (char y = 'a'; y < 'z'; y++)
+		steps++;
+		i += m * w;
+		size_t budget = i / cost;
+		if (budget)
 		{
-			ostringstream xy, xyy, xyyx;
-			xy << x << y;
-			xyy << y << x << x;
-			xyyx << xyy.str() << s[i];
-			counts[xy.str()]++;
-			counts[xyy.str()]++;
-			count += counts[xyyx.str()];
-			counts[xyyx.str()]++;
+			// Increase m
+			size_t increaseM = ((m + budget) * w);
+			size_t increaseW = ((w + budget) * m);
+			size_t increaseBoth = ((w + budget / 2) * (m + budget / 2));
 		}
 	}
-	return 0;
+	return steps;
 }
