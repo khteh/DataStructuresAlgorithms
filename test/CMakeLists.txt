@@ -44,6 +44,7 @@ set(Sources
     "RangeTests.cpp"
     "ReversePolishNotationTests.cpp"
     "SuffixTreeTests.cpp"
+    "TowerOfHanoiTests.cpp"
     "TreeTests.cpp"
     "TrieTests.cpp"
     "TweeterAPITests.cpp"

@@ -78,6 +78,7 @@
     <ClCompile Include="StringPermutationTests.cpp" />
     <ClCompile Include="RangeTests.cpp" />
     <ClCompile Include="SuffixTreeTests.cpp" />
+    <ClCompile Include="TowerOfHanoiTests.cpp" />
     <ClCompile Include="TreeTests.cpp" />
     <ClCompile Include="TrieTests.cpp" />
     <ClCompile Include="TweeterAPITests.cpp" />
