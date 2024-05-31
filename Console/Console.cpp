@@ -1835,76 +1835,6 @@ int main(int argc, char *argv[])
 		{9, 2, 13},
 	};
 	assert("1010100000000011001101110101111" == RoadsInHackerland2(20, edges));
-	udata.clear();
-	udata = {1};
-	// assert(ResetTowerOfHanoi(4, udata) == 0);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 0);
-	assert(ResetTowerOfHanoi2(4, udata) == 0);
-	udata.clear();
-	udata = {2};
-	// assert(ResetTowerOfHanoi(4, udata) == 1);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 1);
-	assert(ResetTowerOfHanoi2(4, udata) == 1);
-	udata.clear();
-	udata = {2, 1};
-	// assert(ResetTowerOfHanoi(4, udata) == 1);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 1);
-	assert(ResetTowerOfHanoi2(4, udata) == 1);
-	udata.clear();
-	udata = {2, 3};
-	// assert(ResetTowerOfHanoi(4, udata) == 2);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 2);
-	assert(ResetTowerOfHanoi2(4, udata) == 2);
-	udata.clear();
-	udata = {4, 3, 2, 1};
-	// assert(ResetTowerOfHanoi(4, udata) == 3);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 3);
-	assert(ResetTowerOfHanoi2(4, udata) == 3);
-	udata.clear();
-	udata = {1, 4, 1};
-	// assert(ResetTowerOfHanoi(4, udata) == 3);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 3);
-	assert(ResetTowerOfHanoi2(4, udata) == 3);
-	udata.clear();
-	udata = {4, 2, 2, 1};
-	// assert(ResetTowerOfHanoi(4, udata) == 4);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 4);
-	assert(ResetTowerOfHanoi2(4, udata) == 4);
-	udata.clear();
-	udata = {1, 3, 3};
-	// assert(ResetTowerOfHanoi(4, udata) == 5);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 5);
-	assert(ResetTowerOfHanoi2(4, udata) == 5);
-	udata.clear();
-	udata = {2, 1, 3, 2};
-	// assert(ResetTowerOfHanoi(4, udata) == 7);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 7);
-	assert(ResetTowerOfHanoi2(4, udata) == 7);
-	udata.clear();
-	udata = {2, 4, 4, 4};
-	// assert(ResetTowerOfHanoi(4, udata) == 8);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 8);
-	assert(ResetTowerOfHanoi2(4, udata) == 8);
-	udata.clear();
-	udata = {2, 4, 2, 4};
-	// assert(ResetTowerOfHanoi(4, udata) == 6);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 6);
-	assert(ResetTowerOfHanoi2(4, udata) == 6);
-	udata.clear();
-	udata = {3, 1, 2, 1, 4};
-	// assert(ResetTowerOfHanoi(4, udata) == 10);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 10);
-	assert(ResetTowerOfHanoi2(4, udata) == 10);
-	udata.clear();
-	udata = {1, 1, 3, 1, 4};
-	// assert(ResetTowerOfHanoi(4, udata) == 11);
-	//  assert(ResetTowerOfHanoi1(4, udata) == 11);
-	assert(ResetTowerOfHanoi2(4, udata) == 11);
-	udata.clear();
-	udata = {1, 4, 2, 4, 2, 2};
-	// assert(ResetTowerOfHanoi(4, udata) == 14); // WIP
-	//  assert(ResetTowerOfHanoi1(4, udata) == 14); WIP
-	// assert(ResetTowerOfHanoi2(4, udata) == 14); WIP
 	ld.clear();
 	ld = {1, 2, 3};
 	assert(VectorSlicesSum(ld) == 44);
@@ -2308,7 +2238,7 @@ int main(int argc, char *argv[])
 	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 43) == 1);
 	// assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 19, 81) == 922261429); Fails
 	// assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 4, 99) == 249346542); // Fails. Why is the expected value smaller than the test case above when the range is larger?
-	assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
+	// assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

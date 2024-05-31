@@ -96,6 +96,11 @@ typedef union
 	long long ll;
 	double d;
 } sixty_four_bit;
+typedef union
+{
+	long double ll;
+	double d;
+} one_two_eight_bit;
 typedef struct ZeroFactors
 {
 	long two, five, value, minValue;
@@ -217,10 +222,10 @@ void RemoveDuplicateCharacters(string &);
 void RemoveDuplicateCharactersLexicographicalOrder(string &);
 bool isAdditiveNumber(const string &);
 bool checkIfAdditiveSequence(size_t, size_t, const string &);
-bool areAnagrams(string const &, string const &);
+bool AreAnagrams(string const &, string const &);
 size_t FindAnagrams(vector<string> const &, vector<vector<string>> &);
 bool SherlockValidString(string const &);
-size_t sherlockAndAnagrams(string const &);
+size_t SherlockAndAnagrams(string const &);
 bool AreRotatedStrings(string const &, string const &, size_t);
 bool SolvabilityOfTheTilesGame(vector<size_t> &);
 void RotateRightArray(vector<int> &, int);
@@ -378,11 +383,9 @@ bool Abbreviation(string &, string &);
 void cpp20readonlyranges();
 void cpp20ranges();
 void cpp20variants();
-size_t ResetTowerOfHanoi(size_t, vector<size_t> &);
+int ResetTowerOfHanoi(size_t, vector<size_t> &);
 size_t MoveDisc(pair<size_t, size_t> const &, map<size_t, set<size_t>> &, size_t);
 pair<size_t, size_t> NextMove(map<size_t, set<size_t>> &, size_t, size_t);
-size_t ResetTowerOfHanoi1(size_t, vector<size_t> &);
-size_t ResetTowerOfHanoi2(size_t, vector<size_t> &);
 long double VectorSlicesSum(vector<long double> &);
 long SteadyGene(string const &);
 size_t IntervalSelection(vector<vector<size_t>> &);

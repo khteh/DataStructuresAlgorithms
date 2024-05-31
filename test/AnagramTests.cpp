@@ -1,29 +1,34 @@
 #include "pch.h"
 using namespace std;
-TEST(AnagramTests, AnagramTest) {
-	string str, str1;
-	vector<string> strings;
-	str = "Hello World!!!";
-	str1 = "World Hello!!!";
-	ASSERT_TRUE(areAnagrams(str, str1));
-	cout << quoted(str) << " and " << quoted(str1) << " -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
-	str1 = "World!!! Hello";
-	ASSERT_TRUE(areAnagrams(str, str1));
-	cout << quoted(str) << " and " << quoted(str1) << " -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
-	str1 = "!HWr ole!d!lol";
-	ASSERT_TRUE(areAnagrams(str, str1));
-	cout << quoted(str) << " and " << quoted(str1) << " -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
-	str1 = "World Hello!!! ";
-	ASSERT_FALSE(areAnagrams(str, str1));
-	cout << quoted(str) << " and " << quoted(str1) << " -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
-	str1 = "world hello!!!";
-	ASSERT_FALSE(areAnagrams(str, str1));
-	cout << quoted(str) << " and " << quoted(str1) << " -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
-	str1 = "Good Morning!!!";
-	ASSERT_FALSE(areAnagrams(str, str1));
-	cout << quoted(str) << " and " << quoted(str1) << " -> " << (areAnagrams(str, str1) ? "Anagram" : "Not anagram") << endl;
+class AreAnagramsTestFixture : public testing::TestWithParam<tuple<bool, string, string>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data1 = get<1>(GetParam());
+		_data2 = get<2>(GetParam());
+	}
+	bool AreAnagramsTest()
+	{
+		return AreAnagrams(_data1, _data2);
+	}
+
+protected:
+	bool _expected;
+	string _data1, _data2;
+};
+TEST_P(AreAnagramsTestFixture, AreAnagramsTests)
+{
+	ASSERT_EQ(this->_expected, this->AreAnagramsTest());
 }
-TEST(AnagramTests, FindAnagramsTest) {
+INSTANTIATE_TEST_SUITE_P(
+	AreAnagramsTests,
+	AreAnagramsTestFixture,
+	::testing::Values(make_tuple(true, "Hello World!!!", "World Hello!!!"), make_tuple(true, "Hello World!!!", "World!!! Hello"), make_tuple(true, "Hello World!!!", "!HWr ole!d!lol"), make_tuple(false, "Hello World!!!", "World Hello!!! "), make_tuple(false, "Hello World!!!", "world hello!!!"), make_tuple(false, "Hello World!!!", "Good Morning!!!")));
+
+TEST(AnagramTests, FindAnagramsTest)
+{
 	vector<string> strings;
 	strings.push_back("star"); // "arst" : "star"
 	strings.push_back("dog");  // "dgo" : "dog"
@@ -40,13 +45,28 @@ TEST(AnagramTests, FindAnagramsTest) {
 		cout << "), ";
 	}
 }
-TEST(AnagramTests, sherlockAndAnagramsChallengeTest) {
-  ASSERT_EQ(2, sherlockAndAnagrams("mom"));
-  ASSERT_EQ(4, sherlockAndAnagrams("abba"));
-  ASSERT_EQ(0, sherlockAndAnagrams("abcd"));
-  ASSERT_EQ(5, sherlockAndAnagrams("cdcd"));
-  ASSERT_EQ(10, sherlockAndAnagrams("kkkk"));
-  ASSERT_EQ(3, sherlockAndAnagrams("ifailuhkqq"));
-  ASSERT_EQ(166650, sherlockAndAnagrams("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
-  ASSERT_EQ(399, sherlockAndAnagrams("ifailuhkqqhucpoltgtyovarjsnrbfpvmupwjjjfiwwhrlkpekxxnebfrwibylcvkfealgonjkzwlyfhhkefuvgndgdnbelgruel"));
+class SherlockAndAnagramsChallengeTestFixture : public testing::TestWithParam<tuple<size_t, string>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	size_t SherlockAndAnagramsChallengeTest()
+	{
+		return SherlockAndAnagrams(_data);
+	}
+
+protected:
+	size_t _expected;
+	string _data;
+};
+TEST_P(SherlockAndAnagramsChallengeTestFixture, SherlockAndAnagramsChallengeTests)
+{
+	ASSERT_EQ(this->_expected, this->SherlockAndAnagramsChallengeTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	SherlockAndAnagramsChallengeTests,
+	SherlockAndAnagramsChallengeTestFixture,
+	::testing::Values(make_tuple(2, "mom"), make_tuple(4, "abba"), make_tuple(0, "abcd"), make_tuple(5, "cdcd"), make_tuple(10, "kkkk"), make_tuple(3, "ifailuhkqq"), make_tuple(166650, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), make_tuple(399, "ifailuhkqqhucpoltgtyovarjsnrbfpvmupwjjjfiwwhrlkpekxxnebfrwibylcvkfealgonjkzwlyfhhkefuvgndgdnbelgruel")));
