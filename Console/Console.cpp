@@ -666,30 +666,6 @@ int main(int argc, char *argv[])
 	assert(minDiffPairs(a, 1) == 0);
 
 	// Test Recursive algorithm
-	strings.clear();
-	parentheses(strings, 2);
-	strings1 = {"(())", "()()"};
-	assert(strings.size() == 2);
-	assert(strings1 == strings);
-
-	strings.clear();
-	parentheses(strings, 3);
-	assert(strings.size() == 5);
-	strings1.clear();
-	strings1 = {"((()))", "(()())", "(())()", "()(())", "()()()"};
-	assert(strings1 == strings);
-	assert(LongestValidParentheses(string("(")) == 0);
-	assert(LongestValidParentheses(string("((()")) == 2);
-	assert(LongestValidParentheses(string("())()")) == 2);
-	assert(LongestValidParentheses(string("()(()")) == 2);
-	assert(LongestValidParentheses(string(")()())")) == 4);
-	assert(LongestValidParentheses(string("()(()))))")) == 6);
-	assert(LongestValidParentheses(string(")))(((")) == 0);
-	assert(LongestValidParentheses(string(")()()(((()")) == 4);
-	assert(LongestValidParentheses(string("))()(()(()")) == 2);
-	assert(LongestValidParentheses(string(")())((()))")) == 6);
-	assert(LongestValidParentheses(string("(()))))(()((()))")) == 8);
-
 	assert(LongestValidParenthesesWithFixes(string("("), 0) == 0);
 	assert(LongestValidParenthesesWithFixes(string("((()"), 0) == 2);
 	assert(LongestValidParenthesesWithFixes(string("())()"), 0) == 2);
@@ -1430,11 +1406,6 @@ int main(int argc, char *argv[])
 	ranges::rotate(a.begin() + 2, a.begin() + 4, a.begin() + 5);
 	b = {1, 2, 5, 3, 4, 6, 7, 8};
 	assert(a == b);
-	assert(SherlockValidString("abcdefghhgfedecba"));
-	assert(!SherlockValidString("aabbcd"));
-	assert(!SherlockValidString("aaaabbcc"));
-	assert(!SherlockValidString("xxxaabbccrry"));
-	assert(SherlockValidString("ibfdgaeadiaefgbhbdghhhbgdfgeiccbiehhfcggchgghadhdhagfbahhddgghbdehidbibaeaagaeeigffcebfbaieggabcfbiiedcabfihchdfabifahcbhagccbdfifhghcadfiadeeaheeddddiecaicbgigccageicehfdhdgafaddhffadigfhhcaedcedecafeacbdacgfgfeeibgaiffdehigebhhehiaahfidibccdcdagifgaihacihadecgifihbebffebdfbchbgigeccahgihbcbcaggebaaafgfedbfgagfediddghdgbgehhhifhgcedechahidcbchebheihaadbbbiaiccededchdagfhccfdefigfibifabeiaccghcegfbcghaefifbachebaacbhbfgfddeceababbacgffbagidebeadfihaefefegbghgddbbgddeehgfbhafbccidebgehifafgbghafacgfdccgifdcbbbidfifhdaibgigebigaedeaaiadegfefbhacgddhchgcbgcaeaieiegiffchbgbebgbehbbfcebciiagacaiechdigbgbghefcahgbhfibhedaeeiffebdiabcifgccdefabccdghehfibfiifdaicfedagahhdcbhbicdgibgcedieihcichadgchgbdcdagaihebbabhibcihicadgadfcihdheefbhffiageddhgahaidfdhhdbgciiaciegchiiebfbcbhaeagccfhbfhaddagnfieihghfbaggiffbbfbecgaiiidccdceadbbdfgigibgcgchafccdchgifdeieicbaididhfcfdedbhaadedfageigfdehgcdaecaebebebfcieaecfagfdieaefdiedbcadchabhebgehiidfcgahcdhcdhgchhiiheffiifeegcfdgbdeffhgeghdfhbfbifgidcafbfcd"));
 	str = "if man was meant to stay on the ground god would have given us roots";
 	assert(encryption(str) == "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau");
 	a.clear();
@@ -1478,10 +1449,6 @@ int main(int argc, char *argv[])
 	assert(paths[0] == "45");
 	assert(paths[1] == "LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LL LL LL LL LL LL LL LL LL LL LL LL");
 
-	assert(cipher(7, 4, string("1110101001")) == "1001011");
-	assert(cipher(4, 5, string("11000110")) == "1010");
-	assert(DecryptPassword(string("43Ah*ck0rr0nk")) == "hAck3rr4nk");
-	assert(DecryptPassword(string("51Pa*0Lp*0e")) == "aP1pL5e");
 	udata.clear();
 	assert(substrings(string("123")) == 164);
 	assert(substrings(string("1234")) == 1670);
@@ -2127,16 +2094,6 @@ int main(int argc, char *argv[])
 			 {1, 4}};
 	udata = {3, 1, 2};
 	assert(udata == UnbeatenPaths(4, ugrid, 1));
-	assert(MorganAndString("ACA", "BCF") == "ABCACF");
-	assert(MorganAndString("BB", "BA") == "BABB");
-	assert(MorganAndString("BA", "BB") == "BABB");
-	assert(MorganAndString("BA", "B") == "BAB");
-	assert(MorganAndString("B", "BA") == "BAB");
-	assert(MorganAndString("BC", "B") == "BBC");
-	assert(MorganAndString("B", "BC") == "BBC");
-	assert(MorganAndString("CAB", "CAB") == "CABCAB");
-	assert(MorganAndString("JACK", "DANIEL") == "DAJACKNIEL");
-	assert(MorganAndString("ABACABA", "ABACABA") == "AABABACABACABA");
 	ugrid.clear();
 	ugrid = {{1, 2}, {2, 3}};
 	assert(DistinctPairs(4, ugrid) == 3);

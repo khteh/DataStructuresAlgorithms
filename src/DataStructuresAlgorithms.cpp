@@ -787,7 +787,7 @@ vector<long> insertItemAt(long toInsert, vector<long> &items, size_t offset)
 	result.insert(result.end(), items.begin() + offset, items.end());
 	return result;
 }
-void parentheses(vector<string> &result, string &str, size_t index, long left, long right)
+void Parentheses(vector<string> &result, string &str, size_t index, long left, long right)
 {
 	if (!left && !right)
 		result.push_back(str);
@@ -796,20 +796,20 @@ void parentheses(vector<string> &result, string &str, size_t index, long left, l
 		if (left > 0)
 		{
 			str[index] = '(';
-			parentheses(result, str, index + 1, left - 1, right);
+			Parentheses(result, str, index + 1, left - 1, right);
 		}
 		if (right > left)
 		{
 			str[index] = ')';
-			parentheses(result, str, index + 1, left, right - 1);
+			Parentheses(result, str, index + 1, left, right - 1);
 		}
 	}
 }
-void parentheses(vector<string> &result, size_t count)
+void Parentheses(vector<string> &result, size_t count)
 {
 	string str;
 	str.resize(count * 2);
-	parentheses(result, str, 0, count, count);
+	Parentheses(result, str, 0, count, count);
 }
 /*
  * i - stack.peek()
@@ -4614,7 +4614,7 @@ Observation:
 	For i >= k, result[i] = s[i - 1] == s[i] ? result[i - k] : result[i - k] == '1' ? '0' : '1'
 100%
 */
-string cipher(size_t n, size_t k, const string &s)
+string Cipher(size_t n, size_t k, const string &s)
 {
 	string result;
 	if (!s.empty() && k <= s.size() && s.size() >= n)
@@ -7588,10 +7588,10 @@ size_t PowerSum(size_t sum, size_t power, size_t i)
 	return PowerSum(sum, power, i + 1) + PowerSum(sum - n, power, i + 1);
 }
 /*
-* https://www.hackerrank.com/challenges/morgan-and-a-string/problem
-* a: CAB, b: CAB => CABCAB
-WIP
-*/
+ * https://www.hackerrank.com/challenges/morgan-and-a-string/problem
+ * a: CAB, b: CAB => CABCAB
+ * 100%
+ */
 string MorganAndString(string const &a, string const &b)
 {
 	string result;
@@ -7608,88 +7608,47 @@ string MorganAndString(string const &a, string const &b)
 			result.append(1, b[j++]);
 		else // a[i] == b[j]
 		{
-			size_t m = i, n = j;
-			for (; a[m] == b[n] && a[m] == a[i] && m < a.size() && n < b.size(); m++, n++)
-				;
-			if (n < b.size() && m < a.size())
+			size_t m = i + 1, n = j + 1;
+			bool takeFromA = false;
+			for (; m < a.size() && n < b.size(); m++, n++)
 			{
-				/*
-				a: BA
-				b: B
-				r: BAB
-
-				a: BBA
-				b: BB
-				r: BBABB
-
-				a: BBA
-				b: BBB
-				r: BBABBB
-
-				a: BBC
-				b: BBD
-				r: BBBBCD
-				*/
-				if (a[m] <= b[n])
+				if (a[m] < b[n])
 				{
-					result.append(a.substr(i, m - i));
-					i = m;
+					takeFromA = true;
+					break;
 				}
 				else if (a[m] > b[n])
-				{
-					result.append(b.substr(j, n - j));
-					j = n;
-				}
+					break;
 			}
-			else if (m == a.size())
-			{
-				/*
-				a: B
-				b: BA
-				r: BAB
-
-				a: B
-				b: BC
-				r: BBC
-				*/
-				if (b[n] < b[j])
-				{
-					result.append(b.substr(j, n - j));
-					j = n;
-				}
-				else
-				{
-					result.append(a.substr(i));
-					i = m;
-				}
-			}
-			else if (n == b.size())
+			if (takeFromA || (m < a.size() && n == b.size()))
 			{
 				/*
 				a: BA
-				b: B
-				r: BAB
+				b: BC
 
 				a: BC
 				b: B
 				r: BBC
+
+				a: BA
+				b: B
+				r: BAB
 				*/
-				if (a[m] < a[i])
-				{
-					result.append(a.substr(i, m - i));
-					i = m;
-				}
-				else
-				{
-					result.append(b.substr(j));
-					j = n;
-				}
+				result.append(1, a[i++]);
+				for (; i < a.size() && a[i] == a[i - 1];)
+					result.append(1, a[i++]);
+			}
+			else
+			{
+				result.append(1, b[j++]);
+				for (; j < b.size() && b[j] == b[j - 1];)
+					result.append(1, b[j++]);
 			}
 		}
 	}
 	if (i < a.size())
 		result.append(a.substr(i));
-	else if (j < b.size())
+	if (j < b.size())
 		result.append(b.substr(j));
 	return result;
 }
