@@ -6850,7 +6850,7 @@ pair<size_t, size_t> NextMove(map<size_t, set<size_t>> &towers, size_t towerCoun
  * Towers: 1      2 3 4
  * Discs : [3, 1]     2 {1: [3, 1], 4: [2]}
  */
-vector<unsigned long long> NextMoves(unsigned long long state, size_t towerCount, size_t discCount)
+vector<unsigned long long> BFSNextMoves(unsigned long long state, size_t towerCount, size_t discCount)
 {
 	// Returns a list of states that can be achieved from the given state
 	vector<unsigned long long> states;
@@ -6859,8 +6859,8 @@ vector<unsigned long long> NextMoves(unsigned long long state, size_t towerCount
 	map<size_t, size_t> topDiscs;
 	set<size_t> poles, skippedPoles;
 	size_t pole;
-	bitset<64> bm(towerBitMask);
-	cout << "towerBitMask: " << bm << endl;
+	// bitset<64> bm(towerBitMask);
+	// cout << "towerBitMask: " << bm << endl;
 	for (size_t d = 0; d < discCount; d++)
 	{
 		/* {1, 4, 2, 4, 2, 2}: 01_01_11_01_11_00
@@ -6913,8 +6913,8 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> &poles)
 		throw runtime_error(oss.str());
 	}
 	unsigned long long state = 0; // 64-bit
-	bitset<64> bm(towerBitMask);
-	cout << "towerBitMask: " << bm << endl;
+	// bitset<64> bm(towerBitMask);
+	// cout << "towerBitMask: " << bm << endl;
 	/* {1, 4, 2, 4, 2, 2}: 01_01_11_01_11_00
 	 * Pole Disc
 	 * 0	0
@@ -6939,7 +6939,7 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> &poles)
 			return s.moves;
 		else
 		{
-			vector<unsigned long long> states = NextMoves(s.state, towerCount, discCount);
+			vector<unsigned long long> states = BFSNextMoves(s.state, towerCount, discCount);
 			for (vector<unsigned long long>::const_iterator it = states.begin(); it != states.end(); it++)
 			{
 				if (visited.find(*it) == visited.end())
