@@ -263,6 +263,14 @@ int main(int argc, char *argv[])
 					 { return n++; });
 	for (size_t i = 0; i < a.size(); i++)
 		assert(a[i] == i + 1);
+
+	ul = 100;
+	generate_n(inserter(uset, uset.end()), 10, [&ul]()
+			   { return ul++; });
+	set<size_t>::const_iterator it = uset.begin();
+	for (size_t i = 0; it != uset.end(); it++, i++)
+		assert(*it == 100 + i);
+
 	time_point timestamp = system_clock::now();
 	duration timespan = timestamp.time_since_epoch();
 	unsigned long long ticks = timespan.count();
@@ -2126,6 +2134,7 @@ int main(int argc, char *argv[])
 	assert(MorganAndString("B", "BA") == "BAB");
 	assert(MorganAndString("BC", "B") == "BBC");
 	assert(MorganAndString("B", "BC") == "BBC");
+	assert(MorganAndString("CAB", "CAB") == "CABCAB");
 	assert(MorganAndString("JACK", "DANIEL") == "DAJACKNIEL");
 	assert(MorganAndString("ABACABA", "ABACABA") == "AABABACABACABA");
 	ugrid.clear();

@@ -383,6 +383,13 @@ bool Abbreviation(string &, string &);
 void cpp20readonlyranges();
 void cpp20ranges();
 void cpp20variants();
+typedef struct TowerOfHanoiState
+{
+	TowerOfHanoiState() : state(0), moves(0) {}
+	TowerOfHanoiState(unsigned long long s, size_t m) : state(s), moves(m) {}
+	unsigned long long state;
+	size_t moves;
+} towerofhanoi_state_t;
 int ResetTowerOfHanoi(size_t, vector<size_t> &);
 size_t MoveDisc(pair<size_t, size_t> const &, map<size_t, set<size_t>> &, size_t);
 pair<size_t, size_t> NextMove(map<size_t, set<size_t>> &, size_t, size_t);
@@ -403,4 +410,3 @@ size_t ActivityNotifications2(vector<size_t> const &, size_t);
 size_t PowerSum(size_t, size_t, size_t i = 1);
 string MorganAndString(string const &, string const &);
 size_t DistinctPairs(size_t, vector<vector<size_t>> const &);
-size_t MinimumSteps2HitTarget(size_t, size_t, size_t, long);

@@ -30,4 +30,4 @@ INSTANTIATE_TEST_SUITE_P(
                       make_tuple(2, 4, vector<size_t>{2, 3}), make_tuple(3, 4, vector<size_t>{4, 3, 2, 1}), make_tuple(3, 4, vector<size_t>{1, 4, 1}),
                       make_tuple(4, 4, vector<size_t>{4, 2, 2, 1}), make_tuple(5, 4, vector<size_t>{1, 3, 3}), make_tuple(7, 4, vector<size_t>{2, 1, 3, 2}),
                       make_tuple(8, 4, vector<size_t>{2, 4, 4, 4}),
-                      make_tuple(6, 4, vector<size_t>{2, 4, 2, 4}), make_tuple(10, 4, vector<size_t>{3, 1, 2, 1, 4}), make_tuple(11, 4, vector<size_t>{1, 1, 3, 1, 4}), make_tuple(14, 4, vector<size_t>{1, 4, 2, 4, 2, 2})));
+                      make_tuple(6, 4, vector<size_t>{2, 4, 2, 4}), make_tuple(10, 4, vector<size_t>{3, 1, 2, 1, 4}), make_tuple(11, 4, vector<size_t>{1, 1, 3, 1, 4}), make_tuple(14, 4, vector<size_t>{1, 4, 2, 4, 2, 2}), make_tuple(19, 4, vector<size_t>{1, 1, 3, 3, 1, 3, 2})));

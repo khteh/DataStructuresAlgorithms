@@ -6846,16 +6846,7 @@ pair<size_t, size_t> NextMove(map<size_t, set<size_t>> &towers, size_t towerCoun
  *
  * [1 4 1]
  * Towers: 1      2 3 4
- * Discs : [3, 1]      2 {1: [3, 1], 4: [2]}
-
- * Towers: 1 2 3 4 => [2 4 1] {1: [3], 2: [1], 4: [2]}
- * Discs : 3 1   2
-
- * Towers: 1 	  2 3 4 => [2 1 1] {1: [3,2], 2: [1]}
- * Discs : [3, 2] 1
- *
- * Towers: 1 	     2 3 4 => [1 1 1] {1: [3,2,1]}
- * Discs : [3, 2, 1]
+ * Discs : [3, 1]     2 {1: [3, 1], 4: [2]}
  */
 vector<unsigned long long> NextMoves(unsigned long long state, size_t towerCount, size_t discCount)
 {
@@ -6864,12 +6855,8 @@ vector<unsigned long long> NextMoves(unsigned long long state, size_t towerCount
 	size_t towerBitCount = (floor(log2(towerCount - 1)) + 1);
 	size_t towerBitMask = ~(-(1 << towerBitCount));
 	map<size_t, size_t> topDiscs;
-	set<size_t> poles;
+	set<size_t> poles, skippedPoles;
 	size_t pole;
-	set<size_t> allowedPoles;
-	size_t i = 0;
-	generate_n(inserter(allowedPoles, allowedPoles.end()), towerCount, [&i]()
-			   { return i++; });
 	bitset<64> bm(towerBitMask);
 	cout << "towerBitMask: " << bm << endl;
 	for (size_t d = 0; d < discCount; d++)
@@ -6891,16 +6878,24 @@ vector<unsigned long long> NextMoves(unsigned long long state, size_t towerCount
 	cout << endl;
 	for (map<size_t, size_t>::const_iterator it = topDiscs.begin(); it != topDiscs.end(); it++)
 	{
-		allowedPoles.erase(it->second);
-		for (set<size_t>::const_iterator p = allowedPoles.begin(); p != allowedPoles.end(); p++)
-		{
-			size_t offset = towerBitCount * it->first;
-			unsigned long long s = state & ~(towerBitMask << offset);
-			s |= (*p << offset);
-			bitset<64> bs(s);
-			cout << "Next move: " << bs << " Pole: " << *p << ", disc: " << it->first << endl;
-			states.push_back(s);
-		}
+		/*
+		 * Next moves:
+		 * Disc Poles
+		 * 0	[1,2,3]
+		 * 1	[1,2]
+		 * 2	[2]
+		 */
+		skippedPoles.emplace(it->second);
+		for (size_t p = 0; p < towerCount; p++)
+			if (skippedPoles.find(p) == skippedPoles.end())
+			{
+				size_t offset = towerBitCount * it->first;
+				unsigned long long s = state & ~(towerBitMask << offset);
+				s |= (p << offset);
+				bitset<64> bs(s);
+				cout << "Next move: " << bs << " Pole: " << p << ", disc: " << it->first << endl;
+				states.push_back(s);
+			}
 	}
 	return states;
 }
@@ -6931,23 +6926,23 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> &poles)
 	}
 	bitset<64> s(state);
 	cout << "state: " << s << endl;
-	deque<pair<unsigned long long, size_t>> queue;
-	queue.push_back(make_pair(state, 0));
+	deque<towerofhanoi_state_t> queue;
+	queue.push_back(towerofhanoi_state_t(state, 0));
 	set<unsigned long long> visited{state};
 	for (; !queue.empty();)
 	{
-		pair<unsigned long long, size_t> s = queue.front();
+		towerofhanoi_state_t s = queue.front();
 		queue.pop_front();
-		if (!s.first)
-			return s.second;
+		if (!s.state)
+			return s.moves;
 		else
 		{
-			vector<unsigned long long> states = NextMoves(s.first, towerCount, discCount);
+			vector<unsigned long long> states = NextMoves(s.state, towerCount, discCount);
 			for (vector<unsigned long long>::const_iterator it = states.begin(); it != states.end(); it++)
 			{
 				if (visited.find(*it) == visited.end())
 				{
-					queue.push_back(make_pair(*it, s.second + 1));
+					queue.push_back(towerofhanoi_state_t(*it, s.moves + 1));
 					visited.emplace(*it);
 				}
 			}
@@ -7591,7 +7586,8 @@ size_t PowerSum(size_t sum, size_t power, size_t i)
 	return PowerSum(sum, power, i + 1) + PowerSum(sum - n, power, i + 1);
 }
 /*
-https://www.hackerrank.com/challenges/morgan-and-a-string/problem
+* https://www.hackerrank.com/challenges/morgan-and-a-string/problem
+* a: CAB, b: CAB => CABCAB
 WIP
 */
 string MorganAndString(string const &a, string const &b)
@@ -7611,74 +7607,81 @@ string MorganAndString(string const &a, string const &b)
 		else // a[i] == b[j]
 		{
 			size_t m = i, n = j;
-			for (; a[m] == a[i] && m < a.size(); m++)
+			for (; a[m] == b[n] && a[m] == a[i] && m < a.size() && n < b.size(); m++, n++)
 				;
-			for (; b[n] == b[j] && n < b.size(); n++)
-				;
-			if (m == a.size() && n == b.size())
+			if (n < b.size() && m < a.size())
 			{
-				result.append(a.substr(i));
-				result.append(b.substr(j));
-				i = m;
-				j = n;
+				/*
+				a: BA
+				b: B
+				r: BAB
+
+				a: BBA
+				b: BB
+				r: BBABB
+
+				a: BBA
+				b: BBB
+				r: BBABBB
+
+				a: BBC
+				b: BBD
+				r: BBBBCD
+				*/
+				if (a[m] <= b[n])
+				{
+					result.append(a.substr(i, m - i));
+					i = m;
+				}
+				else if (a[m] > b[n])
+				{
+					result.append(b.substr(j, n - j));
+					j = n;
+				}
 			}
-			else if (m == a.size() && n < b.size())
+			else if (m == a.size())
 			{
 				/*
-				b[n] < b[j]
-				BB BA B
-				BB  A BA
-					BABB
+				a: B
+				b: BA
+				r: BAB
 
-				B BA B
-				B  A BA
-				B    BAB
+				a: B
+				b: BC
+				r: BBC
 				*/
-				result.append(1, b[n] < b[j] ? b[j++] : a[i++]);
-				/*
-				b[n] > b[j]
-				BB BC B
-				 B BC BB
-				   BC BBBC
-
-				B BC B
-				  BC BB
-				   C BBC
-				*/
+				if (b[n] < b[j])
+				{
+					result.append(b.substr(j, n - j));
+					j = n;
+				}
+				else
+				{
+					result.append(a.substr(i));
+					i = m;
+				}
 			}
-			else if (n == b.size() && m < a.size())
+			else if (n == b.size())
 			{
 				/*
-				a[m] < a[i]
-				BA BB B
-				 A BB BA
-					  BABB
+				a: BA
+				b: B
+				r: BAB
 
-				BA B B
-				A B BA
-					BAB
+				a: BC
+				b: B
+				r: BBC
 				*/
-				result.append(1, a[m] < a[i] ? a[i++] : b[j++]);
-				/*
-				a[n] > a[i]
-				BC BB B
-				BC  B BB
-				BC    BBB
-					  BBBC
-				*/
-			}
-			else
-			{
-				/*
-				BA BC B
-				 A BC BA
-				   BC BABC
-
-				BC BA B
-				BC  A BA
-					BABC
-				*/
-				result.append(1, a[m] < b[n] ? a[i++] : b[j++]);
+				if (a[m] < a[i])
+				{
+					result.append(a.substr(i, m - i));
+					i = m;
+				}
+				else
+				{
+					result.append(b.substr(j));
+					j = n;
+				}
 			}
 		}
 	}
@@ -7743,25 +7746,4 @@ size_t DistinctPairs(size_t n, vector<vector<size_t>> const &astronauts)
 		pairs1 += ids.size() * it->size();
 	}
 	return BinomialCoefficients(ids.size(), 2) + pairs + pairs1;
-}
-/*
- * https://www.hackerrank.com/challenges/making-candies/problem
- */
-size_t MinimumSteps2HitTarget(size_t m, size_t w, size_t cost, long target)
-{
-	size_t steps = 0;
-	for (size_t i = 0; i < target;)
-	{
-		steps++;
-		i += m * w;
-		size_t budget = i / cost;
-		if (budget)
-		{
-			// Increase m
-			size_t increaseM = ((m + budget) * w);
-			size_t increaseW = ((w + budget) * m);
-			size_t increaseBoth = ((w + budget / 2) * (m + budget / 2));
-		}
-	}
-	return steps;
 }
