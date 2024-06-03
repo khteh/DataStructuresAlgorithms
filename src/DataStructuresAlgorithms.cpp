@@ -6830,6 +6830,8 @@ pair<size_t, size_t> NextMove(map<size_t, set<size_t>> &towers, size_t towerCoun
  * vector index # is the size of disk
  * vector element is tower #
  *
+ * Use breadth-first search until the final state of 0 (0-based index) is found.
+ *
  * Represent each possible arrangement as a binary number of length 2 * discCount.
  * The rightmost 2 digits represent the pole of disc 1, the next two digits represent the position of disk 2, etc.,
  * Then do a bfs of the graph starting at init_state...
