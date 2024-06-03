@@ -6887,7 +6887,7 @@ vector<unsigned long long> NextMoves(unsigned long long state, size_t towerCount
 		 * 1	[1,2]
 		 * 2	[2]
 		 */
-		skippedPoles.emplace(it->second);
+		skippedPoles.emplace(it->second); // (1) Skip it's own pole. (2) Avoid moving on top of smaller discs.
 		for (size_t p = 0; p < towerCount; p++)
 			if (skippedPoles.find(p) == skippedPoles.end())
 			{
