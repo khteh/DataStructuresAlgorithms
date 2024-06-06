@@ -265,7 +265,7 @@ TEST(MatrixTests, RotateMatrixRTimesAntiClockwiseTests)
 	matrix.RotateMatrixRTimesAntiClockwise(grid1, 7);
 	ASSERT_EQ(grid1, grid2);
 }
-class SurfaceArea3DTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
+class SurfaceArea3DTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<size_t>>>>
 {
 public:
 	void SetUp() override
@@ -275,11 +275,12 @@ public:
 	}
 	size_t SurfaceArea3DTest()
 	{
-		return SurfaceArea3D(_data);
+		return _matrix.SurfaceArea3D(_data);
 	}
 
 protected:
-	vector<vector<long>> _data;
+	Matrix<size_t> _matrix;
+	vector<vector<size_t>> _data;
 	size_t _expected;
 };
 TEST_P(SurfaceArea3DTestFixture, SurfaceArea3DTests)
@@ -289,14 +290,14 @@ TEST_P(SurfaceArea3DTestFixture, SurfaceArea3DTests)
 INSTANTIATE_TEST_SUITE_P(
 	SurfaceArea3DTests,
 	SurfaceArea3DTestFixture,
-	::testing::Values(make_tuple(6, vector<vector<long>>{{1}}),
-					  make_tuple(12, vector<vector<long>>{{1, 0, 1}}),
-					  make_tuple(60, vector<vector<long>>{{1, 3, 4}, {2, 2, 3}, {1, 2, 4}}),
-					  make_tuple(90, vector<vector<long>>{{1, 2, 3, 4, 5, 5, 4, 3, 2, 1}}),
-					  make_tuple(90, vector<vector<long>>{{1}, {2}, {3}, {4}, {5}, {5}, {4}, {3}, {2}, {1}}),
-					  make_tuple(102, vector<vector<long>>{{1, 2, 3, 4, 5, 4, 5, 4, 3, 2, 1}}),
-					  make_tuple(102, vector<vector<long>>{{1}, {2}, {3}, {4}, {5}, {4}, {5}, {4}, {3}, {2}, {1}}),
-					  make_tuple(1482, vector<vector<long>>{{51}, {32}, {28}, {49}, {28}, {21}, {98}, {56}, {99}, {77}})));
+	::testing::Values(make_tuple(6, vector<vector<size_t>>{{1}}),
+					  make_tuple(12, vector<vector<size_t>>{{1, 0, 1}}),
+					  make_tuple(60, vector<vector<size_t>>{{1, 3, 4}, {2, 2, 3}, {1, 2, 4}}),
+					  make_tuple(90, vector<vector<size_t>>{{1, 2, 3, 4, 5, 5, 4, 3, 2, 1}}),
+					  make_tuple(90, vector<vector<size_t>>{{1}, {2}, {3}, {4}, {5}, {5}, {4}, {3}, {2}, {1}}),
+					  make_tuple(102, vector<vector<size_t>>{{1, 2, 3, 4, 5, 4, 5, 4, 3, 2, 1}}),
+					  make_tuple(102, vector<vector<size_t>>{{1}, {2}, {3}, {4}, {5}, {4}, {5}, {4}, {3}, {2}, {1}}),
+					  make_tuple(1482, vector<vector<size_t>>{{51}, {32}, {28}, {49}, {28}, {21}, {98}, {56}, {99}, {77}})));
 
 TEST(MatrixTests, MatrixSumTest)
 {

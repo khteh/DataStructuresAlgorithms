@@ -343,7 +343,6 @@ string TimeInWords(int, int);
 size_t BeautifulQuadruples(long, long, long, long);
 long kruskals(int, vector<long> &, vector<long> &, vector<long> &);
 long getLowestPathCost(size_t g_nodes, vector<long> &, vector<long> &, vector<long> &);
-size_t SurfaceArea3D(vector<vector<long>> &);
 size_t MinSubGraphsDifference(vector<size_t> &, vector<vector<size_t>> &);
 long PostmanProblem(vector<long> &, vector<vector<long>> &);
 string DecryptPassword(const string &);

@@ -505,3 +505,42 @@ size_t Matrix<T>::GridlandMetro(T rows, T cols, vector<vector<T>> const &tracks)
 		count += (rows - occupied.size()) * cols;
 	return count;
 }
+/* https://www.hackerrank.com/challenges/3d-surface-area/problem
+ * 100%
+ */
+template <typename T>
+size_t Matrix<T>::SurfaceArea3D(vector<vector<T>> const &data)
+{
+	size_t zArea = 0, xArea = 0, yArea = 0;
+	for (size_t i = 0; i < data.size(); i++)
+	{
+		for (size_t j = 0; j < data[i].size(); j++)
+		{
+			if (data[i][j] > 0)
+				zArea++;
+			// X-Axis : Side / Left/Right views
+			if (i == 0) // Start X-Axis border
+				xArea += data[i][j];
+			if (i == data.size() - 1)
+			{ // End X-Axis border
+				xArea += data[i][j];
+				if (i != 0)
+					xArea += abs((long)(data[i][j] - data[i - 1][j]));
+			}
+			if (i != 0 && i != data.size() - 1)
+				xArea += abs((long)(data[i][j] - data[i - 1][j]));
+			// Y-Axis : Front/Back views
+			if (j == 0) // Start Y-Axis border
+				yArea += data[i][j];
+			if (j == data[i].size() - 1)
+			{ // End Y-Axis border
+				yArea += data[i][j];
+				if (j != 0)
+					yArea += abs((long)(data[i][j] - data[i][j - 1]));
+			}
+			if (j != 0 && j != data[i].size() - 1)
+				yArea += abs((long)(data[i][j] - data[i][j - 1]));
+		}
+	}
+	return xArea + yArea + zArea * 2;
+}

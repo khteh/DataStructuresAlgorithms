@@ -4446,43 +4446,6 @@ long kruskals(int nodes, vector<long> &from, vector<long> &to, vector<long> &wei
 	}
 	return sum;
 }
-// https://www.hackerrank.com/challenges/3d-surface-area/problem
-// 100%
-size_t SurfaceArea3D(vector<vector<long>> &data)
-{
-	size_t zArea = 0, xArea = 0, yArea = 0;
-	for (size_t i = 0; i < data.size(); i++)
-	{
-		for (size_t j = 0; j < data[i].size(); j++)
-		{
-			if (data[i][j] > 0)
-				zArea++;
-			// X-Axis : Side / Left/Right views
-			if (i == 0) // Start X-Axis border
-				xArea += data[i][j];
-			if (i == data.size() - 1)
-			{ // End X-Axis border
-				xArea += data[i][j];
-				if (i != 0)
-					xArea += abs(data[i][j] - data[i - 1][j]);
-			}
-			if (i != 0 && i != data.size() - 1)
-				xArea += abs(data[i][j] - data[i - 1][j]);
-			// Y-Axis : Front/Back views
-			if (j == 0) // Start Y-Axis border
-				yArea += data[i][j];
-			if (j == data[i].size() - 1)
-			{ // End Y-Axis border
-				yArea += data[i][j];
-				if (j != 0)
-					yArea += abs(data[i][j] - data[i][j - 1]);
-			}
-			if (j != 0 && j != data[i].size() - 1)
-				yArea += abs(data[i][j] - data[i][j - 1]);
-		}
-	}
-	return xArea + yArea + zArea * 2;
-}
 /* https://www.hackerrank.com/challenges/cut-the-tree/problem
  * Segmentation fault. Maybe due to recursion
  */

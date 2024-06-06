@@ -1,12 +1,13 @@
 #include "Range.h"
-// https://en.wikipedia.org/wiki/Maximum_subarray_problem
-// Kadane's algorithm
-long Range::ConsecutiveMaximumSum(vector<long> &data, vector<long> &result)
+/* https://en.wikipedia.org/wiki/Maximum_subarray_problem
+ * Kadane's algorithm
+ */
+long Range::ConsecutiveMaximumSum(vector<long> const &data, vector<long> &result)
 {
 	vector<long> kadane;
 	map<long, vector<long>> results;
 	long max_ending_here = 0, max_so_far = 0; // max_so_far = max of all max_ending_here's found
-	for (vector<long>::iterator it = data.begin(); it != data.end(); it++)
+	for (vector<long>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
 		max_ending_here += *it;
 		if (max_ending_here < 0)
@@ -85,7 +86,7 @@ long Range::ConsecutiveMaximumSum(vector<long> &data, vector<long> &result)
  * 11	14	14		[1 3 13 2 9 0 7 10 3 14]
  * 12	11	14		[1 3 13 2 9 0 7 10 3 14 11]
  */
-size_t Range::ConsecutiveMaximumSumModulo(vector<long> &data, size_t modulo)
+size_t Range::ConsecutiveMaximumSumModulo(vector<long> const &data, size_t modulo)
 {
 	size_t maxSum = numeric_limits<size_t>::min(), sum = numeric_limits<size_t>::min();
 	vector<size_t> sums; // Using set<size_t> will cause time out!
@@ -107,13 +108,13 @@ size_t Range::ConsecutiveMaximumSumModulo(vector<long> &data, size_t modulo)
 /* https://leetcode.com/problems/maximum-product-subarray/
  * 100%
  */
-long Range::ConsecutiveLargestProduct(vector<long> &data)
+long Range::ConsecutiveLargestProduct(vector<long> const &data)
 {
 	vector<long> tmp;
 	map<long, vector<long>> results;
 	long maxproduct = numeric_limits<long>::min(), max_ending_here = 1, min_ending_here = 1;
 	bool zero = false;
-	for (vector<long>::iterator it = data.begin(); it != data.end(); it++)
+	for (vector<long>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
 		if (!*it)
 		{
@@ -168,7 +169,7 @@ long Range::ConsecutiveLargestProduct(vector<long> &data)
    j i   sum: 8 count: 2
 	 i,j sum: 4 count: 1
 */
-size_t Range::MinSumSubSequence(size_t target, vector<size_t> &data)
+size_t Range::MinSumSubSequence(size_t target, vector<size_t> const &data)
 {
 	size_t count = numeric_limits<size_t>::max();
 	size_t sum = 0;
@@ -189,7 +190,7 @@ size_t Range::MinSumSubSequence(size_t target, vector<size_t> &data)
  * Find the longest sequence when the graph crosses a previous point. The crossing point is when negative becomes positive and vice versa
  * 100%
  */
-long Range::LongestNonNegativeSumSlice(vector<long> &data)
+long Range::LongestNonNegativeSumSlice(vector<long> const &data)
 {
 	// -1, -1, -1, -1, -1, -1, 1 (max_len = max(1, 6 - 4) = 2), 1 (max_len = max(2, 7 - 3) = 4)
 	//  1,  1,  1,  1,  1,  1,-1 (max_len = max(6, 6 - 4) = 6),-1 (max_len = max(6, 7 - 3) = 6)
@@ -250,7 +251,7 @@ size_t Range::LongestUpDownAlternatingSubSequence(const vector<long> &data, vect
  * diff: 7 6 5 4 3 2 3
  * pairs:1 2 3 4 . .    <= 2 pairs: {[3,5], [2,6]}
  */
-size_t Range::SumPairs(size_t sum, vector<size_t> &data)
+size_t Range::SumPairs(size_t sum, vector<size_t> const &data)
 {
 	size_t count = 0;
 	size_t diff;
@@ -296,7 +297,7 @@ size_t Range::SumPairs(size_t sum, vector<size_t> &data)
  * (9,10), (9,9) 2
  * Count = 45
  */
-size_t Range::GreaterThanSumPairs(size_t sum, vector<size_t> &data)
+size_t Range::GreaterThanSumPairs(size_t sum, vector<size_t> const &data)
 {
 	size_t count = 0, count1;
 	for (size_t i = 0; i <= data.size() / 2 - 1; i++)
@@ -371,7 +372,7 @@ vector<vector<long>> Range::QuadrupletsSum(long target, vector<long> &nums)
  * tmp:  2 3 4 5 6 7
  * count:1 2 3 4 5  	=> 5 pairs
  */
-size_t Range::NumberDiffPairs(long diff, vector<long> &numbers)
+size_t Range::NumberDiffPairs(long diff, vector<long> const &numbers)
 {
 	size_t count = 0;
 	set<long> pairs(numbers.begin(), numbers.end());
@@ -384,7 +385,7 @@ size_t Range::NumberDiffPairs(long diff, vector<long> &numbers)
 	}
 	return count;
 }
-size_t Range::NumberDiffPairs(long diff, set<long> &numbers)
+size_t Range::NumberDiffPairs(long diff, set<long> const &numbers)
 {
 	size_t count = 0;
 	long tmp;
@@ -402,7 +403,7 @@ size_t Range::NumberDiffPairs(long diff, set<long> &numbers)
  * 100%
  * { 1, 2, 100 } : (100 - 1 = 99) + (100 - 2 = 98) = 197
  */
-size_t Range::StockMax(vector<long> &prices)
+size_t Range::StockMax(vector<long> const &prices)
 {
 	size_t profit = 0;
 	size_t maxIndex = 0;
@@ -410,7 +411,7 @@ size_t Range::StockMax(vector<long> &prices)
 	{
 		if (maxIndex <= i)
 		{
-			vector<long>::iterator peak = ranges::max_element(prices.begin() + i, prices.end());
+			vector<long>::const_iterator peak = ranges::max_element(prices.begin() + i, prices.end());
 			if (peak != prices.end())
 				maxIndex = distance(prices.begin(), peak);
 		}
@@ -437,11 +438,11 @@ size_t Range::StockMax(vector<long> &prices)
  * Maximum possible profit was 356. It would occur if a share was bought on day 1 and sold on day 5.
  * 100%
  */
-long Range::MaxProfit(vector<long> &data)
+long Range::MaxProfit(vector<long> const &data)
 {
 	long min = numeric_limits<long>::max();
 	long delta = 0;
-	for (vector<long>::iterator it = data.begin(); it != data.end(); it++)
+	for (vector<long>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
 		if (*it < min)
 			min = *it;
@@ -454,7 +455,7 @@ long Range::MaxProfit(vector<long> &data)
  * https://www.hackerrank.com/challenges/minimum-loss/problem
  * 100%
  */
-long Range::MinimumLoss(vector<long> &data)
+long Range::MinimumLoss(vector<long> const &data)
 {
 	map<long, size_t, greater<long>> prices;
 	for (size_t i = 0; i < data.size(); i++)
