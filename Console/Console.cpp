@@ -1815,20 +1815,6 @@ int main(int argc, char *argv[])
 	strings.clear();
 	strings = {"x.x", ".x.", "x.x"};
 	assert(kMarsh(strings) == 0);
-	str = "_";
-	assert(HappyLadyBugs(str));
-	str = "RBRB";
-	assert(!HappyLadyBugs(str));
-	str = "aaaa";
-	assert(HappyLadyBugs(str));
-	str = "aaa";
-	assert(HappyLadyBugs(str));
-	str = "aa";
-	assert(HappyLadyBugs(str));
-	str = "a";
-	assert(!HappyLadyBugs(str));
-	str = "aa_";
-	assert(HappyLadyBugs(str));
 
 	ugrid.clear();
 	ugrid.resize(0);

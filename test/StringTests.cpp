@@ -244,7 +244,6 @@ INSTANTIATE_TEST_SUITE_P(
     ZigZagConvertTestFixture,
     ::testing::Values(make_tuple("PAHNAPLSIIGYIR", "PAYPALISHIRING", 3), make_tuple("AB", "AB", 1)));
 
-// vector<string> wordBreakDFS(const string &s, set<string> &words)
 class WordBreakDFSFixture : public testing::TestWithParam<tuple<vector<string>, string, set<string>>>
 {
 public:
@@ -277,3 +276,29 @@ INSTANTIATE_TEST_SUITE_P(
                       make_tuple(vector<string>{"cat and dog"}, "catanddog", set<string>{"cats", "dog", "sand", "and", "cat"}),
                       make_tuple(vector<string>{"apple pen apple"}, "applepenapple", set<string>{"apple", "pen"}),
                       make_tuple(vector<string>{"aaa aaaa", "aaaa aaa"}, "aaaaaaa", set<string>{"aaaa", "aaa"})));
+
+class HappyLadyBugsChallengeTestFixture : public testing::TestWithParam<tuple<bool, string>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _data = get<1>(GetParam());
+    }
+    bool HappyLadyBugsChallengeTest()
+    {
+        return HappyLadyBugs(_data);
+    }
+
+protected:
+    bool _expected;
+    string _data;
+};
+TEST_P(HappyLadyBugsChallengeTestFixture, HappyLadyBugsChallengeTests)
+{
+    ASSERT_EQ(this->_expected, this->HappyLadyBugsChallengeTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    HappyLadyBugsChallengeTests,
+    HappyLadyBugsChallengeTestFixture,
+    ::testing::Values(make_tuple(true, "_"), make_tuple(false, "RBRB"), make_tuple(true, "aaaa"), make_tuple(true, "aaa"), make_tuple(true, "aa"), make_tuple(false, "a"), make_tuple(true, "aa_")));

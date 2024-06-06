@@ -324,7 +324,7 @@ void RemoveDuplicateCharactersLexicographicalOrder(string &str)
  * j: width of the second operand
  * width of sum is max(i, j). So i must be <= half the input string size
  */
-bool isAdditiveNumber(const string &str)
+bool isAdditiveNumber(string const &str)
 {
 	for (size_t i = 1; i <= str.size() / 2; i++)
 		for (size_t j = 1; max(i, j) <= str.size() - i - j; j++)
@@ -340,7 +340,7 @@ bool isAdditiveNumber(const string &str)
  *       5 8 13
  *         8 13 21
  */
-bool checkIfAdditiveSequence(size_t i, size_t j, const string &str)
+bool checkIfAdditiveSequence(size_t i, size_t j, string const &str)
 {
 	if ((str[0] == '0' && i > 1) || (str[i] == '0' && j > 1))
 		return false;
@@ -847,7 +847,7 @@ void Parentheses(vector<string> &result, size_t count)
  * 3: 2, 3
  * 4: 2 result = 2
  */
-long LongestValidParentheses(const string &str)
+long LongestValidParentheses(string const &str)
 {
 	MyStack<long> stack;
 	stack.push(-1); // The first element of stack is used to provide base for next valid string
@@ -869,7 +869,7 @@ long LongestValidParentheses(const string &str)
 }
 // https://app.codility.com/programmers/task/brackets_rotation/
 // Unfinished work!
-long LongestValidParenthesesWithFixes(const string &str, size_t k)
+long LongestValidParenthesesWithFixes(string const &str, size_t k)
 {
 	stack<long> stack;
 	long start = -1, end = -1;
@@ -1653,7 +1653,7 @@ void GetPermutations(string &w, set<string> &dictionary, set<string> &result)
 	}
 }
 // DAMP -> LAMP -> LIMP -> LIME -> LIKE
-void WordsLadder(const string &start, const string &stop, set<string> &dictionary, vector<string> &result)
+void WordsLadder(string const &start, string const &stop, set<string> &dictionary, vector<string> &result)
 {
 	queue<string> actionQ;
 	set<string> visited;
@@ -2319,7 +2319,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 /* https://leetcode.com/problems/word-search/
  * 100%
  */
-bool WordExistsInGrid(vector<vector<char>> &board, const string &word)
+bool WordExistsInGrid(vector<vector<char>> &board, string const &word)
 {
 	for (size_t i = 0; i < board.size(); i++)
 		for (size_t j = 0; j < board[i].size(); j++)
@@ -2327,7 +2327,7 @@ bool WordExistsInGrid(vector<vector<char>> &board, const string &word)
 				return true;
 	return false;
 }
-bool WordExistsInGrid(vector<vector<char>> &board, const string &word, long row, long col, size_t offset)
+bool WordExistsInGrid(vector<vector<char>> &board, string const &word, long row, long col, size_t offset)
 {
 	if (row < 0 || col < 0 || row >= (long)board.size() || col >= (long)board[row].size() || offset >= word.size() || word[offset] != board[row][col])
 		return false;
@@ -2548,7 +2548,7 @@ bool GetSum(vector<long> &data, size_t K, long P, size_t index, vector<long> &le
 // 2) Pattern: "aaaa" (.+)\\1\\1\\1  input : "asdasdasdasd" should return 1.
 // 3) Pattern: "aabb" (.+)\\1(.+)\\2 input : "xyzabcxyzabc" should return 0.
 // 3) Pattern: "abab" (.+)(.+)\\1\\2 input : "xyzabcxyzabc" should return 1.
-bool match(const string &pattern, const string &input)
+bool match(string const &pattern, string const &input)
 {
 	map<char, long> patternCount;
 	ostringstream regexStr;
@@ -2677,7 +2677,7 @@ string subtract(istream &a, istream &b)
 	cout << "Result : " << oss.str() << endl;
 	return oss.str();
 }
-void split(const string &s, char delim, vector<string> &elems)
+void split(string const &s, char delim, vector<string> &elems)
 {
 	stringstream ss(s);
 	string item;
@@ -2687,7 +2687,7 @@ void split(const string &s, char delim, vector<string> &elems)
 // file: "This is a dog"
 // 0: This is a
 // 1: is a dog
-set<string> process(const string &str, int n)
+set<string> process(string const &str, int n)
 {
 	vector<string> words;
 	set<string> ngrams;
@@ -2705,7 +2705,7 @@ set<string> process(const string &str, int n)
 	}
 	return ngrams;
 }
-set<string> intersectionNgram(const string &str1, const string &str2, int n)
+set<string> intersectionNgram(string const &str1, string const &str2, int n)
 {
 	set<string> result;
 	set<string> ngrams1 = process(str1, n);
@@ -3031,7 +3031,7 @@ vector<size_t> grayCode(size_t n)
 			result.push_back(result[j] | i);
 	return result;
 }
-void OrderedMergedCombinations(set<string> &result, const string &s1, const string &s2, string cur)
+void OrderedMergedCombinations(set<string> &result, string const &s1, string const &s2, string cur)
 {
 	if (s1.empty() && s2.empty())
 	{
@@ -3177,7 +3177,7 @@ string decimal_to_binary(long decimal)
 	}
 	return "0";
 }
-long binary_to_decimal(const string &binary)
+long binary_to_decimal(string const &binary)
 {
 	long result = 0;
 	size_t shift = 0;
@@ -3791,7 +3791,7 @@ bool increasingTriplet(vector<size_t> &data)
 	return tails.size() >= 3;
 }
 // https://stackoverflow.com/questions/6877249/find-the-number-of-occurrences-of-a-subsequence-in-a-string
-size_t FindSubsequenceRecursive(const string &str, const string &tomatch)
+size_t FindSubsequenceRecursive(string const &str, string const &tomatch)
 {
 	size_t result = 0;
 	if (tomatch.empty())
@@ -3830,7 +3830,7 @@ i:6(s=adBeef)	1	1			2			2			1			 1				0				0				0
 i:7(s=eadBeef)	1	1			3			3			1			 1				1				0				0
 i:8(s=DeadBeef)	1	1			3			3			1			 1				1				0				0
 */
-size_t FindSubsequenceDynamicProgramming(const string &str, const string &tomatch)
+size_t FindSubsequenceDynamicProgramming(string const &str, string const &tomatch)
 {
 	if (tomatch.empty())
 		return 1;
@@ -4577,7 +4577,7 @@ Observation:
 	For i >= k, result[i] = s[i - 1] == s[i] ? result[i - k] : result[i - k] == '1' ? '0' : '1'
 100%
 */
-string Cipher(size_t n, size_t k, const string &s)
+string Cipher(size_t n, size_t k, string const &s)
 {
 	string result;
 	if (!s.empty() && k <= s.size() && s.size() >= n)
@@ -4598,7 +4598,7 @@ string Cipher(size_t n, size_t k, const string &s)
 // If s[i] is lowercase and s[i+1] is uppercase, swap them and add an asterik '*' after them
 // If s[i] is a number, replace it with 0 and place the original number at the beginning.
 // 100%
-string DecryptPassword(const string &s)
+string DecryptPassword(string const &s)
 {
 	string result;
 	long numbers = -1;
@@ -4627,7 +4627,7 @@ string DecryptPassword(const string &s)
 }
 // https://www.hackerrank.com/challenges/sam-and-substrings/problem
 // 100 %
-unsigned long long substrings(const string &s)
+unsigned long long substrings(string const &s)
 {
 	/*
 	Example: "6789". Substrings: 6, 7, 8, 9, 67, 78, 89, 678, 789, 6789.
@@ -5088,7 +5088,7 @@ stack:   3 2 -4 -20 <= 3+2-20
 sign:	+ * + /
 stack:   3 6 5 1 <= 6+1 = 7
 */
-long BasicCalculator(const string &s)
+long BasicCalculator(string const &s)
 {
 	stack<long> numbers;
 	char sign = '+';
@@ -5194,7 +5194,7 @@ size_t hIndex(vector<size_t> &citations)
 /* https://leetcode.com/problems/letter-combinations-of-a-phone-number/
  * 100%
  */
-vector<string> PhoneKeyLetters(const string &digits)
+vector<string> PhoneKeyLetters(string const &digits)
 {
 	map<char, string> letters{
 		{'1', ""},
@@ -5378,7 +5378,7 @@ vector<long> diffWaysToCompute(string input)
 /* https://leetcode.com/problems/bulls-and-cows/
  * 100%
  */
-string getHint(const string &secret, const string &guess)
+string getHint(string const &secret, string const &guess)
 {
 	map<char, long> counts;
 	size_t bulls = 0, cows = 0;
@@ -5408,7 +5408,7 @@ string getHint(const string &secret, const string &guess)
  * If such prefix does not exist, then the serialization is definitely invalid; otherwise, the serialization is valid if and only if the prefix is the entire sequence.
  * 100%
  */
-bool IsValidPreOrderTreeSerialization(const string &preorder)
+bool IsValidPreOrderTreeSerialization(string const &preorder)
 {
 	vector<string> tokens;
 	::split(preorder, ',', tokens);
@@ -5445,7 +5445,7 @@ size_t LargestNumberCompositionProductWithDynamicProgramming(size_t n)
  * (5) ATL -> SFO
  * JFK -> ATL -> JFK -> SFO -> ATL -> SFO
  */
-vector<string> FindItinerary(vector<vector<string>> &tickets, const string &start)
+vector<string> FindItinerary(vector<vector<string>> &tickets, string const &start)
 {
 	map<string, multiset<string>> vertices;
 	vector<string> itinerary;
@@ -6447,7 +6447,7 @@ b 0  0 1 0 0
 A 0  0 0 1 0
 b 0  0 0 1 0
  */
-bool Abbreviation(string &s1, string &s2)
+bool Abbreviation(string const &s1, string const &s2)
 {
 	if (s1.empty() || (s2.empty() && count_if(s1.begin(), s1.end(), [](char c)
 											  { return isupper(c); }) > 0))
@@ -6461,91 +6461,6 @@ bool Abbreviation(string &s1, string &s2)
 		for (size_t j = 1; j <= s2.size(); j++)
 			table[i][j] = (table[i - 1][j - 1] && toupper(s1[i - 1]) == s2[j - 1]) || (table[i - 1][j] && islower(s1[i - 1]));
 	return table[s1.size()][s2.size()];
-}
-size_t MoveDisc(pair<size_t, size_t> const &from, map<size_t, set<size_t>> &towers, size_t discCount)
-{
-	for (map<size_t, set<size_t>>::iterator it = towers.begin(); it != towers.end(); it++)
-	{								 // Try to move to empty pole
-		if (it->first != from.first) // Skip same pole
-		{
-			if (it->second.empty()) // Move to empty pole except the destination pole unless it is the biggest disc
-			{
-				if (!(it->first == 1 && from.second < discCount)) // Don't move smaller discs to empty pole 1
-				{
-					it->second.insert(from.second);
-					towers[from.first].erase(from.second);
-					return 1;
-				}
-			}
-			else if (*it->second.begin() > from.second) // Look for a pole with disc on top > from.second
-			{
-				/*
-				(1) What happens if this is tower 1 to move to?
-				(2) What happens if this disc hides bigger discs in the pole?
-				*/
-				if (it->first == 1)
-				{
-					size_t i = discCount;
-					for (; i > from.second && towers[1].find(i) != towers[1].end(); i--)
-						;
-					if (i != from.second)
-						continue;
-				}
-				else
-				{
-					map<size_t, set<size_t>>::iterator emptyTower = find_if(next(it), towers.end(), [](const auto &it1)
-																			{ return it1.second.empty(); });
-					if (emptyTower != towers.end())
-					{
-						emptyTower->second.insert(from.second);
-						towers[from.first].erase(from.second);
-						return 1;
-					}
-				}
-				it->second.insert(from.second);
-				towers[from.first].erase(from.second);
-				return 1;
-			}
-		}
-	}
-	/*
-	 * No suitable pole to move from.second to.
-	 * Try to empty some poles
-	 */
-	return 0;
-}
-/*
- * [4 3 2 1]
- * Towers: 1 2 3 4
- * Disks : 4 3 2 1 (3 moves):
- *
- * {1: [5 3 1], 2: [4 2]}
- * {1: [5 3 1], 2: [6 4 2]}
- */
-pair<size_t, size_t> NextMove(map<size_t, set<size_t>> &towers, size_t towerCount, size_t discCount)
-{
-	pair<size_t, size_t> nextDisc;
-	bool found = false, done = true;
-	for (size_t tower = 2; done && tower <= towerCount; tower++)
-		if (!towers[tower].empty())
-			done = false;
-	if (done)
-		return nextDisc;
-	for (size_t disc = discCount; !found && disc > 0; disc--)
-		if (towers[1].find(disc) == towers[1].end())
-		{
-			if (!towers[1].empty() && *towers[1].begin() < disc)
-				return pair<size_t, size_t>{1, *towers[1].begin()};
-			for (size_t tower = 2; !found && tower <= towerCount; tower++)
-				if (towers[tower].find(disc) != towers[tower].end())
-				{
-					nextDisc = pair<size_t, size_t>{tower, *towers[tower].begin() != disc ? *towers[tower].begin() : disc}; // Move the top discs away if current disc below them
-					if (!towers[1].empty() && *towers[1].begin() < nextDisc.second)
-						nextDisc = pair<size_t, size_t>{1, *towers[1].begin()}; // Move the smaller discs away from destination tower
-					found = true;
-				}
-		}
-	return nextDisc;
 }
 /*
  * https://www.hackerrank.com/challenges/gena/problem
@@ -6623,7 +6538,7 @@ vector<unsigned long long> BFSNextMoves(unsigned long long state, size_t towerCo
 	}
 	return states;
 }
-int ResetTowerOfHanoi(size_t towerCount, vector<size_t> &poles)
+int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 {
 	ostringstream oss;
 	size_t towerBitCount = (floor(log2(towerCount - 1)) + 1);
@@ -7164,7 +7079,7 @@ size_t kMarsh(vector<string> &grid)
  * https://www.hackerrank.com/challenges/happy-ladybugs/problem
  * 100%
  */
-bool HappyLadyBugs(string &str)
+bool HappyLadyBugs(string const &str)
 {
 	map<char, size_t> counts;
 	for (size_t i = 0; i < str.size(); i++)
@@ -7179,7 +7094,7 @@ bool HappyLadyBugs(string &str)
 	{
 		set<char> groups;
 		char current = '\0';
-		for (string::iterator it = str.begin(); it != str.end(); it++)
+		for (string::const_iterator it = str.begin(); it != str.end(); it++)
 		{
 			if (current == '\0' || (*it != current && groups.find(*it) == groups.end()))
 			{
