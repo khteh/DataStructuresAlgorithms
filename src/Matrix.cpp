@@ -92,7 +92,7 @@ void Matrix<T>::MatrixSortWithHeap(vector<vector<T>> &data)
 // You are given a matrix. Elements in matrix can be either 0 or 1. Each row and column of matrix is sorted in ascending order.
 // Find number of '0's in the given matrix. Expected complexity is O(log(N)).
 template <typename T>
-T Matrix<T>::MatrixPatternCount(vector<vector<T>> &data)
+T Matrix<T>::MatrixPatternCount(vector<vector<T>> const &data)
 {
 	T i = data.size() - 1, j = data[0].size() - 1;
 	T count = T();
@@ -264,7 +264,7 @@ bool Matrix<T>::SearchMatrixCol(vector<vector<T>> const &matrix, T target, size_
  * 100%
  */
 template <typename T>
-vector<T> Matrix<T>::MatrixSprialOrder(vector<vector<T>> &matrix)
+vector<T> Matrix<T>::MatrixSprialOrder(vector<vector<T>> const &matrix)
 {
 	vector<T> result;
 	int row = 0, col = 0;
@@ -420,7 +420,7 @@ bool Matrix<T>::SearchMatrix1(T target, vector<vector<T>> const &matrix) const
  * 100%
  */
 template <typename T>
-T Matrix<T>::ChessQueensMoveCount(T dimension, T r_q /*[1,dimension]*/, T c_q /*[1,dimension]*/, vector<vector<size_t>> &obstacles)
+T Matrix<T>::ChessQueensMoveCount(T dimension, T r_q /*[1,dimension]*/, T c_q /*[1,dimension]*/, vector<vector<size_t>> const &obstacles)
 {
 	r_q--;
 	c_q--;
