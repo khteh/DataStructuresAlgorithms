@@ -211,7 +211,7 @@ long Range::LongestNonNegativeSumSlice(vector<long> const &data)
 	}
 	return max_len;
 }
-size_t Range::LongestUpDownAlternatingSubSequence(const vector<long> &data, vector<long> &result)
+size_t Range::LongestUpDownAlternatingSubSequence(vector<long> const &data, vector<long> &result)
 {
 	map<size_t, vector<long>> sequences;
 	direction_t direction = Direction::NoChange, flag = Direction::NoChange;
@@ -493,7 +493,7 @@ stay:   0  0  1  2 2
 bought: -1 -1 -1 1 1
 sold:   0  1  2 -1 3
 */
-long Range::StockMaxProfit(vector<long> &prices)
+long Range::StockMaxProfit(vector<long> const &prices)
 {
 	if (prices.size() < 2)
 		return 0;
@@ -520,7 +520,7 @@ long Range::StockMaxProfit(vector<long> &prices)
  * [1,2,3,4,5]
  * profit: 4
  */
-long Range::StockMaxProfit2(vector<long> &prices)
+long Range::StockMaxProfit1(vector<long> const &prices)
 {
 	long profit = 0, current = prices[0], bought = prices[0];
 	for (size_t i = 1; i < prices.size(); i++)
@@ -544,7 +544,7 @@ long Range::StockMaxProfit2(vector<long> &prices)
  * data: 1 -2 0 9 -1 -2 -3 9
  * dp  : 1,-1, MAX(-1, 1) = 1, MAX(10, 8, 10) = 10, MAX(0, -2, 0, 9) = 9, MAX(-1, -3, -1, 8, 7) = 8, MAX(-2, -4, -2, 7, 6, 5) = 7, MAX(10, 8, 10, 19, 18, 17, 16) = 19
  */
-long Range::NumberSolitaire(vector<long> &data)
+long Range::NumberSolitaire(vector<long> const &data)
 {
 	vector<long> dp(data.size(), numeric_limits<long>::min());
 	dp[0] = data[0];
@@ -572,7 +572,7 @@ hh = 9 - 7 = 2 {4 7 9}
 l = max(3, 6+6) = 12
 h = max(6+2, 3+8) = 11
 */
-size_t Range::SherlockAndCost(vector<size_t> &data)
+size_t Range::SherlockAndCost(vector<size_t> const &data)
 {
 	/*
 		lh: low to high from data[i - 1]=1 to data[i]
@@ -605,28 +605,29 @@ size_t Range::SherlockAndCost(vector<size_t> &data)
  * 1 17 5 10 13 11 12 5 16 8
  * 1 17 5 13 11 12 5 16 8
  */
-vector<long> Range::WiggleMaxLength(vector<long> &nums)
+vector<size_t> Range::WiggleMaxLength(vector<size_t> const &nums)
 {
-	vector<long> result;
+	vector<size_t> result;
 	bool direction = false; // false: down. true: up
-	for (size_t i = 0; i < nums.size(); i++)
+	if (nums.empty())
+		return result;
+	result.push_back(*nums.begin());
+	for (vector<size_t>::const_iterator it = nums.begin(); it != nums.end(); it++)
 	{
-		if (!i)
-			result.push_back(nums[i]);
-		else if (nums[i] < result.back())
+		if (*it < result.back())
 		{
 			if (result.size() == 1 || direction)
-				result.push_back(nums[i]);
-			else if (!direction && nums[i] < result.back())
-				result.back() = nums[i];
+				result.push_back(*it);
+			else if (!direction && *it < result.back())
+				result.back() = *it;
 			direction = false;
 		}
-		else if (nums[i] > result.back())
+		else if (*it > result.back())
 		{
 			if (result.size() == 1 || !direction)
-				result.push_back(nums[i]);
-			else if (direction && nums[i] > result.back())
-				result.back() = nums[i];
+				result.push_back(*it);
+			else if (direction && *it > result.back())
+				result.back() = *it;
 			direction = true;
 		}
 	}
@@ -654,7 +655,7 @@ t: 10
 k: 1
 t: 1
 */
-bool Range::ContainsNearbyAlmostDuplicate(vector<long> &nums, long k, long t)
+bool Range::ContainsNearbyAlmostDuplicate(vector<long> const &nums, long k, long t)
 {
 	multiset<long> buckets;
 	if (k > 0 && t >= 0)
@@ -677,7 +678,7 @@ bool Range::ContainsNearbyAlmostDuplicate(vector<long> &nums, long k, long t)
  * Do NOT change the data type from int to long!
  * Only tested working with int type.
  */
-size_t Range::VectorEqualSplit(vector<int> &data)
+size_t Range::VectorEqualSplit(vector<int> const &data)
 {
 	set<int> unique(data.begin(), data.end());
 	size_t result = 0;
@@ -717,19 +718,19 @@ size_t Range::VectorEqualSplit(vector<int> &data)
 /* https://leetcode.com/problems/maximum-product-of-word-lengths/
  * 100%
  */
-size_t Range::MaxProductOfNonOverlappingWordLengths(vector<string> &words)
+size_t Range::MaxProductOfNonOverlappingWordLengths(vector<string> const &words)
 {
 	size_t result = 0;
 	map<size_t, size_t> patterns;
-	for (size_t i = 0; i < words.size(); i++)
+	for (vector<string>::const_iterator it = words.begin(); it != words.end(); it++)
 	{
 		int pattern = 0;
-		for (size_t c = 0; c < words[i].size(); c++)
-			pattern |= 1 << (words[i][c] - 'a');
-		patterns[pattern] = max(patterns[pattern], words[i].size());
-		for (map<size_t, size_t>::iterator it = patterns.begin(); it != patterns.end(); it++)
-			if (!(it->first & pattern))
-				result = max(result, it->second * words[i].size());
+		for (size_t c = 0; c < it->size(); c++)
+			pattern |= 1 << ((*it)[c] - 'a');
+		patterns[pattern] = max(patterns[pattern], it->size());
+		for (map<size_t, size_t>::iterator it1 = patterns.begin(); it1 != patterns.end(); it1++)
+			if (!(it1->first & pattern))
+				result = max(result, it1->second * it->size());
 	}
 	return result;
 }
@@ -783,7 +784,7 @@ size_t Range::MaxProductOfNonOverlappingWordLengths(vector<string> &words)
 1 2 3 4 5 6 : No
 1 1 -2 0 0 0
 */
-string Range::AlmostSorted(vector<long> &arr)
+string Range::AlmostSorted(vector<long> const &arr)
 {
 	ostringstream oss;
 	vector<long> sorted(arr);
@@ -862,7 +863,7 @@ string Range::AlmostSorted(vector<long> &arr)
  * i: 1 -> [5]
  * i: 0
  */
-long Range::MinimumBribes(size_t maxBribes, vector<long> &data)
+long Range::MinimumBribes(size_t maxBribes, vector<long> const &data)
 {
 	long bribes = 0;
 	for (long i = data.size() - 1; i >= 0; i--)
@@ -891,19 +892,19 @@ long Range::MinimumBribes(size_t maxBribes, vector<long> &data)
  * https://www.hackerrank.com/challenges/picking-numbers/problem
  * 100%
  */
-size_t Range::PickNumbersFromRange(vector<long> &a)
+size_t Range::PickNumbersFromRange(vector<size_t> const &data)
 {
 	size_t max = 0;
-	for (size_t i = 0; i < a.size(); i++)
+	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
-		long value = a[i];
-		size_t cnt = ranges::count_if(a, [&value](long j)
+		size_t value = *it;
+		size_t cnt = ranges::count_if(data, [&value](size_t j)
 									  { return j == value; });
 		size_t oneless = 0;
 		if (value > 0)
-			oneless = ranges::count_if(a, [&value](long j)
+			oneless = ranges::count_if(data, [&value](size_t j)
 									   { return j == (value - 1); });
-		size_t onemore = ranges::count_if(a, [&value](long j)
+		size_t onemore = ranges::count_if(data, [&value](size_t j)
 										  { return j == (value + 1); });
 		cnt = cnt + oneless > cnt + onemore ? cnt + oneless : cnt + onemore;
 		if (cnt > max)
@@ -956,7 +957,7 @@ vector<long> Range::LastNumbers(size_t n, long a, long b)
  * https://www.hackerrank.com/challenges/non-divisible-subset/problem
  * 100%
  */
-size_t Range::MaxNonDivisableSubset(vector<size_t> &data, size_t k)
+size_t Range::MaxNonDivisableSubset(vector<size_t> const &data, size_t k)
 {
 	vector<size_t> counts(k, 0);
 	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)

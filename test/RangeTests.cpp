@@ -141,25 +141,25 @@ INSTANTIATE_TEST_SUITE_P(
 	StockMaxProfitTests,
 	StockMaxProfitTestFixture,
 	::testing::Values(make_tuple(6, vector<long>{1, 2, 3, 0, 2, 5}), make_tuple(6, vector<long>{1, 2, 3, 0, 1, 5}), make_tuple(9, vector<long>{1, 2, 6, 0, 1, 5})));
-class StockMaxProfit2TestFixture : public RangeTestFixture1<long, long>, public testing::TestWithParam<tuple<long, vector<long>>>
+class StockMaxProfit1TestFixture : public RangeTestFixture1<long, long>, public testing::TestWithParam<tuple<long, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
 		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
-	long StockMaxProfit2Test()
+	long StockMaxProfit1Test()
 	{
-		return _rangeObj.StockMaxProfit2(_data);
+		return _rangeObj.StockMaxProfit1(_data);
 	}
 };
-TEST_P(StockMaxProfit2TestFixture, StockMaxProfit2Tests)
+TEST_P(StockMaxProfit1TestFixture, StockMaxProfit1Tests)
 {
-	ASSERT_EQ(this->_expected, this->StockMaxProfit2Test());
+	ASSERT_EQ(this->_expected, this->StockMaxProfit1Test());
 }
 INSTANTIATE_TEST_SUITE_P(
-	StockMaxProfit2Tests,
-	StockMaxProfit2TestFixture,
+	StockMaxProfit1Tests,
+	StockMaxProfit1TestFixture,
 	::testing::Values(make_tuple(7, vector<long>{7, 1, 5, 3, 6, 4}), make_tuple(4, vector<long>{1, 2, 3, 4, 5}), make_tuple(0, vector<long>{5, 4, 3, 2, 1}),
 					  make_tuple(1, vector<long>{1, 2}), make_tuple(0, vector<long>{1, 1})));
 
@@ -261,7 +261,7 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple("no", vector<long>{3, 1, 2}),
 					  make_tuple("reverse 2 5", vector<long>{1, 5, 4, 3, 2, 6}),
 					  make_tuple("no", vector<long>{43, 65, 1, 98, 99, 101})));
-class PickNumbersFromRangeTestFixture : public RangeTestFixture1<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<long>>>
+class PickNumbersFromRangeTestFixture : public RangeTestFixture1<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
 {
 public:
 	void SetUp() override
@@ -280,7 +280,7 @@ TEST_P(PickNumbersFromRangeTestFixture, PickNumbersFromRangeTests)
 INSTANTIATE_TEST_SUITE_P(
 	PickNumbersFromRangeTests,
 	PickNumbersFromRangeTestFixture,
-	::testing::Values(make_tuple(5, vector<long>{1, 1, 2, 2, 4, 4, 5, 5, 5}), make_tuple(3, vector<long>{4, 6, 5, 3, 3, 1}), make_tuple(5, vector<long>{1, 2, 2, 3, 1, 2})));
+	::testing::Values(make_tuple(5, vector<size_t>{1, 1, 2, 2, 4, 4, 5, 5, 5}), make_tuple(3, vector<size_t>{4, 6, 5, 3, 3, 1}), make_tuple(5, vector<size_t>{1, 2, 2, 3, 1, 2})));
 class MaxNonDivisableSubsetTestFixture : public RangeTestFixture2<size_t, size_t, size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
 public:
@@ -615,7 +615,7 @@ TEST(RangeTests, ClimbLeaderboardTest)
 	vector<size_t> expected = {6, 4, 2, 1};
 	ASSERT_EQ(expected, ClimbLeaderBoard(a, b));
 }
-class WiggleMaxLengthTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
+class WiggleMaxLengthTestFixture : public testing::TestWithParam<tuple<vector<size_t>, vector<size_t>>>
 {
 public:
 	void SetUp() override
@@ -623,15 +623,14 @@ public:
 		_expected = get<0>(GetParam());
 		_data = get<1>(GetParam());
 	}
-	vector<long> WiggleMaxLengthTest()
+	vector<size_t> WiggleMaxLengthTest()
 	{
 		return _rangeObj.WiggleMaxLength(_data);
 	}
 
 protected:
 	Range _rangeObj;
-	vector<long> _expected;
-	vector<long> _data;
+	vector<size_t> _expected, _data;
 };
 TEST_P(WiggleMaxLengthTestFixture, WiggleMaxLengthTests)
 {
@@ -640,14 +639,14 @@ TEST_P(WiggleMaxLengthTestFixture, WiggleMaxLengthTests)
 INSTANTIATE_TEST_SUITE_P(
 	WiggleMaxLengthTests,
 	WiggleMaxLengthTestFixture,
-	::testing::Values(make_tuple(vector<long>{1, 7, 4, 9, 2, 5}, vector<long>{1, 7, 4, 9, 2, 5}),
-					  make_tuple(vector<long>{0}, vector<long>{0}),
-					  make_tuple(vector<long>{0}, vector<long>{0, 0}),
-					  make_tuple(vector<long>{3, 2, 5}, vector<long>{3, 3, 3, 2, 5}),
-					  make_tuple(vector<long>{1, 17, 5, 15, 5, 16, 8}, vector<long>{1, 17, 5, 10, 13, 15, 10, 5, 16, 8}),
-					  make_tuple(vector<long>{1, 17, 5, 15, 5, 16, 8}, vector<long>{1, 17, 5, 15, 5, 16, 8}),
-					  make_tuple(vector<long>{1, 17, 5, 15, 5, 16, 8}, vector<long>{1, 17, 5, 10, 13, 15, 12, 5, 16, 8}),
-					  make_tuple(vector<long>{1, 17, 5, 13, 11, 12, 5, 16, 8}, vector<long>{1, 17, 5, 10, 13, 11, 12, 5, 16, 8})));
+	::testing::Values(make_tuple(vector<size_t>{1, 7, 4, 9, 2, 5}, vector<size_t>{1, 7, 4, 9, 2, 5}),
+					  make_tuple(vector<size_t>{0}, vector<size_t>{0}),
+					  make_tuple(vector<size_t>{0}, vector<size_t>{0, 0}),
+					  make_tuple(vector<size_t>{3, 2, 5}, vector<size_t>{3, 3, 3, 2, 5}),
+					  make_tuple(vector<size_t>{1, 17, 5, 15, 5, 16, 8}, vector<size_t>{1, 17, 5, 10, 13, 15, 10, 5, 16, 8}),
+					  make_tuple(vector<size_t>{1, 17, 5, 15, 5, 16, 8}, vector<size_t>{1, 17, 5, 15, 5, 16, 8}),
+					  make_tuple(vector<size_t>{1, 17, 5, 15, 5, 16, 8}, vector<size_t>{1, 17, 5, 10, 13, 15, 12, 5, 16, 8}),
+					  make_tuple(vector<size_t>{1, 17, 5, 13, 11, 12, 5, 16, 8}, vector<size_t>{1, 17, 5, 10, 13, 11, 12, 5, 16, 8})));
 class ContainsNearbyAlmostDuplicateTestFixture : public testing::TestWithParam<tuple<bool, vector<long>, long, long>>
 {
 public:
