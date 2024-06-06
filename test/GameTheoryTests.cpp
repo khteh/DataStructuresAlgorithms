@@ -1,5 +1,63 @@
 #include "pch.h"
 using namespace std;
+class SolvabilityOfTheTilesGameTestFixture : public testing::TestWithParam<tuple<bool, vector<size_t>>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _data = get<1>(GetParam());
+    }
+    bool SolvabilityOfTheTilesGameTest()
+    {
+        return _game.SolvabilityOfTheTilesGame(_data);
+    }
+
+protected:
+    bool _expected;
+    vector<size_t> _data;
+    GameTheory<size_t> _game;
+};
+TEST_P(SolvabilityOfTheTilesGameTestFixture, SolvabilityOfTheTilesGameTests)
+{
+    ASSERT_EQ(this->_expected, this->SolvabilityOfTheTilesGameTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    SolvabilityOfTheTilesGameTests,
+    SolvabilityOfTheTilesGameTestFixture,
+    ::testing::Values(make_tuple(true, vector<size_t>{3, 1, 2}), make_tuple(true, vector<size_t>{1, 3, 4, 2}), make_tuple(false, vector<size_t>{1, 2, 3, 5, 4}), make_tuple(true, vector<size_t>{4, 1, 3, 2}), make_tuple(false, vector<size_t>{1, 6, 5, 2, 3, 4})));
+class SnakesAndLaddersGameTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<size_t>>, vector<vector<size_t>>>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _ladders = get<1>(GetParam());
+        _snakes = get<2>(GetParam());
+    }
+    size_t SnakesAndLaddersGameTest()
+    {
+        return _game.SnakesAndLaddersGameFast(_ladders, _snakes);
+    }
+
+protected:
+    size_t _expected;
+    vector<vector<size_t>> _ladders, _snakes;
+    GameTheory<size_t> _game;
+};
+TEST_P(SnakesAndLaddersGameTestFixture, SnakesAndLaddersGameTests)
+{
+    ASSERT_EQ(this->_expected, this->SnakesAndLaddersGameTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    SnakesAndLaddersGameTests,
+    SnakesAndLaddersGameTestFixture,
+    ::testing::Values(make_tuple(3, vector<vector<size_t>>{{32, 62}, {42, 68}, {12, 98}}, vector<vector<size_t>>{{95, 13}, {97, 25}, {93, 37}, {79, 27}, {75, 19}, {49, 47}, {67, 17}}),
+                      make_tuple(5, vector<vector<size_t>>{{8, 52}, {6, 80}, {26, 42}, {2, 72}}, vector<vector<size_t>>{{51, 19}, {39, 11}, {37, 29}, {81, 3}, {59, 5}, {79, 23}, {53, 7}, {43, 33}, {77, 21}}),
+                      make_tuple(3, vector<vector<size_t>>{{3, 5}, {7, 8}, {44, 56}, {36, 54}, {88, 91}, {77, 83}, {2, 4}, {9, 99}, {45, 78}, {31, 75}}, vector<vector<size_t>>{{10, 6}, {95, 90}, {96, 30}, {97, 52}, {98, 86}}),
+                      make_tuple(3, vector<vector<size_t>>{{3, 54}, {37, 100}}, vector<vector<size_t>>{{56, 33}}),
+                      make_tuple(17, vector<vector<size_t>>{{5, 6}}, vector<vector<size_t>>{{97, 95}}),
+                      make_tuple(0, vector<vector<size_t>>{{3, 90}}, vector<vector<size_t>>{{99, 10}, {97, 20}, {98, 30}, {96, 40}, {95, 50}, {94, 60}, {93, 70}})));
 template <typename T>
 class NimGameFixture
 {
@@ -163,29 +221,3 @@ INSTANTIATE_TEST_SUITE_P(
                       make_tuple("First", 12),
                       make_tuple("First", 13),
                       make_tuple("Second", 14)));
-class SolvabilityOfTheTilesGameTestFixture : public testing::TestWithParam<tuple<bool, vector<size_t>>>
-{
-public:
-    void SetUp() override
-    {
-        _expected = get<0>(GetParam());
-        _data = get<1>(GetParam());
-    }
-    bool SolvabilityOfTheTilesGameTest()
-    {
-        return _game.SolvabilityOfTheTilesGame(_data);
-    }
-
-protected:
-    bool _expected;
-    vector<size_t> _data;
-    GameTheory<size_t> _game;
-};
-TEST_P(SolvabilityOfTheTilesGameTestFixture, SolvabilityOfTheTilesGameTests)
-{
-    ASSERT_EQ(this->_expected, this->SolvabilityOfTheTilesGameTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-    SolvabilityOfTheTilesGameTests,
-    SolvabilityOfTheTilesGameTestFixture,
-    ::testing::Values(make_tuple(true, vector<size_t>{3, 1, 2}), make_tuple(true, vector<size_t>{1, 3, 4, 2}), make_tuple(false, vector<size_t>{1, 2, 3, 5, 4}), make_tuple(true, vector<size_t>{4, 1, 3, 2}), make_tuple(false, vector<size_t>{1, 6, 5, 2, 3, 4})));

@@ -27,6 +27,113 @@ bool GameTheory<T>::SolvabilityOfTheTilesGame(vector<T> const &data)
     }
     return !(inversions % 2);
 }
+/*
+ * https://www.hackerrank.com/challenges/the-quickest-way-up/problem
+ * http://theoryofprogramming.com/2014/12/25/snakes-and-ladders-game-code/
+ * Times out!
+ */
+template <typename T>
+size_t GameTheory<T>::SnakesAndLaddersGame(vector<vector<T>> const &ladders, vector<vector<T>> const &snakes)
+{
+    map<T, T> laddermap, snakemap;
+    shared_ptr<Vertex<T, T>> root(make_shared<Vertex<T, T>>(1));
+    map<T, shared_ptr<Vertex<T, T>>> vertices;
+    vertices.emplace(1, root);
+    for (size_t i = 0; i < ladders.size(); i++)
+        laddermap.emplace(ladders[i][0], ladders[i][1]);
+    for (size_t i = 0; i < snakes.size(); i++)
+        snakemap.emplace(snakes[i][0], snakes[i][1]);
+    for (size_t i = 1; i <= 100; i++)
+        if (laddermap.find(i) == laddermap.end() && snakemap.find(i) == snakemap.end())
+        { // Skip the number if it is at the beginning of a ladder
+            shared_ptr<Vertex<T, T>> parent = vertices.find(i) != vertices.end() ? vertices[i] : nullptr;
+            if (!parent)
+            {
+                parent = make_shared<Vertex<T, T>>(i);
+                vertices.emplace(i, parent);
+            }
+            for (size_t j = min(6L, (long)(100L - i)); j > 0; j--)
+            {
+                size_t next = i + j;
+                if (laddermap.find(next) != laddermap.end())
+                    next = laddermap[next];
+                if (snakemap.find(next) != snakemap.end())
+                    next = snakemap[next];
+                shared_ptr<Vertex<T, T>> vertex = vertices.find(next) != vertices.end() ? vertices[next] : nullptr;
+                if (!vertex)
+                {
+                    vertex = make_shared<Vertex<T, T>>(next);
+                    vertices.emplace(next, vertex);
+                }
+                parent->AddNeighbour(vertex, 0);
+            }
+        }
+    size_t level = 0;
+    map<T, vector<shared_ptr<Vertex<T, T>>>> result;
+    result.emplace(level, vector<shared_ptr<Vertex<T, T>>>{root});
+    for (; !result[level].empty(); level++)
+    {
+        vector<shared_ptr<Vertex<T, T>>> tmp;
+        for (typename vector<shared_ptr<Vertex<T, T>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++)
+        {
+            if ((*it)->GetTag() == 100)
+                return level;
+            vector<shared_ptr<Vertex<T, T>>> neighbours = (*it)->GetNeighbours();
+            tmp.insert(tmp.end(), neighbours.begin(), neighbours.end());
+        }
+        result.emplace(level + 1, tmp);
+    }
+    return 0;
+}
+/*
+ * https://www.hackerrank.com/challenges/the-quickest-way-up/problem
+ * http://theoryofprogramming.com/2014/12/25/snakes-and-ladders-game-code/
+ * 100%
+ */
+template <typename T>
+size_t GameTheory<T>::SnakesAndLaddersGameFast(vector<vector<T>> const &ladders, vector<vector<T>> const &snakes)
+{
+    map<T, vector<T>> adjacency_list;
+    map<T, T> laddermap, snakemap;
+    for (size_t i = 0; i < ladders.size(); i++)
+        laddermap.emplace(ladders[i][0], ladders[i][1]);
+    for (size_t i = 0; i < snakes.size(); i++)
+        snakemap.emplace(snakes[i][0], snakes[i][1]);
+    for (size_t i = 1; i <= 100; i++)
+        if (laddermap.find(i) == laddermap.end() && snakemap.find(i) == snakemap.end())
+        { // Skip the number if it is at the beginning of a ladder
+            for (size_t j = min(6L, (long)(100L - i)); j > 0; j--)
+            {
+                size_t next = i + j;
+                if (laddermap.find(next) != laddermap.end())
+                    next = laddermap[next];
+                if (snakemap.find(next) != snakemap.end())
+                    next = snakemap[next];
+                adjacency_list[i].push_back(next);
+            }
+        }
+    size_t level = 0;
+    map<T, vector<T>> result;
+    result.emplace(level, vector<T>{1});
+    set<T> visited;
+    for (; !result[level].empty(); level++)
+    {
+        vector<T> tmp;
+        for (typename vector<T>::const_iterator it = result[level].begin(); it != result[level].end(); it++)
+        {
+            if (visited.find(*it) == visited.end())
+            {
+                if (*it == 100)
+                    return level;
+                if (adjacency_list.find(*it) != adjacency_list.end())
+                    tmp.insert(tmp.end(), adjacency_list[*it].begin(), adjacency_list[*it].end());
+                visited.insert(*it);
+            }
+        }
+        result.emplace(level + 1, tmp);
+    }
+    return 0;
+}
 
 /*
  * https://www.hackerrank.com/challenges/chocolate-in-box/problem

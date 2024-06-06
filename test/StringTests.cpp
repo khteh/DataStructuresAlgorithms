@@ -190,3 +190,90 @@ INSTANTIATE_TEST_SUITE_P(
     DecryptPasswordTests,
     DecryptPasswordTestFixture,
     ::testing::Values(make_tuple("hAck3rr4nk", "43Ah*ck0rr0nk"), make_tuple("aP1pL5e", "51Pa*0Lp*0e")));
+class LengthOfLongestUniqueSubstringTestFixture : public testing::TestWithParam<tuple<size_t, string>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _data = get<1>(GetParam());
+    }
+    size_t LengthOfLongestUniqueSubstringTest()
+    {
+        return LengthOfLongestUniqueSubstring(_data);
+    }
+
+protected:
+    size_t _expected;
+    string _data;
+};
+TEST_P(LengthOfLongestUniqueSubstringTestFixture, LengthOfLongestUniqueSubstringTests)
+{
+    ASSERT_EQ(this->_expected, this->LengthOfLongestUniqueSubstringTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    LengthOfLongestUniqueSubstringTests,
+    LengthOfLongestUniqueSubstringTestFixture,
+    ::testing::Values(make_tuple(3, "abcabc"), make_tuple(1, "aaa"), make_tuple(6, "abcdef"), make_tuple(3, "dvdf"), make_tuple(3, "abcabcbb"), make_tuple(5, "tmmzuxt"), make_tuple(3, "pwwkew"), make_tuple(6, "ohvhjdml"), make_tuple(4, "vqblqcb")));
+
+class ZigZagConvertTestFixture : public testing::TestWithParam<tuple<string, string, size_t>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _data = get<1>(GetParam());
+        _numRows = get<2>(GetParam());
+    }
+    string ZigZagConvertTest()
+    {
+        return ZigZagConvert(_data, _numRows);
+    }
+
+protected:
+    string _expected;
+    string _data;
+    size_t _numRows;
+};
+TEST_P(ZigZagConvertTestFixture, ZigZagConvertTests)
+{
+    ASSERT_EQ(this->_expected, this->ZigZagConvertTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    ZigZagConvertTests,
+    ZigZagConvertTestFixture,
+    ::testing::Values(make_tuple("PAHNAPLSIIGYIR", "PAYPALISHIRING", 3), make_tuple("AB", "AB", 1)));
+
+// vector<string> wordBreakDFS(const string &s, set<string> &words)
+class WordBreakDFSFixture : public testing::TestWithParam<tuple<vector<string>, string, set<string>>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _str1 = get<1>(GetParam());
+        _strs = get<2>(GetParam());
+    }
+    vector<string> WordBreakDFSTest()
+    {
+        return WordBreakDFS(_str1, _strs);
+    }
+
+protected:
+    string _str1;
+    set<string> _strs;
+    vector<string> _expected;
+};
+TEST_P(WordBreakDFSFixture, WordBreakDFSTests)
+{
+    ASSERT_EQ(this->_expected, this->WordBreakDFSTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    WordBreakDFSTests,
+    WordBreakDFSFixture,
+    ::testing::Values(make_tuple(vector<string>{"Hello World"}, "HelloWorld", set<string>{"Hello", "World"}),
+                      make_tuple(vector<string>{}, "catsandog", set<string>{"cats", "dog", "sand", "and", "cat"}),
+                      make_tuple(vector<string>{"cat sand dog", "cats and dog"}, "catsanddog", set<string>{"cats", "dog", "sand", "and", "cat"}),
+                      make_tuple(vector<string>{"cat and dog"}, "catanddog", set<string>{"cats", "dog", "sand", "and", "cat"}),
+                      make_tuple(vector<string>{"apple pen apple"}, "applepenapple", set<string>{"apple", "pen"}),
+                      make_tuple(vector<string>{"aaa aaaa", "aaaa aaa"}, "aaaaaaa", set<string>{"aaaa", "aaa"})));

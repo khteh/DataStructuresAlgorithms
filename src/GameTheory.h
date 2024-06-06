@@ -1,8 +1,11 @@
 #pragma once
 #include <limits>
 #include <vector>
+#include <map>
+#include <set>
 #include <sstream>
 #include <ranges>
+#include <memory>
 #ifdef _MSC_VER
 #include <ppl.h>
 using namespace concurrency;
@@ -12,12 +15,15 @@ using namespace concurrency;
 #include <tbb/blocked_range.h>
 using namespace tbb;
 #endif
+#include "Vertex.h"
 using namespace std;
 template <typename T>
 class GameTheory
 {
 public:
     bool SolvabilityOfTheTilesGame(vector<T> const &);
+    size_t SnakesAndLaddersGame(vector<vector<T>> const &, vector<vector<T>> const &);
+    size_t SnakesAndLaddersGameFast(vector<vector<T>> const &, vector<vector<T>> const &);
     size_t NormalPlayNim(vector<T> const &);
     size_t MisèrePlayNim(vector<T> const &);
     size_t NimbleGame(vector<T> const &);

@@ -4756,111 +4756,6 @@ vector<string> bomberMan(size_t n, vector<string> &grid)
 	return grid;
 }
 /*
- * https://www.hackerrank.com/challenges/the-quickest-way-up/problem
- * http://theoryofprogramming.com/2014/12/25/snakes-and-ladders-game-code/
- * Times out!
- */
-size_t SnakesAndLaddersGame(vector<vector<size_t>> &ladders, vector<vector<size_t>> &snakes)
-{
-	map<size_t, size_t> laddermap, snakemap;
-	shared_ptr<Vertex<size_t, size_t>> root(make_shared<Vertex<size_t, size_t>>(1));
-	map<size_t, shared_ptr<Vertex<size_t, size_t>>> vertices;
-	vertices.emplace(1, root);
-	for (size_t i = 0; i < ladders.size(); i++)
-		laddermap.emplace(ladders[i][0], ladders[i][1]);
-	for (size_t i = 0; i < snakes.size(); i++)
-		snakemap.emplace(snakes[i][0], snakes[i][1]);
-	for (size_t i = 1; i <= 100; i++)
-		if (laddermap.find(i) == laddermap.end() && snakemap.find(i) == snakemap.end())
-		{ // Skip the number if it is at the beginning of a ladder
-			shared_ptr<Vertex<size_t, size_t>> parent = vertices.find(i) != vertices.end() ? vertices[i] : nullptr;
-			if (!parent)
-			{
-				parent = make_shared<Vertex<size_t, size_t>>(i);
-				vertices.emplace(i, parent);
-			}
-			for (size_t j = min(6L, (long)(100L - i)); j > 0; j--)
-			{
-				size_t next = i + j;
-				if (laddermap.find(next) != laddermap.end())
-					next = laddermap[next];
-				if (snakemap.find(next) != snakemap.end())
-					next = snakemap[next];
-				shared_ptr<Vertex<size_t, size_t>> vertex = vertices.find(next) != vertices.end() ? vertices[next] : nullptr;
-				if (!vertex)
-				{
-					vertex = make_shared<Vertex<size_t, size_t>>(next);
-					vertices.emplace(next, vertex);
-				}
-				parent->AddNeighbour(vertex, 0);
-			}
-		}
-	size_t level = 0;
-	map<size_t, vector<shared_ptr<Vertex<size_t, size_t>>>> result;
-	result.emplace(level, vector<shared_ptr<Vertex<size_t, size_t>>>{root});
-	for (; !result[level].empty(); level++)
-	{
-		vector<shared_ptr<Vertex<size_t, size_t>>> tmp;
-		for (vector<shared_ptr<Vertex<size_t, size_t>>>::const_iterator it = result[level].begin(); it != result[level].end(); it++)
-		{
-			if ((*it)->GetTag() == 100)
-				return level;
-			vector<shared_ptr<Vertex<size_t, size_t>>> neighbours = (*it)->GetNeighbours();
-			tmp.insert(tmp.end(), neighbours.begin(), neighbours.end());
-		}
-		result.emplace(level + 1, tmp);
-	}
-	return 0;
-}
-/*
- * https://www.hackerrank.com/challenges/the-quickest-way-up/problem
- * http://theoryofprogramming.com/2014/12/25/snakes-and-ladders-game-code/
- * 100%
- */
-size_t SnakesAndLaddersGameFast(vector<vector<size_t>> &ladders, vector<vector<size_t>> &snakes)
-{
-	map<size_t, vector<size_t>> adjacency_list;
-	map<size_t, size_t> laddermap, snakemap;
-	for (size_t i = 0; i < ladders.size(); i++)
-		laddermap.emplace(ladders[i][0], ladders[i][1]);
-	for (size_t i = 0; i < snakes.size(); i++)
-		snakemap.emplace(snakes[i][0], snakes[i][1]);
-	for (size_t i = 1; i <= 100; i++)
-		if (laddermap.find(i) == laddermap.end() && snakemap.find(i) == snakemap.end())
-		{ // Skip the number if it is at the beginning of a ladder
-			for (size_t j = min(6L, (long)(100L - i)); j > 0; j--)
-			{
-				size_t next = i + j;
-				if (laddermap.find(next) != laddermap.end())
-					next = laddermap[next];
-				if (snakemap.find(next) != snakemap.end())
-					next = snakemap[next];
-				adjacency_list[i].push_back(next);
-			}
-		}
-	size_t level = 0;
-	map<size_t, vector<size_t>> result;
-	result.emplace(level, vector<size_t>{1});
-	set<size_t> visited;
-	for (; !result[level].empty(); level++)
-	{
-		vector<size_t> tmp;
-		for (vector<size_t>::const_iterator it = result[level].begin(); it != result[level].end(); it++)
-		{
-			if (visited.find(*it) == visited.end())
-			{
-				if (*it == 100)
-					return level;
-				if (adjacency_list.find(*it) != adjacency_list.end())
-					tmp.insert(tmp.end(), adjacency_list[*it].begin(), adjacency_list[*it].end());
-				visited.insert(*it);
-			}
-		}
-		result.emplace(level + 1, tmp);
-	}
-	return 0;
-}
-/*
  * https://leetcode.com/problems/longest-substring-without-repeating-characters
  * 100%
  * aaa -> 1
@@ -4872,7 +4767,7 @@ size_t SnakesAndLaddersGameFast(vector<vector<size_t>> &ladders, vector<vector<s
  * ohvhjdml ->
  * vqblqcb
  */
-size_t LengthOfLongestUniqueSubstring(const string &s)
+size_t LengthOfLongestUniqueSubstring(string const &s)
 {
 	size_t maxLength = 0;
 	set<char> chars;
@@ -4908,7 +4803,7 @@ size_t LengthOfLongestUniqueSubstring(const string &s)
  * https://leetcode.com/problems/zigzag-conversion/
  * 100%
  */
-string zigzagconvert(const string &s, size_t numRows)
+string ZigZagConvert(string const &s, size_t numRows)
 {
 	bool direction = false;
 	vector<string> str(numRows);
@@ -5373,7 +5268,7 @@ vector<string> PhoneKeyLetters(const string &digits)
  * [0,0) is valid -> [0,4) is valid -> [0,7) is valid
  * 100%
  */
-bool WordBreakDynamicProgramming(const string &s, set<string> &words)
+bool WordBreakDynamicProgramming(string const &s, set<string> const &words)
 {
 	vector<bool> valid(s.size() + 1, false);	 // flag to mark substring [0, end) validity
 	valid[0] = true;							 // empty substring is a valid string
@@ -5391,7 +5286,7 @@ bool WordBreakDynamicProgramming(const string &s, set<string> &words)
 /* https://leetcode.com/problems/word-break-ii/
  * 100%
  */
-void WordBreakDynamicProgramming(const string &s, set<string> &words, vector<string> &result)
+void WordBreakDynamicProgramming(string const &s, set<string> const &words, vector<string> &result)
 {
 	map<size_t, vector<string>> strings;
 	vector<bool> valid(s.size() + 1, false); // flag to mark substring [0, end) validity
@@ -5414,7 +5309,7 @@ void WordBreakDynamicProgramming(const string &s, set<string> &words, vector<str
 	if (strings.find(s.size()) != strings.end())
 		result.insert(result.end(), strings[s.size()].begin(), strings[s.size()].end());
 }
-vector<string> wordBreakDFS(string s, set<string> &words, map<string, vector<string>> &strings)
+vector<string> WordBreakDFS(string const &s, set<string> const &words, map<string, vector<string>> &strings)
 {
 	vector<string> result;
 	if (s.empty())
@@ -5426,7 +5321,7 @@ vector<string> wordBreakDFS(string s, set<string> &words, map<string, vector<str
 		size_t found = s.find(*it);
 		if (found == 0)
 		{
-			vector<string> tmp = wordBreakDFS(s.substr(it->size()), words, strings);
+			vector<string> tmp = WordBreakDFS(s.substr(it->size()), words, strings);
 			for (vector<string>::iterator it1 = tmp.begin(); it1 != tmp.end(); it1++)
 			{
 				ostringstream oss;
@@ -5439,10 +5334,10 @@ vector<string> wordBreakDFS(string s, set<string> &words, map<string, vector<str
 		strings.emplace(s, result);
 	return result;
 }
-vector<string> wordBreakDFS(const string &s, set<string> &words)
+vector<string> WordBreakDFS(string const &s, set<string> const &words)
 {
 	map<string, vector<string>> strings;
-	return wordBreakDFS(s, words, strings);
+	return WordBreakDFS(s, words, strings);
 }
 /* https://leetcode.com/problems/different-ways-to-add-parentheses/
  * 100%
@@ -5604,7 +5499,7 @@ Eggs\Floors	0	1	2	3	4	5	6
 * https://leetcode.com/problems/super-egg-drop/
 * Time limit exceeded! :-(
 */
-size_t eggDrops(size_t eggs, size_t floors)
+size_t EggDrops(size_t eggs, size_t floors)
 {
 	vector<vector<size_t>> dp(eggs, vector<size_t>(floors + 1, numeric_limits<size_t>::max()));
 	// Base case for Floor-0 and Floor-1
