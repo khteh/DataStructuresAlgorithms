@@ -1,4 +1,33 @@
 #include "GameTheory.h"
+template class GameTheory<long>;
+template class GameTheory<size_t>;
+
+/* https://www.hackerrank.com/challenges/larrys-array/problem
+   https://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html
+Formula: ( (grid width odd) && (#inversions even) )  ||  ( (grid width even) && ((blank on odd row from bottom) == (#inversions even)) )
+   The given array can be then compared to a rectangle of width 3, and any height h, so that total number of tiles is (3*h)-1.
+   (Like it was (w*h)-1 in the original 15 tile puzzle)
+blank spaces for a grid with width 3 to satisfy (3*h)-1:
+0: add 2
+1: add 0
+2: add 1
+    Don't have to add anything to the input data to fulfil the (3*h)-1 tiles since we can arbitrarily add the numbers which are in-sequence and bigger than the biggest number currently in the board.
+    100%
+*/
+template <typename T>
+bool GameTheory<T>::SolvabilityOfTheTilesGame(vector<T> const &data)
+{
+    size_t inversions = 0;
+    for (size_t i = 0; i < data.size(); i++)
+    {
+        T item = data[i];
+        T smallerItems = ranges::count_if(data.begin(), data.begin() + i, [&item](T i)
+                                          { return i < item; });
+        inversions += item - 1 - smallerItems;
+    }
+    return !(inversions % 2);
+}
+
 /*
  * https://www.hackerrank.com/challenges/chocolate-in-box/problem
  * https://www.hackerrank.com/challenges/nim-game-1/problem?isFullScreen=true
@@ -38,28 +67,29 @@
  * [3, 4, 5] -> [1, 4, 5] -> [1, 4, 3] -> [1, 2, 3] -> [1, 2, 2] -> [0, 2, 2] -> [0, 1, 2] -> [0, 1, 1] (Nim-sum: 2)
  * 100%
  */
-size_t GameTheory::NormalPlayNim(vector<size_t> const &data)
+template <typename T>
+size_t GameTheory<T>::NormalPlayNim(vector<T> const &data)
 {
 #ifdef _MSC_VER
     // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
     // https://en.wikipedia.org/wiki/Identity_element
-    size_t sum = parallel_reduce(data.begin(), data.end(), 0 /* Identity for Addition */, [](size_t a, size_t b)
-                                 { return a ^ b; });
+    T sum = parallel_reduce(data.begin(), data.end(), 0 /* Identity for Addition */, [](T a, T b)
+                            { return a ^ b; });
 #elif defined(__GNUC__) || defined(__GNUG__)
-    size_t sum = parallel_reduce(
-        blocked_range<size_t>(0, data.size()), 0 /* Identity for Addition */,
-        [&](tbb::blocked_range<size_t> r, size_t running_total)
+    T sum = parallel_reduce(
+        blocked_range<T>(0, data.size()), 0 /* Identity for Addition */,
+        [&](tbb::blocked_range<T> r, T running_total)
         {
             for (int i = r.begin(); i < r.end(); i++)
                 running_total ^= data[i];
             return running_total;
         },
-        std::bit_xor<size_t>());
+        std::bit_xor<T>());
 #endif
     if (!sum)     // In a normal Nim game, the player making the first move has a winning strategy if and only if the nim-sum of the sizes of the heaps is not zero.
         return 0; // return "Second"
     size_t count = 0;
-    for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
+    for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
         if ((*it ^ sum) < *it)
             count++; // return "First"
     return count;    // return "Second"
@@ -71,26 +101,27 @@ size_t GameTheory::NormalPlayNim(vector<size_t> const &data)
  * and n1⊕⋯⊕nk=0, or all ni≤1 and n1⊕⋯⊕nk=1
  * 100%
  */
-size_t GameTheory::MisèrePlayNim(vector<size_t> const &data)
+template <typename T>
+size_t GameTheory<T>::MisèrePlayNim(vector<T> const &data)
 {
 #ifdef _MSC_VER
     // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
     // https://en.wikipedia.org/wiki/Identity_element
-    size_t sum = parallel_reduce(data.begin(), data.end(), 0 /* Identity for Addition */, [](size_t a, size_t b)
-                                 { return a ^ b; });
+    T sum = parallel_reduce(data.begin(), data.end(), 0 /* Identity for Addition */, [](T a, T b)
+                            { return a ^ b; });
 #elif defined(__GNUC__) || defined(__GNUG__)
     size_t sum = parallel_reduce(
-        blocked_range<size_t>(0, data.size()), 0 /* Identity for Addition */,
-        [&](tbb::blocked_range<size_t> r, size_t running_total)
+        blocked_range<T>(0, data.size()), 0 /* Identity for Addition */,
+        [&](tbb::blocked_range<T> r, T running_total)
         {
             for (int i = r.begin(); i < r.end(); i++)
                 running_total ^= data[i];
             return running_total;
         },
-        std::bit_xor<size_t>());
+        std::bit_xor<T>());
 #endif
-    vector<size_t>::const_iterator it = ranges::find_if(data, [](const auto &value)
-                                                        { return value > 1; }); // Look for element <= data[i]
+    typename vector<T>::const_iterator it = ranges::find_if(data, [](const auto &value)
+                                                            { return value > 1; }); // Look for element <= data[i]
     return ((!sum && it != data.end()) || sum == 1 && it == data.end()) ? 1 /* Second*/ : 0 /* First*/;
 }
 /*
@@ -98,9 +129,10 @@ size_t GameTheory::MisèrePlayNim(vector<size_t> const &data)
  * Haven't figured out the logic.
  * 100%
  */
-size_t GameTheory::NimbleGame(vector<size_t> const &data)
+template <typename T>
+size_t GameTheory<T>::NimbleGame(vector<T> const &data)
 {
-    size_t sum = 0;
+    T sum = 0;
     for (size_t i = 0; i < data.size(); i++)
         if (data[i] % 2)
             sum ^= i;
@@ -110,7 +142,8 @@ size_t GameTheory::NimbleGame(vector<size_t> const &data)
  * https://www.hackerrank.com/challenges/counter-game/problem
  * 100%
  */
-bool GameTheory::CounterGame(long n)
+template <typename T>
+bool GameTheory<T>::CounterGame(T n) // long
 {
     bool flag = false;
     for (; n > 1; flag = !flag)
@@ -120,7 +153,7 @@ bool GameTheory::CounterGame(long n)
             n /= 2;
         else
         {
-            unsigned long m = 1UL << (sizeof(long) * 8 - 1);
+            unsigned long m = 1UL << (sizeof(T) * 8 - 1);
             for (; !(m & n); m >>= 1)
                 ;
             n -= m;
@@ -135,7 +168,8 @@ bool GameTheory::CounterGame(long n)
  * The winning pattern repeats every 7 stones
  * 100%
  */
-string GameTheory::GameOfStones(size_t n)
+template <typename T>
+string GameTheory<T>::GameOfStones(T n)
 {
     return n % 7 <= 1 ? "Second" : "First";
 }

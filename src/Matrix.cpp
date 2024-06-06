@@ -544,3 +544,117 @@ size_t Matrix<T>::SurfaceArea3D(vector<vector<T>> const &data)
 	}
 	return xArea + yArea + zArea * 2;
 }
+/* https://www.hackerrank.com/challenges/two-pluses/problem
+ * 100%
+ */
+template <typename T>
+size_t Matrix<T>::TwoCrosses(vector<string> const &grid)
+{
+	multimap<size_t, vector<size_t>> crosses;
+	// Firstly, record all the crosses with size > 1. A single cell is considered a valid cross
+	for (size_t i = 1; i < grid.size(); i++)
+		for (size_t j = 1; j < grid[i].size(); j++)
+		{
+			if (grid[i][j] == 'G')
+			{
+				size_t up = 0, down = 0, left = 0, right = 0;
+				// UP
+				for (long k = i - 1; k >= 0 && grid[k][j] == 'G'; k--)
+					up++;
+				// DOWN
+				for (long k = i + 1; k < (long)grid.size() && grid[k][j] == 'G'; k++)
+					down++;
+				// LEFT
+				for (long k = j - 1; k >= 0 && grid[i][k] == 'G'; k--)
+					left++;
+				// RIGHT
+				for (long k = j + 1; k < (long)grid[i].size() && grid[i][k] == 'G'; k++)
+					right++;
+				size_t size = min(left, right);
+				size = min(size, up);
+				size = min(size, down);
+				for (; size; size--)
+					crosses.emplace(size * 4 + 1, vector<size_t>{i, j});
+			}
+		}
+	// If no crosses with size > 1 found, return if there is a 'G' cell in the grid
+	if (crosses.empty())
+	{
+		for (vector<string>::const_iterator it = grid.begin(); it != grid.end(); it++)
+			if (it->find("G") != string::npos)
+				return 1;
+		return 0;
+	}
+	vector<size_t> crossCentre;
+	set<size_t> products;
+	size_t product = 0, firstWidth = 0;
+	// Go through all the crosses, check for overlap and get the products of the 2 crosses.
+	for (multimap<size_t, vector<size_t>>::iterator it1 = crosses.begin(); it1 != crosses.end(); it1++)
+	{
+		product = it1->first;
+		crossCentre = it1->second;
+		firstWidth = (it1->first - 1) / 4;
+		products.insert(product);
+		for (multimap<size_t, vector<size_t>>::iterator it = it1; it != crosses.end(); it++)
+		{
+			if (it->first > 1)
+			{
+				size_t x = it->second[1], y = it->second[0];
+				size_t width = (it->first - 1) / 4;
+				// Above at the same x position
+				if (x == crossCentre[1] && y < crossCentre[0] && y + width < crossCentre[0] - firstWidth)
+					products.insert(product * it->first);
+				// Below at the same x position
+				else if (x == crossCentre[1] && y > crossCentre[0] && y - width > crossCentre[0] + firstWidth)
+					products.insert(product * it->first);
+				// Left at the same y position
+				else if (y == crossCentre[0] && x < crossCentre[1] && x + width < crossCentre[1] - firstWidth)
+					products.insert(product * it->first);
+				// Right at the same y position
+				else if (y == crossCentre[0] && x > crossCentre[1] && x - width > crossCentre[1] + firstWidth)
+					products.insert(product * it->first);
+				// Top left of crossCentre
+				else if (x < crossCentre[1] && y < crossCentre[0])
+				{
+					size_t right = x + width;
+					size_t down = y + width;
+					size_t top = crossCentre[0] - firstWidth;
+					size_t left = crossCentre[1] - firstWidth;
+					if ((right < crossCentre[1] || top > y) && (left > x || down < crossCentre[0]))
+						products.insert(product * it->first);
+				}
+				// Bottom right of crossCentre
+				else if (x > crossCentre[1] && y > crossCentre[0])
+				{
+					size_t right = crossCentre[1] + firstWidth;
+					size_t down = crossCentre[0] + firstWidth;
+					size_t top = y - width;
+					size_t left = x - width;
+					if ((right < x || top > crossCentre[0]) && (left > crossCentre[1] || down < y))
+						products.insert(product * it->first);
+				}
+				// Top right of crossCentre
+				else if (x > crossCentre[1] && y < crossCentre[0])
+				{
+					size_t right = crossCentre[1] + firstWidth;
+					size_t top = crossCentre[0] - firstWidth;
+					size_t down = y + width;
+					size_t left = x - width;
+					if ((left > crossCentre[1] || top > y) && (down < crossCentre[1] || right < x))
+						products.insert(product * it->first);
+				}
+				// Bottom left of crossCentre
+				else if (x < crossCentre[1] && y > crossCentre[0])
+				{
+					size_t left = crossCentre[1] - firstWidth;
+					size_t down = crossCentre[0] + firstWidth;
+					size_t right = x + width;
+					size_t top = y - width;
+					if ((top > crossCentre[0] || left > x) && (right < crossCentre[1] || down < y))
+						products.insert(product * it->first);
+				}
+			}
+		}
+	}
+	return *ranges::max_element(products);
+}

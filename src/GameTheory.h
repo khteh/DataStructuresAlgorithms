@@ -13,12 +13,14 @@ using namespace concurrency;
 using namespace tbb;
 #endif
 using namespace std;
+template <typename T>
 class GameTheory
 {
 public:
-    size_t NormalPlayNim(vector<size_t> const &);
-    size_t MisèrePlayNim(vector<size_t> const &);
-    size_t NimbleGame(vector<size_t> const &);
-    bool CounterGame(long n);
-    string GameOfStones(size_t);
+    bool SolvabilityOfTheTilesGame(vector<T> const &);
+    size_t NormalPlayNim(vector<T> const &);
+    size_t MisèrePlayNim(vector<T> const &);
+    size_t NimbleGame(vector<T> const &);
+    bool CounterGame(T n); // long
+    string GameOfStones(T);
 };

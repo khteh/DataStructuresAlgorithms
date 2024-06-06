@@ -32,4 +32,5 @@ public:
 	T ChessQueensMoveCount(T, T /*[1,rows]*/, T /*[1,cols]*/, vector<vector<size_t>> const &);
 	size_t GridlandMetro(T, T, vector<vector<T>> const &);
 	size_t SurfaceArea3D(vector<vector<T>> const &);
+	size_t TwoCrosses(vector<string> const &);
 };

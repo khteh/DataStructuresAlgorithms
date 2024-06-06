@@ -347,7 +347,6 @@ size_t MinSubGraphsDifference(vector<size_t> &, vector<vector<size_t>> &);
 long PostmanProblem(vector<long> &, vector<vector<long>> &);
 string DecryptPassword(const string &);
 unsigned long long substrings(const string &);
-size_t TwoCrosses(vector<string> &);
 vector<long> absolutePermutation(size_t, size_t);
 vector<string> bomberMan(size_t, vector<string> &);
 size_t SnakesAndLaddersGame(vector<vector<size_t>> &, vector<vector<size_t>> &);

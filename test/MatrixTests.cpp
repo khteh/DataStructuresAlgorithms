@@ -88,6 +88,41 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(4l, vector<vector<long>>{{0, 0, 1}, {0, 0, 1}, {1, 1, 1}}),
 					  make_tuple(6l, vector<vector<long>>{{0, 0, 0, 1}, {0, 0, 1, 1}, {0, 1, 1, 1}, {1, 1, 1, 1}})));
 
+class TwoCrossesChallengeTestFixture : public testing::TestWithParam<tuple<size_t, vector<string>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	size_t TwoCrossesChallengeTest()
+	{
+		return _matrix.TwoCrosses(_data);
+	}
+
+protected:
+	Matrix<size_t> _matrix;
+	vector<string> _data;
+	size_t _expected;
+};
+TEST_P(TwoCrossesChallengeTestFixture, TwoCrossesChallengeTests)
+{
+	ASSERT_EQ(this->_expected, this->TwoCrossesChallengeTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	TwoCrossesChallengeTests,
+	TwoCrossesChallengeTestFixture,
+	::testing::Values(make_tuple(1, vector<string>{"GGGGGGGGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GBBBGGBGG", "GGGGGGGGG"}),
+					  make_tuple(5, vector<string>{"GGGGGGG", "BGBBBBG", "BGBBBBG", "GGGGGGG", "GGGGGGG", "BGBBBBG"}),
+					  make_tuple(45, vector<string>{"GBGBGGB", "GBGBGGB", "GBGBGGB", "GGGGGGG", "GGGGGGG", "GBGBGGB", "GBGBGGB"}),
+					  make_tuple(81, vector<string>{"GGGGGGGG", "GBGBGGBG", "GBGBGGBG", "GGGGGGGG", "GBGBGGBG", "GGGGGGGG", "GBGBGGBG", "GGGGGGGG"}),
+					  make_tuple(45, vector<string>{"GGGGGGGGGG", "GBBBBBBGGG", "GGGGGGGGGG", "GGGGGGGGGG", "GBBBBBBGGG", "GGGGGGGGGG", "GBBBBBBGGG", "GBBBBBBGGG", "GGGGGGGGGG"}),
+					  make_tuple(85, vector<string>{"BBBBBGGBGG", "GGGGGGGGGG", "GGGGGGGGGG", "BBBBBGGBGG", "BBBBBGGBGG", "GGGGGGGGGG", "BBBBBGGBGG", "GGGGGGGGGG", "BBBBBGGBGG", "GGGGGGGGGG"}),
+					  make_tuple(81, vector<string>{"GGGGGGGGGGGG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GGGGGGGGGGGG", "GBGGBBBBBBBG"}),
+					  make_tuple(189, vector<string>{"GGGGGGGGGGGG", "GGGGGGGGGGGG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG"}),
+					  make_tuple(25, vector<string>{"BGB", "GGG", "BGB", "BGB", "GGG", "BGB"}), make_tuple(25, vector<string>{"BGBBGB", "GGGGGG", "BGBBGB"})));
+
 TEST(MatrixTests, PathExistsTest)
 {
 	vector<vector<char>> maze = {{0, 0, 1, 0, 1}, {0, 0, 0, 0, 0}, {0, 1, 1, 1, 1}, {0, 1, 1, 0, 0}};
