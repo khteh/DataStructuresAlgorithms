@@ -1,5 +1,82 @@
 #include "pch.h"
 using namespace std;
+template <typename T1, typename T2>
+class StringTestFixture
+{
+public:
+    void SetUp(T1 expected, T2 var1)
+    {
+        _expected = expected;
+        _var1 = var1;
+    }
+
+protected:
+    T1 _expected;
+    T2 _var1;
+};
+
+class PhoneKeyLettersTestFixture : public StringTestFixture<vector<string>, string>, public testing::TestWithParam<tuple<vector<string>, string>>
+{
+public:
+    void SetUp() override
+    {
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+    }
+    vector<string> PhoneKeyLettersTest()
+    {
+        vector<string> result;
+        PhoneKeyLetters(_var1, result);
+        return result;
+    }
+};
+TEST_P(PhoneKeyLettersTestFixture, PhoneKeyLettersTests)
+{
+    ASSERT_EQ(this->_expected, this->PhoneKeyLettersTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    PhoneKeyLettersTests,
+    PhoneKeyLettersTestFixture,
+    ::testing::Values(make_tuple(vector<string>{"ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"}, "23"), make_tuple(vector<string>(), ""), make_tuple(vector<string>{"a", "b", "c"}, "2"), make_tuple(vector<string>{"djt", "dkt", "dlt", "ejt", "ekt", "elt", "fjt", "fkt", "flt", "dju", "dku", "dlu", "eju", "eku", "elu", "fju", "fku", "flu", "djv", "dkv", "dlv", "ejv", "ekv", "elv", "fjv", "fkv", "flv"}, "358")));
+class BasicCalculatorTestFixture : public StringTestFixture<long, string>, public testing::TestWithParam<tuple<long, string>>
+{
+public:
+    void SetUp() override
+    {
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+    }
+    long BasicCalculatorTest()
+    {
+        return BasicCalculator(_var1);
+    }
+};
+TEST_P(BasicCalculatorTestFixture, BasicCalculatorTests)
+{
+    ASSERT_EQ(this->_expected, this->BasicCalculatorTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    BasicCalculatorTests,
+    BasicCalculatorTestFixture,
+    ::testing::Values(make_tuple(6, "3+2*2-1"), make_tuple(5, "3+2"), make_tuple(7, "10-3"), make_tuple(8, "3*2+2"), make_tuple(-15, "3+2-4*5"), make_tuple(7, "3*2+5/4")));
+class TwentyFourHourTimeConversionTestFixture : public StringTestFixture<string, string>, public testing::TestWithParam<tuple<string, string>>
+{
+public:
+    void SetUp() override
+    {
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+    }
+    string TwentyFourHourTimeConversionTest()
+    {
+        return TwentyFourHourTimeConversion(_var1);
+    }
+};
+TEST_P(TwentyFourHourTimeConversionTestFixture, TwentyFourHourTimeConversionTests)
+{
+    ASSERT_EQ(this->_expected, this->TwentyFourHourTimeConversionTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    TwentyFourHourTimeConversionTests,
+    TwentyFourHourTimeConversionTestFixture,
+    ::testing::Values(make_tuple("19:05:45", "07:05:45PM"), make_tuple("07:05:45", "07:05:45AM"), make_tuple("23:59:30", "11:59:30PM")));
 class MorganAndStringTestFixture : public testing::TestWithParam<tuple<string, string, string>>
 {
 public:
@@ -27,22 +104,17 @@ INSTANTIATE_TEST_SUITE_P(
     MorganAndStringTestFixture,
     ::testing::Values(make_tuple("ABCACF", "ACA", "BCF"), make_tuple("BABB", "BB", "BA"), make_tuple("BABC", "BA", "BC"), make_tuple("BAB", "BA", "B"), make_tuple("BAB", "B", "BA"), make_tuple("BBC", "BC", "B"), make_tuple("BBC", "B", "BC"), make_tuple("CABCAB", "CAB", "CAB"), make_tuple("DAJACKNIEL", "JACK", "DANIEL"), make_tuple("AABABACABACABA", "ABACABA", "ABACABA")));
 
-class SherlockValidStringTestFixture : public testing::TestWithParam<tuple<bool, string>>
+class SherlockValidStringTestFixture : public StringTestFixture<bool, string>, public testing::TestWithParam<tuple<bool, string>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _data1 = get<1>(GetParam());
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     bool SherlockValidStringTest()
     {
-        return SherlockValidString(_data1);
+        return SherlockValidString(_var1);
     }
-
-protected:
-    bool _expected;
-    string _data1;
 };
 TEST_P(SherlockValidStringTestFixture, SherlockValidStringTests)
 {
@@ -82,24 +154,19 @@ INSTANTIATE_TEST_SUITE_P(
     AreRotatedStringsTestFixture,
     ::testing::Values(make_tuple(true, 2, "Hello World !!!", "llo World !!!He")));
 
-class ParenthesesTestFixture : public testing::TestWithParam<tuple<vector<string>, size_t>>
+class ParenthesesTestFixture : public StringTestFixture<vector<string>, size_t>, public testing::TestWithParam<tuple<vector<string>, size_t>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _count = get<1>(GetParam());
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     vector<string> ParenthesesTest()
     {
         vector<string> result;
-        Parentheses(result, _count);
+        Parentheses(result, _var1);
         return result;
     }
-
-protected:
-    vector<string> _expected;
-    size_t _count;
 };
 TEST_P(ParenthesesTestFixture, ParenthesesTests)
 {
@@ -110,22 +177,17 @@ INSTANTIATE_TEST_SUITE_P(
     ParenthesesTestFixture,
     ::testing::Values(make_tuple(vector<string>{"(())", "()()"}, 2), make_tuple(vector<string>{"((()))", "(()())", "(())()", "()(())", "()()()"}, 3)));
 
-class LongestValidParenthesesTestFixture : public testing::TestWithParam<tuple<long, string>>
+class LongestValidParenthesesTestFixture : public StringTestFixture<long, string>, public testing::TestWithParam<tuple<long, string>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _data = get<1>(GetParam());
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     long LongestValidParenthesesTest()
     {
-        return LongestValidParentheses(_data);
+        return LongestValidParentheses(_var1);
     }
-
-protected:
-    long _expected;
-    string _data;
 };
 TEST_P(LongestValidParenthesesTestFixture, LongestValidParenthesesTests)
 {
@@ -165,22 +227,17 @@ INSTANTIATE_TEST_SUITE_P(
     CipherChallengeTestFixture,
     ::testing::Values(make_tuple("1001011", 7, 4, "1110101001"), make_tuple("1010", 4, 5, "11000110")));
 
-class DecryptPasswordTestFixture : public testing::TestWithParam<tuple<string, string>>
+class DecryptPasswordTestFixture : public StringTestFixture<string, string>, public testing::TestWithParam<tuple<string, string>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _data = get<1>(GetParam());
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     string DecryptPasswordTest()
     {
-        return DecryptPassword(_data);
+        return DecryptPassword(_var1);
     }
-
-protected:
-    string _expected;
-    string _data;
 };
 TEST_P(DecryptPasswordTestFixture, DecryptPasswordTests)
 {
@@ -190,22 +247,17 @@ INSTANTIATE_TEST_SUITE_P(
     DecryptPasswordTests,
     DecryptPasswordTestFixture,
     ::testing::Values(make_tuple("hAck3rr4nk", "43Ah*ck0rr0nk"), make_tuple("aP1pL5e", "51Pa*0Lp*0e")));
-class LengthOfLongestUniqueSubstringTestFixture : public testing::TestWithParam<tuple<size_t, string>>
+class LengthOfLongestUniqueSubstringTestFixture : public StringTestFixture<size_t, string>, public testing::TestWithParam<tuple<size_t, string>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _data = get<1>(GetParam());
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     size_t LengthOfLongestUniqueSubstringTest()
     {
-        return LengthOfLongestUniqueSubstring(_data);
+        return LengthOfLongestUniqueSubstring(_var1);
     }
-
-protected:
-    size_t _expected;
-    string _data;
 };
 TEST_P(LengthOfLongestUniqueSubstringTestFixture, LengthOfLongestUniqueSubstringTests)
 {
@@ -277,22 +329,17 @@ INSTANTIATE_TEST_SUITE_P(
                       make_tuple(vector<string>{"apple pen apple"}, "applepenapple", set<string>{"apple", "pen"}),
                       make_tuple(vector<string>{"aaa aaaa", "aaaa aaa"}, "aaaaaaa", set<string>{"aaaa", "aaa"})));
 
-class HappyLadyBugsChallengeTestFixture : public testing::TestWithParam<tuple<bool, string>>
+class HappyLadyBugsChallengeTestFixture : public StringTestFixture<bool, string>, public testing::TestWithParam<tuple<bool, string>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _data = get<1>(GetParam());
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     bool HappyLadyBugsChallengeTest()
     {
-        return HappyLadyBugs(_data);
+        return HappyLadyBugs(_var1);
     }
-
-protected:
-    bool _expected;
-    string _data;
 };
 TEST_P(HappyLadyBugsChallengeTestFixture, HappyLadyBugsChallengeTests)
 {
@@ -302,3 +349,48 @@ INSTANTIATE_TEST_SUITE_P(
     HappyLadyBugsChallengeTests,
     HappyLadyBugsChallengeTestFixture,
     ::testing::Values(make_tuple(true, "_"), make_tuple(false, "RBRB"), make_tuple(true, "aaaa"), make_tuple(true, "aaa"), make_tuple(true, "aa"), make_tuple(false, "a"), make_tuple(true, "aa_")));
+class GetHintChallengeTestFixture : public testing::TestWithParam<tuple<string, string, string>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _secret = get<1>(GetParam());
+        _guess = get<2>(GetParam());
+    }
+    string GetHintChallengeTest()
+    {
+        return GetHint(_secret, _guess);
+    }
+
+protected:
+    string _expected, _secret, _guess;
+};
+TEST_P(GetHintChallengeTestFixture, GetHintChallengeTests)
+{
+    ASSERT_EQ(this->_expected, this->GetHintChallengeTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    GetHintChallengeTests,
+    GetHintChallengeTestFixture,
+    ::testing::Values(make_tuple("2A2B", "6244988279", "3819888600"), make_tuple("1A3B", "1807", "7810"), make_tuple("1A1B", "1123", "0111")));
+class SteadyGeneChallengeTestFixture : public StringTestFixture<long, string>, public testing::TestWithParam<tuple<long, string>>
+{
+public:
+    void SetUp() override
+    {
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+    }
+    long SteadyGeneChallengeTest()
+    {
+        return SteadyGene(_var1);
+    }
+};
+TEST_P(SteadyGeneChallengeTestFixture, SteadyGeneChallengeTests)
+{
+    ASSERT_EQ(this->_expected, this->SteadyGeneChallengeTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    SteadyGeneChallengeTests,
+    SteadyGeneChallengeTestFixture,
+    ::testing::Values(make_tuple(1, "ACGTCCGT"), make_tuple(0, "AAGTGCCT"), make_tuple(2, "ACTGAAAG")));

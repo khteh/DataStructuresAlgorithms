@@ -5035,7 +5035,7 @@ double median(vector<long> &a, vector<long> &b)
  * https://leetcode.com/problems/evaluate-reverse-polish-notation/
  * 100%
  */
-long ReversePolishNotation(vector<string> &tokens)
+long ReversePolishNotation(vector<string> const &tokens)
 {
 	stack<long> numbers;
 	for (size_t i = 0; i < tokens.size(); i++)
@@ -5194,7 +5194,7 @@ size_t hIndex(vector<size_t> &citations)
 /* https://leetcode.com/problems/letter-combinations-of-a-phone-number/
  * 100%
  */
-vector<string> PhoneKeyLetters(string const &digits)
+void PhoneKeyLetters(string const &digits, vector<string> &result)
 {
 	map<char, string> letters{
 		{'1', ""},
@@ -5206,47 +5206,46 @@ vector<string> PhoneKeyLetters(string const &digits)
 		{'7', "pqrs"},
 		{'8', "tuv"},
 		{'9', "wxyz"}};
-	vector<string> result;
-	if (digits.empty())
-		return result;
-	for (size_t i = 0; i < digits.size();)
+	if (!digits.empty())
 	{
-		vector<string> tmp;
-		string str1 = letters[digits[i]];
-		if (!i)
+		for (size_t i = 0; i < digits.size();)
 		{
-			string str2 = i < digits.size() - 1 ? letters[digits[i + 1]] : "";
-			if (str2.empty())
+			vector<string> tmp;
+			string str1 = letters[digits[i]];
+			if (!i)
 			{
-				for (size_t j = 0; j < str1.size(); j++)
-					tmp.push_back(string(1, str1[j]));
+				string str2 = i < digits.size() - 1 ? letters[digits[i + 1]] : "";
+				if (str2.empty())
+				{
+					for (size_t j = 0; j < str1.size(); j++)
+						tmp.push_back(string(1, str1[j]));
+				}
+				else
+				{
+					for (size_t j = 0; j < str1.size(); j++)
+						for (size_t k = 0; k < str2.size(); k++)
+						{
+							ostringstream oss;
+							oss << str1[j] << str2[k];
+							tmp.push_back(oss.str());
+						}
+				}
+				i += 2;
 			}
 			else
 			{
 				for (size_t j = 0; j < str1.size(); j++)
-					for (size_t k = 0; k < str2.size(); k++)
+					for (vector<string>::iterator it = result.begin(); it != result.end(); it++)
 					{
 						ostringstream oss;
-						oss << str1[j] << str2[k];
+						oss << *it << str1[j];
 						tmp.push_back(oss.str());
 					}
+				i++;
 			}
-			i += 2;
+			result = tmp;
 		}
-		else
-		{
-			for (size_t j = 0; j < str1.size(); j++)
-				for (vector<string>::iterator it = result.begin(); it != result.end(); it++)
-				{
-					ostringstream oss;
-					oss << *it << str1[j];
-					tmp.push_back(oss.str());
-				}
-			i++;
-		}
-		result = tmp;
 	}
-	return result;
 }
 /* https://leetcode.com/problems/word-break/
  * ["cats", "dog", "sand", "and", "cat"]
@@ -5376,9 +5375,18 @@ vector<long> diffWaysToCompute(string input)
 	return result;
 }
 /* https://leetcode.com/problems/bulls-and-cows/
+You are playing the Bulls and Cows game with your friend.
+
+You write down a secret number and ask your friend to guess what the number is. When your friend makes a guess, you provide a hint with the following info:
+
+The number of "bulls", which are digits in the guess that are in the correct position.
+The number of "cows", which are digits in the guess that are in your secret number but are located in the wrong position. Specifically, the non-bull digits in the guess that could be rearranged such that they become bulls.
+Given the secret number secret and your friend's guess guess, return the hint for your friend's guess.
+
+The hint should be formatted as "xAyB", where x is the number of bulls and y is the number of cows. Note that both secret and guess may contain duplicate digits.
  * 100%
  */
-string getHint(string const &secret, string const &guess)
+string GetHint(string const &secret, string const &guess)
 {
 	map<char, long> counts;
 	size_t bulls = 0, cows = 0;
@@ -6789,7 +6797,7 @@ long SteadyGene(string const &gene)
  * https://www.hackerrank.com/challenges/time-conversion/problem
  * 100%
  */
-string TwentyFourHourTimeConversion(string &s)
+string TwentyFourHourTimeConversion(string const &s)
 {
 	int hour; // 12:00:00 AM - 11:59:59 AM => 00:00:00 - 11:59:59
 	istringstream(s.substr(0, 2)) >> hour;
