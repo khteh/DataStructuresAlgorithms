@@ -699,7 +699,7 @@ INSTANTIATE_TEST_SUITE_P(
  * Timeout! WIP
  */
 template <typename T>
-class ShortestPathsFixture
+class ShortestPathsTestFixtureBase
 {
 protected:
 	void SetUp(vector<long> expected, vector<vector<T>> edges, size_t nodes, T start)
@@ -717,12 +717,12 @@ protected:
 	Dijkstra<T> _dijkstra;
 };
 
-class ShortestPathsTestFixture : public ShortestPathsFixture<size_t>, public testing::TestWithParam<tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>>
+class ShortestPathsTestFixture : public ShortestPathsTestFixtureBase<size_t>, public testing::TestWithParam<tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>>
 {
 public:
 	void SetUp() override
 	{
-		ShortestPathsFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
+		ShortestPathsTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
 		vector<size_t> data(_nodes);
 		ranges::generate(data, [n = 1]() mutable
 						 { return n++; });
@@ -761,12 +761,12 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{24l, 3l, 15l}, vector<vector<size_t>>{{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}}, 4, 1),
 					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{20, 25, 25, 68, 86, 39, 22, 70, 36, 53, 91, 35, 88, 27, 30, 43, 54, 74, 41}, vector<vector<size_t>>{{1, 7, 45}, {2, 14, 15}, {3, 7, 29}, {4, 1, 48}, {5, 1, 66}, {6, 7, 17}, {7, 14, 15}, {8, 14, 43}, {9, 1, 27}, {10, 1, 33}, {11, 14, 64}, {12, 14, 27}, {13, 7, 66}, {14, 7, 54}, {15, 14, 56}, {16, 7, 21}, {17, 1, 20}, {18, 1, 34}, {19, 7, 52}, {20, 14, 14}, {9, 14, 9}, {15, 1, 39}, {12, 1, 24}, {9, 1, 16}, {1, 2, 33}, {18, 1, 46}, {9, 1, 28}, {15, 14, 3}, {12, 1, 27}, {1, 2, 5}, {15, 1, 34}, {1, 2, 28}, {9, 7, 16}, {3, 7, 23}, {9, 7, 21}, {9, 14, 19}, {3, 1, 20}, {3, 1, 5}, {12, 14, 19}, {3, 14, 2}, {12, 1, 46}, {3, 14, 5}, {9, 14, 44}, {6, 14, 26}, {9, 14, 16}, {9, 14, 34}, {6, 7, 42}, {3, 14, 27}, {1, 7, 9}, {1, 7, 41}, {15, 14, 19}, {12, 7, 13}, {3, 7, 10}, {1, 7, 2}}, 20, 17)));
 
-class ShortestPaths1TestFixture : public ShortestPathsFixture<size_t>, public testing::TestWithParam<tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>>
+class ShortestPaths1TestFixture : public ShortestPathsTestFixtureBase<size_t>, public testing::TestWithParam<tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>>
 {
 public:
 	void SetUp() override
 	{
-		ShortestPathsFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
+		ShortestPathsTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
 		vector<size_t> data(_nodes);
 		ranges::generate(data, [n = 1]() mutable
 						 { return n++; });
@@ -799,12 +799,12 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{24l, 3l, 15l}, vector<vector<size_t>>{{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}}, 4, 1),
 					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{20, 25, 25, 68, 86, 39, 22, 70, 36, 53, 91, 35, 88, 27, 30, 43, 54, 74, 41}, vector<vector<size_t>>{{1, 7, 45}, {2, 14, 15}, {3, 7, 29}, {4, 1, 48}, {5, 1, 66}, {6, 7, 17}, {7, 14, 15}, {8, 14, 43}, {9, 1, 27}, {10, 1, 33}, {11, 14, 64}, {12, 14, 27}, {13, 7, 66}, {14, 7, 54}, {15, 14, 56}, {16, 7, 21}, {17, 1, 20}, {18, 1, 34}, {19, 7, 52}, {20, 14, 14}, {9, 14, 9}, {15, 1, 39}, {12, 1, 24}, {9, 1, 16}, {1, 2, 33}, {18, 1, 46}, {9, 1, 28}, {15, 14, 3}, {12, 1, 27}, {1, 2, 5}, {15, 1, 34}, {1, 2, 28}, {9, 7, 16}, {3, 7, 23}, {9, 7, 21}, {9, 14, 19}, {3, 1, 20}, {3, 1, 5}, {12, 14, 19}, {3, 14, 2}, {12, 1, 46}, {3, 14, 5}, {9, 14, 44}, {6, 14, 26}, {9, 14, 16}, {9, 14, 34}, {6, 7, 42}, {3, 14, 27}, {1, 7, 9}, {1, 7, 41}, {15, 14, 19}, {12, 7, 13}, {3, 7, 10}, {1, 7, 2}}, 20, 17)));
 
-class ShortestPaths2TestFixture : public ShortestPathsFixture<size_t>, public testing::TestWithParam<tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>>
+class ShortestPaths2TestFixture : public ShortestPathsTestFixtureBase<size_t>, public testing::TestWithParam<tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>>
 {
 public:
 	void SetUp() override
 	{
-		ShortestPathsFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
+		ShortestPathsTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
 		vector<size_t> data(_nodes);
 		ranges::generate(data, [n = 1]() mutable
 						 { return n++; });
