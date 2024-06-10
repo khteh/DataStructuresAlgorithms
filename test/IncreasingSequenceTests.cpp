@@ -101,6 +101,6 @@ TEST_P(LongestDecreasingSubsequenceNlogNTestFixture, LongestDecreasingSubsequenc
 INSTANTIATE_TEST_SUITE_P(
 	LongestDecreasingSubsequenceNlogNTests,
 	LongestDecreasingSubsequenceNlogNTestFixture,
-	::testing::Values(make_tuple(5, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
+	::testing::Values(make_tuple(1, vector<size_t>{0}), make_tuple(1, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}), make_tuple(5, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
 					  make_tuple(3, vector<size_t>{3, 2, 4, 1, 5}),
 					  make_tuple(1, vector<size_t>{1, 1, 1, 1, 1})));
