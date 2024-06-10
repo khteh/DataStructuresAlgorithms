@@ -280,3 +280,58 @@ string GameTheory<T>::GameOfStones(T n)
 {
     return n % 7 <= 1 ? "Second" : "First";
 }
+template <typename T>
+bool GameTheory<T>::IsIncreasingSequence(string const &numbers)
+{
+    if (numbers.size() == 1)
+        return true;
+    string::const_iterator it = numbers.begin();
+    char prev = *it++;
+    for (; it != numbers.end(); it++)
+    {
+        if (*it <= prev)
+            return false;
+        prev = *it;
+    }
+    return true;
+}
+template <typename T>
+bool GameTheory<T>::PermutationGameCheckCurrentPlayer(string numbers)
+{
+    if (_permutationGameWinningNumbersCache.find(numbers) != _permutationGameWinningNumbersCache.end())
+        return true;
+    /*
+        Sequence increases after opponent's turn. Current player loses.
+    */
+    if (IsIncreasingSequence(numbers))
+        return false;
+    for (size_t i = 0; i < numbers.size(); i++)
+    {
+        char number = numbers[i];
+        // Make a move
+        numbers.erase(i, 1);
+        // Check opponent's winning status
+        bool opponentWins = PermutationGameCheckCurrentPlayer(numbers); // ["1", "32"], ["3", "2"]:true, ["3", "12"]:true, ["2", "13"]: true
+        // Put back the number
+        numbers.insert(i, 1, number);
+        if (!opponentWins)
+        {
+            _permutationGameWinningNumbersCache.emplace(numbers); // "32", "132"
+            return true;
+        }
+    }
+    return false;
+}
+/*
+ * https://www.hackerrank.com/challenges/permutation-game/problem
+ * [1 3 2] => "132"
+ * 100%
+ */
+template <typename T>
+bool GameTheory<T>::PermutationGame(vector<T> const &data)
+{
+    string numbers;
+    for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
+        numbers.append(1, *it < 10 ? *it + '0' : *it - 10 + 'A');
+    return PermutationGameCheckCurrentPlayer(numbers);
+}

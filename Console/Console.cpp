@@ -1814,15 +1814,7 @@ int main(int argc, char *argv[])
 	udata = {1, 2, 3, 4, 4};
 	assert(ActivityNotifications(udata, 4) == 0);
 	assert(ActivityNotifications1(udata, 4) == 0);
-#if 0
-	udata.clear();
-	udata = {1, 3, 2};
-	assert(PermutationGame(udata) == "Alice");
 
-	udata.clear();
-	udata = {5, 3, 2, 1, 4};
-	assert(PermutationGame(udata) == "Bob");
-#endif
 	udata.clear();
 	udata = {1, 3, 2};
 	cout << "{1, 3, 2}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;

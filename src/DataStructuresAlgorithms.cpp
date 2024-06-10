@@ -3774,7 +3774,7 @@ size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &data)
 	return tails.size();
 }
 
-bool increasingTriplet(vector<size_t> &data)
+bool IncreasingTriplet(vector<size_t> &data)
 {
 	vector<size_t> tails;
 	if (!data.empty())

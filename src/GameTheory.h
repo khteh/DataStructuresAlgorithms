@@ -20,6 +20,11 @@ using namespace std;
 template <typename T>
 class GameTheory
 {
+private:
+    set<string> _permutationGameWinningNumbersCache;
+    bool IsIncreasingSequence(string const &);
+    bool PermutationGameCheckCurrentPlayer(string);
+
 public:
     bool SolvabilityOfTheTilesGame(vector<T> const &);
     size_t SnakesAndLaddersGame(vector<vector<T>> const &, vector<vector<T>> const &);
@@ -29,4 +34,5 @@ public:
     size_t NimbleGame(vector<T> const &);
     bool CounterGame(T n); // long
     string GameOfStones(T);
+    bool PermutationGame(vector<T> const &);
 };

@@ -1,12 +1,27 @@
 #include "pch.h"
 using namespace std;
-class SolvabilityOfTheTilesGameTestFixture : public testing::TestWithParam<tuple<bool, vector<size_t>>>
+template <typename T1, typename T2>
+class GameTheoryTestFixture
+{
+public:
+    void SetUp(T1 expected, T2 var1)
+    {
+        _expected = expected;
+        _data = var1;
+    }
+
+protected:
+    GameTheory<T2> _game;
+    T2 _data;
+    T1 _expected;
+};
+
+class SolvabilityOfTheTilesGameTestFixture : public GameTheoryTestFixture<bool, vector<size_t>>, public testing::TestWithParam<tuple<bool, vector<size_t>>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _data = get<1>(GetParam());
+        GameTheoryTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     bool SolvabilityOfTheTilesGameTest()
     {
@@ -14,8 +29,6 @@ public:
     }
 
 protected:
-    bool _expected;
-    vector<size_t> _data;
     GameTheory<size_t> _game;
 };
 TEST_P(SolvabilityOfTheTilesGameTestFixture, SolvabilityOfTheTilesGameTests)
@@ -151,23 +164,17 @@ INSTANTIATE_TEST_SUITE_P(
                       make_tuple(1, vector<size_t>{297, 452}),
                       make_tuple(0, vector<size_t>{279, 758, 334, 495, 288, 157, 924, 346, 663})));
 
-class CounterGameTestFixture : public testing::TestWithParam<tuple<size_t, long>>
+class CounterGameTestFixture : public GameTheoryTestFixture<size_t, long>, public testing::TestWithParam<tuple<size_t, long>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _data = get<1>(GetParam());
+        GameTheoryTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     size_t CounterGameTest()
     {
         return _game.CounterGame(_data);
     }
-
-protected:
-    bool _expected;
-    long _data;
-    GameTheory<long> _game;
 };
 TEST_P(CounterGameTestFixture, CounterGameTests)
 {
@@ -181,23 +188,17 @@ INSTANTIATE_TEST_SUITE_P(
                       make_tuple(false, 132),
                       make_tuple(true, 1246326493)));
 
-class GameOfStonesTestFixture : public testing::TestWithParam<tuple<string, size_t>>
+class GameOfStonesTestFixture : public GameTheoryTestFixture<string, size_t>, public testing::TestWithParam<tuple<string, size_t>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _data = get<1>(GetParam());
+        GameTheoryTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     string GameOfStonesTest()
     {
         return _game.GameOfStones(_data);
     }
-
-protected:
-    string _expected;
-    size_t _data;
-    GameTheory<size_t> _game;
 };
 TEST_P(GameOfStonesTestFixture, GameOfStonesTests)
 {
@@ -221,3 +222,26 @@ INSTANTIATE_TEST_SUITE_P(
                       make_tuple("First", 12),
                       make_tuple("First", 13),
                       make_tuple("Second", 14)));
+class PermutationGameTestFixture : public GameTheoryTestFixture<bool, vector<size_t>>, public testing::TestWithParam<tuple<bool, vector<size_t>>>
+{
+public:
+    void SetUp() override
+    {
+        GameTheoryTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+    }
+    bool PermutationGameTest()
+    {
+        return _game.PermutationGame(_data);
+    }
+
+protected:
+    GameTheory<size_t> _game;
+};
+TEST_P(PermutationGameTestFixture, PermutationGameTests)
+{
+    ASSERT_EQ(this->_expected, this->PermutationGameTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    PermutationGameTests,
+    PermutationGameTestFixture,
+    ::testing::Values(make_tuple(true, vector<size_t>{1, 3, 2}), make_tuple(true, vector<size_t>{4, 2, 3, 1}), make_tuple(false, vector<size_t>{5, 3, 2, 1, 4}), make_tuple(false, vector<size_t>{11, 9, 10, 5, 8, 3, 2, 7, 6, 4, 1}), make_tuple(true, vector<size_t>{10, 7, 9, 2, 5, 8, 4, 1, 3, 6})));

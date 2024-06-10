@@ -331,7 +331,7 @@ vector<string> ZigZagEscape(vector<long> &, vector<long> &, size_t lIndex, size_
 size_t IncreasingSequences(vector<long> &, vector<long> &);
 size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &);
 size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &);
-bool increasingTriplet(vector<size_t> &);
+bool IncreasingTriplet(vector<size_t> &);
 size_t FindSubsequenceRecursive(string const &, string const &);
 size_t FindSubsequenceDynamicProgramming(string const &, string const &);
 void cpluplus17();

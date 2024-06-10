@@ -40,10 +40,10 @@ INSTANTIATE_TEST_SUITE_P(
 TEST(IncreasingTripletTests, IncreasingTripletTest)
 {
 	vector<size_t> a = {3, 2, 4, 1, 5};
-	ASSERT_TRUE(increasingTriplet(a));
+	ASSERT_TRUE(IncreasingTriplet(a));
 	a.clear();
 	a = {1, 1, 1, 1, 1};
-	ASSERT_TRUE(!increasingTriplet(a));
+	ASSERT_TRUE(!IncreasingTriplet(a));
 }
 template <typename T1, typename T2>
 class LongestSubsequenceFixture
