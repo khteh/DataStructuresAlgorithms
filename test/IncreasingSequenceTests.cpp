@@ -79,7 +79,7 @@ TEST_P(LongestIncreasingSubsequenceNlogNTestFixture, LongestIncreasingSubsequenc
 INSTANTIATE_TEST_SUITE_P(
 	LongestIncreasingSubsequenceNlogNTests,
 	LongestIncreasingSubsequenceNlogNTestFixture,
-	::testing::Values(make_tuple(6, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
+	::testing::Values(make_tuple(1, vector<size_t>{0}), make_tuple(1, vector<size_t>{10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0}), make_tuple(6, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
 					  make_tuple(3, vector<size_t>{3, 2, 4, 1, 5}),
 					  make_tuple(1, vector<size_t>{1, 1, 1, 1, 1})));
 class LongestDecreasingSubsequenceNlogNTestFixture : public LongestSubsequenceFixture<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
