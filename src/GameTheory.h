@@ -21,9 +21,8 @@ template <typename T>
 class GameTheory
 {
 private:
-    set<string> _permutationGameWinningNumbersCache;
-    bool IsIncreasingSequence(string const &);
-    bool PermutationGameCheckCurrentPlayer(string);
+    set<vector<T>> _permutationGameWinningNumbersCache;
+    bool IsIncreasingSequence(vector<T> const &);
 
 public:
     bool SolvabilityOfTheTilesGame(vector<T> const &);
@@ -34,5 +33,5 @@ public:
     size_t NimbleGame(vector<T> const &);
     bool CounterGame(T n); // long
     string GameOfStones(T);
-    bool PermutationGame(vector<T> const &);
+    bool PermutationGame(vector<T>);
 };
