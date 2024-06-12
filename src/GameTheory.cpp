@@ -297,11 +297,10 @@ bool GameTheory<T>::IsIncreasingSequence(vector<T> const &numbers)
 }
 /*
  * https://www.hackerrank.com/challenges/permutation-game/problem
- * [1 3 2] => "132"
  * 100%
  */
 template <typename T>
-bool GameTheory<T>::PermutationGame(vector<T> numbers)
+bool GameTheory<T>::PermutationGame(const vector<T> numbers)
 {
     if (_permutationGameWinningNumbersCache.find(numbers) != _permutationGameWinningNumbersCache.end())
         return true;
@@ -310,18 +309,17 @@ bool GameTheory<T>::PermutationGame(vector<T> numbers)
     */
     if (IsIncreasingSequence(numbers))
         return false;
-    for (size_t i = 0; i < numbers.size(); i++)
+    for (size_t i = 0; i < numbers.size(); i++) // Look for a winning move or lose
     {
         // Make a move by removing numbers[i] from the range
         vector<T> nextNumbers(numbers.begin(), next(numbers.begin(), i));
         nextNumbers.insert(nextNumbers.end(), next(numbers.begin(), i + 1), numbers.end());
         // Check opponent's winning status
-        bool opponentWins = PermutationGame(nextNumbers); // ["1", "32"], ["3", "2"]:true, ["3", "12"]:true, ["2", "13"]: true
-        if (!opponentWins)
+        if (!PermutationGame(nextNumbers)) // ["1", "32"], ["3", "2"]:true, ["3", "12"]:true, ["2", "13"]: true
         {
             _permutationGameWinningNumbersCache.emplace(numbers); // "32", "132"
-            return true;
+            return true;                                          // "I" win
         }
     }
-    return false;
+    return false; // No winning move. "I" lose
 }

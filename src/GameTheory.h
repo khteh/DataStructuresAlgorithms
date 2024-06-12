@@ -33,5 +33,5 @@ public:
     size_t NimbleGame(vector<T> const &);
     bool CounterGame(T n); // long
     string GameOfStones(T);
-    bool PermutationGame(vector<T>);
+    bool PermutationGame(const vector<T>);
 };
