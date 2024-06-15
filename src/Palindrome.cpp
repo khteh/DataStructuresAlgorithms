@@ -409,9 +409,7 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
         if (!result.second)
             chars[*it]++;
     }
-    long double singulars = 0;
-    vector<size_t> pairs;
-    long double sum = 0, divisor = 1;
+    long double singulars = 0, sum = 0, divisor = 1;
     for (typename map<char, size_t>::const_iterator it = chars.begin(); it != chars.end(); it++)
         if (it->second == 1)
             singulars++;
@@ -420,8 +418,7 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
             // once you have settled the left half of a palindrome (finding all unique permutations of the numbers that end up in that left half) , the right half is fully determined
             long double sumHalved = (it->second - it->second % 2) / 2;
             sum += sumHalved;
-            pairs.push_back(sumHalved);
-            divisor = divisor * Factorial(sumHalved);
+            divisor *= Factorial(sumHalved);
             singulars += it->second % 2;
         }
     // return MultinomialCoefficients(accumulate(pairs.begin(), pairs.end(), 0), pairs) * (singulars > 0 ? singulars : 1);
