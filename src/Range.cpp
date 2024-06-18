@@ -688,10 +688,10 @@ size_t Range::VectorEqualSplit(vector<int> const &data)
 	int right = parallel_reduce(data.begin(), data.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
 	int right = parallel_reduce(
-		blocked_range<int>(0, data.size()), 0,
-		[&](tbb::blocked_range<int> r, int running_total)
+		blocked_range<size_t>(0, data.size()), 0,
+		[&](tbb::blocked_range<size_t> const &r, int running_total)
 		{
-			for (int j = r.begin(); j < r.end(); j++)
+			for (size_t j = r.begin(); j < r.end(); j++)
 				running_total += data[j];
 			return running_total;
 		},

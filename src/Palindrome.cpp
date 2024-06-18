@@ -410,19 +410,79 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
             chars[*it]++;
     }
     long double singulars = 0, sum = 0, divisor = 1;
+    vector<vector<long double>> divisors;
     for (typename map<char, size_t>::const_iterator it = chars.begin(); it != chars.end(); it++)
         if (it->second == 1)
             singulars++;
         else
         {
             // once you have settled the left half of a palindrome (finding all unique permutations of the numbers that end up in that left half) , the right half is fully determined
-            long double sumHalved = (it->second - it->second % 2) / 2;
+            size_t sumHalved = (it->second - it->second % 2) / 2;
             sum += sumHalved;
-            divisor *= Factorial(sumHalved);
+            // divisor *= Factorial(sumHalved);
+            vector<long double> d(sumHalved);
+            ranges::generate(d, [n = 1]() mutable
+                             { return n++; });
+            divisors.push_back(d);
             singulars += it->second % 2;
         }
-    // return MultinomialCoefficients(accumulate(pairs.begin(), pairs.end(), 0), pairs) * (singulars > 0 ? singulars : 1);
-    sum = Factorial(sum);
+    // sum = Factorial(sum);
+    // long double count = sum / divisor;
+    vector<long double> sum1(sum);
+    ranges::generate(sum1, [n = 1]() mutable
+                     { return n++; });
+    for (vector<long double>::iterator it = sum1.begin(); it != sum1.end();)
+    {
+        bool removed = false;
+        for (vector<vector<long double>>::iterator it1 = divisors.begin(); it1 != divisors.end() && !removed; it1++)
+        {
+            vector<long double>::iterator it2 = ranges::find_if(*it1, [it](const auto &value)
+                                                                { return value == *it; }); // Look for element <= data[i]
+            if (it2 != it1->end())
+            {
+                removed = true;
+                it1->erase(it2);
+                it = sum1.erase(it);
+            }
+        }
+        if (!removed)
+            it++;
+    }
+#ifdef _MSC_VER
+    // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
+    // https://en.wikipedia.org/wiki/Identity_element
+    sum = parallel_reduce(sum1.begin(), sum1.end(), 1.0L /* Identity for Multiplication */, [](long double a, long double b)
+                          { return a * b; });
+#elif defined(__GNUC__) || defined(__GNUG__)
+    sum = parallel_reduce(
+        blocked_range<size_t>(0, sum1.size()), 1.0L /* Identity for Multiplication */,
+        [&](tbb::blocked_range<size_t> const &r, long double running_total)
+        {
+            for (size_t i = r.begin(); i < r.end(); i++)
+                running_total *= sum1[i];
+            return running_total;
+        },
+        std::multiplies<long double>());
+#endif
+    for (vector<vector<long double>>::iterator it = divisors.begin(); it != divisors.end(); it++)
+    {
+#ifdef _MSC_VER
+        // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
+        // https://en.wikipedia.org/wiki/Identity_element
+        divisor1 *= parallel_reduce(it1->begin(), it1->end(), 1.0L /* Identity for Multiplication */, [](long double a, long double b)
+                                    { return a * b; });
+#elif defined(__GNUC__) || defined(__GNUG__)
+        divisor *= parallel_reduce(
+            blocked_range<size_t>(0, it->size()), 1.0L /* Identity for Multiplication */,
+            [&](tbb::blocked_range<size_t> const &r, long double running_total)
+            {
+                for (size_t i = r.begin(); i < r.end(); i++)
+                    running_total *= (*it)[i];
+                return running_total;
+            },
+            std::multiplies<long double>());
+#endif
+    }
     long double count = sum / divisor;
     long double result = fmodl(count * (singulars > 0 ? singulars : 1), modulo);
     cout << fixed << setprecision(0) << result << endl;

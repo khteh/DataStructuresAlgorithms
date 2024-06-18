@@ -813,10 +813,10 @@ int main(int argc, char *argv[])
 	long sum = parallel_reduce(a.begin(), a.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
 	long sum = parallel_reduce(
-		blocked_range<long>(0, a.size()), 0,
-		[&](tbb::blocked_range<long> r, long running_total)
+		blocked_range<size_t>(0, a.size()), 0,
+		[&](tbb::blocked_range<size_t> const &r, long running_total)
 		{
-			for (int i = r.begin(); i < r.end(); i++)
+			for (size_t i = r.begin(); i < r.end(); i++)
 				running_total += a[i];
 			return running_total;
 		},
@@ -833,10 +833,10 @@ int main(int argc, char *argv[])
 	sum = parallel_reduce(a.begin() + 2, a.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
 	sum = parallel_reduce(
-		blocked_range<long>(2, a.size()), 0,
-		[&](tbb::blocked_range<long> r, long running_total)
+		blocked_range<size_t>(2, a.size()), 0,
+		[&](tbb::blocked_range<size_t> const &r, long running_total)
 		{
-			for (int i = r.begin(); i < r.end(); i++)
+			for (size_t i = r.begin(); i < r.end(); i++)
 				running_total += a[i];
 			return running_total;
 		},
@@ -853,10 +853,10 @@ int main(int argc, char *argv[])
 	sum = parallel_reduce(a.begin(), a.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
 	sum = parallel_reduce(
-		blocked_range<long>(0, a.size()), 0,
-		[&](tbb::blocked_range<long> r, long running_total)
+		blocked_range<size_t>(0, a.size()), 0,
+		[&](tbb::blocked_range<size_t> const &r, long running_total)
 		{
-			for (int i = r.begin(); i < r.end(); i++)
+			for (size_t i = r.begin(); i < r.end(); i++)
 				running_total += a[i];
 			return running_total;
 		},
@@ -873,10 +873,10 @@ int main(int argc, char *argv[])
 	sum = parallel_reduce(b.begin(), b.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
 	sum = parallel_reduce(
-		blocked_range<long>(0, b.size()), 0,
-		[&](tbb::blocked_range<long> r, long running_total)
+		blocked_range<size_t>(0, b.size()), 0,
+		[&](tbb::blocked_range<size_t> const &r, long running_total)
 		{
-			for (int i = r.begin(); i < r.end(); ++i)
+			for (size_t i = r.begin(); i < r.end(); ++i)
 				running_total += b[i];
 			return running_total;
 		},

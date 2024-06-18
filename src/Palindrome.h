@@ -3,6 +3,7 @@
 #include <set>
 #include <map>
 #include <vector>
+#include <ranges>
 #include <sstream>
 #ifdef _MSC_VER
 #include <ppl.h>

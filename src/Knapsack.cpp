@@ -38,10 +38,10 @@ set<vector<size_t>> Knapsack::CoinChange(long amount, vector<size_t> &coins)
 						size_t sum = parallel_reduce(change.begin(), change.end(), 0) + *coin;
 #elif defined(__GNUC__) || defined(__GNUG__)
 						size_t sum = parallel_reduce(
-										 blocked_range<long>(0, change.size()), 0,
-										 [&](tbb::blocked_range<long> r, long running_total)
+										 blocked_range<size_t>(0, change.size()), 0,
+										 [&](tbb::blocked_range<size_t> const &r, long running_total)
 										 {
-											 for (int i = r.begin(); i < r.end(); ++i)
+											 for (size_t i = r.begin(); i < r.end(); ++i)
 												 running_total += change[i];
 											 return running_total;
 										 },
@@ -186,10 +186,10 @@ set<vector<size_t>> Knapsack::KnapsackCombinations(long amount, vector<size_t> &
 							size_t sum = parallel_reduce(change.begin(), change.end(), 0) + *number;
 #elif defined(__GNUC__) || defined(__GNUG__)
 							size_t sum = parallel_reduce(
-											 blocked_range<long>(0, change.size()), 0,
-											 [&](tbb::blocked_range<long> r, long running_total)
+											 blocked_range<size_t>(0, change.size()), 0,
+											 [&](tbb::blocked_range<size_t> const &r, long running_total)
 											 {
-												 for (int i = r.begin(); i < r.end(); ++i)
+												 for (size_t i = r.begin(); i < r.end(); ++i)
 													 running_total += change[i];
 												 return running_total;
 											 },
@@ -225,9 +225,9 @@ size_t Knapsack::UnboundedKnapsack(long k, vector<size_t> &arr)
 #elif defined(__GNUC__) || defined(__GNUG__)
 		size_t sum = parallel_reduce(
 			blocked_range<size_t>(0, it->size()), 0,
-			[&](tbb::blocked_range<size_t> r, size_t running_total)
+			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 			{
-				for (int i = r.begin(); i < r.end(); ++i)
+				for (size_t i = r.begin(); i < r.end(); ++i)
 					running_total += (*it)[i];
 				return running_total;
 			},
@@ -263,10 +263,10 @@ set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> &numb
 						size_t sum = parallel_reduce(tmp1.begin(), tmp1.end(), 0) + *number;
 #elif defined(__GNUC__) || defined(__GNUG__)
 						size_t sum = parallel_reduce(
-										 blocked_range<long>(0, tmp1.size()), 0,
-										 [&](tbb::blocked_range<long> r, long running_total)
+										 blocked_range<size_t>(0, tmp1.size()), 0,
+										 [&](tbb::blocked_range<size_t> const &r, long running_total)
 										 {
-											 for (int i = r.begin(); i < r.end(); ++i)
+											 for (size_t i = r.begin(); i < r.end(); ++i)
 												 running_total += tmp1[i];
 											 return running_total;
 										 },
@@ -303,9 +303,9 @@ vector<vector<size_t>> Knapsack::BoundedKnapsack(long amount, vector<size_t> &nu
 #elif defined(__GNUC__) || defined(__GNUG__)
 		size_t sum = parallel_reduce(
 			blocked_range<size_t>(0, it->size()), 0,
-			[&](tbb::blocked_range<size_t> r, size_t running_total)
+			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 			{
-				for (int i = r.begin(); i < r.end(); ++i)
+				for (size_t i = r.begin(); i < r.end(); ++i)
 					running_total += (*it)[i];
 				return running_total;
 			},
@@ -346,9 +346,9 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t k, size_t su
 #elif defined(__GNUC__) || defined(__GNUG__)
 						size_t total = parallel_reduce(
 							blocked_range<size_t>(0, change.size()), 0,
-							[&](tbb::blocked_range<size_t> r, size_t running_total)
+							[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 							{
-								for (int i = r.begin(); i < r.end(); ++i)
+								for (size_t i = r.begin(); i < r.end(); ++i)
 									running_total += change[i];
 								return running_total;
 							},
@@ -422,9 +422,9 @@ size_t Knapsack::StairsClimbingDynamicProgrammingBottomUp(long destination, vect
 #elif defined(__GNUC__) || defined(__GNUG__)
 		combinations[i % combinations.size()] = parallel_reduce(
 			blocked_range<size_t>(0, combinations.size()), 0,
-			[&](tbb::blocked_range<size_t> r, size_t running_total)
+			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 			{
-				for (int i = r.begin(); i < r.end(); ++i)
+				for (size_t i = r.begin(); i < r.end(); ++i)
 					running_total += combinations[i];
 				return running_total;
 			},

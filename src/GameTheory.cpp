@@ -184,10 +184,10 @@ size_t GameTheory<T>::NormalPlayNim(vector<T> const &data)
                             { return a ^ b; });
 #elif defined(__GNUC__) || defined(__GNUG__)
     T sum = parallel_reduce(
-        blocked_range<T>(0, data.size()), 0 /* Identity for Addition */,
-        [&](tbb::blocked_range<T> r, T running_total)
+        blocked_range<size_t>(0, data.size()), 0 /* Identity for Addition */,
+        [&](tbb::blocked_range<size_t> const &r, T running_total)
         {
-            for (int i = r.begin(); i < r.end(); i++)
+            for (size_t i = r.begin(); i < r.end(); i++)
                 running_total ^= data[i];
             return running_total;
         },
@@ -218,10 +218,10 @@ size_t GameTheory<T>::MisèrePlayNim(vector<T> const &data)
                             { return a ^ b; });
 #elif defined(__GNUC__) || defined(__GNUG__)
     size_t sum = parallel_reduce(
-        blocked_range<T>(0, data.size()), 0 /* Identity for Addition */,
-        [&](tbb::blocked_range<T> r, T running_total)
+        blocked_range<size_t>(0, data.size()), 0 /* Identity for Addition */,
+        [&](tbb::blocked_range<size_t> const &r, T running_total)
         {
-            for (int i = r.begin(); i < r.end(); i++)
+            for (size_t i = r.begin(); i < r.end(); i++)
                 running_total ^= data[i];
             return running_total;
         },

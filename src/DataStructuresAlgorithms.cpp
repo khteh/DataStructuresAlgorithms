@@ -2505,10 +2505,10 @@ void EqualAverageDivide(vector<long> &data, vector<long> &left)
 	sum = parallel_reduce(data.begin(), data.end(), 0);
 #elif defined(__GNUC__) || defined(__GNUG__)
 	sum = parallel_reduce(
-		blocked_range<long>(0, data.size()), 0,
-		[&](tbb::blocked_range<long> r, long running_total)
+		blocked_range<size_t>(0, data.size()), 0,
+		[&](tbb::blocked_range<size_t> const &r, long running_total)
 		{
-			for (int i = r.begin(); i < r.end(); ++i)
+			for (size_t i = r.begin(); i < r.end(); ++i)
 				running_total += data[i];
 			return running_total;
 		},
@@ -4128,6 +4128,7 @@ string TimeInWords(int h, int m)
 	return str.str();
 }
 /* https://www.hackerrank.com/challenges/xor-quadruples/problem
+ * WIP
  * 100% Functionality. However, time out as it is O(N^3)
  */
 size_t BeautifulQuadruples(long a, long b, long c, long d)
@@ -4468,7 +4469,7 @@ size_t MinSubGraphsDifference(vector<size_t> &vertices, vector<vector<size_t>> &
 #elif defined(__GNUC__) || defined(__GNUG__)
 	size_t sum = parallel_reduce(
 		blocked_range<size_t>(0, vertices.size()), 0,
-		[&](tbb::blocked_range<size_t> r, size_t running_total)
+		[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 		{
 			for (int i = r.begin(); i < r.end(); ++i)
 				running_total += vertices[i];
