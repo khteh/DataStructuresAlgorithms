@@ -1,10 +1,7 @@
 ﻿#include "stdafx.h"
 #include "DataStructuresAlgorithms.h"
-using namespace std;
 namespace ranges = std::ranges;
-#if defined(__GNUC__) || defined(__GNUG__)
-using namespace tbb;
-#endif
+using namespace oneapi::tbb;
 long **my2DAlloc(long rows, long cols)
 {
 	size_t header = rows * sizeof(long *);			// Store the row pointers [i]

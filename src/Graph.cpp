@@ -4,12 +4,6 @@
 #include <set>
 #include <iostream>
 #include <limits>
-using namespace std;
-namespace ranges = std::ranges;
-#if defined(__GNUC__) || defined(__GNUG__)
-using namespace tbb;
-#endif
-
 template class Graph<long, long>;
 template class Graph<size_t, size_t>;
 template <typename TTag, typename TItem>

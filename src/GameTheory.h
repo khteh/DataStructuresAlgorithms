@@ -7,8 +7,8 @@
 #include <ranges>
 #include <memory>
 #include "oneapi/tbb.h"
-using namespace oneapi::tbb;
 #include "Vertex.h"
+using namespace oneapi::tbb;
 using namespace std;
 template <typename T>
 class GameTheory

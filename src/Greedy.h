@@ -8,6 +8,7 @@
 #include "Vertex.h"
 #include "oneapi/tbb.h"
 using namespace oneapi::tbb;
+using namespace std;
 template <typename T>
 class Greedy
 {

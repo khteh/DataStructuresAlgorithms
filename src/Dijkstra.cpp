@@ -4,11 +4,6 @@
 #include <set>
 #include <iostream>
 #include <limits>
-using namespace std;
-namespace ranges = std::ranges;
-#if defined(__GNUC__) || defined(__GNUG__)
-using namespace tbb;
-#endif
 template class DEdge<long>;
 template class DEdge<size_t>;
 template class DEdge<string>;

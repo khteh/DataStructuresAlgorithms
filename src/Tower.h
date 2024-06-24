@@ -5,7 +5,6 @@
 #include <memory>
 #include "MyStack.h"
 using namespace std;
-
 template <typename T>
 class Tower : public enable_shared_from_this<Tower<T>>
 {

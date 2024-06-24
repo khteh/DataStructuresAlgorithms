@@ -4,9 +4,7 @@
 #include "Console.h"
 using namespace std;
 namespace ranges = std::ranges;
-#if defined(__GNUC__) || defined(__GNUG__)
-using namespace tbb;
-#endif
+using namespace oneapi::tbb;
 int main(int argc, char *argv[])
 {
 	string str, str1;

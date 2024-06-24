@@ -7,6 +7,8 @@
 #include <sstream>
 #include "Vertex.h"
 #include "oneapi/tbb.h"
+using namespace std;
+namespace ranges = std::ranges;
 using namespace oneapi::tbb;
 
 template <typename TTag, typename TItem> // TTag is used as a unique ID. Graph vertices can have duplicate values of TItem

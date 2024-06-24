@@ -7,7 +7,10 @@
 #include <sstream>
 #include "Vertex.h"
 #include "oneapi/tbb.h"
+using namespace std;
+namespace ranges = std::ranges;
 using namespace oneapi::tbb;
+
 template <typename T>
 class DEdge;
 template <typename T>

@@ -7,7 +7,7 @@
 #include <numeric>
 #include <ranges>
 #include "oneapi/tbb.h"
-using namespace tbb;
+using namespace oneapi::tbb;
 using namespace std;
 namespace ranges = std::ranges;
 class Knapsack

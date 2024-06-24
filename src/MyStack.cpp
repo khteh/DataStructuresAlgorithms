@@ -3,12 +3,10 @@
 #include <iostream>
 #include <string>
 using namespace std;
-
 template class MyStack<size_t>;
 template class MyStack<int>;
 template class MyStack<long>;
 template class MyStack<string>;
-
 template <typename T>
 MyStack<T>::MyStack()
 	: m_top(nullptr), m_size(0)

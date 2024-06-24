@@ -3,7 +3,6 @@
 #include <iostream>
 #include <set>
 using namespace std;
-
 template class Node<int>;
 template class Node<long>;
 template class Node<string>;

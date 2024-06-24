@@ -7,7 +7,6 @@
 #include <assert.h>
 using namespace std;
 class PrefixTrieNode;
-
 class PrefixTrie
 {
 private:

@@ -10,7 +10,6 @@
 using namespace std;
 template <typename T>
 class TrieNode;
-
 template <typename T>
 class Trie
 {

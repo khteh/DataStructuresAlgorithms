@@ -52,7 +52,7 @@ void Search::KMPSearch(string const &s, string const &w, vector<size_t> &result)
 /* https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
  * 100%
  */
-vector<long> Search::SearchRange(size_t target, vector<size_t> &nums)
+vector<long> Search::SearchRange(size_t target, vector<size_t> const &nums)
 {
     long start = 0, end = nums.size() - 1, middle = end / 2 + end % 2;
     vector<long> result{-1, -1}; // result[0] = start (inclusive); result[1] = end (exclusive)
@@ -106,7 +106,7 @@ vector<long> Search::SearchRange(size_t target, vector<size_t> &nums)
 //			                   L             M              U
 // 4 8 9 9 9 10 12 13 1 2 2 3
 // L            M           U
-size_t Search::BinarySearch(size_t toSearch, vector<size_t> &data)
+size_t Search::BinarySearch(size_t toSearch, vector<size_t> const &data)
 {
     for (size_t lower = 0, middle = 0, upper = data.size() - 1; lower <= upper;)
     {
@@ -142,7 +142,7 @@ size_t Search::BinarySearch(size_t toSearch, vector<size_t> &data)
 /* https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
  * 100%
  */
-long Search::BinarySearchMinimum(vector<long> &data, long start, long end)
+long Search::BinarySearchMinimum(vector<long> const &data, long start, long end)
 {
     if (start == end)
         return data[start];
@@ -161,7 +161,7 @@ long Search::BinarySearchMinimum(vector<long> &data, long start, long end)
  * Binary search for the upper bound of sorted list with duplicate items.
  * Returns the last index of the repeated items found in the sorted list
  */
-int Search::BinarySearchCountUpper(vector<long> &source, long toSearch, long start, long end)
+int Search::BinarySearchCountUpper(vector<long> const &source, long toSearch, long start, long end)
 {
     int mid = start + (end - start) / 2 + (end - start) % 2;
     if (end < start)
@@ -180,7 +180,7 @@ int Search::BinarySearchCountUpper(vector<long> &source, long toSearch, long sta
  * Binary search for the lower bound of sorted list with duplicate items.
  * Returns the first index of the repeated items found in the sorted list
  */
-int Search::BinarySearchCountLower(vector<long> &source, long toSearch, long start, long end)
+int Search::BinarySearchCountLower(vector<long> const &source, long toSearch, long start, long end)
 {
     int mid = start + (end - start) / 2 + (end - start) % 2;
     if (end < start)
@@ -194,7 +194,7 @@ int Search::BinarySearchCountLower(vector<long> &source, long toSearch, long sta
     else
         return BinarySearchCountLower(source, toSearch, start, mid - 1);
 }
-int Search::BinarySearch(const string &toSearch, vector<string> &source)
+int Search::BinarySearch(const string &toSearch, vector<string> const &source)
 {
     int lower, middle, upper;
     lower = 0;
@@ -219,7 +219,7 @@ int Search::BinarySearch(const string &toSearch, vector<string> &source)
 }
 // https://www.hackerrank.com/challenges/the-grid-search/problem
 // 100%
-bool Search::GridSearch(vector<string> &pattern, vector<string> &grid)
+bool Search::GridSearch(vector<string> const &pattern, vector<string> const &grid)
 {
     size_t i = 0;
     size_t found = 0;
