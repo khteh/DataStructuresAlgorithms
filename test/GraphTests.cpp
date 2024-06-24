@@ -283,31 +283,6 @@ public:
 	string RoadsInHackerlandTest()
 	{
 		size_t distance = 0;
-#ifdef _MSC_VER
-		map<string, long> costCache;
-		parallel_for(size_t(1), _nodes, [&](size_t i)
-					 {
-		for (size_t j = i + 1; j <= _nodes; j++)
-		{
-			if (i != j)
-			{
-				ostringstream oss1, oss2;
-				oss1 << i << "-" << j;
-				oss2 << j << "-" << i;
-				if (costCache.find(oss1.str()) != costCache.end())
-					distance += costCache[oss1.str()];
-				else if (costCache.find(oss2.str()) != costCache.end())
-					distance += costCache[oss2.str()];
-				else
-				{
-					size_t cost = _graph.Dijkstra(i, j);
-					costCache[oss1.str()] = cost;
-					costCache[oss2.str()] = cost;
-					distance += cost;
-				}
-			}
-		} });
-#elif defined(__GNUC__) || defined(__GNUG__)
 		std::mutex m;
 		set<string> computed;
 		parallel_for(blocked_range<size_t>(1, _nodes, 2), [&](blocked_range<size_t> r)
@@ -339,7 +314,6 @@ public:
 						m.unlock();
 				}
 			} });
-#endif
 		string binary = decimal_to_binary(distance ? distance : -1);
 		size_t offset = binary.find_first_not_of('0');
 		return binary.substr(offset != string::npos ? offset : 0);
@@ -429,32 +403,6 @@ public:
 	string RoadsInHackerland1Test()
 	{
 		size_t distance = 0;
-#ifdef _MSC_VER
-		map<string, long> costCache;
-		parallel_for(size_t(1), _nodes, [&](size_t i)
-					 {
-		for (size_t j = i + 1; j <= _nodes; j++)
-		{
-			if (i != j)
-			{
-				ostringstream oss1, oss2;
-				oss1 << i << "-" << j;
-				oss2 << j << "-" << i;
-				if (costCache.find(oss1.str()) != costCache.end())
-					distance += costCache[oss1.str()];
-				else if (costCache.find(oss2.str()) != costCache.end())
-					distance += costCache[oss2.str()];
-				else
-				{
-					size_t cost = _graph.Dijkstra(i, j);
-					_dijkstra.InitVertices(); // This prevents the routine from being used in multi-threading mode.
-					costCache[oss1.str()] = cost;
-					costCache[oss2.str()] = cost;
-					distance += cost;
-				}
-			}
-		} });
-#elif defined(__GNUC__) || defined(__GNUG__)
 		set<string> computed;
 		for (size_t i = 1; i < _nodes; i++)
 			for (size_t j = i + 1; j <= _nodes; j++)
@@ -475,7 +423,6 @@ public:
 					}
 				}
 			}
-#endif
 		string binary = decimal_to_binary(distance ? distance : -1);
 		size_t offset = binary.find_first_not_of('0');
 		return binary.substr(offset != string::npos ? offset : 0);
@@ -564,32 +511,6 @@ public:
 	string RoadsInHackerland2Test()
 	{
 		size_t distance = 0;
-#ifdef _MSC_VER
-		map<string, long> costCache;
-		parallel_for(size_t(1), _nodes, [&](size_t i)
-					 {
-		for (size_t j = i + 1; j <= _nodes; j++)
-		{
-			if (i != j)
-			{
-				ostringstream oss1, oss2;
-				oss1 << i << "-" << j;
-				oss2 << j << "-" << i;
-				if (costCache.find(oss1.str()) != costCache.end())
-					distance += costCache[oss1.str()];
-				else if (costCache.find(oss2.str()) != costCache.end())
-					distance += costCache[oss2.str()];
-				else
-				{
-					vector<shared_ptr<DVertex<size_t>>> path;
-					long cost = _dijkstra.ShortestPathStateless(i, j, path);
-					costCache[oss1.str()] = cost;
-					costCache[oss2.str()] = cost;
-					distance += cost;
-				}
-			}
-		} });
-#elif defined(__GNUC__) || defined(__GNUG__)
 		std::mutex m;
 		set<string> computed;
 		parallel_for(blocked_range<size_t>(1, _nodes, 2), [&](blocked_range<size_t> r)
@@ -621,7 +542,6 @@ public:
 						m.unlock();
 				}
 			} });
-#endif
 		string binary = decimal_to_binary(distance ? distance : -1);
 		size_t offset = binary.find_first_not_of('0');
 		return binary.substr(offset != string::npos ? offset : 0);

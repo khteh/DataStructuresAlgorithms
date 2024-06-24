@@ -28,13 +28,8 @@
 #include <ranges>
 #include <variant>
 #include <typeinfo>
-#ifdef _MSC_VER
 #include <ppl.h>
-using namespace concurrency;
-#elif defined(__GNUC__) || defined(__GNUG__)
 #include "oneapi/tbb.h"
-using namespace oneapi::tbb;
-#endif
 #include <limits.h>
 #include <cmath>
 #include <chrono>
@@ -80,10 +75,8 @@ using namespace oneapi::tbb;
 #include "VariantVisitor.h"
 #include "GameTheory.h"
 using namespace std;
-#ifdef _MSC_VER
-using namespace concurrency;
-#endif
 using namespace chrono;
+using namespace oneapi::tbb;
 typedef union
 {
 	long l;
