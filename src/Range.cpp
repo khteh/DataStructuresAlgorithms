@@ -684,9 +684,6 @@ size_t Range::VectorEqualSplit(vector<int> const &data)
 	size_t result = 0;
 	if (data.size() < 2)
 		return result;
-#ifdef _MSC_VER
-	int right = parallel_reduce(data.begin(), data.end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
 	int right = parallel_reduce(
 		blocked_range<size_t>(0, data.size()), 0,
 		[&](tbb::blocked_range<size_t> const &r, int running_total)
@@ -696,7 +693,6 @@ size_t Range::VectorEqualSplit(vector<int> const &data)
 			return running_total;
 		},
 		std::plus<int>());
-#endif
 	int left = 0;
 	size_t i = 0;
 	if (!right)

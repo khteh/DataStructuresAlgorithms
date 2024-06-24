@@ -177,12 +177,8 @@ size_t GameTheory<T>::SnakesAndLaddersGameFast(vector<vector<T>> const &ladders,
 template <typename T>
 size_t GameTheory<T>::NormalPlayNim(vector<T> const &data)
 {
-#ifdef _MSC_VER
     // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
     // https://en.wikipedia.org/wiki/Identity_element
-    T sum = parallel_reduce(data.begin(), data.end(), 0 /* Identity for Addition */, [](T a, T b)
-                            { return a ^ b; });
-#elif defined(__GNUC__) || defined(__GNUG__)
     T sum = parallel_reduce(
         blocked_range<size_t>(0, data.size()), 0 /* Identity for Addition */,
         [&](tbb::blocked_range<size_t> const &r, T running_total)
@@ -192,7 +188,6 @@ size_t GameTheory<T>::NormalPlayNim(vector<T> const &data)
             return running_total;
         },
         std::bit_xor<T>());
-#endif
     if (!sum)     // In a normal Nim game, the player making the first move has a winning strategy if and only if the nim-sum of the sizes of the heaps is not zero.
         return 0; // return "Second"
     size_t count = 0;
@@ -211,12 +206,8 @@ size_t GameTheory<T>::NormalPlayNim(vector<T> const &data)
 template <typename T>
 size_t GameTheory<T>::MisèrePlayNim(vector<T> const &data)
 {
-#ifdef _MSC_VER
     // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
     // https://en.wikipedia.org/wiki/Identity_element
-    T sum = parallel_reduce(data.begin(), data.end(), 0 /* Identity for Addition */, [](T a, T b)
-                            { return a ^ b; });
-#elif defined(__GNUC__) || defined(__GNUG__)
     size_t sum = parallel_reduce(
         blocked_range<size_t>(0, data.size()), 0 /* Identity for Addition */,
         [&](tbb::blocked_range<size_t> const &r, T running_total)
@@ -226,7 +217,6 @@ size_t GameTheory<T>::MisèrePlayNim(vector<T> const &data)
             return running_total;
         },
         std::bit_xor<T>());
-#endif
     typename vector<T>::const_iterator it = ranges::find_if(data, [](const auto &value)
                                                             { return value > 1; }); // Look for element <= data[i]
     return ((!sum && it != data.end()) || sum == 1 && it == data.end()) ? 1 /* Second*/ : 0 /* First*/;

@@ -2501,9 +2501,6 @@ void EqualAverageDivide(vector<long> &data, vector<long> &left)
 	size_t N = data.size(), K;
 	// Sort the data
 	ranges::sort(data);
-#ifdef _MSC_VER
-	sum = parallel_reduce(data.begin(), data.end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
 	sum = parallel_reduce(
 		blocked_range<size_t>(0, data.size()), 0,
 		[&](tbb::blocked_range<size_t> const &r, long running_total)
@@ -2513,7 +2510,6 @@ void EqualAverageDivide(vector<long> &data, vector<long> &left)
 			return running_total;
 		},
 		std::plus<long>());
-#endif
 	for (K = 1; K < (N - K); K++)
 	{
 		if (((K * sum) % N)) //  check if such P can be integer (we operate with array of integers).
@@ -4469,9 +4465,6 @@ size_t MinSubGraphsDifference(vector<size_t> &vertices, vector<vector<size_t>> &
 	shared_ptr<Vertex<size_t, size_t>> v = graph.GetVertex(650);
 	if (v)
 		graph.Print(v);
-#ifdef _MSC_VER
-	size_t sum = parallel_reduce(vertices.begin(), vertices.end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
 	size_t sum = parallel_reduce(
 		blocked_range<size_t>(0, vertices.size()), 0,
 		[&](tbb::blocked_range<size_t> const &r, size_t running_total)
@@ -4481,7 +4474,6 @@ size_t MinSubGraphsDifference(vector<size_t> &vertices, vector<vector<size_t>> &
 			return running_total;
 		},
 		std::plus<size_t>());
-#endif
 	size_t result = graph.MinSubGraphsDifference(vertices[0], sum);
 	return result;
 }

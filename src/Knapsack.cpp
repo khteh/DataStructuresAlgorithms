@@ -34,9 +34,6 @@ set<vector<size_t>> Knapsack::CoinChange(long amount, vector<size_t> &coins)
 					for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++)
 					{
 						vector<size_t> change(*it);
-#ifdef _MSC_VER
-						size_t sum = parallel_reduce(change.begin(), change.end(), 0) + *coin;
-#elif defined(__GNUC__) || defined(__GNUG__)
 						size_t sum = parallel_reduce(
 										 blocked_range<size_t>(0, change.size()), 0,
 										 [&](tbb::blocked_range<size_t> const &r, long running_total)
@@ -47,7 +44,6 @@ set<vector<size_t>> Knapsack::CoinChange(long amount, vector<size_t> &coins)
 										 },
 										 std::plus<long>()) +
 									 *coin;
-#endif
 						if (sum == amount)
 						{
 							change.push_back(*coin);
@@ -182,9 +178,6 @@ set<vector<size_t>> Knapsack::KnapsackCombinations(long amount, vector<size_t> &
 						for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++)
 						{
 							vector<size_t> change(*it);
-#ifdef _MSC_VER
-							size_t sum = parallel_reduce(change.begin(), change.end(), 0) + *number;
-#elif defined(__GNUC__) || defined(__GNUG__)
 							size_t sum = parallel_reduce(
 											 blocked_range<size_t>(0, change.size()), 0,
 											 [&](tbb::blocked_range<size_t> const &r, long running_total)
@@ -195,7 +188,6 @@ set<vector<size_t>> Knapsack::KnapsackCombinations(long amount, vector<size_t> &
 											 },
 											 std::plus<long>()) +
 										 *number;
-#endif
 							if (sum <= (size_t)amount)
 							{
 								change.push_back(*number);
@@ -220,9 +212,6 @@ size_t Knapsack::UnboundedKnapsack(long k, vector<size_t> &arr)
 	set<size_t> sums;
 	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
 	{
-#ifdef _MSC_VER
-		size_t sum = parallel_reduce(it->begin(), it->end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
 		size_t sum = parallel_reduce(
 			blocked_range<size_t>(0, it->size()), 0,
 			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
@@ -232,7 +221,6 @@ size_t Knapsack::UnboundedKnapsack(long k, vector<size_t> &arr)
 				return running_total;
 			},
 			std::plus<size_t>());
-#endif
 		sums.insert(sum);
 	}
 	return sums.empty() ? 0 : *sums.rbegin();
@@ -259,9 +247,6 @@ set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> &numb
 					for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++)
 					{
 						vector<size_t> tmp1(*it);
-#ifdef _MSC_VER
-						size_t sum = parallel_reduce(tmp1.begin(), tmp1.end(), 0) + *number;
-#elif defined(__GNUC__) || defined(__GNUG__)
 						size_t sum = parallel_reduce(
 										 blocked_range<size_t>(0, tmp1.size()), 0,
 										 [&](tbb::blocked_range<size_t> const &r, long running_total)
@@ -272,7 +257,6 @@ set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> &numb
 										 },
 										 std::plus<long>()) +
 									 *number;
-#endif
 						if (sum == amount)
 						{
 							tmp1.push_back(*number);
@@ -298,9 +282,6 @@ vector<vector<size_t>> Knapsack::BoundedKnapsack(long amount, vector<size_t> &nu
 	set<vector<size_t>> combinations = _BoundedKnapsack(amount, numbers);
 	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
 	{
-#ifdef _MSC_VER
-		size_t sum = parallel_reduce(it->begin(), it->end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
 		size_t sum = parallel_reduce(
 			blocked_range<size_t>(0, it->size()), 0,
 			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
@@ -310,7 +291,6 @@ vector<vector<size_t>> Knapsack::BoundedKnapsack(long amount, vector<size_t> &nu
 				return running_total;
 			},
 			std::plus<size_t>());
-#endif
 		if (sum == amount)
 			result.push_back(*it);
 	}
@@ -341,9 +321,6 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t k, size_t su
 					{
 						vector<size_t> change(*it);
 						change.push_back(i);
-#ifdef _MSC_VER
-						size_t total = parallel_reduce(change.begin(), change.end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
 						size_t total = parallel_reduce(
 							blocked_range<size_t>(0, change.size()), 0,
 							[&](tbb::blocked_range<size_t> const &r, size_t running_total)
@@ -353,7 +330,6 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t k, size_t su
 								return running_total;
 							},
 							std::plus<size_t>());
-#endif
 						if (total == sum)
 						{
 							ranges::sort(change);
@@ -417,9 +393,6 @@ size_t Knapsack::StairsClimbingDynamicProgrammingBottomUp(long destination, vect
 	combinations[0] = 1;
 	for (size_t i = 1; i <= (size_t)destination; i++)
 	{
-#ifdef _MSC_VER
-		combinations[i % combinations.size()] = parallel_reduce(combinations.begin(), combinations.end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
 		combinations[i % combinations.size()] = parallel_reduce(
 			blocked_range<size_t>(0, combinations.size()), 0,
 			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
@@ -429,7 +402,6 @@ size_t Knapsack::StairsClimbingDynamicProgrammingBottomUp(long destination, vect
 				return running_total;
 			},
 			std::plus<size_t>());
-#endif
 	}
 	return combinations[destination % combinations.size()];
 }

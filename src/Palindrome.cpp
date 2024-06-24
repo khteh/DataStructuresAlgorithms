@@ -448,12 +448,8 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
         if (!removed)
             it++;
     }
-#ifdef _MSC_VER
     // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
     // https://en.wikipedia.org/wiki/Identity_element
-    sum = parallel_reduce(sum1.begin(), sum1.end(), 1.0L /* Identity for Multiplication */, [](long double a, long double b)
-                          { return a * b; });
-#elif defined(__GNUC__) || defined(__GNUG__)
     sum = parallel_reduce(
         blocked_range<size_t>(0, sum1.size()), 1.0L /* Identity for Multiplication */,
         [&](tbb::blocked_range<size_t> const &r, long double running_total)
@@ -463,15 +459,10 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
             return running_total;
         },
         std::multiplies<long double>());
-#endif
     for (vector<vector<long double>>::iterator it = divisors.begin(); it != divisors.end(); it++)
     {
-#ifdef _MSC_VER
         // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
         // https://en.wikipedia.org/wiki/Identity_element
-        divisor *= parallel_reduce(it->begin(), it->end(), 1.0L /* Identity for Multiplication */, [](long double a, long double b)
-                                    { return a * b; });
-#elif defined(__GNUC__) || defined(__GNUG__)
         divisor *= parallel_reduce(
             blocked_range<size_t>(0, it->size()), 1.0L /* Identity for Multiplication */,
             [&](tbb::blocked_range<size_t> const &r, long double running_total)
@@ -481,7 +472,6 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
                 return running_total;
             },
             std::multiplies<long double>());
-#endif
     }
     long double count = sum / divisor;
     long double result = fmodl(count * (singulars > 0 ? singulars : 1), modulo);

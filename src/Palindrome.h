@@ -5,14 +5,9 @@
 #include <vector>
 #include <ranges>
 #include <sstream>
-#ifdef _MSC_VER
-#include <ppl.h>
-using namespace concurrency;
-#elif defined(__GNUC__) || defined(__GNUG__)
 #include "oneapi/tbb.h"
-using namespace oneapi::tbb;
-#endif
 #include "DataStructuresAlgorithms.h"
+using namespace oneapi::tbb;
 using namespace std;
 class Palindrome
 {

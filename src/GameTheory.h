@@ -6,13 +6,8 @@
 #include <sstream>
 #include <ranges>
 #include <memory>
-#ifdef _MSC_VER
-#include <ppl.h>
-using namespace concurrency;
-#elif defined(__GNUC__) || defined(__GNUG__)
 #include "oneapi/tbb.h"
 using namespace oneapi::tbb;
-#endif
 #include "Vertex.h"
 using namespace std;
 template <typename T>

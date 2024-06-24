@@ -809,9 +809,6 @@ int main(int argc, char *argv[])
 	a.clear();
 	b.clear();
 	a.push_back(123);
-#ifdef _MSC_VER
-	long sum = parallel_reduce(a.begin(), a.end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
 	long sum = parallel_reduce(
 		blocked_range<size_t>(0, a.size()), 0,
 		[&](tbb::blocked_range<size_t> const &r, long running_total)
@@ -821,7 +818,6 @@ int main(int argc, char *argv[])
 			return running_total;
 		},
 		std::plus<long>());
-#endif
 	assert(sum == 123);
 
 	a.clear();
@@ -829,9 +825,6 @@ int main(int argc, char *argv[])
 	a.push_back(1);
 	a.push_back(2);
 	a.push_back(3);
-#ifdef _MSC_VER
-	sum = parallel_reduce(a.begin() + 2, a.end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
 	sum = parallel_reduce(
 		blocked_range<size_t>(2, a.size()), 0,
 		[&](tbb::blocked_range<size_t> const &r, long running_total)
@@ -841,7 +834,6 @@ int main(int argc, char *argv[])
 			return running_total;
 		},
 		std::plus<long>());
-#endif
 	assert(sum == 3);
 
 	a.clear();
@@ -849,9 +841,6 @@ int main(int argc, char *argv[])
 	a.resize(10);
 	ranges::generate(a, [n = 1]() mutable
 					 { return n++; });
-#ifdef _MSC_VER
-	sum = parallel_reduce(a.begin(), a.end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
 	sum = parallel_reduce(
 		blocked_range<size_t>(0, a.size()), 0,
 		[&](tbb::blocked_range<size_t> const &r, long running_total)
@@ -861,7 +850,6 @@ int main(int argc, char *argv[])
 			return running_total;
 		},
 		std::plus<long>());
-#endif
 	assert(sum == 55);
 	a.clear();
 	b.clear();
@@ -869,9 +857,6 @@ int main(int argc, char *argv[])
 	EqualAverageDivide(a, b);
 	assert(b.size() == 2);
 	cout << "Left part: ";
-#ifdef _MSC_VER
-	sum = parallel_reduce(b.begin(), b.end(), 0);
-#elif defined(__GNUC__) || defined(__GNUG__)
 	sum = parallel_reduce(
 		blocked_range<size_t>(0, b.size()), 0,
 		[&](tbb::blocked_range<size_t> const &r, long running_total)
@@ -881,7 +866,6 @@ int main(int argc, char *argv[])
 			return running_total;
 		},
 		std::plus<long>());
-#endif
 	ranges::copy(b, ostream_iterator<long>(cout, " "));
 	assert(sum == 24);
 	cout << "sum: " << sum << endl;

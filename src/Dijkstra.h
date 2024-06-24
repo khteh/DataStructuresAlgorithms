@@ -6,14 +6,8 @@
 #include <numeric>
 #include <sstream>
 #include "Vertex.h"
-#ifdef _MSC_VER
-#include <ppl.h>
-using namespace concurrency;
-#elif defined(__GNUC__) || defined(__GNUG__)
-#include "tbb/parallel_reduce.h"
-#include "tbb/blocked_range.h"
-using namespace tbb;
-#endif
+#include "oneapi/tbb.h"
+using namespace oneapi::tbb;
 template <typename T>
 class DEdge;
 template <typename T>
