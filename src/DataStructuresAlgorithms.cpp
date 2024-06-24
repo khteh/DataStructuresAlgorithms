@@ -5719,7 +5719,7 @@ string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 			}
 		} });
 #elif defined(__GNUC__) || defined(__GNUG__)
-	mutex m;
+	std::mutex m;
 	set<string> computed;
 	parallel_for(blocked_range<size_t>(1, n, 2), [&](blocked_range<size_t> r)
 				 {
@@ -5853,7 +5853,7 @@ string RoadsInHackerland2(size_t n, vector<vector<size_t>> &edges)
 			}
 		} });
 #elif defined(__GNUC__) || defined(__GNUG__)
-	mutex m;
+	std::mutex m;
 	set<string> computed;
 	parallel_for(blocked_range<size_t>(1, n, 2), [&](blocked_range<size_t> r)
 				 {

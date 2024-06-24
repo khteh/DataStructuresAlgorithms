@@ -308,7 +308,7 @@ public:
 			}
 		} });
 #elif defined(__GNUC__) || defined(__GNUG__)
-		mutex m;
+		std::mutex m;
 		set<string> computed;
 		parallel_for(blocked_range<size_t>(1, _nodes, 2), [&](blocked_range<size_t> r)
 					 {
@@ -590,7 +590,7 @@ public:
 			}
 		} });
 #elif defined(__GNUC__) || defined(__GNUG__)
-		mutex m;
+		std::mutex m;
 		set<string> computed;
 		parallel_for(blocked_range<size_t>(1, _nodes, 2), [&](blocked_range<size_t> r)
 					 {

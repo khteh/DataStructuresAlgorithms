@@ -6,6 +6,7 @@ C++-latest data structures and algorithms using only standard libraries. This an
 
 - Use Visual Studio 2022, latest Windows SDK and ISO C++23 Standard.
 - Download googletest from https://github.com/google/googletest/releases and extract to C:\Projects\C++\googletest
+- Intel oneAPI toolkits: https://www.intel.com/content/www/us/en/docs/onetbb/get-started-guide/2021-6/install-onetbb-on-windows-os.html
 
 ## Ubuntu
 
@@ -28,6 +29,7 @@ C++-latest data structures and algorithms using only standard libraries. This an
   - libtbb-dev (Intel® Threading Building Blocks)
   - libgtest-dev
   - ninja-build
+  - Intel oneAPI toolkits: https://www.intel.com/content/www/us/en/docs/oneapi/installation-guide-linux/2024-2/overview.html
 
 - Download googletest from https://github.com/google/googletest/releases and extract to /usr/src/googletest
 

@@ -32,10 +32,8 @@
 #include <ppl.h>
 using namespace concurrency;
 #elif defined(__GNUC__) || defined(__GNUG__)
-#include <tbb/parallel_reduce.h>
-#include <tbb/parallel_for.h>
-#include <tbb/blocked_range.h>
-using namespace tbb;
+#include "oneapi/tbb.h"
+using namespace oneapi::tbb;
 #endif
 #include <limits.h>
 #include <cmath>
