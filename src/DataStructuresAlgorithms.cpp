@@ -4068,7 +4068,7 @@ long CalculateMedian(vector<long> &data)
 	}
 	return *middleItr;
 }
-string TimeInWords(int h, int m)
+string TimeInWords(size_t h, size_t m)
 {
 	static map<int, string> numbers = {
 		{1, "one"},
@@ -4133,11 +4133,16 @@ string TimeInWords(int h, int m)
  */
 size_t BeautifulQuadruples(long a, long b, long c, long d)
 {
+	/*
+		if a^b^c^d = 0 then a^b = c^d, therefore sort values to avoid duplications
+	*/
+	vector<long> abcd{a, b, c, d};
+	ranges::sort(abcd);
 	set<multiset<long>> quadruples;
-	for (long i = 1; i <= a; i++)
-		for (long j = 1; j <= b; j++)
-			for (long k = 1; k <= c; k++)
-				for (long l = 1; l <= d; l++)
+	for (long i = 1; i <= abcd[0]; i++)
+		for (long j = 1; j <= abcd[1]; j++)
+			for (long k = 1; k <= abcd[2]; k++)
+				for (long l = 1; l <= abcd[3]; l++)
 					if ((i ^ j ^ k ^ l) != 0)
 						quadruples.emplace(multiset<long>{i, j, k, l});
 	return quadruples.size();
