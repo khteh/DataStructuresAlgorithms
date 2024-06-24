@@ -469,7 +469,7 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
 #ifdef _MSC_VER
         // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
         // https://en.wikipedia.org/wiki/Identity_element
-        divisor1 *= parallel_reduce(it1->begin(), it1->end(), 1.0L /* Identity for Multiplication */, [](long double a, long double b)
+        divisor *= parallel_reduce(it->begin(), it->end(), 1.0L /* Identity for Multiplication */, [](long double a, long double b)
                                     { return a * b; });
 #elif defined(__GNUC__) || defined(__GNUG__)
         divisor *= parallel_reduce(
