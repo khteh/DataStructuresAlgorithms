@@ -217,8 +217,9 @@ int Search::BinarySearch(const string &toSearch, vector<string> const &source)
     }
     return -1;
 }
-// https://www.hackerrank.com/challenges/the-grid-search/problem
-// 100%
+/* https://www.hackerrank.com/challenges/the-grid-search/problem
+ * 100%
+ */
 bool Search::GridSearch(vector<string> const &pattern, vector<string> const &grid)
 {
     size_t i = 0;

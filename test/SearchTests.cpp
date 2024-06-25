@@ -248,9 +248,8 @@ public:
 
 protected:
 	Search _search;
-	vector<string> _toSearch;
 	bool _expected;
-	vector<string> _range;
+	vector<string> _toSearch, _range;
 };
 TEST_P(StringGridPatternSearchTestFixture, StringGridPatternTests)
 {
