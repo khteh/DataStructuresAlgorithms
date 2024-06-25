@@ -1,9 +1,5 @@
 #include "stdafx.h"
 #include "Dijkstra.h"
-#include <string>
-#include <set>
-#include <iostream>
-#include <limits>
 template class DEdge<long>;
 template class DEdge<size_t>;
 template class DEdge<string>;

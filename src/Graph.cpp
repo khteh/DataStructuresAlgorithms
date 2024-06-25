@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "Graph.h"
 #include <string>
 #include <set>
 #include <iostream>
 #include <limits>
+#include "Graph.h"
 template class Graph<long, long>;
 template class Graph<size_t, size_t>;
 template <typename TTag, typename TItem>

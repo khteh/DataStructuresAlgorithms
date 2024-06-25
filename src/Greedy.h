@@ -5,8 +5,8 @@
 #include <set>
 #include <numeric>
 #include <sstream>
-#include "Vertex.h"
 #include "oneapi/tbb.h"
+#include "Vertex.h"
 using namespace oneapi::tbb;
 using namespace std;
 template <typename T>

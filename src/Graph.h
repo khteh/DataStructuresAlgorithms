@@ -5,8 +5,8 @@
 #include <set>
 #include <numeric>
 #include <sstream>
-#include "Vertex.h"
 #include "oneapi/tbb.h"
+#include "Vertex.h"
 using namespace std;
 namespace ranges = std::ranges;
 using namespace oneapi::tbb;
