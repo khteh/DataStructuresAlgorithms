@@ -197,7 +197,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 
 if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
-    use_package(${PROJECT_NAME} Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn 1.8.1.5)
+    use_package(${PROJECT_NAME} Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.7)
 elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
     include(GoogleTest) # To use gtest_discover_tests
     gtest_discover_tests(${PROJECT_NAME}) # Runs GTest with CTest
