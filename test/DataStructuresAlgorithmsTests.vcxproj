@@ -37,12 +37,16 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnagramTests.cpp" />
     <ClCompile Include="ArithmeticOperationTests.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="SearchTests.cpp" />
     <ClCompile Include="BinarySearchTreeTests.cpp" />
     <ClCompile Include="BinaryTreeTests.cpp" />
