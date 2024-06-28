@@ -1,0 +1,14 @@
+<RunSettings>
+  <RunConfiguration>
+    <TargetPlatform>x64</TargetPlatform>
+  </RunConfiguration>
+  <GoogleTestAdapterSettings>
+    <SolutionSettings>
+      <Settings>
+        <TestDiscoveryRegex>DataStructuresAlgorithmsTests.exe</TestDiscoveryRegex>
+        <TestDiscoveryTimeoutInSeconds>30</TestDiscoveryTimeoutInSeconds>
+      </Settings>
+    </SolutionSettings>
+    <ProjectSettings/>
+  </GoogleTestAdapterSettings>
+</RunSettings>
