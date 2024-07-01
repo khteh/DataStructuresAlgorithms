@@ -7050,11 +7050,12 @@ size_t ActivityNotifications(vector<size_t> const &data, size_t d)
 	{
 		// ranges::sort(it, it + d);
 		// double median = odd ? data[j + half] : (double)(data[j + half] + data[j + half - 1]) / 2l;
-		double m = odd ? *(next(window.begin(), half)) : (double)(*(next(window.begin(), half)) + *(next(window.begin(), -1))) / 2l;
+		double m = odd ? *(next(window.begin(), half)) : (double)(*(next(window.begin(), half)) + *(next(window.end(), -1))) / 2l;
 		if (data[i] >= 2 * m)
 			count++;
 		window.erase(window.find(data[i - d]));
-		window.insert(data[++i]);
+		if (++i < data.size())
+			window.insert(data[i]);
 	}
 	return count;
 }
