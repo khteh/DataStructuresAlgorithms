@@ -97,7 +97,6 @@ typedef struct ZeroFactors
 	bool operator>(const ZeroFactors &other) const
 	{
 		return max(two, five) == max(other.two, other.five) ? value > other.value : max(two, five) > max(other.two, other.five);
-		// return minValue == other.minValue ? value > other.value : minValue > other.minValue;
 	}
 	bool operator<(const ZeroFactors &other) const
 	{
