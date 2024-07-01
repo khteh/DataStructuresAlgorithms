@@ -189,3 +189,4 @@ _go.sh
 
 #/.vscode
 /global.json
+**/vcpkg_installed

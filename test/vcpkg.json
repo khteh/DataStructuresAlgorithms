@@ -1,5 +1,5 @@
 {
-  "name": "gtestconsoleapp",
-  "version-string": "1.0.0-dev",
+  "name": "test",
+  "version-string": "1.0.0",
   "dependencies": [ "gtest"]
 }
