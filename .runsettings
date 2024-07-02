@@ -5,7 +5,7 @@
   <GoogleTestAdapterSettings>
     <SolutionSettings>
       <Settings>
-        <TestDiscoveryRegex>DataStructuresAlgorithmsTests.exe</TestDiscoveryRegex>
+        <TestDiscoveryRegex>test.exe</TestDiscoveryRegex>
         <TestDiscoveryTimeoutInSeconds>30</TestDiscoveryTimeoutInSeconds>
       </Settings>
     </SolutionSettings>
