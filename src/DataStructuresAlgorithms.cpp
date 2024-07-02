@@ -6737,18 +6737,28 @@ string TwentyFourHourTimeConversion(string const &s)
  */
 vector<long> KaprekarNumbers(long p, long q)
 {
+	string d, str, r, l;
+	long j, k;
+	long long square;
 	vector<long> result;
 	for (long i = p; i <= q; i++)
+	try
 	{
-		string d = to_string(i);
-		string str = to_string(i * i);
-		string r = str.substr(str.size() - d.size(), d.size());
-		string l = str.substr(0, str.size() - r.size());
-		long j = 0, k = 0;
+		d = to_string(i);
+		square = (long long)i * (long long)i;
+		str = to_string((long long)i * (long long)i); // Overflows for 32-bit system when i > 65535
+		r = str.substr(str.size() - d.size(), d.size()); // str: 1234, d: 12 => r: 34
+		l = str.substr(0, str.size() - r.size()); // l: 12
+		j = 0;
+		k = 0;
 		istringstream(l) >> j;
 		istringstream(r) >> k;
 		if (j + k == i)
 			result.push_back(i);
+	}
+	catch (exception& e)
+	{
+		cout << e.what() << '\n';
 	}
 	return result;
 }

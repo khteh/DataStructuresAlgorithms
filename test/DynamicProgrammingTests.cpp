@@ -153,7 +153,7 @@ INSTANTIATE_TEST_SUITE_P(
 	FindSubsequenceDPTests,
 	FindSubsequenceTestFixture,
 	::testing::Values(make_tuple(2, "1221", "12"), make_tuple(0, "1234", "56"), make_tuple(15, "kkkkkkz", "kkkk"), make_tuple(6, "kkkkkkz", "kkkkk"), make_tuple(1, "kkkkkkz", "kkkkkk"), make_tuple(0, "DeadBeef", "FeedBeef"), make_tuple(1, "DeadBeef", "Beef"), make_tuple(1, "DeadBeef", "dBeef"), make_tuple(0, "DeadBeef", "eedBeef"), make_tuple(1, "DeadBeef", "edBeef")));
-class FibonacciDPTestFixture : public testing::TestWithParam<tuple<long, unsigned long long>>
+class FibonacciDPTestFixture : public testing::TestWithParam<tuple<long double, long>>
 {
 public:
 	void SetUp() override
@@ -161,23 +161,31 @@ public:
 		_expected = get<0>(GetParam());
 		_data = get<1>(GetParam());
 	}
-	unsigned long long FibonacciDPTest()
+	long double FibonacciDPTest()
 	{
 		return FibonacciDynamicProgramming(_data);
 	}
 
 protected:
 	long _data;
-	unsigned long long _expected;
+	long double _expected;
 };
 TEST_P(FibonacciDPTestFixture, FibonacciDPTests)
 {
 	ASSERT_EQ(this->_expected, this->FibonacciDPTest());
 }
+// long double is 128-bit on Linux but only 64-bit on Windows
+#if defined(__GNUC__) || defined(__GNUG__)
 INSTANTIATE_TEST_SUITE_P(
 	FibonacciDPTests,
 	FibonacciDPTestFixture,
 	::testing::Values(make_tuple(-1, -1), make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(5, 5), make_tuple(8, 6), make_tuple(13, 7), make_tuple(21, 8), make_tuple(34, 9), make_tuple(2880067194370816120ULL, 90)));
+#else
+INSTANTIATE_TEST_SUITE_P(
+	FibonacciDPTests,
+	FibonacciDPTestFixture,
+	::testing::Values(make_tuple(-1, -1), make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(5, 5), make_tuple(8, 6), make_tuple(13, 7), make_tuple(21, 8), make_tuple(34, 9)));
+#endif
 class FibonacciModifiedDPTesFixture : public testing::TestWithParam<tuple<string, long, long, long>>
 {
 public:

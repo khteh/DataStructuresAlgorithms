@@ -92,7 +92,6 @@ INSTANTIATE_TEST_SUITE_P(
 	KaprekarNumbersTestFixture,
 	::testing::Values(make_tuple(vector<long>{1, 9, 45, 55, 99}, 1, 100),
 					  make_tuple(vector<long>{1, 9, 45, 55, 99, 297, 703, 999, 2223, 2728, 4950, 5050, 7272, 7777, 9999, 17344, 22222, 77778, 82656, 95121, 99999}, 1, 99999)));
-
 class BinomialCoefficientsTestFixture : public testing::TestWithParam<tuple<unsigned long long, size_t, size_t>>
 {
 public:

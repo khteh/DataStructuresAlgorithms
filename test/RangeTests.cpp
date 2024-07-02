@@ -672,6 +672,7 @@ TEST_P(ContainsNearbyAlmostDuplicateTestFixture, ContainsNearbyAlmostDuplicateTe
 {
 	ASSERT_EQ(this->_expected, this->ContainsNearbyAlmostDuplicateTest());
 }
+#if defined(__GNUC__) || defined(__GNUG__)
 INSTANTIATE_TEST_SUITE_P(
 	ContainsNearbyAlmostDuplicateTests,
 	ContainsNearbyAlmostDuplicateTestFixture,
@@ -685,7 +686,7 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, -1, -1),
 					  make_tuple(true, vector<long>{1, 2, 1}, 2, 0),
 					  make_tuple(false, vector<long>{2147483647, -1, 2147483647}, 1, 2147483647),
-					  make_tuple(true, vector<long>{2147483647, -1, 2147483647}, 1, 2147483648),
+					  make_tuple(true, vector<long>{2147483647, -1, 2147483647}, 1, 2147483648), // long is 64-bit on Linux and 32-bit on Windows
 					  make_tuple(false, vector<long>{2147483647, -1, 2147483647}, 1, -2147483647L),
 					  make_tuple(false, vector<long>{-2147483648L, 2147483647}, 1, 1),
 					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 1),
@@ -693,6 +694,28 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 3),
 					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 4),
 					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 5)));
+#else
+INSTANTIATE_TEST_SUITE_P(
+	ContainsNearbyAlmostDuplicateTests,
+	ContainsNearbyAlmostDuplicateTestFixture,
+	::testing::Values(make_tuple(true, vector<long>{1, 2, 3, 1}, 3, 0),
+		make_tuple(true, vector<long>{1, 0, 1, 1}, 1, 2),
+		make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 2, 3),
+		make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 0, 0),
+		make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 0, 1),
+		make_tuple(true, vector<long>{1, 5, 9, 1, 5, 9}, 3, 0),
+		make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 2, 0),
+		make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, -1, -1),
+		make_tuple(true, vector<long>{1, 2, 1}, 2, 0),
+		make_tuple(false, vector<long>{2147483647, -1, 2147483647}, 1, 2147483647),
+		make_tuple(false, vector<long>{2147483647, -1, 2147483647}, 1, -2147483647L),
+		make_tuple(false, vector<long>{-2147483648L, 2147483647}, 1, 1),
+		make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 1),
+		make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 2),
+		make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 3),
+		make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 4),
+		make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 5)));
+#endif
 class MinimumBribesTestFixture : public testing::TestWithParam<tuple<long, size_t, vector<long>>>
 {
 public:
