@@ -9,6 +9,18 @@ C++-latest data structures and algorithms using only standard libraries. This an
 - Intel oneAPI toolkits: https://www.intel.com/content/www/us/en/docs/onetbb/get-started-guide/2021-6/install-onetbb-on-windows-os.html
 - Run `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
 
+### Google Test
+
+To use the latest version of Google Test, use vcpkg to install it: https://github.com/microsoft/vcpkg
+
+```
+git clone https://github.com/microsoft/vcpkg
+cd vcpkg
+bootstrap-vcpkg.bat
+vcpkg integrate install
+vcpkg.exe install gtest:x64-windows
+```
+
 ## Ubuntu
 
 - Visual Studio Code with the following extensions:
@@ -31,7 +43,11 @@ C++-latest data structures and algorithms using only standard libraries. This an
   - libgtest-dev
   - ninja-build
   - Intel oneAPI toolkits: https://www.intel.com/content/www/us/en/docs/oneapi/installation-guide-linux/2024-2/overview.html
-  - Source `/opt/intel/oneapi/setvars.sh` in `/etc/profile`
+  - Add the following to `/etc/profile`:
+
+  ```
+  [ -f "/opt/intel/oneapi/setvars.sh" ] && . /opt/intel/oneapi/setvars.sh
+  ```
 
 - Download googletest from https://github.com/google/googletest/releases and extract to /usr/src/googletest
 
