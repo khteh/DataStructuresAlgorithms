@@ -229,14 +229,16 @@ long double FibonacciDynamicProgramming(long);
 string FibonacciModified(long, long, long);
 string FibonacciModifiedDynamicProgramming(long, long, long);
 set<string> permute(string const &);
-set<vector<long>> permute(vector<long> &);
+template <typename T>
+set<vector<T>> permute(vector<T> &);
 void BitCombinations(size_t, vector<long> &);
 vector<size_t> grayCode(size_t);
 void OrderedMergedCombinations(set<string> &, string const &, string const &, string);
 void numberCombinations1(size_t, size_t, size_t, vector<size_t> &, vector<vector<size_t>> &);
 void numberCombinations(size_t, size_t, vector<vector<size_t>> &);
 string insertCharAt(char, string, size_t);
-vector<long> insertItemAt(long, vector<long> &, size_t);
+template <typename T>
+vector<T> insertItemAt(T, vector<T> &, size_t);
 void findDistinct(vector<long> &, vector<long> &);
 void findPrimes(unsigned long, vector<long> &);
 bool isPrime(unsigned long);
@@ -391,3 +393,4 @@ size_t ActivityNotifications2(vector<size_t> const &, size_t);
 size_t PowerSum(size_t, size_t, size_t i = 1);
 string MorganAndString(string const &, string const &);
 size_t DistinctPairs(size_t, vector<vector<size_t>> const &);
+size_t CountArray(size_t, size_t, size_t);

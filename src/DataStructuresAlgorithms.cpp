@@ -750,26 +750,51 @@ set<string> permute(string const &str)
 	return permutations;
 }
 // O(n!)
-set<vector<long>> permute(vector<long> &data)
+template <typename T>
+set<vector<T>> permute(vector<T> &data)
 {
-	set<vector<long>> permutations;
+	set<vector<T>> permutations;
 	if (data.empty())
 		return permutations;
 	else if (data.size() == 1)
 	{
-		permutations.insert(vector<long>{data[0]});
+		permutations.insert(vector<T>{data[0]});
 		return permutations;
 	}
-	long toInsert = data[0];
-	vector<long> subset(data.begin() + 1, data.end());
-	set<vector<long>> combinations = permute(subset);
-	for (set<vector<long>>::iterator it = combinations.begin(); it != combinations.end(); it++)
+	T toInsert = data[0];
+	vector<T> subset(data.begin() + 1, data.end());
+	set<vector<T>> combinations = permute<T>(subset);
+	for (typename set<vector<T>>::iterator it = combinations.begin(); it != combinations.end(); it++)
 	{
-		vector<long> tmp = *it;
+		vector<T> tmp = *it;
 		for (size_t offset = 0; offset <= tmp.size(); offset++)
-			permutations.insert(insertItemAt(toInsert, tmp, offset));
+			permutations.insert(insertItemAt<T>(toInsert, tmp, offset));
 	}
 	return permutations;
+}
+/*
+ * https://www.hackerrank.com/challenges/construct-the-array/problem
+ * WIP
+ */
+size_t CountArray(size_t n, size_t k, size_t x)
+{
+	vector<size_t> data;
+	if (n == 2)
+		return 1;
+	else if (n < 2)
+		return 0;
+	data.resize(n - 2);
+	ranges::generate(data, [n = 1, k]() mutable
+					 { size_t count = n++;
+						if (n > k)
+					 	n = 1;
+					 return count; });
+	set<vector<size_t>> result = permute<size_t>(data);
+	size_t count = result.size();
+	for (set<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
+		if ((*it)[0] == 1 || (*it)[it->size() - 1] == x)
+			count--;
+	return count;
 }
 string insertCharAt(char toInsert, string str, size_t offset)
 {
@@ -777,9 +802,10 @@ string insertCharAt(char toInsert, string str, size_t offset)
 	string end = str.substr(offset);
 	return start + toInsert + end;
 }
-vector<long> insertItemAt(long toInsert, vector<long> &items, size_t offset)
+template <typename T>
+vector<T> insertItemAt(T toInsert, vector<T> &items, size_t offset)
 {
-	vector<long> result(items.begin(), items.begin() + offset);
+	vector<T> result(items.begin(), items.begin() + offset);
 	result.push_back(toInsert);
 	result.insert(result.end(), items.begin() + offset, items.end());
 	return result;
@@ -6742,24 +6768,24 @@ vector<long> KaprekarNumbers(long p, long q)
 	long long square;
 	vector<long> result;
 	for (long i = p; i <= q; i++)
-	try
-	{
-		d = to_string(i);
-		square = (long long)i * (long long)i;
-		str = to_string((long long)i * (long long)i); // Overflows for 32-bit system when i > 65535
-		r = str.substr(str.size() - d.size(), d.size()); // str: 1234, d: 12 => r: 34
-		l = str.substr(0, str.size() - r.size()); // l: 12
-		j = 0;
-		k = 0;
-		istringstream(l) >> j;
-		istringstream(r) >> k;
-		if (j + k == i)
-			result.push_back(i);
-	}
-	catch (exception& e)
-	{
-		cout << e.what() << '\n';
-	}
+		try
+		{
+			d = to_string(i);
+			square = (long long)i * (long long)i;
+			str = to_string((long long)i * (long long)i);	 // Overflows for 32-bit system when i > 65535
+			r = str.substr(str.size() - d.size(), d.size()); // str: 1234, d: 12 => r: 34
+			l = str.substr(0, str.size() - r.size());		 // l: 12
+			j = 0;
+			k = 0;
+			istringstream(l) >> j;
+			istringstream(r) >> k;
+			if (j + k == i)
+				result.push_back(i);
+		}
+		catch (exception &e)
+		{
+			cout << e.what() << '\n';
+		}
 	return result;
 }
 /*
