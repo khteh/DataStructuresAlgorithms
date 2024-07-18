@@ -2,6 +2,7 @@
 #include "DataStructuresAlgorithms.h"
 namespace ranges = std::ranges;
 using namespace oneapi::tbb;
+template vector<vector<size_t>> RangePermutations(vector<size_t>, set<size_t>, size_t);
 long **my2DAlloc(long rows, long cols)
 {
 	size_t header = rows * sizeof(long *);			// Store the row pointers [i]
@@ -772,29 +773,35 @@ set<vector<T>> permute(vector<T> &data)
 	}
 	return permutations;
 }
+template <typename T>
+vector<vector<T>> RangePermutations(vector<T> sequence, set<T> available, size_t step)
+{
+	vector<vector<T>> result;
+	if (available.empty())
+	{
+		result.push_back(sequence);
+		return result;
+	}
+	for (typename set<T>::iterator it = available.begin(); it != available.end(); it++)
+		if (sequence.empty() || abs(*it - sequence.back() >= step))
+		{
+			vector<T> tmp(sequence);
+			tmp.push_back(*it);
+			set<T> setTmp(available);
+			setTmp.erase(*it);
+			vector<vector<T>> tmpResult = RangePermutations<T>(tmp, setTmp, step);
+			result.insert(result.end(), tmpResult.begin(), tmpResult.end());
+		}
+	return result;
+}
 /*
  * https://www.hackerrank.com/challenges/construct-the-array/problem
  * WIP
  */
 size_t CountArray(size_t n, size_t k, size_t x)
 {
-	vector<size_t> data;
-	if (n == 2)
-		return 1;
-	else if (n < 2)
-		return 0;
-	data.resize(n - 2);
-	ranges::generate(data, [n = 1, k]() mutable
-					 { size_t count = n++;
-						if (n > k)
-					 	n = 1;
-					 return count; });
-	set<vector<size_t>> result = permute<size_t>(data);
-	size_t count = result.size();
-	for (set<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
-		if ((*it)[0] == 1 || (*it)[it->size() - 1] == x)
-			count--;
-	return count;
+	set<vector<size_t>> result;
+	return result.size();
 }
 string insertCharAt(char toInsert, string str, size_t offset)
 {

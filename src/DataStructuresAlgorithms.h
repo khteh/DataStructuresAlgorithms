@@ -231,6 +231,10 @@ string FibonacciModifiedDynamicProgramming(long, long, long);
 set<string> permute(string const &);
 template <typename T>
 set<vector<T>> permute(vector<T> &);
+void GetPermutations(string &);
+vector<long> absolutePermutation(size_t, size_t);
+template <typename T>
+vector<vector<T>> RangePermutations(vector<T>, set<T>, size_t);
 void BitCombinations(size_t, vector<long> &);
 vector<size_t> grayCode(size_t);
 void OrderedMergedCombinations(set<string> &, string const &, string const &, string);
@@ -267,7 +271,6 @@ size_t CountDigits(char, size_t);
 size_t CountNumbersWithUniqueDigits(size_t);
 size_t Count1Bits(long);
 void WordsLadder(string const &, string const &, set<string> &, vector<string> &);
-void GetPermutations(string &);
 void trim(string &);
 size_t minDiffPairs(vector<long> &, long);
 string uncompress(string const &);
@@ -341,7 +344,6 @@ size_t MinSubGraphsDifference(vector<size_t> &, vector<vector<size_t>> &);
 long PostmanProblem(vector<long> &, vector<vector<long>> &);
 string DecryptPassword(string const &);
 unsigned long long substrings(string const &);
-vector<long> absolutePermutation(size_t, size_t);
 vector<string> bomberMan(size_t, vector<string> &);
 size_t LengthOfLongestUniqueSubstring(string const &);
 string ZigZagConvert(string const &, size_t);
