@@ -157,3 +157,29 @@ INSTANTIATE_TEST_SUITE_P(
 	XorSequenceTests,
 	XorSequenceTestFixture,
 	::testing::Values(make_tuple(6, 1, 4), make_tuple(7, 2, 4), make_tuple(9, 2, 8), make_tuple(15, 5, 9), make_tuple(5, 3, 5), make_tuple(2, 4, 6), make_tuple(22, 15, 20)));
+class IsAdditiveNumberTestFixture : public testing::TestWithParam<tuple<bool, string>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_var = get<1>(GetParam());
+	}
+	bool IsAdditiveNumberTest()
+	{
+		return _arithmetic.IsAdditiveNumber(_var);
+	}
+
+protected:
+	Arithmetic _arithmetic;
+	bool _expected;
+	string _var;
+};
+TEST_P(IsAdditiveNumberTestFixture, IsAdditiveNumberTests)
+{
+	ASSERT_EQ(this->_expected, this->IsAdditiveNumberTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	IsAdditiveNumberTests,
+	IsAdditiveNumberTestFixture,
+	::testing::Values(make_tuple(true, "123"), make_tuple(true, "123581321"), make_tuple(true, "199100199"), make_tuple(false, "1203"), make_tuple(false, "1023"), make_tuple(false, "0123")));

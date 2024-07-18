@@ -40,6 +40,9 @@ int main(int argc, char *argv[])
 	Graph<size_t, size_t> graph;
 	Range range;
 	Palindrome palindrome;
+	Permutation<long> lPermutation;
+	Permutation<size_t> ulPermutation;
+	Permutation<string> sPermutation;
 	ExceptionTest();
 	TestRandom();
 	KDTreeTests();
@@ -386,12 +389,6 @@ int main(int argc, char *argv[])
 	str = "cdadabcc";
 	RemoveDuplicateCharactersLexicographicalOrder(str);
 	assert(str == "adbc");
-	assert(isAdditiveNumber(string("123")));
-	assert(isAdditiveNumber(string("123581321")));
-	assert(isAdditiveNumber(string("199100199")));
-	assert(!isAdditiveNumber(string("1203")));
-	assert(!isAdditiveNumber(string("1023")));
-	assert(!isAdditiveNumber(string("0123")));
 	str = "Hello World!!!";
 	str1 = "llo World!!!He";
 	assert(AreRotatedStrings(str, str1, 2));
@@ -1420,12 +1417,6 @@ int main(int argc, char *argv[])
 	assert(substrings(string("123")) == 164);
 	assert(substrings(string("1234")) == 1670);
 	assert(substrings(string("972698438521")) == 445677619);
-	a = absolutePermutation(10, 0);
-	b = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-	assert(a == b);
-	a = absolutePermutation(10, 1);
-	b = {2, 1, 4, 3, 6, 5, 8, 7, 10, 9};
-	assert(a == b);
 	strings = {".......", "...O...", "....O..", ".......", "OO.....", "OO....."};
 	strings1 = {"OOO.OOO", "OO...OO", "OOO...O", "..OO.OO", "...OOOO", "...OOOO"};
 	assert(bomberMan(3, strings) == strings1);
@@ -2029,37 +2020,6 @@ int main(int argc, char *argv[])
 	// assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 19, 81) == 922261429); // Fails. 922195893. Short of 65536 (0x10000)
 	// assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 4, 99) == 249346542); // Fails. Why is the expected value smaller than the test case above when the range is larger? Overflow.
 	// assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
-	ul = 1;
-	uset.clear();
-	generate_n(inserter(uset, uset.end()), 3, [&ul]()
-			   { return ul++; });
-	ugrid.clear();
-	ugrid = {{1, 2, 3}, {1, 3, 2}, {2, 1, 3}, {2, 3, 1}, {3, 1, 2}, {3, 2, 1}};
-	ugrid1.clear();
-	ugrid1 = RangePermutations<size_t>(vector<size_t>{}, uset, (size_t)1);
-	assert(ugrid == ugrid1);
-	assert(ugrid1.size() == Factorial(uset.size()));
-	ul = 1;
-	uset.clear();
-	generate_n(inserter(uset, uset.end()), 5, [&ul]()
-			   { return ul++; });
-	ugrid1 = RangePermutations<size_t>(vector<size_t>{}, uset, (size_t)1);
-	assert(!ugrid1.empty());
-	assert(ugrid1.size() == Factorial(uset.size()));
-	ul = 1;
-	uset.clear();
-	generate_n(inserter(uset, uset.end()), 7, [&ul]()
-			   { return ul++; });
-	ugrid1 = RangePermutations<size_t>(vector<size_t>{}, uset, (size_t)1);
-	assert(!ugrid1.empty());
-	assert(ugrid1.size() == Factorial(uset.size()));
-	ul = 1;
-	uset.clear();
-	generate_n(inserter(uset, uset.end()), 9, [&ul]()
-			   { return ul++; });
-	ugrid1 = RangePermutations<size_t>(vector<size_t>{}, uset, (size_t)1);
-	assert(!ugrid1.empty());
-	assert(ugrid1.size() == Factorial(uset.size()));
 	// assert(CountArray(4, 3, 2) == 3);
 	/***** The End *****/
 	cout

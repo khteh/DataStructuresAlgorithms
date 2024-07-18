@@ -73,6 +73,7 @@
 #include "Poker.h"
 #include "VariantVisitor.h"
 #include "GameTheory.h"
+#include "Permutation.h"
 using namespace std;
 using namespace chrono;
 using namespace oneapi::tbb;
@@ -212,8 +213,6 @@ void reverseWords(string &);
 void reverseWordsTrimmed(string &);
 void RemoveDuplicateCharacters(string &);
 void RemoveDuplicateCharactersLexicographicalOrder(string &);
-bool isAdditiveNumber(string const &);
-bool checkIfAdditiveSequence(size_t, size_t, string const &);
 bool AreAnagrams(string const &, string const &);
 size_t FindAnagrams(vector<string> const &, vector<vector<string>> &);
 bool SherlockValidString(string const &);
@@ -228,21 +227,12 @@ long double Fibonacci(long);
 long double FibonacciDynamicProgramming(long);
 string FibonacciModified(long, long, long);
 string FibonacciModifiedDynamicProgramming(long, long, long);
-set<string> permute(string const &);
-template <typename T>
-set<vector<T>> permute(vector<T> &);
-void GetPermutations(string &);
-vector<long> absolutePermutation(size_t, size_t);
-template <typename T>
-vector<vector<T>> RangePermutations(vector<T>, set<T>, size_t);
 void BitCombinations(size_t, vector<long> &);
 vector<size_t> grayCode(size_t);
 void OrderedMergedCombinations(set<string> &, string const &, string const &, string);
 void numberCombinations1(size_t, size_t, size_t, vector<size_t> &, vector<vector<size_t>> &);
 void numberCombinations(size_t, size_t, vector<vector<size_t>> &);
 string insertCharAt(char, string, size_t);
-template <typename T>
-vector<T> insertItemAt(T, vector<T> &, size_t);
 void findDistinct(vector<long> &, vector<long> &);
 void findPrimes(unsigned long, vector<long> &);
 bool isPrime(unsigned long);

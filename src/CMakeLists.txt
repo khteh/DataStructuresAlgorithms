@@ -87,6 +87,7 @@ set(Sources
     "NameHidingExample.cpp"
     "Node.cpp"
     "Palindrome.cpp"
+    "Permutation.cpp"
     "Poker.cpp"
     "PrefixTrie.cpp"
     "PriorityQueueMedian.cpp"

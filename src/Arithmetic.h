@@ -6,6 +6,9 @@
 using namespace std;
 class Arithmetic
 {
+private:
+	bool CheckIfAdditiveSequence(size_t, size_t, string const &);
+
 public:
 	unsigned long long XOR(unsigned long long);
 	long ToggleSign(long);
@@ -18,4 +21,5 @@ public:
 	string NumberStringSum(const string &, const string &);
 	string NumberStringMultiplication(string &, string &);
 	size_t XorSequence(size_t, size_t);
+	bool IsAdditiveNumber(string const &);
 };

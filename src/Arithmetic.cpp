@@ -291,3 +291,43 @@ size_t Arithmetic::XorSequence(size_t l, size_t r)
 	}
 	return left ^ right;
 }
+/* https://leetcode.com/problems/additive-number/
+ * 100%
+ * i: width of the first operand
+ * j: width of the second operand
+ * width of sum is max(i, j). So i must be <= half the input string size
+ */
+bool Arithmetic::IsAdditiveNumber(string const &str)
+{
+	for (size_t i = 1; i <= str.size() / 2; i++)
+		for (size_t j = 1; max(i, j) <= str.size() - i - j; j++)
+			if (CheckIfAdditiveSequence(i, j, str))
+				return true;
+	return false;
+}
+/*
+ * 123581321
+ * 1 2 3
+ *   2 3 5
+ *     3 5 8
+ *       5 8 13
+ *         8 13 21
+ */
+bool Arithmetic::CheckIfAdditiveSequence(size_t i, size_t j, string const &str)
+{
+	if ((str[0] == '0' && i > 1) || (str[i] == '0' && j > 1))
+		return false;
+	unsigned long long first, second;
+	string sum;
+	istringstream(str.substr(0, i)) >> first;
+	istringstream(str.substr(i, j)) >> second;
+	for (size_t k = i + j; k < str.size(); k += sum.size())
+	{
+		second = first + second;
+		first = second - first;
+		sum = to_string(second);
+		if (str.substr(k, sum.size()) != sum)
+			return false;
+	}
+	return true;
+}

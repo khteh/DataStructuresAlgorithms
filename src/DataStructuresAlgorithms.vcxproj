@@ -239,6 +239,7 @@
     <ClCompile Include="LongestCommonSubsequence.cpp" />
     <ClCompile Include="LRUCache.cpp" />
     <ClCompile Include="Palindrome.cpp" />
+    <ClCompile Include="Permutation.cpp" />
     <ClCompile Include="Range.cpp" />
     <ClCompile Include="Sort.cpp" />
     <ClCompile Include="Square.cpp" />

@@ -2,7 +2,6 @@
 #include "DataStructuresAlgorithms.h"
 namespace ranges = std::ranges;
 using namespace oneapi::tbb;
-template vector<vector<size_t>> RangePermutations(vector<size_t>, set<size_t>, size_t);
 long **my2DAlloc(long rows, long cols)
 {
 	size_t header = rows * sizeof(long *);			// Store the row pointers [i]
@@ -315,46 +314,6 @@ void RemoveDuplicateCharactersLexicographicalOrder(string &str)
 		counts[c]--;
 	}
 	str = result;
-}
-/* https://leetcode.com/problems/additive-number/
- * 100%
- * i: width of the first operand
- * j: width of the second operand
- * width of sum is max(i, j). So i must be <= half the input string size
- */
-bool isAdditiveNumber(string const &str)
-{
-	for (size_t i = 1; i <= str.size() / 2; i++)
-		for (size_t j = 1; max(i, j) <= str.size() - i - j; j++)
-			if (checkIfAdditiveSequence(i, j, str))
-				return true;
-	return false;
-}
-/*
- * 123581321
- * 1 2 3
- *   2 3 5
- *     3 5 8
- *       5 8 13
- *         8 13 21
- */
-bool checkIfAdditiveSequence(size_t i, size_t j, string const &str)
-{
-	if ((str[0] == '0' && i > 1) || (str[i] == '0' && j > 1))
-		return false;
-	unsigned long long first, second;
-	string sum;
-	istringstream(str.substr(0, i)) >> first;
-	istringstream(str.substr(i, j)) >> second;
-	for (size_t k = i + j; k < str.size(); k += sum.size())
-	{
-		second = first + second;
-		first = second - first;
-		sum = to_string(second);
-		if (str.substr(k, sum.size()) != sum)
-			return false;
-	}
-	return true;
 }
 bool AreAnagrams(string const &s1, string const &s2)
 {
@@ -731,69 +690,6 @@ long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t> &data, vector<zerofact
 		result.assign(start, end + 1);
 	return max_so_far;
 }
-set<string> permute(string const &str)
-{
-	set<string> permutations;
-	if (str.empty())
-		return permutations;
-	else if (str.size() == 1)
-	{
-		permutations.insert(str);
-		return permutations;
-	}
-	char toInsert = str[0];
-	set<string> words = permute(str.substr(1));
-	for (set<string>::iterator it = words.begin(); it != words.end(); it++)
-	{
-		for (size_t i = 0; i <= it->size(); i++)
-			permutations.insert(insertCharAt(toInsert, *it, i));
-	}
-	return permutations;
-}
-// O(n!)
-template <typename T>
-set<vector<T>> permute(vector<T> &data)
-{
-	set<vector<T>> permutations;
-	if (data.empty())
-		return permutations;
-	else if (data.size() == 1)
-	{
-		permutations.insert(vector<T>{data[0]});
-		return permutations;
-	}
-	T toInsert = data[0];
-	vector<T> subset(data.begin() + 1, data.end());
-	set<vector<T>> combinations = permute<T>(subset);
-	for (typename set<vector<T>>::iterator it = combinations.begin(); it != combinations.end(); it++)
-	{
-		vector<T> tmp = *it;
-		for (size_t offset = 0; offset <= tmp.size(); offset++)
-			permutations.insert(insertItemAt<T>(toInsert, tmp, offset));
-	}
-	return permutations;
-}
-template <typename T>
-vector<vector<T>> RangePermutations(vector<T> sequence, set<T> available, size_t step)
-{
-	vector<vector<T>> result;
-	if (available.empty())
-	{
-		result.push_back(sequence);
-		return result;
-	}
-	for (typename set<T>::iterator it = available.begin(); it != available.end(); it++)
-		if (sequence.empty() || abs(*it - sequence.back() >= step))
-		{
-			vector<T> tmp(sequence);
-			tmp.push_back(*it);
-			set<T> setTmp(available);
-			setTmp.erase(*it);
-			vector<vector<T>> tmpResult = RangePermutations<T>(tmp, setTmp, step);
-			result.insert(result.end(), tmpResult.begin(), tmpResult.end());
-		}
-	return result;
-}
 /*
  * https://www.hackerrank.com/challenges/construct-the-array/problem
  * WIP
@@ -808,14 +704,6 @@ string insertCharAt(char toInsert, string str, size_t offset)
 	string start = str.substr(0, offset);
 	string end = str.substr(offset);
 	return start + toInsert + end;
-}
-template <typename T>
-vector<T> insertItemAt(T toInsert, vector<T> &items, size_t offset)
-{
-	vector<T> result(items.begin(), items.begin() + offset);
-	result.push_back(toInsert);
-	result.insert(result.end(), items.begin() + offset, items.end());
-	return result;
 }
 void Parentheses(vector<string> &result, string &str, size_t index, long left, long right)
 {
@@ -1667,21 +1555,6 @@ long KthNumberWith357PrimeFactors(long n)
 	}
 	return value;
 }
-void GetPermutations(string &w, set<string> &dictionary, set<string> &result)
-{
-	for (set<string>::iterator it = dictionary.begin(); it != dictionary.end(); it++)
-	{
-		if (it->size() == w.size() && *it != w)
-		{
-			size_t count = 0;
-			for (size_t i = 0; i < it->size() && count < 2; i++)
-				if ((*it)[i] != w[i])
-					count++;
-			if (count < 2)
-				result.insert(*it);
-		}
-	}
-}
 // DAMP -> LAMP -> LIMP -> LIME -> LIKE
 void WordsLadder(string const &start, string const &stop, set<string> &dictionary, vector<string> &result)
 {
@@ -1690,13 +1563,14 @@ void WordsLadder(string const &start, string const &stop, set<string> &dictionar
 	map<string, string> backtrack;
 	actionQ.push(start);
 	visited.emplace(start);
+	Permutation<string> permutation;
 	while (!actionQ.empty())
 	{
 		string w = actionQ.front(); // DAMP
 		actionQ.pop();
 		set<string> permutations;
 		dictionary.erase(w);
-		GetPermutations(w, dictionary, permutations);
+		permutation.GetPermutations(w, dictionary, permutations);
 		for (set<string>::const_iterator it = permutations.begin(); it != permutations.end(); it++)
 		{
 			if (*it == stop)
@@ -4511,6 +4385,7 @@ size_t MinSubGraphsDifference(vector<size_t> &vertices, vector<vector<size_t>> &
 // Times out for more than 100 nodes! ;)
 long PostmanProblem(vector<long> &k, vector<vector<long>> &roads)
 {
+	Permutation<long> permutation;
 	Graph<long, long> graph;
 	for (size_t i = 0; i < roads.size(); i++)
 	{
@@ -4519,7 +4394,7 @@ long PostmanProblem(vector<long> &k, vector<vector<long>> &roads)
 		graph.AddUndirectedEdge(v1, v2, roads[i][2]);
 	}
 	set<vector<long>> paths;
-	paths = permute(k);
+	paths = permutation.Permute(k);
 	multimap<long, string> costs;
 	ostringstream oss, oss1, oss2;
 	map<string, long> costCache;
@@ -4680,35 +4555,6 @@ Digit   Unit    Ten     Hundred     Thousand        Sum
 		sum %= (unsigned long long)(1e9 + 7);
 	}
 	return sum;
-}
-// https://www.hackerrank.com/challenges/absolute-permutation/problem
-// 100%
-vector<long> absolutePermutation(size_t n, size_t k)
-{
-	vector<long> sequence(n, 0);
-	ranges::generate(sequence, [i = 1]() mutable
-					 { return i++; });
-	// |sequence[i] - i| = k
-	vector<long> a;
-	set<long> exists;
-	for (size_t i = 1; i <= n; i++)
-	{
-		if (i > k && exists.find(i - k) == exists.end())
-		{
-			a.push_back(i - k);
-			exists.insert(i - k);
-		}
-		else if (exists.find(i + k) == exists.end())
-		{
-			a.push_back(i + k);
-			exists.insert(i + k);
-		}
-		else
-			return vector<long>(1, -1);
-	}
-	vector<long> result(a);
-	ranges::sort(a);
-	return a == sequence ? result : vector<long>(1, -1);
 }
 // https://www.hackerrank.com/challenges/bomber-man/problem
 // Times out!
