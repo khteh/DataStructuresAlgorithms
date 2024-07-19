@@ -56,7 +56,7 @@ set<vector<T>> Permutation<T>::Permute(vector<T> &data)
     return permutations;
 }
 template <typename T>
-vector<vector<T>> Permutation<T>::RangePermutations(vector<T> sequence, set<T> available, size_t step)
+vector<vector<T>> Permutation<T>::RangePermutations(vector<T> sequence, set<T> available, size_t size, size_t step)
     requires integral_type<T>
 {
     vector<vector<T>> result;
@@ -66,15 +66,17 @@ vector<vector<T>> Permutation<T>::RangePermutations(vector<T> sequence, set<T> a
         return result;
     }
     for (typename set<T>::iterator it = available.begin(); it != available.end(); it++)
-        if (sequence.empty() || abs(*it - sequence.back() >= step))
+        if (sequence.size() < size && (sequence.empty() || abs(*it - sequence.back() >= step)))
         {
             vector<T> tmp(sequence);
             tmp.push_back(*it);
             set<T> setTmp(available);
             setTmp.erase(*it);
-            vector<vector<T>> tmpResult = RangePermutations(tmp, setTmp, step);
+            vector<vector<T>> tmpResult = RangePermutations(tmp, setTmp, size, step);
             result.insert(result.end(), tmpResult.begin(), tmpResult.end());
         }
+        else if (sequence.size() == size)
+            result.push_back(sequence);
     return result;
 }
 template <typename T>

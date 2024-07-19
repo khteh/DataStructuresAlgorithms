@@ -105,14 +105,15 @@ INSTANTIATE_TEST_SUITE_P(
     ListPermutationTests,
     ListPermutationTestFixture,
     ::testing::Values(make_tuple(6, vector<long>{1, 2, 3}), make_tuple(120, vector<long>{1, 2, 3, 4, 5})));
-class RangePermutationsTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t>>
+class RangePermutationsTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t, size_t>>
 {
 public:
     void SetUp() override
     {
         _expected = get<0>(GetParam());
         _size = get<1>(GetParam());
-        _step = get<2>(GetParam());
+        _resultSize = get<2>(GetParam());
+        _step = get<3>(GetParam());
     }
     size_t RangePermutationsTest()
     {
@@ -120,12 +121,12 @@ public:
         set<size_t> uset;
         generate_n(inserter(uset, uset.end()), _size, [&ul]()
                    { return ul++; });
-        return _permutation.RangePermutations(vector<size_t>{}, uset, _step).size();
+        return _permutation.RangePermutations(vector<size_t>{}, uset, _resultSize, _step).size();
     }
 
 protected:
     Permutation<size_t> _permutation;
-    size_t _expected, _size, _step;
+    size_t _expected, _size, _step, _resultSize;
 };
 TEST_P(RangePermutationsTestFixture, RangePermutationsTests)
 {
@@ -134,7 +135,7 @@ TEST_P(RangePermutationsTestFixture, RangePermutationsTests)
 INSTANTIATE_TEST_SUITE_P(
     RangePermutationsTests,
     RangePermutationsTestFixture,
-    ::testing::Values(make_tuple(6, 3, 1), make_tuple(120, 5, 1), make_tuple(5040, 7, 1), make_tuple(362880, 9, 1)));
+    ::testing::Values(make_tuple(6, 3, 3, 1), make_tuple(6, 3, 2, 1), make_tuple(120, 5, 5, 1), make_tuple(5040, 7, 7, 1), make_tuple(362880, 9, 9, 1)));
 class PermutationGameTestFixture : public testing::TestWithParam<tuple<bool, vector<size_t>>>
 {
 public:

@@ -27,7 +27,7 @@ public:
     void GetPermutations(string &, set<string> &, set<string> &);
     vector<T> AbsolutePermutation(size_t, size_t)
         requires integral_type<T>;
-    vector<vector<T>> RangePermutations(vector<T>, set<T>, size_t)
+    vector<vector<T>> RangePermutations(vector<T>, set<T>, size_t, size_t)
         requires integral_type<T>;
     bool PermutationGame(const vector<T>)
         requires integral_type<T>;

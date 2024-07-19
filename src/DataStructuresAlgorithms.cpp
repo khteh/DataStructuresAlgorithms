@@ -696,8 +696,16 @@ long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t> &data, vector<zerofact
  */
 size_t CountArray(size_t n, size_t k, size_t x)
 {
-	set<vector<size_t>> result;
-	return result.size();
+	size_t ul = 1, count = 0;
+	set<size_t> uset;
+	Permutation<size_t> permutation;
+	generate_n(inserter(uset, uset.end()), k, [&ul]()
+			   { return ul++; });
+	vector<vector<size_t>> ugrid = permutation.RangePermutations(vector<size_t>{}, uset, n - 2, 1);
+	for (vector<vector<size_t>>::const_iterator it = ugrid.begin(); it != ugrid.end(); it++)
+		if (it->size() == n - 2 && *(it->begin()) != 1 && it->back() != x)
+			count++;
+	return count;
 }
 string insertCharAt(char toInsert, string str, size_t offset)
 {
