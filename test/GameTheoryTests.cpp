@@ -222,26 +222,3 @@ INSTANTIATE_TEST_SUITE_P(
                       make_tuple("First", 12),
                       make_tuple("First", 13),
                       make_tuple("Second", 14)));
-class PermutationGameTestFixture : public GameTheoryTestFixture<bool, vector<size_t>>, public testing::TestWithParam<tuple<bool, vector<size_t>>>
-{
-public:
-    void SetUp() override
-    {
-        GameTheoryTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-    }
-    bool PermutationGameTest()
-    {
-        return _game.PermutationGame(_data);
-    }
-
-protected:
-    GameTheory<size_t> _game;
-};
-TEST_P(PermutationGameTestFixture, PermutationGameTests)
-{
-    ASSERT_EQ(this->_expected, this->PermutationGameTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-    PermutationGameTests,
-    PermutationGameTestFixture,
-    ::testing::Values(make_tuple(true, vector<size_t>{1, 3, 2}), make_tuple(true, vector<size_t>{4, 2, 3, 1}), make_tuple(false, vector<size_t>{5, 3, 2, 1, 4}), make_tuple(false, vector<size_t>{11, 9, 10, 5, 8, 3, 2, 7, 6, 4, 1}), make_tuple(true, vector<size_t>{10, 7, 9, 2, 5, 8, 4, 1, 3, 6})));

@@ -125,3 +125,48 @@ vector<T> Permutation<T>::AbsolutePermutation(size_t n, size_t k)
     ranges::sort(a);
     return a == sequence ? result : vector<T>(1, -1);
 }
+/*
+ * https://www.hackerrank.com/challenges/permutation-game/problem
+ * 100%
+ */
+template <typename T>
+bool Permutation<T>::PermutationGame(const vector<T> numbers)
+    requires integral_type<T>
+{
+    if (_permutationGameWinningNumbersCache.find(numbers) != _permutationGameWinningNumbersCache.end())
+        return true;
+    /*
+        Sequence increases after opponent's turn. Current player loses.
+    */
+    if (IsIncreasingSequence(numbers))
+        return false;
+    for (size_t i = 0; i < numbers.size(); i++) // Look for a winning move or lose
+    {
+        // Make a move by removing numbers[i] from the range
+        vector<T> nextNumbers(numbers.begin(), next(numbers.begin(), i));
+        nextNumbers.insert(nextNumbers.end(), next(numbers.begin(), i + 1), numbers.end());
+        // Check opponent's winning status
+        if (!PermutationGame(nextNumbers)) // ["1", "32"], ["3", "2"]:true, ["3", "12"]:true, ["2", "13"]: true
+        {
+            _permutationGameWinningNumbersCache.emplace(numbers); // "32", "132"
+            return true;                                          // "I" win
+        }
+    }
+    return false; // No winning move. "I" lose
+}
+template <typename T>
+bool Permutation<T>::IsIncreasingSequence(vector<T> const &numbers)
+    requires integral_type<T>
+{
+    if (numbers.size() == 1)
+        return true;
+    typename vector<T>::const_iterator it = numbers.begin();
+    T prev = *it++;
+    for (; it != numbers.end(); it++)
+    {
+        if (*it <= prev)
+            return false;
+        prev = *it;
+    }
+    return true;
+}

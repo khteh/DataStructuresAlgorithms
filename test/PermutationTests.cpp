@@ -135,3 +135,29 @@ INSTANTIATE_TEST_SUITE_P(
     RangePermutationsTests,
     RangePermutationsTestFixture,
     ::testing::Values(make_tuple(6, 3, 1), make_tuple(120, 5, 1), make_tuple(5040, 7, 1), make_tuple(362880, 9, 1)));
+class PermutationGameTestFixture : public testing::TestWithParam<tuple<bool, vector<size_t>>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _data = get<1>(GetParam());
+    }
+    bool PermutationGameTest()
+    {
+        return _permutation.PermutationGame(_data);
+    }
+
+protected:
+    Permutation<size_t> _permutation;
+    bool _expected;
+    vector<size_t> _data;
+};
+TEST_P(PermutationGameTestFixture, PermutationGameTests)
+{
+    ASSERT_EQ(this->_expected, this->PermutationGameTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    PermutationGameTests,
+    PermutationGameTestFixture,
+    ::testing::Values(make_tuple(true, vector<size_t>{1, 3, 2}), make_tuple(true, vector<size_t>{4, 2, 3, 1}), make_tuple(false, vector<size_t>{5, 3, 2, 1, 4}), make_tuple(false, vector<size_t>{11, 9, 10, 5, 8, 3, 2, 7, 6, 4, 1}), make_tuple(true, vector<size_t>{10, 7, 9, 2, 5, 8, 4, 1, 3, 6})));

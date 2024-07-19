@@ -121,5 +121,6 @@
         }
       }
     ]
-  }
+  },
+  "cmake.ctest.testExplorerIntegrationEnabled": false
 }

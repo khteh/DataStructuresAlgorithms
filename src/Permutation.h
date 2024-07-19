@@ -16,6 +16,9 @@ class Permutation
 private:
     vector<T> InsertItemAt(T toInsert, vector<T> &items, size_t offset)
         requires integral_type<T>;
+    set<vector<T>> _permutationGameWinningNumbersCache;
+    bool IsIncreasingSequence(vector<T> const &)
+        requires integral_type<T>;
 
 public:
     set<string> Permute(string const &);
@@ -25,5 +28,7 @@ public:
     vector<T> AbsolutePermutation(size_t, size_t)
         requires integral_type<T>;
     vector<vector<T>> RangePermutations(vector<T>, set<T>, size_t)
+        requires integral_type<T>;
+    bool PermutationGame(const vector<T>)
         requires integral_type<T>;
 };
