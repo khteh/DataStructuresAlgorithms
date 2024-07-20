@@ -55,6 +55,13 @@ set<vector<T>> Permutation<T>::Permute(vector<T> &data)
     }
     return permutations;
 }
+/// @brief
+/// @tparam T
+/// @param sequence : Intermediate result sequence
+/// @param available : Available pool of numbers to add to result sequence
+/// @param size : Size of the result sequence
+/// @param step : Increment step between successive numbers in the result sequence
+/// @return
 template <typename T>
 vector<vector<T>> Permutation<T>::RangePermutations(vector<T> sequence, set<T> available, size_t size, size_t step)
     requires integral_type<T>
