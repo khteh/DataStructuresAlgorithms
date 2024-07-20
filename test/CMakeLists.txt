@@ -11,7 +11,6 @@ source_group("Headers" FILES ${Headers})
 set(Sources
     "AnagramTests.cpp"
     "ArithmeticOperationTests.cpp"
-    "ArrayNegativePositiveSeriesTests.cpp"
     "BinarySearchTreeTests.cpp"
     "BinaryTreeTests.cpp"
     "CircularLinkedListTests.cpp"

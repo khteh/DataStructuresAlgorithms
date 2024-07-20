@@ -32,7 +32,7 @@ public:
 	void TopDownMergeSort(vector<T> &, vector<T> &, size_t, size_t);
 	void BottomUpMergeSort(vector<T> &, vector<T> &);
 	void WiggleSort(vector<T> &);
-	void SortNumbers(vector<T> &)
+	void AlternateSignSortNumbers(vector<T> &)
 		requires arithmetic_type<T>;
 	size_t SortSwapCount(vector<T> &);
 	bool CanFinishCourseTopologicalSort(size_t, vector<vector<T>> &, vector<T> &);

@@ -1,5 +1,65 @@
 #include "pch.h"
 using namespace std;
+class AlternateSignSortNumbersTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	vector<long> AlternateSignSortNumbersTest()
+	{
+		_sort.AlternateSignSortNumbers(_data);
+		return _data;
+	}
+
+protected:
+	vector<long> _expected, _data;
+	Sort<long> _sort;
+};
+TEST_P(AlternateSignSortNumbersTestFixture, AlternateSignSortNumbersTests)
+{
+	ASSERT_EQ(this->_expected, this->AlternateSignSortNumbersTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	AlternateSignSortNumbersTests,
+	AlternateSignSortNumbersTestFixture,
+	::testing::Values(make_tuple(vector<long>{2, -1, 9, -3, 5, -7, -8, -5, -7}, vector<long>{2, -1, -3, -7, -8, 9, 5, -5, -7}), make_tuple(vector<long>{-1, 9, -3, 5, -7, 2, -8, -5, -7}, vector<long>{-1, -3, -7, -8, 9, 5, -5, -7, 2}),
+					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, -8, -5, -7}, vector<long>{2, -1, -3, -7, -8, 9, 5, -5, -7}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, 9, 5, 3, 2, 1, -1, -3, -7, -8, -5, -7}),
+					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, -8, -5, -7, 9, 5, 3, 2, 1}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, 9, 5, 3, 2, 1, -8, -5, -7}),
+					  make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, 2, 9, 5, 3, 2, 1, -8, -5, -7}), make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, -8, -5, -7, 2, 9, 5, 3, 2, 1})));
+
+class OrderArrayIntoNegativePositiveSeriesTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	vector<long> OrderArrayIntoNegativePositiveSeriesTest()
+	{
+		OrderArrayIntoNegativePositiveSeries(_data);
+		return _data;
+	}
+
+protected:
+	vector<long> _expected, _data;
+	Sort<long> _sort;
+};
+TEST_P(OrderArrayIntoNegativePositiveSeriesTestFixture, OrderArrayIntoNegativePositiveSeriesTests)
+{
+	ASSERT_EQ(this->_expected, this->OrderArrayIntoNegativePositiveSeriesTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	OrderArrayIntoNegativePositiveSeriesTests,
+	OrderArrayIntoNegativePositiveSeriesTestFixture,
+	::testing::Values(make_tuple(vector<long>{2, -1, 9, -3, 5, -7, -8, -5, -7}, vector<long>{2, -1, -3, -7, -8, 9, 5, -5, -7}), make_tuple(vector<long>{-1, 9, -3, 5, -7, 2, -8, -5, -7}, vector<long>{-1, -3, -7, -8, 9, 5, -5, -7, 2}),
+					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, -8, -5, -7}, vector<long>{2, -1, -3, -7, -8, 9, 5, -5, -7}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, 9, 5, 3, 2, 1, -1, -3, -7, -8, -5, -7}),
+					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, -8, -5, -7, 9, 5, 3, 2, 1}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, 9, 5, 3, 2, 1, -8, -5, -7}),
+					  make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, 2, 9, 5, 3, 2, 1, -8, -5, -7}), make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, -8, -5, -7, 2, 9, 5, 3, 2, 1})));
+
 TEST(SortTests, BubbleSortTest)
 {
 	Sort<long> sort;

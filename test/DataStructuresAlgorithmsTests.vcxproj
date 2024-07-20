@@ -67,7 +67,6 @@
     <ClCompile Include="LRUCacheTests.cpp" />
     <ClCompile Include="MatrixTests.cpp" />
     <ClCompile Include="MaxZeroProductTests.cpp" />
-    <ClCompile Include="ArrayNegativePositiveSeriesTests.cpp" />
     <ClCompile Include="NumbersTests.cpp" />
     <ClCompile Include="PalindromeTests.cpp" />
     <ClCompile Include="PermutationTests.cpp" />

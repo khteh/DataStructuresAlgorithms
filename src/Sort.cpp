@@ -480,10 +480,11 @@ bool Sort<T>::CanFinishCourseTopologicalSort(size_t numCourses, vector<vector<T>
 	}
 	return !edgeCount; // A topological ordering is possible if and only if the graph has no directed cycles, that is, if it is a directed acyclic graph (DAG)
 }
-// Sort numbers into consecutive positive/negative numbers
-// http://www.careercup.com/question?id=5183920823861248
+/* Sort numbers into consecutive positive/negative numbers
+ * http://www.careercup.com/question?id=5183920823861248
+ */
 template <typename T>
-void Sort<T>::SortNumbers(vector<T> &data)
+void Sort<T>::AlternateSignSortNumbers(vector<T> &data)
 	requires arithmetic_type<T>
 {
 	size_t j;
