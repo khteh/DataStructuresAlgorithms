@@ -1,29 +1,27 @@
 #include "pch.h"
 using namespace std;
-TEST(HIndexTests, HIndexTest)
+class HIndexTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>>>
 {
-	vector<size_t> udata;
-	udata = { 3, 0, 6, 1, 5 };
-	ASSERT_EQ(3, hIndex(udata));
-	udata.clear();
-	udata = { 0, 1 };
-	ASSERT_EQ(1, hIndex(udata));
-	udata.clear();
-	udata = { 1, 1 };
-	ASSERT_EQ(1, hIndex(udata));
-	udata.clear();
-	udata = { 123 };
-	ASSERT_EQ(1, hIndex(udata));
-	udata.clear();
-	udata = { 1, 1, 2 };
-	ASSERT_EQ(1, hIndex(udata));
-	udata.clear();
-	udata = { 1, 2, 2 };
-	ASSERT_EQ(2, hIndex(udata));
-	udata.clear();
-	udata = { 3, 2, 2 };
-	ASSERT_EQ(2, hIndex(udata));
-	udata.clear();
-	udata = { 3, 3, 2 };
-	ASSERT_EQ(2, hIndex(udata));
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	size_t HIndexTest()
+	{
+		return hIndex(_data);
+	}
+
+protected:
+	size_t _expected;
+	vector<size_t> _data;
+};
+TEST_P(HIndexTestFixture, HIndexTests)
+{
+	ASSERT_EQ(this->_expected, this->HIndexTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	HIndexTests,
+	HIndexTestFixture,
+	::testing::Values(make_tuple(3, vector<size_t>{3, 0, 6, 1, 5}), make_tuple(1, vector<size_t>{0, 1}), make_tuple(1, vector<size_t>{1, 1}), make_tuple(1, vector<size_t>{123}), make_tuple(1, vector<size_t>{1, 1, 2}), make_tuple(2, vector<size_t>{1, 2, 2}), make_tuple(2, vector<size_t>{3, 2, 2}), make_tuple(2, vector<size_t>{3, 3, 2})));
