@@ -758,93 +758,109 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{10l, 16l, 8l, -1l}, vector<vector<size_t>>{{1, 2, 10}, {1, 3, 6}, {2, 4, 8}}, 5, 2),
 					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{24l, 3l, 15l}, vector<vector<size_t>>{{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}}, 4, 1),
 					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{20, 25, 25, 68, 86, 39, 22, 70, 36, 53, 91, 35, 88, 27, 30, 43, 54, 74, 41}, vector<vector<size_t>>{{1, 7, 45}, {2, 14, 15}, {3, 7, 29}, {4, 1, 48}, {5, 1, 66}, {6, 7, 17}, {7, 14, 15}, {8, 14, 43}, {9, 1, 27}, {10, 1, 33}, {11, 14, 64}, {12, 14, 27}, {13, 7, 66}, {14, 7, 54}, {15, 14, 56}, {16, 7, 21}, {17, 1, 20}, {18, 1, 34}, {19, 7, 52}, {20, 14, 14}, {9, 14, 9}, {15, 1, 39}, {12, 1, 24}, {9, 1, 16}, {1, 2, 33}, {18, 1, 46}, {9, 1, 28}, {15, 14, 3}, {12, 1, 27}, {1, 2, 5}, {15, 1, 34}, {1, 2, 28}, {9, 7, 16}, {3, 7, 23}, {9, 7, 21}, {9, 14, 19}, {3, 1, 20}, {3, 1, 5}, {12, 14, 19}, {3, 14, 2}, {12, 1, 46}, {3, 14, 5}, {9, 14, 44}, {6, 14, 26}, {9, 14, 16}, {9, 14, 34}, {6, 7, 42}, {3, 14, 27}, {1, 7, 9}, {1, 7, 41}, {15, 14, 19}, {12, 7, 13}, {3, 7, 10}, {1, 7, 2}}, 20, 17)));
-
-TEST(GraphTests, MinSubGraphsDifferenceTest)
+class MinSubGraphsDifferenceTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, vector<vector<size_t>>>>
 {
-	vector<size_t> data = {10, 5, 11};
-	Graph<size_t, size_t> graph(data);
-	map<shared_ptr<Vertex<size_t, size_t>>, long> costs;
-	ASSERT_EQ(data.size(), graph.Count());
-	vector<vector<size_t>> edges = {{1, 2}, {1, 3}}; // Use tag. Not value
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_edges = get<2>(GetParam()); // Use tag. Not value
+	}
+	size_t MinSubGraphsDifferenceTest()
+	{
+		return MinSubGraphsDifference(_data, _edges);
+	}
+
+protected:
+	size_t _expected;
+	vector<size_t> _data;
+	vector<vector<size_t>> _edges;
+};
+TEST_P(MinSubGraphsDifferenceTestFixture, MinSubGraphsDifferenceTests)
+{
 	/*
 			10
 		11		5
 	Diff: 15 - 11 = 4
-	*/
-	ASSERT_EQ(4, MinSubGraphsDifference(data, edges));
-	data.clear();
-	data = {10, 5, 6, 20};
-	/*
+
 			10
 		 5		6
 	  20
 	Diff: 21 - 20 = 1
-	*/
-	edges = {{1, 2}, {1, 3}, {2, 4}}; //{ {10,5}, {10,6}, {5,20} };
-	ASSERT_EQ(1, MinSubGraphsDifference(data, edges));
-	/*
+
 			10
 		 5
 	  20
 	Diff: 20 - 15 = 5
 	*/
-	data.clear();
-	data = {10, 5, 20};
-	edges = {{1, 2}, {2, 3}};
-	ASSERT_EQ(5, MinSubGraphsDifference(data, edges));
-	cout << endl;
-	data.clear();
-	data = {100, 200, 100, 100, 500, 600};
-	edges = {{1, 2}, {2, 3}, {2, 4}, {4, 5}, {4, 6}};
-	ASSERT_EQ(400, MinSubGraphsDifference(data, edges));
-	data.clear();
-	data = {205, 573, 985, 242, 830, 514, 592, 263, 142, 915};
-	edges = {{2, 8}, {10, 5}, {1, 7}, {6, 9}, {4, 3}, {8, 10}, {5, 1}, {7, 6}, {9, 4}};
-	ASSERT_EQ(99, MinSubGraphsDifference(data, edges));
+	ASSERT_EQ(this->_expected, this->MinSubGraphsDifferenceTest());
 }
-TEST(GraphTests, PostmanProblemTest)
+INSTANTIATE_TEST_SUITE_P(
+	MinSubGraphsDifferenceTests,
+	MinSubGraphsDifferenceTestFixture,
+	::testing::Values(make_tuple(4, vector<size_t>{10, 5, 11}, vector<vector<size_t>>{{1, 2}, {1, 3}}),
+					  make_tuple(1, vector<size_t>{10, 5, 6, 20}, vector<vector<size_t>>{{1, 2}, {1, 3}, {2, 4}}),
+					  make_tuple(5, vector<size_t>{10, 5, 20}, vector<vector<size_t>>{{1, 2}, {2, 3}}),
+					  make_tuple(400, vector<size_t>{100, 200, 100, 100, 500, 600}, vector<vector<size_t>>{{1, 2}, {2, 3}, {2, 4}, {4, 5}, {4, 6}}),
+					  make_tuple(99, vector<size_t>{205, 573, 985, 242, 830, 514, 592, 263, 142, 915}, vector<vector<size_t>>{{2, 8}, {10, 5}, {1, 7}, {6, 9}, {4, 3}, {8, 10}, {5, 1}, {7, 6}, {9, 4}})));
+class PostmanProblemTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, vector<vector<size_t>>>>
 {
-	vector<size_t> data;
-	Graph<size_t, size_t> graph;
-	vector<vector<size_t>> edges;
-	map<shared_ptr<Vertex<size_t, size_t>>, long> costs;
-	data = {716, 365, 206, 641, 841, 585, 801, 645, 208, 924, 920, 286, 554, 832, 359, 836, 247, 959, 31, 322, 709, 860, 890, 195, 575, 905, 314, 41, 669, 549, 950, 736, 265, 507, 729, 457, 91, 529, 102, 650, 805, 373, 287, 710, 556, 645, 546, 154, 956, 928};
-	edges = {{14, 25}, {25, 13}, {13, 20}, {20, 24}, {43, 2}, {2, 48}, {48, 42}, {42, 5}, {27, 18}, {18, 30}, {30, 7}, {7, 36}, {37, 9}, {9, 23}, {23, 49}, {49, 15}, {31, 26}, {26, 29}, {29, 50}, {50, 21}, {41, 45}, {45, 10}, {10, 17}, {17, 34}, {28, 47}, {47, 44}, {44, 11}, {11, 16}, {3, 8}, {8, 39}, {39, 38}, {38, 22}, {19, 32}, {32, 12}, {12, 40}, {40, 46}, {1, 35}, {35, 4}, {4, 33}, {33, 6}, {25, 2}, {2, 27}, {7, 37}, {15, 50}, {21, 10}, {17, 28}, {16, 39}, {38, 19}, {40, 1}};
-	// size_t result = MinSubGraphsDifference(data, edges); Segmentation fault. Maybe due to recursion
-	// assert(result == 525); Fail but difficult to check due to the sheer number of data points.
-	vector<long> data1;
-	vector<vector<long>> edges1;
-	data1.clear();
-	data1 = {1, 3, 4};
-	edges1 = {{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}};
-	ASSERT_EQ(6, PostmanProblem(data1, edges1));
-	data1.clear();
-	data1 = {5, 11, 12, 15, 16};
-	edges1 = {{17, 4, 3}, {11, 12, 5}, {14, 2, 1}, {16, 14, 4}, {7, 8, 4}, {13, 5, 5}, {17, 15, 2}, {5, 3, 5}, {8, 6, 1}, {18, 10, 4}, {18, 1, 3}, {16, 1, 2}, {9, 2, 5}, {11, 6, 1}, {4, 9, 4}, {7, 20, 2}, {13, 19, 3}, {19, 12, 3}, {10, 20, 2}};
-	ASSERT_EQ(54, PostmanProblem(data1, edges1));
-}
-TEST(GraphTests, UnbeatenPathsTest)
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_edges = get<2>(GetParam());
+	}
+	size_t PostmanProblemTest()
+	{
+		return PostmanProblem(_data, _edges);
+	}
+
+protected:
+	size_t _expected;
+	vector<size_t> _data;
+	vector<vector<size_t>> _edges;
+};
+TEST_P(PostmanProblemTestFixture, PostmanProblemTests)
 {
-	vector<size_t> data;
-	vector<vector<size_t>> edges;
-	edges = {{1, 2}, {2, 3}, {1, 4}};
-	data = {3, 1, 2};
-	ASSERT_EQ(data, UnbeatenPaths(4, edges, 1));
-	edges.clear();
-	data.clear();
-	edges = {{1, 2}, {2, 3}};
-	data = {2, 2, 1};
-	ASSERT_EQ(data, UnbeatenPaths(4, edges, 2));
-	edges.clear();
-	data.clear();
-	edges = {{1, 3}, {1, 4}, {1, 5}, {2, 4}, {2, 5}, {3, 5}};
-	data = {1, 2, 3, 4};
-	ASSERT_EQ(data, UnbeatenPaths(5, edges, 1));
-	edges.clear();
-	data.clear();
+	ASSERT_EQ(this->_expected, this->PostmanProblemTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	PostmanProblemTests,
+	PostmanProblemTestFixture,
+	::testing::Values(make_tuple(6, vector<size_t>{1, 3, 4}, vector<vector<size_t>>{{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}}), make_tuple(54, vector<size_t>{5, 11, 12, 15, 16}, vector<vector<size_t>>{{17, 4, 3}, {11, 12, 5}, {14, 2, 1}, {16, 14, 4}, {7, 8, 4}, {13, 5, 5}, {17, 15, 2}, {5, 3, 5}, {8, 6, 1}, {18, 10, 4}, {18, 1, 3}, {16, 1, 2}, {9, 2, 5}, {11, 6, 1}, {4, 9, 4}, {7, 20, 2}, {13, 19, 3}, {19, 12, 3}, {10, 20, 2}})));
+class UnbeatenPathsTestFixture : public testing::TestWithParam<tuple<vector<size_t>, size_t, vector<vector<size_t>>, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+		_data = get<2>(GetParam());
+		_source = get<3>(GetParam());
+	}
+	vector<size_t> UnbeatenPathsTest()
+	{
+		return UnbeatenPaths(_n, _data, _source);
+	}
+
+protected:
+	vector<size_t> _expected;
+	vector<vector<size_t>> _data;
+	size_t _n, _source;
+};
+TEST_P(UnbeatenPathsTestFixture, UnbeatenPathsTests)
+{
+	ASSERT_EQ(this->_expected, this->UnbeatenPathsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	UnbeatenPathsTests,
+	UnbeatenPathsTestFixture,
+	::testing::Values(make_tuple(vector<size_t>{3, 1, 2}, 4, vector<vector<size_t>>{{1, 2}, {2, 3}, {1, 4}}, 1), make_tuple(vector<size_t>{2, 2, 1}, 4, vector<vector<size_t>>{{1, 2}, {2, 3}}, 2), make_tuple(vector<size_t>{1, 2, 3, 4}, 5, vector<vector<size_t>>{{1, 3}, {1, 4}, {1, 5}, {2, 4}, {2, 5}, {3, 5}}, 1)));
 template <typename T>
-class GraphFixture
+class AutoGeneratedVerticesGraphFixture
 {
 protected:
 	void SetUp(size_t expected, vector<vector<T>> edges, size_t nodes, T start)
@@ -872,12 +888,12 @@ protected:
 	vector<vector<T>> _edges;
 	Graph<T, T> _graph;
 };
-class UnsignedGraph : public GraphFixture<size_t>, public testing::TestWithParam<tuple<size_t, vector<vector<size_t>>, size_t, size_t>>
+class UnsignedGraphFixture : public AutoGeneratedVerticesGraphFixture<size_t>, public testing::TestWithParam<tuple<size_t, vector<vector<size_t>>, size_t, size_t>>
 {
 public:
 	void SetUp() override
 	{
-		GraphFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
+		AutoGeneratedVerticesGraphFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
 	}
 	size_t EvenForestTest()
 	{
@@ -888,23 +904,23 @@ public:
  * https://www.hackerrank.com/challenges/even-tree/problem
  * 100%
  */
-TEST_P(UnsignedGraph, EvenForestTests)
+TEST_P(UnsignedGraphFixture, EvenForestTests)
 {
 	// The root of the graph is Node 1
 	ASSERT_EQ(this->_expected, this->EvenForestTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	GraphTests,
-	UnsignedGraph,
+	EvenForestTests,
+	UnsignedGraphFixture,
 	::testing::Values(make_tuple<size_t, vector<vector<size_t>>, size_t, size_t>(1, vector<vector<size_t>>{{1, 2}, {1, 3}, {3, 4}}, 4, 1),
 					  make_tuple<size_t, vector<vector<size_t>>, size_t, size_t>(2, vector<vector<size_t>>{{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 1}, {7, 2}, {8, 6}, {9, 8}, {10, 8}}, 10, 1),
 					  make_tuple<size_t, vector<vector<size_t>>, size_t, size_t>(4, vector<vector<size_t>>{{2, 1}, {3, 1}, {4, 3}, {5, 2}, {6, 5}, {7, 1}, {8, 1}, {9, 2}, {10, 7}, {11, 10}, {12, 3}, {13, 7}, {14, 8}, {15, 12}, {16, 6}, {17, 6}, {18, 10}, {19, 1}, {20, 8}}, 20, 1)));
-class SignedGraph : public GraphFixture<long>, public testing::TestWithParam<tuple<size_t, vector<vector<long>>, size_t, long>>
+class SignedGraphFixture : public AutoGeneratedVerticesGraphFixture<long>, public testing::TestWithParam<tuple<size_t, vector<vector<long>>, size_t, long>>
 {
 public:
 	void SetUp() override
 	{
-		GraphFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
+		AutoGeneratedVerticesGraphFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
 	}
 	size_t PrimMinimumSpanningTreeTest()
 	{
@@ -919,13 +935,13 @@ public:
    Prim's algorithm is significantly faster in the limit when you've got a really dense graph with many more edges than vertices.
    100%
 */
-TEST_P(SignedGraph, PrimMinimumSpanningTreeTests)
+TEST_P(SignedGraphFixture, PrimMinimumSpanningTreeTests)
 {
 	ASSERT_EQ(this->_expected, this->PrimMinimumSpanningTreeTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	GraphTests,
-	SignedGraph,
+	PrimMinimumSpanningTreeTests,
+	SignedGraphFixture,
 	::testing::Values(make_tuple<size_t, vector<vector<long>>, size_t, long>(15, vector<vector<long>>{{1, 2, 3}, {1, 3, 4}, {4, 2, 6}, {5, 2, 2}, {2, 3, 5}, {3, 5, 7}}, 5, 1),
 					  make_tuple<size_t, vector<vector<long>>, size_t, long>(150, vector<vector<long>>{{1, 2, 20}, {1, 3, 50}, {1, 4, 70}, {1, 5, 90}, {2, 3, 30}, {3, 4, 40}, {4, 5, 60}}, 5, 2),
 					  make_tuple<size_t, vector<vector<long>>, size_t, long>(1106, vector<vector<long>>{{2, 1, 1000}, {3, 4, 299}, {2, 4, 200}, {2, 4, 100}, {3, 2, 300}, {3, 2, 6}}, 4, 2)));

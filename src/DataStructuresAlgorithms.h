@@ -327,7 +327,7 @@ size_t BeautifulQuadruples(long, long, long, long);
 long kruskals(int, vector<long> &, vector<long> &, vector<long> &);
 long getLowestPathCost(size_t g_nodes, vector<long> &, vector<long> &, vector<long> &);
 size_t MinSubGraphsDifference(vector<size_t> &, vector<vector<size_t>> &);
-long PostmanProblem(vector<long> &, vector<vector<long>> &);
+size_t PostmanProblem(vector<size_t> &, vector<vector<size_t>> &);
 string DecryptPassword(string const &);
 unsigned long long substrings(string const &);
 vector<string> bomberMan(size_t, vector<string> &);

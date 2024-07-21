@@ -4329,22 +4329,13 @@ long kruskals(int nodes, vector<long> &from, vector<long> &to, vector<long> &wei
 	return sum;
 }
 /* https://www.hackerrank.com/challenges/cut-the-tree/problem
- * Segmentation fault. Maybe due to recursion
+ * WIP. Segmentation fault. Maybe due to recursion
  */
 size_t MinSubGraphsDifference(vector<size_t> &vertices, vector<vector<size_t>> &edges)
 {
 	Graph<size_t, size_t> graph(vertices);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
-	{
-		shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(vertices[(*it)[0] - 1]);
-		shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex(vertices[(*it)[1] - 1]);
-		assert(v1);
-		assert(v2);
-		graph.AddUndirectedEdge(v1, v2, 0);
-	}
-	shared_ptr<Vertex<size_t, size_t>> v = graph.GetVertex(650);
-	if (v)
-		graph.Print(v);
+		graph.AddUndirectedEdge(vertices[(*it)[0] - 1], vertices[(*it)[1] - 1], 0);
 	size_t sum = parallel_reduce(
 		blocked_range<size_t>(0, vertices.size()), 0,
 		[&](tbb::blocked_range<size_t> const &r, size_t running_total)
@@ -4357,26 +4348,23 @@ size_t MinSubGraphsDifference(vector<size_t> &vertices, vector<vector<size_t>> &
 	size_t result = graph.MinSubGraphsDifference(vertices[0], sum);
 	return result;
 }
-// https://www.hackerrank.com/challenges/jeanies-route/problem
-// Times out for more than 100 nodes! ;)
-long PostmanProblem(vector<long> &k, vector<vector<long>> &roads)
+/* https://www.hackerrank.com/challenges/jeanies-route/problem
+ * WIP. Times out for more than 100 nodes! ;)
+ */
+size_t PostmanProblem(vector<size_t> &k, vector<vector<size_t>> &roads)
 {
-	Permutation<long> permutation;
-	Graph<long, long> graph;
-	for (size_t i = 0; i < roads.size(); i++)
-	{
-		shared_ptr<Vertex<long, long>> v1 = graph.AddVertex(roads[i][0]);
-		shared_ptr<Vertex<long, long>> v2 = graph.AddVertex(roads[i][1]);
-		graph.AddUndirectedEdge(v1, v2, roads[i][2]);
-	}
-	set<vector<long>> paths;
+	Permutation<size_t> permutation;
+	Graph<size_t, size_t> graph;
+	for (vector<vector<size_t>>::iterator it = roads.begin(); it != roads.end(); it++)
+		graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
+	set<vector<size_t>> paths;
 	paths = permutation.Permute(k);
 	multimap<long, string> costs;
 	ostringstream oss, oss1, oss2;
-	map<string, long> costCache;
-	for (set<vector<long>>::iterator it = paths.begin(); it != paths.end(); it++)
+	map<string, size_t> costCache;
+	for (set<vector<size_t>>::iterator it = paths.begin(); it != paths.end(); it++)
 	{
-		vector<long> path = *it;
+		vector<size_t> path = *it;
 		long totalCost = 0;
 		bool isValidPath = true;
 		for (size_t i = 0; i < path.size() - 1 && isValidPath; i++)
@@ -5401,7 +5389,7 @@ vector<string> fizzBuzz(size_t n)
 }
 /*
  * https://www.hackerrank.com/challenges/rust-murderer/problem
- * Time out and wrong answer. WIP.
+ * WIP. Time out and wrong answer.
  */
 vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
 {
@@ -5452,7 +5440,7 @@ vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sou
 }
 /*
  * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
- * Timeout! WIP
+ * WIP. Timeout!
  */
 vector<long> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t start)
 {
