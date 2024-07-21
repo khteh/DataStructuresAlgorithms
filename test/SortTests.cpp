@@ -30,7 +30,7 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, -8, -5, -7, 9, 5, 3, 2, 1}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, 9, 5, 3, 2, 1, -8, -5, -7}),
 					  make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, 2, 9, 5, 3, 2, 1, -8, -5, -7}), make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, -8, -5, -7, 2, 9, 5, 3, 2, 1})));
 
-class OrderArrayIntoNegativePositiveSeriesTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
+class AlternateSignSortNumbers1TestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
 {
 public:
 	void SetUp() override
@@ -38,9 +38,9 @@ public:
 		_expected = get<0>(GetParam());
 		_data = get<1>(GetParam());
 	}
-	vector<long> OrderArrayIntoNegativePositiveSeriesTest()
+	vector<long> AlternateSignSortNumbers1Test()
 	{
-		OrderArrayIntoNegativePositiveSeries(_data);
+		_sort.AlternateSignSortNumbers1(_data);
 		return _data;
 	}
 
@@ -48,13 +48,13 @@ protected:
 	vector<long> _expected, _data;
 	Sort<long> _sort;
 };
-TEST_P(OrderArrayIntoNegativePositiveSeriesTestFixture, OrderArrayIntoNegativePositiveSeriesTests)
+TEST_P(AlternateSignSortNumbers1TestFixture, AlternateSignSortNumbers1Tests)
 {
-	ASSERT_EQ(this->_expected, this->OrderArrayIntoNegativePositiveSeriesTest());
+	ASSERT_EQ(this->_expected, this->AlternateSignSortNumbers1Test());
 }
 INSTANTIATE_TEST_SUITE_P(
-	OrderArrayIntoNegativePositiveSeriesTests,
-	OrderArrayIntoNegativePositiveSeriesTestFixture,
+	AlternateSignSortNumbers1Tests,
+	AlternateSignSortNumbers1TestFixture,
 	::testing::Values(make_tuple(vector<long>{2, -1, 9, -3, 5, -7, -8, -5, -7}, vector<long>{2, -1, -3, -7, -8, 9, 5, -5, -7}), make_tuple(vector<long>{-1, 9, -3, 5, -7, 2, -8, -5, -7}, vector<long>{-1, -3, -7, -8, 9, 5, -5, -7, 2}),
 					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, -8, -5, -7}, vector<long>{2, -1, -3, -7, -8, 9, 5, -5, -7}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, 9, 5, 3, 2, 1, -1, -3, -7, -8, -5, -7}),
 					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, -8, -5, -7, 9, 5, 3, 2, 1}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, 9, 5, 3, 2, 1, -8, -5, -7}),

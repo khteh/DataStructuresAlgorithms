@@ -1077,38 +1077,6 @@ void Merge(vector<long> &dest, vector<long> &source)
 	while (j >= 0)
 		dest[k--] = source[j--];
 }
-// http://cpluspluslearning-petert.blogspot.co.uk/2014/10/data-structure-and-algorithm-order.html
-void OrderArrayIntoNegativePositiveSeries(vector<long> &arr)
-{
-	if (arr.empty() || arr.size() < 3)
-		return;
-	// if first value is negative, then find a positive value next
-	bool positiveValToFind = arr[0] < 0;
-	long nextValue;
-	for (size_t outOfOrderPos = 1, curIndex = 1; curIndex < arr.size(); curIndex++)
-	{
-		if ((positiveValToFind && arr[curIndex] > 0) || (!positiveValToFind && arr[curIndex] < 0))
-		{
-			if (outOfOrderPos == curIndex)
-			{
-				// Scenario 1: curIndex is increment by the for loop
-				positiveValToFind = !positiveValToFind;
-				outOfOrderPos++;
-			}
-			else
-			{
-				// Scenario 2: curIndex is increment by the for loop
-				nextValue = arr[curIndex];
-				memcpy(&arr[outOfOrderPos + 1], /* destination */
-					   &arr[outOfOrderPos],		/* source */
-					   (curIndex - outOfOrderPos) * sizeof(long));
-				arr[outOfOrderPos] = nextValue;
-				outOfOrderPos += 2;
-			}
-		}
-	}
-}
-
 /* https://en.wikipedia.org/wiki/Dutch_national_flag_problem
 * https://leetcode.com/problems/sort-colors/
 * 100%

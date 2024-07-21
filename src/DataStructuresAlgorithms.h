@@ -284,8 +284,6 @@ size_t ConnectedCellsInAGridLinkedList(vector<vector<long>> &);
 size_t ConnectedCellsInAGrid(vector<vector<long>> &);
 bool WordExistsInGrid(vector<vector<char>> &, string const &);
 bool WordExistsInGrid(vector<vector<char>> &, string const &, long, long, size_t);
-void OrderArrayIntoNegativePositiveSeries(vector<long> &);
-// End of Sort numbers into consecutive positive/negative numbers
 void EqualAverageDivide(vector<long> &, vector<long> &);
 bool GetSum(vector<long> &, size_t K, long sum, size_t index, vector<long> &);
 bool match(string const &, string const &);

@@ -9,6 +9,7 @@
 #include <limits>
 #include <ranges>
 #include <assert.h>
+#include <cstring>
 #include "Heap.h"
 using namespace std;
 namespace ranges = std::ranges;
@@ -33,6 +34,8 @@ public:
 	void BottomUpMergeSort(vector<T> &, vector<T> &);
 	void WiggleSort(vector<T> &);
 	void AlternateSignSortNumbers(vector<T> &)
+		requires arithmetic_type<T>;
+	void AlternateSignSortNumbers1(vector<T> &)
 		requires arithmetic_type<T>;
 	size_t SortSwapCount(vector<T> &);
 	bool CanFinishCourseTopologicalSort(size_t, vector<vector<T>> &, vector<T> &);
