@@ -201,9 +201,7 @@ bool CanShuffleWithoutRepeat(string &);
 long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t> &, vector<zerofactors_t> &, int);
 size_t CountDistinctSlices(vector<long> &);
 size_t CountTriangles(vector<long> &);
-// Greedy Algorithms
 long MinAbsSum(vector<long> &);
-long NumberSolitaire(vector<long> &);
 string decimal_to_binary(long);
 long binary_to_decimal(string const &);
 void decimal_to_binary(long, vector<bool> &, size_t);
