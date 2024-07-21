@@ -405,8 +405,7 @@ template <typename TTag, typename TItem>
 TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root, TItem sum)
 {
 	set<TItem> diffs;
-	shared_ptr<Vertex<TTag, TItem>> n = GetVertex(root);
-	vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = n->GetNeighbours();
+	vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = GetVertex(root)->GetNeighbours();
 	for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
 		(*it)->MinSubGraphsDifference(root, sum, diffs);
 	return diffs.empty() ? numeric_limits<size_t>::max() : *diffs.begin();
@@ -418,11 +417,9 @@ TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root, TItem sum)
 template <typename TTag, typename TItem>
 long Graph<TTag, TItem>::EvenForest(TTag root)
 {
-	shared_ptr<Vertex<TTag, TItem>> n = GetVertex(root);
-	assert(n);
 	ostringstream oss;
 	set<string> cuts;
-	vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = n->GetNeighbours();
+	vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = GetVertex(root)->GetNeighbours();
 	for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
 	{
 		size_t descendents = (*it)->EvenForestDescendentsCount(root, cuts);

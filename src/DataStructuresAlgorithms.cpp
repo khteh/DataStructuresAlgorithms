@@ -4329,8 +4329,21 @@ long kruskals(int nodes, vector<long> &from, vector<long> &to, vector<long> &wei
 	return sum;
 }
 /* https://www.hackerrank.com/challenges/cut-the-tree/problem
- * WIP. Segmentation fault. Maybe due to recursion
- */
+			10
+		11		5
+	Diff: 15 - 11 = 4
+
+			10
+		 5		6
+	  20
+	Diff: 21 - 20 = 1
+
+			10
+		 5
+	  20
+	Diff: 20 - 15 = 5
+* WIP.Segmentation fault.Maybe due to recursion
+*/
 size_t MinSubGraphsDifference(vector<size_t> &vertices, vector<vector<size_t>> &edges)
 {
 	Graph<size_t, size_t> graph(vertices);
