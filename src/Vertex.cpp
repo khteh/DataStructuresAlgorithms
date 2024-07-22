@@ -165,7 +165,6 @@ TItem Vertex<TTag, TItem>::MinSubGraphsDifference(TTag parent, TItem sum) const
 			TItem sum2 = sum - sum1;
 			TItem diff1 = it->first->MinSubGraphsDifference(GetTag(), sum);
 			TItem diff2 = abs((long)sum1 - (long)sum2);
-			// minDiff = min((TItem)min(it->first->MinSubGraphsDifference(GetTag(), sum), (TItem)abs((long)sum - (long)it->first->GetSubGraphSum())), minDiff);
 			minDiff = min(minDiff, min(diff1, diff2));
 		}
 	return minDiff;
