@@ -4342,7 +4342,7 @@ long kruskals(int nodes, vector<long> &from, vector<long> &to, vector<long> &wei
 		 5
 	  20
 	Diff: 20 - 15 = 5
-* WIP.Segmentation fault.Maybe due to recursion
+* WIP. Timeout for large number of nodes.
 */
 size_t MinSubGraphsDifference(vector<size_t> &vertices, vector<vector<size_t>> &edges)
 {
