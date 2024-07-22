@@ -4,24 +4,24 @@ TEST(GraphTests, BredthFirstSearchTest)
 {
 	vector<size_t> data(5);
 	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
-	Graph<size_t, size_t> graph(data);
+					 { return n++; }); // Item values
+	Graph<size_t, size_t> graph(data); // Tag values are indices
 	ASSERT_EQ(data.size(), graph.Count());
-	shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(1);
+	shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(0);
+	ASSERT_TRUE(graph.HasVertex(0));
 	ASSERT_TRUE(graph.HasVertex(1));
 	ASSERT_TRUE(graph.HasVertex(2));
 	ASSERT_TRUE(graph.HasVertex(3));
 	ASSERT_TRUE(graph.HasVertex(4));
-	ASSERT_TRUE(graph.HasVertex(5));
 
 	ASSERT_FALSE(v1->HasNeighbours());
-	shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex(2);
+	shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex(1);
 	ASSERT_FALSE(v2->HasNeighbours());
-	shared_ptr<Vertex<size_t, size_t>> v3 = graph.GetVertex(3);
+	shared_ptr<Vertex<size_t, size_t>> v3 = graph.GetVertex(2);
 	ASSERT_FALSE(v3->HasNeighbours());
-	shared_ptr<Vertex<size_t, size_t>> v4 = graph.GetVertex(4);
+	shared_ptr<Vertex<size_t, size_t>> v4 = graph.GetVertex(3);
 	ASSERT_FALSE(v4->HasNeighbours());
-	shared_ptr<Vertex<size_t, size_t>> v5 = graph.GetVertex(5);
+	shared_ptr<Vertex<size_t, size_t>> v5 = graph.GetVertex(4);
 	ASSERT_FALSE(v5->HasNeighbours());
 	ASSERT_EQ(0, v1->GetCost(v1));
 	ASSERT_EQ(0, v2->GetCost(v2));
@@ -157,24 +157,24 @@ TEST(GraphTests, DijkstraTest)
 	vector<size_t> data(5);
 	vector<long> ldata;
 	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
-	Graph<size_t, size_t> graph(data);
+					 { return n++; }); // Item values
+	Graph<size_t, size_t> graph(data); // Tag values are indices
 	ASSERT_EQ(data.size(), graph.Count());
-	shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(1);
+	shared_ptr<Vertex<size_t, size_t>> v1 = graph.GetVertex(0);
+	ASSERT_TRUE(graph.HasVertex(0));
 	ASSERT_TRUE(graph.HasVertex(1));
 	ASSERT_TRUE(graph.HasVertex(2));
 	ASSERT_TRUE(graph.HasVertex(3));
 	ASSERT_TRUE(graph.HasVertex(4));
-	ASSERT_TRUE(graph.HasVertex(5));
 
 	ASSERT_FALSE(v1->HasNeighbours());
-	shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex(2);
+	shared_ptr<Vertex<size_t, size_t>> v2 = graph.GetVertex(1);
 	ASSERT_FALSE(v2->HasNeighbours());
-	shared_ptr<Vertex<size_t, size_t>> v3 = graph.GetVertex(3);
+	shared_ptr<Vertex<size_t, size_t>> v3 = graph.GetVertex(2);
 	ASSERT_FALSE(v3->HasNeighbours());
-	shared_ptr<Vertex<size_t, size_t>> v4 = graph.GetVertex(4);
+	shared_ptr<Vertex<size_t, size_t>> v4 = graph.GetVertex(3);
 	ASSERT_FALSE(v4->HasNeighbours());
-	shared_ptr<Vertex<size_t, size_t>> v5 = graph.GetVertex(5);
+	shared_ptr<Vertex<size_t, size_t>> v5 = graph.GetVertex(4);
 	ASSERT_FALSE(v5->HasNeighbours());
 	ASSERT_EQ(0, v1->GetCost(v1));
 	ASSERT_EQ(0, v2->GetCost(v2));
@@ -210,37 +210,37 @@ TEST(GraphTests, DijkstraTest)
 	cout << "Vertex\tDistance from Source (1): " << endl;
 	for (map<shared_ptr<Vertex<size_t, size_t>>, long>::iterator it = costs.begin(); it != costs.end(); it++)
 		cout << it->first->GetItem() << "\t" << it->second << endl;
-	ASSERT_EQ(7, graph.Dijkstra(1, 5)); // 1->2->3->5
-	ASSERT_EQ(7, graph.Dijkstra(5, 1)); // 1->2->3->5
-	graph.Remove(3);
-	ASSERT_FALSE(graph.HasVertex(3));
+	ASSERT_EQ(7, graph.Dijkstra(0, 4)); // 0->1->2->4 (Using tags)
+	ASSERT_EQ(7, graph.Dijkstra(4, 0)); // 0->1->2->4 (Using tags)
+	graph.Remove(2);
+	ASSERT_FALSE(graph.HasVertex(2));
 	ASSERT_FALSE(v2->HasNeighbour(v3));
 	ASSERT_FALSE(v5->HasNeighbour(v3));
 	costs.clear();
 	graph.Clear();
 	ASSERT_EQ(0, graph.Count());
-	v1 = graph.AddVertex(1);
-	v2 = graph.AddVertex(2);
-	v3 = graph.AddVertex(3);
-	v4 = graph.AddVertex(4);
-	v5 = graph.AddVertex(5);
+	v1 = graph.AddVertex(0);
+	v2 = graph.AddVertex(1);
+	v3 = graph.AddVertex(2);
+	v4 = graph.AddVertex(3);
+	v5 = graph.AddVertex(4);
 	ASSERT_EQ(5, graph.Count());
 	graph.AddUndirectedEdge(v1, v2, 1);
 	graph.AddUndirectedEdge(v2, v3, 2);
 	graph.AddUndirectedEdge(v3, v5, 3);
 	graph.AddUndirectedEdge(v2, v4, 2);
-	ASSERT_EQ(6, graph.Dijkstra(1, 5)); // 1 + 2 + 3
-	ASSERT_EQ(6, graph.Dijkstra(5, 1)); // 1 + 2 + 3
-	ASSERT_EQ(1, graph.Dijkstra(1, 2));
-	ASSERT_EQ(1, graph.Dijkstra(2, 1));
-	ASSERT_EQ(2, graph.Dijkstra(2, 3));
-	ASSERT_EQ(2, graph.Dijkstra(3, 2));
-	ASSERT_EQ(3, graph.Dijkstra(1, 3)); // 1 + 2
-	ASSERT_EQ(3, graph.Dijkstra(3, 1)); // 1 + 2
-	ASSERT_EQ(3, graph.Dijkstra(1, 4)); // 1 + 2
-	ASSERT_EQ(3, graph.Dijkstra(4, 1)); // 1 + 2
-	ASSERT_EQ(4, graph.Dijkstra(3, 4)); // 2 + 2
-	ASSERT_EQ(4, graph.Dijkstra(4, 3)); // 2 + 2
+	ASSERT_EQ(6, graph.Dijkstra(0, 4)); // 1 + 2 + 3
+	ASSERT_EQ(6, graph.Dijkstra(4, 0)); // 1 + 2 + 3
+	ASSERT_EQ(1, graph.Dijkstra(0, 1));
+	ASSERT_EQ(1, graph.Dijkstra(1, 0));
+	ASSERT_EQ(2, graph.Dijkstra(1, 2));
+	ASSERT_EQ(2, graph.Dijkstra(2, 1));
+	ASSERT_EQ(3, graph.Dijkstra(0, 2)); // 1 + 2
+	ASSERT_EQ(3, graph.Dijkstra(2, 0)); // 1 + 2
+	ASSERT_EQ(3, graph.Dijkstra(0, 3)); // 1 + 2
+	ASSERT_EQ(3, graph.Dijkstra(3, 0)); // 1 + 2
+	ASSERT_EQ(4, graph.Dijkstra(2, 3)); // 2 + 2
+	ASSERT_EQ(4, graph.Dijkstra(3, 2)); // 2 + 2
 }
 /*
  * https://www.hackerrank.com/challenges/johnland/problem
@@ -270,15 +270,11 @@ public:
 		RoadsInHackerlandFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 		vector<size_t> data(_nodes);
 		ranges::generate(data, [n = 1]() mutable
-						 { return n++; });
-		_graph.AddVertices(data);
+						 { return n++; }); // Item values
+		_graph.AddVertices(data);		   // Tag values are indices
 		assert(_graph.Count() == _nodes);
 		for (vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
-		{
-			shared_ptr<Vertex<size_t, size_t>> v1 = _graph.GetVertex((*it)[0]);
-			shared_ptr<Vertex<size_t, size_t>> v2 = _graph.GetVertex((*it)[1]);
-			_graph.AddUndirectedEdge(v1, v2, 1 << (*it)[2]);
-		}
+			_graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, 1 << (*it)[2]);
 	}
 	string RoadsInHackerlandTest()
 	{
@@ -304,7 +300,7 @@ public:
 						computed.emplace(oss1.str());
 						computed.emplace(oss2.str());
 						m.unlock();
-						long cost = _graph.Dijkstra(i, j);
+						long cost = _graph.Dijkstra(i - 1, j - 1);
 						m.lock();
 						if (cost >= 0)
 							distance += cost;
@@ -636,7 +632,6 @@ protected:
 	Graph<T, T> _graph;
 	Dijkstra<T> _dijkstra;
 };
-
 class ShortestPathsTestFixture : public ShortestPathsTestFixtureBase<size_t>, public testing::TestWithParam<tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>>
 {
 public:
@@ -645,26 +640,19 @@ public:
 		ShortestPathsTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
 		vector<size_t> data(_nodes);
 		ranges::generate(data, [n = 1]() mutable
-						 { return n++; });
-		_graph.AddVertices(data);
+						 { return n++; }); // Item values
+		_graph.AddVertices(data);		   // Tags are indices
 		ASSERT_EQ(_nodes, _graph.Count());
 		for (typename vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
-		{
-			shared_ptr<Vertex<size_t, size_t>> v1 = _graph.GetVertex((*it)[0]);
-			shared_ptr<Vertex<size_t, size_t>> v2 = _graph.GetVertex((*it)[1]);
-			ASSERT_TRUE(v1);
-			ASSERT_TRUE(v2);
-			_graph.AddUndirectedEdge(v1, v2, (*it).size() == 3 ? (*it)[2] : 0);
-			_graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it).size() == 3 ? (*it)[2] : 0);
-		}
+			_graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, (*it).size() == 3 ? (*it)[2] : 0);
 	}
 	vector<long> ShortestPathsTest()
 	{
 		vector<long> result;
-		for (size_t i = 1; i <= _nodes; i++)
+		for (size_t i = 0; i < _nodes; i++)
 		{
-			if (i != _start)
-				result.push_back(_graph.Dijkstra(_start, i));
+			if (i != _start - 1)
+				result.push_back(_graph.Dijkstra(_start - 1, i)); // Use Tags, which are indices
 		}
 		return result;
 	}
@@ -680,7 +668,6 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{10l, 16l, 8l, -1l}, vector<vector<size_t>>{{1, 2, 10}, {1, 3, 6}, {2, 4, 8}}, 5, 2),
 					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{24l, 3l, 15l}, vector<vector<size_t>>{{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}}, 4, 1),
 					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{20, 25, 25, 68, 86, 39, 22, 70, 36, 53, 91, 35, 88, 27, 30, 43, 54, 74, 41}, vector<vector<size_t>>{{1, 7, 45}, {2, 14, 15}, {3, 7, 29}, {4, 1, 48}, {5, 1, 66}, {6, 7, 17}, {7, 14, 15}, {8, 14, 43}, {9, 1, 27}, {10, 1, 33}, {11, 14, 64}, {12, 14, 27}, {13, 7, 66}, {14, 7, 54}, {15, 14, 56}, {16, 7, 21}, {17, 1, 20}, {18, 1, 34}, {19, 7, 52}, {20, 14, 14}, {9, 14, 9}, {15, 1, 39}, {12, 1, 24}, {9, 1, 16}, {1, 2, 33}, {18, 1, 46}, {9, 1, 28}, {15, 14, 3}, {12, 1, 27}, {1, 2, 5}, {15, 1, 34}, {1, 2, 28}, {9, 7, 16}, {3, 7, 23}, {9, 7, 21}, {9, 14, 19}, {3, 1, 20}, {3, 1, 5}, {12, 14, 19}, {3, 14, 2}, {12, 1, 46}, {3, 14, 5}, {9, 14, 44}, {6, 14, 26}, {9, 14, 16}, {9, 14, 34}, {6, 7, 42}, {3, 14, 27}, {1, 7, 9}, {1, 7, 41}, {15, 14, 19}, {12, 7, 13}, {3, 7, 10}, {1, 7, 2}}, 20, 17)));
-
 class ShortestPaths1TestFixture : public ShortestPathsTestFixtureBase<size_t>, public testing::TestWithParam<tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>>
 {
 public:
@@ -793,6 +780,11 @@ TEST_P(MinSubGraphsDifferenceTestFixture, MinSubGraphsDifferenceTests)
 		 5
 	  20
 	Diff: 20 - 15 = 5
+
+		100(0)
+			200(1)
+		100(2)    100(4)
+				500(3) 600(5)
 	*/
 	ASSERT_EQ(this->_expected, this->MinSubGraphsDifferenceTest());
 }
@@ -802,9 +794,9 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(4, vector<size_t>{10, 5, 11}, vector<vector<size_t>>{{1, 2}, {1, 3}}),
 					  make_tuple(1, vector<size_t>{10, 5, 6, 20}, vector<vector<size_t>>{{1, 2}, {1, 3}, {2, 4}}),
 					  make_tuple(5, vector<size_t>{10, 5, 20}, vector<vector<size_t>>{{1, 2}, {2, 3}}),
-					  make_tuple(400, vector<size_t>{100, 200, 100, 100, 500, 600}, vector<vector<size_t>>{{1, 2}, {2, 3}, {2, 4}, {4, 5}, {4, 6}}),
-					  make_tuple(99, vector<size_t>{205, 573, 985, 242, 830, 514, 592, 263, 142, 915}, vector<vector<size_t>>{{2, 8}, {10, 5}, {1, 7}, {6, 9}, {4, 3}, {8, 10}, {5, 1}, {7, 6}, {9, 4}})
-					  /*make_tuple(525, vector<size_t>{716, 365, 206, 641, 841, 585, 801, 645, 208, 924, 920, 286, 554, 832, 359, 836, 247, 959, 31, 322, 709, 860, 890, 195, 575, 905, 314, 41, 669, 549, 950, 736, 265, 507, 729, 457, 91, 529, 102, 650, 805, 373, 287, 710, 556, 645, 546, 154, 956, 928}, vector<vector<size_t>>{{14, 25}, {25, 13}, {13, 20}, {20, 24}, {43, 2}, {2, 48}, {48, 42}, {42, 5}, {27, 18}, {18, 30}, {30, 7}, {7, 36}, {37, 9}, {9, 23}, {23, 49}, {49, 15}, {31, 26}, {26, 29}, {29, 50}, {50, 21}, {41, 45}, {45, 10}, {10, 17}, {17, 34}, {28, 47}, {47, 44}, {44, 11}, {11, 16}, {3, 8}, {8, 39}, {39, 38}, {38, 22}, {19, 32}, {32, 12}, {12, 40}, {40, 46}, {1, 35}, {35, 4}, {4, 33}, {33, 6}, {25, 2}, {2, 27}, {7, 37}, {15, 50}, {21, 10}, {17, 28}, {16, 39}, {38, 19}, {40, 1}})*/));
+					  make_tuple(400, vector<size_t>{100, 200, 100, 500, 100, 600}, vector<vector<size_t>>{{1, 2}, {2, 3}, {2, 5}, {4, 5}, {5, 6}}),
+					  make_tuple(99, vector<size_t>{205, 573, 985, 242, 830, 514, 592, 263, 142, 915}, vector<vector<size_t>>{{2, 8}, {10, 5}, {1, 7}, {6, 9}, {4, 3}, {8, 10}, {5, 1}, {7, 6}, {9, 4}}),
+					  make_tuple(525, vector<size_t>{716, 365, 206, 641, 841, 585, 801, 645, 208, 924, 920, 286, 554, 832, 359, 836, 247, 959, 31, 322, 709, 860, 890, 195, 575, 905, 314, 41, 669, 549, 950, 736, 265, 507, 729, 457, 91, 529, 102, 650, 805, 373, 287, 710, 556, 645, 546, 154, 956, 928}, vector<vector<size_t>>{{14, 25}, {25, 13}, {13, 20}, {20, 24}, {43, 2}, {2, 48}, {48, 42}, {42, 5}, {27, 18}, {18, 30}, {30, 7}, {7, 36}, {37, 9}, {9, 23}, {23, 49}, {49, 15}, {31, 26}, {26, 29}, {29, 50}, {50, 21}, {41, 45}, {45, 10}, {10, 17}, {17, 34}, {28, 47}, {47, 44}, {44, 11}, {11, 16}, {3, 8}, {8, 39}, {39, 38}, {38, 22}, {19, 32}, {32, 12}, {12, 40}, {40, 46}, {1, 35}, {35, 4}, {4, 33}, {33, 6}, {25, 2}, {2, 27}, {7, 37}, {15, 50}, {21, 10}, {17, 28}, {16, 39}, {38, 19}, {40, 1}})));
 class PostmanProblemTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, vector<vector<size_t>>>>
 {
 public:
@@ -872,17 +864,11 @@ protected:
 		_edges = edges;
 		vector<T> data(_nodes);
 		ranges::generate(data, [n = 1]() mutable
-						 { return n++; });
-		_graph.AddVertices(data);
+						 { return n++; }); // Item values
+		_graph.AddVertices(data);		   // Tags are indices
 		ASSERT_EQ(_nodes, _graph.Count());
 		for (typename vector<vector<T>>::iterator it = _edges.begin(); it != _edges.end(); it++)
-		{
-			shared_ptr<Vertex<T, T>> v1 = _graph.GetVertex((*it)[0]);
-			shared_ptr<Vertex<T, T>> v2 = _graph.GetVertex((*it)[1]);
-			ASSERT_TRUE(v1);
-			ASSERT_TRUE(v2);
-			_graph.AddUndirectedEdge(v1, v2, (*it).size() == 3 ? (*it)[2] : 0);
-		}
+			_graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, (*it).size() == 3 ? (*it)[2] : 0);
 	}
 	size_t _nodes, _expected;
 	T _start;
@@ -898,7 +884,7 @@ public:
 	}
 	size_t EvenForestTest()
 	{
-		return _graph.EvenForest(_start);
+		return _graph.EvenForest(_start - 1);
 	}
 };
 /*

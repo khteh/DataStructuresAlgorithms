@@ -18,8 +18,9 @@ Graph<TTag, TItem>::Graph(vector<TItem> &data)
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddVertices(vector<TItem> &data)
 {
-	for (typename vector<TItem>::iterator it = data.begin(); it != data.end(); it++)
-		AddVertex(*it, *it); // tag = item
+	// for (typename vector<TItem>::iterator it = data.begin(); it != data.end(); it++)
+	for (size_t i = 0; i < data.size(); i++)
+		AddVertex(i, data[i]); // Use index as Tag in case there are duplicate values in data
 }
 template <typename TTag, typename TItem>
 Graph<TTag, TItem>::~Graph()
@@ -85,15 +86,15 @@ template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddUndirectedEdge(TTag from, TTag to, long cost)
 {
 	if (_vertices.find(from) == _vertices.end())
-		_vertices.emplace(from, make_shared<Vertex<TTag, TItem>>(from, from));
+		_vertices.emplace(from, make_shared<Vertex<TTag, TItem>>(from, from)); // Tag == Item
 	if (_vertices.find(to) == _vertices.end())
-		_vertices.emplace(to, make_shared<Vertex<TTag, TItem>>(to, to));
+		_vertices.emplace(to, make_shared<Vertex<TTag, TItem>>(to, to)); // Tag == Item
 	_vertices[from]->AddNeighbour(_vertices[to], cost);
 	_vertices[to]->AddNeighbour(_vertices[from], cost);
 }
 
 template <typename TTag, typename TItem>
-bool Graph<TTag, TItem>::HasVertex(TTag tag)
+bool Graph<TTag, TItem>::HasVertex(TTag tag) const
 {
 	return _vertices.find(tag) != _vertices.end();
 }
@@ -122,7 +123,7 @@ void Graph<TTag, TItem>::Print(TTag tag)
 		Print(GetVertex(tag));
 }
 template <typename TTag, typename TItem>
-void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex)
+void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex) const
 {
 	ostringstream oss;
 	string uni = "-->";
@@ -401,15 +402,6 @@ long Graph<TTag, TItem>::GetLowestPathCost(size_t nodecount, vector<TTag> &from,
 	assert(Count() == nodecount);
 	return GetPathsCosts(_vertices[1], _vertices[nodecount]);
 }
-template <typename TTag, typename TItem>
-TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root, TItem sum)
-{
-	set<TItem> diffs;
-	vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = GetVertex(root)->GetNeighbours();
-	for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
-		(*it)->MinSubGraphsDifference(root, sum, diffs);
-	return diffs.empty() ? numeric_limits<size_t>::max() : *diffs.begin();
-}
 /*
  * https://www.hackerrank.com/challenges/even-tree/problem
  * 100%
@@ -431,4 +423,32 @@ long Graph<TTag, TItem>::EvenForest(TTag root)
 		}
 	}
 	return cuts.size();
+}
+template <typename TTag, typename TItem>
+TItem Graph<TTag, TItem>::GetSubGraphSum(TTag root)
+{
+	return GetVertex(root)->GetSubGraphSum(root);
+}
+/* https://www.hackerrank.com/challenges/cut-the-tree/problem
+			10
+		11		5
+	Diff: 15 - 11 = 4
+
+			10
+		 5		6
+	  20
+	Diff: 21 - 20 = 1
+
+			10
+		 5
+	  20
+	Diff: 20 - 15 = 5
+* WIP.Segmentation fault.Maybe due to recursion
+*/
+template <typename TTag, typename TItem>
+TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root)
+{
+	Print(root);
+	TItem sum = GetSubGraphSum(root);
+	return GetVertex(root)->MinSubGraphsDifference(root, sum);
 }

@@ -19,8 +19,9 @@ public:
 	virtual ~Vertex();
 	TTag GetTag() const;
 	TItem GetItem() const;
+	TItem GetSubGraphSum(TTag) const;
 	long GetCost(shared_ptr<Vertex<TTag, TItem>>);
-	TItem MinSubGraphsDifference(TTag, TItem, set<TItem> &) const;
+	TItem MinSubGraphsDifference(TTag, TItem) const;
 	long GetTotalCost() const;
 	void SetTotalCost(long);
 	void ResetTotalCost();

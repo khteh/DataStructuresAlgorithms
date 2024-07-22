@@ -4348,18 +4348,8 @@ size_t MinSubGraphsDifference(vector<size_t> &vertices, vector<vector<size_t>> &
 {
 	Graph<size_t, size_t> graph(vertices);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
-		graph.AddUndirectedEdge(vertices[(*it)[0] - 1], vertices[(*it)[1] - 1], 0);
-	size_t sum = parallel_reduce(
-		blocked_range<size_t>(0, vertices.size()), 0,
-		[&](tbb::blocked_range<size_t> const &r, size_t running_total)
-		{
-			for (int i = r.begin(); i < r.end(); ++i)
-				running_total += vertices[i];
-			return running_total;
-		},
-		std::plus<size_t>());
-	size_t result = graph.MinSubGraphsDifference(vertices[0], sum);
-	return result;
+		graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, 0);
+	return graph.MinSubGraphsDifference(0);
 }
 /* https://www.hackerrank.com/challenges/jeanies-route/problem
  * WIP. Times out for more than 100 nodes! ;)
@@ -5409,38 +5399,38 @@ vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sou
 	map<size_t, set<size_t>> edges;
 	for (vector<vector<size_t>>::iterator it = roads.begin(); it != roads.end(); it++)
 	{
-		if (edges.find((*it)[0]) == edges.end())
-			edges.emplace((*it)[0], set<size_t>{(*it)[1]});
+		if (edges.find((*it)[0] - 1) == edges.end())
+			edges.emplace((*it)[0] - 1, set<size_t>{(*it)[1] - 1});
 		else
-			edges[(*it)[0]].insert((*it)[1]);
-		if (edges.find((*it)[1]) == edges.end())
-			edges.emplace((*it)[1], set<size_t>{(*it)[0]});
+			edges[(*it)[0] - 1].insert((*it)[1] - 1);
+		if (edges.find((*it)[1] - 1) == edges.end())
+			edges.emplace((*it)[1] - 1, set<size_t>{(*it)[0] - 1});
 		else
-			edges[(*it)[1]].insert((*it)[0]);
+			edges[(*it)[1] - 1].insert((*it)[0] - 1);
 	}
 	vector<size_t> data(n);
 	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
-	Graph<size_t, size_t> graph(data);
+					 { return n++; }); // Item values
+	Graph<size_t, size_t> graph(data); // Tag values are indices
 	assert(graph.Count() == n);
 	for (map<size_t, set<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 	{
 		shared_ptr<Vertex<size_t, size_t>> v = graph.GetVertex(it->first);
 		assert(v);
-		for (size_t i = 1; i <= n; i++)
+		for (size_t i = 0; i < n; i++)
 		{
 			if (i != it->first && it->second.find(i) == it->second.end())
 				graph.AddUndirectedEdge(v, graph.GetVertex(i), 1);
 		}
 	}
 	map<shared_ptr<Vertex<size_t, size_t>>, long> costs;
-	graph.Dijkstra(source, costs);
+	graph.Dijkstra(source - 1, costs);
 	map<size_t, size_t> sortedCosts;
 	cout << "Vertex\tDistance from Source " << source << ": " << endl;
 	for (map<shared_ptr<Vertex<size_t, size_t>>, long>::iterator it = costs.begin(); it != costs.end(); it++)
 	{
 		cout << it->first->GetItem() << "\t" << it->second << endl;
-		if (it->first->GetTag() != source)
+		if (it->first->GetTag() != source - 1)
 			sortedCosts.emplace(it->first->GetTag(), it->second);
 	}
 	vector<size_t> result;
@@ -5459,16 +5449,16 @@ vector<long> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t start
 {
 	vector<size_t> data(n);
 	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
+					 { return n++; }); // Item values
 	vector<long> result;
-	Graph<size_t, size_t> graph(data);
+	Graph<size_t, size_t> graph(data); // Tag values are indices
 	assert(graph.Count() == n);
 	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
-		graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
-	for (size_t i = 1; i <= n; i++)
+		graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, (*it)[2]);
+	for (size_t i = 0; i < n; i++)
 	{
-		if (i != start)
-			result.push_back(graph.Dijkstra(start, i));
+		if (i != start - 1)
+			result.push_back(graph.Dijkstra(start - 1, i));
 	}
 	return result;
 }

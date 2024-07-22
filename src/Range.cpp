@@ -553,7 +553,6 @@ long Range::NumberSolitaire(vector<long> const &data)
 			dp[i] = max(dp[i], data[i] + dp[i - j]);
 	return dp[data.size() - 1];
 }
-
 /*
 	https://www.hackerrank.com/challenges/sherlock-and-cost/problem
 	100%

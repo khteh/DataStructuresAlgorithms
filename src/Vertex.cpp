@@ -104,7 +104,6 @@ size_t Vertex<TTag, TItem>::EvenForestDescendentsCount(TTag parent, set<string> 
 	ostringstream oss;
 	size_t count = 1; // Include itself
 	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = _neighbours.begin(); it != _neighbours.end(); it++)
-	{
 		if (it->first->GetTag() != parent)
 		{
 			size_t descendents = it->first->EvenForestDescendentsCount(GetTag(), cuts);
@@ -117,7 +116,6 @@ size_t Vertex<TTag, TItem>::EvenForestDescendentsCount(TTag parent, set<string> 
 			else
 				count += descendents;
 		}
-	}
 	return count;
 }
 template <typename TTag, typename TItem>
@@ -128,17 +126,49 @@ long Vertex<TTag, TItem>::GetCost(shared_ptr<Vertex<TTag, TItem>> v)
 	return _neighbours.find(v) != _neighbours.end() ? _neighbours[v] : -1;
 }
 template <typename TTag, typename TItem>
-TItem Vertex<TTag, TItem>::MinSubGraphsDifference(TTag parent, TItem sum, set<TItem> &diffs) const
+TItem Vertex<TTag, TItem>::GetSubGraphSum(TTag parent) const
 {
-	TItem localSum = _item;
+	TItem sum = _item;
+	if (_neighbours.empty())
+		return sum;
 	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = _neighbours.begin(); it != _neighbours.end(); it++)
-	{
-		if (it->first->GetTag() != parent)
-			localSum += it->first->MinSubGraphsDifference(GetTag(), sum, diffs);
-	}
-	TItem balance = sum - localSum;
-	diffs.emplace(abs((long)balance - (long)localSum));
-	return localSum;
+		if (it->first->GetTag() != parent) // Undirected graph
+			sum += it->first->GetSubGraphSum(GetTag());
+	return sum;
+}
+/* https://www.hackerrank.com/challenges/cut-the-tree/problem
+			10
+		11		5
+	Diff: 15 - 11 = 4
+
+			10
+		 5		6
+	  20
+	Diff: 21 - 20 = 1
+
+			10
+		 5
+	  20
+	Diff: 20 - 15 = 5
+* WIP.Segmentation fault.Maybe due to recursion
+*/
+template <typename TTag, typename TItem>
+TItem Vertex<TTag, TItem>::MinSubGraphsDifference(TTag parent, TItem sum) const
+{
+	TItem minDiff = numeric_limits<TItem>::max();
+	if (_neighbours.empty())
+		return sum;
+	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = _neighbours.begin(); it != _neighbours.end(); it++)
+		if (it->first->GetTag() != parent) // Undirected graph
+		{
+			TItem sum1 = it->first->GetSubGraphSum(GetTag());
+			TItem sum2 = sum - sum1;
+			TItem diff1 = it->first->MinSubGraphsDifference(GetTag(), sum);
+			TItem diff2 = abs((long)sum1 - (long)sum2);
+			// minDiff = min((TItem)min(it->first->MinSubGraphsDifference(GetTag(), sum), (TItem)abs((long)sum - (long)it->first->GetSubGraphSum())), minDiff);
+			minDiff = min(minDiff, min(diff1, diff2));
+		}
+	return minDiff;
 }
 template <typename TTag, typename TItem>
 long Vertex<TTag, TItem>::GetTotalCost() const { return _cost; }
