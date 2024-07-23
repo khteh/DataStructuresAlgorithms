@@ -443,12 +443,16 @@ TItem Graph<TTag, TItem>::GetSubGraphSum(TTag root)
 		 5
 	  20
 	Diff: 20 - 15 = 5
-* WIP.Segmentation fault.Maybe due to recursion
+
+		100(0)
+			200(1)
+		100(2)    100(4)
+				500(3) 600(5)
+* 100%
 */
 template <typename TTag, typename TItem>
 TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root)
 {
-	Print(root);
 	TItem sum = GetSubGraphSum(root);
 	return GetVertex(root)->MinSubGraphsDifference(root, sum);
 }

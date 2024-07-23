@@ -756,36 +756,20 @@ public:
 	}
 	size_t MinSubGraphsDifferenceTest()
 	{
-		return MinSubGraphsDifference(_data, _edges);
+		_graph.AddVertices(_data);
+		for (vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
+			_graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, 0);
+		return _graph.MinSubGraphsDifference(0);
 	}
 
 protected:
+	Graph<size_t, size_t> _graph;
 	size_t _expected;
 	vector<size_t> _data;
 	vector<vector<size_t>> _edges;
 };
 TEST_P(MinSubGraphsDifferenceTestFixture, MinSubGraphsDifferenceTests)
 {
-	/*
-			10
-		11		5
-	Diff: 15 - 11 = 4
-
-			10
-		 5		6
-	  20
-	Diff: 21 - 20 = 1
-
-			10
-		 5
-	  20
-	Diff: 20 - 15 = 5
-
-		100(0)
-			200(1)
-		100(2)    100(4)
-				500(3) 600(5)
-	*/
 	ASSERT_EQ(this->_expected, this->MinSubGraphsDifferenceTest());
 }
 INSTANTIATE_TEST_SUITE_P(

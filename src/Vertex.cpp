@@ -5,22 +5,22 @@ template class Vertex<long, long>;
 template class Vertex<size_t, size_t>;
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex()
-	: _tag(TTag()), _item(TItem()), _cost(numeric_limits<long>::max())
+	: _tag(TTag()), _item(TItem()), _cost(numeric_limits<long>::max()), _sum(TItem())
 {
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag)
-	: _tag(tag), _item(TItem()), _cost(numeric_limits<long>::max())
+	: _tag(tag), _item(TItem()), _cost(numeric_limits<long>::max()), _sum(TItem())
 {
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag, TItem item)
-	: _tag(tag), _item(item), _cost(numeric_limits<long>::max())
+	: _tag(tag), _item(item), _cost(numeric_limits<long>::max()), _sum(TItem())
 {
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag, TItem item, map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours)
-	: _tag(tag), _item(item), _cost(numeric_limits<long>::max()), _neighbours(neighbours)
+	: _tag(tag), _item(item), _cost(numeric_limits<long>::max()), _neighbours(neighbours), _sum(TItem())
 {
 }
 template <typename TTag, typename TItem>
@@ -126,15 +126,18 @@ long Vertex<TTag, TItem>::GetCost(shared_ptr<Vertex<TTag, TItem>> v)
 	return _neighbours.find(v) != _neighbours.end() ? _neighbours[v] : -1;
 }
 template <typename TTag, typename TItem>
-TItem Vertex<TTag, TItem>::GetSubGraphSum(TTag parent) const
+TItem Vertex<TTag, TItem>::GetSubGraphSum(TTag parent)
 {
-	TItem sum = _item;
-	if (_neighbours.empty())
-		return sum;
-	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = _neighbours.begin(); it != _neighbours.end(); it++)
-		if (it->first->GetTag() != parent) // Undirected graph
-			sum += it->first->GetSubGraphSum(GetTag());
-	return sum;
+	if (_sum == TItem())
+	{
+		_sum = _item;
+		if (_neighbours.empty())
+			return _sum;
+		for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = _neighbours.begin(); it != _neighbours.end(); it++)
+			if (it->first->GetTag() != parent) // Undirected graph
+				_sum += it->first->GetSubGraphSum(GetTag());
+	}
+	return _sum;
 }
 /* https://www.hackerrank.com/challenges/cut-the-tree/problem
 			10
@@ -150,7 +153,12 @@ TItem Vertex<TTag, TItem>::GetSubGraphSum(TTag parent) const
 		 5
 	  20
 	Diff: 20 - 15 = 5
-* WIP.Segmentation fault.Maybe due to recursion
+
+		100(0)
+			200(1)
+		100(2)    100(4)
+				500(3) 600(5)
+* 100%
 */
 template <typename TTag, typename TItem>
 TItem Vertex<TTag, TItem>::MinSubGraphsDifference(TTag parent, TItem sum) const
@@ -170,10 +178,16 @@ TItem Vertex<TTag, TItem>::MinSubGraphsDifference(TTag parent, TItem sum) const
 	return minDiff;
 }
 template <typename TTag, typename TItem>
-long Vertex<TTag, TItem>::GetTotalCost() const { return _cost; }
+long Vertex<TTag, TItem>::GetTotalCost() const
+{
+	return _cost;
+}
 
 template <typename TTag, typename TItem>
-void Vertex<TTag, TItem>::SetTotalCost(long cost) { _cost = cost; }
+void Vertex<TTag, TItem>::SetTotalCost(long cost)
+{
+	_cost = cost;
+}
 
 template <typename TTag, typename TItem>
 void Vertex<TTag, TItem>::ResetTotalCost()

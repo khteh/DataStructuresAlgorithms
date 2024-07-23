@@ -19,7 +19,7 @@ public:
 	virtual ~Vertex();
 	TTag GetTag() const;
 	TItem GetItem() const;
-	TItem GetSubGraphSum(TTag) const;
+	TItem GetSubGraphSum(TTag);
 	long GetCost(shared_ptr<Vertex<TTag, TItem>>);
 	TItem MinSubGraphsDifference(TTag, TItem) const;
 	long GetTotalCost() const;
@@ -44,7 +44,7 @@ public:
 
 protected:
 	TTag _tag;
-	TItem _item;
+	TItem _item, _sum;
 	long _cost;
 	map<shared_ptr<Vertex<TTag, TItem>>, long> _neighbours; // neighbours and costs from this vertex to them
 };
