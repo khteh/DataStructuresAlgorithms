@@ -18,7 +18,6 @@ Graph<TTag, TItem>::Graph(vector<TItem> &data)
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddVertices(vector<TItem> &data)
 {
-	// for (typename vector<TItem>::iterator it = data.begin(); it != data.end(); it++)
 	for (size_t i = 0; i < data.size(); i++)
 		AddVertex(i, data[i]); // Use index as Tag in case there are duplicate values in data
 }
@@ -86,9 +85,9 @@ template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddUndirectedEdge(TTag from, TTag to, long cost)
 {
 	if (_vertices.find(from) == _vertices.end())
-		_vertices.emplace(from, make_shared<Vertex<TTag, TItem>>(from, from)); // Tag == Item
+		_vertices.emplace(from, make_shared<Vertex<TTag, TItem>>(from, from)); // Tag == Item. XXX This will have undesired behaviour if there are duplicate tag values in the graph OR funtions expect TItem but tag value is used here!
 	if (_vertices.find(to) == _vertices.end())
-		_vertices.emplace(to, make_shared<Vertex<TTag, TItem>>(to, to)); // Tag == Item
+		_vertices.emplace(to, make_shared<Vertex<TTag, TItem>>(to, to)); // Tag == Item. XXX This will have undesired behaviour if there are duplicate tag values in the graph OR funtions expect TItem but tag value is used here!
 	_vertices[from]->AddNeighbour(_vertices[to], cost);
 	_vertices[to]->AddNeighbour(_vertices[from], cost);
 }
