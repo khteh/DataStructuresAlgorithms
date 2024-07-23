@@ -11,6 +11,11 @@ using namespace std;
 template <typename TTag, typename TItem> // TTag is used as a unique ID. Graph vertices can have duplicate values of TItem
 class Vertex
 {
+private:
+	void ResetTotalCost();
+	bool HasNeighbour(TTag, TItem) const;
+	size_t NeighbourCount() const;
+
 public:
 	Vertex();
 	Vertex(TTag tag);
@@ -21,19 +26,16 @@ public:
 	TItem GetItem() const;
 	TItem GetSubGraphSum(TTag);
 	long GetCost(shared_ptr<Vertex<TTag, TItem>>);
-	TItem MinSubGraphsDifference(TTag, TItem) const;
 	long GetTotalCost() const;
 	void SetTotalCost(long);
-	void ResetTotalCost();
-	void AddNeighbour(shared_ptr<Vertex<TTag, TItem>>, long);
-	void RemoveNeighbour(shared_ptr<Vertex<TTag, TItem>>);
-	vector<shared_ptr<Vertex<TTag, TItem>>> GetNeighbours();
-	map<shared_ptr<Vertex<TTag, TItem>>, long> GetNeighboursWithCost();
+	TItem MinSubGraphsDifference(TTag, TItem) const;
 	bool HasNeighbours() const;
 	bool HasNeighbour(TTag) const;
-	bool HasNeighbour(TTag, TItem) const;
 	bool HasNeighbour(shared_ptr<Vertex<TTag, TItem>>) const;
-	size_t NeighbourCount() const;
+	vector<shared_ptr<Vertex<TTag, TItem>>> GetNeighbours();
+	void AddNeighbour(shared_ptr<Vertex<TTag, TItem>>, long);
+	map<shared_ptr<Vertex<TTag, TItem>>, long> GetNeighboursWithCost();
+	void RemoveNeighbour(shared_ptr<Vertex<TTag, TItem>>);
 	size_t EvenForestDescendentsCount(TTag, set<string> &) const;
 	Vertex<TTag, TItem> &operator=(Vertex<TTag, TItem> &);
 	bool operator<(const Vertex<TTag, TItem> &) const;
