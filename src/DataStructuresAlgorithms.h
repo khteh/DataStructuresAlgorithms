@@ -265,7 +265,7 @@ string uncompress(string const &);
 size_t findLongestContiguousPattern(string &, char);
 string GetRange(vector<long> &);
 vector<vector<long>> MergeIntervals(vector<vector<long>> &);
-bool isSparseNumber(long);
+bool IsSparseNumber(long);
 long NextSparseNumber(long);
 long KthNumberWith357PrimeFactors(long);
 typedef struct PathResult
@@ -334,7 +334,6 @@ size_t LengthOfLongestUniqueSubstring(string const &);
 string ZigZagConvert(string const &, size_t);
 string numberToRoman(size_t);
 double median(vector<long> &, vector<long> &);
-long ReversePolishNotation(vector<string> const &);
 long BasicCalculator(string const &);
 vector<long> productExceptSelf(vector<long> &);
 size_t hIndex(vector<size_t> &);
@@ -344,7 +343,6 @@ void WordBreakDynamicProgramming(string const &, set<string> const &, vector<str
 vector<string> WordBreakDFS(string const &, set<string> const &);
 vector<string> WordBreakDFS(string const &, set<string> const &, map<string, vector<string>> &);
 string GetHint(string const &, string const &);
-bool IsValidPreOrderTreeSerialization(string const &);
 size_t LargestNumberCompositionProductWithDynamicProgramming(size_t);
 vector<string> FindItinerary(vector<vector<string>> &, string const &);
 void EulerianPath(string, map<string, multiset<string>> &, vector<string> &);

@@ -41,13 +41,11 @@ set(Sources
     "StackTests.cpp"
     "StringTests.cpp"
     "RangeTests.cpp"
-    "ReversePolishNotationTests.cpp"
     "SuffixTreeTests.cpp"
     "TowerOfHanoiTests.cpp"
     "TreeTests.cpp"
     "TrieTests.cpp"
     "TweeterAPITests.cpp"
-    "WordsLadderTests.cpp"
 )
 source_group("Sources" FILES ${Sources})
 

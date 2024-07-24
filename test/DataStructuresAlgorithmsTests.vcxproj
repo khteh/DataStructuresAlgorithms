@@ -78,7 +78,6 @@
     </ClCompile>
     <ClCompile Include="PrefixTrieTests.cpp" />
     <ClCompile Include="QueueTests.cpp" />
-    <ClCompile Include="ReversePolishNotationTests.cpp" />
     <ClCompile Include="SortTests.cpp" />
     <ClCompile Include="SparseNumberTests.cpp" />
     <ClCompile Include="StackTests.cpp" />
@@ -89,7 +88,6 @@
     <ClCompile Include="TreeTests.cpp" />
     <ClCompile Include="TrieTests.cpp" />
     <ClCompile Include="TweeterAPITests.cpp" />
-    <ClCompile Include="WordsLadderTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\DataStructuresAlgorithms.vcxproj">

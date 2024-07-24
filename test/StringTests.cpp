@@ -394,3 +394,33 @@ INSTANTIATE_TEST_SUITE_P(
     SteadyGeneChallengeTests,
     SteadyGeneChallengeTestFixture,
     ::testing::Values(make_tuple(1, "ACGTCCGT"), make_tuple(0, "AAGTGCCT"), make_tuple(2, "ACTGAAAG")));
+class WordsLadderTestFixture : public testing::TestWithParam<tuple<vector<string>, string, string, set<string>>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _start = get<1>(GetParam());
+        _finish = get<2>(GetParam());
+        _dictionary = get<3>(GetParam());
+    }
+    vector<string> WordsLadderTest()
+    {
+        vector<string> result;
+        WordsLadder(_start, _finish, _dictionary, result);
+        return result;
+    }
+
+protected:
+    vector<string> _expected;
+    string _start, _finish;
+    set<string> _dictionary;
+};
+TEST_P(WordsLadderTestFixture, WordsLadderTests)
+{
+    ASSERT_EQ(this->_expected, this->WordsLadderTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    WordsLadderTests,
+    WordsLadderTestFixture,
+    ::testing::Values(make_tuple(vector<string>{"LIKE", "LIME", "LIMP", "LAMP", "DAMP"}, "DAMP", "LIKE", set<string>{"DAMP", "LAMP", "LIMP", "LIME", "LIKE", "LAKE"}), make_tuple(vector<string>{}, "DAMP", "Like", set<string>{"DAMP", "LAMP", "LIMP", "LIME", "LIKE", "LAKE"}), make_tuple(vector<string>{"Cog", "Dog", "Dot", "Hot", "Hit"}, "Hit", "Cog", set<string>{"Hot", "Dot", "Dog", "Lot", "Log", "Cog"}), make_tuple(vector<string>{}, "Hit", "Hat", set<string>{"Hot", "Dot", "Dog", "Lot", "Log", "Cog"})));

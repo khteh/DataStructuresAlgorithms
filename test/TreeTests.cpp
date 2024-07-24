@@ -1,6 +1,7 @@
 #include "pch.h"
 using namespace std;
-TEST(TreeTests, TreeArithmeticTotalDoubleTest) {
+TEST(TreeTests, TreeArithmeticTotalDoubleTest)
+{
 	Tree<double> tree;
 	shared_ptr<Node<string>> multiplier = make_shared<Node<string>>("*");
 	shared_ptr<Node<string>> adder = make_shared<Node<string>>("+");
@@ -23,12 +24,29 @@ TEST(TreeTests, TreeArithmeticTotalDoubleTest) {
 	double expected = (1.2 + 2.3) * (3.4 - 4.5);
 	ASSERT_LT(fabs(tree.TreeArithmeticTotal(multiplier) - expected), numeric_limits<double>::epsilon());
 }
-TEST(TreeTests, IsValidPreOrderTreeSerializationTests)
+class IsValidPreOrderTreeSerializationTestFixture : public testing::TestWithParam<tuple<bool, string>>
 {
-	ASSERT_FALSE(IsValidPreOrderTreeSerialization(string("1")));
-	ASSERT_TRUE(IsValidPreOrderTreeSerialization(string("#")));
-	ASSERT_TRUE(IsValidPreOrderTreeSerialization(string("1,#,#")));
-	ASSERT_TRUE(IsValidPreOrderTreeSerialization(string("9,3,4,#,#,1,#,#,2,#,6,#,#")));
-	ASSERT_TRUE(IsValidPreOrderTreeSerialization(string("9,#,93,#,9,9,#,#,#")));
-	ASSERT_TRUE(IsValidPreOrderTreeSerialization(string("9,9,9,19,#,9,#,#,#,9,#,69,#,#,#")));
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_var = get<1>(GetParam());
+	}
+	bool IsValidPreOrderTreeSerializationTest()
+	{
+		return _tree.IsValidPreOrderTreeSerialization(_var);
+	}
+
+protected:
+	Tree<string> _tree;
+	bool _expected;
+	string _var;
+};
+TEST_P(IsValidPreOrderTreeSerializationTestFixture, IsValidPreOrderTreeSerializationTests)
+{
+	ASSERT_EQ(this->_expected, this->IsValidPreOrderTreeSerializationTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	IsValidPreOrderTreeSerializationTests,
+	IsValidPreOrderTreeSerializationTestFixture,
+	::testing::Values(make_tuple(false, "1"), make_tuple(true, "#"), make_tuple(true, "1,#,#"), make_tuple(true, "9,3,4,#,#,1,#,#,2,#,6,#,#"), make_tuple(true, "9,#,93,#,9,9,#,#,#"), make_tuple(true, "9,9,9,19,#,9,#,#,#,9,#,69,#,#,#")));

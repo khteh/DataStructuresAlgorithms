@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <stdexcept>
+#include <stack>
 using namespace std;
 class Arithmetic
 {
@@ -22,4 +23,5 @@ public:
 	string NumberStringMultiplication(string &, string &);
 	size_t XorSequence(size_t, size_t);
 	bool IsAdditiveNumber(string const &);
+	long ReversePolishNotation(vector<string> const &);
 };

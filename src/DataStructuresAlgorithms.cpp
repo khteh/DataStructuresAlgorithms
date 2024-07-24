@@ -2515,7 +2515,7 @@ vector<vector<long>> MergeIntervals(vector<vector<long>> &intervals)
 	}
 	return result;
 }
-bool isSparseNumber(long i)
+bool IsSparseNumber(long i)
 {
 	long previous2digits = 0;
 	for (; i > 0; i = i >> 2)
@@ -4850,49 +4850,6 @@ double median(vector<long> &a, vector<long> &b)
 	return (result + min(a[i], b[j])) / 2;
 }
 /*
- * https://leetcode.com/problems/evaluate-reverse-polish-notation/
- * 100%
- */
-long ReversePolishNotation(vector<string> const &tokens)
-{
-	stack<long> numbers;
-	for (size_t i = 0; i < tokens.size(); i++)
-	{
-		if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/")
-		{
-			long num2 = numbers.top();
-			numbers.pop();
-			long num1 = numbers.top();
-			numbers.pop();
-			switch (tokens[i][0])
-			{
-			case '+':
-				num1 += num2;
-				break;
-			case '-':
-				num1 -= num2;
-				break;
-			case '*':
-				num1 *= num2;
-				break;
-			case '/':
-				num1 /= num2;
-				break;
-			default:
-				throw runtime_error("Invalid operator!");
-			}
-			numbers.push(num1);
-		}
-		else
-		{
-			long num;
-			istringstream(tokens[i]) >> num;
-			numbers.push(num);
-		}
-	}
-	return !numbers.empty() ? numbers.top() : numeric_limits<long>::max();
-}
-/*
 3+2*2-1
 sign:	+ + * -
 stack:   3 2 4 -1 <= 3+4-1 = 6
@@ -5227,26 +5184,6 @@ string GetHint(string const &secret, string const &guess)
 	ostringstream oss;
 	oss << bulls << "A" << cows << "B";
 	return oss.str();
-}
-/* https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/
- * If we treat null's as leaves, then the binary tree will always be full. A full binary tree has a good property that # of leaves = # of nonleaves + 1.
- * Since we are given a pre-order serialization, we just need to find the shortest prefix of the serialization sequence satisfying the property above.
- * If such prefix does not exist, then the serialization is definitely invalid; otherwise, the serialization is valid if and only if the prefix is the entire sequence.
- * 100%
- */
-bool IsValidPreOrderTreeSerialization(string const &preorder)
-{
-	vector<string> tokens;
-	::split(preorder, ',', tokens);
-	size_t leaves = 0, nonLeaves = 0, i = 0;
-	for (; i < tokens.size() && leaves != nonLeaves + 1; i++)
-	{
-		if (tokens[i][0] == '#')
-			leaves++;
-		else
-			nonLeaves++;
-	}
-	return leaves == nonLeaves + 1 && i == tokens.size();
 }
 /* https://leetcode.com/problems/integer-break/
  * 100%

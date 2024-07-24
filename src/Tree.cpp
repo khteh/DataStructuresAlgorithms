@@ -1027,6 +1027,36 @@ T Tree<T>::TreeArithmeticTotal(shared_ptr<Node<string>> node)
 		result = left / right;
 	return result;
 }
+template <typename T>
+void Tree<T>::split(string const &s, char delim, vector<string> &elems)
+{
+	stringstream ss(s);
+	string item;
+	while (getline(ss, item, delim))
+		elems.push_back(item);
+}
+
+/* https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/
+ * If we treat null's as leaves, then the binary tree will always be full. A full binary tree has a good property that # of leaves = # of nonleaves + 1.
+ * Since we are given a pre-order serialization, we just need to find the shortest prefix of the serialization sequence satisfying the property above.
+ * If such prefix does not exist, then the serialization is definitely invalid; otherwise, the serialization is valid if and only if the prefix is the entire sequence.
+ * 100%
+ */
+template <typename T>
+bool Tree<T>::IsValidPreOrderTreeSerialization(string const &preorder)
+{
+	vector<string> tokens;
+	split(preorder, ',', tokens);
+	size_t leaves = 0, nonLeaves = 0, i = 0;
+	for (; i < tokens.size() && leaves != nonLeaves + 1; i++)
+	{
+		if (tokens[i][0] == '#')
+			leaves++;
+		else
+			nonLeaves++;
+	}
+	return leaves == nonLeaves + 1 && i == tokens.size();
+}
 #if 0
 template<typename T>
 void Tree<T>::PrintNodeIterative(shared_ptr<Node<T>>node)

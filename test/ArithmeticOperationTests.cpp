@@ -183,3 +183,29 @@ INSTANTIATE_TEST_SUITE_P(
 	IsAdditiveNumberTests,
 	IsAdditiveNumberTestFixture,
 	::testing::Values(make_tuple(true, "123"), make_tuple(true, "123581321"), make_tuple(true, "199100199"), make_tuple(false, "1203"), make_tuple(false, "1023"), make_tuple(false, "0123")));
+class ReversePolishNotationTestFixture : public testing::TestWithParam<tuple<long, vector<string>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_var = get<1>(GetParam());
+	}
+	long ReversePolishNotationTest()
+	{
+		return _arithmetic.ReversePolishNotation(_var);
+	}
+
+protected:
+	Arithmetic _arithmetic;
+	long _expected;
+	vector<string> _var;
+};
+TEST_P(ReversePolishNotationTestFixture, ReversePolishNotationTests)
+{
+	ASSERT_EQ(this->_expected, this->ReversePolishNotationTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	ReversePolishNotationTests,
+	ReversePolishNotationTestFixture,
+	::testing::Values(make_tuple(9, vector<string>{"2", "1", "+", "3", "*"}), make_tuple(6, vector<string>{"4", "13", "5", "/", "+"}), make_tuple(22, vector<string>{"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"})));

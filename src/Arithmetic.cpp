@@ -331,3 +331,46 @@ bool Arithmetic::CheckIfAdditiveSequence(size_t i, size_t j, string const &str)
 	}
 	return true;
 }
+/*
+ * https://leetcode.com/problems/evaluate-reverse-polish-notation/
+ * 100%
+ */
+long Arithmetic::ReversePolishNotation(vector<string> const &tokens)
+{
+	stack<long> numbers;
+	for (size_t i = 0; i < tokens.size(); i++)
+	{
+		if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/")
+		{
+			long num2 = numbers.top();
+			numbers.pop();
+			long num1 = numbers.top();
+			numbers.pop();
+			switch (tokens[i][0])
+			{
+			case '+':
+				num1 += num2;
+				break;
+			case '-':
+				num1 -= num2;
+				break;
+			case '*':
+				num1 *= num2;
+				break;
+			case '/':
+				num1 /= num2;
+				break;
+			default:
+				throw runtime_error("Invalid operator!");
+			}
+			numbers.push(num1);
+		}
+		else
+		{
+			long num;
+			istringstream(tokens[i]) >> num;
+			numbers.push(num);
+		}
+	}
+	return !numbers.empty() ? numbers.top() : numeric_limits<long>::max();
+}
