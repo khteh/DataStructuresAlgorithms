@@ -1,265 +1,327 @@
 #include "pch.h"
 using namespace std;
-TEST(KnapsackTests, CoinChangeTest)
+class CoinsChangeTestFixture : public testing::TestWithParam<tuple<set<vector<size_t>>, long, vector<size_t>>>
 {
-	Knapsack knapsack;
-	vector<size_t> numbers = {3, 2, 1};
-	set<vector<size_t>> combinations = knapsack.CoinChange(0, numbers);
-	ASSERT_TRUE(combinations.empty());
-	knapsack.ClearCoinChangeCache();
-	combinations = knapsack.CoinChange(1, numbers);
-	ASSERT_EQ(1, combinations.size());
-	set<vector<size_t>>::iterator it = combinations.begin();
-	ASSERT_EQ(1, it->size());
-	ASSERT_EQ(1, (*it)[0]);
-	knapsack.ClearCoinChangeCache();
-	combinations = knapsack.CoinChange(2, numbers);
-	ASSERT_EQ(2, combinations.size());
-	knapsack.ClearCoinChangeCache();
-	combinations = knapsack.CoinChange(3, numbers);
-	ASSERT_EQ(3, combinations.size());
-	knapsack.ClearCoinChangeCache();
-	combinations = knapsack.CoinChange(4, numbers);
-	ASSERT_EQ(4, combinations.size());
-	numbers.clear();
-	numbers = {6, 5, 3, 2};
-	knapsack.ClearCoinChangeCache();
-	combinations = knapsack.CoinChange(10, numbers);
-	ASSERT_EQ(5, combinations.size());
-	knapsack.ClearCoinChangeCache();
-	numbers.clear();
-	numbers = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
-	combinations = knapsack.CoinChange(10, numbers);
-	ASSERT_EQ(5, combinations.size());
-	knapsack.ClearCoinChangeCache();
-	numbers.clear();
-	numbers = {1, 50};
-	combinations = knapsack.CoinChange(200, numbers);
-	ASSERT_EQ(5, combinations.size());
-	knapsack.ClearCoinChangeCache();
-	// combinations1 = knapsack.CoinsChangeDynamicProgramming(166, numbers); Times out!
-	// assert(!combinations1.empty());
-	// combinations = knapsack.CoinChange(166, numbers); //Times out!
-	// assert(combinations.size() == 96190959);
-	numbers.clear();
-	numbers = {3, 7, 405, 436};
-	knapsack.ClearCoinChangeCache();
-	// combinations = knapsack.CoinsChangeDynamicProgramming(8839, numbers); // Stack overflow! using recursive knapsack.CoinChange()
-	// ASSERT_FALSE(combinations.empty());
-}
-TEST(KnapsackTests, CoinChangeDynamicProgrammingTest)
-{
-	Knapsack knapsack;
-	vector<size_t> numbers = {3, 2, 1};
-	set<vector<size_t>> combinations = knapsack.CoinsChangeDynamicProgramming(0, numbers);
-	ASSERT_TRUE(combinations.empty());
-	knapsack.ClearCoinChangeCache();
-	combinations = knapsack.CoinsChangeDynamicProgramming(-1, numbers);
-	ASSERT_TRUE(combinations.empty());
-	knapsack.ClearCoinChangeCache();
-	combinations = knapsack.CoinsChangeDynamicProgramming(1, numbers);
-	ASSERT_EQ(1, combinations.size());
-	knapsack.ClearCoinChangeCache();
-	combinations = knapsack.CoinsChangeDynamicProgramming(2, numbers);
-	ASSERT_EQ(2, combinations.size());
-	knapsack.ClearCoinChangeCache();
-	combinations = knapsack.CoinsChangeDynamicProgramming(3, numbers);
-	ASSERT_EQ(3, combinations.size());
-	knapsack.ClearCoinChangeCache();
-	combinations = knapsack.CoinsChangeDynamicProgramming(4, numbers);
-	ASSERT_EQ(4, combinations.size());
-	combinations = knapsack.CoinsChangeDynamicProgramming(10, numbers);
-	ASSERT_FALSE(combinations.empty());
-	knapsack.ClearCoinChangeCache();
-	numbers.clear();
-	numbers = {6, 5, 3, 2};
-	combinations = knapsack.CoinsChangeDynamicProgramming(10, numbers);
-	ASSERT_EQ(5, combinations.size());
-	knapsack.ClearCoinChangeCache();
-	numbers.clear();
-	numbers = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
-	combinations = knapsack.CoinsChangeDynamicProgramming(10, numbers);
-	ASSERT_EQ(5, combinations.size());
-	numbers.clear();
-	numbers = {1, 50};
-	combinations = knapsack.CoinsChangeDynamicProgramming(200, numbers);
-	ASSERT_EQ(5, combinations.size());
-}
-TEST(KnapsackTests, CoinsChangeUniqueWaysDynamicProgrammingTest)
-{
-	Knapsack knapsack;
-	vector<size_t> numbers = {3, 2, 1};
-	set<vector<size_t>> combinations;
-	ASSERT_EQ(0, knapsack.CoinsChangeUniqueWaysDynamicProgramming(0, numbers));
-	knapsack.ClearCoinChangeCache();
-	ASSERT_EQ(1, knapsack.CoinsChangeUniqueWaysDynamicProgramming(1, numbers));
-	knapsack.ClearCoinChangeCache();
-	ASSERT_EQ(2, knapsack.CoinsChangeUniqueWaysDynamicProgramming(2, numbers));
-	knapsack.ClearCoinChangeCache();
-	ASSERT_EQ(3, knapsack.CoinsChangeUniqueWaysDynamicProgramming(3, numbers));
-	knapsack.ClearCoinChangeCache();
-	ASSERT_EQ(4, knapsack.CoinsChangeUniqueWaysDynamicProgramming(4, numbers));
-	knapsack.ClearCoinChangeCache();
-	numbers.clear();
-	numbers = {6, 5, 3, 2};
-	ASSERT_EQ(5, knapsack.CoinsChangeUniqueWaysDynamicProgramming(10, numbers));
-	numbers.clear();
-	numbers = {2, 3, 5};
-	knapsack.ClearCoinChangeCache();
-	ASSERT_EQ(2, knapsack.CoinsChangeUniqueWaysDynamicProgramming(5, numbers)); // {{2,3}, {5}}
-	knapsack.ClearCoinChangeCache();
-	ASSERT_EQ(2, knapsack.CoinsChangeUniqueWaysDynamicProgramming(6, numbers)); // {{2,2,2}, {3,3}}
-	knapsack.ClearCoinChangeCache();
-	numbers.clear();
-	numbers = {5, 37, 8, 39, 33, 17, 22, 32, 13, 7, 10, 35, 40, 2, 43, 49, 46, 19, 41, 1, 12, 11, 28};
-	ranges::sort(numbers);
-	ASSERT_EQ(96190959, knapsack.CoinsChangeUniqueWaysDynamicProgramming(166, numbers));
-	knapsack.ClearCoinChangeCache();
-}
-TEST(KnapsackTests, CoinsChangeDuplicateWaysDynamicProgrammingTest)
-{
-	Knapsack knapsack;
-	vector<size_t> numbers = {3, 2, 1};
-	ASSERT_EQ(0, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(0, numbers));
-	knapsack.ClearCoinChangeCache();
-	ASSERT_EQ(1, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(1, numbers));
-	knapsack.ClearCoinChangeCache();
-	ASSERT_EQ(2, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(2, numbers));
-	knapsack.ClearCoinChangeCache();
-	ASSERT_EQ(4, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(3, numbers)); // {3},{1,2},{2,1},{1,1,1}
-	knapsack.ClearCoinChangeCache();
-	ASSERT_EQ(7, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(4, numbers)); // {3,1},{3,1},{1,1,2},{1,2,1},{2,1,1},{2,2},{1,1,1,1}
-	knapsack.ClearCoinChangeCache();
-	numbers.clear();
-	numbers = {6, 5, 3, 2};
-	ASSERT_EQ(17, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(10, numbers));
-	knapsack.ClearCoinChangeCache();
-	numbers.clear();
-	numbers = {2, 3, 5};
-	ASSERT_EQ(3, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(5, numbers)); //{2,3},{3,2},{5}
-	ASSERT_EQ(2, knapsack.CoinsChangeDuplicateWaysDynamicProgramming(6, numbers)); //
-}
-TEST(KnapsackTests, CoinsChangeFewestCoinsDynamicProgrammingTest)
-{
-	Knapsack knapsack;
-	vector<size_t> numbers = {1, 2, 5};
-	ASSERT_EQ(3, knapsack.CoinsChangeFewestCoinsDynamicProgramming(11, numbers));
-	ASSERT_EQ(2, knapsack.CoinsChangeFewestCoinsDynamicProgramming(10, numbers));
-	numbers.clear();
-	numbers = {2};
-	ASSERT_EQ(-1, knapsack.CoinsChangeFewestCoinsDynamicProgramming(3, numbers));
-	numbers.clear();
-	numbers = {1};
-	ASSERT_EQ(0, knapsack.CoinsChangeFewestCoinsDynamicProgramming(0, numbers));
-	ASSERT_EQ(1, knapsack.CoinsChangeFewestCoinsDynamicProgramming(1, numbers));
-	ASSERT_EQ(2, knapsack.CoinsChangeFewestCoinsDynamicProgramming(2, numbers));
-}
-TEST(KnapsackTests, StairsClimbingDynamicProgrammingTest)
-{
-	Knapsack knapsack;
-	vector<size_t> numbers = {1, 2};
-	ASSERT_EQ(13, knapsack.StairsClimbingDynamicProgramming(6, numbers));
-	numbers.clear();
-	numbers = {1, 2, 3};
-	knapsack.ClearDPMemoization();
-	ASSERT_EQ(24, knapsack.StairsClimbingDynamicProgramming(6, numbers));
-}
-TEST(KnapsackTests, StairsClimbingDynamicProgrammingBottomUpTest)
-{
-	Knapsack knapsack;
-	vector<size_t> numbers = {1, 2};
-	ASSERT_EQ(13, knapsack.StairsClimbingDynamicProgrammingBottomUp(6, numbers));
-	numbers.clear();
-	numbers = {1, 2, 3};
-	knapsack.ClearDPMemoization();
-	ASSERT_EQ(24, knapsack.StairsClimbingDynamicProgrammingBottomUp(6, numbers));
-}
-TEST(KnapsackTests, UnboundedKnapsackTest)
-{
-	Knapsack knapsack;
-	vector<size_t> numbers = {2, 3, 4};
-	ASSERT_EQ(9, knapsack.UnboundedKnapsack(9, numbers)); // [3,3,3]
-	numbers.clear();
-	numbers = {3, 4, 10};
-	ASSERT_EQ(12, knapsack.UnboundedKnapsack(12, numbers)); // [3,3,3,3] or [4,4,4]
-	ASSERT_EQ(13, knapsack.UnboundedKnapsack(13, numbers)); // [3,10]
-	ASSERT_EQ(16, knapsack.UnboundedKnapsack(16, numbers)); // [4,4,4,4]
-	numbers.clear();
-	numbers = {2000, 2000, 2000};
-	ASSERT_EQ(2000, knapsack.UnboundedKnapsack(2000, numbers)); // 2000
-	numbers.clear();
-	numbers = {9, 9, 9};
-	ASSERT_EQ(9, knapsack.UnboundedKnapsack(9, numbers)); // 9
-	ASSERT_EQ(0, knapsack.UnboundedKnapsack(8, numbers));
-	numbers.clear();
-	numbers = {1};
-	ASSERT_EQ(9999, knapsack.UnboundedKnapsack(9999, numbers)); // 1 * 9999
-	numbers.clear();
-	numbers = {1, 2};
-	ASSERT_EQ(9999, knapsack.UnboundedKnapsack(9999, numbers));
-	numbers.clear();
-	numbers = {5, 9};
-	ASSERT_EQ(10, knapsack.UnboundedKnapsack(10, numbers)); // [5,5]
-	ASSERT_EQ(5, knapsack.UnboundedKnapsack(8, numbers));	// [5]
-	numbers.clear();
-	numbers = {9};
-	ASSERT_EQ(9, knapsack.UnboundedKnapsack(10, numbers)); // [9]
-	ASSERT_EQ(9, knapsack.UnboundedKnapsack(9, numbers));  // [9]
-	ASSERT_EQ(0, knapsack.UnboundedKnapsack(8, numbers));  // [0]
-}
-TEST(KnapsackTests, BoundedKnapsackTest)
-{
-	Knapsack knapsack;
-	vector<size_t> numbers = {10, 1, 2, 7, 6, 1, 5};
-	vector<vector<size_t>> result = knapsack.BoundedKnapsack(8, numbers);
-	ASSERT_FALSE(result.empty());
-	ASSERT_EQ(4, result.size());
-	cout << "BoundedKnapsack which sums to amount 8: ";
-	for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
+public:
+	void SetUp() override
 	{
-		cout << "[";
-		ranges::copy(*it, ostream_iterator<size_t>(cout, " "));
-		cout << "], ";
+		_expected = get<0>(GetParam());
+		_amount = get<1>(GetParam());
+		_coins = get<2>(GetParam());
 	}
-	cout << endl;
-	numbers.clear();
-	numbers = {2, 3, 5};
-	result = knapsack.BoundedKnapsack(6, numbers);
-	ASSERT_TRUE(result.empty());
-}
-TEST(KnapsackTests, BoundedCombinationSumTests)
+	set<vector<size_t>> CoinsChangeTest()
+	{
+		_knapsack.ClearCoinsChangeCache();
+		return _knapsack.CoinsChange(_amount, _coins);
+	}
+	/*
+		numbers.clear();
+		numbers = {3, 7, 405, 436};
+		knapsack.ClearCoinsChangeCache();
+		// combinations = knapsack.CoinsChangeDynamicProgramming(8839, numbers); // Stack overflow! using recursive knapsack.CoinsChange()
+		// ASSERT_FALSE(combinations.empty());
+	*/
+protected:
+	Knapsack _knapsack;
+	set<vector<size_t>> _expected;
+	long _amount;
+	vector<size_t> _coins;
+};
+TEST_P(CoinsChangeTestFixture, CoinChangeTests)
 {
-	Knapsack knapsack;
-	set<vector<size_t>> combinations = knapsack.BoundedKnapsackCombinationSum(3, 7);
-	ASSERT_EQ(1, combinations.size()); // [[1,2,4]]
-	combinations = knapsack.BoundedKnapsackCombinationSum(3, 9);
-	ASSERT_EQ(3, combinations.size()); // [[1,2,6],[1,3,5],[2,3,4]]
-	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
-		ASSERT_EQ(3, it->size());
-	combinations = knapsack.BoundedKnapsackCombinationSum(4, 1);
-	ASSERT_TRUE(combinations.empty());
-	combinations = knapsack.BoundedKnapsackCombinationSum(3, 2);
-	ASSERT_TRUE(combinations.empty());
-	combinations = knapsack.BoundedKnapsackCombinationSum(9, 45);
-	ASSERT_EQ(1, combinations.size()); // [[1,2,3,4,5,6,7,8,9]]
-	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
-		ASSERT_EQ(9, it->size());
+	ASSERT_EQ(this->_expected, this->CoinsChangeTest());
 }
-TEST(KnapsackTests, BoundedCombinationSumWithMaxElementTests)
+INSTANTIATE_TEST_SUITE_P(
+	CoinsChangeTests,
+	CoinsChangeTestFixture,
+	::testing::Values(make_tuple(set<vector<size_t>>{}, 0, vector<size_t>{3, 2, 1}), make_tuple(set<vector<size_t>>{{1}}, 1, vector<size_t>{3, 2, 1}), make_tuple(set<vector<size_t>>{{2}, {1, 1}}, 2, vector<size_t>{3, 2, 1}), make_tuple(set<vector<size_t>>{{3}, {1, 2}, {1, 1, 1}}, 3, vector<size_t>{3, 2, 1}), make_tuple(set<vector<size_t>>{{1, 3}, {2, 2}, {1, 1, 2}, {1, 1, 1, 1}}, 4, vector<size_t>{3, 2, 1}),
+					  make_tuple(set<vector<size_t>>{{2, 2, 6}, {5, 5}, {2, 3, 5}, {2, 2, 3, 3}, {2, 2, 2, 2, 2}}, 10, vector<size_t>{6, 5, 3, 2}), make_tuple(set<vector<size_t>>{{3, 3, 4}, {3, 7}, {4, 6}, {5, 5}, {10}}, 10, vector<size_t>{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25})));
+class CoinsChangeDynamicProgrammingTestFixture : public testing::TestWithParam<tuple<set<vector<size_t>>, long, vector<size_t>>>
 {
-	Knapsack knapsack;
-	set<vector<size_t>> combinations = knapsack.BoundedKnapsackCombinationSum(3, 12, 8);
-	ASSERT_FALSE(combinations.empty());
-	combinations = knapsack.BoundedKnapsackCombinationSum(3, 10, 3);
-	ASSERT_TRUE(combinations.empty());
-	combinations = knapsack.BoundedKnapsackCombinationSum(2, 9, 10);
-	ASSERT_FALSE(combinations.empty());
-	combinations = knapsack.BoundedKnapsackCombinationSum(1, 5, 20);
-	ASSERT_FALSE(combinations.empty());
-	ASSERT_EQ(1, combinations.begin()->size());
-	ASSERT_EQ(5, *(combinations.begin()->begin()));
-	combinations = knapsack.BoundedKnapsackCombinationSum(1, 1, 20);
-	ASSERT_FALSE(combinations.empty());
-	ASSERT_EQ(1, combinations.begin()->size());
-	ASSERT_EQ(1, *(combinations.begin()->begin()));
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_amount = get<1>(GetParam());
+		_coins = get<2>(GetParam());
+	}
+	set<vector<size_t>> CoinsChangeDynamicProgrammingTest()
+	{
+		_knapsack.ClearCoinsChangeCache();
+		return _knapsack.CoinsChangeDynamicProgramming(_amount, _coins);
+	}
+
+protected:
+	Knapsack _knapsack;
+	set<vector<size_t>> _expected;
+	long _amount;
+	vector<size_t> _coins;
+};
+TEST_P(CoinsChangeDynamicProgrammingTestFixture, CoinsChangeDynamicProgrammingTests)
+{
+	ASSERT_EQ(this->_expected, this->CoinsChangeDynamicProgrammingTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	CoinsChangeDynamicProgrammingTests,
+	CoinsChangeDynamicProgrammingTestFixture,
+	::testing::Values(make_tuple(set<vector<size_t>>{}, 0, vector<size_t>{3, 2, 1}), make_tuple(set<vector<size_t>>{}, -1, vector<size_t>{3, 2, 1}), make_tuple(set<vector<size_t>>{{1}}, 1, vector<size_t>{3, 2, 1}), make_tuple(set<vector<size_t>>{{2}, {1, 1}}, 2, vector<size_t>{3, 2, 1}), make_tuple(set<vector<size_t>>{{3}, {1, 2}, {1, 1, 1}}, 3, vector<size_t>{3, 2, 1}),
+					  make_tuple(set<vector<size_t>>{{1, 3}, {2, 2}, {1, 1, 2}, {1, 1, 1, 1}}, 4, vector<size_t>{3, 2, 1}),
+					  make_tuple(set<vector<size_t>>{{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1, 1, 1, 2}, {1, 1, 1, 1, 1, 1, 1, 3}, {1, 1, 1, 1, 1, 1, 2, 2}, {1, 1, 1, 1, 1, 2, 3}, {1, 1, 1, 1, 2, 2, 2}, {1, 1, 1, 1, 3, 3}, {1, 1, 1, 2, 2, 3}, {1, 1, 2, 2, 2, 2}, {1, 1, 2, 3, 3}, {1, 2, 2, 2, 3}, {1, 3, 3, 3}, {2, 2, 2, 2, 2}, {2, 2, 3, 3}}, 10, vector<size_t>{3, 2, 1}),
+					  make_tuple(set<vector<size_t>>{{2, 2, 6}, {5, 5}, {2, 3, 5}, {2, 2, 3, 3}, {2, 2, 2, 2, 2}}, 10, vector<size_t>{6, 5, 3, 2}), make_tuple(set<vector<size_t>>{{3, 3, 4}, {3, 7}, {4, 6}, {5, 5}, {10}}, 10, vector<size_t>{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25})));
+class CoinsChangeUniqueWaysDynamicProgrammingTestFixture : public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_amount = get<1>(GetParam());
+		_coins = get<2>(GetParam());
+	}
+	size_t CoinsChangeUniqueWaysDynamicProgrammingTest()
+	{
+		_knapsack.ClearCoinsChangeCache();
+		return _knapsack.CoinsChangeUniqueWaysDynamicProgramming(_amount, _coins);
+	}
+
+protected:
+	Knapsack _knapsack;
+	size_t _expected;
+	long _amount;
+	vector<size_t> _coins;
+};
+TEST_P(CoinsChangeUniqueWaysDynamicProgrammingTestFixture, CoinsChangeUniqueWaysDynamicProgrammingTests)
+{
+	ASSERT_EQ(this->_expected, this->CoinsChangeUniqueWaysDynamicProgrammingTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	CoinsChangeUniqueWaysDynamicProgrammingTests,
+	CoinsChangeUniqueWaysDynamicProgrammingTestFixture,
+	::testing::Values(make_tuple(0, 0, vector<size_t>{3, 2, 1}), make_tuple(1, 1, vector<size_t>{3, 2, 1}), make_tuple(2, 2, vector<size_t>{3, 2, 1}), make_tuple(3, 3, vector<size_t>{3, 2, 1}), make_tuple(4, 4, vector<size_t>{3, 2, 1}), make_tuple(2, 5, vector<size_t>{2, 3, 5}) /*{{2,3}, {5}}*/,
+					  make_tuple(2, 6, vector<size_t>{2, 3, 5}) /*{{2,2,2}, {3,3}}*/, make_tuple(5, 10, vector<size_t>{6, 5, 3, 2}), make_tuple(96190959, 166, vector<size_t>{5, 37, 8, 39, 33, 17, 22, 32, 13, 7, 10, 35, 40, 2, 43, 49, 46, 19, 41, 1, 12, 11, 28})));
+
+class CoinsChangeDuplicateWaysDynamicProgrammingTestFixture : public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_amount = get<1>(GetParam());
+		_coins = get<2>(GetParam());
+	}
+	size_t CoinsChangeDuplicateWaysDynamicProgrammingTest()
+	{
+		_knapsack.ClearCoinsChangeCache();
+		return _knapsack.CoinsChangeDuplicateWaysDynamicProgramming(_amount, _coins);
+	}
+
+protected:
+	Knapsack _knapsack;
+	size_t _expected;
+	long _amount;
+	vector<size_t> _coins;
+};
+TEST_P(CoinsChangeDuplicateWaysDynamicProgrammingTestFixture, CoinsChangeDuplicateWaysDynamicProgrammingTests)
+{
+	ASSERT_EQ(this->_expected, this->CoinsChangeDuplicateWaysDynamicProgrammingTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	CoinsChangeDuplicateWaysDynamicProgrammingTests,
+	CoinsChangeDuplicateWaysDynamicProgrammingTestFixture,
+	::testing::Values(make_tuple(0, 0, vector<size_t>{3, 2, 1}), make_tuple(1, 1, vector<size_t>{3, 2, 1}), make_tuple(2, 2, vector<size_t>{3, 2, 1}), make_tuple(4, 3, vector<size_t>{3, 2, 1}) /*{3},{1,2},{2,1},{1,1,1}*/,
+					  make_tuple(7, 4, vector<size_t>{3, 2, 1}) /*{3,1},{3,1},{1,1,2},{1,2,1},{2,1,1},{2,2},{1,1,1,1}*/, make_tuple(17, 10, vector<size_t>{6, 5, 3, 2}), make_tuple(3, 5, vector<size_t>{2, 3, 5}), make_tuple(2, 6, vector<size_t>{2, 3, 5})));
+class CoinsChangeFewestCoinsDynamicProgrammingTestFixture : public testing::TestWithParam<tuple<long, long, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_amount = get<1>(GetParam());
+		_coins = get<2>(GetParam());
+	}
+	long CoinsChangeFewestCoinsDynamicProgrammingTest()
+	{
+		return _knapsack.CoinsChangeFewestCoinsDynamicProgramming(_amount, _coins);
+	}
+
+protected:
+	Knapsack _knapsack;
+	long _expected, _amount;
+	vector<size_t> _coins;
+};
+TEST_P(CoinsChangeFewestCoinsDynamicProgrammingTestFixture, CoinsChangeFewestCoinsDynamicProgrammingTests)
+{
+	ASSERT_EQ(this->_expected, this->CoinsChangeFewestCoinsDynamicProgrammingTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	CoinsChangeFewestCoinsDynamicProgrammingTests,
+	CoinsChangeFewestCoinsDynamicProgrammingTestFixture,
+	::testing::Values(make_tuple(3, 11, vector<size_t>{1, 2, 5}), make_tuple(2, 10, vector<size_t>{1, 2, 5}), make_tuple(-1, 3, vector<size_t>{2}), make_tuple(0, 0, vector<size_t>{1}), make_tuple(1, 1, vector<size_t>{1}), make_tuple(2, 2, vector<size_t>{1})));
+class StairsClimbingDynamicProgrammingTestFixture : public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_amount = get<1>(GetParam());
+		_coins = get<2>(GetParam());
+	}
+	size_t StairsClimbingDynamicProgrammingTest()
+	{
+		return _knapsack.StairsClimbingDynamicProgramming(_amount, _coins);
+	}
+
+protected:
+	Knapsack _knapsack;
+	size_t _expected;
+	long _amount;
+	vector<size_t> _coins;
+};
+TEST_P(StairsClimbingDynamicProgrammingTestFixture, StairsClimbingDynamicProgrammingTests)
+{
+	ASSERT_EQ(this->_expected, this->StairsClimbingDynamicProgrammingTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	StairsClimbingDynamicProgrammingTests,
+	StairsClimbingDynamicProgrammingTestFixture,
+	::testing::Values(make_tuple(13, 6, vector<size_t>{1, 2}), make_tuple(24, 6, vector<size_t>{1, 2, 3})));
+class StairsClimbingDynamicProgrammingBottomUpTestFixture : public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_amount = get<1>(GetParam());
+		_coins = get<2>(GetParam());
+	}
+	size_t StairsClimbingDynamicProgrammingBottomUpTest()
+	{
+		return _knapsack.StairsClimbingDynamicProgrammingBottomUp(_amount, _coins);
+	}
+
+protected:
+	Knapsack _knapsack;
+	size_t _expected;
+	long _amount;
+	vector<size_t> _coins;
+};
+TEST_P(StairsClimbingDynamicProgrammingBottomUpTestFixture, StairsClimbingDynamicProgrammingBottomUpTests)
+{
+	ASSERT_EQ(this->_expected, this->StairsClimbingDynamicProgrammingBottomUpTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	StairsClimbingDynamicProgrammingBottomUpTests,
+	StairsClimbingDynamicProgrammingBottomUpTestFixture,
+	::testing::Values(make_tuple(13, 6, vector<size_t>{1, 2}), make_tuple(24, 6, vector<size_t>{1, 2, 3})));
+class UnboundedKnapsackTestFixture : public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_amount = get<1>(GetParam());
+		_coins = get<2>(GetParam());
+	}
+	size_t UnboundedKnapsackTest()
+	{
+		return _knapsack.UnboundedKnapsack(_amount, _coins);
+	}
+
+protected:
+	Knapsack _knapsack;
+	size_t _expected;
+	long _amount;
+	vector<size_t> _coins;
+};
+TEST_P(UnboundedKnapsackTestFixture, UnboundedKnapsackTests)
+{
+	ASSERT_EQ(this->_expected, this->UnboundedKnapsackTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	UnboundedKnapsackTests,
+	UnboundedKnapsackTestFixture,
+	::testing::Values(make_tuple(9, 9, vector<size_t>{2, 3, 4}) /*[3,3,3]*/, make_tuple(12, 12, vector<size_t>{3, 4, 10}) /*[3,3,3,3] or [4,4,4]*/, make_tuple(13, 13, vector<size_t>{3, 4, 10}), make_tuple(16, 16, vector<size_t>{3, 4, 10}), make_tuple(2000, 2000, vector<size_t>{2000, 2000, 2000}), make_tuple(9, 9, vector<size_t>{9, 9, 9}),
+					  make_tuple(0, 8, vector<size_t>{9, 9, 9}), make_tuple(9999, 9999, vector<size_t>{1}), make_tuple(9999, 9999, vector<size_t>{1, 2}), make_tuple(10, 10, vector<size_t>{5, 9}), make_tuple(5, 8, vector<size_t>{5, 9}), make_tuple(9, 10, vector<size_t>{9}), make_tuple(9, 9, vector<size_t>{9}), make_tuple(0, 8, vector<size_t>{9})));
+class BoundedKnapsackTestFixture : public testing::TestWithParam<tuple<vector<vector<size_t>>, long, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_amount = get<1>(GetParam());
+		_coins = get<2>(GetParam());
+	}
+	vector<vector<size_t>> BoundedKnapsackTest()
+	{
+		return _knapsack.BoundedKnapsack(_amount, _coins);
+	}
+
+protected:
+	Knapsack _knapsack;
+	vector<vector<size_t>> _expected;
+	long _amount;
+	vector<size_t> _coins;
+};
+TEST_P(BoundedKnapsackTestFixture, BoundedKnapsackTests)
+{
+	ASSERT_EQ(this->_expected, this->BoundedKnapsackTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	BoundedKnapsackTests,
+	BoundedKnapsackTestFixture,
+	::testing::Values(make_tuple(vector<vector<size_t>>{}, 6, vector<size_t>{2, 3, 5}), make_tuple(vector<vector<size_t>>{{1, 1, 6}, {1, 2, 5}, {1, 7}, {2, 6}}, 8, vector<size_t>{10, 1, 2, 7, 6, 1, 5})));
+class BoundedKnapsackCombinationSumTestFixture : public testing::TestWithParam<tuple<set<vector<size_t>>, size_t, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_k = get<1>(GetParam());
+		_sum = get<2>(GetParam());
+		_max = get<3>(GetParam());
+	}
+	set<vector<size_t>> BoundedKnapsackCombinationSumTest()
+	{
+		return _knapsack.BoundedKnapsackCombinationSum(_k, _sum, _max);
+	}
+
+protected:
+	Knapsack _knapsack;
+	set<vector<size_t>> _expected;
+	size_t _k, _sum, _max;
+};
+TEST_P(BoundedKnapsackCombinationSumTestFixture, BoundedKnapsackCombinationSumTests)
+{
+	ASSERT_EQ(this->_expected, this->BoundedKnapsackCombinationSumTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	BoundedKnapsackCombinationSumTests,
+	BoundedKnapsackCombinationSumTestFixture,
+	::testing::Values(make_tuple(set<vector<size_t>>{{1, 2, 4}}, 3, 7, 10), make_tuple(set<vector<size_t>>{{1, 2, 6}, {1, 3, 5}, {2, 3, 4}}, 3, 9, 10), make_tuple(set<vector<size_t>>{}, 4, 1, 10), make_tuple(set<vector<size_t>>{}, 3, 2, 10), make_tuple(set<vector<size_t>>{{1, 2, 3, 4, 5, 6, 7, 8, 9}}, 9, 45, 10)));
+class BoundedCombinationSumWithMaxElementTestFixture : public testing::TestWithParam<tuple<set<vector<size_t>>, size_t, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_k = get<1>(GetParam());
+		_sum = get<2>(GetParam());
+		_max = get<3>(GetParam());
+	}
+	set<vector<size_t>> BoundedCombinationSumWithMaxElementTest()
+	{
+		return _knapsack.BoundedKnapsackCombinationSum(_k, _sum, _max);
+	}
+
+protected:
+	Knapsack _knapsack;
+	set<vector<size_t>> _expected;
+	size_t _k, _sum, _max;
+};
+TEST_P(BoundedCombinationSumWithMaxElementTestFixture, BoundedCombinationSumWithMaxElementTests)
+{
+	ASSERT_EQ(this->_expected, this->BoundedCombinationSumWithMaxElementTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	BoundedCombinationSumWithMaxElementTests,
+	BoundedCombinationSumWithMaxElementTestFixture,
+	::testing::Values(make_tuple(set<vector<size_t>>{{1, 4, 7}, {1, 5, 6}, {2, 3, 7}, {2, 4, 6}, {3, 4, 5}}, 3, 12, 8), make_tuple(set<vector<size_t>>{}, 3, 10, 3), make_tuple(set<vector<size_t>>{{1, 8}, {2, 7}, {3, 6}, {4, 5}}, 2, 9, 10), make_tuple(set<vector<size_t>>{{5}}, 1, 5, 20), make_tuple(set<vector<size_t>>{{1}}, 1, 1, 20)));

@@ -1,5 +1,5 @@
 #include "Knapsack.h"
-void Knapsack::ClearCoinChangeCache()
+void Knapsack::ClearCoinsChangeCache()
 {
 	coinChangeCache.clear();
 }
@@ -11,9 +11,15 @@ void Knapsack::ClearDPMemoization()
 {
 	dpMemoization.clear();
 }
-// https://www.hackerrank.com/challenges/coin-change/problem
-// Times out!
-set<vector<size_t>> Knapsack::CoinChange(long amount, vector<size_t> &coins)
+/* https://www.hackerrank.com/challenges/coin-change/problem
+		numbers.clear();
+		numbers = {3, 7, 405, 436};
+		knapsack.ClearCoinsChangeCache();
+		// combinations = knapsack.CoinsChangeDynamicProgramming(8839, numbers); // Stack overflow! using recursive knapsack.CoinsChange()
+		// ASSERT_FALSE(combinations.empty());
+* Times out!
+*/
+set<vector<size_t>> Knapsack::CoinsChange(long amount, vector<size_t> &coins)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0)
@@ -24,7 +30,7 @@ set<vector<size_t>> Knapsack::CoinChange(long amount, vector<size_t> &coins)
 				set<vector<size_t>> tmp;
 				if (coinChangeCache.find(amount - *coin) == coinChangeCache.end())
 				{
-					tmp = CoinChange(amount - *coin, coins);
+					tmp = CoinsChange(amount - *coin, coins);
 					if (!tmp.empty())
 						coinChangeCache[amount - *coin] = tmp;
 				}
@@ -117,14 +123,14 @@ size_t Knapsack::CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<siz
  * ways: 1 0 1 1 1 3 2 5 6 8 14
  * i:    0 1 2 3 4 5 6 7 8 9 10
  */
-size_t Knapsack::CoinsChangeDuplicateWaysDynamicProgramming(size_t amount, vector<size_t> &coins)
+size_t Knapsack::CoinsChangeDuplicateWaysDynamicProgramming(long amount, vector<size_t> &coins)
 {
 	if (amount <= 0 || coins.empty())
 		return 0;
 	ranges::sort(coins);
 	vector<size_t> dp(amount + 1, 0); // Index: amount. Value: #ways or #posibilities
 	dp[0] = 1;						  // $0 is one possibility
-	for (size_t i = coins[0]; i <= amount; i++)
+	for (size_t i = coins[0]; i <= (size_t)amount; i++)
 		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end() && i >= *coin; coin++)
 			dp[i] += dp[i - *coin];
 	return dp[amount];
@@ -142,7 +148,7 @@ long Knapsack::CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size
 	ranges::sort(coins);
 	vector<size_t> dp(amount + 1, numeric_limits<size_t>::max()); // Index: amount. Value: #coins
 	dp[0] = 0;													  // $0 = 0 coins
-	for (size_t i = coins[0]; i <= (size_t)amount; i++)
+	for (size_t i = coins[0]; i <= amount; i++)
 		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end() && i >= *coin; coin++)
 			if (dp[i - *coin] != numeric_limits<size_t>::max())
 				dp[i] = min(dp[i], dp[i - *coin] + 1);
@@ -299,7 +305,7 @@ vector<vector<size_t>> Knapsack::BoundedKnapsack(long amount, vector<size_t> &nu
 /* https://leetcode.com/problems/combination-sum-iii/
  * 100%
  */
-set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t k, size_t sum, size_t max)
+set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t size, size_t sum, size_t max)
 {
 	set<vector<size_t>> combinations;
 	for (size_t i = 1; i < max; i++)
@@ -309,7 +315,7 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t k, size_t su
 			set<vector<size_t>> tmp;
 			if (knapsackCache.find(sum - i) == knapsackCache.end())
 			{
-				tmp = _BoundedKnapsackCombinationSum(k, sum - i, max);
+				tmp = _BoundedKnapsackCombinationSum(size, sum - i, max);
 				knapsackCache[sum - i] = tmp;
 			}
 			else
@@ -317,7 +323,7 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t k, size_t su
 			if (!tmp.empty())
 				for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++)
 				{
-					if (it->size() < k && ranges::find(*it, i) == it->end())
+					if (it->size() < size && ranges::find(*it, i) == it->end())
 					{
 						vector<size_t> change(*it);
 						change.push_back(i);
@@ -343,12 +349,12 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t k, size_t su
 	} // for
 	return combinations;
 }
-set<vector<size_t>> Knapsack::BoundedKnapsackCombinationSum(size_t k, size_t sum, size_t max)
+set<vector<size_t>> Knapsack::BoundedKnapsackCombinationSum(size_t size, size_t sum, size_t max)
 {
 	knapsackCache.clear();
-	set<vector<size_t>> combinations = _BoundedKnapsackCombinationSum(k, sum, max);
+	set<vector<size_t>> combinations = _BoundedKnapsackCombinationSum(size, sum, max);
 	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end();)
-		if (it->size() != k)
+		if (it->size() != size)
 			it = combinations.erase(it);
 		else
 			it++;
