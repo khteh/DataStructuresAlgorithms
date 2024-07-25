@@ -26,25 +26,33 @@ INSTANTIATE_TEST_SUITE_P(
 	AreAnagramsTests,
 	AreAnagramsTestFixture,
 	::testing::Values(make_tuple(true, "Hello World!!!", "World Hello!!!"), make_tuple(true, "Hello World!!!", "World!!! Hello"), make_tuple(true, "Hello World!!!", "!HWr ole!d!lol"), make_tuple(false, "Hello World!!!", "World Hello!!! "), make_tuple(false, "Hello World!!!", "world hello!!!"), make_tuple(false, "Hello World!!!", "Good Morning!!!")));
-
-TEST(AnagramTests, FindAnagramsTest)
+class FindAnagramsTestFixture : public testing::TestWithParam<tuple<vector<vector<string>>, vector<string>>>
 {
-	vector<string> strings;
-	strings.push_back("star"); // "arst" : "star"
-	strings.push_back("dog");  // "dgo" : "dog"
-	strings.push_back("car");  // "acr" : "car"
-	strings.push_back("rats"); // "arst" : rats
-	strings.push_back("arc");  // "acr" : "arc"
-	strings.push_back("god");  // "dgo" : "god"
-	vector<vector<string>> anagrams;
-	ASSERT_EQ(3, FindAnagrams(strings, anagrams));
-	for (vector<vector<string>>::const_iterator it = anagrams.begin(); it != anagrams.end(); it++)
+public:
+	void SetUp() override
 	{
-		cout << "( ";
-		ranges::copy(*it, ostream_iterator<string>(cout, " "));
-		cout << "), ";
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
 	}
+	vector<vector<string>> FindAnagramsTest()
+	{
+		vector<vector<string>> result;
+		FindAnagrams(_data, result);
+		return result;
+	}
+
+protected:
+	vector<vector<string>> _expected;
+	vector<string> _data;
+};
+TEST_P(FindAnagramsTestFixture, FindAnagramsTests)
+{
+	ASSERT_EQ(this->_expected, this->FindAnagramsTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	FindAnagramsTests,
+	FindAnagramsTestFixture,
+	::testing::Values(make_tuple(vector<vector<string>>{{"car", "arc"}, {"star", "rats"}, {"dog", "god"}}, vector<string>{"star", "dog", "car", "rats", "arc", "god"})));
 class SherlockAndAnagramsChallengeTestFixture : public testing::TestWithParam<tuple<size_t, string>>
 {
 public:

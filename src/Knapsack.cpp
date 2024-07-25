@@ -12,13 +12,8 @@ void Knapsack::ClearDPMemoization()
 	dpMemoization.clear();
 }
 /* https://www.hackerrank.com/challenges/coin-change/problem
-		numbers.clear();
-		numbers = {3, 7, 405, 436};
-		knapsack.ClearCoinsChangeCache();
-		// combinations = knapsack.CoinsChangeDynamicProgramming(8839, numbers); // Stack overflow! using recursive knapsack.CoinsChange()
-		// ASSERT_FALSE(combinations.empty());
-* Times out!
-*/
+ * Times out due to recursion!
+ */
 set<vector<size_t>> Knapsack::CoinsChange(long amount, vector<size_t> &coins)
 {
 	set<vector<size_t>> combinations;
@@ -154,8 +149,9 @@ long Knapsack::CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size
 				dp[i] = min(dp[i], dp[i - *coin] + 1);
 	return dp[amount] == numeric_limits<size_t>::max() ? -1 : dp[amount];
 }
-// https://www.hackerrank.com/challenges/unbounded-knapsack/problem
-// 100%
+/* https://www.hackerrank.com/challenges/unbounded-knapsack/problem
+ * 100%
+ */
 set<vector<size_t>> Knapsack::KnapsackCombinations(long amount, vector<size_t> &numbers)
 {
 	set<vector<size_t>> combinations;

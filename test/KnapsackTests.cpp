@@ -14,13 +14,7 @@ public:
 		_knapsack.ClearCoinsChangeCache();
 		return _knapsack.CoinsChange(_amount, _coins);
 	}
-	/*
-		numbers.clear();
-		numbers = {3, 7, 405, 436};
-		knapsack.ClearCoinsChangeCache();
-		// combinations = knapsack.CoinsChangeDynamicProgramming(8839, numbers); // Stack overflow! using recursive knapsack.CoinsChange()
-		// ASSERT_FALSE(combinations.empty());
-	*/
+
 protected:
 	Knapsack _knapsack;
 	set<vector<size_t>> _expected;
