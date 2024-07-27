@@ -229,6 +229,7 @@
     <ClCompile Include="DiamondProblem.cpp" />
     <ClCompile Include="DisJointSet.cpp" />
     <ClCompile Include="Edge.cpp" />
+    <ClCompile Include="FenwickTree.cpp" />
     <ClCompile Include="FunctionObject.cpp" />
     <ClCompile Include="IntervalMap.cpp" />
     <ClCompile Include="DataStructuresAlgorithms.cpp" />

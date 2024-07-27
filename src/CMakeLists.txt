@@ -68,6 +68,7 @@ set(Sources
     "Edge.cpp"
     "Employee.cpp"
     "Error.cpp"
+    "FenwickTree.cpp"
     "FunctionObject.cpp"
     "GameTheory.cpp"
     "Graph.cpp"

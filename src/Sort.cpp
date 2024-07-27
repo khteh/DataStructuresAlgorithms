@@ -584,3 +584,18 @@ bool Sort<T>::LexicographicSort(string s1, string s2)
 	}
 	return (s1.size() - i) < (s2.size() - j); // String length comparison.
 }
+template <typename T>
+size_t Sort<T>::InsertionSortShifts(vector<T> &data)
+{
+	map<T, size_t> shifts;
+	for (size_t i = 1; i < data.size(); i++)
+		for (size_t j = i; j > 0 && data[j] < data[j - 1]; j--)
+		{
+			pair<typename map<T, size_t>::iterator, bool> result = shifts.emplace(data[j], 1);
+			if (!result.second)
+				shifts[data[j]]++;
+			swap(data[j], data[j - 1]);
+		}
+	return accumulate(shifts.begin(), shifts.end(), 0, [](size_t value, const typename map<T, size_t>::value_type &p)
+					  { return value + p.second; });
+}

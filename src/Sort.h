@@ -10,9 +10,11 @@
 #include <ranges>
 #include <assert.h>
 #include <cstring>
+#include "oneapi/tbb.h"
 #include "Heap.h"
 using namespace std;
 namespace ranges = std::ranges;
+using namespace oneapi::tbb;
 template <typename T>
 class Sort
 {
@@ -41,4 +43,5 @@ public:
 	bool CanFinishCourseTopologicalSort(size_t, vector<vector<T>> &, vector<T> &);
 	size_t TopDownMergeSortCountConversions(vector<T> &, vector<T> &, size_t, size_t);
 	static bool LexicographicSort(string, string);
+	size_t InsertionSortShifts(vector<T> &);
 };
