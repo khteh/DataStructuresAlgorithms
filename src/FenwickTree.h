@@ -23,8 +23,10 @@ private:
     vector<T> _data;
 
 public:
-    FenwickTree(size_t);
+    FenwickTree();
+    explicit FenwickTree(size_t);
     FenwickTree(vector<T> const &);
+    void Construct(vector<T> const &);
     T Query(T);
     void Update(T, T);
 };

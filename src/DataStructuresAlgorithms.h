@@ -52,6 +52,7 @@
 #include "PriorityQueueMedian.h"
 #include "DiamondProblem.h"
 #include "Error.h"
+#include "FenwickTree.h"
 #include "LinkedList.h"
 #include "CircularLinkedList.h"
 #include "Square.h"

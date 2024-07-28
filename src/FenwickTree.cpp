@@ -5,12 +5,24 @@ template class FenwickTree<long long>;
 template <signed_integral T>
 FenwickTree<T>::FenwickTree(size_t size) : _data(size + 1, T()) {}
 template <signed_integral T>
-FenwickTree<T>::FenwickTree(vector<T> const &data) : _data(data.size() + 1, T())
+FenwickTree<T>::FenwickTree()
 {
+}
+template <signed_integral T>
+FenwickTree<T>::FenwickTree(vector<T> const &data)
+{
+    _data.resize(*ranges::max_element(data) + 1);
     for (size_t i = 0; i < data.size(); i++)
         Update(i + 1, 1);
 }
-
+template <signed_integral T>
+void FenwickTree<T>::Construct(vector<T> const &data)
+{
+    _data.clear();
+    _data.resize(*ranges::max_element(data) + 1);
+    for (size_t i = 0; i < data.size(); i++)
+        Update(i + 1, 1);
+}
 /*
  * Any time that we move right, add the current value to the counter. OR:
  * Any time you follow a right child link upward, add in the value at the node you arrive at.
@@ -19,7 +31,7 @@ template <signed_integral T>
 T FenwickTree<T>::Query(T index)
 {
     T sum = T();
-    for (T i = 0; i > 0; i -= lsb(i))
+    for (T i = index; i > 0; i -= lsb(i))
         sum += _data[i];
     return sum;
 }

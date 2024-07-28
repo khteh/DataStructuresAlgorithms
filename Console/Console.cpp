@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
 	Permutation<long> lPermutation;
 	Permutation<size_t> ulPermutation;
 	Permutation<string> sPermutation;
+	FenwickTree<long> fenwickTree;
 	ExceptionTest();
 	TestRandom();
 	KDTreeTests();
@@ -2022,6 +2023,12 @@ int main(int argc, char *argv[])
 	// assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
 	assert(CountArray(4, 3, 2) == 3);
 	assert(CountArray(5, 2, 2) == 0);
+	a.clear();
+	a = {2, 1, 3, 1, 2};
+	fenwickTree.Construct(a);
+	assert(2 == fenwickTree.Query(1));
+	assert(4 == fenwickTree.Query(2));
+	assert(3 == fenwickTree.Query(3));
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
