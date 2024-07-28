@@ -20,12 +20,22 @@ void FenwickTree<T>::Construct(vector<T> const &data)
 {
     _data.clear();
     _data.resize(*ranges::max_element(data) + 1);
-    for (size_t i = 0; i < data.size(); i++)
-        Update(i + 1, 1);
+    // for (size_t i = 0; i < data.size(); i++)
+    //     Update(i + 1, 1);
+    for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
+        Update(*it, 1);
 }
 /*
  * Any time that we move right, add the current value to the counter. OR:
  * Any time you follow a right child link upward, add in the value at the node you arrive at.
+[2 1 3 1 2]:
+[+2] [+2] [+1]
+ 1     2    3
+
+         2
+        [4]
+     1      3
+    [2]     [1]
  */
 template <signed_integral T>
 T FenwickTree<T>::Query(T index)

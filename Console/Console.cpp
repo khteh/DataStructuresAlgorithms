@@ -2026,9 +2026,9 @@ int main(int argc, char *argv[])
 	a.clear();
 	a = {2, 1, 3, 1, 2};
 	fenwickTree.Construct(a);
-	assert(2 == fenwickTree.Query(1));
-	assert(4 == fenwickTree.Query(2));
-	assert(3 == fenwickTree.Query(3));
+	assert(2 == fenwickTree.Query(1)); // f(1)
+	assert(4 == fenwickTree.Query(2)); // f(2)
+	assert(5 == fenwickTree.Query(3)); // f(3) = f(3) + f(2) = 5
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
