@@ -68,3 +68,29 @@ TEST(TreeTests, FenwickTreeTest)
 	ASSERT_EQ(3, fenwickTree.Query(3)); // f(3) = f(3) + f(2) = 2 + 1 = 3
 	ASSERT_EQ(4, fenwickTree.Query(4)); // f(2)
 }
+class InsertionSortShiftCountTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	long InsertionSortShiftCountTest()
+	{
+		return _tree.InsertionSortShiftCount(_data);
+	}
+
+protected:
+	FenwickTree<long> _tree;
+	long _expected;
+	vector<long> _data;
+};
+TEST_P(InsertionSortShiftCountTestFixture, InsertionSortShiftCountTests)
+{
+	ASSERT_EQ(this->_expected, this->InsertionSortShiftCountTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	InsertionSortShiftCountTests,
+	InsertionSortShiftCountTestFixture,
+	::testing::Values(make_tuple(0, vector<long>{1, 1, 1, 2, 2}), make_tuple(4, vector<long>{2, 1, 3, 1, 2}), make_tuple(6, vector<long>{4, 3, 2, 1}), make_tuple(4, vector<long>{9492052, 241944, 5743396, 5758608, 6053545})));

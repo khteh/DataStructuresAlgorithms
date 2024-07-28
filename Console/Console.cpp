@@ -2023,12 +2023,6 @@ int main(int argc, char *argv[])
 	// assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
 	assert(CountArray(4, 3, 2) == 3);
 	assert(CountArray(5, 2, 2) == 0);
-	udata.clear();
-	udata = {2, 1, 3, 1, 2};
-	fenwickTree.Construct(udata);
-	assert(2 == fenwickTree.Query(1)); // f(1)
-	assert(4 == fenwickTree.Query(2)); // f(2)
-	assert(5 == fenwickTree.Query(3)); // f(3) = f(3) + f(2) = 5
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

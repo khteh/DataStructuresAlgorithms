@@ -30,4 +30,5 @@ public:
     void Construct(vector<T> const &);
     T Query(T);
     void Update(T, T);
+    size_t InsertionSortShiftCount(vector<T> const &);
 };
