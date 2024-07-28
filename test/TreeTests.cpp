@@ -50,3 +50,21 @@ INSTANTIATE_TEST_SUITE_P(
 	IsValidPreOrderTreeSerializationTests,
 	IsValidPreOrderTreeSerializationTestFixture,
 	::testing::Values(make_tuple(false, "1"), make_tuple(true, "#"), make_tuple(true, "1,#,#"), make_tuple(true, "9,3,4,#,#,1,#,#,2,#,6,#,#"), make_tuple(true, "9,#,93,#,9,9,#,#,#"), make_tuple(true, "9,9,9,19,#,9,#,#,#,9,#,69,#,#,#")));
+TEST(TreeTests, FenwickTreeTest)
+{
+	vector<size_t> udata;
+	FenwickTree<size_t> fenwickTree;
+	udata = {2, 1, 3, 1, 2};
+	fenwickTree.Construct(udata);
+	ASSERT_EQ(2, fenwickTree.Query(1)); // f(1)
+	ASSERT_EQ(4, fenwickTree.Query(2)); // f(2)
+	ASSERT_EQ(5, fenwickTree.Query(3)); // f(3) = f(3) + f(2) = 5
+
+	udata.clear();
+	udata = {4, 3, 2, 1};
+	fenwickTree.Construct(udata);
+	ASSERT_EQ(1, fenwickTree.Query(1)); // f(1)
+	ASSERT_EQ(2, fenwickTree.Query(2)); // f(2)
+	ASSERT_EQ(3, fenwickTree.Query(3)); // f(3) = f(3) + f(2) = 2 + 1 = 3
+	ASSERT_EQ(4, fenwickTree.Query(4)); // f(2)
+}

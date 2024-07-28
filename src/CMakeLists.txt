@@ -19,6 +19,7 @@ set(Headers
     "FenwickTree.h"
     "FunctionObject.h"
     "GameTheory.h"
+    "GenericConstaints.h"
     "Graph.h"
     "Greedy.h"
     "Heap.h"
