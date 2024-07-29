@@ -12,22 +12,22 @@ FenwickTree<T>::FenwickTree()
 template <integral_type T>
 FenwickTree<T>::FenwickTree(vector<T> const &data)
 {
-    _data.resize(*ranges::max_element(data) + 1);
-    for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
-        Update(*it, 1);
+  _data.resize(*ranges::max_element(data) + 1);
+  for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
+    Update(*it, 1);
 }
 template <integral_type T>
 void FenwickTree<T>::Construct(vector<T> const &data)
 {
-    _data.clear();
-    _data.resize(*ranges::max_element(data) + 1);
-    for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
-        Update(*it, 1);
+  _data.clear();
+  _data.resize(*ranges::max_element(data) + 1);
+  for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
+    Update(*it, 1);
 }
 template <integral_type T>
 T FenwickTree<T>::lsb(T index)
 {
-    return index & -index;
+  return index & -index;
 }
 /*
  * Any time that we move right, add the current value to the counter. OR:
@@ -44,20 +44,22 @@ T FenwickTree<T>::lsb(T index)
 template <integral_type T>
 T FenwickTree<T>::Query(T index)
 {
-    T sum = T();
-    for (long long i = index; i > 0; i -= lsb(i))
-        sum += _data[i];
-    return sum;
+  T sum = T();
+  for (long long i = index; i > 0; i -= lsb(i))
+    sum += _data[i];
+  return sum;
 }
 /*
  Increment the frequency for that node, then start walking up to the root of the tree.
- Any time you follow a link that takes you up as a left child, increment the frequency of the node you encounter by adding in the current value
+ Any time you follow a link that takes you up as a left child, increment the frequency of the node you encounter by adding in the current value.
+ Each node stores the sum of the weights of all nodes in its left subtree, plus the weight of the node itself.
+ We count the full left subtree of the node, not just the nodes on the path from the root going left.
 */
 template <integral_type T>
 void FenwickTree<T>::Update(T index, T value)
 {
-    for (; index < _data.size(); index += lsb(index))
-        _data[index] += value;
+  for (; index < _data.size(); index += lsb(index))
+    _data[index] += value;
 }
 /*
 https://www.hackerrank.com/challenges/insertion-sort/problem
@@ -169,15 +171,15 @@ https://www.hackerrank.com/challenges/insertion-sort/problem
 template <integral_type T>
 size_t FenwickTree<T>::InsertionSortShiftCount(vector<T> const &data)
 {
-    size_t count = 0, diff = 0, index = 0, sum = 0;
-    _data.clear();
-    _data.resize(*ranges::max_element(data) + 1);
-    for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++, index++)
-    {
-        sum = Query(*it);
-        diff = index - sum;
-        count += diff;
-        Update(*it, 1);
-    }
-    return count;
+  size_t count = 0, diff = 0, index = 0, sum = 0;
+  _data.clear();
+  _data.resize(*ranges::max_element(data) + 1);
+  for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++, index++)
+  {
+    sum = Query(*it);
+    diff = index - sum;
+    count += diff;
+    Update(*it, 1);
+  }
+  return count;
 }
