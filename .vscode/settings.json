@@ -92,6 +92,19 @@
   "cmake.configureSettings": {
     "gtest_build_samples": "ON"
   },
+  "testMate.cpp.log.logfile": "/var/log/testMate.log",
+  "testMate.cpp.debug.configTemplate": {
+    "type": "cppvsdbg",
+    "linux": { "type": "cppdbg", "MIMode": "gdb" },
+    "darwin": { "type": "cppdbg", "MIMode": "lldb" },
+    "win32": { "type": "cppvsdbg" },
+    "program": "${exec}",
+    "args": "${argsArray}",
+    "cwd": "${cwd}",
+    "env": "${envObj}",
+    "environment": "${envObjArray}",
+    "sourceFileMap": "${sourceFileMapObj}",
+  },  
   "testMate.cpp.test.advancedExecutables": [
     {
       "pattern": "x64/{Debug,Release}/*{test,Test,TEST}*",
