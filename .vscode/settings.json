@@ -94,7 +94,7 @@
   },
   "testMate.cpp.log.logfile": "/var/log/testMate.log",
   "testMate.cpp.debug.configTemplate": {
-    "type": "cppvsdbg",
+    "type": "cppdbg",
     "linux": { "type": "cppdbg", "MIMode": "gdb" },
     "darwin": { "type": "cppdbg", "MIMode": "lldb" },
     "win32": { "type": "cppvsdbg" },
