@@ -42,7 +42,7 @@
     <ClInclude Include="FunctionObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GenericConstaints.h">
+    <ClInclude Include="GenericConstraints.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Graph.h">

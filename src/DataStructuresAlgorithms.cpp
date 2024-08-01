@@ -4023,8 +4023,9 @@ size_t BeautifulQuadruples(long a, long b, long c, long d)
 						quadruples.emplace(multiset<long>{i, j, k, l});
 	return quadruples.size();
 }
-// https://www.hackerrank.com/challenges/red-knights-shortest-path/problem
-// 100%
+/*https://www.hackerrank.com/challenges/red-knights-shortest-path/problem
+ * 100%
+ */
 vector<string> findShortestPath(int n, int i_start, int j_start, int i_end, int j_end)
 {
 	vector<string> result;

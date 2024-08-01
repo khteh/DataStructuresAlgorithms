@@ -7,7 +7,7 @@
 #include <ranges>
 #include <memory>
 #include <concepts>
-#include "GenericConstaints.h"
+#include "GenericConstraints.h"
 #include "oneapi/tbb.h"
 #include "Vertex.h"
 using namespace oneapi::tbb;
