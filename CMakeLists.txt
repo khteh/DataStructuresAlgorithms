@@ -79,6 +79,7 @@ include(CMake/Utils.cmake)
 # Additional Global Settings(add specific info there)
 # ###############################################################################
 include(CMake/GlobalSettingsInclude.cmake OPTIONAL)
+include(CTest)
 enable_testing()
 
 # ###############################################################################
