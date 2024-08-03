@@ -106,7 +106,7 @@ vector<long> Search::SearchRange(size_t target, vector<size_t> const &nums)
 //			                   L             M              U
 // 4 8 9 9 9 10 12 13 1 2 2 3
 // L            M           U
-size_t Search::BinarySearch(size_t toSearch, vector<size_t> const &data)
+long Search::BinarySearch(size_t toSearch, vector<size_t> const &data)
 {
     for (size_t lower = 0, middle = 0, upper = data.size() - 1; lower <= upper;)
     {

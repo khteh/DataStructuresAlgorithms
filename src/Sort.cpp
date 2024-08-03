@@ -489,9 +489,11 @@ void Sort<T>::AlternateSignSortNumbers(vector<T> &data)
 {
 	size_t j;
 	T tmp = T();
+	if (data.empty() || data.size() < 3)
+		return;
 	for (size_t i = 0; i < data.size(); i++)
 	{
-		if (data[i] < 0 && data[i + 1] < 0)
+		if (data[i] < 0 && i < data.size() - 1 && data[i + 1] < 0)
 		{ // Look for positive number
 			for (j = i + 1; j < data.size() && data[j] < 0; j++)
 				;
@@ -503,7 +505,7 @@ void Sort<T>::AlternateSignSortNumbers(vector<T> &data)
 				data[k] = data[k - 1];
 			data[i + 1] = tmp;
 		}
-		else if (data[i] > 0 && data[i + 1] > 0)
+		else if (data[i] > 0 && i < data.size() - 1 && data[i + 1] > 0)
 		{ // Look for positive number
 			for (j = i + 1; j < data.size() && data[j] > 0; j++)
 				;
@@ -517,7 +519,8 @@ void Sort<T>::AlternateSignSortNumbers(vector<T> &data)
 		}
 	}
 }
-// http://cpluspluslearning-petert.blogspot.co.uk/2014/10/data-structure-and-algorithm-order.html
+/* http://cpluspluslearning-petert.blogspot.co.uk/2014/10/data-structure-and-algorithm-order.html
+*/
 template <typename T>
 void Sort<T>::AlternateSignSortNumbers1(vector<T> &data)
 	requires arithmetic_type<T>

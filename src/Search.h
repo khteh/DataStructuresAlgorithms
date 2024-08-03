@@ -15,7 +15,7 @@ private:
 public:
     void KMPSearch(string const &, string const &, vector<size_t> &);
     vector<long> SearchRange(size_t, vector<size_t> const &);
-    size_t BinarySearch(size_t, vector<size_t> const &);
+    long BinarySearch(size_t, vector<size_t> const &);
     long BinarySearchMinimum(vector<long> const &data, long, long);
     int BinarySearchCountUpper(vector<long> const &, long, long, long);
     int BinarySearchCountLower(vector<long> const &, long, long, long);
