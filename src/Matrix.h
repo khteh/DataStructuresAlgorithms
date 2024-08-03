@@ -3,7 +3,6 @@
 #include <limits>
 #include <ranges>
 #include <algorithm>
-#include "Heap.h"
 #include "Sort.h"
 using namespace std;
 namespace ranges = std::ranges;

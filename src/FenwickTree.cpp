@@ -27,7 +27,8 @@ void FenwickTree<T>::Construct(vector<T> const &data)
 template <integral_type T>
 T FenwickTree<T>::lsb(T index)
 {
-  return index & -index;
+    // https://stackoverflow.com/questions/26892674/warning-c4146-minus-operator-on-unsigned-type
+  return index & (0 - index);
 }
 /*
  * Any time that we move right, add the current value to the counter. OR:

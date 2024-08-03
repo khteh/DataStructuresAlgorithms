@@ -3,7 +3,6 @@
 #include <string>
 #include <iostream>
 using namespace std;
-
 Error::Error(string msg)
 {
 	msg_ = msg;

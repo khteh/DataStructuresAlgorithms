@@ -359,7 +359,7 @@ public:
 		_expected = get<0>(GetParam());
 		_data = get<1>(GetParam());
 	}
-	long SortSwapCountTest()
+	size_t SortSwapCountTest()
 	{
 		return _sort.SortSwapCount(_data);
 	}

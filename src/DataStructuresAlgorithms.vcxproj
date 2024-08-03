@@ -183,6 +183,7 @@
     <ClInclude Include="FenwickTree.h" />
     <ClInclude Include="FunctionObject.h" />
     <ClInclude Include="GameTheory.h" />
+    <ClInclude Include="GenericConstraints.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="Greedy.h" />
     <ClInclude Include="Heap.h" />

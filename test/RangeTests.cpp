@@ -268,7 +268,7 @@ public:
 	{
 		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
-	long PickNumbersFromRangeTest()
+	size_t PickNumbersFromRangeTest()
 	{
 		return _rangeObj.PickNumbersFromRange(_data);
 	}
@@ -303,7 +303,7 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(3, 3, vector<size_t>{1, 2, 3, 4, 5, 6}),
 					  make_tuple(8, 6, vector<size_t>{12, 6, 1, 9, 13, 15, 10, 21, 14, 32, 5, 8, 23, 19}),
 					  make_tuple(3, 3, vector<size_t>{1, 7, 2, 4})));
-class HackerlandRadioTransmittersTestFixture : public RangeTestFixture2<size_t, size_t, size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+class HackerlandRadioTransmittersTestFixture : public RangeTestFixture2<size_t, long, size_t>, public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
 {
 public:
 	void SetUp() override

@@ -1,5 +1,4 @@
 #pragma once
-#include "Node.h"
 #include <map>
 #include <vector>
 #include <list>
@@ -10,6 +9,7 @@
 #include <limits>
 #include <limits.h>
 #include <memory>
+#include "Node.h"
 using namespace std;
 /*
 3 types of tree traversal:

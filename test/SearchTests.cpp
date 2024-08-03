@@ -3,7 +3,7 @@ using namespace std;
 TEST(SearchTests, BinarySearchTest)
 {
 	Search search;
-	int pos;
+	size_t pos;
 	vector<size_t> source(30);
 	long data[12] = {15, 16, 17, 18, 19, 20, 0, 1, 2, 3, 4, 5};
 	/*L				      M			         U*/

@@ -150,7 +150,7 @@ INSTANTIATE_TEST_SUITE_P(
 	CoinsChangeFewestCoinsDynamicProgrammingTests,
 	CoinsChangeFewestCoinsDynamicProgrammingTestFixture,
 	::testing::Values(make_tuple(3, 11, vector<size_t>{1, 2, 5}), make_tuple(2, 10, vector<size_t>{1, 2, 5}), make_tuple(-1, 3, vector<size_t>{2}), make_tuple(0, 0, vector<size_t>{1}), make_tuple(1, 1, vector<size_t>{1}), make_tuple(2, 2, vector<size_t>{1})));
-class StairsClimbingDynamicProgrammingTestFixture : public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+class StairsClimbingDynamicProgrammingTestFixture : public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
 {
 public:
 	void SetUp() override
@@ -178,7 +178,7 @@ INSTANTIATE_TEST_SUITE_P(
 	StairsClimbingDynamicProgrammingTests,
 	StairsClimbingDynamicProgrammingTestFixture,
 	::testing::Values(make_tuple(13, 6, vector<size_t>{1, 2}), make_tuple(24, 6, vector<size_t>{1, 2, 3})));
-class StairsClimbingDynamicProgrammingBottomUpTestFixture : public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+class StairsClimbingDynamicProgrammingBottomUpTestFixture : public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
 {
 public:
 	void SetUp() override

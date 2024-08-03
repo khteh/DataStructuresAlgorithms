@@ -13,8 +13,8 @@
 #include "oneapi/tbb.h"
 #include "Heap.h"
 using namespace std;
-namespace ranges = std::ranges;
 using namespace oneapi::tbb;
+namespace ranges = std::ranges;
 template <typename T>
 class Sort
 {
