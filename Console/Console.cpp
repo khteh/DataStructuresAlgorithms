@@ -1908,8 +1908,8 @@ int main(int argc, char *argv[])
 	ugrid = {{1, 2},
 			 {2, 3},
 			 {1, 4}};
-	udata = {3, 1, 2};
-	assert(udata == UnbeatenPaths(4, ugrid, 1));
+	a = {3, 1, 2};
+	assert(a == UnbeatenPaths(4, ugrid, 1));
 	ugrid.clear();
 	ugrid = {{1, 2}, {2, 3}};
 	assert(DistinctPairs(4, ugrid) == 3);

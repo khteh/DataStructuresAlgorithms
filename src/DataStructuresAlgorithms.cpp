@@ -5309,51 +5309,26 @@ vector<string> fizzBuzz(size_t n)
  * https://www.hackerrank.com/challenges/rust-murderer/problem
  * WIP. Time out and wrong answer.
  */
-vector<size_t> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
+vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
 {
-	map<size_t, set<size_t>> edges;
-	for (vector<vector<size_t>>::iterator it = roads.begin(); it != roads.end(); it++)
-	{
-		if (edges.find((*it)[0] - 1) == edges.end())
-			edges.emplace((*it)[0] - 1, set<size_t>{(*it)[1] - 1});
-		else
-			edges[(*it)[0] - 1].insert((*it)[1] - 1);
-		if (edges.find((*it)[1] - 1) == edges.end())
-			edges.emplace((*it)[1] - 1, set<size_t>{(*it)[0] - 1});
-		else
-			edges[(*it)[1] - 1].insert((*it)[0] - 1);
-	}
+	vector<vector<bool>> paths(n, vector<bool>(n, true));
 	vector<size_t> data(n);
+	vector<long> result;
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; }); // Item values
 	Graph<size_t, size_t> graph(data); // Tag values are indices
 	assert(graph.Count() == n);
-	for (map<size_t, set<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
-	{
-		shared_ptr<Vertex<size_t, size_t>> v = graph.GetVertex(it->first);
-		assert(v);
-		for (size_t i = 0; i < n; i++)
+	for (vector<vector<size_t>>::iterator it = roads.begin(); it != roads.end(); it++)
+		paths[(*it)[0] - 1][(*it)[1] - 1] = false;
+	for (size_t i = 0; i < n; i++)
+		for (size_t j = i + 1; j < n; j++)
 		{
-			if (i != it->first && it->second.find(i) == it->second.end())
-				graph.AddUndirectedEdge(v, graph.GetVertex(i), 1);
+			if (paths[i][j])
+				graph.AddUndirectedEdge(i, j, 1);
 		}
-	}
-	map<shared_ptr<Vertex<size_t, size_t>>, long> costs;
-	graph.Dijkstra(source - 1, costs);
-	map<size_t, size_t> sortedCosts;
-	cout << "Vertex\tDistance from Source " << source << ": " << endl;
-	for (map<shared_ptr<Vertex<size_t, size_t>>, long>::iterator it = costs.begin(); it != costs.end(); it++)
-	{
-		cout << it->first->GetItem() << "\t" << it->second << endl;
-		if (it->first->GetTag() != source - 1)
-			sortedCosts.emplace(it->first->GetTag(), it->second);
-	}
-	vector<size_t> result;
-	ranges::transform(
-		sortedCosts,
-		back_inserter(result),
-		[](const typename map<size_t, size_t>::value_type &pair)
-		{ return pair.second; });
+	for (size_t i = 0; i < n; i++)
+		if (i != source - 1)
+			result.push_back(graph.Dijkstra(source - 1, i));
 	return result;
 }
 /*
