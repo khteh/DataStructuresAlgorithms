@@ -5319,7 +5319,10 @@ vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sourc
 	Graph<size_t, size_t> graph(data); // Tag values are indices
 	assert(graph.Count() == n);
 	for (vector<vector<size_t>>::iterator it = roads.begin(); it != roads.end(); it++)
+	{
 		paths[(*it)[0] - 1][(*it)[1] - 1] = false;
+		paths[(*it)[1] - 1][(*it)[0] - 1] = false;
+	}
 	for (size_t i = 0; i < n; i++)
 		for (size_t j = i + 1; j < n; j++)
 		{
@@ -5328,7 +5331,7 @@ vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sourc
 		}
 	for (size_t i = 0; i < n; i++)
 		if (i != source - 1)
-			result.push_back(graph.Dijkstra(source - 1, i));
+			result.push_back(paths[source - 1][i] ? 1 : graph.Dijkstra(source - 1, i));
 	return result;
 }
 /*
