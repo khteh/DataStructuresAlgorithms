@@ -6172,14 +6172,14 @@ vector<unsigned long long> BFSNextMoves(unsigned long long state, size_t towerCo
 		 * 1	[2, 4, 5]
 		 */
 		pole = (state >> (d * towerBitCount)) & towerBitMask;
-		cout << "Current state: Pole: " << pole << ", discs: " << d << endl;
+		// cout << "Current state: Pole: " << pole << ", discs: " << d << endl;
 		if (poles.find(pole) == poles.end())
 		{
 			topDiscs[d] = pole;
 			poles.emplace(pole);
 		}
 	}
-	cout << endl;
+	// cout << endl;
 	for (map<size_t, size_t>::const_iterator it = topDiscs.begin(); it != topDiscs.end(); it++)
 	{
 		/*
@@ -6197,7 +6197,7 @@ vector<unsigned long long> BFSNextMoves(unsigned long long state, size_t towerCo
 				unsigned long long s = state & ~(towerBitMask << offset);
 				s |= (p << offset);
 				bitset<64> bs(s);
-				cout << "Next move: " << bs << " Pole: " << p << ", disc: " << it->first << endl;
+				// cout << "Next move: " << bs << " Pole: " << p << ", disc: " << it->first << endl;
 				states.push_back(s);
 			}
 	}
@@ -6225,11 +6225,11 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 	 */
 	for (size_t d = 0; d < discCount; d++)
 	{
-		cout << "Pole " << poles[d] - 1 << " discs: " << d << endl;
+		// cout << "Pole " << poles[d] - 1 << " discs: " << d << endl;
 		state |= (poles[d] - 1) << (d * towerBitCount);
 	}
 	bitset<64> s(state);
-	cout << "state: " << s << endl;
+	// cout << "state: " << s << endl;
 	deque<towerofhanoi_state_t> queue;
 	queue.push_back(towerofhanoi_state_t(state, 0));
 	set<unsigned long long> visited{state};
