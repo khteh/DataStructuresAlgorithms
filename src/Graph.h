@@ -39,6 +39,7 @@ public:
 	size_t PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem>>);
 	void Dijkstra(TTag, map<shared_ptr<Vertex<TTag, TItem>>, long> &);
 	long Dijkstra(TTag, TTag);
+	long Dijkstra(map<TTag, map<TTag, long>> &, TTag, TTag);
 	vector<long> BFSShortestPaths(size_t nodecount, vector<vector<TTag>> &, TTag);
 	void GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>> &, shared_ptr<Vertex<TTag, TItem>> &);
 	long GetLowestPathCost(size_t, vector<TTag> &, vector<TTag> &, vector<long> &);

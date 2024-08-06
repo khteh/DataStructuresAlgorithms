@@ -5311,14 +5311,17 @@ vector<string> fizzBuzz(size_t n)
  */
 vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
 {
-	map<size_t, vector<pair<size_t, long>>> adjacency_list;
+	map<size_t, map<size_t, long>> adjacency_list;
 	vector<vector<bool>> paths(n, vector<bool>(n, true));
-	vector<size_t> data(n);
 	vector<long> result;
+	Graph<size_t, size_t> graph;
+#if 0
+	vector<size_t> data(n);
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; }); // Item values
 	Graph<size_t, size_t> graph(data); // Tag values are indices
 	assert(graph.Count() == n);
+#endif
 	for (vector<vector<size_t>>::iterator it = roads.begin(); it != roads.end(); it++)
 	{
 		paths[(*it)[0] - 1][(*it)[1] - 1] = false;
@@ -5329,13 +5332,14 @@ vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sourc
 		{
 			if (paths[i][j])
 			{
-				adjacency_list[i].push_back(make_pair(j, 1));
-				graph.AddUndirectedEdge(i, j, 1);
+				adjacency_list[i].emplace(j, 1);
+				adjacency_list[j].emplace(i, 1);
+				// graph.AddUndirectedEdge(i, j, 1);
 			}
 		}
 	for (size_t i = 0; i < n; i++)
 		if (i != source - 1)
-			result.push_back(paths[source - 1][i] ? 1 : graph.Dijkstra(source - 1, i));
+			result.push_back(paths[source - 1][i] ? 1 : graph.Dijkstra(adjacency_list, source - 1, i));
 	return result;
 }
 /*

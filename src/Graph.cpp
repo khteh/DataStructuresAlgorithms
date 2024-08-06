@@ -277,9 +277,8 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 	}
 	return vertex && vertex == destination && costs.find(vertex) != costs.end() ? costs[vertex] : -1;
 }
-#if 0
 template <typename TTag, typename TItem>
-long Graph<TTag, TItem>::Dijkstra(map<TTag, vector<pair<TTag, long>>> const &adjacency_list, TTag src, TTag dest)
+long Graph<TTag, TItem>::Dijkstra(map<TTag, map<TTag, long>> &adjacency_list, TTag src, TTag destination)
 {
 	set<TTag> spt;				  // spt: Shortest Path Tree
 	multimap<long, TTag> costsPQ; // Priority Queue with min cost at *begin()
@@ -293,8 +292,8 @@ long Graph<TTag, TItem>::Dijkstra(map<TTag, vector<pair<TTag, long>>> const &adj
 		costsPQ.erase(costsPQ.begin());
 		spt.emplace(vertex);
 		// Update cost of the adjacent vertices of the picked vertex.
-		vector<pair<TTag, long>> neighbours = adjacency_list[vertex];
-		for (typename vector<pair<TTag, long>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
+		map<TTag, long> neighbours = adjacency_list[vertex];
+		for (typename map<TTag, long>::const_iterator it = neighbours.begin(); it != neighbours.end(); it++)
 		{
 			/* v is (*it); u is vertex.
 			 * Update cost[v] only if it:
@@ -302,23 +301,25 @@ long Graph<TTag, TItem>::Dijkstra(map<TTag, vector<pair<TTag, long>>> const &adj
 			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
 			 * (3) and total cost of path from src to v through u is smaller than current value of cost[v]
 			 */
-			if (spt.find(*it) == spt.end())
+			if (spt.find(it->first) == spt.end())
 			{
-				long uCost = vertex->GetCost(*it);
-				long vCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
-				if (costs[vertex] + uCost < vCost)
+				if (adjacency_list[vertex].find(it->first) != adjacency_list[vertex].end())
 				{
-					costs[*it] = costs[vertex] + uCost;
-					erase_if(costsPQ, [it](const auto &it1)
-							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
-					costsPQ.emplace(costs[vertex] + uCost, *it);
+					long uCost = adjacency_list[vertex][it->first]; // vertex->GetCost(*it);
+					long vCost = costs.find(it->first) == costs.end() ? numeric_limits<long>::max() : costs[it->first];
+					if (costs[vertex] + uCost < vCost)
+					{
+						costs[it->first] = costs[vertex] + uCost;
+						erase_if(costsPQ, [it](const auto &it1)
+								 { return it1.second == it->first; });
+						costsPQ.emplace(costs[vertex] + uCost, it->first);
+					}
 				}
 			}
 		}
 	}
-	return vertex && vertex == destination && costs.find(vertex) != costs.end() ? costs[vertex] : -1;
+	return vertex == destination && costs.find(vertex) != costs.end() ? costs[vertex] : -1;
 }
-#endif
 /*
  * https://www.hackerrank.com/challenges/bfsshortreach
  * 100%
