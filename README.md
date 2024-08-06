@@ -26,7 +26,7 @@ vcpkg.exe install gtest:x64-windows
 - Visual Studio Code with the following extensions:
 
   - C/C++
-  - CMake Tools extension for VS Code
+  - CMake Tools extension for VS Code (https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/how-to.md)
   - https://marketplace.visualstudio.com/items?itemName=matepek.vscode-catch2-test-adapter
 
 - To convert Visual Studio solution `.sln` and included `.vcxproj` to `CMakeLists.txt`:
