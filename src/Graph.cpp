@@ -277,6 +277,48 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 	}
 	return vertex && vertex == destination && costs.find(vertex) != costs.end() ? costs[vertex] : -1;
 }
+#if 0
+template <typename TTag, typename TItem>
+long Graph<TTag, TItem>::Dijkstra(map<TTag, vector<pair<TTag, long>>> const &adjacency_list, TTag src, TTag dest)
+{
+	set<TTag> spt;				  // spt: Shortest Path Tree
+	multimap<long, TTag> costsPQ; // Priority Queue with min cost at *begin()
+	map<TTag, long> costs;
+	TTag vertex = src;
+	costs.emplace(vertex, 0);
+	costsPQ.emplace(0, vertex);
+	for (; !costsPQ.empty() && vertex != destination;)
+	{
+		vertex = costsPQ.begin()->second;
+		costsPQ.erase(costsPQ.begin());
+		spt.emplace(vertex);
+		// Update cost of the adjacent vertices of the picked vertex.
+		vector<pair<TTag, long>> neighbours = adjacency_list[vertex];
+		for (typename vector<pair<TTag, long>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
+		{
+			/* v is (*it); u is vertex.
+			 * Update cost[v] only if it:
+			 * (1) is not in sptSet
+			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
+			 * (3) and total cost of path from src to v through u is smaller than current value of cost[v]
+			 */
+			if (spt.find(*it) == spt.end())
+			{
+				long uCost = vertex->GetCost(*it);
+				long vCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
+				if (costs[vertex] + uCost < vCost)
+				{
+					costs[*it] = costs[vertex] + uCost;
+					erase_if(costsPQ, [it](const auto &it1)
+							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
+					costsPQ.emplace(costs[vertex] + uCost, *it);
+				}
+			}
+		}
+	}
+	return vertex && vertex == destination && costs.find(vertex) != costs.end() ? costs[vertex] : -1;
+}
+#endif
 /*
  * https://www.hackerrank.com/challenges/bfsshortreach
  * 100%

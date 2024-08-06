@@ -5311,6 +5311,7 @@ vector<string> fizzBuzz(size_t n)
  */
 vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
 {
+	map<size_t, vector<pair<size_t, long>>> adjacency_list;
 	vector<vector<bool>> paths(n, vector<bool>(n, true));
 	vector<size_t> data(n);
 	vector<long> result;
@@ -5327,7 +5328,10 @@ vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sourc
 		for (size_t j = i + 1; j < n; j++)
 		{
 			if (paths[i][j])
+			{
+				adjacency_list[i].push_back(make_pair(j, 1));
 				graph.AddUndirectedEdge(i, j, 1);
+			}
 		}
 	for (size_t i = 0; i < n; i++)
 		if (i != source - 1)
