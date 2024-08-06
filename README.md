@@ -55,6 +55,10 @@ vcpkg.exe install gtest:x64-windows
 
 - Press `CTRL + SHFT + B` and select one of the options
 
-### Run
+### Run Without Debug
 
 - Press `CTRL + F5`
+
+### Debug
+
+- Press `SHIFT + F5`
