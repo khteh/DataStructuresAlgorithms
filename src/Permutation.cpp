@@ -73,7 +73,7 @@ vector<vector<T>> Permutation<T>::RangePermutations(vector<T> sequence, set<T> a
         return result;
     }
     for (typename set<T>::iterator it = available.begin(); it != available.end(); it++)
-        if (sequence.size() < size && (sequence.empty() || abs(*it - sequence.back() >= step)))
+        if (sequence.size() < size && (sequence.empty() || abs((long)*it - (long)sequence.back()) >= step))
         {
             vector<T> tmp(sequence);
             tmp.push_back(*it);
