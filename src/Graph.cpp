@@ -277,49 +277,6 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 	}
 	return vertex && vertex == destination && costs.find(vertex) != costs.end() ? costs[vertex] : -1;
 }
-template <typename TTag, typename TItem>
-long Graph<TTag, TItem>::Dijkstra(map<TTag, map<TTag, long>> &adjacency_list, TTag src, TTag destination)
-{
-	set<TTag> spt;				  // spt: Shortest Path Tree
-	multimap<long, TTag> costsPQ; // Priority Queue with min cost at *begin()
-	map<TTag, long> costs;
-	TTag vertex = src;
-	costs.emplace(vertex, 0);
-	costsPQ.emplace(0, vertex);
-	for (; !costsPQ.empty() && vertex != destination;)
-	{
-		vertex = costsPQ.begin()->second;
-		costsPQ.erase(costsPQ.begin());
-		spt.emplace(vertex);
-		// Update cost of the adjacent vertices of the picked vertex.
-		map<TTag, long> neighbours = adjacency_list[vertex];
-		for (typename map<TTag, long>::const_iterator it = neighbours.begin(); it != neighbours.end(); it++)
-		{
-			/* v is (*it); u is vertex.
-			 * Update cost[v] only if it:
-			 * (1) is not in sptSet
-			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
-			 * (3) and total cost of path from src to v through u is smaller than current value of cost[v]
-			 */
-			if (spt.find(it->first) == spt.end())
-			{
-				if (adjacency_list[vertex].find(it->first) != adjacency_list[vertex].end())
-				{
-					long uCost = adjacency_list[vertex][it->first]; // vertex->GetCost(*it);
-					long vCost = costs.find(it->first) == costs.end() ? numeric_limits<long>::max() : costs[it->first];
-					if (costs[vertex] + uCost < vCost)
-					{
-						costs[it->first] = costs[vertex] + uCost;
-						erase_if(costsPQ, [it](const auto &it1)
-								 { return it1.second == it->first; });
-						costsPQ.emplace(costs[vertex] + uCost, it->first);
-					}
-				}
-			}
-		}
-	}
-	return vertex == destination && costs.find(vertex) != costs.end() ? costs[vertex] : -1;
-}
 /*
  * https://www.hackerrank.com/challenges/bfsshortreach
  * 100%
