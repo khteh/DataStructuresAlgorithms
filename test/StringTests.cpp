@@ -424,3 +424,31 @@ INSTANTIATE_TEST_SUITE_P(
     WordsLadderTests,
     WordsLadderTestFixture,
     ::testing::Values(make_tuple(vector<string>{"LIKE", "LIME", "LIMP", "LAMP", "DAMP"}, "DAMP", "LIKE", set<string>{"DAMP", "LAMP", "LIMP", "LIME", "LIKE", "LAKE"}), make_tuple(vector<string>{}, "DAMP", "Like", set<string>{"DAMP", "LAMP", "LIMP", "LIME", "LIKE", "LAKE"}), make_tuple(vector<string>{"Cog", "Dog", "Dot", "Hot", "Hit"}, "Hit", "Cog", set<string>{"Hot", "Dot", "Dog", "Lot", "Log", "Cog"}), make_tuple(vector<string>{}, "Hit", "Hat", set<string>{"Hot", "Dot", "Dog", "Lot", "Log", "Cog"})));
+
+class ZFunctionTestFixture : public testing::TestWithParam<tuple<vector<size_t>, string>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _str = get<1>(GetParam());
+    }
+    vector<size_t> ZFunctionTest()
+    {
+        vector<size_t> result;
+        Z(result, _str);
+        return result;
+    }
+
+protected:
+    vector<size_t> _expected;
+    string _str;
+};
+TEST_P(ZFunctionTestFixture, ZFunctionTests)
+{
+    ASSERT_EQ(this->_expected, this->ZFunctionTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    ZFunctionTests,
+    ZFunctionTestFixture,
+    ::testing::Values(make_tuple(vector<size_t>{0, 4, 3, 2, 1}, "aaaaa"), make_tuple(vector<size_t>{0, 2, 1, 0, 2, 1, 0}, "aaabaab"), make_tuple(vector<size_t>{0, 0, 1, 0, 3, 0, 1}, "abacaba"), make_tuple(vector<size_t>{0, 0, 3, 0, 1, 1}, "ababaa")));

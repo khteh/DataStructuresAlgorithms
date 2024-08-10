@@ -34,6 +34,7 @@ class SuffixTree
 private:
 	vector<string> m_strings;
 	unique_ptr<SuffixTreeNode> m_root;
+	const vector<size_t> GetIndexes();
 
 public:
 	SuffixTree();
@@ -41,7 +42,6 @@ public:
 	~SuffixTree();
 	void InsertString(string const &);
 	void RemoveString(string const &);
-	const vector<size_t> GetIndexes();
 	const vector<size_t> GetIndexes(string const &);
 	const vector<string> LongestRepeatedSubstring();
 	const size_t LongestCommonSubstring(long); // Uses LongestRepeatedSubstring

@@ -7015,3 +7015,25 @@ size_t DistinctPairs(size_t n, vector<vector<size_t>> const &astronauts)
 	}
 	return BinomialCoefficients(ids.size(), 2) + pairs + pairs1;
 }
+/*
+https://www.hackerrank.com/challenges/string-similarity/problem
+100%
+https://cp-algorithms.com/string/z-function.html
+*/
+void Z(vector<size_t> &z, string const &str)
+{
+	z.resize(str.size());
+	for (size_t l = 0, r = 0, i = 1; i < str.size(); i++)
+	{
+		if (i < r) // The current position is inside the current segment match [l, r)
+			z[i] = min(r - i, z[i - l]);
+		// trivial
+		for (; i + z[i] < str.size() && str[z[i]] == str[i + z[i]]; z[i]++)
+			;
+		if (i + z[i] > r)
+		{
+			l = i;
+			r = i + z[i];
+		}
+	}
+}
