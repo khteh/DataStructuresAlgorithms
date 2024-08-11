@@ -7019,6 +7019,13 @@ size_t DistinctPairs(size_t n, vector<vector<size_t>> const &astronauts)
 https://www.hackerrank.com/challenges/string-similarity/problem
 100%
 https://cp-algorithms.com/string/z-function.html
+
+ababaa
+babaa 0
+abaa  3
+baa   0
+aa    1
+a     1
 */
 void Z(vector<size_t> &z, string const &str)
 {

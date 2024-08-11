@@ -260,12 +260,34 @@ INSTANTIATE_TEST_SUITE_P(
 	StringGridPatternSearchTestFixture,
 	::testing::Values(make_tuple(true, vector<string>{"12", "34"}, vector<string>{"123412", "561212", "123634", "781288"}),
 					  make_tuple(true, vector<string>{"876543", "111111", "111111"}, vector<string>{"1234567890", "0987654321", "1111111111", "1111111111", "2222222222"})));
-TEST(SearchTests, KMPSearchTests)
+class KMPSearchTestFixture : public testing::TestWithParam<tuple<vector<size_t>, string, string>>
 {
-	Search search;
-	vector<size_t> udata;
-	search.KMPSearch("ABC ABCDAB ABCDABCDABDE", "ABCDABD", udata);
-	ASSERT_FALSE(udata.empty());
-	ASSERT_EQ(1, udata.size());
-	ASSERT_EQ(15, udata[0]);
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_toSearch = get<2>(GetParam());
+	}
+	vector<size_t> KMPSearchTest()
+	{
+		vector<size_t> result;
+		_search.KMPSearch(_data, _toSearch, result);
+		return result;
+	}
+
+protected:
+	Search _search;
+	vector<size_t> _expected;
+	string _data, _toSearch;
+};
+TEST_P(KMPSearchTestFixture, KMPSearchTests)
+{
+	ASSERT_EQ(this->_expected, this->KMPSearchTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	KMPSearchTests,
+	KMPSearchTestFixture,
+	::testing::Values(make_tuple(vector<size_t>{15}, "ABC ABCDAB ABCDABCDABDE", "ABCDABD"),
+					  make_tuple(vector<size_t>{6, 13, 17}, "ABC ABCDAB ABCDABCDABDE", "CD"),
+					  make_tuple(vector<size_t>{11, 12, 13}, "Hello World!!!", "!")));
