@@ -16,12 +16,15 @@ protected:
 	void SetHead(shared_ptr<Node<T>>);
 	shared_ptr<Node<T>> Split(shared_ptr<Node<T>>, size_t);
 	void Merge(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
+	shared_ptr<Node<T>> AddNumbers(shared_ptr<Node<T>>, shared_ptr<Node<T>>, T carry = 0)
+		requires integral_type<T>;
 
 public:
 	LinkedList();
 	LinkedList(shared_ptr<Node<T>>);
-	LinkedList(vector<T> &);
+	LinkedList(vector<T> const &);
 	virtual ~LinkedList();
+	void LoadData(vector<T> const &);
 	shared_ptr<Node<T>> Head();
 	shared_ptr<Node<T>> Tail();
 	virtual shared_ptr<Node<T>> Find(const Node<T> &);
@@ -48,6 +51,6 @@ public:
 	// Implement an algorithm to find the nth to last element of a singly linked list.
 	shared_ptr<Node<T>> NthElementFromBack(long);
 	shared_ptr<Node<T>> RemoveNthElementFromBack(long);
-	shared_ptr<Node<T>> AddNumbers(shared_ptr<Node<T>>, shared_ptr<Node<T>>, T carry = 0)
+	shared_ptr<Node<T>> AddNumbers(LinkedList<T> &)
 		requires integral_type<T>;
 };

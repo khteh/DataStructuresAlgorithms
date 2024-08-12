@@ -32,107 +32,125 @@ TEST(LinkedListTests, SplitLinkedListTest)
 	for (size_t i = 1; node; node = node->Next(), i += 2)
 		ASSERT_EQ(a[i], node->Item());
 }
-TEST(LinkedListTests, LinkedListNthElementFromBackTest)
+template <typename T>
+class LinkedListTestFixture
 {
-	vector<long> a(10);
-	ranges::generate(a, [n = 0]() mutable
-					 { return n++; });
-	// 0->1->2->3->4->5->6->7->8->9
-	// 10 9  8  7  6  5  4  3  2  1
-	LinkedList<long> ll(a);
-	ASSERT_EQ(10, ll.Length());
-	// Implement an algorithm to find the nth to last element of a singly linked list.
-	shared_ptr<Node<long>> lptr = ll.NthElementFromBack(3);
-	ASSERT_TRUE(lptr);
-	ASSERT_EQ(7, lptr->Item());
-	lptr = ll.NthElementFromBack(10);
-	ASSERT_TRUE(lptr);
-	ASSERT_EQ(0, lptr->Item());
-	lptr = ll.NthElementFromBack(11);
-	ASSERT_FALSE(lptr);
-}
-TEST(LinkedListTests, LinkedListIndexSubscriptOperatorTest)
+public:
+	void SetUp(T expected, T var1, vector<T> data)
+	{
+		_expected = expected;
+		_var1 = var1;
+		_data = data;
+		_ll.LoadData(_data);
+	}
+
+protected:
+	LinkedList<T> _ll;
+	T _expected, _var1;
+	vector<T> _data;
+};
+class LinkedListNthElementFromBackTestFixture : public LinkedListTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
-	vector<long> a(10);
-	ranges::generate(a, [n = 0]() mutable
-					 { return n++; });
-	LinkedList<long> ll(a);
-	ASSERT_EQ(10, ll.Length());
-	// Implement an algorithm to find the nth to last element of a singly linked list.
-	shared_ptr<Node<long>> lptr = ll[3];
-	ASSERT_TRUE(lptr);
-	ASSERT_EQ(a[3], lptr->Item());
-	lptr = ll[5];
-	ASSERT_TRUE(lptr);
-	ASSERT_EQ(a[5], lptr->Item());
-	lptr = ll[10];
-	ASSERT_FALSE(lptr);
-}
-TEST(LinkedListTests, LinkedListRemoveNthElementFromBackTest)
+public:
+	void SetUp() override
+	{
+		LinkedListTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	size_t LinkedListNthElementFromBackTest()
+	{
+		// 0->1->2->3->4->5->6->7->8->9
+		// 10 9  8  7  6  5  4  3  2  1
+		shared_ptr<Node<size_t>> lptr = _ll.NthElementFromBack(_var1);
+		return lptr ? lptr->Item() : 0;
+	}
+};
+TEST_P(LinkedListNthElementFromBackTestFixture, LinkedListNthElementFromBackTests)
 {
-	vector<long> a(10);
-	ranges::generate(a, [n = 0]() mutable
-					 { return n++; });
-	// 0->1->2->3->4->5->6->7->8->9
-	// 10 9  8  7  6  5  4  3  2  1
-	LinkedList<long> ll(a);
-	ASSERT_EQ(10, ll.Length());
-	shared_ptr<Node<long>> lptr = ll.RemoveNthElementFromBack(4);
-	ASSERT_EQ(9, ll.Length());
-	a.clear();
-	a = {0, 1, 2, 3, 4, 5, 7, 8, 9};
-	for (size_t i = 0; i < ll.Length(); i++, lptr = lptr->Next())
-		ASSERT_EQ(a[i], lptr->Item());
-	// 0->1->2->3->4->5->7->8->9
-	// 9  8  7  6  5  4  3  2  1
-	lptr = ll.RemoveNthElementFromBack(7);
-	ASSERT_EQ(8, ll.Length());
-	a.clear();
-	a = {0, 1, 3, 4, 5, 7, 8, 9};
-	for (size_t i = 0; i < ll.Length(); i++, lptr = lptr->Next())
-		ASSERT_EQ(a[i], lptr->Item());
-	// 0->1->3->4->5->7->8->9
-	// 8  7  6  5  4  3  2  1
-	lptr = ll.RemoveNthElementFromBack(8);
-	ASSERT_EQ(7, ll.Length());
-	a.clear();
-	a = {1, 3, 4, 5, 7, 8, 9};
-	for (size_t i = 0; i < ll.Length(); i++, lptr = lptr->Next())
-		ASSERT_EQ(a[i], lptr->Item());
+	ASSERT_EQ(this->_expected, this->LinkedListNthElementFromBackTest());
 }
-TEST(LinkedListTests, LinkedListArithmeticTest)
+INSTANTIATE_TEST_SUITE_P(
+	LinkedListNthElementFromBackTests,
+	LinkedListNthElementFromBackTestFixture,
+	::testing::Values(make_tuple(0, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), make_tuple(7, 3, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), make_tuple(0, 11, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})));
+class LinkedListIndexSubscriptOperatorTestFixture : public LinkedListTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
-	vector<long> a;
-	a.push_back(1); // LSB
-	a.push_back(2);
-	a.push_back(3); // MSB
-	LinkedList<long> lla(a);
-	ASSERT_EQ(3, lla.Length());
-	ASSERT_TRUE(lla.Find(Node<long>(2)));
-	lla.Print();
-	a.clear();
-	a.push_back(7); // LSB
-	a.push_back(8);
-	a.push_back(9); // MSB
-	LinkedList<long> llb(a);
-	ASSERT_EQ(3, llb.Length());
-	llb.Print();
-	a.clear();
-	a.push_back(8); // LSB
-	a.push_back(0);
-	a.push_back(3);
-	a.push_back(1);																  // MSB
-	LinkedList<long> listAdditionResult = lla.AddNumbers(lla.Head(), llb.Head()); // 987 + 321 = 1308 List in reverse order. Head points to LSB
-	ASSERT_EQ(4, listAdditionResult.Length());
-	listAdditionResult.Print();
-	size_t i = 0;
-	for (shared_ptr<Node<long>> n = listAdditionResult.Head(); n; n = n->Next(), i++)
-		ASSERT_EQ(a[i], n->Item());
-	vector<long> listAdditionResultVector;
-	listAdditionResult.ToVector(listAdditionResultVector);
-	ASSERT_EQ(4, listAdditionResultVector.size());
-	ASSERT_EQ(a, listAdditionResultVector);
+public:
+	void SetUp() override
+	{
+		LinkedListTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	size_t LinkedListIndexSubscriptOperatorTest()
+	{
+		// 0->1->2->3->4->5->6->7->8->9
+		shared_ptr<Node<size_t>> lptr = _ll[_var1];
+		return lptr ? lptr->Item() : 0;
+	}
+};
+TEST_P(LinkedListIndexSubscriptOperatorTestFixture, LinkedListIndexSubscriptOperatorTests)
+{
+	ASSERT_EQ(this->_expected, this->LinkedListIndexSubscriptOperatorTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	LinkedListIndexSubscriptOperatorTests,
+	LinkedListIndexSubscriptOperatorTestFixture,
+	::testing::Values(make_tuple(3, 3, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), make_tuple(5, 5, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), make_tuple(0, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})));
+class LinkedListRemoveNthElementFromBackTestFixture : public LinkedListTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		LinkedListTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	size_t LinkedListRemoveNthElementFromBackTest()
+	{
+		// 0->1->2->3->4->5->6->7->8->9
+		// 10 9  8  7  6  5  4  3  2  1
+		shared_ptr<Node<size_t>> lptr = _ll.RemoveNthElementFromBack(_var1);
+		return lptr ? lptr->Item() : 0;
+	}
+};
+TEST_P(LinkedListRemoveNthElementFromBackTestFixture, LinkedListRemoveNthElementFromBackTests)
+{
+	ASSERT_EQ(this->_expected, this->LinkedListRemoveNthElementFromBackTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LinkedListRemoveNthElementFromBackTests,
+	LinkedListRemoveNthElementFromBackTestFixture,
+	::testing::Values(make_tuple(5, 4, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), make_tuple(2, 7, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), make_tuple(1, 8, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})));
+class LinkedListArithmeticTestFixture : public testing::TestWithParam<tuple<vector<size_t>, vector<size_t>, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data1 = get<1>(GetParam());
+		_data2 = get<2>(GetParam());
+		_ll1.LoadData(_data1);
+		_ll2.LoadData(_data2);
+	}
+	vector<size_t> LinkedListArithmeticTest()
+	{
+		// 0->1->2->3->4->5->6->7->8->9
+		LinkedList<size_t> listAdditionResult = _ll1.AddNumbers(_ll2);
+		vector<size_t> listAdditionResultVector;
+		listAdditionResult.ToVector(listAdditionResultVector);
+		return listAdditionResultVector;
+	}
+
+protected:
+	LinkedList<size_t> _ll1, _ll2;
+	vector<size_t> _expected;
+	vector<size_t> _data1, _data2;
+};
+TEST_P(LinkedListArithmeticTestFixture, LinkedListArithmeticTests)
+{
+	ASSERT_EQ(this->_expected, this->LinkedListArithmeticTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LinkedListArithmeticTests,
+	LinkedListArithmeticTestFixture,
+	::testing::Values(make_tuple(vector<size_t>{8 /*LSB*/, 0, 3, 1 /*MSB*/}, vector<size_t>{1 /*LSB*/, 2, 3 /*MSB*/}, vector<size_t>{7 /*LSB*/, 8, 9 /*MSB*/})));
+
 TEST(LinkedListTests, LinkedListJoinTest)
 {
 	vector<long> a, b;

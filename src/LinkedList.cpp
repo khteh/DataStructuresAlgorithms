@@ -18,7 +18,17 @@ LinkedList<T>::LinkedList(shared_ptr<Node<T>> n)
 }
 
 template <typename T>
-LinkedList<T>::LinkedList(vector<T> &data)
+LinkedList<T>::LinkedList(vector<T> const &data)
+{
+	LoadData(data);
+}
+template <typename T>
+LinkedList<T>::~LinkedList()
+{
+	Clear();
+}
+template <typename T>
+void LinkedList<T>::LoadData(vector<T> const &data)
 {
 	m_head.reset();
 	shared_ptr<Node<T>> tail = nullptr;
@@ -37,11 +47,6 @@ LinkedList<T>::LinkedList(vector<T> &data)
 			tail = n;
 		}
 	}
-}
-template <typename T>
-LinkedList<T>::~LinkedList()
-{
-	Clear();
 }
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::Head()
@@ -497,6 +502,11 @@ shared_ptr<Node<T>> LinkedList<T>::NthElementFromBack(long n) // n starts from 1
 	}
 	return p1;
 }
+/*
+ * 0->1->2->3->4->5->6->7->8->9
+ * 10 9  8  7  6  5  4  3  2  1
+ * Return the nth element from the back after successful removal
+ */
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::RemoveNthElementFromBack(long n) // n starts from 1
 {
@@ -506,7 +516,7 @@ shared_ptr<Node<T>> LinkedList<T>::RemoveNthElementFromBack(long n) // n starts 
 	for (long i = 0; i < n - 1 && p2; i++, p2 = p2->Next())
 		;
 	if (!p2)
-		return m_head;
+		return nullptr;
 	while (p2->Next())
 	{
 		prev = p1;
@@ -519,12 +529,13 @@ shared_ptr<Node<T>> LinkedList<T>::RemoveNthElementFromBack(long n) // n starts 
 		return m_head;
 	}
 	prev->SetNext(p1->Next());
-	return m_head;
+	return prev;
 }
-// Input:
-//   p1:   3 -> 1 -> 5
-//   p2:   5 -> 9 -> 2
-// Output: 8 -> 0 -> 8
+/* Input:
+ *   p1:   3 -> 1 -> 5
+ *   p2:   5 -> 9 -> 2
+ * Output: 8 -> 0 -> 8
+ */
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::AddNumbers(shared_ptr<Node<T>> p1, shared_ptr<Node<T>> p2, T carry)
 	requires integral_type<T>
@@ -542,4 +553,10 @@ shared_ptr<Node<T>> LinkedList<T>::AddNumbers(shared_ptr<Node<T>> p1, shared_ptr
 		return result;
 	}
 	return nullptr;
+}
+template <typename T>
+shared_ptr<Node<T>> LinkedList<T>::AddNumbers(LinkedList<T> &ll)
+	requires integral_type<T>
+{
+	return AddNumbers(m_head, ll.Head(), T());
 }
