@@ -5,3 +5,5 @@ template <typename T>
 concept arithmetic_type = integral<T> || floating_point<T>;
 template <typename T>
 concept integral_type = integral<T>;
+template <class T, class U>
+concept Derived = std::is_base_of<U, T>::value;
