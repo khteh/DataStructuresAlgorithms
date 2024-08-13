@@ -32,6 +32,29 @@ TEST(LinkedListTests, SplitLinkedListTest)
 	for (size_t i = 1; node; node = node->Next(), i += 2)
 		ASSERT_EQ(a[i], node->Item());
 }
+TEST(LinkedListTests, LinkedListJoinTest)
+{
+	vector<long> a, b;
+	random_device device;
+	vector<unsigned int> seeds;
+	seeds.resize(mt19937_64::state_size);
+	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
+	seed_seq sequence(seeds.begin(), seeds.end());
+	mt19937_64 engine(sequence);
+	uniform_int_distribution<long> uniformDistribution;
+	a.resize(10);
+	b.resize(10);
+	ranges::generate(a, [&]
+					 { return uniformDistribution(engine); });
+	ranges::generate(b, [&]
+					 { return uniformDistribution(engine); });
+	LinkedList<long> lla(a), llb(b);
+	ASSERT_EQ(10, lla.Length());
+	ASSERT_EQ(10, llb.Length());
+	lla.Join(llb);
+	ASSERT_EQ(20, lla.Length());
+	ASSERT_EQ(0, llb.Length());
+}
 template <typename T>
 class LinkedListTestFixture
 {
@@ -131,10 +154,10 @@ public:
 	vector<size_t> LinkedListArithmeticTest()
 	{
 		// 0->1->2->3->4->5->6->7->8->9
-		LinkedList<size_t> listAdditionResult = _ll1.AddNumbers(_ll2);
-		vector<size_t> listAdditionResultVector;
-		listAdditionResult.ToVector(listAdditionResultVector);
-		return listAdditionResultVector;
+		LinkedList<size_t> listAdditionResult(_ll1.AddNumbers(_ll2));
+		_data1.clear();
+		listAdditionResult.ToVector(_data1);
+		return _data1;
 	}
 
 protected:
@@ -150,369 +173,169 @@ INSTANTIATE_TEST_SUITE_P(
 	LinkedListArithmeticTests,
 	LinkedListArithmeticTestFixture,
 	::testing::Values(make_tuple(vector<size_t>{8 /*LSB*/, 0, 3, 1 /*MSB*/}, vector<size_t>{1 /*LSB*/, 2, 3 /*MSB*/}, vector<size_t>{7 /*LSB*/, 8, 9 /*MSB*/})));
-
-TEST(LinkedListTests, LinkedListJoinTest)
+class LinkedListReversalTestFixture : public testing::TestWithParam<tuple<vector<size_t>, size_t, size_t, vector<size_t>>>
 {
-	vector<long> a, b;
-	random_device device;
-	vector<unsigned int> seeds;
-	seeds.resize(mt19937_64::state_size);
-	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
-	seed_seq sequence(seeds.begin(), seeds.end());
-	mt19937_64 engine(sequence);
-	uniform_int_distribution<long> uniformDistribution;
-	a.resize(10);
-	b.resize(10);
-	ranges::generate(a, [&]
-					 { return uniformDistribution(engine); });
-	ranges::generate(b, [&]
-					 { return uniformDistribution(engine); });
-	LinkedList<long> lla(a), llb(b);
-	ASSERT_EQ(10, lla.Length());
-	ASSERT_EQ(10, llb.Length());
-	lla.Join(llb);
-	ASSERT_EQ(20, lla.Length());
-	ASSERT_EQ(0, llb.Length());
-}
-TEST(LinkedListTests, LinkedListReversalTest)
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_start = get<1>(GetParam());
+		_end = get<2>(GetParam());
+		_data = get<3>(GetParam());
+		_ll.LoadData(_data);
+	}
+	vector<size_t> LinkedListReversalTest()
+	{
+		_ll.Reverse(_start, _end);
+		_data.clear();
+		_ll.ToVector(_data);
+		return _data;
+	}
+
+protected:
+	LinkedList<size_t> _ll;
+	size_t _start, _end;
+	vector<size_t> _expected;
+	vector<size_t> _data;
+};
+TEST_P(LinkedListReversalTestFixture, LinkedListReversalTests)
 {
-	vector<long> a, b;
-	a = {1, 2, 3, 4, 5};
-	LinkedList<long> ll(a);
-	ASSERT_EQ(5, ll.Length());
-	ll.Reverse(1, 3);
-	ASSERT_EQ(5, ll.Length());
-	a.clear();
-	b.clear();
-	b = {1, 4, 3, 2, 5};
-	ll.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 2, 3, 4, 5};
-	LinkedList<long> ll1(a);
-	ASSERT_EQ(5, ll1.Length());
-	ll1.Reverse(0, 4);
-	ASSERT_EQ(5, ll1.Length());
-	b.clear();
-	b = {5, 4, 3, 2, 1};
-	a.clear();
-	ll1.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 2, 3, 4, 5};
-	LinkedList<long> ll2(a);
-	ASSERT_EQ(5, ll2.Length());
-	ll2.Reverse(0, 3);
-	ASSERT_EQ(5, ll2.Length());
-	b.clear();
-	b = {4, 3, 2, 1, 5};
-	a.clear();
-	ll2.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 2, 3, 4, 5};
-	LinkedList<long> ll3(a);
-	ASSERT_EQ(5, ll3.Length());
-	ll3.Reverse(1, 4);
-	ASSERT_EQ(5, ll3.Length());
-	b.clear();
-	b = {1, 5, 4, 3, 2};
-	a.clear();
-	ll3.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 2, 3, 4, 5};
-	LinkedList<long> ll4(a);
-	ASSERT_EQ(5, ll4.Length());
-	ll4.Reverse(1, 1);
-	ASSERT_EQ(5, ll4.Length());
-	b.clear();
-	b = {1, 2, 3, 4, 5};
-	a.clear();
-	ll4.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 2};
-	LinkedList<long> ll5(a);
-	ASSERT_EQ(2, ll5.Length());
-	ll5.Reverse(0, 1);
-	ASSERT_EQ(2, ll5.Length());
-	b.clear();
-	b = {2, 1};
-	a.clear();
-	ll5.ToVector(a);
-	ASSERT_EQ(b, a);
+	ASSERT_EQ(this->_expected, this->LinkedListReversalTest());
 }
-TEST(LinkedListTests, LinkedListRemoveDuplicatesTest)
+INSTANTIATE_TEST_SUITE_P(
+	LinkedListReversalTests,
+	LinkedListReversalTestFixture,
+	::testing::Values(make_tuple(vector<size_t>{1, 4, 3, 2, 5}, 1, 3, vector<size_t>{1, 2, 3, 4, 5}), make_tuple(vector<size_t>{5, 4, 3, 2, 1}, 0, 4, vector<size_t>{1, 2, 3, 4, 5}), make_tuple(vector<size_t>{4, 3, 2, 1, 5}, 0, 3, vector<size_t>{1, 2, 3, 4, 5}), make_tuple(vector<size_t>{1, 5, 4, 3, 2}, 1, 4, vector<size_t>{1, 2, 3, 4, 5}), make_tuple(vector<size_t>{1, 2, 3, 4, 5}, 1, 1, vector<size_t>{1, 2, 3, 4, 5}), make_tuple(vector<size_t>{2, 1}, 0, 1, vector<size_t>{1, 2})));
+class LinkedListRemoveDuplicatesTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
 {
-	vector<long> a, b;
-	a = {1, 2, 3, 3, 4, 4, 5};
-	LinkedList<long> ll(a);
-	ASSERT_EQ(7, ll.Length());
-	ll.RemoveDuplicates();
-	ASSERT_EQ(5, ll.Length());
-	b.clear();
-	b = {1, 2, 3, 4, 5};
-	a.clear();
-	ll.ToVector(a);
-	ASSERT_EQ(b, a);
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_ll.LoadData(_data);
+	}
+	vector<long> LinkedListRemoveDuplicatesTest()
+	{
+		_ll.RemoveDuplicates();
+		_data.clear();
+		_ll.ToVector(_data);
+		return _data;
+	}
 
-	a.clear();
-	a = {1, 2, 3, 3, 4, 4, 5};
-	LinkedList<long> ll1(a);
-	ASSERT_EQ(7, ll1.Length());
-	ll1.RemoveAllDuplicates();
-	ASSERT_EQ(3, ll1.Length());
-	b.clear();
-	b = {1, 2, 5};
-	a.clear();
-	ll1.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 1, 2, 3, 3, 4, 4, 5};
-	LinkedList<long> ll2(a);
-	ASSERT_EQ(8, ll2.Length());
-	ll2.RemoveDuplicates();
-	ASSERT_EQ(5, ll2.Length());
-	b.clear();
-	b = {1, 2, 3, 4, 5};
-	a.clear();
-	ll2.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1};
-	LinkedList<long> ll3(a);
-	ASSERT_EQ(1, ll3.Length());
-	ll3.RemoveDuplicates();
-	ASSERT_EQ(1, ll3.Length());
-	b.clear();
-	b = {1};
-	a.clear();
-	ll3.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 1};
-	LinkedList<long> ll4(a);
-	ASSERT_EQ(2, ll4.Length());
-	ll4.RemoveDuplicates();
-	ASSERT_EQ(1, ll4.Length());
-	b.clear();
-	b = {1};
-	a.clear();
-	ll4.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 2, 2};
-	LinkedList<long> ll5(a);
-	ASSERT_EQ(3, ll5.Length());
-	ll5.RemoveDuplicates();
-	ASSERT_EQ(2, ll5.Length());
-	b.clear();
-	b = {1, 2};
-	a.clear();
-	ll5.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 1, 1, 2};
-	LinkedList<long> ll6(a);
-	ASSERT_EQ(4, ll6.Length());
-	ll6.RemoveDuplicates();
-	ASSERT_EQ(2, ll6.Length());
-	b.clear();
-	b = {1, 2};
-	a.clear();
-	ll6.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 1, 1, 2, 3};
-	LinkedList<long> ll7(a);
-	ASSERT_EQ(5, ll7.Length());
-	ll7.RemoveDuplicates();
-	ASSERT_EQ(3, ll7.Length());
-	b.clear();
-	b = {1, 2, 3};
-	a.clear();
-	ll7.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {-1, 0, 0, 0, 0, 3, 3};
-	LinkedList<long> ll8(a);
-	ASSERT_EQ(7, ll8.Length());
-	ll8.RemoveDuplicates();
-	ASSERT_EQ(3, ll8.Length());
-	b.clear();
-	b = {-1, 0, 3};
-	a.clear();
-	ll8.ToVector(a);
-	ASSERT_EQ(b, a);
-}
-TEST(LinkedListTests, LinkedListRemoveALLDuplicatesTest)
+protected:
+	LinkedList<long> _ll;
+	vector<long> _expected;
+	vector<long> _data;
+};
+TEST_P(LinkedListRemoveDuplicatesTestFixture, LinkedListRemoveDuplicatesTests)
 {
-	vector<long> a, b;
-	a = {1, 1, 2, 3, 3, 4, 4, 5};
-	LinkedList<long> ll(a);
-	ASSERT_EQ(8, ll.Length());
-	ll.RemoveAllDuplicates();
-	ASSERT_EQ(2, ll.Length());
-	b.clear();
-	b = {2, 5};
-	a.clear();
-	ll.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1};
-	LinkedList<long> ll1(a);
-	ASSERT_EQ(1, ll1.Length());
-	ll1.RemoveAllDuplicates();
-	ASSERT_EQ(1, ll1.Length());
-	b.clear();
-	b = {1};
-	a.clear();
-	ll1.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 1};
-	LinkedList<long> ll2(a);
-	ASSERT_EQ(2, ll2.Length());
-	ll2.RemoveAllDuplicates();
-	ASSERT_EQ(0, ll2.Length());
-
-	a.clear();
-	a = {1, 2, 2};
-	LinkedList<long> ll3(a);
-	ASSERT_EQ(3, ll3.Length());
-	ll3.RemoveAllDuplicates();
-	ASSERT_EQ(1, ll3.Length());
-	b.clear();
-	b = {1};
-	a.clear();
-	ll3.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 1, 1, 2};
-	LinkedList<long> ll4(a);
-	ASSERT_EQ(4, ll4.Length());
-	ll4.RemoveAllDuplicates();
-	ASSERT_EQ(1, ll4.Length());
-	b.clear();
-	b = {2};
-	a.clear();
-	ll4.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1, 1, 1, 2, 3};
-	LinkedList<long> lla25(a);
-	ASSERT_EQ(5, lla25.Length());
-	lla25.RemoveAllDuplicates();
-	ASSERT_EQ(2, lla25.Length());
-	b.clear();
-	b = {2, 3};
-	a.clear();
-	lla25.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {-1, 0, 0, 0, 0, 3, 3};
-	LinkedList<long> lla27(a);
-	ASSERT_EQ(7, lla27.Length());
-	lla27.RemoveAllDuplicates();
-	ASSERT_EQ(1, lla27.Length());
-	b.clear();
-	b = {-1};
-	a.clear();
-	lla27.ToVector(a);
-	ASSERT_EQ(b, a);
+	ASSERT_EQ(this->_expected, this->LinkedListRemoveDuplicatesTest());
 }
-TEST(LinkedListTests, LinkedListRemoveSortTest)
+INSTANTIATE_TEST_SUITE_P(
+	LinkedListRemoveDuplicatesTests,
+	LinkedListRemoveDuplicatesTestFixture,
+	::testing::Values(make_tuple(vector<long>{1, 2, 3, 4, 5}, vector<long>{1, 2, 3, 3, 4, 4, 5}), make_tuple(vector<long>{1, 2, 3, 4, 5}, vector<long>{1, 1, 2, 3, 3, 4, 4, 5}), make_tuple(vector<long>{1}, vector<long>{1}), make_tuple(vector<long>{1}, vector<long>{1, 1}), make_tuple(vector<long>{1, 2}, vector<long>{1, 1, 2, 2}), make_tuple(vector<long>{1, 2, 3}, vector<long>{1, 1, 1, 2, 3}), make_tuple(vector<long>{-1, 0, 3}, vector<long>{-1, 0, 0, 0, 0, 3, 3})));
+class LinkedListRemoveAllDuplicatesTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
 {
-	vector<long> a, b;
-	a = {2, 1};
-	LinkedList<long> ll(a);
-	ASSERT_EQ(2, ll.Length());
-	ll.Sort();
-	ASSERT_EQ(2, ll.Length());
-	ll.ToVector(b);
-	a = {1, 2};
-	ASSERT_EQ(2, b.size());
-	ASSERT_EQ(a, b);
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_ll.LoadData(_data);
+	}
+	vector<long> LinkedListRemoveAllDuplicatesTest()
+	{
+		_ll.RemoveAllDuplicates();
+		_data.clear();
+		_ll.ToVector(_data);
+		return _data;
+	}
 
-	a.clear();
-	b.clear();
-	a = {4, 2, 1, 3};
-	LinkedList<long> ll1(a);
-	ASSERT_EQ(4, ll1.Length());
-	ll1.Sort();
-	ASSERT_EQ(4, ll1.Length());
-	ll1.ToVector(b);
-	a = {1, 2, 3, 4};
-	ASSERT_EQ(4, b.size());
-	ASSERT_EQ(a, b);
-
-	a.clear();
-	b.clear();
-	a = {-1, 5, 3, 4, 0};
-	LinkedList<long> ll2(a);
-	ASSERT_EQ(5, ll2.Length());
-	ll2.Sort();
-	ASSERT_EQ(5, ll2.Length());
-	ll2.ToVector(b);
-	a = {-1, 0, 3, 4, 5};
-	ASSERT_EQ(5, b.size());
-	ASSERT_EQ(a, b);
-}
-TEST(LinkedListTests, LinkedListRotateRightTest)
+protected:
+	LinkedList<long> _ll;
+	vector<long> _expected;
+	vector<long> _data;
+};
+TEST_P(LinkedListRemoveAllDuplicatesTestFixture, LinkedListRemoveAllDuplicatesTests)
 {
-	vector<long> a, b;
-	a = {1, 2, 3, 4, 5};
-	LinkedList<long> ll(a);
-	ASSERT_EQ(5, ll.Length());
-	ll.RotateRight(2);
-	ASSERT_EQ(5, ll.Length());
-	a.clear();
-	b = {4, 5, 1, 2, 3};
-	ll.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	b.clear();
-	a = {1, 2, 3};
-	LinkedList<long> ll1(a);
-	ASSERT_EQ(3, ll1.Length());
-	ll1.RotateRight(2000000000);
-	ASSERT_EQ(3, ll1.Length());
-	b = {2, 3, 1};
-	a.clear();
-	ll1.ToVector(a);
-	ASSERT_EQ(b, a);
-
-	a.clear();
-	a = {1};
-	LinkedList<long> ll2(a);
-	ASSERT_EQ(1, ll2.Length());
-	ll2.RotateRight(1);
-	ASSERT_EQ(1, ll2.Length());
-	b.clear();
-	b = {1};
-	a.clear();
-	ll2.ToVector(a);
-	ASSERT_EQ(b, a);
+	ASSERT_EQ(this->_expected, this->LinkedListRemoveAllDuplicatesTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	LinkedListRemoveAllDuplicatesTests,
+	LinkedListRemoveAllDuplicatesTestFixture,
+	::testing::Values(make_tuple(vector<long>{2, 5}, vector<long>{1, 1, 2, 3, 3, 4, 4, 5}), make_tuple(vector<long>{}, vector<long>{1, 1, 3, 3, 4, 4}), make_tuple(vector<long>{1}, vector<long>{1}), make_tuple(vector<long>{}, vector<long>{1, 1}), make_tuple(vector<long>{}, vector<long>{1, 1, 2, 2}), make_tuple(vector<long>{2, 3}, vector<long>{1, 1, 1, 2, 3}), make_tuple(vector<long>{-1}, vector<long>{-1, 0, 0, 0, 0, 3, 3})));
+
+class LinkedListSortTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_ll.LoadData(_data);
+	}
+	vector<long> LinkedListSortTest()
+	{
+		_ll.Sort();
+		_data.clear();
+		_ll.ToVector(_data);
+		return _data;
+	}
+
+protected:
+	LinkedList<long> _ll;
+	vector<long> _expected;
+	vector<long> _data;
+};
+TEST_P(LinkedListSortTestFixture, LinkedListSortTests)
+{
+	ASSERT_EQ(this->_expected, this->LinkedListSortTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LinkedListSortTests,
+	LinkedListSortTestFixture,
+	::testing::Values(make_tuple(vector<long>{1, 2}, vector<long>{2, 1}), make_tuple(vector<long>{1, 2, 3, 4}, vector<long>{4, 2, 1, 3}), make_tuple(vector<long>{-1, 0, 3, 4, 5}, vector<long>{-1, 5, 3, 4, 0})));
+class LinkedListRotateRightTestFixture : public testing::TestWithParam<tuple<vector<long>, size_t, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_rotationCount = get<1>(GetParam());
+		_data = get<2>(GetParam());
+		_ll.LoadData(_data);
+	}
+	/*
+	-1, 5, 3, 4, 0
+	0, -1, 5, 3, 4 (R1)
+	4, 0, -1, 5, 3 (R2)
+	3, 4, 0, -1, 5 (R3)
+	*/
+	vector<long> LinkedListRotateRightTest()
+	{
+		_ll.RotateRight(_rotationCount);
+		_data.clear();
+		_ll.ToVector(_data);
+		return _data;
+	}
+
+protected:
+	LinkedList<long> _ll;
+	size_t _rotationCount;
+	vector<long> _expected;
+	vector<long> _data;
+};
+TEST_P(LinkedListRotateRightTestFixture, LinkedListRotateRightTests)
+{
+	ASSERT_EQ(this->_expected, this->LinkedListRotateRightTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LinkedListRotateRightTests,
+	LinkedListRotateRightTestFixture,
+	::testing::Values(make_tuple(vector<long>{4, 5, 1, 2, 3}, 2, vector<long>{1, 2, 3, 4, 5}), make_tuple(vector<long>{2, 3, 1}, 2000000000, vector<long>{1, 2, 3}), make_tuple(vector<long>{3, 4, 0, -1, 5}, 3, vector<long>{-1, 5, 3, 4, 0}), make_tuple(vector<long>{1}, 10, vector<long>{1})));
+
 class ConnectedCellsInAGridLinkedListTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
 {
 public:
