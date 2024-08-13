@@ -336,7 +336,7 @@ INSTANTIATE_TEST_SUITE_P(
 	LinkedListRotateRightTestFixture,
 	::testing::Values(make_tuple(vector<long>{4, 5, 1, 2, 3}, 2, vector<long>{1, 2, 3, 4, 5}), make_tuple(vector<long>{2, 3, 1}, 2000000000, vector<long>{1, 2, 3}), make_tuple(vector<long>{3, 4, 0, -1, 5}, 3, vector<long>{-1, 5, 3, 4, 0}), make_tuple(vector<long>{1}, 10, vector<long>{1})));
 
-class ConnectedCellsInAGridLinkedListTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
+class LinkedListConnectedCellsInAGridTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
 {
 public:
 	void SetUp() override
@@ -344,7 +344,7 @@ public:
 		_expected = get<0>(GetParam());
 		_grid = get<1>(GetParam());
 	}
-	size_t ConnectedCellsInAGridLinkedListTest()
+	size_t LinkedListConnectedCellsInAGridTest()
 	{
 		return ConnectedCellsInAGridLinkedList(_grid);
 	}
@@ -353,13 +353,13 @@ protected:
 	vector<vector<long>> _grid;
 	size_t _expected;
 };
-TEST_P(ConnectedCellsInAGridLinkedListTestFixture, ConnectedCellsInAGridLinkedListTests)
+TEST_P(LinkedListConnectedCellsInAGridTestFixture, LinkedListConnectedCellsInAGridTests)
 {
-	ASSERT_EQ(this->_expected, this->ConnectedCellsInAGridLinkedListTest());
+	ASSERT_EQ(this->_expected, this->LinkedListConnectedCellsInAGridTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	LinkedListTests,
-	ConnectedCellsInAGridLinkedListTestFixture,
+	LinkedListConnectedCellsInAGridTests,
+	LinkedListConnectedCellsInAGridTestFixture,
 	::testing::Values(make_tuple(5, vector<vector<long>>{{1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0}}),
 					  make_tuple(8, vector<vector<long>>{{0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}}),
 					  make_tuple(5, vector<vector<long>>{{1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1}}),
