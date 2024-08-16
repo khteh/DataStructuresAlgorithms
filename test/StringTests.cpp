@@ -152,7 +152,7 @@ TEST_P(AreRotatedStringsTestFixture, AreRotatedStringsTests)
 INSTANTIATE_TEST_SUITE_P(
     AreRotatedStringsTests,
     AreRotatedStringsTestFixture,
-    ::testing::Values(make_tuple(true, 2, "Hello World !!!", "llo World !!!He")));
+    ::testing::Values(make_tuple(true, 2, "Hello World !!!", "llo World !!!He"), make_tuple(true, 5, "Hello World !!!", " World !!!Hello")));
 
 class ParenthesesTestFixture : public StringTestFixture<vector<string>, size_t>, public testing::TestWithParam<tuple<vector<string>, size_t>>
 {
@@ -452,3 +452,55 @@ INSTANTIATE_TEST_SUITE_P(
     ZFunctionTests,
     ZFunctionTestFixture,
     ::testing::Values(make_tuple(vector<size_t>{0, 4, 3, 2, 1}, "aaaaa"), make_tuple(vector<size_t>{0, 2, 1, 0, 2, 1, 0}, "aaabaab"), make_tuple(vector<size_t>{0, 0, 1, 0, 3, 0, 1}, "abacaba"), make_tuple(vector<size_t>{0, 0, 3, 0, 1, 1}, "ababaa")));
+class RemoveDuplicateCharactersTestFixture : public testing::TestWithParam<tuple<string, string>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _str = get<1>(GetParam());
+    }
+    string RemoveDuplicateCharactersTest()
+    {
+        RemoveDuplicateCharacters(_str);
+        return _str;
+    }
+
+protected:
+    string _expected;
+    string _str;
+};
+TEST_P(RemoveDuplicateCharactersTestFixture, RemoveDuplicateCharactersTests)
+{
+    ASSERT_EQ(this->_expected, this->RemoveDuplicateCharactersTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    RemoveDuplicateCharactersTests,
+    RemoveDuplicateCharactersTestFixture,
+    ::testing::Values(make_tuple("Helo Wrd!", "Hello World!!!"), make_tuple("ab", "aaabaab"), make_tuple("abdc", "abadcaba")));
+class RemoveDuplicateCharactersLexicographicalOrderTestFixture : public testing::TestWithParam<tuple<string, string>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _str = get<1>(GetParam());
+    }
+    string RemoveDuplicateCharactersLexicographicalOrderTest()
+    {
+        RemoveDuplicateCharactersLexicographicalOrder(_str);
+        return _str;
+    }
+
+protected:
+    string _expected;
+    string _str;
+};
+TEST_P(RemoveDuplicateCharactersLexicographicalOrderTestFixture, RemoveDuplicateCharactersLexicographicalOrderTests)
+{
+    ASSERT_EQ(this->_expected, this->RemoveDuplicateCharactersLexicographicalOrderTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    RemoveDuplicateCharactersLexicographicalOrderTests,
+    RemoveDuplicateCharactersLexicographicalOrderTestFixture,
+    ::testing::Values(make_tuple("abc", "bcabc"), make_tuple("abdc", "abdcb"), make_tuple("abc", "abacb"), make_tuple("adcb", "adcba"), make_tuple("acdb", "cbacdcbc"), make_tuple("abcd", "cbacdbcd"), make_tuple("aidbcj", "cbaidbcj"), make_tuple("adbc", "cdadabcc")));
