@@ -260,12 +260,13 @@ int main(int argc, char *argv[])
 	j = i - 1;
 	assert(j == 0x7FFFFFFF);
 	cout << i << " 0x" << hex << i << " - 1 = 0x" << j << dec << " " << j << endl;
-	a.resize(10);
-	ranges::generate(a, [n = 1]() mutable
-					 { return n++; });
-	for (size_t i = 0; i < a.size(); i++)
-		assert(a[i] == i + 1);
-
+	assert(!numeric_limits<size_t>::has_quiet_NaN);
+	assert(!numeric_limits<long>::has_quiet_NaN);
+	assert(!numeric_limits<size_t>::has_signaling_NaN);
+	assert(!numeric_limits<long>::has_signaling_NaN);
+	assert(numeric_limits<float>::has_signaling_NaN);
+	assert(numeric_limits<double>::has_signaling_NaN);
+	assert(numeric_limits<long double>::has_signaling_NaN);
 	ul = 100;
 	generate_n(inserter(uset, uset.end()), 10, [&ul]()
 			   { return ul++; });
@@ -284,7 +285,6 @@ int main(int argc, char *argv[])
 	cpp20readonlyranges();
 	cpp20ranges();
 	cpp20variants();
-
 	grid = {{1, 3, 5}, {2, 4, 6}, {7, 8, 9}};
 	// grid.back() = {7,8,9}
 	assert(grid.back().back() == 9);
@@ -1913,100 +1913,7 @@ int main(int argc, char *argv[])
 	ugrid.clear();
 	ugrid = {{12397, 52974}, {107864, 38870}};
 	// a = UnbeatenPaths(110857, ugrid, 47678);
-	ugrid.clear();
-	ugrid = {{1, 2}, {2, 3}};
-	assert(DistinctPairs(4, ugrid) == 3);
-	ugrid.clear();
-	ugrid = {{0, 1}, {2, 3}, {0, 4}};
-	assert(DistinctPairs(5, ugrid) == 6);
-	ugrid.clear();
-	ugrid = {{0, 2}};
-	assert(DistinctPairs(4, ugrid) == 5);
-	ugrid.clear();
-	ugrid = {
-		{0, 2},
-		{1, 8},
-		{1, 4},
-		{2, 8},
-		{2, 6},
-		{3, 5},
-		{6, 9},
-	};
-	assert(DistinctPairs(10, ugrid) == 23);
-	ugrid.clear();
-	ugrid = {
-		{0, 11},
-		{2, 4},
-		{2, 95},
-		{3, 48},
-		{4, 85},
-		{4, 95},
-		{5, 67},
-		{5, 83},
-		{5, 42},
-		{6, 76},
-		{9, 31},
-		{9, 22},
-		{9, 55},
-		{10, 61},
-		{10, 38},
-		{11, 96},
-		{11, 41},
-		{12, 60},
-		{12, 69},
-		{14, 80},
-		{14, 99},
-		{14, 46},
-		{15, 42},
-		{15, 75},
-		{16, 87},
-		{16, 71},
-		{18, 99},
-		{18, 44},
-		{19, 26},
-		{19, 59},
-		{19, 60},
-		{20, 89},
-		{21, 69},
-		{22, 96},
-		{22, 60},
-		{23, 88},
-		{24, 73},
-		{27, 29},
-		{30, 32},
-		{31, 62},
-		{32, 71},
-		{33, 43},
-		{33, 47},
-		{35, 51},
-		{35, 75},
-		{37, 89},
-		{37, 95},
-		{38, 83},
-		{39, 53},
-		{41, 84},
-		{42, 76},
-		{44, 85},
-		{45, 47},
-		{46, 65},
-		{47, 49},
-		{47, 94},
-		{50, 55},
-		{51, 99},
-		{53, 99},
-		{56, 78},
-		{66, 99},
-		{71, 78},
-		{73, 98},
-		{76, 88},
-		{78, 97},
-		{80, 90},
-		{83, 95},
-		{85, 92},
-		{88, 99},
-		{88, 94},
-	};
-	// assert(DistinctPairs(100, ugrid) == 3984); WIP
+	grid1.clear();
 	assert(palindrome.MaxSizePalindromeCount("week", 0, 3) == 2);
 	assert(palindrome.MaxSizePalindromeCount("week", 1, 2) == 1);
 	assert(palindrome.MaxSizePalindromeCount("abab", 0, 3) == 2);

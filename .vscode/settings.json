@@ -135,7 +135,7 @@
       }
     ]
   },
-  "cmake.ctest.testExplorerIntegrationEnabled": true,
+  "cmake.ctest.testExplorerIntegrationEnabled": false,
   "cmake.ctest.allowParallelJobs": true,
   "cmake.ctest.parallelJobs": 18
 }

@@ -1,16 +1,17 @@
 #include "stdafx.h"
 #include "DisJointSet.h"
+template class DisJointSet<int>;
 template class DisJointSet<long>;
 template <typename T>
-DisJointSet<T>::DisJointSet(vector<T> &data)
+DisJointSet<T>::DisJointSet(vector<T> const &data)
 {
 	MakeSet(data);
 }
 template <typename T>
-void DisJointSet<T>::MakeSet(vector<T> &data)
+void DisJointSet<T>::MakeSet(vector<T> const &data)
 {
 	// perform makeset operation by creating n disjoint sets
-	for (typename vector<T>::iterator it = data.begin(); it != data.end(); it++)
+	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
 		_sets.emplace(*it, *it); // Key: current item; Value: parent of the current item
 }
 template <typename T>
@@ -47,8 +48,9 @@ size_t DisJointSet<T>::Rank(T item)
 template <typename T>
 T DisJointSet<T>::Union(T x, T y)
 {
-	// Unites the set that includes x
-	// and the set that includes y
+	/* Unites the set that includes x
+	 * and the set that includes y
+	 */
 	T rootX = Find(x);
 	T rootY = Find(y);
 	if (rootX == numeric_limits<T>::min())
@@ -96,7 +98,7 @@ void DisJointSet<T>::Print(vector<T> const &data, size_t linesize)
 	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++, i++)
 	{
 		cout << Find(*it);
-		if (!(i % linesize))
+		if (linesize > 0 && !(i % linesize))
 			cout << endl;
 		else
 			cout << ", ";

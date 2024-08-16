@@ -378,6 +378,6 @@ size_t ActivityNotifications1(vector<size_t> &, size_t);
 size_t ActivityNotifications2(vector<size_t> const &, size_t);
 size_t PowerSum(size_t, size_t, size_t i = 1);
 string MorganAndString(string const &, string const &);
-size_t DistinctPairs(size_t, vector<vector<size_t>> const &);
+unsigned long long DistinctPairs(size_t, vector<vector<long>> const &);
 size_t CountArray(size_t, size_t, size_t);
 void Z(vector<size_t> &, string const &);

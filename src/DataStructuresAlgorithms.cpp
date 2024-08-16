@@ -492,15 +492,51 @@ long double FactorialDynamicProgramming(long n)
 	long double result = 1;
 	if (n <= 0)
 		return 1;
-	for (size_t i = 1; i <= (size_t)n; result *= i++)
+	for (size_t i = 2; i <= (size_t)n; result *= i++)
 		;
 	return result;
 }
 /*
  * https://en.wikipedia.org/wiki/Binomial_coefficient
+ *
+ * Optimize for counting number of pairs:
+1 2 3 4 5 6 7 8 9 10
+(n + 1) * (n / 2) = n(n + 1) / 2
+
+1 2 3 4 5 6 7 8 9
+(n + 1) * (n / 2) - n = n(n+1) / 2 - n
+					= (n^2 + n)/2 - n
+					= (n^2 + n - 2n) / 2
+					= (n^2 - n) / 2
+					= n(n - 1) / 2
+
+pairs #:
+a b c
+2 1  => 2 + 1 => (n - 1) + 1
+
+a b c d
+3 2 1 0 => 3 + 2 + 1 => (n - 1) + 2 + 1
+		= n(n+1) / 2 - n
+		= (n^2 + n)/2 - n
+		= (n^2 + n - 2n) / 2
+		= (n^2 - n) / 2
+		= n(n - 1) / 2
+
+a b c d e
+4 3 2 1 0 => 4 + 3 + 2 + 1 = 10
+
+a b c d e f
+5 4 3 2 1 0 => 5 + 4 + 3 + 2 + 1 = 15
+
  */
 long double BinomialCoefficients(size_t n, size_t k)
 {
+	if (n == k)
+		return 1;
+	else if (n < k)
+		return 0;
+	else if (k == 2)
+		return n * (n - 1) / 2;
 	return Factorial(n) / (Factorial(k) * Factorial(n - k));
 }
 /*
@@ -514,13 +550,11 @@ long double MultinomialCoefficients(size_t n, vector<size_t> const &k)
 		divisor *= Factorial(*it);
 	return Factorial(n) / divisor;
 }
-
 long SequenceSum(long n)
 {
 	// return (n <= 0) ? 0 : n + SequenceSum(n - 1);
 	return (n + 1) * (n) / 2;
 }
-
 /*
  Trailing zeros are contributed by pairs of 5 and 2, because 5*2 = 10.
  To count the number of pairs, we just have to count the number of multiples of 5.
@@ -6961,59 +6995,175 @@ string MorganAndString(string const &a, string const &b)
 }
 /*
  * https://www.hackerrank.com/challenges/journey-to-the-moon/problem
- * WIP
- * [0, 1] [2, 3] [0, 4] => [0, 1, 4] * [2, 3] = 6
+ * 100%
+ * [0,1,4] [2,3] [5]
+ * [0,2] [0,3]
+ * [1,2] [1,3]
+ * [4,2] [4,3]
+ * [0,5]
+ * [1,5]
+ * [4,5]
+ * [2,5]
+ * [3,5]
+ * Total: 11 pairs (3*2 + 3*1 + 2*1 = 6 + 3 + 2 = 11)
+ * Sizes:
+ * {1: 1} {2: 1} {3:1} => (1) * (2*1) + (1) * (3*1) + (2*1) * (3*1) = 2 + 3 + 6 = 11
  *
- * [1, 2] [2, 3] n: 4 => [1, 2, 3] * [0] = 3
- *				 n: 5 => [1, 2, 3] * [0] [4] =>
-
- * [0, 2], n: 4 => [0, 2] * [1] [3] =>
- * [0, 2] [1] [3] => [0, 1] [0, 3] [2, 1] [2, 3] [1, 3]
+ * [0, 1] [2, 3] n:4
+ * [0, 2] [0,3]
+ * [1, 2] [1,3]
+ * Total: 4 pairs
+ * Sizes:
+ * {2: 2} 2 * 2 => 2 * (2*2 - 2)
  *
- * [0, 2] [1, 8] [1, 4] [2, 8] [2, 6] [3, 5] [6, 9] => [0, 2, 8, 6, 9] [1, 8, 4] [3, 5] XXX
- * [0, 2, 6, 8, 1, 4, 9] [3, 5] [7] => 2 * 7 + 1 * 7 + 1 * 2 = 23
+ * [0, 1] [2, 3] [4, 5] n:6
+ * [0, 2] [0,3] [0,4] [0,5]
+ * [1, 2] [1,3] [1,4] [1,5]
+ * [2,4] [2,5]
+ * [3,4] [3,5]
+ * Total: 12 pairs
+ * Sizes:
+ * {2: 3} 2 * 4 + 2 * 2 = 12 => 2 * (2*3 - 2) + 2 * (2*3 - 2 - 2)
+ *
+ * [0, 1] [2, 3] [4, 5] [6,7] n:8
+ * [0, 2] [0,3] [0,4] [0,5] [0,6] [0,7]
+ * [1, 2] [1,3] [1,4] [1,5] [1,6] [1,7]
+ * [2,4] [2,5] [2,6] [2,7]
+ * [3,4] [3,5] [3,6] [3,7]
+ * [4,6] [4,7]
+ * [5,6] [5,7]
+ * Total: 24 pairs
+ * Sizes:
+ * {2: 4} 2 * 6 + 2 * 4 + 2 * 2 = 12 + 8 + 4 = 24 => 2 * (2*4 - 2) + 2 * (2*4 - 2 - 2) + 2 * (2*4 - 2 - 2 - 2)
+ *
+ * [0, 1, 2] [3, 4, 5] n:6
+ * [0, 3] [0,4] [0,5]
+ * [1, 3] [1,4] [1,5]
+ * [2, 3] [2,4] [2,5]
+ * Total: 9 pairs
+ * Sizes:
+ * {3: 2} 3 * 3 = 9 => 3 * (3*2 - 3)
+ *
+ * [0, 1, 2] [3, 4, 5] [6,7,8] n:9
+ * [0, 3] [0,4] [0,5] [0,6] [0,7] [0,8]
+ * [1, 3] [1,4] [1,5] [1,6] [1,7] [1,8]
+ * [2, 3] [2,4] [2,5] [2,6] [2,7] [2,8]
+ * [3,6] [3,7] [3,8]
+ * [4,6] [4,7] [4,8]
+ * [5,6] [5,7] [5,8]
+ * Total: 18 + 9 = 27 pairs
+ * Sizes:
+ * {3: 3} 3 * 6 + 3 * 3 = 18 + 9 = 27 => 3 * (3*3 - 3) + 3  (3*3 - 3 - 3)
+ *
+ * [0, 1, 2] [3, 4, 5] [6,7,8] [9,10,11] n:12
+ * [0, 3] [0,4] [0,5] [0,6] [0,7] [0,8] [0,9] [0,10] [0,11]
+ * [1, 3] [1,4] [1,5] [1,6] [1,7] [1,8] ...
+ * [2, 3] [2,4] [2,5] [2,6] [2,7] [2,8] ...
+ * [3,6] [3,7] [3,8] [0,9] [0,10] [0,11]
+ * [4,6] [4,7] [4,8] ...
+ * [5,6] [5,7] [5,8] ...
+ * [6,9] [6,10] [6,11]
+ * [7,9] [7,10] [7,11]
+ * [8,9] [8,10] [8,11]
+ * Total: 3 * 9 + 3 * 6 + 3 * 3 = 27 + 18 + 9 = 54 => 3 * (3*4 - 3) + 3 * (3*4 - 3 - 3) + 3 * (3*4 - 3 - 3 - 3)
+ * Sizes:
+ * {3: 4}
+ *
+ * [1, 2] [2, 3] n:4 => [0] [1,2,3]
+ * [0, 1] [0, 2] [0,3]
+ * Total: 3 pairs: 1 * 3
+ * Sizes:
+ * {1: 1} {3:1} => (3*1) *(1*1) = 3
+ *
+ * [1, 2] [2, 3] n:10 => [0] [4] [5] [6] [7] [8] [9] [1,2,3]
+ * [0, 1] [0, 2] [0,3]
+ * [4, 1] [4, 2] [4,3]
+ * [5, 1] [5, 2] [5,3]
+ * [6, 1] [6, 2] [6,3]
+ * [7, 1] [7, 2] [7,3]
+ * [8, 1] [8, 2] [8,3]
+ * [9, 1] [9, 2] [9,3]
+ * Total: 7*3 + BinomialCoefficient(7,2) = 21 + 21 = 42
+ * Sizes:
+ * {1: 1} {3:1} => (3*1) *(1*1) = 3
+ *
+ * {0, 1}, {2, 3}, {0, 4} => [0, 1, 4] [2,3]
+ * [0,2] [0,3]
+ * [1,2] [1,3]
+ * [4,2] [4.3]
+ * Total: 6 pairs (2 * 3 = 6)
+ * Sizes:
+ * {2: 1} {3:1} => (3*1*2) = 6
+ *
+ * {0, 2} n:4 => [0,2] [1] [3]
+ * [1,0] [1,2]
+ * [3,0] [3,2]
+ * [1,3]
+ * Total: 4 (1*2 + 1*2 + BinomialCoefficient(2,2) = 5)
+ * Sizes:
+ * {1:2} {2:1} => (1*2)*(2*1) = 4
+ *
+ * {0, 2} n:10 => [0,2] [1] [3] [4] [5] [6] [7] [8] [9]
+ * [1,0] [1,2]
+ * [3,0] [3,2]
+ * [4,0] [4,2]
+ * [5,0] [5,2]
+ * [6,0] [6,2]
+ * [7,0] [7,2]
+ * [8,0] [8,2]
+ * [9,0] [9,2]
+ * [1,3]
+ * Total: 4 (8*2 + BinomialCoefficient(8,2) = 16 + 28 = 44)
+ * Sizes:
+ * {1:8} {2:1} => (1*2)*(8*1) + BinomialCoefficient(8,2) = 16 + 28 = 44
+ *
+ * {1,2} {3,4} n:10 => [0] [5] [6] [7] [8] [9] [1,2] [3,4]
+ * Total: 6*2 + 6 * 2 + BinomialCoefficient(6,2) + 2^2 = 12 + 12 + 15 + 4 = 43
+ * Sizes:
+ * {1: 6} {2:2} => 6 * 4 + BinomialCoefficient(6,2) + 2^2 = 24 + 15 + 4 = 43
+ *
+ * {0, 2} n:5 => [0,2] [1] [3] [4]
+ * [1,0] [1,2]
+ * [3,0] [3,2]
+ * [4,0] [4,2]
+ * [1,3] [1,4] [3,4]
+ * Total: 9 (1*2 + 1*2 + 1*2 + BinomialCoefficient(3,2) = 9)
+ * Sizes:
+ * {1:3} {2:1} => (1*3)*(2*1) + BinomialCoefficient(3,2) = 6 + 3 = 9
  */
-size_t DistinctPairs(size_t n, vector<vector<size_t>> const &astronauts)
+unsigned long long DistinctPairs(size_t n, vector<vector<long>> const &astronauts)
 {
-	set<size_t> ids;
-	vector<set<size_t>> groups;
-	for (size_t i = 0; i < n; i++)
-		ids.emplace(i);
-	for (vector<vector<size_t>>::const_iterator it = astronauts.begin(); it != astronauts.end(); it++)
+	vector<long> data(n);
+	ranges::generate(data, [n = 0]() mutable
+					 { return n++; });
+	DisJointSet<long> disjointSet(data);
+	for (vector<vector<long>>::const_iterator it = astronauts.begin(); it != astronauts.end(); it++)
+		disjointSet.Union((*it)[0], (*it)[1]);
+	// disjointSet.Print(data);
+	map<long, vector<long>> sets;
+	disjointSet.GetSets(data, sets);
+	unsigned long long sum = 0;
+	map<size_t, size_t> sizes; /* Key: items # in groups, Value: Count of such groups */
+	for (map<long, vector<long>>::const_iterator it = sets.begin(); it != sets.end(); it++)
+		sizes[it->second.size()]++;
+	for (map<size_t, size_t>::const_iterator it = sizes.begin(); it != sizes.end(); it++)
 	{
-		ids.erase((*it)[0]);
-		ids.erase((*it)[1]);
-		bool found = false;
-		for (vector<set<size_t>>::iterator it1 = groups.begin(); !found && it1 != groups.end(); it1++)
-			if (it1->find((*it)[0]) != it1->end() || it1->find((*it)[1]) != it1->end())
-			{
-				it1->insert((*it)[0]);
-				it1->insert((*it)[1]);
-				found = true;
-			}
-		if (!found)
-			groups.push_back(set<size_t>{(*it)[0], (*it)[1]});
-	}
-	for (vector<set<size_t>>::iterator it = groups.begin(); it != groups.end(); it++)
-		for (vector<set<size_t>>::iterator it1 = next(it, 1); it1 != groups.end();)
+		unsigned long long s1;
+		s1 = it->first * it->second;
+		if (it->second > 1)
 		{
-			set<size_t> duplicates;
-			set_intersection(it->begin(), it->end(), it1->begin(), it1->end(), inserter(duplicates, duplicates.begin()));
-			if (!duplicates.empty())
-			{
-				it->insert(it1->begin(), it1->end());
-				it1 = groups.erase(it1);
-			}
+			if (it->first == 1)
+				sum += BinomialCoefficients(it->second, 2);
 			else
-				it1++;
+			{
+				for (unsigned long long i = s1 - it->first; i > 0; i -= it->first)
+					sum += it->first * i;
+			}
 		}
-	size_t pairs = groups.size() > 1 ? 1 : 0, pairs1 = 0;
-	for (vector<set<size_t>>::iterator it = groups.begin(); it != groups.end(); it++)
-	{
-		pairs *= it->size();
-		pairs1 += ids.size() * it->size();
+		for (map<size_t, size_t>::const_iterator it1 = next(it, 1); it1 != sizes.end(); it1++)
+			sum += s1 * it1->first * it1->second;
 	}
-	return BinomialCoefficients(ids.size(), 2) + pairs + pairs1;
+	return sum;
 }
 /*
 https://www.hackerrank.com/challenges/string-similarity/problem
