@@ -77,6 +77,28 @@ INSTANTIATE_TEST_SUITE_P(
     TwentyFourHourTimeConversionTests,
     TwentyFourHourTimeConversionTestFixture,
     ::testing::Values(make_tuple("19:05:45", "07:05:45PM"), make_tuple("07:05:45", "07:05:45AM"), make_tuple("23:59:30", "11:59:30PM")));
+
+class NextBiggerStringTestFixture : public StringTestFixture<string, string>, public testing::TestWithParam<tuple<string, string>>
+{
+public:
+    void SetUp() override
+    {
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+    }
+    string NextBiggerStringTest()
+    {
+        return NextBiggerString(_var1);
+    }
+};
+TEST_P(NextBiggerStringTestFixture, NextBiggerStringTests)
+{
+    ASSERT_EQ(this->_expected, this->NextBiggerStringTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    NextBiggerStringTests,
+    NextBiggerStringTestFixture,
+    ::testing::Values(make_tuple("no answer", "aaa"), make_tuple("Hello Wrdlo", "Hello World"), make_tuple("imllmmcslslkyoegyoam", "imllmmcslslkyoegymoa"), make_tuple("rtglgzzqxnuflitnlyti", "rtglgzzqxnuflitnlyit"), make_tuple("wjjulziszbqqdcpdnhod", "wjjulziszbqqdcpdnhdo")));
+
 class MorganAndStringTestFixture : public testing::TestWithParam<tuple<string, string, string>>
 {
 public:
