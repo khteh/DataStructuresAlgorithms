@@ -632,119 +632,6 @@ protected:
 	Graph<T, T> _graph;
 	Dijkstra<T> _dijkstra;
 };
-class ShortestPathsTestFixture : public ShortestPathsTestFixtureBase<size_t>, public testing::TestWithParam<tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>>
-{
-public:
-	void SetUp() override
-	{
-		ShortestPathsTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
-		vector<size_t> data(_nodes);
-		ranges::generate(data, [n = 1]() mutable
-						 { return n++; }); // Item values
-		_graph.AddVertices(data);		   // Tags are indices
-		ASSERT_EQ(_nodes, _graph.Count());
-		for (typename vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
-			_graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, (*it).size() == 3 ? (*it)[2] : 0);
-	}
-	vector<long> ShortestPathsTest()
-	{
-		vector<long> result;
-		for (size_t i = 0; i < _nodes; i++)
-		{
-			if (i != _start - 1)
-				result.push_back(_graph.Dijkstra(_start - 1, i)); // Use Tags, which are indices
-		}
-		return result;
-	}
-};
-TEST_P(ShortestPathsTestFixture, ShortestPathsTests)
-{
-	// The root of the graph is Node 1
-	ASSERT_EQ(this->_expected, this->ShortestPathsTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	ShortestPathsTests,
-	ShortestPathsTestFixture,
-	::testing::Values(make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{10l, 16l, 8l, -1l}, vector<vector<size_t>>{{1, 2, 10}, {1, 3, 6}, {2, 4, 8}}, 5, 2),
-					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{24l, 3l, 15l}, vector<vector<size_t>>{{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}}, 4, 1),
-					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{20, 25, 25, 68, 86, 39, 22, 70, 36, 53, 91, 35, 88, 27, 30, 43, 54, 74, 41}, vector<vector<size_t>>{{1, 7, 45}, {2, 14, 15}, {3, 7, 29}, {4, 1, 48}, {5, 1, 66}, {6, 7, 17}, {7, 14, 15}, {8, 14, 43}, {9, 1, 27}, {10, 1, 33}, {11, 14, 64}, {12, 14, 27}, {13, 7, 66}, {14, 7, 54}, {15, 14, 56}, {16, 7, 21}, {17, 1, 20}, {18, 1, 34}, {19, 7, 52}, {20, 14, 14}, {9, 14, 9}, {15, 1, 39}, {12, 1, 24}, {9, 1, 16}, {1, 2, 33}, {18, 1, 46}, {9, 1, 28}, {15, 14, 3}, {12, 1, 27}, {1, 2, 5}, {15, 1, 34}, {1, 2, 28}, {9, 7, 16}, {3, 7, 23}, {9, 7, 21}, {9, 14, 19}, {3, 1, 20}, {3, 1, 5}, {12, 14, 19}, {3, 14, 2}, {12, 1, 46}, {3, 14, 5}, {9, 14, 44}, {6, 14, 26}, {9, 14, 16}, {9, 14, 34}, {6, 7, 42}, {3, 14, 27}, {1, 7, 9}, {1, 7, 41}, {15, 14, 19}, {12, 7, 13}, {3, 7, 10}, {1, 7, 2}}, 20, 17)));
-class ShortestPaths1TestFixture : public ShortestPathsTestFixtureBase<size_t>, public testing::TestWithParam<tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>>
-{
-public:
-	void SetUp() override
-	{
-		ShortestPathsTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
-		vector<size_t> data(_nodes);
-		ranges::generate(data, [n = 1]() mutable
-						 { return n++; });
-		_dijkstra.AddVertices(data);
-		ASSERT_EQ(_nodes, _dijkstra.Count());
-		for (typename vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
-			_dijkstra.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
-	}
-	vector<long> ShortestPaths1Test()
-	{
-		vector<long> result;
-		for (size_t i = 1; i <= _nodes; i++)
-			if (i != _start)
-			{
-				vector<shared_ptr<DVertex<size_t>>> path;
-				result.push_back(_dijkstra.ShortestPath(_start, i, path));
-			}
-		return result;
-	}
-};
-TEST_P(ShortestPaths1TestFixture, ShortestPaths1Tests)
-{
-	// The root of the graph is Node 1
-	ASSERT_EQ(this->_expected, this->ShortestPaths1Test());
-}
-INSTANTIATE_TEST_SUITE_P(
-	ShortestPaths1Tests,
-	ShortestPaths1TestFixture,
-	::testing::Values(make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{10l, 16l, 8l, -1l}, vector<vector<size_t>>{{1, 2, 10}, {1, 3, 6}, {2, 4, 8}}, 5, 2),
-					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{24l, 3l, 15l}, vector<vector<size_t>>{{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}}, 4, 1),
-					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{20, 25, 25, 68, 86, 39, 22, 70, 36, 53, 91, 35, 88, 27, 30, 43, 54, 74, 41}, vector<vector<size_t>>{{1, 7, 45}, {2, 14, 15}, {3, 7, 29}, {4, 1, 48}, {5, 1, 66}, {6, 7, 17}, {7, 14, 15}, {8, 14, 43}, {9, 1, 27}, {10, 1, 33}, {11, 14, 64}, {12, 14, 27}, {13, 7, 66}, {14, 7, 54}, {15, 14, 56}, {16, 7, 21}, {17, 1, 20}, {18, 1, 34}, {19, 7, 52}, {20, 14, 14}, {9, 14, 9}, {15, 1, 39}, {12, 1, 24}, {9, 1, 16}, {1, 2, 33}, {18, 1, 46}, {9, 1, 28}, {15, 14, 3}, {12, 1, 27}, {1, 2, 5}, {15, 1, 34}, {1, 2, 28}, {9, 7, 16}, {3, 7, 23}, {9, 7, 21}, {9, 14, 19}, {3, 1, 20}, {3, 1, 5}, {12, 14, 19}, {3, 14, 2}, {12, 1, 46}, {3, 14, 5}, {9, 14, 44}, {6, 14, 26}, {9, 14, 16}, {9, 14, 34}, {6, 7, 42}, {3, 14, 27}, {1, 7, 9}, {1, 7, 41}, {15, 14, 19}, {12, 7, 13}, {3, 7, 10}, {1, 7, 2}}, 20, 17)));
-
-class ShortestPaths2TestFixture : public ShortestPathsTestFixtureBase<size_t>, public testing::TestWithParam<tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>>
-{
-public:
-	void SetUp() override
-	{
-		ShortestPathsTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
-		vector<size_t> data(_nodes);
-		ranges::generate(data, [n = 1]() mutable
-						 { return n++; });
-		_dijkstra.AddVertices(data);
-		ASSERT_EQ(_nodes, _dijkstra.Count());
-		for (typename vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
-			_dijkstra.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
-	}
-	vector<long> ShortestPaths2Test()
-	{
-		vector<long> result;
-		for (size_t i = 1; i <= _nodes; i++)
-		{
-			if (i != _start)
-			{
-				vector<shared_ptr<DVertex<size_t>>> path;
-				result.push_back(_dijkstra.ShortestPathStateless(_start, i, path));
-			}
-		}
-		return result;
-	}
-};
-TEST_P(ShortestPaths2TestFixture, ShortestPaths2Tests)
-{
-	// The root of the graph is Node 1
-	ASSERT_EQ(this->_expected, this->ShortestPaths2Test());
-}
-INSTANTIATE_TEST_SUITE_P(
-	ShortestPaths2Tests,
-	ShortestPaths2TestFixture,
-	::testing::Values(make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{10l, 16l, 8l, -1l}, vector<vector<size_t>>{{1, 2, 10}, {1, 3, 6}, {2, 4, 8}}, 5, 2),
-					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{24l, 3l, 15l}, vector<vector<size_t>>{{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}}, 4, 1),
-					  make_tuple<vector<long>, vector<vector<size_t>>, size_t, size_t>(vector<long>{20, 25, 25, 68, 86, 39, 22, 70, 36, 53, 91, 35, 88, 27, 30, 43, 54, 74, 41}, vector<vector<size_t>>{{1, 7, 45}, {2, 14, 15}, {3, 7, 29}, {4, 1, 48}, {5, 1, 66}, {6, 7, 17}, {7, 14, 15}, {8, 14, 43}, {9, 1, 27}, {10, 1, 33}, {11, 14, 64}, {12, 14, 27}, {13, 7, 66}, {14, 7, 54}, {15, 14, 56}, {16, 7, 21}, {17, 1, 20}, {18, 1, 34}, {19, 7, 52}, {20, 14, 14}, {9, 14, 9}, {15, 1, 39}, {12, 1, 24}, {9, 1, 16}, {1, 2, 33}, {18, 1, 46}, {9, 1, 28}, {15, 14, 3}, {12, 1, 27}, {1, 2, 5}, {15, 1, 34}, {1, 2, 28}, {9, 7, 16}, {3, 7, 23}, {9, 7, 21}, {9, 14, 19}, {3, 1, 20}, {3, 1, 5}, {12, 14, 19}, {3, 14, 2}, {12, 1, 46}, {3, 14, 5}, {9, 14, 44}, {6, 14, 26}, {9, 14, 16}, {9, 14, 34}, {6, 7, 42}, {3, 14, 27}, {1, 7, 9}, {1, 7, 41}, {15, 14, 19}, {12, 7, 13}, {3, 7, 10}, {1, 7, 2}}, 20, 17)));
 class MinSubGraphsDifferenceTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, vector<vector<size_t>>>>
 {
 public:
@@ -916,7 +803,6 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple<size_t, vector<vector<long>>, size_t, long>(15, vector<vector<long>>{{1, 2, 3}, {1, 3, 4}, {4, 2, 6}, {5, 2, 2}, {2, 3, 5}, {3, 5, 7}}, 5, 1),
 					  make_tuple<size_t, vector<vector<long>>, size_t, long>(150, vector<vector<long>>{{1, 2, 20}, {1, 3, 50}, {1, 4, 70}, {1, 5, 90}, {2, 3, 30}, {3, 4, 40}, {4, 5, 60}}, 5, 2),
 					  make_tuple<size_t, vector<vector<long>>, size_t, long>(1106, vector<vector<long>>{{2, 1, 1000}, {3, 4, 299}, {2, 4, 200}, {2, 4, 100}, {3, 2, 300}, {3, 2, 6}}, 4, 2)));
-
 TEST(GraphTests, KruskalTest)
 {
 	vector<long> from{1, 1, 4, 2, 3, 3}, to{2, 3, 1, 4, 2, 4}, weights{5, 3, 6, 7, 4, 5};
@@ -929,3 +815,49 @@ TEST(GraphTests, KruskalTest)
 	weights = {1, 150, 99, 100, 200};
 	ASSERT_EQ(200, kruskals(4, from, to, weights));
 }
+/*
+ * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
+ * 100%
+ */
+class ShortestPathsTestFixture : public testing::TestWithParam<tuple<vector<long>, size_t, vector<vector<size_t>>, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_nodes = get<1>(GetParam());
+		_edges = get<2>(GetParam());
+		_start = get<3>(GetParam());
+		vector<size_t> data(_nodes);
+		ranges::generate(data, [n = 1]() mutable
+						 { return n++; }); // Item values
+		_graph.AddVertices(data);		   // Tags are indices
+		ASSERT_EQ(_nodes, _graph.Count());
+		for (typename vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
+			_graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, (*it)[2]);
+	}
+	vector<long> ShortestPathsTest()
+	{
+		vector<long> result(_nodes, -1);
+		_graph.Dijkstra(_start - 1, result);
+		erase_if(result, [](const long &value)
+				 { return !value; });
+		return result;
+	}
+
+protected:
+	Graph<size_t, size_t> _graph;
+	vector<long> _expected;
+	size_t _nodes, _start;
+	vector<vector<size_t>> _edges;
+};
+TEST_P(ShortestPathsTestFixture, ShortestPathsTests)
+{
+	ASSERT_EQ(this->_expected, this->ShortestPathsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	ShortestPathsTests,
+	ShortestPathsTestFixture,
+	::testing::Values(make_tuple(vector<long>{10, 16, 8, -1}, 5, vector<vector<size_t>>{{1, 2, 10}, {1, 3, 6}, {2, 4, 8}}, 2), make_tuple(vector<long>{24, 3, 15}, 4, vector<vector<size_t>>{{1, 2, 24}, {1, 4, 20}, {3, 1, 3}, {4, 3, 12}}, 1),
+					  make_tuple(vector<long>{20, 25, 25, 68, 86, 39, 22, 70, 36, 53, 91, 35, 88, 27, 30, 43, 54, 74, 41}, 20,
+								 vector<vector<size_t>>{{1, 7, 45}, {2, 14, 15}, {3, 7, 29}, {4, 1, 48}, {5, 1, 66}, {6, 7, 17}, {7, 14, 15}, {8, 14, 43}, {9, 1, 27}, {10, 1, 33}, {11, 14, 64}, {12, 14, 27}, {13, 7, 66}, {14, 7, 54}, {15, 14, 56}, {16, 7, 21}, {17, 1, 20}, {18, 1, 34}, {19, 7, 52}, {20, 14, 14}, {9, 14, 9}, {15, 1, 39}, {12, 1, 24}, {9, 1, 16}, {1, 2, 33}, {18, 1, 46}, {9, 1, 28}, {15, 14, 3}, {12, 1, 27}, {1, 2, 5}, {15, 1, 34}, {1, 2, 28}, {9, 7, 16}, {3, 7, 23}, {9, 7, 21}, {9, 14, 19}, {3, 1, 20}, {3, 1, 5}, {12, 14, 19}, {3, 14, 2}, {12, 1, 46}, {3, 14, 5}, {9, 14, 44}, {6, 14, 26}, {9, 14, 16}, {9, 14, 34}, {6, 7, 42}, {3, 14, 27}, {1, 7, 9}, {1, 7, 41}, {15, 14, 19}, {12, 7, 13}, {3, 7, 10}, {1, 7, 2}}, 17)));

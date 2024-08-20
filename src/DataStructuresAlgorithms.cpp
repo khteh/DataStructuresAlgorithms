@@ -5352,7 +5352,7 @@ vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sourc
 					 { return n++; }); // Item values
 	Graph<size_t, size_t> graph(data); // Tag values are indices
 	assert(graph.Count() == n);
-	for (vector<vector<size_t>>::iterator it = roads.begin(); it != roads.end(); it++)
+	for (vector<vector<size_t>>::const_iterator it = roads.begin(); it != roads.end(); it++)
 	{
 		paths[(*it)[0] - 1][(*it)[1] - 1] = false;
 		paths[(*it)[1] - 1][(*it)[0] - 1] = false;
@@ -5368,78 +5368,23 @@ vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sourc
 }
 /*
  * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
- * WIP. Timeout!
+ * 100%
  */
 vector<long> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t start)
 {
 	vector<size_t> data(n);
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; }); // Item values
-	vector<long> result;
 	Graph<size_t, size_t> graph(data); // Tag values are indices
 	assert(graph.Count() == n);
-	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
+	for (vector<vector<size_t>>::const_iterator it = edges.begin(); it != edges.end(); it++)
 		graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, (*it)[2]);
-	for (size_t i = 0; i < n; i++)
-	{
-		if (i != start - 1)
-			result.push_back(graph.Dijkstra(start - 1, i));
-	}
+	vector<long> result(n, -1);
+	graph.Dijkstra(start - 1, result);
+	erase_if(result, [](const long &value)
+			 { return !value; });
 	return result;
 }
-/*
- * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
- * Timeout! WIP
- */
-vector<long> ShortestPaths1(size_t n, vector<vector<size_t>> &edges, size_t start)
-{
-	vector<size_t> data(n);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
-	vector<long> result;
-	Dijkstra<size_t> dijkstra(data);
-	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
-		dijkstra.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
-	for (size_t i = 1; i <= n; i++)
-	{
-		if (i != start)
-		{
-			vector<shared_ptr<DVertex<size_t>>> path;
-			result.push_back(dijkstra.ShortestPath(start, i, path));
-			for (vector<shared_ptr<DVertex<size_t>>>::const_iterator it = path.begin(); it != path.end(); it++)
-				cout << (*it)->Value() << " -> ";
-			cout << " cost: " << result.back() << endl;
-		}
-	}
-	return result;
-}
-/*
- * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
- * Timeout! WIP
- */
-vector<long> ShortestPaths2(size_t n, vector<vector<size_t>> &edges, size_t start)
-{
-	vector<size_t> data(n);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
-	vector<long> result;
-	Dijkstra<size_t> dijkstra(data);
-	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
-		dijkstra.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
-	for (size_t i = 1; i <= n; i++)
-	{
-		if (i != start)
-		{
-			vector<shared_ptr<DVertex<size_t>>> path;
-			result.push_back(dijkstra.ShortestPathStateless(start, i, path));
-			for (vector<shared_ptr<DVertex<size_t>>>::const_iterator it = path.begin(); it != path.end(); it++)
-				cout << (*it)->Value() << " -> ";
-			cout << " cost: " << result.back() << endl;
-		}
-	}
-	return result;
-}
-
 /*
  * https://www.hackerrank.com/challenges/johnland/problem
  * Timeout!
@@ -7067,6 +7012,26 @@ unsigned long long DistinctPairs(size_t n, vector<vector<long>> const &astronaut
 	return sum;
 }
 /*
+https://www.hackerrank.com/challenges/bigger-is-greater/problem
+100%
+aPb => bPa
+bPa => Pba => Pab
+abP => aPb
+Pab => Pba
+
+dkhc => (swap) hkdc => (sort) hcdk
+
+aPa => Paa
+baPac => (swap) caPab => (sort) caabP
+
+bPa => (swap) Pba => (sort) Pab
+abPac => (swap) acPab => (sort) acabP
+*/
+string NextBiggerString(string &str)
+{
+	return next_permutation(str.begin(), str.end()) ? str : "no answer";
+}
+/*
 https://www.hackerrank.com/challenges/string-similarity/problem
 100%
 https://cp-algorithms.com/string/z-function.html
@@ -7193,24 +7158,4 @@ size_t ActivityNotifications2(vector<size_t> const &data, size_t d, size_t max)
 		frequencies[*it1]++;
 	}
 	return result;
-}
-/*
-https://www.hackerrank.com/challenges/bigger-is-greater/problem
-100%
-aPb => bPa
-bPa => Pba => Pab
-abP => aPb
-Pab => Pba
-
-dkhc => (swap) hkdc => (sort) hcdk
-
-aPa => Paa
-baPac => (swap) caPab => (sort) caabP
-
-bPa => (swap) Pba => (sort) Pab
-abPac => (swap) acPab => (sort) acabP
-*/
-string NextBiggerString(string &str)
-{
-	return next_permutation(str.begin(), str.end()) ? str : "no answer";
 }

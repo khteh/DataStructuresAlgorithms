@@ -278,6 +278,55 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 	return vertex && vertex == destination && costs.find(vertex) != costs.end() ? costs[vertex] : -1;
 }
 /*
+ * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
+ * 100%
+ */
+template <typename TTag, typename TItem>
+void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
+{
+	set<shared_ptr<Vertex<TTag, TItem>>> spt; // spt: Shortest Path Tree
+	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(src);
+	multimap<long, shared_ptr<Vertex<TTag, TItem>>> costsPQ; // Priority Queue with min cost at *begin()
+	assert(vertex);
+	map<shared_ptr<Vertex<TTag, TItem>>, long> costs;
+	map<TTag, long> orderedCosts;
+	costs.emplace(vertex, 0);
+	orderedCosts.emplace(src, 0);
+	costsPQ.emplace(0, vertex);
+	for (; !costsPQ.empty();)
+	{
+		vertex = costsPQ.begin()->second;
+		costsPQ.erase(costsPQ.begin());
+		spt.emplace(vertex);
+		// Update cost of the adjacent vertices of the picked vertex.
+		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
+		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
+		{
+			/* v is (*it); u is vertex.
+			 * Update cost[v] only if it:
+			 * (1) is not in sptSet
+			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
+			 * (3) and total cost of path from src to v through u is smaller than current value of cost[v]
+			 */
+			if (spt.find(*it) == spt.end())
+			{
+				long uCost = vertex->GetCost(*it);
+				long vCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
+				if (costs[vertex] + uCost < vCost)
+				{
+					costs[*it] = costs[vertex] + uCost;
+					orderedCosts[(*it)->GetTag()] = costs[*it];
+					erase_if(costsPQ, [it](const auto &it1)
+							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
+					costsPQ.emplace(costs[vertex] + uCost, *it);
+				}
+			}
+		}
+	}
+	for (typename map<TTag, long>::const_iterator it = orderedCosts.begin(); it != orderedCosts.end(); it++)
+		distances[it->first] = it->second;
+}
+/*
  * https://www.hackerrank.com/challenges/bfsshortreach
  * 100%
  */
