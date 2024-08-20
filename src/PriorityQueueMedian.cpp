@@ -3,23 +3,23 @@
 
 template class PriorityQueueMedian<long>;
 
-template<typename T>
+template <typename T>
 PriorityQueueMedian<T>::PriorityQueueMedian()
 {
 }
 
-template<typename T>
+template <typename T>
 PriorityQueueMedian<T>::~PriorityQueueMedian()
 {
 	Clear();
 }
-template<typename T>
+template <typename T>
 void PriorityQueueMedian<T>::Clear()
 {
-	while (!maxHeap.empty())
-		maxHeap.pop();
-	while (!minHeap.empty())
-		minHeap.pop();
+	while (!_maxHeap.empty())
+		_maxHeap.pop();
+	while (!_minHeap.empty())
+		_minHeap.pop();
 }
 /*
  maxHeap...Median...minHeap
@@ -39,37 +39,40 @@ Min     Max
 	pqueue.Add(8)
 5 6 7 8	3 2 1 <= Median: 5
 */
-template<typename T>
+template <typename T>
 void PriorityQueueMedian<T>::Add(T item)
 {
-	if (minHeap.empty() && maxHeap.empty())
-		minHeap.push(item); // If start with maxHeap, the logic below has to toggle.
-	else {
-		if (item < minHeap.top())
-			maxHeap.push(item);
+	if (_minHeap.empty() && _maxHeap.empty())
+		_minHeap.push(item); // If start with maxHeap, the logic below has to toggle.
+	else
+	{
+		if (item < _minHeap.top())
+			_maxHeap.push(item);
 		else
-			minHeap.push(item);
-		if ((int)(maxHeap.size() - minHeap.size()) > 1) {
-			minHeap.push(maxHeap.top());
-			maxHeap.pop();
-		} else if ((int)(minHeap.size() - maxHeap.size()) > 1) {
-			maxHeap.push(minHeap.top());
-			minHeap.pop();
+			_minHeap.push(item);
+		if ((int)(_maxHeap.size() - _minHeap.size()) > 1)
+		{
+			_minHeap.push(_maxHeap.top());
+			_maxHeap.pop();
+		}
+		else if ((int)(_minHeap.size() - _maxHeap.size()) > 1)
+		{
+			_maxHeap.push(_minHeap.top());
+			_minHeap.pop();
 		}
 	}
 }
-
-template<typename T>
+template <typename T>
 double PriorityQueueMedian<T>::GetMedian()
 {
-	if (maxHeap.empty() && minHeap.empty())
+	if (_maxHeap.empty() && _minHeap.empty())
 		return 0;
-	else if (maxHeap.empty())
-		return minHeap.top();
-	else if (minHeap.empty())
-		return maxHeap.top();
-	else if (minHeap.size() == maxHeap.size())
-		return (double)((double)minHeap.top() + (double)maxHeap.top()) / 2;
+	else if (_maxHeap.empty())
+		return _minHeap.top();
+	else if (_minHeap.empty())
+		return _maxHeap.top();
+	else if (_minHeap.size() == _maxHeap.size())
+		return (double)((double)_minHeap.top() + (double)_maxHeap.top()) / 2;
 	else
-		return maxHeap.size() > minHeap.size() ? maxHeap.top() : minHeap.top();
+		return _maxHeap.size() > _minHeap.size() ? _maxHeap.top() : _minHeap.top();
 }
