@@ -369,7 +369,6 @@ string TwentyFourHourTimeConversion(string const &);
 vector<long> KaprekarNumbers(long, long);
 size_t kMarsh(vector<string> &);
 size_t MatrixPerimeter(vector<vector<size_t>> &, vector<string> &);
-vector<long> ShortestPaths(size_t, vector<vector<size_t>> &, size_t);
 bool HappyLadyBugs(string const &);
 size_t PowerSum(size_t, size_t, size_t i = 1);
 string MorganAndString(string const &, string const &);

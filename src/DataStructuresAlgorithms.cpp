@@ -5346,7 +5346,6 @@ vector<string> fizzBuzz(size_t n)
 vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
 {
 	vector<vector<bool>> paths(n, vector<bool>(n, true));
-	vector<long> result;
 	vector<size_t> data(n);
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; }); // Item values
@@ -5361,26 +5360,8 @@ vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sourc
 		for (size_t j = i + 1; j < n; j++) // O(m*n). This explodes!
 			if (paths[i][j])
 				graph.AddUndirectedEdge(i, j, 1);
-	for (size_t i = 0; i < n; i++)
-		if (i != source - 1)
-			result.push_back(paths[source - 1][i] ? 1 : graph.Dijkstra(source - 1, i));
-	return result;
-}
-/*
- * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
- * 100%
- */
-vector<long> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t start)
-{
-	vector<size_t> data(n);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; }); // Item values
-	Graph<size_t, size_t> graph(data); // Tag values are indices
-	assert(graph.Count() == n);
-	for (vector<vector<size_t>>::const_iterator it = edges.begin(); it != edges.end(); it++)
-		graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, (*it)[2]);
 	vector<long> result(n, -1);
-	graph.Dijkstra(start - 1, result);
+	graph.Dijkstra(source - 1, result);
 	erase_if(result, [](const long &value)
 			 { return !value; });
 	return result;
@@ -5388,7 +5369,38 @@ vector<long> ShortestPaths(size_t n, vector<vector<size_t>> &edges, size_t start
 /*
  * https://www.hackerrank.com/challenges/johnland/problem
  * Timeout!
+ * 16/21 test cases failed :(
  */
+string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
+{
+	vector<size_t> data(n);
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; }); // Item values
+	Graph<size_t, size_t> graph(data); // Tag values are indices
+	assert(graph.Count() == n);
+	for (vector<vector<size_t>>::const_iterator it = edges.begin(); it != edges.end(); it++)
+		graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, 1 << (*it)[2]);
+	long sum = 0;
+	for (size_t i = 0; i < n; i++)
+	{
+		vector<long> result(n, -1);
+		graph.Dijkstra(i, result);
+		result.erase(result.begin(), result.begin() + i);
+		sum += parallel_reduce(
+			blocked_range<size_t>(0, result.size()), 0,
+			[&](tbb::blocked_range<size_t> const &r, long running_total)
+			{
+				for (size_t i = r.begin(); i < r.end(); ++i)
+					running_total += result[i];
+				return running_total;
+			},
+			std::plus<long>());
+	}
+	string binary = decimal_to_binary(sum ? sum : -1);
+	size_t offset = binary.find_first_not_of('0');
+	return binary.substr(offset != string::npos ? offset : 0);
+}
+#if 0
 string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 {
 	vector<size_t> data(n);
@@ -5513,7 +5525,7 @@ string RoadsInHackerland2(size_t n, vector<vector<size_t>> &edges)
 	size_t offset = binary.find_first_not_of('0');
 	return binary.substr(offset != string::npos ? offset : 0);
 }
-
+#endif
 /*
  * https://www.cppstories.com/2022/ranges-alg-part-one/
  */
