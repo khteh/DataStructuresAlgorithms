@@ -289,9 +289,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 	multimap<long, shared_ptr<Vertex<TTag, TItem>>> costsPQ; // Priority Queue with min cost at *begin()
 	assert(vertex);
 	map<shared_ptr<Vertex<TTag, TItem>>, long> costs;
-	map<TTag, long> orderedCosts;
 	costs.emplace(vertex, 0);
-	orderedCosts.emplace(src, 0);
 	costsPQ.emplace(0, vertex);
 	for (; !costsPQ.empty();)
 	{
@@ -315,7 +313,6 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 				if (costs[vertex] + uCost < vCost)
 				{
 					costs[*it] = costs[vertex] + uCost;
-					orderedCosts[(*it)->GetTag()] = costs[*it];
 					erase_if(costsPQ, [it](const auto &it1)
 							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
 					costsPQ.emplace(costs[vertex] + uCost, *it);
@@ -323,8 +320,8 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 			}
 		}
 	}
-	for (typename map<TTag, long>::const_iterator it = orderedCosts.begin(); it != orderedCosts.end(); it++)
-		distances[it->first] = it->second;
+	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = costs.begin(); it != costs.end(); it++)
+		distances[it->first->GetTag()] = it->second;
 }
 /*
  * https://www.hackerrank.com/challenges/bfsshortreach
