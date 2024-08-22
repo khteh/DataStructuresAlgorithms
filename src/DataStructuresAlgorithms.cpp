@@ -4476,10 +4476,11 @@ string Cipher(size_t n, size_t k, string const &s)
 	}
 	return result;
 }
-// Encryption scheme:
-// If s[i] is lowercase and s[i+1] is uppercase, swap them and add an asterik '*' after them
-// If s[i] is a number, replace it with 0 and place the original number at the beginning.
-// 100%
+/* Encryption scheme:
+ * If s[i] is lowercase and s[i+1] is uppercase, swap them and add an asterik '*' after them
+ * If s[i] is a number, replace it with 0 and place the original number at the beginning.
+ * 100%
+ */
 string DecryptPassword(string const &s)
 {
 	string result;
@@ -4507,8 +4508,9 @@ string DecryptPassword(string const &s)
 	}
 	return result;
 }
-// https://www.hackerrank.com/challenges/sam-and-substrings/problem
-// 100 %
+/* https://www.hackerrank.com/challenges/sam-and-substrings/problem
+ * 100%
+ */
 unsigned long long substrings(string const &s)
 {
 	/*
@@ -4535,8 +4537,9 @@ Digit   Unit    Ten     Hundred     Thousand        Sum
 	}
 	return sum;
 }
-// https://www.hackerrank.com/challenges/bomber-man/problem
-// Times out!
+/* https://www.hackerrank.com/challenges/bomber-man/problem
+ * WIP Times out!
+ */
 vector<string> bomberMan(size_t n, vector<string> &grid)
 {
 	set<size_t> seconds;
@@ -5379,11 +5382,11 @@ string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 	Graph<size_t, size_t> graph(data); // Tag values are indices
 	assert(graph.Count() == n);
 	for (vector<vector<size_t>>::const_iterator it = edges.begin(); it != edges.end(); it++)
-		graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, 1 << (*it)[2]);
+		graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, 1 << (*it)[2] /* This explodes with insane big values! */);
 	long sum = 0;
 	for (size_t i = 0; i < n; i++)
 	{
-		vector<long> result(n, -1);
+		vector<long> result(n, 0);
 		graph.Dijkstra(i, result);
 		result.erase(result.begin(), result.begin() + i);
 		sum += parallel_reduce(

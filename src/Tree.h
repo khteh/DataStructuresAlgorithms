@@ -79,6 +79,7 @@ public:
 	Tree(vector<T> &, TreeType);
 	Tree(TraversalType, vector<T> &preorder, vector<T> &inorder);
 	Tree(shared_ptr<Node<T>> &);
+	void LoadData(vector<T> &, TreeType);
 	virtual ~Tree();
 	void Clear();
 	Tree<T> &operator=(Tree<T> &);

@@ -112,16 +112,16 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest)
 	ASSERT_EQ(4, tree1.MaxDepth(tree1.Root()));
 	ASSERT_TRUE(tree1.IsBalancedTree());
 }
-TEST(BinarySearchTreeTests, BinarySearchTreeFindSumTest)
+class BinarySearchTreeFindSumTestFixture : public testing::TestWithParam<tuple<vector<string>, long, vector<long>>>
 {
-	vector<long> a;
-	vector<string> result, expected;
-	a = {50, -100, 0, 10, -50, 60, 100, 75, 150};
-	Tree<long> tree(a, TreeType::BinarySearch);
-	ASSERT_TRUE(tree.isValidBST());
-	ASSERT_EQ(9, tree.Count());
-	ASSERT_EQ(-100, tree.Min());
-	ASSERT_EQ(150, tree.Max());
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_sum = get<1>(GetParam());
+		_data = get<2>(GetParam());
+		_tree.LoadData(_data, TreeType::BinarySearch);
+	}
 	/*
 Binary Search Tree (tree1) content:
 Level 0:                              50
@@ -129,28 +129,32 @@ Level 1:                        0(50)            100(50)
 Level 2:                -50(0)     10(0)   75(100)       150(100)
 Level 3:        -100(-50)               60(75)
 	*/
-	tree.FindSum(tree.Root(), (long)-100, result);
-	ASSERT_FALSE(result.empty());
-	ASSERT_EQ(2, result.size());
-	expected.clear();
-	expected = {"-100", "50 0 -50 -100"};
-	ASSERT_EQ(expected, result);
+	vector<string> BinarySearchTreeFindSumTest()
+	{
+		vector<string> result;
+		_tree.FindSum(_tree.Root(), _sum, result);
+		return result;
+	}
 
-	result.clear();
-	tree.FindSum(tree.Root(), (long)150, result);
-	ASSERT_FALSE(result.empty());
-	expected.clear();
-	expected = {"50 100", "150"};
-	ASSERT_EQ(expected, result);
-	result.clear();
-
-	result.clear();
-	tree.FindSum(tree.Root(), (long)110, result);
-	ASSERT_TRUE(result.empty());
-	expected.clear();
-	ASSERT_EQ(expected, result);
-	result.clear();
+protected:
+	Tree<long> _tree;
+	vector<string> _expected;
+	vector<long> _data;
+	long _sum;
+};
+TEST_P(BinarySearchTreeFindSumTestFixture, BinarySearchTreeFindSumTests)
+{
+	ASSERT_TRUE(this->_tree.isValidBST());
+	ASSERT_EQ(this->_data.size(), this->_tree.Count());
+	ASSERT_EQ(*ranges::min_element(this->_data), this->_tree.Min());
+	ASSERT_EQ(*ranges::max_element(this->_data), this->_tree.Max());
+	ASSERT_EQ(this->_expected, this->BinarySearchTreeFindSumTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	BinarySearchTreeFindSumTests,
+	BinarySearchTreeFindSumTestFixture,
+	::testing::Values(make_tuple(vector<string>{"-100", "50 0 -50 -100"}, -100, vector<long>{50, -100, 0, 10, -50, 60, 100, 75, 150}), make_tuple(vector<string>{"50 100", "150"}, 150, vector<long>{50, -100, 0, 10, -50, 60, 100, 75, 150}), make_tuple(vector<string>{}, 110, vector<long>{50, -100, 0, 10, -50, 60, 100, 75, 150})));
+
 TEST(BinarySearchTreeTests, BinarySearchTreeInOrderSuccessorTest)
 {
 	vector<long> a, b;
@@ -227,21 +231,88 @@ TEST(BinarySearchTreeTests, BinarySearchTreeCommonAncestorTest)
 	ASSERT_EQ(node2, node3);
 	cout << node->Item() << " and " << node1->Item() << " common ancestor is " << node2->Item() << endl;
 }
-TEST(BinarySearchTreeTests, BinarySearchTreekthSmallestAndLargestTests)
+template <typename T>
+class BinarySearchTreekthSmallestLargestTestFixture
 {
-	vector<long> a;
-	shared_ptr<Node<long>> node, node1, node2, node3;
-	a = {50, -100, 0, 10, -50, 60, 100, 75, 150};
-	Tree<long> tree(a, TreeType::BinarySearch);
-	ASSERT_TRUE(tree.isValidBST());
-	ASSERT_EQ(9, tree.Count());
-	ASSERT_EQ(-100, tree.Min());
-	ASSERT_EQ(150, tree.Max());
+public:
+	void SetUp(T expected, size_t k, vector<T> data)
+	{
+		_expected = expected;
+		_data = data;
+		_k = k;
+		_tree.LoadData(_data, TreeType::BinarySearch);
+	}
+
+protected:
+	Tree<long> _tree;
+	T _expected;
+	size_t _k;
+	vector<T> _data;
+};
+
+class BinarySearchTreekthSmallestTestFixture : public BinarySearchTreekthSmallestLargestTestFixture<long>, public testing::TestWithParam<tuple<long, size_t, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		BinarySearchTreekthSmallestLargestTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	/*
+Binary Search Tree (tree1) content:
+Level 0:                              50
+Level 1:                        0(50)            100(50)
+Level 2:                -50(0)     10(0)   75(100)       150(100)
+Level 3:        -100(-50)               60(75)
 	// 50,-100,0,10,-50,60,100,75,150
 	// -100,-50,0,10,50,60,75,100,150
-	ASSERT_EQ(0, tree.kthSmallest(3));
-	ASSERT_EQ(75, tree.kthLargest(3));
-	cout << "Tree2 content (= Tree1): " << endl;
-	tree.PrintTree();
-	cout << endl;
+	*/
+	long BinarySearchTreekthSmallestTest()
+	{
+		return _tree.kthSmallest(_k);
+	}
+};
+TEST_P(BinarySearchTreekthSmallestTestFixture, BinarySearchTreekthSmallestTests)
+{
+	ASSERT_TRUE(this->_tree.isValidBST());
+	ASSERT_EQ(this->_data.size(), this->_tree.Count());
+	ASSERT_EQ(*ranges::min_element(this->_data), this->_tree.Min());
+	ASSERT_EQ(*ranges::max_element(this->_data), this->_tree.Max());
+	ASSERT_EQ(this->_expected, this->BinarySearchTreekthSmallestTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	BinarySearchTreekthSmallestTests,
+	BinarySearchTreekthSmallestTestFixture,
+	::testing::Values(make_tuple(0, 3, vector<long>{50, -100, 0, 10, -50, 60, 100, 75, 150}), make_tuple(50, 5, vector<long>{50, -100, 0, 10, -50, 60, 100, 75, 150}), make_tuple(75, 7, vector<long>{50, -100, 0, 10, -50, 60, 100, 75, 150})));
+class BinarySearchTreekthLargestTestFixture : public BinarySearchTreekthSmallestLargestTestFixture<long>, public testing::TestWithParam<tuple<long, size_t, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		BinarySearchTreekthSmallestLargestTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	/*
+Binary Search Tree (tree1) content:
+Level 0:                              50
+Level 1:                        0(50)            100(50)
+Level 2:                -50(0)     10(0)   75(100)       150(100)
+Level 3:        -100(-50)               60(75)
+	// 50,-100,0,10,-50,60,100,75,150
+	// -100,-50,0,10,50,60,75,100,150
+	*/
+	long BinarySearchTreekthLargestTest()
+	{
+		return _tree.kthLargest(_k);
+	}
+};
+TEST_P(BinarySearchTreekthLargestTestFixture, BinarySearchTreekthLargestTests)
+{
+	ASSERT_TRUE(this->_tree.isValidBST());
+	ASSERT_EQ(this->_data.size(), this->_tree.Count());
+	ASSERT_EQ(*ranges::min_element(this->_data), this->_tree.Min());
+	ASSERT_EQ(*ranges::max_element(this->_data), this->_tree.Max());
+	ASSERT_EQ(this->_expected, this->BinarySearchTreekthLargestTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	BinarySearchTreekthLargestTests,
+	BinarySearchTreekthLargestTestFixture,
+	::testing::Values(make_tuple(75, 3, vector<long>{50, -100, 0, 10, -50, 60, 100, 75, 150}), make_tuple(50, 5, vector<long>{50, -100, 0, 10, -50, 60, 100, 75, 150}), make_tuple(0, 7, vector<long>{50, -100, 0, 10, -50, 60, 100, 75, 150})));

@@ -66,18 +66,24 @@ Tree<T>::Tree(Tree<T> &tree)
 		;
 }
 template <typename T>
-Tree<T>::Tree(vector<T> &v, TreeType type)
+Tree<T>::Tree(vector<T> &data, TreeType type)
 {
-	if (!v.empty())
+	LoadData(data, type);
+}
+template <typename T>
+void Tree<T>::LoadData(vector<T> &data, TreeType type)
+{
+	if (!data.empty())
 	{
+		Clear();
 		switch (type)
 		{
 		case TreeType::BinarySearch:
-			ranges::sort(v);
-			m_root = AddToTree(nullptr, v, 0, v.size() - 1);
+			ranges::sort(data);
+			m_root = AddToTree(nullptr, data, 0, data.size() - 1);
 			break;
 		case TreeType::Binary:
-			m_root = AddToTree(v);
+			m_root = AddToTree(data);
 			break;
 		default:
 			throw runtime_error("Invalid Tree type!");
