@@ -4538,78 +4538,62 @@ Digit   Unit    Ten     Hundred     Thousand        Sum
 	return sum;
 }
 /* https://www.hackerrank.com/challenges/bomber-man/problem
- * WIP Times out!
+ * WIP Times out when n is big. Need to handle duplicate states.
  */
-vector<string> bomberMan(size_t n, vector<string> &grid)
+vector<string> BomberMan(size_t n, vector<string> const &grid)
 {
-	set<size_t> seconds;
-	ostringstream oss;
-	for (size_t second = 0; second <= n; second++)
+	vector<vector<long>> grid1;
+	// Initial state
+	for (size_t i = 0; i < grid.size(); i++)
 	{
-		if (!second)
+		grid1.push_back(vector<long>(grid[i].size(), -1));
+		for (size_t j = 0; j < grid[i].size(); j++)
 		{
-			// Initial state
-			for (size_t i = 0; i < grid.size(); i++)
-				for (size_t j = 0; j < grid[i].size(); j++)
-				{
-					if (grid[i][j] == 'O')
-						grid[i][j] = '0'; // to detonate at third second. second % 3
-				}
-			seconds.insert(3);
-			continue;
+			if (grid[i][j] == 'O')
+				grid1[i][j] = 3;
 		}
-		// After one second, Bomberman does nothing.
-		if (second == 1)
-			continue;
-		if (seconds.find(second) != seconds.end())
+	}
+	for (size_t second = 2; second <= n; second++)
+	{
+		if (second % 2)
 		{ // Blow up!
-			oss.str("");
-			oss << second % 3;
-			char pattern = oss.str()[0];
-			for (size_t i = 0; i < grid.size(); i++)
-				for (size_t j = 0; j < grid[i].size(); j++)
+			for (size_t i = 0; i < grid1.size(); i++)
+				for (size_t j = 0; j < grid1[i].size(); j++)
 				{
-					if (grid[i][j] == pattern)
+					if (grid1[i][j] == second)
 					{
-						grid[i][j] = '.';
-						if (i > 0 && grid[i - 1][j] != pattern)
-							grid[i - 1][j] = '.';
-						if (i < grid.size() - 1 && grid[i + 1][j] != pattern)
-							grid[i + 1][j] = '.';
-						if (j > 0 && grid[i][j - 1] != pattern)
-							grid[i][j - 1] = '.';
-						if (j < grid[i].size() - 1 && grid[i][j + 1] != pattern)
-							grid[i][j + 1] = '.';
+						// XXX: Need to check overlapping cells which blow up at the same time
+						grid1[i][j] = -1;
+						if (i > 0)
+							grid1[i - 1][j] = -1;
+						if (i < grid1.size() - 1 && grid1[i + 1][j] != second)
+							grid1[i + 1][j] = -1;
+						if (j > 0)
+							grid1[i][j - 1] = -1;
+						if (j < grid1[i].size() - 1 && grid1[i][j + 1] != second)
+							grid1[i][j + 1] = -1;
 					}
 				}
-			// cout << second << " (" << pattern << "): " << " blow up!" << endl;
-			// for (size_t i = 0; i < grid.size(); i++)
-			//     cout << grid[i] << endl;
 		}
 		else
 		{ // Plant bombs
-			oss.str("");
-			oss << second % 3;
-			char pattern = oss.str()[0];
-			for (size_t i = 0; i < grid.size(); i++)
-				for (size_t j = 0; j < grid[i].size(); j++)
+			for (size_t i = 0; i < grid1.size(); i++)
+				for (size_t j = 0; j < grid1[i].size(); j++)
 				{
-					if (grid[i][j] == '.')
-						grid[i][j] = pattern; // to detonate at second + 2
+					if (grid1[i][j] == -1)
+						grid1[i][j] = second + 3;
 				}
-			seconds.insert(second + 3);
-			// cout << second << " (" << pattern << "): " << " plant bombs!" << endl;
-			// for (size_t i = 0; i < grid.size(); i++)
-			//     cout << grid[i] << endl;
 		}
 	}
-	for (size_t i = 0; i < grid.size(); i++)
-		for (size_t j = 0; j < grid[i].size(); j++)
-		{
-			if (grid[i][j] != '.')
-				grid[i][j] = 'O'; // to detonate at third second. second % 3
-		}
-	return grid;
+	vector<string> result;
+	for (size_t i = 0; i < grid1.size(); i++)
+	{
+		vector<char> tmp;
+		for (size_t j = 0; j < grid1[i].size(); j++)
+			tmp.push_back(grid1[i][j] == -1 ? '.' : 'O');
+		result.push_back(string(tmp.begin(), tmp.end()));
+	}
+	return result;
 }
 /*
  * https://leetcode.com/problems/longest-substring-without-repeating-characters

@@ -330,7 +330,7 @@ long getLowestPathCost(size_t g_nodes, vector<long> &, vector<long> &, vector<lo
 size_t PostmanProblem(vector<size_t> &, vector<vector<size_t>> &);
 string DecryptPassword(string const &);
 unsigned long long substrings(string const &);
-vector<string> bomberMan(size_t, vector<string> &);
+vector<string> BomberMan(size_t, vector<string> const &);
 size_t LengthOfLongestUniqueSubstring(string const &);
 string ZigZagConvert(string const &, size_t);
 string numberToRoman(size_t);

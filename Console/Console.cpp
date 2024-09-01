@@ -1371,9 +1371,13 @@ int main(int argc, char *argv[])
 	assert(substrings(string("123")) == 164);
 	assert(substrings(string("1234")) == 1670);
 	assert(substrings(string("972698438521")) == 445677619);
+	strings = {"...", ".O.", "..."};
+	strings1 = {"O.O", "...", "O.O"};
+	assert(BomberMan(3, strings) == strings1);
+
 	strings = {".......", "...O...", "....O..", ".......", "OO.....", "OO....."};
 	strings1 = {"OOO.OOO", "OO...OO", "OOO...O", "..OO.OO", "...OOOO", "...OOOO"};
-	assert(bomberMan(3, strings) == strings1);
+	assert(BomberMan(3, strings) == strings1);
 	assert(FindSubsequenceRecursive(string("1221"), string("12")) == 2);
 	assert(FindSubsequenceRecursive(string("1234"), string("56")) == 0);
 	assert(FindSubsequenceRecursive(string("kkkkkkz"), string("kkkk")) == 15);
