@@ -4588,10 +4588,10 @@ vector<string> BomberMan(size_t n, vector<string> const &grid)
 	vector<string> result;
 	for (size_t i = 0; i < grid1.size(); i++)
 	{
-		vector<char> tmp;
+		string tmp;
 		for (size_t j = 0; j < grid1[i].size(); j++)
 			tmp.push_back(grid1[i][j] == -1 ? '.' : 'O');
-		result.push_back(string(tmp.begin(), tmp.end()));
+		result.push_back(tmp);
 	}
 	return result;
 }
