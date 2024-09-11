@@ -4537,64 +4537,6 @@ Digit   Unit    Ten     Hundred     Thousand        Sum
 	}
 	return sum;
 }
-/* https://www.hackerrank.com/challenges/bomber-man/problem
- * WIP Times out when n is big. Need to handle duplicate states.
- */
-vector<string> BomberMan(size_t n, vector<string> const &grid)
-{
-	vector<vector<long>> grid1;
-	// Initial state
-	for (size_t i = 0; i < grid.size(); i++)
-	{
-		grid1.push_back(vector<long>(grid[i].size(), -1));
-		for (size_t j = 0; j < grid[i].size(); j++)
-		{
-			if (grid[i][j] == 'O')
-				grid1[i][j] = 3;
-		}
-	}
-	for (size_t second = 2; second <= n; second++)
-	{
-		if (second % 2)
-		{ // Blow up!
-			for (size_t i = 0; i < grid1.size(); i++)
-				for (size_t j = 0; j < grid1[i].size(); j++)
-				{
-					if (grid1[i][j] == second)
-					{
-						// XXX: Need to check overlapping cells which blow up at the same time
-						grid1[i][j] = -1;
-						if (i > 0)
-							grid1[i - 1][j] = -1;
-						if (i < grid1.size() - 1 && grid1[i + 1][j] != second)
-							grid1[i + 1][j] = -1;
-						if (j > 0)
-							grid1[i][j - 1] = -1;
-						if (j < grid1[i].size() - 1 && grid1[i][j + 1] != second)
-							grid1[i][j + 1] = -1;
-					}
-				}
-		}
-		else
-		{ // Plant bombs
-			for (size_t i = 0; i < grid1.size(); i++)
-				for (size_t j = 0; j < grid1[i].size(); j++)
-				{
-					if (grid1[i][j] == -1)
-						grid1[i][j] = second + 3;
-				}
-		}
-	}
-	vector<string> result;
-	for (size_t i = 0; i < grid1.size(); i++)
-	{
-		string tmp;
-		for (size_t j = 0; j < grid1[i].size(); j++)
-			tmp.push_back(grid1[i][j] == -1 ? '.' : 'O');
-		result.push_back(tmp);
-	}
-	return result;
-}
 /*
  * https://leetcode.com/problems/longest-substring-without-repeating-characters
  * 100%

@@ -32,4 +32,5 @@ public:
 	size_t GridlandMetro(T, T, vector<vector<T>> const &);
 	size_t SurfaceArea3D(vector<vector<T>> const &);
 	size_t TwoCrosses(vector<string> const &);
+	vector<string> BomberMan(size_t, vector<string> const &);
 };

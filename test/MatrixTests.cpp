@@ -502,3 +502,33 @@ INSTANTIATE_TEST_SUITE_P(
 																			   {118881009, 192274800, 440912976},
 																			   {481315381, 93447775, 210550337},
 																		   })));
+class BomberManTestFixture : public testing::TestWithParam<tuple<vector<string>, size_t, vector<string>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_second = get<1>(GetParam());
+		_data = get<2>(GetParam());
+	}
+	vector<string> BomberManTest()
+	{
+		return _matrix.BomberMan(_second, _data);
+	}
+
+protected:
+	Matrix<size_t> _matrix;
+	vector<string> _expected;
+	size_t _second;
+	vector<string> _data;
+};
+TEST_P(BomberManTestFixture, BomberManTests)
+{
+	ASSERT_EQ(this->_expected, this->BomberManTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	BomberManTests,
+	BomberManTestFixture,
+	::testing::Values(make_tuple(vector<string>{"O.O", "...", "O.O"}, 3, vector<string>{"...", ".O.", "..."}), make_tuple(vector<string>{"OOO.OOO", "OO...OO", "OOO...O", "..OO.OO", "...OOOO", "...OOOO"}, 3, vector<string>{".......", "...O...", "....O..", ".......", "OO.....", "OO....."}), make_tuple(vector<string>{".......", "...O.O.", "...OO..", "..OOOO.", "OOOOOOO", "OOOOOOO"}, 5, vector<string>{".......", "...O.O.", "....O..", "..O....", "OO...OO", "OO.O..."}),
+					  make_tuple(vector<string>{"OOOOO........OOOO........OOOOOOOOOO...O.....OOO...OOOOOOOOOOO...OOOOOOOOOOOOOOOOOOOOOOOOO....O...O....O...OOOOOOO....OOOOOOO.....O.....OOOOOOO......OOO.....OOO....OO....OO....OOO...OOOOO....OOOOO...O"}, 181054341, vector<string>{"O..OO........O..O........OO.O.OO.OO...O.....OOO...OO.O..OOOOO...O.O..O..O.O..OOO..O..O..O....O...O....O...O..O..O....O.O.O.O.....O.....OOOO..O......O.O.....OOO....OO....OO....O.O...O..OO....OO..O...O"}),
+					  make_tuple(vector<string>{".........O.........OOOOOO.........OOO..........O.....OO.......OO...O...OO..........OOO........O...OO......OOOOOOOOO.............O........OOOO...OOOOOO...O...OO........OO...OOOOO........OOOOOOOO....."}, 329973043, vector<string>{"OOOO.O.O...OOO.O.O........O.OOO.O.....OO..O..O...OOO....O.OOO....O...O....O..O.O.O.....OOOO.O...O....OO.O...........O.O..O.O..O...OO.OOO......O........O...O....O.O..O....O.......OOOO.O..........OO.O"})));
