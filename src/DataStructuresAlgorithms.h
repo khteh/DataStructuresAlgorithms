@@ -333,7 +333,7 @@ unsigned long long substrings(string const &);
 vector<string> BomberMan(size_t, vector<string> const &);
 size_t LengthOfLongestUniqueSubstring(string const &);
 string ZigZagConvert(string const &, size_t);
-string numberToRoman(size_t);
+string NumberToRoman(size_t);
 double median(vector<long> &, vector<long> &);
 long BasicCalculator(string const &);
 vector<long> productExceptSelf(vector<long> &);

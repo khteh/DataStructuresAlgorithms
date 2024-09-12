@@ -4616,7 +4616,7 @@ string ZigZagConvert(string const &s, size_t numRows)
  * https://leetcode.com/problems/integer-to-roman/
  * 100%
  */
-string numberToRoman(size_t num)
+string NumberToRoman(size_t num)
 {
 	string roman;
 	size_t symbols;

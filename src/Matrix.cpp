@@ -660,80 +660,57 @@ size_t Matrix<T>::TwoCrosses(vector<string> const &grid)
 }
 /* https://www.hackerrank.com/challenges/bomber-man/problem
  * 100%
--1	-1	-1	0s	-1	-1	-1	1s (BeforeExplosion)
--1	3	-1		-1	3	-1
--1	-1	-1		-1	-1	-1
-
-5	5	5	2s	 5	-1	5	3s
-5	3	5		-1	-1	-1
-5	5	5		 5	-1	5
-
-5	7	5	4s	-1	-1	-1	5s
-7	7	7		-1	7	-1
-5	7	5		-1	-1	-1
-
-9	9	9	6s	9	-1	9	7s: repeat 3s
-9	7	9		-1	-1	-1
-9	9	9		9	-1	9
-
-9	11	9	8s	-1	-1	-1	9s: repeat 5s
-11	11	11		-1	11	-1
-9	11	9		-1	-1	-1
-
-13	13	13	10s	13	-1	13
-13	11	13		-1	-1	-1	11s: repeat 3s
-13	13	13		13	-1	13
-
--1	-1	-1	-1	-1	-1	-1	0s	-1	-1	-1	-1	-1	-1	-1	1s (BeforeExplosion)
+0s:								1s:
+-1	-1	-1	-1	-1	-1	-1		-1	-1	-1	-1	-1	-1	-1
 -1	-1	-1	3	-1	3	-1		-1	-1	-1	3	-1	3	-1
 -1	-1	-1	-1	3	-1	-1		-1	-1	-1	-1	3	-1	-1
 -1	-1	3	-1	-1	-1	-1		-1	-1	3	-1	-1	-1	-1
 3	3	-1	-1	-1	3	3		3	3	-1	-1	-1	3	3
 3	3	-1	3	-1	-1	-1		3	3	-1	3	-1	-1	-1
-
-5	5	5	5	5	5	5	2s	5	5	5	-1	5	-1	5	3s (AfterExplosion)
+2s:								3s:
+5	5	5	5	5	5	5		5	5	5	-1	5	-1	5
 5	5	5	3	5	3	5		5	5	-1	-1	-1	-1	-1
 5	5	5	5	3	5	5		5	5	-1	-1	-1	-1	5
 5	5	3	5	5	5	5		-1	-1	-1	-1	-1	-1	-1
 3	3	5	5	5	3	3		-1	-1	-1	-1	-1	-1	-1
 3	3	5	3	5	5	5		-1	-1	-1	-1	-1	-1	-1
-
-5	5	5	7	5	7	5	4s	-1	-1	-1	-1	-1	-1	-1	5s
+4s:								5s:
+5	5	5	7	5	7	5		-1	-1	-1	-1	-1	-1	-1
 5	5	7	7	7	7	7		-1	-1	-1	7	-1	7	-1
 5	5	7	7	7	7	5		-1	-1	-1	7	7	-1	-1
 7	7	7	7	7	7	7		-1	-1	7	7	7	7	-1
 7	7	7	7	7	7	7		7	7	7	7	7	7	7
 7	7	7	7	7	7	7		7	7	7	7	7	7	7
-
-9	9	9	9	9	9	9	6s	9	9	9	-1	9	-1	9	7s (Repeats 3s)
+6s:								7s:
+9	9	9	9	9	9	9		9	9	9	-1	9	-1	9	7s (Repeats 3s)
 9	9	9	7	9	7	9		9	9	-1	-1	-1	-1	-1
 9	9	9	7	7	9	9		9	9	-1	-1	-1	-1	9
 9	9	7	7	7	7	9		-1	-1	-1	-1	-1	-1	-1
 7	7	7	7	7	7	7		-1	-1	-1	-1	-1	-1	-1
 7	7	7	7	7	7	7		-1	-1	-1	-1	-1	-1	-1
-
-9	9	9	11	9	11	9	8s	-1	-1	-1	-1	-1	-1	-1	9s (Repeats 5s)
+8s:								9s:
+9	9	9	11	9	11	9		-1	-1	-1	-1	-1	-1	-1	9s (Repeats 5s)
 9	9	11	11	11	11	11		-1	-1	-1	11	-1	11	-1
 9	9	11	11	11	11	9		-1	-1	-1	11	11	-1	-1
 11	11	11	11	11	11	11		-1	-1	11	11	11	11	-1
 11	11	11	11	11	11	11		11	11	11	11	11	11	11
 11	11	11	11	11	11	11		11	11	11	11	11	11	11
 
-5: [5 9  13] <= %4 == 1
-3: [3 7 11  15] <= %4 == 3
+explodeAt5s: [5 9  13] <= %4 == 1
+explodeAt3s: [3 7 11  15] <= %4 == 3
  */
 template <typename T>
 vector<string> Matrix<T>::BomberMan(size_t n, vector<string> const &grid)
 {
 	vector<vector<long>> grid1;
-	vector<string> result, explosion3s, explosion5s;
+	vector<string> filled, explodeAt3s, explodeAt5s;
 	if (n <= 1)
 		return grid;
 	else if (!(n % 2))
 	{
 		for (size_t i = 0; i < grid.size(); i++)
-			result.push_back(string(grid[i].size(), 'O'));
-		return result;
+			filled.push_back(string(grid[i].size(), 'O'));
+		return filled;
 	}
 	// Initial state
 	for (size_t i = 0; i < grid.size(); i++)
@@ -773,7 +750,7 @@ vector<string> Matrix<T>::BomberMan(size_t n, vector<string> const &grid)
 					string tmp;
 					for (size_t j = 0; j < grid1[i].size(); j++)
 						tmp.push_back(grid1[i][j] == -1 ? '.' : 'O');
-					explosion3s.push_back(tmp);
+					explodeAt3s.push_back(tmp);
 				}
 			}
 			else if (second == 5)
@@ -783,7 +760,7 @@ vector<string> Matrix<T>::BomberMan(size_t n, vector<string> const &grid)
 					string tmp;
 					for (size_t j = 0; j < grid1[i].size(); j++)
 						tmp.push_back(grid1[i][j] == -1 ? '.' : 'O');
-					explosion5s.push_back(tmp);
+					explodeAt5s.push_back(tmp);
 				}
 			}
 		}
@@ -797,5 +774,5 @@ vector<string> Matrix<T>::BomberMan(size_t n, vector<string> const &grid)
 				}
 		}
 	}
-	return n % 4 == 1 ? explosion5s : explosion3s;
+	return n % 4 == 1 ? explodeAt5s : explodeAt3s;
 }

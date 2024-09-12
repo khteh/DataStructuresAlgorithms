@@ -1,5 +1,43 @@
 #include "pch.h"
 using namespace std;
+/*
+	assert(numberToRoman(4) == "IV");
+	assert(numberToRoman(9) == "IX");
+	assert(numberToRoman(40) == "XL");
+	assert(numberToRoman(90) == "XC");
+	assert(numberToRoman(400) == "CD");
+	assert(numberToRoman(900) == "CM");
+*/
+class NumberToRomanTestFixture : public testing::TestWithParam<tuple<string, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+	}
+	string NumberToRomanTest()
+	{
+		return NumberToRoman(_n);
+	}
+
+protected:
+	string _expected;
+	size_t _n;
+};
+TEST_P(NumberToRomanTestFixture, NumberToRomanTests)
+{
+	ASSERT_EQ(this->_expected, this->NumberToRomanTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	NumberToRomanTests,
+	NumberToRomanTestFixture,
+	::testing::Values(make_tuple("IV", 4),
+					  make_tuple("IX", 9),
+					  make_tuple("XL", 40),
+					  make_tuple("XC", 90),
+					  make_tuple("CD", 400), make_tuple("CM", 900)));
+
 class CountDigitsTestFixture : public testing::TestWithParam<tuple<size_t, char, size_t>>
 {
 public:

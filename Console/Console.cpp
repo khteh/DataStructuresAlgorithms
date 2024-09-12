@@ -1375,12 +1375,6 @@ int main(int argc, char *argv[])
 	assert(FindSubsequenceRecursive(string("1234"), string("56")) == 0);
 	assert(FindSubsequenceRecursive(string("kkkkkkz"), string("kkkk")) == 15);
 	strings.clear();
-	assert(numberToRoman(4) == "IV");
-	assert(numberToRoman(9) == "IX");
-	assert(numberToRoman(40) == "XL");
-	assert(numberToRoman(90) == "XC");
-	assert(numberToRoman(400) == "CD");
-	assert(numberToRoman(900) == "CM");
 	a.clear();
 	b.clear();
 	a = {1, 3, 5, 7, 9};
