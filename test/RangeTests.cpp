@@ -55,6 +55,33 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(2, 8, vector<size_t>{1, 2, 3, 4, 5, 6, 5}),
 					  make_tuple(3, 12, vector<size_t>{5, 7, 9, 13, 11, 6, 6, 3, 3}),
 					  make_tuple(4, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})));
+
+class SumPairsIndicesTestFixture : public RangeTestFixture2<vector<size_t>, size_t, size_t>, public testing::TestWithParam<tuple<vector<size_t>, size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		RangeTestFixture2::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	vector<size_t> SumPairsIndicesTest()
+	{
+		vector<size_t> result;
+		_rangeObj.SumPairs(_param, _data, result);
+		return result;
+	}
+};
+TEST_P(SumPairsIndicesTestFixture, SumPairsIndicesTests)
+{
+	ASSERT_EQ(this->_expected, this->SumPairsIndicesTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	SumPairsIndicesTests,
+	SumPairsIndicesTestFixture,
+	::testing::Values(make_tuple(vector<size_t>{0, 3}, 4, vector<size_t>{1, 4, 5, 3, 2}),
+					  make_tuple(vector<size_t>{0, 1}, 4, vector<size_t>{2, 2, 4, 3}),
+					  make_tuple(vector<size_t>{1, 2}, 100, vector<size_t>{5, 75, 25}),
+					  make_tuple(vector<size_t>{0, 3}, 200, vector<size_t>{150, 24, 79, 50, 88, 345, 3})));
+
 class MinimumLossTestFixture : public RangeTestFixture1<long, long>, public testing::TestWithParam<tuple<long, vector<long>>>
 {
 public:
@@ -699,22 +726,22 @@ INSTANTIATE_TEST_SUITE_P(
 	ContainsNearbyAlmostDuplicateTests,
 	ContainsNearbyAlmostDuplicateTestFixture,
 	::testing::Values(make_tuple(true, vector<long>{1, 2, 3, 1}, 3, 0),
-		make_tuple(true, vector<long>{1, 0, 1, 1}, 1, 2),
-		make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 2, 3),
-		make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 0, 0),
-		make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 0, 1),
-		make_tuple(true, vector<long>{1, 5, 9, 1, 5, 9}, 3, 0),
-		make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 2, 0),
-		make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, -1, -1),
-		make_tuple(true, vector<long>{1, 2, 1}, 2, 0),
-		make_tuple(false, vector<long>{2147483647, -1, 2147483647}, 1, 2147483647),
-		make_tuple(false, vector<long>{2147483647, -1, 2147483647}, 1, -2147483647L),
-		make_tuple(false, vector<long>{-2147483648L, 2147483647}, 1, 1),
-		make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 1),
-		make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 2),
-		make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 3),
-		make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 4),
-		make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 5)));
+					  make_tuple(true, vector<long>{1, 0, 1, 1}, 1, 2),
+					  make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 2, 3),
+					  make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 0, 0),
+					  make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 0, 1),
+					  make_tuple(true, vector<long>{1, 5, 9, 1, 5, 9}, 3, 0),
+					  make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 2, 0),
+					  make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, -1, -1),
+					  make_tuple(true, vector<long>{1, 2, 1}, 2, 0),
+					  make_tuple(false, vector<long>{2147483647, -1, 2147483647}, 1, 2147483647),
+					  make_tuple(false, vector<long>{2147483647, -1, 2147483647}, 1, -2147483647L),
+					  make_tuple(false, vector<long>{-2147483648L, 2147483647}, 1, 1),
+					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 1),
+					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 2),
+					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 3),
+					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 4),
+					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 5)));
 #endif
 class MinimumBribesTestFixture : public testing::TestWithParam<tuple<long, size_t, vector<long>>>
 {

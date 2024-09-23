@@ -827,8 +827,9 @@ long LongestValidParentheses(string const &str)
 	}
 	return result;
 }
-// https://app.codility.com/programmers/task/brackets_rotation/
-// Unfinished work!
+/* https://app.codility.com/programmers/task/brackets_rotation/
+ * WIP!
+ */
 long LongestValidParenthesesWithFixes(string const &str, size_t k)
 {
 	stack<long> stack;
@@ -1029,7 +1030,6 @@ unsigned long long findMax(vector<unsigned long long> const &data)
 	}
 	return findMax(result);
 }
-
 string uncompress(string const &str)
 {
 	ostringstream oss;
@@ -2397,18 +2397,19 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 	}
 	return false;
 }
-// Divide the array(+ve and -ve numbers) into two parts such that the average of both the parts is equal.
-//
-// Assume that such splitting exists.
-//
-// Let then N be array length, Sum - sum of entire array, P - sum of one part of items, K - count of numbers in that part.
-// Let's write equations for averages in both parts of array:
-//
-// P / K = (Sum - P) / (N - K)
-// P * (N - K) = K * (Sum - P)
-// P * N - P * K = K * Sum - K * P
-// P * N = K * Sum
-// P = K * Sum / N
+/* Divide the array(+ve and -ve numbers) into two parts such that the average of both the parts is equal.
+ *
+ * Assume that such splitting exists.
+ *
+ * Let then N be array length, Sum - sum of entire array, P - sum of one part of items, K - count of numbers in that part.
+ * Let's write equations for averages in both parts of array:
+ *
+ * P / K = (Sum - P) / (N - K)
+ * P * (N - K) = K * (Sum - P)
+ * P * N - P * K = K * Sum - K * P
+ * P * N = K * Sum
+ * P = K * Sum / N
+ */
 void EqualAverageDivide(vector<long> &data, vector<long> &left)
 {
 	long sum = 0, P = 0;
@@ -7003,7 +7004,7 @@ void Z(vector<size_t> &z, string const &str)
 }
 /*
  * https://www.hackerrank.com/challenges/fraudulent-activity-notifications/problem
- * Times out!
+ * WIP Times out!
  */
 size_t ActivityNotifications(vector<size_t> const &data, size_t d)
 {
@@ -7031,7 +7032,7 @@ size_t ActivityNotifications(vector<size_t> const &data, size_t d)
 /*
  * https://www.hackerrank.com/challenges/fraudulent-activity-notifications/problem
  * Uses CalculateMedian(vector<long> &data) defined above
- * Times out!
+ * WIP Times out!
  */
 size_t ActivityNotifications1(vector<size_t> &data, size_t d)
 {

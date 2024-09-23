@@ -269,6 +269,29 @@ size_t Range::SumPairs(size_t sum, vector<size_t> const &data)
 	}
 	return count;
 }
+/*
+https://www.hackerrank.com/challenges/icecream-parlor/problem
+100%
+*/
+void Range::SumPairs(size_t sum, vector<size_t> const &data, vector<size_t> &result)
+{
+	size_t diff;
+	map<size_t, size_t> pairs;
+	set<size_t> duplicates;
+	for (size_t i = 0; i < data.size(); i++)
+	{
+		diff = sum - data[i];
+		if (pairs.find(diff) != pairs.end() && duplicates.find(diff) == duplicates.end())
+		{
+			result.push_back(pairs[diff]);
+			result.push_back(i);
+			duplicates.emplace(diff);
+		}
+		else
+			pairs.emplace(data[i], i);
+	}
+}
+
 /* 0 1 2 3 4 5 6 7 8 9
  *         ^ (10 / 2 - 1)
  * (0,9), (0,8)	2

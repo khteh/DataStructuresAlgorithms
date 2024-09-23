@@ -26,6 +26,7 @@ public:
 	size_t MinSumSubSequence(size_t, vector<size_t> const &);
 	long LongestNonNegativeSumSlice(vector<long> const &);
 	size_t SumPairs(size_t, vector<size_t> const &);
+	void SumPairs(size_t, vector<size_t> const &, vector<size_t> &);
 	size_t GreaterThanSumPairs(size_t, vector<size_t> const &);
 	vector<vector<long>> TripletsZeroSum(vector<long> &);
 	vector<vector<long>> QuadrupletsSum(long, vector<long> &);
