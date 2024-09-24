@@ -5271,7 +5271,7 @@ vector<string> fizzBuzz(size_t n)
 }
 /*
  * https://www.hackerrank.com/challenges/rust-murderer/problem
- * WIP. Time out and wrong answer.
+ * WIP. Time out.
  */
 vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
 {
