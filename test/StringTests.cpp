@@ -511,11 +511,6 @@ INSTANTIATE_TEST_SUITE_P(
     RemoveDuplicateCharactersLexicographicalOrderTests,
     RemoveDuplicateCharactersLexicographicalOrderTestFixture,
     ::testing::Values(make_tuple("abc", "bcabc"), make_tuple("abdc", "abdcb"), make_tuple("abc", "abacb"), make_tuple("adcb", "adcba"), make_tuple("acdb", "cbacdcbc"), make_tuple("abcd", "cbacdbcd"), make_tuple("aidbcj", "cbaidbcj"), make_tuple("adbc", "cdadabcc")));
-/*
-    assert(AlternateChars("abaacdabd") == 4);
-    assert(AlternateChars("beabeefeab") == 5);
-    assert(AlternateChars("asdcbsdcagfsdbgdfanfghbsfdab") == 8);
-*/
 class AlternateCharsTestFixture : public StringTestFixture<size_t, string>, public testing::TestWithParam<tuple<size_t, string>>
 {
 public:
@@ -535,4 +530,4 @@ TEST_P(AlternateCharsTestFixture, AlternateCharsTests)
 INSTANTIATE_TEST_SUITE_P(
     AlternateCharsTests,
     AlternateCharsTestFixture,
-    ::testing::Values(make_tuple(4, "abaacdabd"), make_tuple(5, "beabeefeab"), make_tuple(8, "asdcbsdcagfsdbgdfanfghbsfdab")));
+    ::testing::Values(make_tuple(4, "abaacdabd"), make_tuple(5, "beabeefeab"), make_tuple(8, "asdcbsdcagfsdbgdfanfghbsfdab"), make_tuple(0, "a"), make_tuple(0, "aa"), make_tuple(2, "abc"), make_tuple(0, "aba")));
