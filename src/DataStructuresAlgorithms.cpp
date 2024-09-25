@@ -7101,3 +7101,38 @@ size_t ActivityNotifications2(vector<size_t> const &data, size_t d, size_t max)
 	}
 	return result;
 }
+/* https://www.hackerrank.com/challenges/two-characters/problem?isFullScreen=true
+ * Return longest string with only 2 alternating characters
+ 100%
+ */
+size_t AlternateChars(string const &s)
+{
+	set<char> unique(s.begin(), s.end());
+	if (unique.size() <= 1)
+		return 0;
+	else if (unique.size() == 2)
+		return s.size() == 2 ? 2 : 0;
+	size_t result = 0;
+	ostringstream oss;
+	for (char i = 'a'; i < 'z'; i++)
+		for (char j = 'b'; j <= 'z'; j++)
+		{
+			oss.str("");
+			for (size_t k = 0; k < s.size(); k++)
+			{
+				string str = oss.str();
+				if (s[k] == i || s[k] == j)
+				{
+					if (!str.empty() && str.back() == s[k])
+					{
+						oss.str("");
+						break;
+					}
+					else
+						oss << s[k];
+				}
+			}
+			result = max(result, oss.str().size());
+		}
+	return result;
+}

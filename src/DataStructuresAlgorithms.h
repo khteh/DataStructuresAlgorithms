@@ -379,3 +379,4 @@ size_t ActivityNotifications(vector<size_t> const &, size_t);
 size_t ActivityNotifications1(vector<size_t> &, size_t);
 size_t ActivityNotifications2(vector<size_t> const &, size_t);
 string NextBiggerString(string &);
+size_t AlternateChars(string const &);

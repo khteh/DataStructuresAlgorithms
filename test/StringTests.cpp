@@ -447,24 +447,19 @@ INSTANTIATE_TEST_SUITE_P(
     WordsLadderTestFixture,
     ::testing::Values(make_tuple(vector<string>{"LIKE", "LIME", "LIMP", "LAMP", "DAMP"}, "DAMP", "LIKE", set<string>{"DAMP", "LAMP", "LIMP", "LIME", "LIKE", "LAKE"}), make_tuple(vector<string>{}, "DAMP", "Like", set<string>{"DAMP", "LAMP", "LIMP", "LIME", "LIKE", "LAKE"}), make_tuple(vector<string>{"Cog", "Dog", "Dot", "Hot", "Hit"}, "Hit", "Cog", set<string>{"Hot", "Dot", "Dog", "Lot", "Log", "Cog"}), make_tuple(vector<string>{}, "Hit", "Hat", set<string>{"Hot", "Dot", "Dog", "Lot", "Log", "Cog"})));
 
-class ZFunctionTestFixture : public testing::TestWithParam<tuple<vector<size_t>, string>>
+class ZFunctionTestFixture : public StringTestFixture<vector<size_t>, string>, public testing::TestWithParam<tuple<vector<size_t>, string>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _str = get<1>(GetParam());
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     vector<size_t> ZFunctionTest()
     {
         vector<size_t> result;
-        Z(result, _str);
+        Z(result, _var1);
         return result;
     }
-
-protected:
-    vector<size_t> _expected;
-    string _str;
 };
 TEST_P(ZFunctionTestFixture, ZFunctionTests)
 {
@@ -474,23 +469,18 @@ INSTANTIATE_TEST_SUITE_P(
     ZFunctionTests,
     ZFunctionTestFixture,
     ::testing::Values(make_tuple(vector<size_t>{0, 4, 3, 2, 1}, "aaaaa"), make_tuple(vector<size_t>{0, 2, 1, 0, 2, 1, 0}, "aaabaab"), make_tuple(vector<size_t>{0, 0, 1, 0, 3, 0, 1}, "abacaba"), make_tuple(vector<size_t>{0, 0, 3, 0, 1, 1}, "ababaa")));
-class RemoveDuplicateCharactersTestFixture : public testing::TestWithParam<tuple<string, string>>
+class RemoveDuplicateCharactersTestFixture : public StringTestFixture<string, string>, public testing::TestWithParam<tuple<string, string>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _str = get<1>(GetParam());
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     string RemoveDuplicateCharactersTest()
     {
-        RemoveDuplicateCharacters(_str);
-        return _str;
+        RemoveDuplicateCharacters(_var1);
+        return _var1;
     }
-
-protected:
-    string _expected;
-    string _str;
 };
 TEST_P(RemoveDuplicateCharactersTestFixture, RemoveDuplicateCharactersTests)
 {
@@ -500,23 +490,18 @@ INSTANTIATE_TEST_SUITE_P(
     RemoveDuplicateCharactersTests,
     RemoveDuplicateCharactersTestFixture,
     ::testing::Values(make_tuple("Helo Wrd!", "Hello World!!!"), make_tuple("ab", "aaabaab"), make_tuple("abdc", "abadcaba")));
-class RemoveDuplicateCharactersLexicographicalOrderTestFixture : public testing::TestWithParam<tuple<string, string>>
+class RemoveDuplicateCharactersLexicographicalOrderTestFixture : public StringTestFixture<string, string>, public testing::TestWithParam<tuple<string, string>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _str = get<1>(GetParam());
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     string RemoveDuplicateCharactersLexicographicalOrderTest()
     {
-        RemoveDuplicateCharactersLexicographicalOrder(_str);
-        return _str;
+        RemoveDuplicateCharactersLexicographicalOrder(_var1);
+        return _var1;
     }
-
-protected:
-    string _expected;
-    string _str;
 };
 TEST_P(RemoveDuplicateCharactersLexicographicalOrderTestFixture, RemoveDuplicateCharactersLexicographicalOrderTests)
 {
@@ -526,3 +511,28 @@ INSTANTIATE_TEST_SUITE_P(
     RemoveDuplicateCharactersLexicographicalOrderTests,
     RemoveDuplicateCharactersLexicographicalOrderTestFixture,
     ::testing::Values(make_tuple("abc", "bcabc"), make_tuple("abdc", "abdcb"), make_tuple("abc", "abacb"), make_tuple("adcb", "adcba"), make_tuple("acdb", "cbacdcbc"), make_tuple("abcd", "cbacdbcd"), make_tuple("aidbcj", "cbaidbcj"), make_tuple("adbc", "cdadabcc")));
+/*
+    assert(AlternateChars("abaacdabd") == 4);
+    assert(AlternateChars("beabeefeab") == 5);
+    assert(AlternateChars("asdcbsdcagfsdbgdfanfghbsfdab") == 8);
+*/
+class AlternateCharsTestFixture : public StringTestFixture<size_t, string>, public testing::TestWithParam<tuple<size_t, string>>
+{
+public:
+    void SetUp() override
+    {
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+    }
+    size_t AlternateCharsTest()
+    {
+        return AlternateChars(_var1);
+    }
+};
+TEST_P(AlternateCharsTestFixture, AlternateCharsTests)
+{
+    ASSERT_EQ(this->_expected, this->AlternateCharsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    AlternateCharsTests,
+    AlternateCharsTestFixture,
+    ::testing::Values(make_tuple(4, "abaacdabd"), make_tuple(5, "beabeefeab"), make_tuple(8, "asdcbsdcagfsdbgdfanfghbsfdab")));
