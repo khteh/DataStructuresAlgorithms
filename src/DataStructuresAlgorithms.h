@@ -129,7 +129,7 @@ typedef struct ZeroFactorsFiveCount
 } zerofactorsfivecount_t;
 typedef struct Position
 {
-	Position() : row(-1), col(-1) {}
+	Position() : row(0), col(0) {}
 	Position(size_t r, size_t c) : row(r), col(c) {}
 	size_t row;
 	size_t col;
@@ -380,3 +380,4 @@ size_t ActivityNotifications1(vector<size_t> &, size_t);
 size_t ActivityNotifications2(vector<size_t> const &, size_t);
 string NextBiggerString(string &);
 size_t AlternateChars(string const &);
+string SuperReducedString(string const &);

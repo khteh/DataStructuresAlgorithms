@@ -531,3 +531,23 @@ INSTANTIATE_TEST_SUITE_P(
     AlternateCharsTests,
     AlternateCharsTestFixture,
     ::testing::Values(make_tuple(4, "abaacdabd"), make_tuple(5, "beabeefeab"), make_tuple(8, "asdcbsdcagfsdbgdfanfghbsfdab"), make_tuple(0, "a"), make_tuple(0, "aa"), make_tuple(2, "abc"), make_tuple(0, "aba")));
+class SuperReducedStringTestFixture : public StringTestFixture<string, string>, public testing::TestWithParam<tuple<string, string>>
+{
+public:
+    void SetUp() override
+    {
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+    }
+    string SuperReducedStringTest()
+    {
+        return SuperReducedString(_var1);
+    }
+};
+TEST_P(SuperReducedStringTestFixture, SuperReducedStringTests)
+{
+    ASSERT_EQ(this->_expected, this->SuperReducedStringTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    SuperReducedStringTests,
+    SuperReducedStringTestFixture,
+    ::testing::Values(make_tuple("ab", "ab"), make_tuple("b", "aab"), make_tuple("", "abba"), make_tuple("abab", "abab"), make_tuple("abd", "aaabccddd")));

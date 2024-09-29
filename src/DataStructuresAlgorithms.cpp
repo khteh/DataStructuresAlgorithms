@@ -6664,6 +6664,52 @@ size_t kMarsh(vector<string> &grid)
 				}
 	return perimeter;
 }
+size_t kMarsh(vector<string> &grid)
+{
+	vector<vector<size_t>> rows(grid.size(), vector<size_t>(grid[0].size())), cols(grid.size(), vector<size_t>(grid[0].size()));
+	map<size_t, size_t> maxRows, maxCols;
+	size_t maxRow = 0, maxCol = 0;
+	for (size_t i = 0; i < grid.size(); i++)
+	{
+		maxCol = 0;
+		for (size_t j = 0; j < grid[i].size(); j++)
+		{
+			// rows
+			if (i == 0 || (grid[i - 1][j] != 'x') && grid[i][j] != 'x')
+				rows[i][j] = i == 0 ? 0 : rows[i - 1][j] + 1;
+			else if (i > 0)
+				rows[i][j] = rows[i - 1][j];
+			// cols
+			if (j == 0 || (grid[i][j - 1] != 'x') && grid[i][j] != 'x')
+				cols[i][j] = j == 0 ? 0 : cols[i][j - 1] + 1;
+			else if (j > 0)
+				cols[i][j] = cols[i][j - 1];
+			maxCol = max(maxCol, cols[i][j]);
+			maxRows[j] = max(maxRows[j], rows[i][j]); // Record the max row value for col j
+		}
+		maxCols.emplace(i, maxCol); // Record the max col value for row i
+	}
+	multimap<size_t, size_t, greater<size_t>> maxRowsInverted = flip_map<size_t, size_t, greater<size_t>>(maxRows), maxColsInverted = flip_map<size_t, size_t, greater<size_t>>(maxCols);
+	map<size_t, vector<size_t>, greater<size_t>> maxRowIndices, maxColIndices;
+	for (multimap<size_t, size_t, greater<size_t>>::const_iterator it = maxRowsInverted.begin(); it != maxRowsInverted.end(); it++)
+		maxRowIndices[it->first].push_back(it->second); // key: Max value; value: columns with the max value
+	for (multimap<size_t, size_t, greater<size_t>>::const_iterator it = maxColsInverted.begin(); it != maxColsInverted.end(); it++)
+		maxColIndices[it->first].push_back(it->second); // key: Max value; value: rows with the max value
+	size_t result = 0;
+	for (map<size_t, vector<size_t>, greater<size_t>>::const_iterator it = maxRowIndices.begin(); it != maxRowIndices.end(); it++)
+	{
+		size_t colCount = it->second.size() >= 2 ? it->second.back() - it->second.front() - 1 : 1;
+		for (map<size_t, vector<size_t>, greater<size_t>>::const_iterator it1 = maxColIndices.begin(); it1 != maxColIndices.end(); it1++)
+		{
+			size_t rowCount = it1->second.size() >= 2 ? it1->second.back() - it1->second.front() + 1 : 1;
+			if (rowCount == 1 && colCount == 1)
+				result = max(result, grid[it1->second.front()][it->second.front()] == 'x' ? (size_t)0 : (size_t)1);
+			else
+				result = max(rowCount * it->second.size() + colCount * it1->second.size(), result);
+		}
+	}
+	return result;
+}
 #endif
 /*
  * https://www.hackerrank.com/challenges/happy-ladybugs/problem
@@ -7101,9 +7147,9 @@ size_t ActivityNotifications2(vector<size_t> const &data, size_t d, size_t max)
 	}
 	return result;
 }
-/* https://www.hackerrank.com/challenges/two-characters/problem?isFullScreen=true
+/* https://www.hackerrank.com/challenges/two-characters/problem
  * Return longest string with only 2 alternating characters
- 100%
+ * 100%
  */
 size_t AlternateChars(string const &s)
 {
@@ -7134,5 +7180,20 @@ size_t AlternateChars(string const &s)
 			}
 			result = max(result, oss.str().size());
 		}
+	return result;
+}
+/* https://www.hackerrank.com/challenges/reduced-string/problem
+ * 100%
+ */
+string SuperReducedString(string const &s)
+{
+	string result;
+	for (size_t i = 0; i < s.size(); i++)
+	{
+		if (result.empty() || s[i] != result.back())
+			result.append(1, s[i]);
+		else if (!result.empty())
+			result.pop_back();
+	}
 	return result;
 }
