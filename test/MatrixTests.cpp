@@ -532,3 +532,29 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(vector<string>{"O.O", "...", "O.O"}, 3, vector<string>{"...", ".O.", "..."}), make_tuple(vector<string>{"OOO.OOO", "OO...OO", "OOO...O", "..OO.OO", "...OOOO", "...OOOO"}, 3, vector<string>{".......", "...O...", "....O..", ".......", "OO.....", "OO....."}), make_tuple(vector<string>{".......", "...O.O.", "...OO..", "..OOOO.", "OOOOOOO", "OOOOOOO"}, 5, vector<string>{".......", "...O.O.", "....O..", "..O....", "OO...OO", "OO.O..."}),
 					  make_tuple(vector<string>{"OOOOO........OOOO........OOOOOOOOOO...O.....OOO...OOOOOOOOOOO...OOOOOOOOOOOOOOOOOOOOOOOOO....O...O....O...OOOOOOO....OOOOOOO.....O.....OOOOOOO......OOO.....OOO....OO....OO....OOO...OOOOO....OOOOO...O"}, 181054341, vector<string>{"O..OO........O..O........OO.O.OO.OO...O.....OOO...OO.O..OOOOO...O.O..O..O.O..OOO..O..O..O....O...O....O...O..O..O....O.O.O.O.....O.....OOOO..O......O.O.....OOO....OO....OO....O.O...O..OO....OO..O...O"}),
 					  make_tuple(vector<string>{".........O.........OOOOOO.........OOO..........O.....OO.......OO...O...OO..........OOO........O...OO......OOOOOOOOO.............O........OOOO...OOOOOO...O...OO........OO...OOOOO........OOOOOOOO....."}, 329973043, vector<string>{"OOOO.O.O...OOO.O.O........O.OOO.O.....OO..O..O...OOO....O.OOO....O...O....O..O.O.O.....OOOO.O...O....OO.O...........O.O..O.O..O...OO.OOO......O........O...O....O.O..O....O.......OOOO.O..........OO.O"})));
+class MaxQuadrantSumTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<size_t>>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	size_t MaxQuadrantSumTest()
+	{
+		return _matrix.MaxQuadrantSum(_data);
+	}
+
+protected:
+	Matrix<size_t> _matrix;
+	size_t _expected;
+	vector<vector<size_t>> _data;
+};
+TEST_P(MaxQuadrantSumTestFixture, MaxQuadrantSumTests)
+{
+	ASSERT_EQ(this->_expected, this->MaxQuadrantSumTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MaxQuadrantSumTests,
+	MaxQuadrantSumTestFixture,
+	::testing::Values(make_tuple(4, vector<vector<size_t>>{{1, 2}, {3, 4}}), make_tuple(414, vector<vector<size_t>>{{112, 42, 83, 119}, {56, 125, 56, 49}, {15, 78, 101, 43}, {62, 98, 114, 108}}), make_tuple(12781, vector<vector<size_t>>{{517, 37, 380, 3727}, {3049, 1181, 2690, 1587}, {3227, 3500, 2665, 383}, {4041, 2013, 384, 965}})));

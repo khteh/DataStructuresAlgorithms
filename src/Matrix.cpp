@@ -457,9 +457,9 @@ T Matrix<T>::ChessQueensMoveCount(T dimension, T r_q /*[1,dimension]*/, T c_q /*
  * 100%
  */
 template <typename T>
-size_t Matrix<T>::GridlandMetro(T rows, T cols, vector<vector<T>> const &tracks)
+T Matrix<T>::GridlandMetro(T rows, T cols, vector<vector<T>> const &tracks)
 {
-	size_t count = 0;
+	T count = 0;
 	map<T, vector<pair<T, T>>> occupied;
 	for (typename vector<vector<T>>::const_iterator it = tracks.begin(); it != tracks.end(); it++)
 	{
@@ -509,9 +509,9 @@ size_t Matrix<T>::GridlandMetro(T rows, T cols, vector<vector<T>> const &tracks)
  * 100%
  */
 template <typename T>
-size_t Matrix<T>::SurfaceArea3D(vector<vector<T>> const &data)
+T Matrix<T>::SurfaceArea3D(vector<vector<T>> const &data)
 {
-	size_t zArea = 0, xArea = 0, yArea = 0;
+	T zArea = 0, xArea = 0, yArea = 0;
 	for (size_t i = 0; i < data.size(); i++)
 	{
 		for (size_t j = 0; j < data[i].size(); j++)
@@ -775,4 +775,30 @@ vector<string> Matrix<T>::BomberMan(size_t n, vector<string> const &grid)
 		}
 	}
 	return n % 4 == 1 ? explodeAt5s : explodeAt3s;
+}
+/* https://www.hackerrank.com/challenges/flipping-the-matrix/problem
+ * 1 2
+ * 3 4
+ *
+ * 112 42  83 119
+ * 56 125  56  49
+ * 15  78 101  43
+ * 62  98 114 108
+ *
+ * 100%
+ */
+template <typename T>
+T Matrix<T>::MaxQuadrantSum(vector<vector<T>> const &data)
+{
+	T sum = 0;
+	for (size_t i = 0; i < data.size() / 2; i++)
+		for (size_t j = 0; j < data[i].size() / 2; j++)
+		{
+			T top_left = data[i][j];
+			T top_right = data[i][data[i].size() - j - 1];
+			T bottom_left = data[data.size() - i - 1][j];
+			T bottom_right = data[data.size() - i - 1][data[i].size() - j - 1];
+			sum += max(top_left, max(top_right, max(bottom_left, bottom_right)));
+		}
+	return sum;
 }
