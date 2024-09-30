@@ -7197,3 +7197,27 @@ string SuperReducedString(string const &s)
 	}
 	return result;
 }
+/* https://www.hackerrank.com/challenges/weighted-uniform-string/problem
+ * 100%
+ */
+vector<bool> WeightedUniformStrings(string const &s, vector<size_t> const &queries)
+{
+	set<size_t> weights;
+	vector<bool> result;
+	char c = ' ';
+	for (size_t i = 0, weight = 0, count = 0; i < s.size(); i++)
+	{
+		if (c != s[i])
+		{
+			weight = s[i] - 'a' + 1;
+			count = 1;
+			weights.emplace(weight);
+			c = s[i];
+		}
+		else if (s[i] == c)
+			weights.emplace(weight * ++count);
+	}
+	for (vector<size_t>::const_iterator it = queries.begin(); it != queries.end(); it++)
+		result.push_back(weights.find(*it) != weights.end());
+	return result;
+}

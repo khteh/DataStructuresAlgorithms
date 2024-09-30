@@ -381,3 +381,4 @@ size_t ActivityNotifications2(vector<size_t> const &, size_t);
 string NextBiggerString(string &);
 size_t AlternateChars(string const &);
 string SuperReducedString(string const &);
+vector<bool> WeightedUniformStrings(string const &, vector<size_t> const &);

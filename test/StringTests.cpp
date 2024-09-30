@@ -551,3 +551,30 @@ INSTANTIATE_TEST_SUITE_P(
     SuperReducedStringTests,
     SuperReducedStringTestFixture,
     ::testing::Values(make_tuple("ab", "ab"), make_tuple("b", "aab"), make_tuple("", "abba"), make_tuple("abab", "abab"), make_tuple("abd", "aaabccddd")));
+class WeightedUniformStringsTestFixture : public testing::TestWithParam<tuple<vector<bool>, string, vector<size_t>>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _data = get<1>(GetParam());
+        _queries = get<2>(GetParam());
+    }
+    vector<bool> WeightedUniformStringsTest()
+    {
+        return WeightedUniformStrings(_data, _queries);
+    }
+
+protected:
+    vector<bool> _expected;
+    string _data;
+    vector<size_t> _queries;
+};
+TEST_P(WeightedUniformStringsTestFixture, WeightedUniformStringsTests)
+{
+    ASSERT_EQ(this->_expected, this->WeightedUniformStringsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    WeightedUniformStringsTests,
+    WeightedUniformStringsTestFixture,
+    ::testing::Values(make_tuple(vector<bool>{true, false, false, true, false}, "abbcccdddd", vector<size_t>{1, 7, 5, 4, 15}), make_tuple(vector<bool>{true, true, true, true, false, false}, "abccddde", vector<size_t>{1, 3, 12, 5, 9, 10}), make_tuple(vector<bool>{true, false, true, true, false}, "aaabbbbcccddd", vector<size_t>{9, 7, 8, 12, 5})));

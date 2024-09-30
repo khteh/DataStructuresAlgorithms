@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
 	vector<int> data, data1;
 	vector<size_t> udata, udata1;
 	vector<unsigned long long> ull;
+	vector<bool> bools;
 	priority_queue<long, deque<long>> maxHeap;
 	priority_queue<long, deque<long>, greater<long>> minHeap;
 	PriorityQueueMedian<long> pqueue;
@@ -267,6 +268,7 @@ int main(int argc, char *argv[])
 	assert(numeric_limits<float>::has_signaling_NaN);
 	assert(numeric_limits<double>::has_signaling_NaN);
 	assert(numeric_limits<long double>::has_signaling_NaN);
+	assert(!(-4 % 2));
 	ul = 100;
 	generate_n(inserter(uset, uset.end()), 10, [&ul]()
 			   { return ul++; });
