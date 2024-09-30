@@ -1122,3 +1122,40 @@ size_t Range::ChiefHopper(vector<size_t> const &data)
 		e = (size_t)ceil((e + *it) / 2.0);
 	return e;
 }
+/* https://www.hackerrank.com/challenges/flatland-space-stations/problem
+ * 100%
+ */
+size_t Range::MaxClosestDistance(size_t n, vector<size_t> &c)
+{
+	size_t distance = 0;
+	ranges::sort(c);
+	for (size_t i = 0, j = 0; i < n; i++)
+	{
+		size_t d = numeric_limits<size_t>::max();
+		if (i == c[j])
+			d = 0;
+		else if (i < c[j])
+			d = c[j] - i;
+		else // i > c[j]
+		{
+			d = i - c[j];
+			size_t k = j;
+			for (; i > c[k] && k < c.size(); k++)
+			{
+				size_t d1 = i - c[k];
+				if (d1 <= d)
+					j = k;
+				d = min(d, d1);
+			}
+			if (k < c.size() && c[k] >= i)
+			{
+				size_t d1 = c[k] - i;
+				if (d1 <= d)
+					j = k;
+				d = min(d, d1);
+			}
+		}
+		distance = max(distance, d);
+	}
+	return distance;
+}
