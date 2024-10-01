@@ -1140,7 +1140,7 @@ size_t Range::MaxClosestDistance(size_t n, vector<size_t> &c)
 		{
 			d = i - c[j];
 			size_t k = j;
-			for (; i > c[k] && k < c.size(); k++)
+			for (; k < c.size() && i > c[k]; k++)
 			{
 				size_t d1 = i - c[k];
 				if (d1 <= d)

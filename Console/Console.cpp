@@ -269,6 +269,7 @@ int main(int argc, char *argv[])
 	assert(numeric_limits<double>::has_signaling_NaN);
 	assert(numeric_limits<long double>::has_signaling_NaN);
 	assert(!(-4 % 2));
+	assert(!(0xFFFFFFFC % 2));
 	ul = 100;
 	generate_n(inserter(uset, uset.end()), 10, [&ul]()
 			   { return ul++; });
