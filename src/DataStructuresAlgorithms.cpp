@@ -7221,3 +7221,25 @@ vector<bool> WeightedUniformStrings(string const &s, vector<size_t> const &queri
 		result.push_back(weights.find(*it) != weights.end());
 	return result;
 }
+/* https://www.hackerrank.com/challenges/torque-and-development/problem
+ * 100%
+ */
+size_t RoadsAndLibraries(size_t n, size_t c_lib, size_t c_road, vector<vector<size_t>> const &cities)
+{
+	vector<long> data(n);
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
+	DisJointSet<long> disjointSet(data);
+	for (vector<vector<size_t>>::const_iterator it = cities.begin(); it != cities.end(); it++)
+		disjointSet.Union((*it)[0], (*it)[1]);
+	// disjointSet.Print(data);
+	map<long, vector<long>> sets;
+	disjointSet.GetSets(data, sets);
+	size_t cityCount = 0, result = 0;
+	for (map<long, vector<long>>::iterator it = sets.begin(); it != sets.end(); it++)
+	{
+		cityCount += it->second.size();
+		result += min((it->second.size() - 1) * c_road + c_lib, c_lib * it->second.size());
+	}
+	return result + (n - cityCount) * c_lib;
+}
