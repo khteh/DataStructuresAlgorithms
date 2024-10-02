@@ -886,3 +886,30 @@ INSTANTIATE_TEST_SUITE_P(
 	MaxClosestDistanceTests,
 	MaxClosestDistanceTestFixture,
 	::testing::Values(make_tuple(1, 3, vector<size_t>{1}), make_tuple(2, 5, vector<size_t>{0, 4}), make_tuple(0, 6, vector<size_t>{0, 1, 2, 4, 3, 5}), make_tuple(6, 20, vector<size_t>{13, 1, 11, 10, 6}), make_tuple(41296, 99998, vector<size_t>{28000, 58701, 43043, 24909, 28572})));
+class LiveMedianCalculationTestFixture : public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+		_data = get<2>(GetParam());
+	}
+	size_t LiveMedianCalculationTest()
+	{
+		return _rangeObj.LiveMedianCalculation(_n, _data);
+	}
+
+protected:
+	Range _rangeObj;
+	vector<size_t> _data;
+	size_t _expected, _n;
+};
+TEST_P(LiveMedianCalculationTestFixture, LiveMedianCalculationTests)
+{
+	ASSERT_EQ(this->_expected, this->LiveMedianCalculationTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LiveMedianCalculationTests,
+	LiveMedianCalculationTestFixture,
+	::testing::Values(make_tuple(1, 3, vector<size_t>{10, 20, 30, 40, 50}), make_tuple(2, 5, vector<size_t>{2, 3, 4, 2, 3, 6, 8, 4, 5}), make_tuple(0, 4, vector<size_t>{1, 2, 3, 4, 4})));

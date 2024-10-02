@@ -52,4 +52,5 @@ public:
 	size_t SherlockAndMinimax(vector<size_t> &, size_t, size_t);
 	size_t ChiefHopper(vector<size_t> const &);
 	size_t MaxClosestDistance(size_t, vector<size_t> &);
+	size_t LiveMedianCalculation(size_t, vector<size_t> const &);
 };

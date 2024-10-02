@@ -1159,3 +1159,24 @@ size_t Range::MaxClosestDistance(size_t n, vector<size_t> &c)
 	}
 	return distance;
 }
+/*
+ * https://www.hackerrank.com/challenges/fraudulent-activity-notifications/problem
+ * 100%
+ */
+size_t Range::LiveMedianCalculation(size_t d, vector<size_t> const &data)
+{
+	size_t count = 0;
+	bool odd = d % 2;
+	size_t half = d / 2;
+	vector<size_t> fifo(data.begin(), data.begin() + d);
+	ranges::sort(fifo);
+	for (size_t i = d; i < data.size(); i++)
+	{
+		double m = odd ? fifo[d / 2] : (double)(fifo[d / 2 - 1] + fifo[d / 2]) / 2l;
+		if (data[i] >= 2 * m)
+			count++;
+		fifo.erase(find(fifo.begin(), fifo.end(), data[i - d]));
+		fifo.insert(lower_bound(fifo.begin(), fifo.end(), data[i]), data[i]); // Look for element >= data[i]
+	}
+	return count;
+}

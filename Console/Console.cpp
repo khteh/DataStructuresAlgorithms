@@ -2041,19 +2041,6 @@ int main(int argc, char *argv[])
 	assert(matrix.ChessQueensMoveCount(100000, 4187, 5068, ugrid) == 308369);
 
 	udata.clear();
-	udata = {10, 20, 30, 40, 50};
-	assert(ActivityNotifications(udata, 3) == 1);
-	assert(ActivityNotifications1(udata, 3) == 1);
-	udata.clear();
-	udata = {2, 3, 4, 2, 3, 6, 8, 4, 5};
-	assert(ActivityNotifications(udata, 5) == 2);
-	assert(ActivityNotifications1(udata, 5) == 2);
-	udata.clear();
-	udata = {1, 2, 3, 4, 4};
-	assert(ActivityNotifications(udata, 4) == 0);
-	assert(ActivityNotifications1(udata, 4) == 0);
-
-	udata.clear();
 	udata = {1, 3, 2};
 	cout << "{1, 3, 2}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
 	udata.clear();
