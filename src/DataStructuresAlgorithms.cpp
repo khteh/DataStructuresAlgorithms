@@ -7048,33 +7048,6 @@ void Z(vector<size_t> &z, string const &str)
 		}
 	}
 }
-/*
- * https://www.hackerrank.com/challenges/fraudulent-activity-notifications/problem
- * WIP Times out!
- */
-size_t ActivityNotifications(vector<size_t> const &data, size_t d)
-{
-	size_t count = 0;
-	bool odd = d % 2;
-	size_t half = d / 2;
-	// vector<long>::iterator it = data.begin();
-	multiset<size_t> window(data.begin(), data.begin() + d);
-	// multiset<long>::iterator it1 = window.begin();
-	// advance(it1, half);
-	//  for (size_t i = d, j = 0; i < data.size() && j < data.size() - d; i++, j++, it++)
-	for (size_t i = d; i < data.size();)
-	{
-		// ranges::sort(it, it + d);
-		// double median = odd ? data[j + half] : (double)(data[j + half] + data[j + half - 1]) / 2l;
-		double m = odd ? *(next(window.begin(), half)) : (double)(*(next(window.begin(), half)) + *(next(window.end(), -1))) / 2l;
-		if (data[i] >= 2 * m)
-			count++;
-		window.erase(window.find(data[i - d]));
-		if (++i < data.size())
-			window.insert(data[i]);
-	}
-	return count;
-}
 /* https://www.hackerrank.com/challenges/two-characters/problem
  * Return longest string with only 2 alternating characters
  * 100%
