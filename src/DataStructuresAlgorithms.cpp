@@ -728,6 +728,7 @@ long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t> &data, vector<zerofact
  * https://www.hackerrank.com/challenges/construct-the-array/problem
  * WIP
  */
+#if 0
 size_t CountArray(size_t n, size_t k, size_t x)
 {
 	size_t ul = 1, count = 0;
@@ -739,6 +740,55 @@ size_t CountArray(size_t n, size_t k, size_t x)
 	for (vector<vector<size_t>>::const_iterator it = ugrid.begin(); it != ugrid.end(); it++)
 		if (it->size() == n - 2 && *(it->begin()) != 1 && it->back() != x)
 			count++;
+	return count;
+}
+size_t CountArray(size_t n, size_t k, size_t x)
+{
+	ostringstream oss;
+	for (size_t i = 1; i <= k; i++)
+		oss << i;
+	Permutation<string> permutation;
+	set<string> permutations = permutation.Permute(oss.str());
+	size_t result = 0;
+	for (set<string>::const_iterator it = permutations.begin(); it != permutations.end(); it++)
+		if ((*it)[0] != '1' && (*it)[n - 2] != x)
+			result++;
+	return result;
+}
+#endif
+size_t CountArray(size_t n, size_t k, size_t x)
+{
+	vector<vector<size_t>> result(BinomialCoefficients(k, n - 2), vector<size_t>(n, 0));
+	for (size_t i = 0; i < n; i++)
+	{
+		if (!i)
+		{
+			for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
+			{
+				(*it)[0] = 1;
+				(*it)[n - 1] = x;
+			}
+		}
+		else
+		{
+			for (size_t j = 1; j <= k; j++)
+			{
+				for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
+				{
+					if ((i != n - 2 && (*it)[i - 1] != j) || (i == n - 2 && j != x))
+						(*it)[i] = j;
+				}
+			}
+		}
+	}
+	size_t count = 0;
+	for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
+	{
+		vector<size_t>::iterator it1 = ranges::find_if(*it, [](const auto &value)
+													   { return !value; }); // Look for element <= data[i]
+		if (it1 == it->end())
+			count++;
+	}
 	return count;
 }
 string insertCharAt(char toInsert, string str, size_t offset)
@@ -5271,7 +5321,7 @@ vector<string> fizzBuzz(size_t n)
 }
 /*
  * https://www.hackerrank.com/challenges/rust-murderer/problem
- * WIP. Time out.
+ * WIP. 3 test cases failed with "Abort Called"
  */
 vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
 {
@@ -6553,7 +6603,7 @@ size_t MatrixPerimeter(vector<vector<size_t>> &area, vector<string> &grid)
  * .xxxx.
  * ......
  */
-#if 1
+#if 0
 /*
  * WIP - wrong answers
  */
@@ -6647,7 +6697,6 @@ size_t kMarsh(vector<string> &grid)
 		}
 	return perimeter;
 }
-#else
 /* WIP - Takes too long!*/
 size_t kMarsh(vector<string> &grid)
 {
@@ -6664,6 +6713,7 @@ size_t kMarsh(vector<string> &grid)
 				}
 	return perimeter;
 }
+#endif
 size_t kMarsh(vector<string> &grid)
 {
 	vector<vector<size_t>> rows(grid.size(), vector<size_t>(grid[0].size())), cols(grid.size(), vector<size_t>(grid[0].size()));
@@ -6689,13 +6739,14 @@ size_t kMarsh(vector<string> &grid)
 		}
 		maxCols.emplace(i, maxCol); // Record the max col value for row i
 	}
-	multimap<size_t, size_t, greater<size_t>> maxRowsInverted = flip_map<size_t, size_t, greater<size_t>>(maxRows), maxColsInverted = flip_map<size_t, size_t, greater<size_t>>(maxCols);
+	multimap<size_t, size_t, greater<size_t>> maxRowsInverted = flip_map<size_t, size_t, greater<size_t>>(maxRows), maxColsInverted = flip_map<size_t, size_t, greater<size_t>>(maxCols); // Key: Max Row/Col; Value: Col/Row index
 	map<size_t, vector<size_t>, greater<size_t>> maxRowIndices, maxColIndices;
 	for (multimap<size_t, size_t, greater<size_t>>::const_iterator it = maxRowsInverted.begin(); it != maxRowsInverted.end(); it++)
 		maxRowIndices[it->first].push_back(it->second); // key: Max value; value: columns with the max value
 	for (multimap<size_t, size_t, greater<size_t>>::const_iterator it = maxColsInverted.begin(); it != maxColsInverted.end(); it++)
 		maxColIndices[it->first].push_back(it->second); // key: Max value; value: rows with the max value
 	size_t result = 0;
+#if 0
 	for (map<size_t, vector<size_t>, greater<size_t>>::const_iterator it = maxRowIndices.begin(); it != maxRowIndices.end(); it++)
 	{
 		size_t colCount = it->second.size() >= 2 ? it->second.back() - it->second.front() - 1 : 1;
@@ -6708,9 +6759,14 @@ size_t kMarsh(vector<string> &grid)
 				result = max(rowCount * it->second.size() + colCount * it1->second.size(), result);
 		}
 	}
+#endif
+	for (map<size_t, vector<size_t>, greater<size_t>>::const_iterator it = maxRowIndices.begin(); it != maxRowIndices.end(); it++)
+	{
+		// if (it->second.size() > 1) // Multiple columns with the max row count
+	}
 	return result;
 }
-#endif
+
 /*
  * https://www.hackerrank.com/challenges/happy-ladybugs/problem
  * 100%

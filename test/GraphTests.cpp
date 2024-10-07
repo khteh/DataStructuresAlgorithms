@@ -610,28 +610,6 @@ INSTANTIATE_TEST_SUITE_P(
 																													{9, 2, 13},
 																												})));
 
-/*
- * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
- * Timeout! WIP
- */
-template <typename T>
-class ShortestPathsTestFixtureBase
-{
-protected:
-	void SetUp(vector<long> expected, vector<vector<T>> edges, size_t nodes, T start)
-	{
-		_expected = expected;
-		_start = start;
-		_nodes = nodes;
-		_edges = edges;
-	}
-	vector<long> _expected;
-	size_t _nodes;
-	T _start;
-	vector<vector<T>> _edges;
-	Graph<T, T> _graph;
-	Dijkstra<T> _dijkstra;
-};
 class MinSubGraphsDifferenceTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, vector<vector<size_t>>>>
 {
 public:

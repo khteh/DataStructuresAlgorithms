@@ -2109,6 +2109,7 @@ int main(int argc, char *argv[])
 	// assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
 	assert(CountArray(4, 3, 2) == 3);
 	assert(CountArray(5, 2, 2) == 0);
+	assert(CountArray(761, 99, 1) == 236568308);
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
