@@ -802,3 +802,57 @@ T Matrix<T>::MaxQuadrantSum(vector<vector<T>> const &data)
 		}
 	return sum;
 }
+/* https://www.hackerrank.com/challenges/organizing-containers-of-balls/problem
+ * 100%
+False:
+				sum
+	1	4		5
+	2	3		5
+sum:3	7
+
+True:
+				sum
+	1	1		2
+	1	1		2
+sum:2	2
+
+False:
+				sum
+	0	2		2
+	1	1		2
+sum:1	3
+
+False:
+					sum
+	1	3	1		5
+	2	1	2		5
+	3	3	3		9
+sum:6	7	6
+
+True:
+					sum
+	0	2	1		3
+	1	1	1		3
+	2	0	0		2
+sum:3	3	2
+ */
+template <typename T>
+bool Matrix<T>::ContainersBallsSwap(vector<vector<T>> const &containers)
+{
+	vector<T> rowSums, colSums;
+	if (!containers.empty())
+		colSums.assign(containers[0].size(), 0);
+	for (size_t i = 0; i < containers.size(); i++)
+	{
+		rowSums.push_back(parallel_reduce(blocked_range<T>(0, containers[i].size()), (T)0, [&](tbb::blocked_range<T> const &r, T running_total)
+										  {
+				for (size_t j = r.begin(); j < r.end(); j++)
+					running_total += containers[i][j];
+				return running_total; }, std::plus<size_t>()));
+		for (size_t j = 0; j < containers[i].size(); j++)
+			colSums[j] += containers[i][j];
+	}
+	ranges::sort(rowSums);
+	ranges::sort(colSums);
+	return rowSums == colSums;
+}

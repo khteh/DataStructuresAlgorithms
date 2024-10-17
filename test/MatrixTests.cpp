@@ -558,3 +558,30 @@ INSTANTIATE_TEST_SUITE_P(
 	MaxQuadrantSumTests,
 	MaxQuadrantSumTestFixture,
 	::testing::Values(make_tuple(4, vector<vector<size_t>>{{1, 2}, {3, 4}}), make_tuple(414, vector<vector<size_t>>{{112, 42, 83, 119}, {56, 125, 56, 49}, {15, 78, 101, 43}, {62, 98, 114, 108}}), make_tuple(12781, vector<vector<size_t>>{{517, 37, 380, 3727}, {3049, 1181, 2690, 1587}, {3227, 3500, 2665, 383}, {4041, 2013, 384, 965}})));
+class ContainersBallsSwapTestFixture : public testing::TestWithParam<tuple<bool, vector<vector<size_t>>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	bool ContainersBallsSwapTest()
+	{
+		return _matrix.ContainersBallsSwap(_data);
+	}
+
+protected:
+	Matrix<size_t> _matrix;
+	bool _expected;
+	vector<vector<size_t>> _data;
+};
+TEST_P(ContainersBallsSwapTestFixture, ContainersBallsSwapTests)
+{
+	ASSERT_EQ(this->_expected, this->ContainersBallsSwapTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	ContainersBallsSwapTests,
+	ContainersBallsSwapTestFixture,
+	::testing::Values(make_tuple(false, vector<vector<size_t>>{{1, 4}, {2, 3}}), make_tuple(true, vector<vector<size_t>>{{1, 1}, {1, 1}}), make_tuple(false, vector<vector<size_t>>{{0, 2}, {1, 1}}), make_tuple(true, vector<vector<size_t>>{{999336263, 998799923}, {998799923, 999763019}}), make_tuple(false, vector<vector<size_t>>{{1, 3, 1}, {2, 1, 2}, {3, 3, 3}}),
+					  make_tuple(true, vector<vector<size_t>>{{0, 2, 1}, {1, 1, 1}, {2, 0, 0}}), make_tuple(true, vector<vector<size_t>>{{997612619, 934920795, 998879231, 999926463}, {960369681, 997828120, 999792735, 979622676}, {999013654, 998634077, 997988323, 958769423}, {997409523, 999301350, 940952923, 993020546}})));

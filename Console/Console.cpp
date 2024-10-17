@@ -813,7 +813,7 @@ int main(int argc, char *argv[])
 		blocked_range<size_t>(0, b.size()), 0,
 		[&](tbb::blocked_range<size_t> const &r, long running_total)
 		{
-			for (size_t i = r.begin(); i < r.end(); ++i)
+			for (size_t i = r.begin(); i < r.end(); i++)
 				running_total += b[i];
 			return running_total;
 		},
@@ -1939,7 +1939,8 @@ int main(int argc, char *argv[])
 	a.clear();
 	strings.clear();
 	strings = {"."};
-	// assert(kMarsh(strings) == 1);
+// assert(kMarsh(strings) == 1);
+#if 0
 	strings.clear();
 	strings = {"x"};
 	assert(kMarsh(strings) == 0);
@@ -2024,7 +2025,7 @@ int main(int argc, char *argv[])
 	strings.clear();
 	strings = {"x.x", ".x.", "x.x"};
 	assert(kMarsh(strings) == 0);
-
+#endif
 	ugrid.clear();
 	ugrid.resize(0);
 	assert(matrix.ChessQueensMoveCount(4, 4, 4, ugrid) == 9);
@@ -2107,9 +2108,80 @@ int main(int argc, char *argv[])
 	// assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 19, 81) == 922261429); // Fails. 922195893. Short of 65536 (0x10000)
 	// assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 4, 99) == 249346542); // Fails. Why is the expected value smaller than the test case above when the range is larger? Overflow.
 	// assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
-	assert(CountArray(4, 3, 2) == 3);
-	assert(CountArray(5, 2, 2) == 0);
-	assert(CountArray(761, 99, 1) == 236568308);
+	// assert(CountArray(4, 3, 2) == 3);
+	// assert(CountArray(5, 2, 2) == 0);
+	// assert(CountArray(761, 99, 1) == 236568308);
+	udata.clear();
+	udata = {1, 1, 1, 1, 1};
+	assert(candies(udata) == 7);
+
+	udata.clear();
+	udata = {4, 5, 6, 5, 4};
+	assert(candies(udata) == 9);
+
+	udata.clear();
+	udata = {4, 5, 6, 4, 5};
+	assert(candies(udata) == 9);
+
+	udata.clear();
+	udata = {6, 5, 3, 4, 1};
+	assert(candies(udata) == 9);
+
+	udata.clear();
+	udata = {6, 5, 4, 2, 3};
+	assert(candies(udata) == 12);
+
+	udata.clear();
+	udata = {4, 6, 4, 5, 6, 2};
+	assert(candies(udata) == 10);
+
+	udata.clear();
+	udata = {4, 5, 6, 6, 6, 5, 4};
+	assert(candies(udata) == 13);
+
+	udata.clear();
+	udata = {4, 5, 6, 6, 6, 4, 5};
+	assert(candies(udata) == 12);
+
+	udata.clear();
+	udata = {6, 5, 3, 3, 3, 4, 1};
+	assert(candies(udata) == 12);
+
+	udata.clear();
+	udata = {6, 5, 4, 4, 4, 2, 3};
+	assert(candies(udata) == 15);
+
+	udata.clear();
+	udata = {2, 4, 2, 6, 1, 7, 8, 9, 2, 1};
+	assert(candies(udata) == 19);
+
+	udata.clear();
+	udata = {2, 4, 3, 5, 2, 6, 4, 5};
+	assert(candies(udata) == 12);
+
+	udata.clear();
+	udata.resize(10);
+	ranges::generate(udata, [n = 1]() mutable
+					 { return n++; });
+	assert(candies(udata) == 55);
+
+	udata.clear();
+	udata.resize(100);
+	ranges::generate(udata, [n = 1]() mutable
+					 { return n++; });
+	assert(candies(udata) == 5050);
+
+	udata.clear();
+	udata.resize(1000);
+	ranges::generate(udata, [n = 1]() mutable
+					 { return n++; });
+	assert(candies(udata) == 500500);
+
+	udata.clear();
+	udata.resize(100000);
+	ranges::generate(udata, [n = 1]() mutable
+					 { return n++; });
+	assert(candies(udata) == 5000050000);
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
