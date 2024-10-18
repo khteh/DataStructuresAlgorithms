@@ -835,6 +835,18 @@ True:
 	1	1	1		3
 	2	0	0		2
 sum:3	3	2
+
+False:			sum
+	1		1	2
+		1		1
+	1	1	1	3
+sum:	2	2	2
+
+True:			sum					sum					sum
+	1	1		2	=>	2			2	=>	2			2
+		1		1			1		1				1	1
+	1	1	1	3			2	1	3			3		3
+sum:	2	3	1		2	3	1			2	3	1
  */
 template <typename T>
 bool Matrix<T>::ContainersBallsSwap(vector<vector<T>> const &containers)
