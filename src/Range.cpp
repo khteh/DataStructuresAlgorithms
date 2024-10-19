@@ -1060,18 +1060,17 @@ i: 0 1 2 3 4
  */
 long Range::MinEnergyInstallations(vector<size_t> &data, long k)
 {
-	bool flag = true;
 	vector<size_t> installations;
 	for (size_t i = 0; i < data.size(); i = installations.back() + k)
 	{
-		flag = false;
-		for (long j = min(data.size() - 1, i + k - 1), lowerbound = installations.empty() ? 0 : installations.back() + 1; !flag && j >= lowerbound; j--)
+		bool found = false;
+		for (long j = min(data.size() - 1, i + k - 1), lowerbound = installations.empty() ? 0 : installations.back() + 1; !found && j >= lowerbound; j--)
 			if (data[j])
 			{
-				flag = true;
+				found = true;
 				installations.push_back(j);
 			}
-		if (!flag)
+		if (!found)
 			return -1;
 	}
 	return installations.size();
