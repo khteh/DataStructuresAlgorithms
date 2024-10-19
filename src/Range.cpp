@@ -1030,7 +1030,7 @@ size_t Range::HackerlandRadioTransmitters(vector<size_t> &data, long k)
 	}
 	return installations.size();
 }
-/* https://www.hackerrank.com/challenges/pylons/problem?isFullScreen=true
+/* https://www.hackerrank.com/challenges/pylons/problem
 100%
 i: 0 1 2 3 4 5 6
    0 1 1 1 0 0 0 (k:3)
@@ -1065,8 +1065,7 @@ long Range::MinEnergyInstallations(vector<size_t> &data, long k)
 	for (size_t i = 0; i < data.size(); i = installations.back() + k)
 	{
 		flag = false;
-		long j, lowerbound = installations.empty() ? 0 : installations.back() + 1;
-		for (j = min(data.size() - 1, i + k - 1); !flag && j >= lowerbound; j--)
+		for (long j = min(data.size() - 1, i + k - 1), lowerbound = installations.empty() ? 0 : installations.back() + 1; !flag && j >= lowerbound; j--)
 			if (data[j])
 			{
 				flag = true;
