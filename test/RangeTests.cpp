@@ -342,7 +342,6 @@ public:
 		return _rangeObj.HackerlandRadioTransmitters(_data, _param);
 	}
 };
-
 TEST_P(HackerlandRadioTransmittersTestFixture, HackerlandRadioTransmittersTests)
 {
 	ASSERT_EQ(this->_expected, this->HackerlandRadioTransmittersTest());
@@ -354,6 +353,110 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(2, 1, vector<size_t>{1, 2, 3, 4, 5}),
 					  make_tuple(3, 2, vector<size_t>{7, 2, 4, 6, 5, 9, 12, 11}),
 					  make_tuple(4, 2, vector<size_t>{9, 5, 4, 2, 6, 15, 12})));
+class MinEnergyInstallationsTestFixture : public RangeTestFixture2<long, long, size_t>, public testing::TestWithParam<tuple<long, long, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		RangeTestFixture2::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	long MinEnergyInstallationsTest()
+	{
+		return _rangeObj.MinEnergyInstallations(_data, _param);
+	}
+};
+TEST_P(MinEnergyInstallationsTestFixture, MinEnergyInstallationsTests)
+{
+	ASSERT_EQ(this->_expected, this->MinEnergyInstallationsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MinEnergyInstallationsTests,
+	MinEnergyInstallationsTestFixture,
+	::testing::Values(make_tuple(-1, 3, vector<size_t>{0, 1, 1, 1, 0, 0, 0}),
+					  make_tuple(2, 2, vector<size_t>{0, 1, 1, 1, 1, 0}),
+					  make_tuple(2, 2, vector<size_t>{0, 1, 0, 1}), make_tuple(2, 2, vector<size_t>{1, 0, 1, 0}), make_tuple(-1, 2, vector<size_t>{0, 1, 1, 0}), make_tuple(2, 2, vector<size_t>{1, 0, 0, 1}),
+					  make_tuple(1, 3, vector<size_t>{0, 1, 0, 1}), make_tuple(1, 3, vector<size_t>{1, 0, 1, 0}), make_tuple(1, 3, vector<size_t>{0, 1, 1, 0}), make_tuple(2, 3, vector<size_t>{1, 0, 0, 1}),
+					  make_tuple(2, 2, vector<size_t>{0, 1, 0, 1, 0}), make_tuple(3, 2, vector<size_t>{1, 0, 1, 0, 1}), make_tuple(-1, 2, vector<size_t>{0, 1, 1, 0, 0}), make_tuple(2, 2, vector<size_t>{0, 1, 1, 0, 1}), make_tuple(2, 2, vector<size_t>{1, 0, 0, 1, 0}), make_tuple(2, 2, vector<size_t>{1, 0, 0, 1, 1}),
+					  make_tuple(-1, 3, vector<size_t>{0, 1, 0, 1, 0}), make_tuple(1, 3, vector<size_t>{1, 0, 1, 0, 1}), make_tuple(1, 3, vector<size_t>{0, 1, 1, 0, 0}), make_tuple(1, 3, vector<size_t>{0, 1, 1, 0, 1}), make_tuple(2, 3, vector<size_t>{1, 0, 0, 1}), make_tuple(2, 2, vector<size_t>{1, 0, 0, 1, 1}),
+					  make_tuple(32, 20, vector<size_t>{0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}),
+					  make_tuple(41, 18, vector<size_t>{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0})));
+/*
+	udata.clear();
+	udata = {1, 1, 1, 1, 1};
+	assert(candies(udata) == 5);
+
+	udata.clear();
+	udata = {1, 2, 2};
+	assert(candies(udata) == 4);
+
+	udata.clear();
+	udata = {4, 5, 6, 5, 4};
+	assert(candies(udata) == 9);
+
+	udata.clear();
+	udata = {4, 5, 6, 4, 5};
+	assert(candies(udata) == 9);
+
+	udata.clear();
+	udata = {6, 5, 3, 4, 1};
+	assert(candies(udata) == 9);
+
+	udata.clear();
+	udata = {6, 5, 4, 2, 3};
+	assert(candies(udata) == 12);
+
+	udata.clear();
+	udata = {4, 6, 4, 5, 6, 2};
+	assert(candies(udata) == 10);
+
+	udata.clear();
+	udata = {4, 5, 6, 6, 6, 5, 4};
+	assert(candies(udata) == 13);
+
+	udata.clear();
+	udata = {4, 5, 6, 6, 6, 4, 5};
+	assert(candies(udata) == 12);
+
+	udata.clear();
+	udata = {6, 5, 3, 3, 3, 4, 1};
+	assert(candies(udata) == 11);
+
+	udata.clear();
+	udata = {2, 4, 2, 6, 1, 7, 8, 9, 2, 1};
+	assert(candies(udata) == 19);
+
+	udata.clear();
+	udata = {2, 4, 3, 5, 2, 6, 4, 5};
+	assert(candies(udata) == 12);
+
+	udata.clear();
+	udata.resize(100000);
+	ranges::generate(udata, [n = 1]() mutable
+					 { return n++; });
+	assert(candies(udata) == 5000050000);
+*/
+class MinimumCandiesTestFixture : public RangeTestFixture1<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	size_t MinimumCandiesTest()
+	{
+		return _rangeObj.MinimumCandies(_data);
+	}
+};
+TEST_P(MinimumCandiesTestFixture, MinimumCandiesTests)
+{
+	ASSERT_EQ(this->_expected, this->MinimumCandiesTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MinimumCandiesTests,
+	MinimumCandiesTestFixture,
+	::testing::Values(make_tuple(5, vector<size_t>{1, 1, 1, 1, 1}), make_tuple(4, vector<size_t>{1, 2, 2}), make_tuple(13, vector<size_t>{4, 5, 6, 6, 6, 5, 4}), make_tuple(12, vector<size_t>{4, 5, 6, 6, 6, 4, 5}), make_tuple(11, vector<size_t>{6, 5, 3, 3, 3, 4, 1}), make_tuple(19, vector<size_t>{2, 4, 2, 6, 1, 7, 8, 9, 2, 1}),
+					  make_tuple(9, vector<size_t>{4, 5, 6, 5, 4}), make_tuple(12, vector<size_t>{6, 5, 4, 2, 3}), make_tuple(19, vector<size_t>{2, 4, 2, 6, 1, 7, 8, 9, 2, 1}), make_tuple(12, vector<size_t>{2, 4, 3, 5, 2, 6, 4, 5}), make_tuple(9, vector<size_t>{6, 5, 3, 4, 1}), make_tuple(10, vector<size_t>{4, 6, 4, 5, 6, 2})));
+
 class ConsecutiveMaximumSumTestFixture : public testing::TestWithParam<tuple<long, vector<long>, vector<long>>>
 {
 public:

@@ -1030,6 +1030,125 @@ size_t Range::HackerlandRadioTransmitters(vector<size_t> &data, long k)
 	}
 	return installations.size();
 }
+/* https://www.hackerrank.com/challenges/pylons/problem?isFullScreen=true
+(k:3) 0 1 1 1 0 0 0
+		  i
+				  i
+(k:2) 0 1 1 1 1 0
+		i
+			  i
+
+k:2
+0 1 0 1
+  i   i => 2
+
+1 0 1 0
+i   i   => 2
+
+0 1 1 0
+  i   i => -1
+
+1 0 0 1
+i     i => 2
+
+k:3
+0 1 0 1
+  i     => 1
+
+1 0 1 0
+	i   => 1
+
+0 1 1 0
+  i     => 1
+
+1 0 0 1
+i     i => 2
+ */
+long Range::MinEnergyInstallations(vector<size_t> &data, long k)
+{
+	bool flag = true;
+	vector<size_t> installations;
+	k--;
+	for (long i = k; flag && i < data.size(); i = min(i + 2 * k + 1, (long)data.size() - 1))
+	{
+		for (; !data[i] && ((installations.empty() && i >= 0) || i > installations.back() + k); i--)
+			;
+		if (i < 0 || (!installations.empty() && i == installations.back() + k))
+			flag = false;
+		installations.push_back(i);
+		if (i + k >= data.size() - 1)
+			break;
+	}
+	if (!flag)
+	{
+		ranges::reverse(data);
+		installations.clear();
+		flag = true;
+		for (long i = k; flag && i < data.size(); i = min(i + 2 * k + 1, (long)data.size() - 1))
+		{
+			for (; !data[i] && ((installations.empty() && i >= 0) || i > installations.back() + k); i--)
+				;
+			if (i < 0 || (!installations.empty() && i == installations.back() + k))
+				flag = false;
+			installations.push_back(i);
+			if (i + k >= data.size() - 1)
+				break;
+		}
+	}
+	return flag ? installations.size() : -1;
+}
+/* https://www.hackerrank.com/challenges/candies/problem
+Note that when two children have equal rating, they are allowed to have different number of candies.
+100%
+1 1 1 1 1 -> 5
+
+4 5 6 5 4 -> 1 2 3 2 1 = 9
+
+4 5 6 4 5 -> 1 2 3 2 3 -> 1 2 3 1 2 = 9
+
+6 5 3 4 1 -> 3 2 1 2 1 = 9
+
+6 5 4 2 3 -> 4 3 2 1 2 = 12
+
+4 5 6 6 6 5 4 -> 1 2 3 2 1 0 -1 -> 1 2 3 2 1 2 1 = 12
+
+4 5 6 6 6 4 5 -> 1 2 3 1 2 1 2 = 12
+
+6 5 3 3 3 4 1 -> 3 2 1 1 1 2 1 = 11
+
+6 5 4 4 4 2 3 -> 3 2 1 1 1 2 3 = 13
+
+4 6 4 5 6 2
+1 2 1 2 3 1
+
+2 4 2 6 1 7 8 9 2 1
+1 2 1 2 1 2 3 4 3 2 -> 1 2 1 2 1 2 3 4 3 1 -> 1 2 1 2 1 2 3 4 2 1
+
+2 4 3 5 2 6 4 5
+1 2 1 2 1 2 1 2
+
+6 5 4 4 4 2 3 -> 3 2 1 2 1 2 3 = 14
+ */
+size_t Range::MinimumCandies(vector<size_t> const &data)
+{
+	vector<size_t> result(data.size(), 1);
+	for (size_t i = 0; i < data.size() - 1; i++)
+		if (data[i] < data[i + 1])
+			result[i + 1] = result[i] + 1;
+	for (size_t i = data.size() - 1; i >= 1; i--)
+		if (data[i - 1] > data[i] && result[i - 1] <= result[i])
+			result[i - 1] = result[i] + 1;
+	size_t sum = parallel_reduce(
+		blocked_range<size_t>(0, result.size()), (size_t)0,
+		[&](tbb::blocked_range<size_t> const &r, size_t running_total)
+		{
+			for (size_t i = r.begin(); i < r.end(); i++)
+				running_total += result[i];
+			return running_total;
+		},
+		std::plus<size_t>());
+	return sum;
+}
 /*
  * https://www.hackerrank.com/challenges/sherlock-and-minimax
  * Find a value between p and q which provides the maximum of min(abs(data[i] - M))

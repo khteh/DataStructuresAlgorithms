@@ -49,6 +49,8 @@ public:
 	vector<long> LastNumbers(size_t, long, long);
 	size_t MaxNonDivisableSubset(vector<size_t> const &, size_t);
 	size_t HackerlandRadioTransmitters(vector<size_t> &, long);
+	long MinEnergyInstallations(vector<size_t> &, long);
+	size_t MinimumCandies(vector<size_t> const &);
 	size_t SherlockAndMinimax(vector<size_t> &, size_t, size_t);
 	size_t ChiefHopper(vector<size_t> const &);
 	size_t MaxClosestDistance(size_t, vector<size_t> &);
