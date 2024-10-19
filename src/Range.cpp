@@ -478,17 +478,17 @@ long Range::MaxProfit(vector<long> const &data)
  * https://www.hackerrank.com/challenges/minimum-loss/problem
  * 100%
  */
-long Range::MinimumLoss(vector<long> const &data)
+size_t Range::MinimumLoss(vector<size_t> const &data)
 {
-	map<long, size_t, greater<long>> prices;
+	map<size_t, size_t, greater<size_t>> prices;
 	for (size_t i = 0; i < data.size(); i++)
 		prices.emplace(data[i], i);
-	long minPrice = numeric_limits<long>::max();
-	for (map<long, size_t, greater<long>>::iterator it = prices.begin(); it != prices.end(); it++)
+	size_t minPrice = numeric_limits<size_t>::max();
+	for (map<size_t, size_t, greater<size_t>>::iterator it = prices.begin(); it != prices.end(); it++)
 	{
-		long index = it->second;
-		map<long, size_t, greater<long>>::iterator it1 = find_if(next(it), prices.end(), [index](const auto &it2)
-																 { return it2.second > index; });
+		size_t index = it->second;
+		map<size_t, size_t, greater<size_t>>::iterator it1 = find_if(next(it), prices.end(), [index](const auto &it2)
+																	 { return it2.second > index; });
 		if (it1 != prices.end() && it1->first < it->first)
 			minPrice = min((it->first - it1->first), minPrice);
 	}
@@ -881,9 +881,9 @@ string Range::AlmostSorted(vector<long> const &arr)
  * i: 1 -> [5]
  * i: 0
  */
-long Range::MinimumBribes(size_t maxBribes, vector<long> const &data)
+size_t Range::MinimumBribes(size_t maxBribes, vector<long> const &data)
 {
-	long bribes = 0;
+	size_t bribes = 0;
 	for (long i = data.size() - 1; i >= 0; i--)
 	{
 		/*

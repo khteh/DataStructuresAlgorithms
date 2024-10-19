@@ -35,7 +35,9 @@ public:
 	size_t NumberDiffPairs(long, set<long> const &);
 	size_t StockMax(vector<long> const &);
 	long MaxProfit(vector<long> const &);
-	long MinimumLoss(vector<long> const &);
+	size_t MinimumLoss(vector<size_t> const &);
+	size_t MinimumBribes(size_t, vector<long> const &);
+	size_t MinimumCandies(vector<size_t> const &);
 	long StockMaxProfit(vector<long> const &);
 	long StockMaxProfit1(vector<long> const &);
 	size_t SherlockAndCost(vector<size_t> const &);
@@ -44,13 +46,11 @@ public:
 	size_t VectorEqualSplit(vector<int> const &); // Only tested working with int type.
 	size_t MaxProductOfNonOverlappingWordLengths(vector<string> const &);
 	string AlmostSorted(vector<long> const &);
-	long MinimumBribes(size_t, vector<long> const &);
 	size_t PickNumbersFromRange(vector<size_t> const &);
 	vector<long> LastNumbers(size_t, long, long);
 	size_t MaxNonDivisableSubset(vector<size_t> const &, size_t);
 	size_t HackerlandRadioTransmitters(vector<size_t> &, long);
 	long MinEnergyInstallations(vector<size_t> &, long);
-	size_t MinimumCandies(vector<size_t> const &);
 	size_t SherlockAndMinimax(vector<size_t> &, size_t, size_t);
 	size_t ChiefHopper(vector<size_t> const &);
 	size_t MaxClosestDistance(size_t, vector<size_t> &);

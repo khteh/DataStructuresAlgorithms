@@ -55,7 +55,6 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(2, 8, vector<size_t>{1, 2, 3, 4, 5, 6, 5}),
 					  make_tuple(3, 12, vector<size_t>{5, 7, 9, 13, 11, 6, 6, 3, 3}),
 					  make_tuple(4, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})));
-
 class SumPairsIndicesTestFixture : public RangeTestFixture2<vector<size_t>, size_t, size_t>, public testing::TestWithParam<tuple<vector<size_t>, size_t, vector<size_t>>>
 {
 public:
@@ -81,15 +80,14 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(vector<size_t>{0, 1}, 4, vector<size_t>{2, 2, 4, 3}),
 					  make_tuple(vector<size_t>{1, 2}, 100, vector<size_t>{5, 75, 25}),
 					  make_tuple(vector<size_t>{0, 3}, 200, vector<size_t>{150, 24, 79, 50, 88, 345, 3})));
-
-class MinimumLossTestFixture : public RangeTestFixture1<long, long>, public testing::TestWithParam<tuple<long, vector<long>>>
+class MinimumLossTestFixture : public RangeTestFixture1<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
 {
 public:
 	void SetUp() override
 	{
 		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
-	long MinimumLossTest()
+	size_t MinimumLossTest()
 	{
 		return _rangeObj.MinimumLoss(_data);
 	}
@@ -101,9 +99,9 @@ TEST_P(MinimumLossTestFixture, MinimumLossTests)
 INSTANTIATE_TEST_SUITE_P(
 	MinimumLossTests,
 	MinimumLossTestFixture,
-	::testing::Values(make_tuple(2, vector<long>{5, 10, 3}),
-					  make_tuple(2, vector<long>{20, 7, 8, 2, 5}),
-					  make_tuple(1, vector<long>{2, 3, 4, 1})));
+	::testing::Values(make_tuple(2, vector<size_t>{5, 10, 3}),
+					  make_tuple(2, vector<size_t>{20, 7, 8, 2, 5}),
+					  make_tuple(1, vector<size_t>{2, 3, 4, 1})));
 class MinSumSubSequenceTestFixture : public RangeTestFixture2<size_t, size_t, size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
 public:
