@@ -1031,71 +1031,51 @@ size_t Range::HackerlandRadioTransmitters(vector<size_t> &data, long k)
 	return installations.size();
 }
 /* https://www.hackerrank.com/challenges/pylons/problem?isFullScreen=true
-(k:3) 0 1 1 1 0 0 0
-		  i
-				  i
-(k:2) 0 1 1 1 1 0
-		i
-			  i
+100%
+i: 0 1 2 3 4 5 6
+   0 1 1 1 0 0 0 (k:3)
+   i:0 [2, 0] j:2
+			 i:5 [6, 3] j: 3
+			   i:6 [6, 4] result: -1
 
-k:2
-0 1 0 1
-  i   i => 2
+i: 0 1 2 3 4 5
+   0 1 1 1 1 0 (k:2)
+   i:0 [1,0] j:1
+		 i:3 [4,2] j:4 result: 2
 
-1 0 1 0
-i   i   => 2
+i: 0 1 2 3
+   1 0 1 0 (k:2)
+   i:0 [1,0] j:0
+	   i:2 [3, 1] j:2 result: 2
 
-0 1 1 0
-  i   i => -1
+i: 0 1 2 3
+   0 1 1 0 (k:2)
+   i:0 [1,0] j:1
+		 i:3 [3, 2] j: 2 result: 2
 
-1 0 0 1
-i     i => 2
-
-k:3
-0 1 0 1
-  i     => 1
-
-1 0 1 0
-	i   => 1
-
-0 1 1 0
-  i     => 1
-
-1 0 0 1
-i     i => 2
+i: 0 1 2 3 4
+   0 1 0 1 0 (k:3)
+   i:0 [2,0] j:1
+		   i:4 [4, 2] j: 3 result: 2
  */
 long Range::MinEnergyInstallations(vector<size_t> &data, long k)
 {
 	bool flag = true;
 	vector<size_t> installations;
-	k--;
-	for (long i = k; flag && i < data.size(); i = min(i + 2 * k + 1, (long)data.size() - 1))
+	for (size_t i = 0; i < data.size(); i = installations.back() + k)
 	{
-		for (; !data[i] && ((installations.empty() && i >= 0) || i > installations.back() + k); i--)
-			;
-		if (i < 0 || (!installations.empty() && i == installations.back() + k))
-			flag = false;
-		installations.push_back(i);
-		if (i + k >= data.size() - 1)
-			break;
+		flag = false;
+		long j, lowerbound = installations.empty() ? 0 : installations.back() + 1;
+		for (j = min(data.size() - 1, i + k - 1); !flag && j >= lowerbound; j--)
+			if (data[j])
+			{
+				flag = true;
+				installations.push_back(j);
+			}
+		if (!flag)
+			return -1;
 	}
-	if (!flag)
-	{
-		ranges::reverse(data);
-		installations.clear();
-		flag = true;
-		for (long i = k; flag && i < data.size(); i = min(i + 2 * k + 1, (long)data.size() - 1))
-		{
-			for (; !data[i] && ((installations.empty() && i >= 0) || i > installations.back() + k); i--)
-				;
-			if (i < 0 || (!installations.empty() && i == installations.back() + k))
-				flag = false;
-			installations.push_back(i);
-			if (i + k >= data.size() - 1)
-				break;
-		}
-	}
-	return flag ? installations.size() : -1;
+	return installations.size();
 }
 /* https://www.hackerrank.com/challenges/candies/problem
 Note that when two children have equal rating, they are allowed to have different number of candies.
