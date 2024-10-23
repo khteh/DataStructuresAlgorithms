@@ -23,7 +23,6 @@ public:
 	long ConsecutiveMaximumSum(vector<long> const &, vector<long> &);
 	size_t ConsecutiveMaximumSumModulo(vector<long> const &, size_t);
 	long ConsecutiveLargestProduct(vector<long> const &);
-	size_t MinSumSubSequence(size_t, vector<size_t> const &);
 	long LongestNonNegativeSumSlice(vector<long> const &);
 	size_t SumPairs(size_t, vector<size_t> const &);
 	void SumPairs(size_t, vector<size_t> const &, vector<size_t> &);
@@ -35,9 +34,11 @@ public:
 	size_t NumberDiffPairs(long, set<long> const &);
 	size_t StockMax(vector<long> const &);
 	long MaxProfit(vector<long> const &);
+	size_t MinSumSubSequence(size_t, vector<size_t> const &);
 	size_t MinimumLoss(vector<size_t> const &);
 	size_t MinimumBribes(size_t, vector<long> const &);
 	size_t MinimumCandies(vector<size_t> const &);
+	long MinEnergyInstallations(vector<size_t> &, long);
 	long StockMaxProfit(vector<long> const &);
 	long StockMaxProfit1(vector<long> const &);
 	size_t SherlockAndCost(vector<size_t> const &);
@@ -50,7 +51,6 @@ public:
 	vector<long> LastNumbers(size_t, long, long);
 	size_t MaxNonDivisableSubset(vector<size_t> const &, size_t);
 	size_t HackerlandRadioTransmitters(vector<size_t> &, long);
-	long MinEnergyInstallations(vector<size_t> &, long);
 	size_t SherlockAndMinimax(vector<size_t> &, size_t, size_t);
 	size_t ChiefHopper(vector<size_t> const &);
 	size_t MaxClosestDistance(size_t, vector<size_t> &);

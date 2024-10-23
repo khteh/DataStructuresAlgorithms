@@ -185,6 +185,185 @@ size_t Range::MinSumSubSequence(size_t target, vector<size_t> const &data)
 	return count == numeric_limits<size_t>::max() ? -1 : count;
 }
 /*
+ * https://www.hackerrank.com/challenges/minimum-loss/problem
+ * 100%
+ */
+size_t Range::MinimumLoss(vector<size_t> const &data)
+{
+	map<size_t, size_t, greater<size_t>> prices;
+	for (size_t i = 0; i < data.size(); i++)
+		prices.emplace(data[i], i);
+	size_t minPrice = numeric_limits<size_t>::max();
+	for (map<size_t, size_t, greater<size_t>>::iterator it = prices.begin(); it != prices.end(); it++)
+	{
+		size_t index = it->second;
+		map<size_t, size_t, greater<size_t>>::iterator it1 = find_if(next(it), prices.end(), [index](const auto &it2)
+																	 { return it2.second > index; });
+		if (it1 != prices.end() && it1->first < it->first)
+			minPrice = min((it->first - it1->first), minPrice);
+	}
+	return minPrice;
+}
+/* https://www.hackerrank.com/challenges/new-year-chaos/problem
+ * 100%
+ * 0 1 2 3 4 5 6 7 <- i
+ * 1 2 5 3 7 8 6 4
+ * i: 7 -> bribes: [5, 7, 8, 6]
+ * i: 6 -> bribes: [7, 8]
+ * i: 5 -> bribes: []
+ * i: 4 -> bribes: []
+ * i: 3 -> bribes: [5]
+ * i: 2 -> bribes: []
+ * i: 1 -> bribes: []
+ * i: 0 -> bribes: []
+ *
+ * 0 1 2 3 4 <- i, maxBribes = 2
+ * 2 1 5 3 4
+ * i: 4 -> [5]
+ * i: 3 -> [5]
+ * i: 2 ->
+ * i: 1 -> [2]
+ * i: 0 ->
+ *
+ * 0 1 2 3 4 <- i, maxBribes = 3
+ * 2 5 1 3 4
+ * i: 4 -> [5]
+ * i: 3 -> [5]
+ * i: 2 -> [2, 5]
+ * i: 1 ->
+ * i: 0 ->
+ *
+ * 0 1 2 3 4 <- i, maxBribes = 4
+ * 5 2 1 3 4
+ * i: 4 -> [5]
+ * i: 3 -> [5]
+ * i: 2 -> [5, 2]
+ * i: 1 -> [5]
+ * i: 0
+ */
+size_t Range::MinimumBribes(size_t maxBribes, vector<long> const &data)
+{
+	size_t bribes = 0;
+	for (long i = data.size() - 1; i >= 0; i--)
+	{
+		/*
+		 * 0 1 2 3 4 5 6 7 <- i
+		 * 1 2 5 3 7 8 6 4
+		 * i: 7 -> bribes: [5, 7, 8, 6]
+		 * i: 6 -> bribes: [7, 8]
+		 * i: 5 -> bribes: []
+		 * i: 4 -> bribes: []
+		 * i: 3 -> bribes: [5]
+		 * i: 2 -> bribes: []
+		 * i: 1 -> bribes: []
+		 * i: 0 -> bribes: []
+		 */
+		if (data[i] - (i + 1) > (long)maxBribes)
+			return -1;
+		for (long j = max(0L, data[i] - (long)maxBribes); j < i; j++)
+			if (data[j] > data[i])
+				bribes++;
+	}
+	return bribes;
+}
+/* https://www.hackerrank.com/challenges/pylons/problem
+100%
+i: 0 1 2 3 4 5 6
+   0 1 1 1 0 0 0 (k:3)
+   i:0 [2, 0] j:2
+			 i:5 [6, 3] j: 3
+			   i:6 [6, 4] result: -1
+
+i: 0 1 2 3 4 5
+   0 1 1 1 1 0 (k:2)
+   i:0 [1,0] j:1
+		 i:3 [4,2] j:4 result: 2
+
+i: 0 1 2 3
+   1 0 1 0 (k:2)
+   i:0 [1,0] j:0
+	   i:2 [3, 1] j:2 result: 2
+
+i: 0 1 2 3
+   0 1 1 0 (k:2)
+   i:0 [1,0] j:1
+		 i:3 [3, 2] j: 2 result: 2
+
+i: 0 1 2 3 4
+   0 1 0 1 0 (k:3)
+   i:0 [2,0] j:1
+		   i:4 [4, 2] j: 3 result: 2
+ */
+long Range::MinEnergyInstallations(vector<size_t> &data, long k)
+{
+	vector<size_t> installations;
+	for (size_t i = 0; i < data.size(); i = installations.back() + k)
+	{
+		bool found = false;
+		for (long j = min(data.size() - 1, i + k - 1), lowerbound = installations.empty() ? 0 : installations.back() + 1; !found && j >= lowerbound; j--)
+			if (data[j])
+			{
+				found = true;
+				installations.push_back(j);
+			}
+		if (!found)
+			return -1;
+	}
+	return installations.size();
+}
+/* https://www.hackerrank.com/challenges/candies/problem
+Note that when two children have equal rating, they are allowed to have different number of candies.
+100%
+1 1 1 1 1 -> 5
+
+4 5 6 5 4 -> 1 2 3 2 1 = 9
+
+4 5 6 4 5 -> 1 2 3 2 3 -> 1 2 3 1 2 = 9
+
+6 5 3 4 1 -> 3 2 1 2 1 = 9
+
+6 5 4 2 3 -> 4 3 2 1 2 = 12
+
+4 5 6 6 6 5 4 -> 1 2 3 2 1 0 -1 -> 1 2 3 2 1 2 1 = 12
+
+4 5 6 6 6 4 5 -> 1 2 3 1 2 1 2 = 12
+
+6 5 3 3 3 4 1 -> 3 2 1 1 1 2 1 = 11
+
+6 5 4 4 4 2 3 -> 3 2 1 1 1 2 3 = 13
+
+4 6 4 5 6 2
+1 2 1 2 3 1
+
+2 4 2 6 1 7 8 9 2 1
+1 2 1 2 1 2 3 4 3 2 -> 1 2 1 2 1 2 3 4 3 1 -> 1 2 1 2 1 2 3 4 2 1
+
+2 4 3 5 2 6 4 5
+1 2 1 2 1 2 1 2
+
+6 5 4 4 4 2 3 -> 3 2 1 2 1 2 3 = 14
+ */
+size_t Range::MinimumCandies(vector<size_t> const &data)
+{
+	vector<size_t> result(data.size(), 1);
+	for (size_t i = 0; i < data.size() - 1; i++)
+		if (data[i] < data[i + 1])
+			result[i + 1] = result[i] + 1;
+	for (size_t i = data.size() - 1; i >= 1; i--)
+		if (data[i - 1] > data[i] && result[i - 1] <= result[i])
+			result[i - 1] = result[i] + 1;
+	size_t sum = parallel_reduce(
+		blocked_range<size_t>(0, result.size()), (size_t)0,
+		[&](tbb::blocked_range<size_t> const &r, size_t running_total)
+		{
+			for (size_t i = r.begin(); i < r.end(); i++)
+				running_total += result[i];
+			return running_total;
+		},
+		std::plus<size_t>());
+	return sum;
+}
+/*
  * https://app.codility.com/programmers/task/longest_nonnegative_sum_slice/
  * https://app.codility.com/programmers/challenges/ferrum2018/
  * Find the longest sequence when the graph crosses a previous point. The crossing point is when negative becomes positive and vice versa
@@ -473,26 +652,6 @@ long Range::MaxProfit(vector<long> const &data)
 			delta = (*it - min);
 	}
 	return delta;
-}
-/*
- * https://www.hackerrank.com/challenges/minimum-loss/problem
- * 100%
- */
-size_t Range::MinimumLoss(vector<size_t> const &data)
-{
-	map<size_t, size_t, greater<size_t>> prices;
-	for (size_t i = 0; i < data.size(); i++)
-		prices.emplace(data[i], i);
-	size_t minPrice = numeric_limits<size_t>::max();
-	for (map<size_t, size_t, greater<size_t>>::iterator it = prices.begin(); it != prices.end(); it++)
-	{
-		size_t index = it->second;
-		map<size_t, size_t, greater<size_t>>::iterator it1 = find_if(next(it), prices.end(), [index](const auto &it2)
-																	 { return it2.second > index; });
-		if (it1 != prices.end() && it1->first < it->first)
-			minPrice = min((it->first - it1->first), minPrice);
-	}
-	return minPrice;
 }
 
 /* https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
@@ -844,68 +1003,6 @@ string Range::AlmostSorted(vector<long> const &arr)
 	}
 	return oss.str().empty() ? "no" : oss.str();
 }
-/* https://www.hackerrank.com/challenges/new-year-chaos/problem
- * 100%
- * 0 1 2 3 4 5 6 7 <- i
- * 1 2 5 3 7 8 6 4
- * i: 7 -> bribes: [5, 7, 8, 6]
- * i: 6 -> bribes: [7, 8]
- * i: 5 -> bribes: []
- * i: 4 -> bribes: []
- * i: 3 -> bribes: [5]
- * i: 2 -> bribes: []
- * i: 1 -> bribes: []
- * i: 0 -> bribes: []
- *
- * 0 1 2 3 4 <- i, maxBribes = 2
- * 2 1 5 3 4
- * i: 4 -> [5]
- * i: 3 -> [5]
- * i: 2 ->
- * i: 1 -> [2]
- * i: 0 ->
- *
- * 0 1 2 3 4 <- i, maxBribes = 3
- * 2 5 1 3 4
- * i: 4 -> [5]
- * i: 3 -> [5]
- * i: 2 -> [2, 5]
- * i: 1 ->
- * i: 0 ->
- *
- * 0 1 2 3 4 <- i, maxBribes = 4
- * 5 2 1 3 4
- * i: 4 -> [5]
- * i: 3 -> [5]
- * i: 2 -> [5, 2]
- * i: 1 -> [5]
- * i: 0
- */
-size_t Range::MinimumBribes(size_t maxBribes, vector<long> const &data)
-{
-	size_t bribes = 0;
-	for (long i = data.size() - 1; i >= 0; i--)
-	{
-		/*
-		 * 0 1 2 3 4 5 6 7 <- i
-		 * 1 2 5 3 7 8 6 4
-		 * i: 7 -> bribes: [5, 7, 8, 6]
-		 * i: 6 -> bribes: [7, 8]
-		 * i: 5 -> bribes: []
-		 * i: 4 -> bribes: []
-		 * i: 3 -> bribes: [5]
-		 * i: 2 -> bribes: []
-		 * i: 1 -> bribes: []
-		 * i: 0 -> bribes: []
-		 */
-		if (data[i] - (i + 1) > (long)maxBribes)
-			return -1;
-		for (long j = max(0L, data[i] - (long)maxBribes); j < i; j++)
-			if (data[j] > data[i])
-				bribes++;
-	}
-	return bribes;
-}
 /*
  * https://www.hackerrank.com/challenges/picking-numbers/problem
  * 100%
@@ -1029,103 +1126,6 @@ size_t Range::HackerlandRadioTransmitters(vector<size_t> &data, long k)
 			;
 	}
 	return installations.size();
-}
-/* https://www.hackerrank.com/challenges/pylons/problem
-100%
-i: 0 1 2 3 4 5 6
-   0 1 1 1 0 0 0 (k:3)
-   i:0 [2, 0] j:2
-			 i:5 [6, 3] j: 3
-			   i:6 [6, 4] result: -1
-
-i: 0 1 2 3 4 5
-   0 1 1 1 1 0 (k:2)
-   i:0 [1,0] j:1
-		 i:3 [4,2] j:4 result: 2
-
-i: 0 1 2 3
-   1 0 1 0 (k:2)
-   i:0 [1,0] j:0
-	   i:2 [3, 1] j:2 result: 2
-
-i: 0 1 2 3
-   0 1 1 0 (k:2)
-   i:0 [1,0] j:1
-		 i:3 [3, 2] j: 2 result: 2
-
-i: 0 1 2 3 4
-   0 1 0 1 0 (k:3)
-   i:0 [2,0] j:1
-		   i:4 [4, 2] j: 3 result: 2
- */
-long Range::MinEnergyInstallations(vector<size_t> &data, long k)
-{
-	vector<size_t> installations;
-	for (size_t i = 0; i < data.size(); i = installations.back() + k)
-	{
-		bool found = false;
-		for (long j = min(data.size() - 1, i + k - 1), lowerbound = installations.empty() ? 0 : installations.back() + 1; !found && j >= lowerbound; j--)
-			if (data[j])
-			{
-				found = true;
-				installations.push_back(j);
-			}
-		if (!found)
-			return -1;
-	}
-	return installations.size();
-}
-/* https://www.hackerrank.com/challenges/candies/problem
-Note that when two children have equal rating, they are allowed to have different number of candies.
-100%
-1 1 1 1 1 -> 5
-
-4 5 6 5 4 -> 1 2 3 2 1 = 9
-
-4 5 6 4 5 -> 1 2 3 2 3 -> 1 2 3 1 2 = 9
-
-6 5 3 4 1 -> 3 2 1 2 1 = 9
-
-6 5 4 2 3 -> 4 3 2 1 2 = 12
-
-4 5 6 6 6 5 4 -> 1 2 3 2 1 0 -1 -> 1 2 3 2 1 2 1 = 12
-
-4 5 6 6 6 4 5 -> 1 2 3 1 2 1 2 = 12
-
-6 5 3 3 3 4 1 -> 3 2 1 1 1 2 1 = 11
-
-6 5 4 4 4 2 3 -> 3 2 1 1 1 2 3 = 13
-
-4 6 4 5 6 2
-1 2 1 2 3 1
-
-2 4 2 6 1 7 8 9 2 1
-1 2 1 2 1 2 3 4 3 2 -> 1 2 1 2 1 2 3 4 3 1 -> 1 2 1 2 1 2 3 4 2 1
-
-2 4 3 5 2 6 4 5
-1 2 1 2 1 2 1 2
-
-6 5 4 4 4 2 3 -> 3 2 1 2 1 2 3 = 14
- */
-size_t Range::MinimumCandies(vector<size_t> const &data)
-{
-	vector<size_t> result(data.size(), 1);
-	for (size_t i = 0; i < data.size() - 1; i++)
-		if (data[i] < data[i + 1])
-			result[i + 1] = result[i] + 1;
-	for (size_t i = data.size() - 1; i >= 1; i--)
-		if (data[i - 1] > data[i] && result[i - 1] <= result[i])
-			result[i - 1] = result[i] + 1;
-	size_t sum = parallel_reduce(
-		blocked_range<size_t>(0, result.size()), (size_t)0,
-		[&](tbb::blocked_range<size_t> const &r, size_t running_total)
-		{
-			for (size_t i = r.begin(); i < r.end(); i++)
-				running_total += result[i];
-			return running_total;
-		},
-		std::plus<size_t>());
-	return sum;
 }
 /*
  * https://www.hackerrank.com/challenges/sherlock-and-minimax
