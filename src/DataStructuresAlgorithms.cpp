@@ -446,7 +446,8 @@ long double FibonacciDynamicProgramming(long n)
 	return result[n % 2];
 }
 /* https://www.hackerrank.com/challenges/fibonacci-modified/problem
- * Timeout for n >= 20
+ * WIP
+ * Timeout for n >= 20. 2 tests timeout.
  */
 string FibonacciModified(long t1, long t2, long n)
 {
