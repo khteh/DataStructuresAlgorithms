@@ -1,4 +1,5 @@
 #include "Arithmetic.h"
+template class Arithmetic<char>;
 template class Arithmetic<int>;
 template class Arithmetic<size_t>;
 template class Arithmetic<long>;
@@ -403,4 +404,106 @@ T Arithmetic<T>::ReversePolishNotation(vector<string> const &tokens)
 		}
 	}
 	return !numbers.empty() ? numbers.top() : numeric_limits<T>::max();
+}
+template <typename T>
+void Arithmetic<T>::NumberToVector(T number, vector<char> &digits)
+	requires arithmetic_type<T>
+{
+	digits.clear();
+	// Index 0: LSB
+	if (!number)
+		digits.push_back(0);
+	for (; number > 0; number /= 10)
+		digits.push_back(number % 10);
+}
+template <typename T>
+T Arithmetic<T>::DigitsVectorToNumber(vector<char> const &digits)
+	requires arithmetic_type<T>
+{
+	T result = 0;
+	// Index 0: LSB
+	for (vector<char>::const_reverse_iterator it = digits.rbegin(); it != digits.rend(); it++)
+	{
+		result += *it;
+		result *= 10;
+	}
+	result /= 10; // Remove trailing 0
+	return result;
+}
+template <typename T>
+string Arithmetic<T>::DigitsVectorToNumberString(vector<char> const &digits)
+{
+	ostringstream oss;
+	// Index 0: LSB
+	for (vector<char>::const_reverse_iterator it = digits.rbegin(); it != digits.rend(); it++)
+		oss << to_string(*it);
+	return oss.str();
+}
+template <typename T>
+void Arithmetic<T>::NumberVectorsSum(vector<char> const &num1, vector<char> const &num2, vector<char> &result)
+{
+	result.clear();
+	char carry = 0;
+	size_t i = 0, j = 0;
+	for (; i < num1.size() && j < num2.size(); i++, j++)
+	{
+		if (num1[i] < 0 || num1[i] > 9 || num2[j] < 0 || num2[j] > 9)
+			throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
+		char tmp = num1[i] + num2[j] + carry;
+		carry = tmp / 10;
+		result.push_back(tmp % 10);
+	}
+	for (; i < num1.size(); i++)
+	{
+		if (num1[i] < 0 || num1[i] > 9)
+			throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
+		char tmp = num1[i] + carry;
+		carry = tmp / 10;
+		result.push_back(tmp % 10);
+	}
+	for (; j < num2.size(); j++)
+	{
+		if (num2[j] < 0 || num2[j] > 9)
+			throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
+		char tmp = num2[j] + carry;
+		carry = tmp / 10;
+		result.push_back(tmp % 10);
+	}
+	if (carry)
+		result.push_back(carry);
+}
+/*
+  456
+x 123
+-----
+ 1368
+ 906
+123
+-----
+22728
+*/
+template <typename T>
+void Arithmetic<T>::NumberVectorsMultiplication(vector<char> const &num1, vector<char> const &num2, vector<char> &result)
+{
+	vector<char> tmpResult;
+	result.clear();
+	for (size_t i = 0; i < num1.size(); i++)
+	{
+		char carry = 0;
+		vector<char> tmp;
+		for (long k = i; k > 0; k--)
+			tmp.push_back(0);
+		for (size_t j = 0; j < num2.size(); j++)
+		{
+			if (num1[i] < 0 || num1[i] > 9 || num2[j] < 0 || num2[j] > 9)
+				throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
+			char tmp1 = num1[i] * num2[j] + carry;
+			carry = tmp1 / 10;
+			tmp.push_back(tmp1 % 10);
+		}
+		if (carry)
+			tmp.push_back(carry);
+		NumberVectorsSum(tmp, tmpResult, result);
+		tmpResult = result;
+	}
 }

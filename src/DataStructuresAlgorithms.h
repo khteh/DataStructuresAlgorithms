@@ -224,7 +224,7 @@ vector<size_t> FindSubString(string const &, string const);
 void copy_on_write_string();
 long double Fibonacci(long);
 long double FibonacciDynamicProgramming(long);
-string FibonacciModified(long, long, long);
+string FibonacciModified(size_t, size_t, size_t);
 string FibonacciModifiedDynamicProgramming(long, long, long);
 void BitCombinations(size_t, vector<long> &);
 vector<size_t> grayCode(size_t);

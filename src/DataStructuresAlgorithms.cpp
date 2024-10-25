@@ -446,22 +446,32 @@ long double FibonacciDynamicProgramming(long n)
 	return result[n % 2];
 }
 /* https://www.hackerrank.com/challenges/fibonacci-modified/problem
+ * t1:0, t2: 1, n:4
+ * 0 1 2 3 4
+ * 0 1 1 2 5
+ *
+// Index: 0 1 2 3 4 5  6   7	  8
+// Value: 0 1 1 2 5 27 734 538783 ...
  * WIP
  * Timeout for n >= 20. 2 tests timeout.
  */
-string FibonacciModified(long t1, long t2, long n)
+string FibonacciModified(size_t t1, size_t t2, size_t n)
 {
-	// Index: 0 1 2 3 4 5  6   7	  8
-	// Value: 0 1 1 2 5 27 734 538783 ...
+	Arithmetic<size_t> arithmetic;
+	vector<vector<char>> result(2, vector<char>());
 	if (!n)
 		return to_string(t1);
 	else if (n == 1)
 		return to_string(t2);
-	Arithmetic<long> arithmetic;
-	string s1 = FibonacciModified(t1, t2, n - 2);
-	string s2 = FibonacciModified(t1, t2, n - 1);
-	string s3 = arithmetic.NumberStringMultiplication(s2, s2);
-	return arithmetic.NumberStringSum(s1, s3);
+	arithmetic.NumberToVector(t1, result[0]);
+	arithmetic.NumberToVector(t2, result[1]);
+	for (size_t i = 2; i <= n; i++)
+	{
+		vector<char> num1(result[(i - 2) % 2]), num2;
+		arithmetic.NumberVectorsMultiplication(result[(i - 1) % 2], result[(i - 1) % 2], num2);
+		arithmetic.NumberVectorsSum(num1, num2, result[i % 2]);
+	}
+	return arithmetic.DigitsVectorToNumberString(result[n % 2]);
 }
 string FibonacciModifiedDynamicProgramming(long t1, long t2, long n)
 {
