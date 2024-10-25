@@ -1,33 +1,51 @@
 #include "Arithmetic.h"
-unsigned long long Arithmetic::XOR(unsigned long long n)
+template class Arithmetic<int>;
+template class Arithmetic<size_t>;
+template class Arithmetic<long>;
+template class Arithmetic<long long>;
+template class Arithmetic<unsigned long long>;
+template class Arithmetic<string>;
+template <typename T>
+T Arithmetic<T>::XOR(T n)
+	requires arithmetic_type<T>
 {
 	return (n <= 1) ? n : n ^ XOR(n - 1);
 }
-long Arithmetic::ToggleSign(long a)
+template <typename T>
+T Arithmetic<T>::ToggleSign(T a)
+	requires arithmetic_type<T>
 {
-	long i, d = a < 0 ? 1 : -1;
+	T i, d = a < 0 ? 1 : -1;
 	for (i = 0; a != 0; i += d, a += d)
 		;
 	return i;
 }
-long Arithmetic::absolute(long a)
+template <typename T>
+T Arithmetic<T>::absolute(T a)
+	requires arithmetic_type<T>
 {
 	return a > 0 ? a : ToggleSign(a);
 }
-long Arithmetic::SubtractWithPlusSign(long a, long b)
+template <typename T>
+T Arithmetic<T>::SubtractWithPlusSign(T a, T b)
+	requires arithmetic_type<T>
 {
 	return a + ToggleSign(b);
 }
-long Arithmetic::MultiplyWithPlusSign(long a, long b)
+template <typename T>
+T Arithmetic<T>::MultiplyWithPlusSign(T a, T b)
+	requires arithmetic_type<T>
 {
 	if (b > a)
 		return MultiplyWithPlusSign(b, a); // Just faster doing it the other way round
-	long sum = 0;
-	for (long i = absolute(b); i > 0; i--, sum += a)
+	T sum = 0;
+	for (T i = absolute(b); i > 0; i--, sum += a)
 		;
 	return b < 0 ? ToggleSign(sum) : sum;
 }
-long Arithmetic::DivideWithPlusSign(long a, long b)
+template <typename T>
+T Arithmetic<T>::DivideWithPlusSign(T a, T b)
+	requires arithmetic_type<T>
 {
 	if (!b)
 		throw runtime_error("Divide by zero exception");
@@ -42,22 +60,24 @@ long Arithmetic::DivideWithPlusSign(long a, long b)
 #endif
 		else if (a == numeric_limits<int>::max())
 			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
-		if (a == numeric_limits<long>::min())
-			return numeric_limits<long>::min();
-		else if (a == numeric_limits<long>::max())
-			return isNegative ? numeric_limits<long>::min() + 1 : numeric_limits<long>::max();
+		if (a == numeric_limits<T>::min())
+			return numeric_limits<T>::min();
+		else if (a == numeric_limits<T>::max())
+			return isNegative ? numeric_limits<T>::min() + 1 : numeric_limits<T>::max();
 		if (isNegative)			   // result should be < 0
-			return a < 0 ? a : -a; // ToggleSign of 64-bit value takes very long time
+			return a < 0 ? a : -a; // ToggleSign of 64-bit value takes very T time
 		return a < 0 ? -a : a;
 	}
-	long quotient;
-	long divisor = ToggleSign(absolute(b)); // * -1
-	long dividend = absolute(a);
+	T quotient;
+	T divisor = ToggleSign(absolute(b)); // * -1
+	T dividend = absolute(a);
 	for (quotient = 0; dividend >= absolute(divisor); dividend += divisor, quotient++)
 		;
 	return isNegative ? -quotient : quotient;
 }
-long Arithmetic::divide(long dividend, long divisor)
+template <typename T>
+T Arithmetic<T>::divide(T dividend, T divisor)
+	requires arithmetic_type<T>
 {
 	if (!divisor)
 		throw runtime_error("Divide by zero exception");
@@ -69,12 +89,12 @@ long Arithmetic::divide(long dividend, long divisor)
 			return isNegative ? numeric_limits<int>::min() : -dividend; // ToggleSign of 64-bit value takes very long time
 		else if (dividend == numeric_limits<int>::max())
 			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
-		if (dividend == numeric_limits<long>::min())
-			return numeric_limits<long>::min();
-		else if (dividend == numeric_limits<long>::max())
-			return isNegative ? numeric_limits<long>::min() + 1 : numeric_limits<long>::max();
+		if (dividend == numeric_limits<T>::min())
+			return numeric_limits<T>::min();
+		else if (dividend == numeric_limits<T>::max())
+			return isNegative ? numeric_limits<T>::min() + 1 : numeric_limits<T>::max();
 		if (isNegative)
-			return dividend < 0 ? dividend : -dividend; // ToggleSign of 64-bit value takes very long time
+			return dividend < 0 ? dividend : -dividend; // ToggleSign of 64-bit value takes very T time
 		return dividend < 0 ? -dividend : dividend;
 	}
 	if (divisor < 0)
@@ -91,12 +111,15 @@ long Arithmetic::divide(long dividend, long divisor)
  * https://stackoverflow.com/questions/55615186/c-left-shift-overflow-for-negative-numbers
  * Left-shifting a negative value results in undefined behaviour. Use unsigned for bit manipulations.
  */
-long long Arithmetic::AddWithoutArithmetic(long long sum, long long carry)
+template <typename T>
+T Arithmetic<T>::AddWithoutArithmetic(T sum, T carry)
+	requires arithmetic_type<T>
 {
 	return !carry ? sum : AddWithoutArithmetic(sum ^ carry, (unsigned long long)(sum & carry) << 1);
 }
+template <typename T>
 // Function for finding sum of larger numbers
-string Arithmetic::NumberStringSum(const string &str1, const string &str2)
+string Arithmetic<T>::NumberStringSum(const string &str1, const string &str2)
 {
 	if (str1.empty() && !str2.empty())
 		return str2;
@@ -141,7 +164,8 @@ string Arithmetic::NumberStringSum(const string &str1, const string &str2)
 	-----
 	26220
 */
-string Arithmetic::NumberStringMultiplication(string &num1, string &num2)
+template <typename T>
+string Arithmetic<T>::NumberStringMultiplication(string &num1, string &num2)
 {
 	if (num1.empty() || num2.empty())
 		return "0";
@@ -246,7 +270,9 @@ string Arithmetic::NumberStringMultiplication(string &num1, string &num2)
  * Solution: generate result[0, l-1] and result[0, r]
  * final result = data[0, l-1] ^ data[0, r]. It will cancel out the accumulated xor from 0 too l-1
  */
-size_t Arithmetic::XorSequence(size_t l, size_t r)
+template <typename T>
+T Arithmetic<T>::XorSequence(T l, T r)
+	requires arithmetic_type<T>
 {
 	size_t left = 0, right = 0;
 	if (l > 0)
@@ -297,7 +323,8 @@ size_t Arithmetic::XorSequence(size_t l, size_t r)
  * j: width of the second operand
  * width of sum is max(i, j). So i must be <= half the input string size
  */
-bool Arithmetic::IsAdditiveNumber(string const &str)
+template <typename T>
+bool Arithmetic<T>::IsAdditiveNumber(string const &str)
 {
 	for (size_t i = 1; i <= str.size() / 2; i++)
 		for (size_t j = 1; max(i, j) <= str.size() - i - j; j++)
@@ -313,7 +340,8 @@ bool Arithmetic::IsAdditiveNumber(string const &str)
  *       5 8 13
  *         8 13 21
  */
-bool Arithmetic::CheckIfAdditiveSequence(size_t i, size_t j, string const &str)
+template <typename T>
+bool Arithmetic<T>::CheckIfAdditiveSequence(size_t i, size_t j, string const &str)
 {
 	if ((str[0] == '0' && i > 1) || (str[i] == '0' && j > 1))
 		return false;
@@ -335,16 +363,18 @@ bool Arithmetic::CheckIfAdditiveSequence(size_t i, size_t j, string const &str)
  * https://leetcode.com/problems/evaluate-reverse-polish-notation/
  * 100%
  */
-long Arithmetic::ReversePolishNotation(vector<string> const &tokens)
+template <typename T>
+T Arithmetic<T>::ReversePolishNotation(vector<string> const &tokens)
+	requires arithmetic_type<T>
 {
-	stack<long> numbers;
+	stack<T> numbers;
 	for (size_t i = 0; i < tokens.size(); i++)
 	{
 		if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/")
 		{
-			long num2 = numbers.top();
+			T num2 = numbers.top();
 			numbers.pop();
-			long num1 = numbers.top();
+			T num1 = numbers.top();
 			numbers.pop();
 			switch (tokens[i][0])
 			{
@@ -367,10 +397,10 @@ long Arithmetic::ReversePolishNotation(vector<string> const &tokens)
 		}
 		else
 		{
-			long num;
+			T num;
 			istringstream(tokens[i]) >> num;
 			numbers.push(num);
 		}
 	}
-	return !numbers.empty() ? numbers.top() : numeric_limits<long>::max();
+	return !numbers.empty() ? numbers.top() : numeric_limits<T>::max();
 }

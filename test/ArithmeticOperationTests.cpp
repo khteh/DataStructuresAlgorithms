@@ -2,7 +2,7 @@
 using namespace std;
 TEST(ArithmerticOperationsTests, XORTest)
 {
-	Arithmetic arithmetic;
+	Arithmetic<long> arithmetic;
 	ASSERT_EQ(1, arithmetic.XOR(1));
 	ASSERT_EQ(3, arithmetic.XOR(2));
 	ASSERT_EQ(0, arithmetic.XOR(3));
@@ -11,25 +11,25 @@ TEST(ArithmerticOperationsTests, XORTest)
 }
 TEST(ArithmerticOperationsTests, ToggleSignTest)
 {
-	Arithmetic arithmetic;
+	Arithmetic<long> arithmetic;
 	ASSERT_EQ(10, arithmetic.ToggleSign(-10));
 	ASSERT_EQ(-10, arithmetic.ToggleSign(10));
 }
 TEST(ArithmerticOperationsTests, AbsoluteTest)
 {
-	Arithmetic arithmetic;
+	Arithmetic<long> arithmetic;
 	ASSERT_EQ(10, arithmetic.absolute(-10));
 	ASSERT_EQ(10, arithmetic.absolute(10));
 }
 TEST(ArithmerticOperationsTests, SubtractWithPlusSignTest)
 {
-	Arithmetic arithmetic;
+	Arithmetic<long> arithmetic;
 	ASSERT_EQ(5, arithmetic.SubtractWithPlusSign(10, 5));
 	ASSERT_EQ(15, arithmetic.SubtractWithPlusSign(10, -5));
 }
 TEST(ArithmerticOperationsTests, MultiplyWithPlusSignTest)
 {
-	Arithmetic arithmetic;
+	Arithmetic<long> arithmetic;
 	ASSERT_EQ(50, arithmetic.MultiplyWithPlusSign(10, 5));
 	ASSERT_EQ(-50, arithmetic.MultiplyWithPlusSign(10, -5));
 }
@@ -45,7 +45,7 @@ public:
 	}
 
 protected:
-	Arithmetic _arithmetic;
+	Arithmetic<T> _arithmetic;
 	T _var1, _var2, _expected;
 };
 class DivideWithPlusSignTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
@@ -171,7 +171,7 @@ public:
 	}
 
 protected:
-	Arithmetic _arithmetic;
+	Arithmetic<string> _arithmetic;
 	bool _expected;
 	string _var;
 };
@@ -183,7 +183,7 @@ INSTANTIATE_TEST_SUITE_P(
 	IsAdditiveNumberTests,
 	IsAdditiveNumberTestFixture,
 	::testing::Values(make_tuple(true, "123"), make_tuple(true, "123581321"), make_tuple(true, "199100199"), make_tuple(false, "1203"), make_tuple(false, "1023"), make_tuple(false, "0123")));
-class ReversePolishNotationTestFixture : public testing::TestWithParam<tuple<long, vector<string>>>
+class ReversePolishNotationTestFixture : public testing::TestWithParam<tuple<size_t, vector<string>>>
 {
 public:
 	void SetUp() override
@@ -191,13 +191,13 @@ public:
 		_expected = get<0>(GetParam());
 		_var = get<1>(GetParam());
 	}
-	long ReversePolishNotationTest()
+	size_t ReversePolishNotationTest()
 	{
 		return _arithmetic.ReversePolishNotation(_var);
 	}
 
 protected:
-	Arithmetic _arithmetic;
+	Arithmetic<size_t> _arithmetic;
 	long _expected;
 	vector<string> _var;
 };

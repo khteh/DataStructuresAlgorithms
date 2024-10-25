@@ -2,7 +2,6 @@
 #include "Node.h"
 #include <iostream>
 #include <set>
-using namespace std;
 template class Node<int>;
 template class Node<long>;
 template class Node<string>;
@@ -64,8 +63,9 @@ shared_ptr<Node<T>> Node<T>::Right() const
 {
 	return m_right;
 }
-template<typename T>
-T Node<T>::MinSubTreesDifference(shared_ptr<Node<T>> n, T sum, T subtreeSum) requires arithmetic_type<T>
+template <typename T>
+T Node<T>::MinSubTreesDifference(shared_ptr<Node<T>> n, T sum, T subtreeSum)
+	requires arithmetic_type<T>
 {
 	ostringstream oss;
 	T adjustedSum = subtreeSum - n->Item();
@@ -77,7 +77,8 @@ T Node<T>::MinSubTreesDifference(shared_ptr<Node<T>> n, T sum, T subtreeSum) req
 		return n->MinSubTreesDifference(sum);
 }
 template <typename T>
-T Node<T>::MinSubTreesDifference(T sum)  requires arithmetic_type<T>
+T Node<T>::MinSubTreesDifference(T sum)
+	requires arithmetic_type<T>
 {
 	/*
 			10
@@ -147,13 +148,13 @@ void Node<T>::SetItem(T item)
 	m_item = item;
 }
 template <typename T>
-Node<T>& Node<T>::operator=(T item)
+Node<T> &Node<T>::operator=(T item)
 {
 	m_item = item;
 	return *this;
 }
 template <typename T>
-Node<T>& Node<T>::operator=(Node<T> &rhs)
+Node<T> &Node<T>::operator=(Node<T> &rhs)
 {
 	m_previous = rhs.Previous();
 	m_item = rhs.Item();
@@ -163,7 +164,7 @@ Node<T>& Node<T>::operator=(Node<T> &rhs)
 	return *this;
 }
 template <typename T>
-Node<T>& Node<T>::operator=(Node<T> rhs)
+Node<T> &Node<T>::operator=(Node<T> rhs)
 {
 	m_previous = rhs.Previous();
 	m_item = rhs.Item();

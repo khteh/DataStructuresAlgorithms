@@ -457,7 +457,7 @@ string FibonacciModified(long t1, long t2, long n)
 		return to_string(t1);
 	else if (n == 1)
 		return to_string(t2);
-	Arithmetic arithmetic;
+	Arithmetic<long> arithmetic;
 	string s1 = FibonacciModified(t1, t2, n - 2);
 	string s2 = FibonacciModified(t1, t2, n - 1);
 	string s3 = arithmetic.NumberStringMultiplication(s2, s2);
@@ -471,7 +471,7 @@ string FibonacciModifiedDynamicProgramming(long t1, long t2, long n)
 		return to_string(t1);
 	else if (n == 1)
 		return to_string(t2);
-	Arithmetic arithmetic;
+	Arithmetic<long> arithmetic;
 	vector<string> result = {to_string(t1), to_string(t2)};
 	for (size_t i = 2; i <= (size_t)n; i++)
 		result[i % 2] = arithmetic.NumberStringSum(result[(i - 2) % 2], arithmetic.NumberStringMultiplication(result[(i - 1) % 2], result[(i - 1) % 2]));

@@ -4,24 +4,36 @@
 #include <sstream>
 #include <stdexcept>
 #include <stack>
+#include "GenericConstraints.h"
 using namespace std;
+template <typename T>
 class Arithmetic
 {
 private:
 	bool CheckIfAdditiveSequence(size_t, size_t, string const &);
 
 public:
-	unsigned long long XOR(unsigned long long);
-	long ToggleSign(long);
-	long absolute(long);
-	long SubtractWithPlusSign(long, long);
-	long MultiplyWithPlusSign(long, long);
-	long DivideWithPlusSign(long, long);
-	long divide(long, long);
-	long long AddWithoutArithmetic(long long, long long);
+	T XOR(T)
+		requires arithmetic_type<T>;
+	T ToggleSign(T)
+		requires arithmetic_type<T>;
+	T absolute(T)
+		requires arithmetic_type<T>;
+	T SubtractWithPlusSign(T, T)
+		requires arithmetic_type<T>;
+	T MultiplyWithPlusSign(T, T)
+		requires arithmetic_type<T>;
+	T DivideWithPlusSign(T, T)
+		requires arithmetic_type<T>;
+	T divide(T, T)
+		requires arithmetic_type<T>;
+	T AddWithoutArithmetic(T, T)
+		requires arithmetic_type<T>;
 	string NumberStringSum(const string &, const string &);
 	string NumberStringMultiplication(string &, string &);
-	size_t XorSequence(size_t, size_t);
+	T XorSequence(T, T)
+		requires arithmetic_type<T>;
 	bool IsAdditiveNumber(string const &);
-	long ReversePolishNotation(vector<string> const &);
+	T ReversePolishNotation(vector<string> const &)
+		requires arithmetic_type<T>;
 };
