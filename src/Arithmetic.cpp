@@ -175,10 +175,10 @@ string Arithmetic<T>::NumberStringMultiplication(string &num1, string &num2)
 		num1 = num1.substr(1);
 	if (num2[0] == '-')
 		num2 = num2.substr(1);
-
-	// will keep the result number in vector in reverse order
+	/* Will keep the result number in vector in reverse order.
+	 * [LSB,MSB]
+	 */
 	vector<long> result(num1.size() + num2.size(), 0);
-
 	size_t i_n1 = 0, i_n2 = 0;
 	// Go from right to left in num1 (bottom)
 	for (int i = num1.size() - 1; i >= 0; i--)
@@ -187,7 +187,7 @@ string Arithmetic<T>::NumberStringMultiplication(string &num1, string &num2)
 		int n1 = num1[i] - '0';
 		// To shift position to left after every multiplication of a digit in num2 (top)
 		i_n2 = 0;
-		// Go from right to left in num2
+		// Go from right (LSB) to left (MSB) in num2
 		for (int j = num2.size() - 1; j >= 0; j--)
 		{
 			// Take current digit of second number
@@ -406,7 +406,7 @@ T Arithmetic<T>::ReversePolishNotation(vector<string> const &tokens)
 	return !numbers.empty() ? numbers.top() : numeric_limits<T>::max();
 }
 template <typename T>
-void Arithmetic<T>::NumberToVector(T number, vector<char> &digits)
+void Arithmetic<T>::NumberToVector(T number, vector<T> &digits)
 	requires arithmetic_type<T>
 {
 	digits.clear();
@@ -417,12 +417,12 @@ void Arithmetic<T>::NumberToVector(T number, vector<char> &digits)
 		digits.push_back(number % 10);
 }
 template <typename T>
-T Arithmetic<T>::DigitsVectorToNumber(vector<char> const &digits)
+T Arithmetic<T>::DigitsVectorToNumber(vector<T> const &digits)
 	requires arithmetic_type<T>
 {
 	T result = 0;
 	// Index 0: LSB
-	for (vector<char>::const_reverse_iterator it = digits.rbegin(); it != digits.rend(); it++)
+	for (typename vector<T>::const_reverse_iterator it = digits.rbegin(); it != digits.rend(); it++)
 	{
 		result += *it;
 		result *= 10;
@@ -431,41 +431,49 @@ T Arithmetic<T>::DigitsVectorToNumber(vector<char> const &digits)
 	return result;
 }
 template <typename T>
-string Arithmetic<T>::DigitsVectorToNumberString(vector<char> const &digits)
+string Arithmetic<T>::DigitsVectorToNumberString(vector<T> const &digits)
+	requires arithmetic_type<T>
 {
+	bool skip = true;
 	ostringstream oss;
 	// Index 0: LSB
-	for (vector<char>::const_reverse_iterator it = digits.rbegin(); it != digits.rend(); it++)
-		oss << to_string(*it);
+	for (typename vector<T>::const_reverse_iterator it = digits.rbegin(); it != digits.rend(); it++)
+		if (!skip || *it > 0)
+		{
+			oss << to_string(*it);
+			skip = false;
+		}
+	cout << oss.str() << endl;
 	return oss.str();
 }
 template <typename T>
-void Arithmetic<T>::NumberVectorsSum(vector<char> const &num1, vector<char> const &num2, vector<char> &result)
+void Arithmetic<T>::NumberVectorsSum(vector<T> const &num1, vector<T> const &num2, vector<T> &result)
+	requires arithmetic_type<T>
 {
 	result.clear();
-	char carry = 0;
+	T carry = 0;
 	size_t i = 0, j = 0;
 	for (; i < num1.size() && j < num2.size(); i++, j++)
 	{
-		if (num1[i] < 0 || num1[i] > 9 || num2[j] < 0 || num2[j] > 9)
-			throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
-		char tmp = num1[i] + num2[j] + carry;
+		// if (num1[i] < 0 || num1[i] > 9 || num2[j] < 0 || num2[j] > 9)
+		//	throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
+		T tmp = num1[i] + num2[j] + carry;
 		carry = tmp / 10;
 		result.push_back(tmp % 10);
 	}
 	for (; i < num1.size(); i++)
 	{
-		if (num1[i] < 0 || num1[i] > 9)
-			throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
-		char tmp = num1[i] + carry;
+		// if (num1[i] < 0 || num1[i] > 9)
+		//	throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
+		T tmp = num1[i] + carry;
 		carry = tmp / 10;
 		result.push_back(tmp % 10);
 	}
 	for (; j < num2.size(); j++)
 	{
-		if (num2[j] < 0 || num2[j] > 9)
-			throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
-		char tmp = num2[j] + carry;
+		// if (num2[j] < 0 || num2[j] > 9)
+		//	throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
+		T tmp = num2[j] + carry;
 		carry = tmp / 10;
 		result.push_back(tmp % 10);
 	}
@@ -477,14 +485,32 @@ void Arithmetic<T>::NumberVectorsSum(vector<char> const &num1, vector<char> cons
 x 123
 -----
  1368
- 906
-123
+ 912
+456
 -----
-22728
+56088
+
+   456
+x  456
+------
+  2736
+ 2280
+1824
+------
+207936
+
+i:0
+r: [42 60 48
+i:1
+r: [42 60 (25+48) 40]
+i:2
+r: [42 60 73 40 16]
 */
 template <typename T>
-void Arithmetic<T>::NumberVectorsMultiplication(vector<char> const &num1, vector<char> const &num2, vector<char> &result)
+void Arithmetic<T>::NumberVectorsMultiplication(vector<T> const &num1, vector<T> const &num2, vector<T> &result)
+	requires arithmetic_type<T>
 {
+#if 0
 	vector<char> tmpResult;
 	result.clear();
 	for (size_t i = 0; i < num1.size(); i++)
@@ -505,5 +531,46 @@ void Arithmetic<T>::NumberVectorsMultiplication(vector<char> const &num1, vector
 			tmp.push_back(carry);
 		NumberVectorsSum(tmp, tmpResult, result);
 		tmpResult = result;
+	}
+#endif
+	/* Will keep the result number in vector in reverse order.
+	 * [LSB,MSB]
+	 */
+	result.clear();
+	result.assign(num1.size() + num2.size(), 0);
+	size_t i_n1 = 0, i_n2 = 0;
+	// Go from left (LSB) to right (MSB) in num1 (bottom)
+	for (size_t i = 0; i < num1.size(); i++)
+	{
+		T carry = 0;
+		T n1 = num1[i];
+		// To shift position to left after every multiplication of a digit in num2 (top)
+		i_n2 = 0;
+		// Go from right to left in num2
+		for (size_t j = 0; j < num2.size(); j++)
+		{
+			// Take current digit of second number
+			T n2 = num2[j];
+
+			// Multiply with current digit of first number
+			// and add result to previously stored result
+			// at current position.
+			T sum = n1 * n2 + result[i_n1 + i_n2] + carry;
+
+			// Carry for next iteration
+			carry = sum / 10;
+
+			// Store result
+			result[i_n1 + i_n2] = sum % 10;
+
+			i_n2++;
+		}
+
+		// store carry in next cell
+		if (carry)
+			result[i_n1 + i_n2] += carry;
+
+		// To shift position to left after every multiplication of a digit in num1.
+		i_n1++;
 	}
 }

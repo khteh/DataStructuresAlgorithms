@@ -33,15 +33,18 @@ public:
 	T AddWithoutArithmetic(T, T)
 		requires arithmetic_type<T>;
 	bool IsAdditiveNumber(string const &);
-	void NumberToVector(T, vector<char> &)
+	void NumberToVector(T, vector<T> &)
 		requires arithmetic_type<T>;
-	T DigitsVectorToNumber(vector<char> const &)
+	T DigitsVectorToNumber(vector<T> const &)
 		requires arithmetic_type<T>;
-	string DigitsVectorToNumberString(vector<char> const &);
+	string DigitsVectorToNumberString(vector<T> const &)
+		requires arithmetic_type<T>;
 	string NumberStringSum(const string &, const string &);
 	string NumberStringMultiplication(string &, string &);
-	void NumberVectorsSum(vector<char> const &, vector<char> const &, vector<char> &);
-	void NumberVectorsMultiplication(vector<char> const &, vector<char> const &, vector<char> &);
+	void NumberVectorsSum(vector<T> const &, vector<T> const &, vector<T> &)
+		requires arithmetic_type<T>;
+	void NumberVectorsMultiplication(vector<T> const &, vector<T> const &, vector<T> &)
+		requires arithmetic_type<T>;
 	T ReversePolishNotation(vector<string> const &)
 		requires arithmetic_type<T>;
 };

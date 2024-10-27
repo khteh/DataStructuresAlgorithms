@@ -148,7 +148,7 @@ public:
 	}
 	size_t NumberVectorsSumTest()
 	{
-		vector<char> var1, var2, result;
+		vector<size_t> var1, var2, result;
 		_arithmetic.NumberToVector(_var1, var1);
 		_arithmetic.NumberToVector(_var2, var2);
 		_arithmetic.NumberVectorsSum(var1, var2, result);
@@ -178,7 +178,7 @@ public:
 	}
 	size_t NumberVectorsMultiplicationTest()
 	{
-		vector<char> var1, var2, result;
+		vector<size_t> var1, var2, result;
 		_arithmetic.NumberToVector(_var1, var1);
 		_arithmetic.NumberToVector(_var2, var2);
 		_arithmetic.NumberVectorsMultiplication(var1, var2, result);

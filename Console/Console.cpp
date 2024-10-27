@@ -8,6 +8,7 @@ using namespace oneapi::tbb;
 int main(int argc, char *argv[])
 {
 	string str, str1;
+	ostringstream oss;
 	size_t size;
 	long l;
 	random_device device;
@@ -511,7 +512,6 @@ int main(int argc, char *argv[])
 	assert(FibonacciModified(2, 0, 6) == "107602");
 	assert(FibonacciModified(2, 0, 7) == "11578190732");
 	assert(FibonacciModified(2, 0, 11) == "104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308");
-	ostringstream oss;
 	unsigned long long factorialResult = Factorial(26);
 	cout << "26!: " << setiosflags(ios::fixed) << factorialResult << endl;
 	assert(FactorialTrailingZeroesCount(10) == 2);
@@ -2110,22 +2110,25 @@ int main(int argc, char *argv[])
 	// assert(CountArray(4, 3, 2) == 3);
 	// assert(CountArray(5, 2, 2) == 0);
 	// assert(CountArray(761, 99, 1) == 236568308);
-	vector<char> var1, var2, cresult;
+	vector<size_t> cresult;
 	Arithmetic<size_t> arithmetic;
 	// 11111111100, 1234567890, 9876543210
-	arithmetic.NumberToVector(1234567890, var1);
-	arithmetic.NumberToVector(9876543210, var2);
-	arithmetic.NumberVectorsSum(var1, var2, cresult);
+	arithmetic.NumberToVector(1234567890, udata);
+	arithmetic.NumberToVector(9876543210, udata1);
+	arithmetic.NumberVectorsSum(udata, udata1, cresult);
 	assert(arithmetic.DigitsVectorToNumber(cresult) == 11111111100);
 	// 168, 123, 45
-	arithmetic.NumberToVector(123, var1);
-	arithmetic.NumberToVector(45, var2);
-	arithmetic.NumberVectorsSum(var1, var2, cresult);
+	arithmetic.NumberToVector(123, udata);
+	arithmetic.NumberToVector(45, udata1);
+	arithmetic.NumberVectorsSum(udata, udata1, cresult);
 	assert(arithmetic.DigitsVectorToNumber(cresult) == 168);
-	// 22728, 123, 456
-	arithmetic.NumberToVector(123, var1);
-	arithmetic.NumberToVector(456, var2);
-	arithmetic.NumberVectorsMultiplication(var1, var2, cresult);
+	// 56088, 123, 456
+	str = "123";
+	str1 = "456";
+	assert(arithmetic.NumberStringMultiplication(str, str1) == "56088");
+	arithmetic.NumberToVector(123, udata);
+	arithmetic.NumberToVector(456, udata1);
+	arithmetic.NumberVectorsMultiplication(udata, udata1, cresult);
 	assert(arithmetic.DigitsVectorToNumber(cresult) == 56088);
 	/***** The End *****/
 	cout
