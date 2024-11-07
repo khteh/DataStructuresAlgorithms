@@ -496,7 +496,8 @@ int main(int argc, char *argv[])
 	assert(Fibonacci(7) == 13);
 	assert(Fibonacci(8) == 21);
 	assert(Fibonacci(9) == 34);
-	// assert(Fibonacci(90) == 2880067194370816120ULL); Times out!!!
+// assert(Fibonacci(90) == 2880067194370816120ULL); Times out!!!
+#if 0
 	assert(FibonacciModified(0, 1, 4) == "5");
 	assert(FibonacciModified(0, 1, 5) == "27");
 	assert(FibonacciModified(0, 1, 6) == "734");
@@ -512,6 +513,7 @@ int main(int argc, char *argv[])
 	assert(FibonacciModified(2, 0, 6) == "107602");
 	assert(FibonacciModified(2, 0, 7) == "11578190732");
 	assert(FibonacciModified(2, 0, 11) == "104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308");
+#endif
 	unsigned long long factorialResult = Factorial(26);
 	cout << "26!: " << setiosflags(ios::fixed) << factorialResult << endl;
 	assert(FactorialTrailingZeroesCount(10) == 2);

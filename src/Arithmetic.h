@@ -45,6 +45,8 @@ public:
 		requires arithmetic_type<T>;
 	void NumberVectorsMultiplication(vector<T> const &, vector<T> const &, vector<T> &)
 		requires arithmetic_type<T>;
+	// void NumberVectorsSquare(vector<T> const &, vector<T> &)
+	//	requires arithmetic_type<T>;
 	T ReversePolishNotation(vector<string> const &)
 		requires arithmetic_type<T>;
 };

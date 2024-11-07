@@ -7215,3 +7215,62 @@ size_t RoadsAndLibraries(size_t n, size_t c_lib, size_t c_road, vector<vector<si
 	}
 	return result + (n - cityCount) * c_lib;
 }
+#if 0
+size_t sansaXor(vector<size_t> const &data)
+{
+	for (size_t i = 0; i < data.size(); i++)
+		for (size_t j = i + 1; j < data.size(); j++)
+}
+#endif
+/* https://www.hackerrank.com/challenges/recursive-digit-sum/problem
+ * 100%
+ */
+size_t SuperDigit(string const &n, size_t k)
+{
+	bool hasNine = false;
+	size_t sum = 0;
+	for (string::const_iterator it = n.begin(); it != n.end(); it++)
+	{
+		if (*it != '9')
+			sum += *it - '0';
+		else
+			hasNine = true;
+		if (sum > 9)
+		{
+			size_t sum1 = sum;
+			for (; sum1 > 9;)
+			{
+				string str = to_string(sum1);
+				sum1 = 0;
+				for (string::const_iterator it1 = str.begin(); it1 != str.end(); it1++)
+				{
+					if (*it1 != '9')
+						sum1 += *it1 - '0';
+				}
+			}
+			sum = sum1;
+		}
+	}
+	if (!sum && hasNine)
+		sum = 9;
+	if (k % 10)
+	{
+		sum *= k;
+		if (sum > 9)
+		{
+			size_t sum1 = sum;
+			for (; sum1 > 9;)
+			{
+				string str = to_string(sum1);
+				sum1 = 0;
+				for (string::const_iterator it1 = str.begin(); it1 != str.end(); it1++)
+				{
+					if (*it1 != '9')
+						sum1 += *it1 - '0';
+				}
+			}
+			sum = sum1;
+		}
+	}
+	return sum;
+}

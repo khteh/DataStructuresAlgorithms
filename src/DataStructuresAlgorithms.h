@@ -380,3 +380,4 @@ size_t AlternateChars(string const &);
 string SuperReducedString(string const &);
 vector<bool> WeightedUniformStrings(string const &, vector<size_t> const &);
 size_t RoadsAndLibraries(size_t, size_t, size_t, vector<vector<size_t>> const &);
+size_t SuperDigit(string const &, size_t);

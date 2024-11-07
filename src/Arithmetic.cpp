@@ -451,6 +451,7 @@ void Arithmetic<T>::NumberVectorsSum(vector<T> const &num1, vector<T> const &num
 	requires arithmetic_type<T>
 {
 	result.clear();
+#if 0
 	T carry = 0;
 	size_t i = 0, j = 0;
 	for (; i < num1.size() && j < num2.size(); i++, j++)
@@ -479,6 +480,16 @@ void Arithmetic<T>::NumberVectorsSum(vector<T> const &num1, vector<T> const &num
 	}
 	if (carry)
 		result.push_back(carry);
+#endif
+	for (size_t i = 0; i < max(num1.size(), num2.size()); i++)
+	{
+		T sum = 0;
+		if (i < num1.size())
+			sum += num1[i];
+		if (i < num2.size())
+			sum += num2[i];
+		result.push_back(sum);
+	}
 }
 /*
   456
@@ -505,34 +516,20 @@ i:1
 r: [42 60 (25+48) 40]
 i:2
 r: [42 60 73 40 16]
+
+  Multiplies num1 and num2, and prints result.
+	  345 (n2)
+	 x 76 (n1)
+	 ----
+	 2070 result: 0(3) 7(2) 0(2) 2(carry) n1: 0, n2: 3
+	2415  result:      2(4) 2(3) 6(2)  2(carry) n1: 1, n2: 3
+	-----
+	26220
 */
 template <typename T>
 void Arithmetic<T>::NumberVectorsMultiplication(vector<T> const &num1, vector<T> const &num2, vector<T> &result)
 	requires arithmetic_type<T>
 {
-#if 0
-	vector<char> tmpResult;
-	result.clear();
-	for (size_t i = 0; i < num1.size(); i++)
-	{
-		char carry = 0;
-		vector<char> tmp;
-		for (long k = i; k > 0; k--)
-			tmp.push_back(0);
-		for (size_t j = 0; j < num2.size(); j++)
-		{
-			if (num1[i] < 0 || num1[i] > 9 || num2[j] < 0 || num2[j] > 9)
-				throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
-			char tmp1 = num1[i] * num2[j] + carry;
-			carry = tmp1 / 10;
-			tmp.push_back(tmp1 % 10);
-		}
-		if (carry)
-			tmp.push_back(carry);
-		NumberVectorsSum(tmp, tmpResult, result);
-		tmpResult = result;
-	}
-#endif
 	/* Will keep the result number in vector in reverse order.
 	 * [LSB,MSB]
 	 */
@@ -574,3 +571,45 @@ void Arithmetic<T>::NumberVectorsMultiplication(vector<T> const &num1, vector<T>
 		i_n1++;
 	}
 }
+/*
+  Multiplies num1 and num2, and prints result.
+	  345 (n2)
+	x 345 (n1)
+	 ----
+	 1725 result: 5(2) 2(2) 7(1) 1(carry) n1: 0, n2: 3
+	1380  result:      0(2) 8(1) 3(1)  1(carry) n1: 1, n2: 3
+   1035   result:           5(1) 3(1)  0(1)  1(carry) n1: 2, n2: 3
+	-----
+   119025
+
+num: 345^2 = 119025
+i:  0
+j:  0 1 2
+tmp:25 40 30
+r:  [25 40 30]
+
+i:  1
+j:  1 2
+tmp:16 24
+r:  [25 40 46 24]
+
+i:  2
+j:  2
+tmp:9
+r:  [25 40 46 24 9]
+*/
+#if 0
+template <typename T>
+void Arithmetic<T>::NumberVectorsSquare(vector<T> const &num, vector<T> &result)
+	requires arithmetic_type<T>
+{
+	result.clear();
+	result.assign(2 * num.size(), 0);
+	T carry - 0;
+	for (size_t i = 0; i < num.size(); i++)
+		for (size_t j = i; j < num.size(); j++)
+		{
+			T tmp = num[i] * num[j];
+		}
+}
+#endif

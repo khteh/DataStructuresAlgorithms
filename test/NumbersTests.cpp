@@ -185,3 +185,31 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(1, 10, 2),
 					  make_tuple(3, 100, 2),
 					  make_tuple(1, 100, 3)));
+class SuperDigitTestFixture : public testing::TestWithParam<tuple<size_t, string, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_num = get<1>(GetParam());
+		_k = get<2>(GetParam());
+	}
+	size_t SuperDigitTest()
+	{
+		return SuperDigit(_num, _k);
+	}
+
+protected:
+	size_t _expected, _k;
+	string _num;
+};
+TEST_P(SuperDigitTestFixture, SuperDigitTests)
+{
+	ASSERT_EQ(this->_expected, this->SuperDigitTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	SuperDigitTests,
+	SuperDigitTestFixture,
+	::testing::Values(make_tuple(8, "9875", 4),
+					  make_tuple(3, "148", 3), make_tuple(1, "1000000000", 1000),
+					  make_tuple(9, "123", 3), make_tuple(9, "9999999999", 1000)));
