@@ -7245,18 +7245,14 @@ char SuperDigit(string const &n, size_t k)
 		sum *= k;
 		if (sum > 9)
 		{
-			size_t sum1 = sum;
-			for (; sum1 > 9;)
+			size_t sum1 = sum / 10;
+			sum = sum % 10;
+			for (; sum1 > 0; sum1 /= 10)
 			{
-				string str = to_string(sum1);
-				sum1 = 0;
-				for (string::const_iterator it1 = str.begin(); it1 != str.end(); it1++)
-				{
-					if (*it1 != '9')
-						sum1 += *it1 - '0';
-				}
+				sum += sum1 % 10;
+				if (sum > 9)
+					sum = sum / 10 + sum % 10;
 			}
-			sum = sum1;
 		}
 	}
 	return sum;
