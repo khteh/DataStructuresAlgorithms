@@ -7225,7 +7225,7 @@ size_t sansaXor(vector<size_t> const &data)
 /* https://www.hackerrank.com/challenges/recursive-digit-sum/problem
  * 100%
  */
-size_t SuperDigit(string const &n, size_t k)
+char SuperDigit(string const &n, size_t k)
 {
 	bool hasNine = false;
 	size_t sum = 0;
@@ -7236,20 +7236,7 @@ size_t SuperDigit(string const &n, size_t k)
 		else
 			hasNine = true;
 		if (sum > 9)
-		{
-			size_t sum1 = sum;
-			for (; sum1 > 9;)
-			{
-				string str = to_string(sum1);
-				sum1 = 0;
-				for (string::const_iterator it1 = str.begin(); it1 != str.end(); it1++)
-				{
-					if (*it1 != '9')
-						sum1 += *it1 - '0';
-				}
-			}
-			sum = sum1;
-		}
+			sum = sum / 10 + sum % 10;
 	}
 	if (!sum && hasNine)
 		sum = 9;

@@ -185,7 +185,7 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(1, 10, 2),
 					  make_tuple(3, 100, 2),
 					  make_tuple(1, 100, 3)));
-class SuperDigitTestFixture : public testing::TestWithParam<tuple<size_t, string, size_t>>
+class SuperDigitTestFixture : public testing::TestWithParam<tuple<char, string, size_t>>
 {
 public:
 	void SetUp() override
@@ -194,7 +194,7 @@ public:
 		_num = get<1>(GetParam());
 		_k = get<2>(GetParam());
 	}
-	size_t SuperDigitTest()
+	char SuperDigitTest()
 	{
 		return SuperDigit(_num, _k);
 	}
