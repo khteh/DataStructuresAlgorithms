@@ -318,6 +318,24 @@ T Arithmetic<T>::XorSequence(T l, T r)
 	}
 	return left ^ right;
 }
+/* https://www.hackerrank.com/challenges/sansa-and-xor/problem?isFullScreen=true
+If the length of the arr is even the result will always cancel out.
+When you get all the sublists you will notice that an element at even position exists odd times in all of the sublists and vice versa, an element at odd position exists even times in all of the subslists.
+For example: [1,2,3] has the following sublists = [1],[1,2],[1,2,3],[2],[2,3],[3], the one appears 3 times, the 2 appears 4 times and the 3 appears 3 times.
+This means that the elements that are on odd positions will cancel out, and we only need to take into consideration the ones that are on even positions, thus we only need to XOR the elements on the array stepping by 2.
+100%
+ */
+template <typename T>
+T Arithmetic<T>::SansaXor(vector<T> const &data)
+	requires arithmetic_type<T>
+{
+	T result = 0;
+	if (!(data.size() % 2))
+		return 0;
+	for (size_t i = 0; i < data.size(); i += 2)
+		result ^= data[i];
+	return result;
+}
 /* https://leetcode.com/problems/additive-number/
  * 100%
  * i: width of the first operand

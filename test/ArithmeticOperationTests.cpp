@@ -217,6 +217,33 @@ INSTANTIATE_TEST_SUITE_P(
 	XorSequenceTests,
 	XorSequenceTestFixture,
 	::testing::Values(make_tuple(6, 1, 4), make_tuple(7, 2, 4), make_tuple(9, 2, 8), make_tuple(15, 5, 9), make_tuple(5, 3, 5), make_tuple(2, 4, 6), make_tuple(22, 15, 20)));
+class SansaXorTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	size_t SansaXorTest()
+	{
+		return _arithmetic.SansaXor(_data);
+	}
+
+protected:
+	Arithmetic<size_t> _arithmetic;
+	size_t _expected;
+	vector<size_t> _data;
+};
+TEST_P(SansaXorTestFixture, SansaXorTests)
+{
+	ASSERT_EQ(this->_expected, this->SansaXorTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	SansaXorTests,
+	SansaXorTestFixture,
+	::testing::Values(make_tuple(6, vector<size_t>{3, 4, 5}), make_tuple(2, vector<size_t>{1, 2, 3}), make_tuple(0, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})));
+
 class IsAdditiveNumberTestFixture : public testing::TestWithParam<tuple<bool, string>>
 {
 public:

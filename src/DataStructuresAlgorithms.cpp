@@ -7215,13 +7215,6 @@ size_t RoadsAndLibraries(size_t n, size_t c_lib, size_t c_road, vector<vector<si
 	}
 	return result + (n - cityCount) * c_lib;
 }
-#if 0
-size_t sansaXor(vector<size_t> const &data)
-{
-	for (size_t i = 0; i < data.size(); i++)
-		for (size_t j = i + 1; j < data.size(); j++)
-}
-#endif
 /* https://www.hackerrank.com/challenges/recursive-digit-sum/problem
  * 100%
  */

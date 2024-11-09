@@ -18,6 +18,8 @@ public:
 		requires arithmetic_type<T>;
 	T XorSequence(T, T)
 		requires arithmetic_type<T>;
+	T SansaXor(vector<T> const &)
+		requires arithmetic_type<T>;
 	T ToggleSign(T)
 		requires arithmetic_type<T>;
 	T absolute(T)
