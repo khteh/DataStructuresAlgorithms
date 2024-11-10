@@ -46,13 +46,14 @@ int main(int argc, char *argv[])
 	Permutation<size_t> ulPermutation;
 	Permutation<string> sPermutation;
 	FenwickTree<size_t> fenwickTree;
+	Sort<long> sortAlgorithm;
 	ExceptionTest();
 	TestRandom();
 	KDTreeTests();
 	strings = {"111", "100", "100"};
 	cgrid1.resize(strings.size());
 	for (size_t i = 0; i < strings.size(); i++)
-		copy(strings[i].begin(), strings[i].end(), std::back_inserter(cgrid1[i]));
+		ranges::copy(strings[i], back_inserter(cgrid1[i]));
 	assert(stringset.erase("Does not exist") == 0); // Erasing non-existing element does NOT throw
 	str = to_string(0);
 	istringstream(str) >> i;
@@ -705,7 +706,7 @@ int main(int argc, char *argv[])
 
 	cout << "Test shuffle deck of cards: " << endl;
 	vector<long> cards(52), result;
-	iota(cards.begin(), cards.end(), 0);
+	ranges::iota(cards.begin(), cards.end(), 0);
 	shuffleCards(cards);
 	for (i = 0; i < 52; i++)
 	{
@@ -1471,6 +1472,11 @@ int main(int argc, char *argv[])
 	assert(fizzBuzz(5) == vector<string>({"1", "2", "Fizz", "4", "Buzz"}));
 	assert(fizzBuzz(10) == vector<string>({"1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz"}));
 	assert(fizzBuzz(15) == vector<string>({"1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz"}));
+	udata.clear();
+	udata1.clear();
+	udata1 = {123, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 456};
+	ranges::copy(GenerateSequence(0, 10), back_inserter(udata));
+	assert(udata1 == udata);
 	vector<vector<size_t>> edges;
 	edges.clear();
 	edges = {{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}};
@@ -2132,6 +2138,17 @@ int main(int argc, char *argv[])
 	arithmetic.NumberToVector(456, udata1);
 	arithmetic.NumberVectorsMultiplication(udata, udata1, cresult);
 	assert(arithmetic.DigitsVectorToNumber(cresult) == 56088);
+// vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1}
+#if 0
+	a.clear();
+	a = {1, 0, -1};
+	sortAlgorithm.CountingSort(a);
+	assert(ranges::is_sorted(a));
+	a.clear();
+	a = {2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1};
+	sortAlgorithm.CountingSort(a);
+	assert(ranges::is_sorted(a));
+#endif
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

@@ -30,7 +30,7 @@ public:
 	void InsertionSort(vector<T> &);
 	void HeapSort(vector<T> &);
 	void CountingSort(vector<T> &)
-		requires arithmetic_type<T>;
+		requires unsigned_integral<T>;
 	string StringCountingSort(vector<vector<string>> &);
 	void TopDownMergeSort(vector<T> &, vector<T> &, size_t, size_t);
 	void BottomUpMergeSort(vector<T> &, vector<T> &);

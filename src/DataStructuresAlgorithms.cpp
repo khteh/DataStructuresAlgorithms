@@ -77,6 +77,13 @@ double MachineEpsilonApproximation()
 		e *= 0.5;
 	return e;
 }
+generator<const size_t &> GenerateSequence(size_t start, size_t end)
+{
+	// whatever you like here, e.g.
+	co_yield 123;
+	co_yield std::ranges::elements_of(ranges::iota_view{start, end});
+	co_yield 456;
+}
 /* Assume ASCII character set */
 bool isUniqueString(string const &str)
 {

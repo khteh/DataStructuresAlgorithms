@@ -215,11 +215,10 @@ INSTANTIATE_TEST_SUITE_P(
 		::testing::Values(make_tuple(2, 8, vector<size_t>{1, 2, 3, 4, 5, 6, 5}),
 					  make_tuple(3, 12, vector<size_t>{5, 7, 9, 13, 11, 6, 6, 3, 3}),
 					  //make_tuple(4, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
-		::testing::ValuesIn([]() -> std::generator
+		::testing::ValuesIn([]() -> generator<const size_t>
 							{
-				// whatever you like here, e.g.
 				co_yield 4;
 				co_yield 10;
-				co_yield std::ranges::elements_of(ranges::iota(0, 10)); }()))
+				co_yield ranges::elements_of(ranges::iota_view(0, 10)); }()))
 );
 -----------------------------------------------------------

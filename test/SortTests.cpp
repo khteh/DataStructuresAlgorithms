@@ -29,7 +29,6 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, -8, -5, -7}, vector<long>{2, -1, -3, -7, -8, 9, 5, -5, -7}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, 9, 5, 3, 2, 1, -1, -3, -7, -8, -5, -7}),
 					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, -8, -5, -7, 9, 5, 3, 2, 1}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, 9, 5, 3, 2, 1, -8, -5, -7}),
 					  make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, 2, 9, 5, 3, 2, 1, -8, -5, -7}), make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, -8, -5, -7, 2, 9, 5, 3, 2, 1})));
-
 class AlternateSignSortNumbers1TestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
 {
 public:
@@ -59,90 +58,109 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, -8, -5, -7}, vector<long>{2, -1, -3, -7, -8, 9, 5, -5, -7}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, 9, 5, 3, 2, 1, -1, -3, -7, -8, -5, -7}),
 					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, -8, -5, -7, 9, 5, 3, 2, 1}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, 9, 5, 3, 2, 1, -8, -5, -7}),
 					  make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, 2, 9, 5, 3, 2, 1, -8, -5, -7}), make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, -8, -5, -7, 2, 9, 5, 3, 2, 1})));
+template <typename TResult, typename T>
+class SortTestFixture
+{
+public:
+	void SetUp(TResult expected, vector<T> data)
+	{
+		_expected = expected;
+		_data = data;
+	}
 
-TEST(SortTests, BubbleSortTest)
+protected:
+	Sort<T> _sort;
+	TResult _expected;
+	vector<T> _data;
+};
+class BubbleSortTestFixture : public SortTestFixture<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
 {
-	Sort<long> sort;
-	// Test Sorting algorithms
-	random_device device;
-	mt19937_64 engine(device());
-	uniform_int_distribution<long> uniformDistribution;
-	vector<long> a;
-	a = {1, 0, -1};
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.BubbleSort(a);
-	ASSERT_TRUE(ranges::is_sorted(a));
-	a.clear();
-	a.resize(100);
-	ranges::generate(a, [&]
-					 { return uniformDistribution(engine); });
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.BubbleSort(a);
-	ASSERT_TRUE(ranges::is_sorted(a));
-}
-TEST(SortTests, QuickSortTest)
+public:
+	void SetUp() override
+	{
+		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	bool BubbleSortTest()
+	{
+		_sort.BubbleSort(_data);
+		return ranges::is_sorted(_data);
+	}
+};
+TEST_P(BubbleSortTestFixture, BubbleSortTests)
 {
-	Sort<long> sort;
-	vector<long> a;
-	random_device device;
-	mt19937_64 engine(device());
-	uniform_int_distribution<long> uniformDistribution;
-	a = {1, 3, 0, 2};
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.QuickSort(a, 0, a.size() - 1);
-	ASSERT_TRUE(ranges::is_sorted(a));
-
-	a.clear();
-	a = {1, 0, -1};
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.QuickSort(a, 0, a.size() - 1);
-	ASSERT_TRUE(ranges::is_sorted(a));
-	a.clear();
-	a.resize(100);
-	ranges::generate(a, [&]
-					 { return uniformDistribution(engine); });
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.QuickSort(a, 0, a.size() - 1);
-	ASSERT_TRUE(ranges::is_sorted(a));
+	ASSERT_EQ(this->_expected, this->BubbleSortTest());
 }
-TEST(SortTests, SelectionSortTest)
+INSTANTIATE_TEST_SUITE_P(
+	BubbleSortTests,
+	BubbleSortTestFixture,
+	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
+class QuickSortTestFixture : public SortTestFixture<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
 {
-	Sort<long> sort;
-	vector<long> a;
-	random_device device;
-	mt19937_64 engine(device());
-	uniform_int_distribution<long> uniformDistribution;
-	a = {1, 0, -1};
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.SelectionSort(a);
-	ASSERT_TRUE(ranges::is_sorted(a));
-	a.clear();
-	a.resize(100);
-	ranges::generate(a, [&]
-					 { return uniformDistribution(engine); });
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.SelectionSort(a);
-	ASSERT_TRUE(ranges::is_sorted(a));
-}
-TEST(SortTests, InsertionSortTest)
+public:
+	void SetUp() override
+	{
+		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	bool QuickSortTest()
+	{
+		_sort.QuickSort(_data, 0, _data.size() - 1);
+		return ranges::is_sorted(_data);
+	}
+};
+TEST_P(QuickSortTestFixture, QuickSortTests)
 {
-	Sort<long> sort;
-	vector<long> a;
-	random_device device;
-	mt19937_64 engine(device());
-	uniform_int_distribution<long> uniformDistribution;
-	a = {1, 0, -1};
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.InsertionSort(a);
-	ASSERT_TRUE(ranges::is_sorted(a));
-	a.clear();
-	a.resize(100);
-	ranges::generate(a, [&]
-					 { return uniformDistribution(engine); });
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.InsertionSort(a);
-	ASSERT_TRUE(ranges::is_sorted(a));
+	ASSERT_EQ(this->_expected, this->QuickSortTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	QuickSortTests,
+	QuickSortTestFixture,
+	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
+class SelectionSortTestFixture : public SortTestFixture<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	bool SelectionSortTest()
+	{
+		_sort.SelectionSort(_data);
+		return ranges::is_sorted(_data);
+	}
+};
+TEST_P(SelectionSortTestFixture, SelectionSortTests)
+{
+	ASSERT_EQ(this->_expected, this->SelectionSortTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	SelectionSortTests,
+	SelectionSortTestFixture,
+	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
+class InsertionSortTestFixture : public SortTestFixture<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	bool InsertionSortTest()
+	{
+		_sort.InsertionSort(_data);
+		return ranges::is_sorted(_data);
+	}
+};
+TEST_P(InsertionSortTestFixture, InsertionSortTests)
+{
+	ASSERT_EQ(this->_expected, this->InsertionSortTest());
+}
+TEST_P(InsertionSortTestFixture, InsertionSortTest)
+{
+	ASSERT_EQ(this->_expected, this->InsertionSortTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	InsertionSortTests,
+	InsertionSortTestFixture,
+	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
 TEST(SortTests, TopDownMergeSortTest)
 {
 	Sort<long> sort;
@@ -195,95 +213,108 @@ TEST(SortTests, BottomUpMergeSortTest)
 	sort.BottomUpMergeSort(a, b);
 	ASSERT_TRUE(ranges::is_sorted(a));
 }
-TEST(SortTests, HeapSortTest)
+class HeapSortTestFixture : public SortTestFixture<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
 {
-	Sort<long> sort;
-	vector<long> a;
-	random_device device;
-	mt19937_64 engine(device());
-	uniform_int_distribution<long> uniformDistribution;
-	a = {1, 0, -1};
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.HeapSort(a);
-	ASSERT_TRUE(ranges::is_sorted(a));
-
-	a.clear();
-	a.resize(100);
-	ranges::generate(a, [&]
-					 { return uniformDistribution(engine); });
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.HeapSort(a);
-	ASSERT_TRUE(ranges::is_sorted(a));
-}
-TEST(SortTests, CountingSortTest)
+public:
+	void SetUp() override
+	{
+		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	bool HeapSortTest()
+	{
+		_sort.HeapSort(_data);
+		return ranges::is_sorted(_data);
+	}
+};
+TEST_P(HeapSortTestFixture, HeapSortTests)
 {
-	Sort<long> sort;
-	vector<long> a;
-	random_device device;
-	mt19937_64 engine(device());
-	uniform_int_distribution<long> uniformDistribution;
-	a = {1, 0, 2};
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.CountingSort(a);
-	ASSERT_TRUE(ranges::is_sorted(a));
-
-	a.clear();
-	a = {456, 789, 123};
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.CountingSort(a);
-	ASSERT_TRUE(ranges::is_sorted(a));
-
-	vector<vector<string>> strSort{
-		{"400", "not"},
-		{"1500", "question"},
-		{"550", "to"},
-		{"100", "to"},
-		{"650", "be"},
-		{"1100", "-"},
-		{"200", "be"},
-		{"1234", "is"},
-		{"1100", "that"},
-		{"300", "or"},
-		{"1250", "the"}};
-	ASSERT_EQ(sort.StringCountingSort(strSort), "to be or not to be - that is the question");
-
-	strSort.clear();
-	strSort = {{"100", "!!!"}, {"55", "Hello"}, {"10", "Hey,"}, {"55", "World"}};
-	ASSERT_EQ(sort.StringCountingSort(strSort), "Hey, Hello World !!!");
+	ASSERT_EQ(this->_expected, this->HeapSortTest());
 }
-TEST(SortTests, WiggleSortTest)
+INSTANTIATE_TEST_SUITE_P(
+	HeapSortTests,
+	HeapSortTestFixture,
+	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
+class CountingSortTestFixture : public SortTestFixture<bool, size_t>, public testing::TestWithParam<tuple<bool, vector<size_t>>>
 {
-	Sort<long> sort;
-	vector<long> a, b;
-	random_device device;
-	mt19937_64 engine(device());
-	uniform_int_distribution<long> uniformDistribution;
-	a = {1, 5, 1, 1, 6, 4};
-	b = {1, 6, 1, 5, 1, 4};
-	sort.WiggleSort(a);
-	ASSERT_EQ(a, b);
-
-	a.clear();
-	b.clear();
-	a = {1, 3, 2, 2, 3, 1};
-	b = {2, 3, 1, 3, 1, 2};
-	sort.WiggleSort(a);
-	ASSERT_EQ(a, b);
-
-	a.clear();
-	b.clear();
-	a = {1, 1, 2, 1, 2, 2, 1};
-	b = {1, 2, 1, 2, 1, 2, 1};
-	sort.WiggleSort(a);
-	ASSERT_EQ(a, b);
-
-	a.clear();
-	b.clear();
-	a = {5, 3, 1, 2, 6, 7, 8, 5, 5};
-	b = {5, 8, 5, 7, 3, 6, 2, 5, 1};
-	sort.WiggleSort(a);
-	ASSERT_EQ(a, b);
+public:
+	void SetUp() override
+	{
+		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	bool CountingSortTest()
+	{
+		_sort.CountingSort(_data);
+		return ranges::is_sorted(_data);
+	}
+};
+TEST_P(CountingSortTestFixture, CountingSortTests)
+{
+	ASSERT_EQ(this->_expected, this->CountingSortTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	CountingSortTests,
+	CountingSortTestFixture,
+	::testing::Values(make_tuple(true, vector<size_t>{1, 0, 2}), make_tuple(true, vector<size_t>{2, 2, 2, 1, 1, 1, 0, 0, 0, 3, 3, 3})));
+class StringCountingSortTestFixture : public testing::TestWithParam<tuple<string, vector<vector<string>>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	string StringCountingSortTest()
+	{
+		return _sort.StringCountingSort(_data);
+	}
+
+protected:
+	Sort<string> _sort;
+	string _expected;
+	vector<vector<string>> _data;
+};
+TEST_P(StringCountingSortTestFixture, StringCountingSortTests)
+{
+	ASSERT_EQ(this->_expected, this->StringCountingSortTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	StringCountingSortTests,
+	StringCountingSortTestFixture,
+	::testing::Values(make_tuple("to be or not to be - that is the question", vector<vector<string>>{
+																				  {"400", "not"},
+																				  {"1500", "question"},
+																				  {"550", "to"},
+																				  {"100", "to"},
+																				  {"650", "be"},
+																				  {"1100", "-"},
+																				  {"200", "be"},
+																				  {"1234", "is"},
+																				  {"1100", "that"},
+																				  {"300", "or"},
+																				  {"1250", "the"}}),
+					  make_tuple("Hey, Hello World !!!", vector<vector<string>>{{"100", "!!!"}, {"55", "Hello"}, {"10", "Hey,"}, {"55", "World"}})));
+class WiggleSortTestFixture : public SortTestFixture<vector<long>, long>, public testing::TestWithParam<tuple<vector<long>, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	vector<long> WiggleSortTest()
+	{
+		_sort.WiggleSort(_data);
+		return _data;
+	}
+};
+TEST_P(WiggleSortTestFixture, WiggleSortTests)
+{
+	ASSERT_EQ(this->_expected, this->WiggleSortTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	WiggleSortTests,
+	WiggleSortTestFixture,
+	::testing::Values(make_tuple(vector<long>{1, 6, 1, 5, 1, 4}, vector<long>{1, 5, 1, 1, 6, 4}), make_tuple(vector<long>{2, 3, 1, 3, 1, 2}, vector<long>{1, 3, 2, 2, 3, 1}), make_tuple(vector<long>{1, 2, 1, 2, 1, 2, 1}, vector<long>{1, 1, 2, 1, 2, 2, 1}), make_tuple(vector<long>{5, 8, 5, 7, 3, 6, 2, 5, 1}, vector<long>{5, 3, 1, 2, 6, 7, 8, 5, 5})));
+
 TEST(SortTests, LexicographicSortTest)
 {
 	vector<string> strings = {"abcczch", "abcchcz", "abcde", "ABCCZCH", "ABCCHCZ", "ABCDE"};

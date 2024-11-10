@@ -108,6 +108,10 @@ void Sort<T>::SelectionSort(vector<T> &data)
 			swap(data[min], data[i]);
 	}
 }
+/*
+https://www.hackerrank.com/challenges/insertionsort1/problem
+https://www.hackerrank.com/challenges/insertionsort2/problem
+*/
 template <typename T>
 void Sort<T>::InsertionSort(vector<T> &data)
 {
@@ -127,11 +131,13 @@ void Sort<T>::HeapSort(vector<T> &data)
 		swap(data[end], item);
 	}
 }
-// https://en.wikipedia.org/wiki/Counting_sort
-// each of which has a non-negative integer key whose maximum value is at most k
+/* https://en.wikipedia.org/wiki/Counting_sort
+ * sorting a collection of objects according to keys that are small positive integers.
+ * In the most general case, the input to counting sort consists of a collection of n items, each of which has a non-negative integer key whose maximum value is at most k
+ */
 template <typename T>
 void Sort<T>::CountingSort(vector<T> &data)
-	requires arithmetic_type<T>
+	requires unsigned_integral<T>
 {
 	vector<T> input(data);
 	T min = numeric_limits<T>::max(), max = 0;
@@ -520,7 +526,7 @@ void Sort<T>::AlternateSignSortNumbers(vector<T> &data)
 	}
 }
 /* http://cpluspluslearning-petert.blogspot.co.uk/2014/10/data-structure-and-algorithm-order.html
-*/
+ */
 template <typename T>
 void Sort<T>::AlternateSignSortNumbers1(vector<T> &data)
 	requires arithmetic_type<T>

@@ -52,9 +52,22 @@ TEST_P(SumPairsTestFixture, SumPairsTests)
 INSTANTIATE_TEST_SUITE_P(
 	SumPairsTests,
 	SumPairsTestFixture,
+#if 1
 	::testing::Values(make_tuple(2, 8, vector<size_t>{1, 2, 3, 4, 5, 6, 5}),
 					  make_tuple(3, 12, vector<size_t>{5, 7, 9, 13, 11, 6, 6, 3, 3}),
-					  make_tuple(4, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})));
+					  make_tuple(4, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}))
+#else
+	::testing::Combine(
+		::testing::Values(make_tuple(2, 8, vector<size_t>{1, 2, 3, 4, 5, 6, 5}),
+						  make_tuple(3, 12, vector<size_t>{5, 7, 9, 13, 11, 6, 6, 3, 3}),
+						  // make_tuple(4, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+						  ::testing::ValuesIn([]() -> generator<size_t>
+											  {
+	co_yield 4;
+	co_yield 10;
+	co_yield ranges::elements_of(ranges::iota_view(0, 10)); }())))
+#endif
+);
 class SumPairsIndicesTestFixture : public RangeTestFixture2<vector<size_t>, size_t, size_t>, public testing::TestWithParam<tuple<vector<size_t>, size_t, vector<size_t>>>
 {
 public:
