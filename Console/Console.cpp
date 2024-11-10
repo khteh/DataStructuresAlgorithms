@@ -2138,17 +2138,6 @@ int main(int argc, char *argv[])
 	arithmetic.NumberToVector(456, udata1);
 	arithmetic.NumberVectorsMultiplication(udata, udata1, cresult);
 	assert(arithmetic.DigitsVectorToNumber(cresult) == 56088);
-// vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1}
-#if 0
-	a.clear();
-	a = {1, 0, -1};
-	sortAlgorithm.CountingSort(a);
-	assert(ranges::is_sorted(a));
-	a.clear();
-	a = {2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1};
-	sortAlgorithm.CountingSort(a);
-	assert(ranges::is_sorted(a));
-#endif
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
