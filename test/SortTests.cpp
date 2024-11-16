@@ -353,35 +353,39 @@ TEST(SortTests, Merge2SortedListsTest)
 		if (it != a.begin())
 			ASSERT_LT(*(it - 1), *it);
 }
-TEST(SortTests, TopDownMergeSortCountConversionsTest)
+class TopDownMergeSortCountConversionsTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, vector<size_t>, size_t, size_t>>
 {
-	Sort<long> sort;
-	vector<long> a, b;
-	random_device device;
-	mt19937_64 engine(device());
-	uniform_int_distribution<long> uniformDistribution;
-	a = {1, 5, 3, 7};
-	b = a;
-	ASSERT_FALSE(ranges::is_sorted(a));
-	ASSERT_EQ(1, sort.TopDownMergeSortCountConversions(b, a, 0, a.size()));
-	ASSERT_TRUE(ranges::is_sorted(a));
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_data1 = get<2>(GetParam());
+		_start = get<3>(GetParam());
+		_end = get<4>(GetParam());
+	}
+	size_t TopDownMergeSortCountConversionsTest()
+	{
+		return _sort.TopDownMergeSortCountConversions(_data, _data1, _start, _end);
+	}
 
-	a.clear();
-	b.clear();
-	a = {7, 5, 3, 1};
-	b = a;
-	ASSERT_FALSE(ranges::is_sorted(a));
-	ASSERT_EQ(6, sort.TopDownMergeSortCountConversions(b, a, 0, a.size()));
-	ASSERT_TRUE(ranges::is_sorted(a));
-
-	a.clear();
-	b.clear();
-	a = {2, 1, 3, 1, 2};
-	b = a;
-	ASSERT_FALSE(ranges::is_sorted(a));
-	ASSERT_EQ(4, sort.TopDownMergeSortCountConversions(b, a, 0, a.size()));
-	ASSERT_TRUE(ranges::is_sorted(a));
+protected:
+	Sort<size_t> _sort;
+	size_t _expected, _start, _end;
+	vector<size_t> _data, _data1;
+};
+TEST_P(TopDownMergeSortCountConversionsTestFixture, TopDownMergeSortCountConversionsTests)
+{
+	ASSERT_EQ(this->_expected, this->TopDownMergeSortCountConversionsTest());
+	ASSERT_TRUE(ranges::is_sorted(this->_data1));
 }
+INSTANTIATE_TEST_SUITE_P(
+	TopDownMergeSortCountConversionsTests,
+	TopDownMergeSortCountConversionsTestFixture,
+	::testing::Values(make_tuple(1, vector<size_t>{1, 5, 3, 7}, vector<size_t>{1, 5, 3, 7}, 0, 4),
+					  make_tuple(6, vector<size_t>{7, 5, 3, 1}, vector<size_t>{7, 5, 3, 1}, 0, 4),
+					  make_tuple(4, vector<size_t>{2, 1, 3, 1, 2}, vector<size_t>{2, 1, 3, 1, 2}, 0, 5)));
+
 class SortSwapCountTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>>>
 {
 public:
@@ -405,12 +409,11 @@ TEST_P(SortSwapCountTestFixture, SortSwapCountTests)
 	ASSERT_EQ(this->_expected, this->SortSwapCountTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	SortTests,
+	SortSwapCountTests,
 	SortSwapCountTestFixture,
 	::testing::Values(make_tuple(2, vector<size_t>{2, 5, 3, 1}),
 					  make_tuple(2, vector<size_t>{3, 4, 2, 5, 1}),
 					  make_tuple(2, vector<size_t>{7, 15, 12, 3})));
-
 TEST(SortTests, DutchPartitioningTest)
 {
 	vector<long> data, data1;

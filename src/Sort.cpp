@@ -111,6 +111,7 @@ void Sort<T>::SelectionSort(vector<T> &data)
 /*
 https://www.hackerrank.com/challenges/insertionsort1/problem
 https://www.hackerrank.com/challenges/insertionsort2/problem
+https://www.hackerrank.com/challenges/runningtime/problem
 */
 template <typename T>
 void Sort<T>::InsertionSort(vector<T> &data)
