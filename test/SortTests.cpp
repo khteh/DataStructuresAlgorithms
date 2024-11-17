@@ -457,37 +457,37 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(vector<long>{-2, -2, -1, -1, 0, 0}, vector<long>{-1, 0, -2, -1, -2, 0}, -1),
 					  make_tuple(vector<long>{-2, -2, -1, 0, 0, -1}, vector<long>{-1, 0, -2, -1, -2, 0}, -2),
 					  make_tuple(vector<long>{0}, vector<long>{0}, 1), make_tuple(vector<long>{1}, vector<long>{1}, 1), make_tuple(vector<long>{2}, vector<long>{2}, 1)));
-
-TEST(SortTests, CanFinishCourseTopologicalSortTest)
+class CanFinishCourseTopologicalSortTestFixture : public testing::TestWithParam<tuple<vector<size_t>, size_t, vector<vector<size_t>>>>
 {
-	Sort<size_t> sort;
-	vector<vector<size_t>> grid = {{1, 0}};
-	vector<size_t> data, expected;
-	ASSERT_TRUE(sort.CanFinishCourseTopologicalSort(2, grid, data));
-	ASSERT_FALSE(data.empty());
-	ASSERT_EQ(2, data.size());
-	expected = {0, 1};
-	ASSERT_EQ(expected, data);
-	grid.clear();
-	data.clear();
-	grid = {{1, 0}, {0, 1}};
-	ASSERT_FALSE(sort.CanFinishCourseTopologicalSort(2, grid, data));
-	ASSERT_TRUE(data.empty());
-	grid.clear();
-	grid = {{1, 0}, {2, 0}};
-	data.clear();
-	ASSERT_TRUE(sort.CanFinishCourseTopologicalSort(3, grid, data));
-	ASSERT_FALSE(data.empty());
-	ASSERT_EQ(3, data.size());
-	expected = {0, 1, 2};
-	ASSERT_EQ(expected, data);
-	data.clear();
-	grid.push_back(vector<size_t>{0, 2}); // Add another dependency will fail the same requirement
-	ASSERT_FALSE(sort.CanFinishCourseTopologicalSort(3, grid, data));
-	ASSERT_TRUE(data.empty());
-	grid.clear();
-	data.clear();
-	grid = {{1, 0}, {0, 2}, {2, 1}};
-	ASSERT_FALSE(sort.CanFinishCourseTopologicalSort(3, grid, data));
-	ASSERT_TRUE(data.empty());
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_numCourses = get<1>(GetParam());
+		_courses = get<2>(GetParam()); // First element depends on second element in each row
+	}
+	vector<size_t> CanFinishCourseTopologicalSortTest()
+	{
+		vector<size_t> sequence;
+		_sort.CanFinishCourseTopologicalSort(_numCourses, _courses, sequence);
+		return sequence;
+	}
+
+protected:
+	Sort<size_t> _sort;
+	size_t _numCourses;
+	vector<vector<size_t>> _courses;
+	vector<size_t> _expected;
+};
+TEST_P(CanFinishCourseTopologicalSortTestFixture, CanFinishCourseTopologicalSortTests)
+{
+	ASSERT_EQ(this->_expected, this->CanFinishCourseTopologicalSortTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	CanFinishCourseTopologicalSortTests,
+	CanFinishCourseTopologicalSortTestFixture,
+	::testing::Values(make_tuple(vector<size_t>{0, 1}, 2, vector<vector<size_t>>{{1, 0}}),
+					  make_tuple(vector<size_t>{}, 2, vector<vector<size_t>>{{1, 0}, {0, 1}}),
+					  make_tuple(vector<size_t>{0, 1, 2}, 3, vector<vector<size_t>>{{1, 0}, {2, 0}}),
+					  make_tuple(vector<size_t>{}, 3, vector<vector<size_t>>{{1, 0}, {2, 0}, {0, 2}}),
+					  make_tuple(vector<size_t>{}, 3, vector<vector<size_t>>{{1, 0}, {0, 2}, {2, 1}})));
