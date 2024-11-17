@@ -161,58 +161,66 @@ INSTANTIATE_TEST_SUITE_P(
 	InsertionSortTests,
 	InsertionSortTestFixture,
 	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
-TEST(SortTests, TopDownMergeSortTest)
+class TopDownMergeSortTestFixture : public testing::TestWithParam<tuple<bool, vector<long>, vector<long>, size_t, size_t>>
 {
-	Sort<long> sort;
-	vector<long> a, b;
-	random_device device;
-	mt19937_64 engine(device());
-	uniform_int_distribution<long> uniformDistribution;
-	a = {1, 0, -1};
-	b = a;
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.TopDownMergeSort(b, a, 0, a.size());
-	ASSERT_TRUE(ranges::is_sorted(a));
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_data1 = get<2>(GetParam());
+		_start = get<3>(GetParam());
+		_end = get<4>(GetParam());
+	}
+	bool TopDownMergeSortTest()
+	{
+		_sort.TopDownMergeSort(_data, _data1, _start, _end);
+		return ranges::is_sorted(_data1);
+	}
 
-	a.clear();
-	a = {2, 1, 3, 1, 2};
-	b = a;
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.TopDownMergeSort(b, a, 0, a.size());
-	ASSERT_TRUE(ranges::is_sorted(a));
-
-	a.clear();
-	a.resize(100);
-	ranges::generate(a, [&]
-					 { return uniformDistribution(engine); });
-	b.clear();
-	b.assign(a.begin(), a.end());
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.TopDownMergeSort(b, a, 0, a.size());
-	ASSERT_TRUE(ranges::is_sorted(a));
-}
-TEST(SortTests, BottomUpMergeSortTest)
+protected:
+	Sort<long> _sort;
+	bool _expected;
+	vector<long> _data, _data1;
+	size_t _start, _end;
+};
+TEST_P(TopDownMergeSortTestFixture, TopDownMergeSortTests)
 {
-	Sort<long> sort;
-	vector<long> a, b;
-	random_device device;
-	mt19937_64 engine(device());
-	uniform_int_distribution<long> uniformDistribution;
-	a = {1, 0, -1};
-	b = a;
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.BottomUpMergeSort(a, b);
-	ASSERT_TRUE(ranges::is_sorted(a));
-	a.clear();
-	a.resize(100);
-	ranges::generate(a, [&]
-					 { return uniformDistribution(engine); });
-	b.clear();
-	b.assign(a.begin(), a.end());
-	ASSERT_FALSE(ranges::is_sorted(a));
-	sort.BottomUpMergeSort(a, b);
-	ASSERT_TRUE(ranges::is_sorted(a));
+	ASSERT_EQ(this->_expected, this->TopDownMergeSortTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	TopDownMergeSortTests,
+	TopDownMergeSortTestFixture,
+	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}, vector<long>{1, 0, -1}, 0, 3), make_tuple(true, vector<long>{2, 1, 3, 1, 2}, vector<long>{2, 1, 3, 1, 2}, 0, 5), make_tuple(true, vector<long>{5, 9, -1, 3, -3, 0}, vector<long>{6, -5, 8, -8, 7, -10}, 0, 6)));
+class BottomUpMergeSortTestFixture : public testing::TestWithParam<tuple<bool, vector<long>, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_data1 = get<2>(GetParam());
+	}
+	bool BottomUpMergeSortTest()
+	{
+		_sort.BottomUpMergeSort(_data, _data1);
+		return ranges::is_sorted(_data);
+	}
+
+protected:
+	Sort<long> _sort;
+	bool _expected;
+	vector<long> _data, _data1;
+};
+TEST_P(BottomUpMergeSortTestFixture, BottomUpMergeSortTests)
+{
+	ASSERT_EQ(this->_expected, this->BottomUpMergeSortTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	BottomUpMergeSortTests,
+	BottomUpMergeSortTestFixture,
+	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 1, 3, 1, 2}, vector<long>{2, 1, 3, 1, 2}), make_tuple(true, vector<long>{5, 9, -1, 3, -3, 0}, vector<long>{6, -5, 8, -8, 7, -10})));
+
 class HeapSortTestFixture : public SortTestFixture<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
 {
 public:
