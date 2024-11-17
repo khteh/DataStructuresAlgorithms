@@ -40,6 +40,7 @@ public:
 	void AlternateSignSortNumbers1(vector<T> &)
 		requires arithmetic_type<T>;
 	size_t SortSwapCount(vector<T> &);
+	void DutchPartitioning(vector<T> &, T);
 	bool CanFinishCourseTopologicalSort(size_t, vector<vector<T>> &, vector<T> &);
 	size_t TopDownMergeSortCountConversions(vector<T> &, vector<T> &, size_t, size_t);
 	static bool LexicographicSort(string, string);

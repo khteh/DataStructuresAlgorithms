@@ -414,77 +414,42 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(2, vector<size_t>{2, 5, 3, 1}),
 					  make_tuple(2, vector<size_t>{3, 4, 2, 5, 1}),
 					  make_tuple(2, vector<size_t>{7, 15, 12, 3})));
-TEST(SortTests, DutchPartitioningTest)
+class DutchPartitioningTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>, long>>
 {
-	vector<long> data, data1;
-	data = {2, 0, 2, 1, 1, 0};
-	data1 = {0, 0, 1, 1, 2, 2};
-	DutchPartitioning(data, 1);
-	ASSERT_EQ(data1, data);
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_mid = get<2>(GetParam());
+	}
+	vector<long> DutchPartitioningTest()
+	{
+		_sort.DutchPartitioning(_data, _mid);
+		return _data;
+	}
 
-	data.clear();
-	data1.clear();
-	data = {1, 0, 2, 1, 2, 0};
-	data1 = {0, 0, 1, 2, 2, 1};
-	DutchPartitioning(data, 0);
-	ASSERT_EQ(data1, data);
-
-	data.clear();
-	data1.clear();
-	data = {2, 0, 1, 2, 1, 0};
-	data1 = {0, 0, 2, 1, 1, 2};
-	DutchPartitioning(data, 0);
-	ASSERT_EQ(data1, data);
-
-	data.clear();
-	data1.clear();
-	data = {2, 0, 2, 1, 1, 0};
-	data1 = {0, 1, 1, 0, 2, 2};
-	DutchPartitioning(data, 2);
-	ASSERT_EQ(data1, data);
-
-	data.clear();
-	data1.clear();
-	data = {-1, 0, -2, -1, -2, 0};
-	data1 = {-1, -2, -1, -2, 0, 0};
-	DutchPartitioning(data, 0);
-	ASSERT_EQ(data1, data);
-
-	data.clear();
-	data1.clear();
-	data = {-1, 0, -2, -1, -2, 0};
-	data1 = {-2, -2, -1, -1, 0, 0};
-	DutchPartitioning(data, -1);
-	ASSERT_EQ(data1, data);
-
-	data.clear();
-	data1.clear();
-	data = {-1, 0, -2, -1, -2, 0};
-	data1 = {-2, -2, -1, 0, 0, -1};
-	DutchPartitioning(data, -2);
-	ASSERT_EQ(data1, data);
-
-	data.clear();
-	data1.clear();
-	data = {0};
-	data1 = data;
-	DutchPartitioning(data, 1);
-	ASSERT_EQ(data1, data);
-
-	data.clear();
-	data1.clear();
-	data = {1};
-	data1 = data;
-	DutchPartitioning(data, 1);
-	ASSERT_EQ(data1, data);
-
-	data.clear();
-	data1.clear();
-	data = {2};
-	data1 = data;
-	DutchPartitioning(data, 1);
-	ASSERT_EQ(data1, data);
+protected:
+	Sort<long> _sort;
+	vector<long> _expected, _data;
+	long _mid;
+};
+TEST_P(DutchPartitioningTestFixture, DutchPartitioningTests)
+{
+	ASSERT_EQ(this->_expected, this->DutchPartitioningTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	DutchPartitioningTests,
+	DutchPartitioningTestFixture,
+	::testing::Values(make_tuple(vector<long>{0, 0, 1, 1, 2, 2}, vector<long>{2, 0, 2, 1, 1, 0}, 1),
+					  make_tuple(vector<long>{0, 0, 1, 2, 2, 1}, vector<long>{1, 0, 2, 1, 2, 0}, 0),
+					  make_tuple(vector<long>{0, 0, 2, 1, 1, 2}, vector<long>{2, 0, 1, 2, 1, 0}, 0),
+					  make_tuple(vector<long>{0, 1, 1, 0, 2, 2}, vector<long>{2, 0, 2, 1, 1, 0}, 2),
+					  make_tuple(vector<long>{-1, -2, -1, -2, 0, 0}, vector<long>{-1, 0, -2, -1, -2, 0}, 0),
+					  make_tuple(vector<long>{-2, -2, -1, -1, 0, 0}, vector<long>{-1, 0, -2, -1, -2, 0}, -1),
+					  make_tuple(vector<long>{-2, -2, -1, 0, 0, -1}, vector<long>{-1, 0, -2, -1, -2, 0}, -2),
+					  make_tuple(vector<long>{0}, vector<long>{0}, 1), make_tuple(vector<long>{1}, vector<long>{1}, 1), make_tuple(vector<long>{2}, vector<long>{2}, 1)));
+
 TEST(SortTests, CanFinishCourseTopologicalSortTest)
 {
 	Sort<size_t> sort;

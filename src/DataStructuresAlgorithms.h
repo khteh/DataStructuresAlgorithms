@@ -253,7 +253,6 @@ void MinHeapifyDown(vector<long> &, size_t);
 void MaxHeapifyDown(vector<long> &, size_t);
 long countInversions(vector<long> &);
 size_t MergeCountInversions(vector<long> &, vector<long> &, size_t, size_t, size_t);
-void DutchPartitioning(vector<long> &, long);
 long **my2DAlloc(long, long);
 long ***my3DAlloc(long, long, long);
 void shuffleCards(vector<long> &);

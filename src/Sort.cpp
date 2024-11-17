@@ -447,6 +447,59 @@ size_t Sort<T>::SortSwapCount(vector<T> &data)
 	}
 	return min(result, resultDescend);
 }
+/* https://en.wikipedia.org/wiki/Dutch_national_flag_problem
+* https://leetcode.com/problems/sort-colors/
+* 100%
+* Entries from 0 up to (but NOT including) i are values less than mid,
+* entries from i up to (but NOT including) j are values equal to mid,
+* entries from j up to (and including) k are values not yet sorted, and
+* entries from k + 1 to the end of the array are values greater than mid.
+0  i   j   k  n-1
+<mid mid ??? >mid
+
+2 1 0 1 2 0 1 2
+i,j           k (>mid)
+
+2 1 0 1 2 0 1 2
+i,j         k   (>mid)
+
+1 1 0 1 2 0 2 2
+i,j       k     (==mid)
+
+1 1 0 1 2 0 2 2
+i j       k    (==mid)
+
+1 1 0 1 2 0 2 2
+i   j     k    (<mid)
+
+0 1 1 1 2 0 2 2
+  i   j   k    (==mid)
+
+0 1 1 1 2 0 2 2
+  i     j k    (>mid)
+
+0 1 1 1 0 2 2 2
+  i     j,k    (>mid)
+
+0 1 1 1 0 2 2 2
+  i     j,k    (<mid)
+
+0 0 1 1 1 2 2 2
+	i   k j		<= j > k base case
+*/
+template <typename T>
+void Sort<T>::DutchPartitioning(vector<T> &data, T mid)
+{
+	for (int i = 0, j = 0, k = data.size() - 1; !data.empty() && j <= k;)
+	{
+		if (data[j] < mid)
+			swap(data[i++], data[j++]);
+		else if (data[j] > mid)
+			swap(data[j], data[k--]);
+		else // if (data[j] == mid)
+			j++;
+	}
+}
 /* https://leetcode.com/problems/course-schedule/
  * https://en.wikipedia.org/wiki/Topological_sorting
  * Use Kahn's algorithm

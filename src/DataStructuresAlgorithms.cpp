@@ -1183,58 +1183,6 @@ void Merge(vector<long> &dest, vector<long> &source)
 	while (j >= 0)
 		dest[k--] = source[j--];
 }
-/* https://en.wikipedia.org/wiki/Dutch_national_flag_problem
-* https://leetcode.com/problems/sort-colors/
-* 100%
-* Entries from 0 up to (but NOT including) i are values less than mid,
-* entries from i up to (but NOT including) j are values equal to mid,
-* entries from j up to (and including) k are values not yet sorted, and
-* entries from k + 1 to the end of the array are values greater than mid.
-0  i   j   k  n-1
-<mid mid ??? >mid
-
-2 1 0 1 2 0 1 2
-i,j           k (>mid)
-
-2 1 0 1 2 0 1 2
-i,j         k   (>mid)
-
-1 1 0 1 2 0 2 2
-i,j       k     (==mid)
-
-1 1 0 1 2 0 2 2
-i j       k    (==mid)
-
-1 1 0 1 2 0 2 2
-i   j     k    (<mid)
-
-0 1 1 1 2 0 2 2
-  i   j   k    (==mid)
-
-0 1 1 1 2 0 2 2
-  i     j k    (>mid)
-
-0 1 1 1 0 2 2 2
-  i     j,k    (>mid)
-
-0 1 1 1 0 2 2 2
-  i     j,k    (<mid)
-
-0 0 1 1 1 2 2 2
-	i   k j		<= j > k base case
-*/
-void DutchPartitioning(vector<long> &data, long mid)
-{
-	for (int i = 0, j = 0, k = data.size() - 1; !data.empty() && j <= k;)
-	{
-		if (data[j] < mid)
-			swap(data[i++], data[j++]);
-		else if (data[j] > mid)
-			swap(data[j], data[k--]);
-		else // if (data[j] == mid)
-			j++;
-	}
-}
 /* http://www.cplusplus.com/reference/cstdlib/rand/
  * A typical way to generate trivial pseudo-random numbers in a determined range using rand is to use
  * the modulo of the returned value by the range span and add the initial value of the range:
