@@ -290,7 +290,8 @@ TEST_P(BoundedKnapsackCombinationSumTestFixture, BoundedKnapsackCombinationSumTe
 INSTANTIATE_TEST_SUITE_P(
 	BoundedKnapsackCombinationSumTests,
 	BoundedKnapsackCombinationSumTestFixture,
-	::testing::Values(make_tuple(set<vector<size_t>>{{1, 2, 4}}, 3, 7, 10), make_tuple(set<vector<size_t>>{{1, 2, 6}, {1, 3, 5}, {2, 3, 4}}, 3, 9, 10), make_tuple(set<vector<size_t>>{}, 4, 1, 10), make_tuple(set<vector<size_t>>{}, 3, 2, 10), make_tuple(set<vector<size_t>>{{1, 2, 3, 4, 5, 6, 7, 8, 9}}, 9, 45, 10)));
+	::testing::Values(make_tuple(set<vector<size_t>>{{1, 2, 4}}, 3, 7, 10), make_tuple(set<vector<size_t>>{{1, 2, 6}, {1, 3, 5}, {2, 3, 4}}, 3, 9, 10), make_tuple(set<vector<size_t>>{}, 4, 1, 10), make_tuple(set<vector<size_t>>{}, 3, 2, 10),
+					  make_tuple(set<vector<size_t>>{{1, 2, 3, 4, 5, 6, 7, 8, 9}}, 9, 45, 10)));
 class BoundedCombinationSumWithMaxElementTestFixture : public testing::TestWithParam<tuple<set<vector<size_t>>, size_t, size_t, size_t>>
 {
 public:

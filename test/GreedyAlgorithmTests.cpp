@@ -32,7 +32,7 @@ INSTANTIATE_TEST_SUITE_P(
 	MaxNonOverlappingSegmentsTestFixture,
 	::testing::Values(make_tuple(3, vector<size_t>{1, 3, 7, 9, 9}, vector<size_t>{5, 6, 8, 9, 10}),
 					  make_tuple(5, vector<size_t>{1, 6, 7, 9, 10}, vector<size_t>{5, 6, 8, 9, 10}),
-					  make_tuple(2, vector<size_t>{1, 2, 3, 4, 5, 6}, vector<size_t>{5, 6, 7, 8, 9, 10})));
+					  make_tuple(2, ranges::iota_view(1, 7) | ranges::to<vector<size_t>>(), ranges::iota_view(5, 11) | ranges::to<vector<size_t>>())));
 class TieRopesTestTestFixture : public GreedyAlgorithmFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
 public:
@@ -123,7 +123,7 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(2, vector<size_t>{1, 1, 5}),
 					  make_tuple(2, vector<size_t>{2, 2, 3, 7}),
 					  make_tuple(3, vector<size_t>{10, 7, 12}),
-					  make_tuple(4, vector<size_t>{1, 2, 3, 4}),
+					  make_tuple(4, ranges::iota_view(1, 5) | ranges::to<vector<size_t>>()),
 					  make_tuple(8, vector<size_t>{1, 3, 5, 7, 9}),
 					  make_tuple(927, vector<size_t>{851, 183, 48, 473, 610, 678, 725, 87, 95, 50, 311, 258, 854}),
 					  make_tuple(1123, vector<size_t>{249, 666, 500, 101, 227, 85, 963, 681, 331, 119, 448, 587, 668, 398, 802}),

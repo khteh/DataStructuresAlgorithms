@@ -307,7 +307,7 @@ TEST(BinaryTreeTests, BinaryTreeTraversalConstructionsTest)
 
 	a.clear();
 	b.clear();
-	a = {1, 2, 3, 4};
+	a = ranges::iota_view(1, 5) | ranges::to<vector<long>>();
 	b = {4, 3, 1, 2};
 	/*
 	*      4
@@ -353,7 +353,7 @@ TEST(BinaryTreeTests, BinaryTreeTraversalConstructionsTest)
 
 	a.clear();
 	b.clear();
-	a = {1, 2, 3, 4};
+	a = ranges::iota_view(1, 5) | ranges::to<vector<long>>();
 	b = {2, 1, 3, 4};
 	/*
 	*      4

@@ -49,25 +49,13 @@ TEST_P(SumPairsTestFixture, SumPairsTests)
 {
 	ASSERT_EQ(this->_expected, this->SumPairsTest());
 }
+
 INSTANTIATE_TEST_SUITE_P(
 	SumPairsTests,
 	SumPairsTestFixture,
-#if 1
 	::testing::Values(make_tuple(2, 8, vector<size_t>{1, 2, 3, 4, 5, 6, 5}),
 					  make_tuple(3, 12, vector<size_t>{5, 7, 9, 13, 11, 6, 6, 3, 3}),
-					  make_tuple(4, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}))
-#else
-	::testing::Combine(
-		::testing::Values(make_tuple(2, 8, vector<size_t>{1, 2, 3, 4, 5, 6, 5}),
-						  make_tuple(3, 12, vector<size_t>{5, 7, 9, 13, 11, 6, 6, 3, 3}),
-						  // make_tuple(4, 10, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
-						  ::testing::ValuesIn([]() -> generator<size_t>
-											  {
-	co_yield 4;
-	co_yield 10;
-	co_yield ranges::elements_of(ranges::iota_view(0, 10)); }())))
-#endif
-);
+					  make_tuple(4, 10, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>())));
 class SumPairsIndicesTestFixture : public RangeTestFixture2<vector<size_t>, size_t, size_t>, public testing::TestWithParam<tuple<vector<size_t>, size_t, vector<size_t>>>
 {
 public:
@@ -198,7 +186,7 @@ TEST_P(StockMaxProfit1TestFixture, StockMaxProfit1Tests)
 INSTANTIATE_TEST_SUITE_P(
 	StockMaxProfit1Tests,
 	StockMaxProfit1TestFixture,
-	::testing::Values(make_tuple(7, vector<long>{7, 1, 5, 3, 6, 4}), make_tuple(4, vector<long>{1, 2, 3, 4, 5}), make_tuple(0, vector<long>{5, 4, 3, 2, 1}),
+	::testing::Values(make_tuple(7, vector<long>{7, 1, 5, 3, 6, 4}), make_tuple(4, ranges::iota_view(1, 6) | ranges::to<vector<long>>()), make_tuple(0, vector<long>{5, 4, 3, 2, 1}),
 					  make_tuple(1, vector<long>{1, 2}), make_tuple(0, vector<long>{1, 1})));
 
 class SherlockAndCostTestFixture : public RangeTestFixture1<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
@@ -338,7 +326,7 @@ TEST_P(MaxNonDivisableSubsetTestFixture, MaxNonDivisableSubsetTests)
 INSTANTIATE_TEST_SUITE_P(
 	MaxNonDivisableSubsetTests,
 	MaxNonDivisableSubsetTestFixture,
-	::testing::Values(make_tuple(3, 3, vector<size_t>{1, 2, 3, 4, 5, 6}),
+	::testing::Values(make_tuple(3, 3, ranges::iota_view(1, 7) | ranges::to<vector<size_t>>()),
 					  make_tuple(8, 6, vector<size_t>{12, 6, 1, 9, 13, 15, 10, 21, 14, 32, 5, 8, 23, 19}),
 					  make_tuple(3, 3, vector<size_t>{1, 7, 2, 4})));
 class HackerlandRadioTransmittersTestFixture : public RangeTestFixture2<size_t, long, size_t>, public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
@@ -361,7 +349,7 @@ INSTANTIATE_TEST_SUITE_P(
 	HackerlandRadioTransmittersTests,
 	HackerlandRadioTransmittersTestFixture,
 	::testing::Values(make_tuple(3, 1, vector<size_t>{1, 2, 3, 5, 9}),
-					  make_tuple(2, 1, vector<size_t>{1, 2, 3, 4, 5}),
+					  make_tuple(2, 1, ranges::iota_view(1, 6) | ranges::to<vector<size_t>>()),
 					  make_tuple(3, 2, vector<size_t>{7, 2, 4, 6, 5, 9, 12, 11}),
 					  make_tuple(4, 2, vector<size_t>{9, 5, 4, 2, 6, 15, 12})));
 class MinEnergyInstallationsTestFixture : public RangeTestFixture2<long, long, size_t>, public testing::TestWithParam<tuple<long, long, vector<size_t>>>
@@ -575,8 +563,8 @@ TEST_P(GreaterThanSumPairsTestFixture, GreaterThanSumPairsTests)
 INSTANTIATE_TEST_SUITE_P(
 	GreaterThanSumPairsTests,
 	GreaterThanSumPairsTestFixture,
-	::testing::Values(make_tuple(35, 8, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}),
-					  make_tuple(45, 8, vector<size_t>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})));
+	::testing::Values(make_tuple(35, 8, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>()),
+					  make_tuple(45, 8, ranges::iota_view(0, 11) | ranges::to<vector<size_t>>())));
 
 class TripletsZeroSumTestFixture : public testing::TestWithParam<tuple<vector<vector<long>>, vector<long>>>
 {
@@ -971,4 +959,4 @@ TEST_P(LiveMedianCalculationTestFixture, LiveMedianCalculationTests)
 INSTANTIATE_TEST_SUITE_P(
 	LiveMedianCalculationTests,
 	LiveMedianCalculationTestFixture,
-	::testing::Values(make_tuple(1, 3, vector<size_t>{10, 20, 30, 40, 50}), make_tuple(2, 5, vector<size_t>{2, 3, 4, 2, 3, 6, 8, 4, 5}), make_tuple(0, 4, vector<size_t>{1, 2, 3, 4, 4})));
+	::testing::Values(make_tuple(1, 3, vector<size_t>{10, 20, 30, 40, 50}), make_tuple(2, 5, vector<size_t>{2, 3, 4, 2, 3, 6, 8, 4, 5}), make_tuple(0, 4, ranges::iota_view(1, 5) | ranges::to<vector<size_t>>())));
