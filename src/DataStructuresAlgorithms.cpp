@@ -945,7 +945,7 @@ long LongestValidParenthesesWithFixes(string const &str, size_t k)
 				size--; // remove -1
 						// if (list[0] != 0) {
 			result = !(size % 2) ? size : size - 1;
-			if ((list[0] == 0 && (long)k > (result / 2)) || (list[0] != 0 && (long)k >= (result / 2)))
+			if ((list[0] == 0 && (long)k > (result / 2)) || (list[0] && (long)k >= (result / 2)))
 				result = min((long)(k * 2), result);
 			else
 				result = 0;
@@ -4073,29 +4073,36 @@ string TimeInWords(size_t h, size_t m)
  * Number of times each integers occur in the quadruple is same.
  * For example  and  should be considered as same.
  */
-size_t BeautifulQuadruples(long a, long b, long c, long d)
+size_t BeautifulQuadruples(size_t a, size_t b, size_t c, size_t d)
 {
 	/*
 		if a^b^c^d = 0 then a^b = c^d, therefore sort values to avoid duplications
 	*/
-	vector<long> abcd{a, b, c, d};
+	vector<size_t> abcd{a, b, c, d};
 	ranges::sort(abcd);
-	set<multiset<long>> quadruples;
-	for (long i = 1; i <= abcd[0]; i++)
-		for (long j = 1; j <= abcd[1]; j++)
-			for (long k = 1; k <= abcd[2]; k++)
-				for (long l = 1; l <= abcd[3]; l++)
-					if ((i ^ j ^ k ^ l) != 0)
-						quadruples.emplace(multiset<long>{i, j, k, l});
+	set<multiset<size_t>> quadruples;
+	for (size_t i = 1; i <= abcd[0]; i++)
+		for (size_t j = 1; j <= abcd[1]; j++)
+			for (size_t k = 1; k <= abcd[2]; k++)
+				for (size_t l = 1; l <= abcd[3]; l++)
+					if ((i ^ j ^ k ^ l))
+						quadruples.emplace(multiset<size_t>{i, j, k, l});
 	return quadruples.size();
 }
-size_t BeautifulQuadruples1(long a, long b, long c, long d)
+size_t BeautifulQuadruples1(size_t a, size_t b, size_t c, size_t d)
 {
 	/*
 		if a^b^c^d = 0 then a^b = c^d, therefore sort values to avoid duplications
 	*/
-	vector<long> abcd{a, b, c, d};
+	vector<size_t> abcd{a, b, c, d};
 	ranges::sort(abcd);
+	vector<vector<size_t>> cnt(numeric_limits<size_t>::max(), vector<size_t>(numeric_limits<size_t>::max(), 0));
+	for (size_t i = 1; i <= abcd[2]; i++)
+		for (size_t j = i; j <= abcd[3]; j++)
+			cnt[i][i ^ j]++;
+	size_t result = 0;
+	// for (size_t i = 1; i <= abcd[0]; i++)
+	//	for (size_t j = i; j <= abcd[1]; j++)
 	return 0;
 }
 /* https://www.hackerrank.com/challenges/red-knights-shortest-path/problem

@@ -17,7 +17,7 @@ T Arithmetic<T>::ToggleSign(T a)
 	requires arithmetic_type<T>
 {
 	T i, d = a < 0 ? 1 : -1;
-	for (i = 0; a != 0; i += d, a += d)
+	for (i = 0; a; i += d, a += d)
 		;
 	return i;
 }

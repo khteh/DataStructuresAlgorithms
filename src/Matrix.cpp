@@ -524,10 +524,10 @@ T Matrix<T>::SurfaceArea3D(vector<vector<T>> const &data)
 			if (i == data.size() - 1)
 			{ // End X-Axis border
 				xArea += data[i][j];
-				if (i != 0)
+				if (i)
 					xArea += abs((long)(data[i][j] - data[i - 1][j]));
 			}
-			if (i != 0 && i != data.size() - 1)
+			if (i && i != data.size() - 1)
 				xArea += abs((long)(data[i][j] - data[i - 1][j]));
 			// Y-Axis : Front/Back views
 			if (j == 0) // Start Y-Axis border
@@ -535,10 +535,10 @@ T Matrix<T>::SurfaceArea3D(vector<vector<T>> const &data)
 			if (j == data[i].size() - 1)
 			{ // End Y-Axis border
 				yArea += data[i][j];
-				if (j != 0)
+				if (j)
 					yArea += abs((long)(data[i][j] - data[i][j - 1]));
 			}
-			if (j != 0 && j != data[i].size() - 1)
+			if (j && j != data[i].size() - 1)
 				yArea += abs((long)(data[i][j] - data[i][j - 1]));
 		}
 	}

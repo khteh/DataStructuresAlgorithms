@@ -95,7 +95,7 @@ void Graph<TTag, TItem>::AddUndirectedEdge(TTag from, TTag to, long cost)
 template <typename TTag, typename TItem>
 bool Graph<TTag, TItem>::HasVertex(TTag tag) const
 {
-	return _vertices.count(tag) != 0;
+	return _vertices.count(tag);
 }
 template <typename TTag, typename TItem>
 shared_ptr<Vertex<TTag, TItem>> Graph<TTag, TItem>::GetVertex(TTag tag)

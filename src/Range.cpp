@@ -1059,7 +1059,7 @@ string Range::AlmostSorted(vector<long> const &arr)
 													{ return i > 0; });
 				size_t negatives = ranges::count_if(diff, [](long i)
 													{ return i < 0; });
-				if (diff[index] + diff[0] != 0)
+				if (diff[index] + diff[0])
 					return "no";
 				else if (positives == 1 && negatives == 1)
 				{

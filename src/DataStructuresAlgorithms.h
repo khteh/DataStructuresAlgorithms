@@ -325,7 +325,7 @@ string encryption(string &);
 vector<size_t> ClimbLeaderBoard(vector<long> &, vector<long> &);
 long CalculateMedian(vector<long> &);
 string TimeInWords(size_t, size_t);
-size_t BeautifulQuadruples(long, long, long, long);
+size_t BeautifulQuadruples(size_t, size_t, size_t, size_t);
 long kruskals(int, vector<long> &, vector<long> &, vector<long> &);
 long getLowestPathCost(size_t g_nodes, vector<long> &, vector<long> &, vector<long> &);
 size_t PostmanProblem(vector<size_t> &, vector<vector<size_t>> &);

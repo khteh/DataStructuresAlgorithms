@@ -91,7 +91,7 @@ bool Vertex<TTag, TItem>::HasNeighbour(TTag tag, TItem item) const
 template <typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::HasNeighbour(shared_ptr<Vertex<TTag, TItem>> v) const
 {
-	return _neighbours.count(v) != 0;
+	return _neighbours.count(v);
 }
 template <typename TTag, typename TItem>
 size_t Vertex<TTag, TItem>::NeighbourCount() const
