@@ -117,12 +117,12 @@ vector<T> Permutation<T>::AbsolutePermutation(size_t n, size_t k)
     set<T> exists;
     for (size_t i = 1; i <= n; i++)
     {
-        if (i > k && exists.find(i - k) == exists.end())
+        if (i > k && !exists.count(i - k))
         {
             a.push_back(i - k);
             exists.insert(i - k);
         }
-        else if (exists.find(i + k) == exists.end())
+        else if (!exists.count(i + k))
         {
             a.push_back(i + k);
             exists.insert(i + k);
@@ -142,7 +142,7 @@ template <typename T>
 bool Permutation<T>::PermutationGame(const vector<T> numbers)
     requires integral_type<T>
 {
-    if (_permutationGameWinningNumbersCache.find(numbers) != _permutationGameWinningNumbersCache.end())
+    if (_permutationGameWinningNumbersCache.count(numbers))
         return true;
     /*
         Sequence increases after opponent's turn. Current player loses.

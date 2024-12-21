@@ -295,7 +295,7 @@ public:
 					oss1 << i << "-" << j;
 					oss2 << j << "-" << i;
 					m.lock();
-					if (computed.find(oss1.str()) == computed.end() && computed.find(oss2.str()) == computed.end())
+					if (!computed.count(oss1.str()) && !computed.count(oss2.str()))
 					{
 						computed.emplace(oss1.str());
 						computed.emplace(oss2.str());
@@ -408,7 +408,7 @@ public:
 					ostringstream oss1, oss2;
 					oss1 << i << "-" << j;
 					oss2 << j << "-" << i;
-					if (computed.find(oss1.str()) == computed.end() && computed.find(oss2.str()) == computed.end())
+					if (!computed.count(oss1.str()) && !computed.count(oss2.str()))
 					{
 						computed.emplace(oss1.str());
 						computed.emplace(oss2.str());
@@ -523,7 +523,7 @@ public:
 					oss1 << i << "-" << j;
 					oss2 << j << "-" << i;
 					m.lock();
-					if (computed.find(oss1.str()) == computed.end() && computed.find(oss2.str()) == computed.end())
+					if (!computed.count(oss1.str()) && !computed.count(oss2.str()))
 					{
 						computed.emplace(oss1.str());
 						computed.emplace(oss2.str());

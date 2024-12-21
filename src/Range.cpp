@@ -383,7 +383,7 @@ long Range::LongestNonNegativeSumSlice(vector<long> const &data)
 			max_len = i + 1;
 		else if (data[i] >= 0 && max_len == 0)
 			max_len = 1;
-		if (sums.find(sum) != sums.end())
+		if (sums.count(sum))
 			max_len = max(max_len, i - sums[sum]);
 		else
 			sums.emplace(sum, i);
@@ -409,7 +409,7 @@ size_t Range::LongestUpDownAlternatingSubSequence(vector<long> const &data, vect
 			else
 			{
 				direction = Direction::NoChange;
-				if (sequences.find(index - start) == sequences.end())
+				if (!sequences.count(index - start))
 				{
 					vector<long> tmp(data.begin() + start, it);
 					sequences.emplace(index - start, tmp);
@@ -438,7 +438,7 @@ size_t Range::SumPairs(size_t sum, vector<size_t> const &data)
 	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
 		diff = sum - *it;
-		if (pairs.find(diff) != pairs.end() && duplicates.find(diff) == duplicates.end())
+		if (pairs.count(diff) && !duplicates.count(diff))
 		{
 			count++;
 			duplicates.emplace(diff);
@@ -460,7 +460,7 @@ void Range::SumPairs(size_t sum, vector<size_t> const &data, vector<size_t> &res
 	for (size_t i = 0; i < data.size(); i++)
 	{
 		diff = sum - data[i];
-		if (pairs.find(diff) != pairs.end() && duplicates.find(diff) == duplicates.end())
+		if (pairs.count(diff) && !duplicates.count(diff))
 		{
 			result.push_back(pairs[diff]);
 			result.push_back(i);
@@ -470,6 +470,9 @@ void Range::SumPairs(size_t sum, vector<size_t> const &data, vector<size_t> &res
 			pairs.emplace(data[i], i);
 	}
 }
+/*
+https://www.geeksforgeeks.org/maximum-value-pair-array/
+*/
 size_t Range::MaxAndPair(vector<size_t> const &data)
 {
 	size_t result = 0, pattern = 0;
@@ -486,6 +489,63 @@ size_t Range::MaxAndPair(vector<size_t> const &data)
 	}
 	return result;
 }
+/*
+https://www.geeksforgeeks.org/maximum-xor-of-two-numbers-in-an-array/
+n: [1, 2, 3, 4, 5, 6, 7]
+mask: 0x100
+prefixes: 0, 0x100
+newMax: 0x100
+   newMax ^ prefix: 0x100 ^ 0 = 0x100 => maxx = 0x100
+
+mask: 0x110
+prefixes: 0, 0x10, 0x100, 0x110
+newMax: 0x110
+   newMax ^ prefix: 0x110 ^ 0 = 0x110 => maxx = 0x110 <= (0x100 ^ 0x010 = 0x110)
+
+mask: 0x111
+prefixes: [1,2,3,4,5,6,7]
+newMax: 0x111
+   newMax ^ prefix: 0x111 ^ 1 = 0x110 => maxx = 0x111 <= (0x100 ^ 0x010 = 0x110)
+
+
+n: [1, 2, 3, 4]
+mask: 0x100
+prefixes: 0, 0x100
+newMax: 0x100
+   newMax ^ prefix: 0x100 ^ 0 = 0x100 => maxx = 0x100
+
+mask: 0x110
+prefixes: 0, 0x10, 0x100
+newMax: 0x110
+   newMax ^ prefix: 0x110 ^ 0 = 0x110 => max = 0x110 <= (0x100 ^ 0x010 = 0x110)
+
+mask: 0x111
+prefixes: [1,2,3,4] [001, 010, 011, 100]
+newMax: 0x111
+   newMax ^ prefix: 0x111 ^ 1 = 0x110 => maxx = 0x111 <= (0x100 ^ 0x010 = 0x110)
+*/
+size_t Range::MaxXorPair(vector<size_t> const &data)
+{
+	size_t mask = 0, result = 0;
+	size_t msb = 1 << BitCount(*ranges::max_element(data)) - 1;
+	set<size_t> prefixes;
+	for (; msb > 0; msb >>= 1)
+	{
+		mask |= msb;
+		prefixes.clear();
+		for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
+			prefixes.emplace(*it & mask);
+		size_t maxx = result | mask;
+		for (set<size_t>::const_iterator it = prefixes.begin(); it != prefixes.end(); it++)
+			if (prefixes.count(*it ^ maxx))
+			{
+				result = maxx;
+				break;
+			}
+	}
+	return result;
+}
+
 /* 0 1 2 3 4 5 6 7 8 9
  *         ^ (10 / 2 - 1)
  * (0,9), (0,8)	2
@@ -597,7 +657,7 @@ size_t Range::NumberDiffPairs(long diff, vector<long> const &numbers)
 	for (vector<long>::const_iterator it = numbers.begin(); it != numbers.end(); it++)
 	{
 		tmp = *it + diff;
-		if (pairs.find(tmp) != pairs.end())
+		if (pairs.count(tmp))
 			count++;
 	}
 	return count;
@@ -1134,7 +1194,7 @@ size_t Range::HackerlandRadioTransmitters(vector<size_t> &data, long k)
 	for (vector<size_t>::const_iterator it = data.begin(); it != data.end();)
 	{
 		size_t center = *it + k;
-		for (; dataset.find(center) == dataset.end(); center--)
+		for (; !dataset.count(center); center--)
 			;
 		installations.push_back(center);
 		for (size_t end = center + k; it != data.end() && *it <= end; it++)

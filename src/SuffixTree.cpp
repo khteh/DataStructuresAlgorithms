@@ -22,7 +22,7 @@ void splitString(size_t count, const string &s, char delim, set<string> &elems, 
 		{
 			pair<map<string, size_t>::iterator, bool> result = stringCounts.emplace(item, count);
 			if (!result.second)
-				stringCounts[item] += handled.find(item) == handled.end() ? count : 1;
+				stringCounts[item] += !handled.count(item) ? count : 1;
 			elems.insert(item);
 			handled.insert(item);
 		}
@@ -207,14 +207,14 @@ void SuffixTreeNode::InsertString(string const &str, size_t index)
 	m_indices.insert(index);
 	if (!str.empty())
 	{
-		if (m_children.find(str[0]) == m_children.end())
+		if (!m_children.count(str[0]))
 			m_children.emplace(str[0], make_unique<SuffixTreeNode>(str[0]));
 		m_children[str[0]]->InsertString(str.substr(1), index);
 	}
 }
 void SuffixTreeNode::RemoveString(string const &str)
 {
-	if (!str.empty() && m_children.find(str[0]) != m_children.end())
+	if (!str.empty() && m_children.count(str[0]))
 	{
 		m_children[str[0]]->RemoveString(str.substr(1));
 		m_children.erase(str[0]);
@@ -230,7 +230,7 @@ const set<size_t> SuffixTreeNode::GetIndexes(string const &str)
 	set<size_t> result;
 	if (str.empty())
 		result = m_indices; // End of search string. Return indexes of this node.
-	else if (m_children.find(str[0]) != m_children.end())
+	else if (m_children.count(str[0]))
 		result = m_children[str[0]]->GetIndexes(str.substr(1));
 	return result;
 }
@@ -283,7 +283,7 @@ const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
 			if (m_char != '\0' && indices.size() > it1->first.size())
 			{
 				for (vector<size_t>::iterator it = indexList.begin(); it != indexList.end(); it++)
-					if (m_indices.find(*it) != m_indices.end())
+					if (m_indices.count(*it))
 						isSamePath = true;
 					else
 					{

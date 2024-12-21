@@ -248,12 +248,12 @@ shared_ptr<Node<T>> Tree<T>::AddToTree(vector<T> &v)
 	{
 		if (v[i] != numeric_limits<T>::min())
 		{
-			if (nodes.find(i) == nodes.end())
+			if (!nodes.count(i))
 				nodes.emplace(i, make_shared<Node<T>>(v[i]));
 			long left = 2 * i + 1;
 			if (v[left] != numeric_limits<T>::min())
 			{
-				if (nodes.find(left) == nodes.end())
+				if (!nodes.count(left))
 					nodes.emplace(left, make_shared<Node<T>>(v[left]));
 				nodes[i]->SetLeft(nodes[left]);
 				nodes[left]->SetNext(nodes[i]);
@@ -263,7 +263,7 @@ shared_ptr<Node<T>> Tree<T>::AddToTree(vector<T> &v)
 			{
 				if (v[right] != numeric_limits<T>::min())
 				{
-					if (nodes.find(right) == nodes.end())
+					if (!nodes.count(right))
 						nodes.emplace(right, make_shared<Node<T>>(v[right]));
 					nodes[i]->SetRight(nodes[right]);
 					nodes[right]->SetNext(nodes[i]);
@@ -295,7 +295,7 @@ shared_ptr<Node<T>> Tree<T>::Copy(const shared_ptr<Node<T>> &node, map<shared_pt
 {
 	if (node)
 	{
-		if (copied.find(node) != copied.end())
+		if (copied.count(node))
 			return copied[node];
 		shared_ptr<Node<T>> n = make_shared<Node<T>>(node);
 		copied.emplace(node, n); // Map original tree node to new tree node
@@ -767,7 +767,7 @@ void Tree<T>::PrintTreeColumns()
 template <typename T>
 void Tree<T>::AddToColumn(T value, long column, map<long, shared_ptr<vector<T>>> &columns)
 {
-	if (columns.find(column) == columns.end())
+	if (!columns.count(column))
 	{
 		shared_ptr<vector<T>> list = make_shared<vector<T>>();
 		list->push_back(value);

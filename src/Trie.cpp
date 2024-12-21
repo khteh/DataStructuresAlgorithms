@@ -134,14 +134,14 @@ T TrieNode<T>::Find(string const &prefix)
 			return numeric_limits<T>::min(); // prefix is longer than the current trie
 		}
 		else // Nodes with common prefix
-			return m_children.find(prefix[0]) != m_children.end() ? m_children[prefix[0]]->Find(prefix.substr(1)) : numeric_limits<T>::min();
+			return m_children.count(prefix[0]) ? m_children[prefix[0]]->Find(prefix.substr(1)) : numeric_limits<T>::min();
 	// Either Leaf node (!m_key.empty()) or prefix not found
 	return m_key;
 }
 template <typename T>
 shared_ptr<TrieNode<T>> TrieNode<T>::Node(char c)
 {
-	return m_children.find(c) != m_children.end() ? m_children[c] : nullptr;
+	return m_children.count(c) ? m_children[c] : nullptr;
 }
 template <typename T>
 shared_ptr<TrieNode<T>> TrieNode<T>::AddNode(char c)
@@ -172,7 +172,7 @@ typename map<char, shared_ptr<TrieNode<T>>>::const_iterator TrieNode<T>::Childre
 template <typename T>
 void TrieNode<T>::RemoveString(string const &str)
 {
-	if (!str.empty() && m_children.find(str[0]) != m_children.end())
+	if (!str.empty() && m_children.count(str[0]))
 	{
 		m_children[str[0]]->RemoveString(str.substr(1));
 		m_children.erase(str[0]);

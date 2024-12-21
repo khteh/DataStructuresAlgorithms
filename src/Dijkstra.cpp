@@ -177,9 +177,9 @@ void Dijkstra<T>::AddVertex(T v)
 template <typename T>
 void Dijkstra<T>::AddUndirectedEdge(T from, T to, long cost)
 {
-    if (_vertices.find(from) == _vertices.end())
+    if (!_vertices.count(from))
         AddVertex(from);
-    if (_vertices.find(to) == _vertices.end())
+    if (!_vertices.count(to))
         AddVertex(to);
     _vertices[from]->AddEdge(_vertices[to], cost);
     _vertices[to]->AddEdge(_vertices[from], cost);
@@ -209,7 +209,7 @@ void Dijkstra<T>::InitVertices()
 template <typename T>
 long Dijkstra<T>::ShortestPath(T start, T end, vector<shared_ptr<DVertex<T>>> &result)
 {
-    if (_vertices.find(start) == _vertices.end() || _vertices.find(end) == _vertices.end())
+    if (!_vertices.count(start) || !_vertices.count(end))
         return -1;
     InitVertices();
     set<shared_ptr<DVertex<T>>> visited;
@@ -220,7 +220,7 @@ long Dijkstra<T>::ShortestPath(T start, T end, vector<shared_ptr<DVertex<T>>> &r
     {
         shared_ptr<DVertex<T>> current = costs.begin()->second; // San Fran
         costs.erase(costs.begin());
-        if (visited.find(current) == visited.end())
+        if (!visited.count(current))
         {
             visited.emplace(current);
             if (current->Value() == end)
@@ -255,7 +255,7 @@ long Dijkstra<T>::ShortestPath(T start, T end, vector<shared_ptr<DVertex<T>>> &r
 template <typename T>
 long Dijkstra<T>::ShortestPathStateless(T start, T end, vector<shared_ptr<DVertex<T>>> &result)
 {
-    if (_vertices.find(start) == _vertices.end() || _vertices.find(end) == _vertices.end())
+    if (!_vertices.count(start) || !_vertices.count(end))
         return -1;
     map<T, shared_ptr<DVertex<T>>> hops;
     // Initialize all the costs to max, and the "previous" vertex to null
@@ -269,7 +269,7 @@ long Dijkstra<T>::ShortestPathStateless(T start, T end, vector<shared_ptr<DVerte
     {
         shared_ptr<DVertex<T>> current = costs.begin()->second; // San Fran
         costs.erase(costs.begin());
-        if (visited.find(current) == visited.end())
+        if (!visited.count(current))
         {
             visited.emplace(current);
             if (current->Value() == end)

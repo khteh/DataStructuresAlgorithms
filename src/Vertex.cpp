@@ -41,7 +41,7 @@ TItem Vertex<TTag, TItem>::GetItem() const
 template <typename TTag, typename TItem>
 void Vertex<TTag, TItem>::AddNeighbour(shared_ptr<Vertex<TTag, TItem>> to, long cost)
 {
-	if (_neighbours.find(to) == _neighbours.end())
+	if (!_neighbours.count(to))
 		_neighbours.emplace(to, cost);
 	else if (_neighbours[to] > cost)
 		_neighbours[to] = cost;
@@ -91,7 +91,7 @@ bool Vertex<TTag, TItem>::HasNeighbour(TTag tag, TItem item) const
 template <typename TTag, typename TItem>
 bool Vertex<TTag, TItem>::HasNeighbour(shared_ptr<Vertex<TTag, TItem>> v) const
 {
-	return _neighbours.find(v) != _neighbours.end();
+	return _neighbours.count(v) != 0;
 }
 template <typename TTag, typename TItem>
 size_t Vertex<TTag, TItem>::NeighbourCount() const
@@ -123,7 +123,7 @@ long Vertex<TTag, TItem>::GetCost(shared_ptr<Vertex<TTag, TItem>> v)
 {
 	if (v->GetTag() == GetTag() && v->GetItem() == GetItem())
 		return 0;
-	return _neighbours.find(v) != _neighbours.end() ? _neighbours[v] : -1;
+	return _neighbours.count(v) ? _neighbours[v] : -1;
 }
 template <typename TTag, typename TItem>
 TItem Vertex<TTag, TItem>::GetSubGraphSum(TTag parent)

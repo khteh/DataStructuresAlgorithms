@@ -463,7 +463,7 @@ T Matrix<T>::GridlandMetro(T rows, T cols, vector<vector<T>> const &tracks)
 	map<T, vector<pair<T, T>>> occupied;
 	for (typename vector<vector<T>>::const_iterator it = tracks.begin(); it != tracks.end(); it++)
 	{
-		if (occupied.find((*it)[0] - 1) == occupied.end())
+		if (!occupied.count((*it)[0] - 1))
 			occupied[(*it)[0] - 1].push_back(pair<T, T>((*it)[1] - 1, (*it)[2] - 1));
 		else
 		{

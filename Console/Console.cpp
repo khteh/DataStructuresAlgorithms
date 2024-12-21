@@ -873,12 +873,12 @@ int main(int argc, char *argv[])
 	stringset1.clear();
 	FindPattern("abc", stringset, stringset1);
 	assert(stringset1.size() == 1);
-	assert(stringset1.find("cdf") != stringset1.end());
+	assert(stringset1.count("cdf"));
 	stringset1.clear();
 	FindPattern("acc", stringset, stringset1);
 	assert(stringset1.size() == 2);
-	assert(stringset1.find("too") != stringset1.end());
-	assert(stringset1.find("paa") != stringset1.end());
+	assert(stringset1.count("too"));
+	assert(stringset1.count("paa"));
 	str = "1024";
 	str1 = "2048";
 	istringstream iss1(str), iss2(str1);
@@ -887,11 +887,11 @@ int main(int argc, char *argv[])
 	// N-Gram test
 	set<string> ngrams = intersectionNgram(string("This is a dog"), string("This is a cat"), 2);
 	assert(ngrams.size() == 2);
-	assert(ngrams.find("This is") != ngrams.end());
-	assert(ngrams.find("is a") != ngrams.end());
+	assert(ngrams.count("This is"));
+	assert(ngrams.count("is a"));
 	ngrams = intersectionNgram(string("This is a dog"), string("This is a cat"), 3);
 	assert(ngrams.size() == 1);
-	assert(ngrams.find("This is a") != ngrams.end());
+	assert(ngrams.count("This is a"));
 	ngrams = intersectionNgram(string("This is a dog"), string("This is a cat"), 4);
 	assert(ngrams.empty());
 	cout << endl;
@@ -2143,9 +2143,6 @@ int main(int argc, char *argv[])
 	arithmetic.NumberToVector(456, udata1);
 	arithmetic.NumberVectorsMultiplication(udata, udata1, cresult);
 	assert(arithmetic.DigitsVectorToNumber(cresult) == 56088);
-	udata.clear();
-	udata = {16, 12, 8, 4};
-	assert(8 == range.MaxAndPair(udata));
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

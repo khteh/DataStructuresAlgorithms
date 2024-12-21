@@ -56,27 +56,27 @@ shared_ptr<Vertex<TTag, TItem>> Graph<TTag, TItem>::AddVertex(TTag tag, TItem it
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddDirectedEdge(shared_ptr<Vertex<TTag, TItem>> from, shared_ptr<Vertex<TTag, TItem>> to, long cost)
 {
-	if (_vertices.find(from->GetTag()) == _vertices.end())
+	if (!_vertices.count(from->GetTag()))
 		_vertices.emplace(from->GetTag(), from);
-	if (_vertices.find(to->GetTag()) == _vertices.end())
+	if (!_vertices.count(to->GetTag()))
 		_vertices.emplace(to->GetTag(), to);
 	from->AddNeighbour(to, cost);
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddDirectedEdge(TTag from, TTag to, long cost)
 {
-	if (_vertices.find(from) == _vertices.end())
+	if (!_vertices.count(from))
 		_vertices.emplace(from, make_shared<Vertex<TTag, TItem>>(from, from));
-	if (_vertices.find(to) == _vertices.end())
+	if (!_vertices.count(to))
 		_vertices.emplace(to, make_shared<Vertex<TTag, TItem>>(to, to));
 	_vertices[from]->AddNeighbour(_vertices[to], cost);
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddUndirectedEdge(shared_ptr<Vertex<TTag, TItem>> from, shared_ptr<Vertex<TTag, TItem>> to, long cost)
 {
-	if (_vertices.find(from->GetTag()) == _vertices.end())
+	if (!_vertices.count(from->GetTag()))
 		_vertices.emplace(from->GetTag(), from);
-	if (_vertices.find(to->GetTag()) == _vertices.end())
+	if (!_vertices.count(to->GetTag()))
 		_vertices.emplace(to->GetTag(), to);
 	from->AddNeighbour(to, cost);
 	to->AddNeighbour(from, cost);
@@ -84,9 +84,9 @@ void Graph<TTag, TItem>::AddUndirectedEdge(shared_ptr<Vertex<TTag, TItem>> from,
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddUndirectedEdge(TTag from, TTag to, long cost)
 {
-	if (_vertices.find(from) == _vertices.end())
+	if (!_vertices.count(from))
 		_vertices.emplace(from, make_shared<Vertex<TTag, TItem>>(from, from)); // Tag == Item. XXX This will have undesired behaviour if there are duplicate tag values in the graph OR funtions expect TItem but tag value is used here!
-	if (_vertices.find(to) == _vertices.end())
+	if (!_vertices.count(to))
 		_vertices.emplace(to, make_shared<Vertex<TTag, TItem>>(to, to)); // Tag == Item. XXX This will have undesired behaviour if there are duplicate tag values in the graph OR funtions expect TItem but tag value is used here!
 	_vertices[from]->AddNeighbour(_vertices[to], cost);
 	_vertices[to]->AddNeighbour(_vertices[from], cost);
@@ -95,18 +95,18 @@ void Graph<TTag, TItem>::AddUndirectedEdge(TTag from, TTag to, long cost)
 template <typename TTag, typename TItem>
 bool Graph<TTag, TItem>::HasVertex(TTag tag) const
 {
-	return _vertices.find(tag) != _vertices.end();
+	return _vertices.count(tag) != 0;
 }
 template <typename TTag, typename TItem>
 shared_ptr<Vertex<TTag, TItem>> Graph<TTag, TItem>::GetVertex(TTag tag)
 {
-	return _vertices.find(tag) != _vertices.end() ? _vertices[tag] : nullptr;
+	return _vertices.count(tag) ? _vertices[tag] : nullptr;
 }
 template <typename TTag, typename TItem>
 bool Graph<TTag, TItem>::Remove(TTag tag)
 {
 	shared_ptr<Vertex<TTag, TItem>> vertex;
-	if (_vertices.find(tag) == _vertices.end())
+	if (!_vertices.count(tag))
 		return false;
 	vertex = _vertices[tag];
 	_vertices.erase(tag);
@@ -179,7 +179,7 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 		for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::iterator v = neighbours.begin(); v != neighbours.end(); v++)
 		{
 			//  If v is not in MST and weight of (u,v) is smaller than current cost of v
-			if (inMST.find(v->first->GetTag()) == inMST.end() && (costs.find(v->first->GetTag()) == costs.end() || costs[v->first->GetTag()] > v->second)) // v->second is edge cost from u to v
+			if (!inMST.count(v->first->GetTag()) && (!costs.count(v->first->GetTag()) || costs[v->first->GetTag()] > v->second)) // v->second is edge cost from u to v
 			{
 				// Updating cost of v
 				costs[v->first->GetTag()] = v->second;
@@ -219,10 +219,10 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
 			 * (3) and total cost of path from src to v through u is smaller than current value of cost[v]
 			 */
-			if (spt.find(*it) == spt.end())
+			if (!spt.count(*it))
 			{
 				long uCost = vertex->GetCost(*it);
-				long vCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
+				long vCost = !costs.count(*it) ? numeric_limits<long>::max() : costs[*it];
 				if (costs[vertex] + uCost < vCost)
 				{
 					costs[*it] = costs[vertex] + uCost;
@@ -261,10 +261,10 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
 			 * (3) and total cost of path from src to v through u is smaller than current value of cost[v]
 			 */
-			if (spt.find(*it) == spt.end())
+			if (!spt.count(*it))
 			{
 				long uCost = vertex->GetCost(*it);
-				long vCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
+				long vCost = !costs.count(*it) ? numeric_limits<long>::max() : costs[*it];
 				if (costs[vertex] + uCost < vCost)
 				{
 					costs[*it] = costs[vertex] + uCost;
@@ -275,7 +275,7 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 			}
 		}
 	}
-	return vertex && vertex == destination && costs.find(vertex) != costs.end() ? costs[vertex] : -1;
+	return vertex && vertex == destination && costs.count(vertex) ? costs[vertex] : -1;
 }
 /*
  * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
@@ -306,10 +306,10 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
 			 * (3) and total cost of path from src to v through u is smaller than current value of cost[v]
 			 */
-			if (spt.find(*it) == spt.end())
+			if (!spt.count(*it))
 			{
 				long uCost = vertex->GetCost(*it);
-				long vCost = costs.find(*it) == costs.end() ? numeric_limits<long>::max() : costs[*it];
+				long vCost = !costs.count(*it) ? numeric_limits<long>::max() : costs[*it];
 				if (costs[vertex] + uCost < vCost)
 				{
 					costs[*it] = costs[vertex] + uCost;
@@ -352,7 +352,7 @@ vector<long> Graph<TTag, TItem>::BFSShortestPaths(size_t nodecount, vector<vecto
 	vector<long> result;
 	for (size_t i = 1; i <= nodecount; i++)
 		if (i != s)
-			result.push_back(distances.find(i) == distances.end() ? -1 : distances[i]);
+			result.push_back(!distances.count(i) ? -1 : distances[i]);
 	return result;
 }
 template <typename TTag, typename TItem>
@@ -368,7 +368,7 @@ void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, 
 			vector<shared_ptr<Vertex<TTag, TItem>>> vertices;
 			for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator parent = result[level].begin(); parent != result[level].end(); parent++)
 			{
-				if (*parent && visited.find(*parent) == visited.end())
+				if (*parent && !visited.count(*parent))
 				{
 					visited.emplace(*parent);
 					vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = (*parent)->GetNeighbours();
@@ -412,7 +412,7 @@ long Graph<TTag, TItem>::GetPathsCosts(shared_ptr<Vertex<TTag, TItem>> vertex, s
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
 		{
-			if (spt.find(*it) == spt.end())
+			if (!spt.count(*it))
 			{
 				// Update dist[v] only if it:
 				// (1) is not in sptSet

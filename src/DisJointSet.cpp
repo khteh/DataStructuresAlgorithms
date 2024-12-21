@@ -18,7 +18,7 @@ template <typename T>
 T DisJointSet<T>::Find(T item)
 {
 	// C++ map will insert non-existing key silently
-	if (_sets.find(item) == _sets.end())
+	if (!_sets.count(item))
 	{
 		ostringstream oss;
 		oss << item << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << item << ");";

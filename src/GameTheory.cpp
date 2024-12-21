@@ -44,9 +44,9 @@ size_t GameTheory<T>::SnakesAndLaddersGame(vector<vector<T>> const &ladders, vec
     for (size_t i = 0; i < snakes.size(); i++)
         snakemap.emplace(snakes[i][0], snakes[i][1]);
     for (size_t i = 1; i <= 100; i++)
-        if (laddermap.find(i) == laddermap.end() && snakemap.find(i) == snakemap.end())
+        if (!laddermap.count(i) && snakemap.count(i))
         { // Skip the number if it is at the beginning of a ladder
-            shared_ptr<Vertex<T, T>> parent = vertices.find(i) != vertices.end() ? vertices[i] : nullptr;
+            shared_ptr<Vertex<T, T>> parent = vertices.count(i) ? vertices[i] : nullptr;
             if (!parent)
             {
                 parent = make_shared<Vertex<T, T>>(i);
@@ -55,11 +55,11 @@ size_t GameTheory<T>::SnakesAndLaddersGame(vector<vector<T>> const &ladders, vec
             for (size_t j = min(6L, (long)(100L - i)); j > 0; j--)
             {
                 size_t next = i + j;
-                if (laddermap.find(next) != laddermap.end())
+                if (laddermap.count(next))
                     next = laddermap[next];
-                if (snakemap.find(next) != snakemap.end())
+                if (snakemap.count(next))
                     next = snakemap[next];
-                shared_ptr<Vertex<T, T>> vertex = vertices.find(next) != vertices.end() ? vertices[next] : nullptr;
+                shared_ptr<Vertex<T, T>> vertex = vertices.count(next) ? vertices[next] : nullptr;
                 if (!vertex)
                 {
                     vertex = make_shared<Vertex<T, T>>(next);
@@ -100,14 +100,14 @@ size_t GameTheory<T>::SnakesAndLaddersGameFast(vector<vector<T>> const &ladders,
     for (size_t i = 0; i < snakes.size(); i++)
         snakemap.emplace(snakes[i][0], snakes[i][1]);
     for (size_t i = 1; i <= 100; i++)
-        if (laddermap.find(i) == laddermap.end() && snakemap.find(i) == snakemap.end())
+        if (!laddermap.count(i) && !snakemap.count(i))
         { // Skip the number if it is at the beginning of a ladder
             for (size_t j = min(6L, (long)(100L - i)); j > 0; j--)
             {
                 size_t next = i + j;
-                if (laddermap.find(next) != laddermap.end())
+                if (laddermap.count(next))
                     next = laddermap[next];
-                if (snakemap.find(next) != snakemap.end())
+                if (snakemap.count(next))
                     next = snakemap[next];
                 adjacency_list[i].push_back(next);
             }
@@ -121,11 +121,11 @@ size_t GameTheory<T>::SnakesAndLaddersGameFast(vector<vector<T>> const &ladders,
         vector<T> tmp;
         for (typename vector<T>::const_iterator it = result[level].begin(); it != result[level].end(); it++)
         {
-            if (visited.find(*it) == visited.end())
+            if (!visited.count(*it))
             {
                 if (*it == 100)
                     return level;
-                if (adjacency_list.find(*it) != adjacency_list.end())
+                if (adjacency_list.count(*it))
                     tmp.insert(tmp.end(), adjacency_list[*it].begin(), adjacency_list[*it].end());
                 visited.insert(*it);
             }

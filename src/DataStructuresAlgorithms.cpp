@@ -143,7 +143,7 @@ size_t CountDistinctSlices1(long m, vector<long> &data)
 	{
 		unique.clear();
 		unique.emplace(data[i]);
-		for (j = i + 1; j < data.size() && unique.find(data[j]) == unique.end(); j++)
+		for (j = i + 1; j < data.size() && !unique.count(data[j]); j++)
 			unique.emplace(data[j]);
 		for (size_t k = (j - i); k > 0; k--)
 			slices += k;
@@ -163,7 +163,7 @@ size_t CountDistinctSlices(vector<long> &data)
 	set<long> unique;
 	for (size_t i = 0; i < data.size(); i++)
 	{
-		if (unique.find(data[i]) == unique.end())
+		if (!unique.count(data[i]))
 			unique.emplace(data[i]); // {3, 4, 5}, {5, 2}
 		else
 		{
@@ -394,7 +394,7 @@ bool SherlockValidString(string const &s)
 			min = it->second;
 		countsCounts[it->second]++;
 	}
-	if (countsCounts.size() == 2 && countsCounts.find(1) != countsCounts.end() && countsCounts[1] == 1)
+	if (countsCounts.size() == 2 && countsCounts.count(1) && countsCounts[1] == 1)
 		return true;
 	return max - min > 1 ? false : result;
 }
@@ -1240,7 +1240,7 @@ void randomSubset(vector<long> &source, size_t count, vector<long> &result)
 		uniform_int_distribution<long> dist(i, source.size() - 1);
 		index = dist(engine);
 		// cout << "source[" << index << "]: " << source[index] << endl;
-		assert(masks.find(source[index]) == masks.end());
+		assert(!masks.count(source[index]));
 		masks.emplace(source[index]);
 		result.push_back(source[index]);
 		tmp = source[i];
@@ -1608,14 +1608,14 @@ void WordsLadder(string const &start, string const &stop, set<string> &dictionar
 				// Found our word! Now backtrack to record all the single-character change from 'start' to 'stop'
 				result.push_back(*it);
 				result.push_back(w);
-				while (backtrack.find(w) != backtrack.end())
+				while (backtrack.count(w))
 				{
 					w = backtrack[w];
 					result.push_back(w);
 				}
 				return;
 			}
-			else if (visited.find(*it) == visited.end())
+			else if (!visited.count(*it))
 			{
 				actionQ.push(*it);
 				visited.insert(*it);
@@ -1698,12 +1698,12 @@ size_t minDiffPairs(vector<long> &numbers, long diff)
 	size_t offset = 1;
 	for (size_t i = 0; i < numbers.size(); i++)
 	{
-		if (pairs.find(i) == pairs.end())
+		if (!pairs.count(i))
 		{
 			int num = numbers[i];
 			for (size_t j = offset; j < numbers.size(); j++)
 			{
-				if (pairs.find(j) == pairs.end() && abs(numbers[i] - numbers[j]) >= diff)
+				if (!pairs.count(j) && abs(numbers[i] - numbers[j]) >= diff)
 				{
 					offset = j + 1;
 					pairs.insert(i);
@@ -1800,7 +1800,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && routes.find(pos) != routes.end())
+					while (pos != origin && routes.count(pos))
 					{
 						pos = routes[pos];
 						result.push(pos);
@@ -1811,7 +1811,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 				{ // Obstacle. Cancel this route
 					oss.str("");
 					oss << it->row + 1 << it->col;
-					if (visited.find(oss.str()) == visited.end())
+					if (!visited.count(oss.str()))
 					{ // Prevent loop
 						positions.push_back(position_t(it->row + 1, it->col));
 						routes.emplace(oss.str(), oss1.str());
@@ -1827,7 +1827,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && routes.find(pos) != routes.end())
+					while (pos != origin && routes.count(pos))
 					{
 						pos = routes[pos];
 						result.push(pos);
@@ -1838,7 +1838,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 				{
 					oss.str("");
 					oss << it->row << it->col + 1;
-					if (visited.find(oss.str()) == visited.end())
+					if (!visited.count(oss.str()))
 					{ // Prevent loop
 						positions.push_back(position_t(it->row, it->col + 1));
 						routes.emplace(oss.str(), oss1.str());
@@ -1854,7 +1854,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && routes.find(pos) != routes.end())
+					while (pos != origin && routes.count(pos))
 					{
 						pos = routes[pos];
 						result.push(pos);
@@ -1865,7 +1865,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 				{
 					oss.str("");
 					oss << it->row - 1 << it->col;
-					if (visited.find(oss.str()) == visited.end())
+					if (!visited.count(oss.str()))
 					{ // Prevent loop
 						positions.push_back(position_t(it->row - 1, it->col));
 						routes.emplace(oss.str(), oss1.str());
@@ -1881,7 +1881,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && routes.find(pos) != routes.end())
+					while (pos != origin && routes.count(pos))
 					{
 						pos = routes[pos];
 						result.push(pos);
@@ -1892,7 +1892,7 @@ bool FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, queue<stri
 				{
 					oss.str("");
 					oss << it->row << it->col - 1;
-					if (visited.find(oss.str()) == visited.end())
+					if (!visited.count(oss.str()))
 					{ // Prevent loop
 						positions.push_back(position_t(it->row, it->col - 1));
 						routes.emplace(oss.str(), oss1.str());
@@ -2138,7 +2138,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 					long root = disjointSet.Union(node, neighbour);
 					if (root != numeric_limits<long>::min())
 					{
-						if (root != currentRoot && counts.find(currentRoot) != counts.end())
+						if (root != currentRoot && counts.count(currentRoot))
 						{ // Existing disjoint set with more than one element
 							counts[root] += counts[currentRoot];
 							counts.erase(currentRoot);
@@ -2158,7 +2158,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 					long root = disjointSet.Union(node, neighbour);
 					if (root != numeric_limits<long>::min())
 					{
-						if (root != currentRoot && counts.find(currentRoot) != counts.end())
+						if (root != currentRoot && counts.count(currentRoot))
 						{ // Existing disjoint set with more than one element
 							counts[root] += counts[currentRoot];
 							counts.erase(currentRoot);
@@ -2178,7 +2178,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 					long root = disjointSet.Union(node, neighbour);
 					if (root != numeric_limits<long>::min())
 					{
-						if (root != currentRoot && counts.find(currentRoot) != counts.end())
+						if (root != currentRoot && counts.count(currentRoot))
 						{ // Existing disjoint set with more than one element
 							counts[root] += counts[currentRoot];
 							counts.erase(currentRoot);
@@ -2198,7 +2198,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 					long root = disjointSet.Union(node, neighbour);
 					if (root != numeric_limits<long>::min())
 					{
-						if (root != currentRoot && counts.find(currentRoot) != counts.end())
+						if (root != currentRoot && counts.count(currentRoot))
 						{ // Existing disjoint set with more than one element
 							counts[root] += counts[currentRoot];
 							counts.erase(currentRoot);
@@ -2218,7 +2218,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 					long root = disjointSet.Union(node, neighbour);
 					if (root != numeric_limits<long>::min())
 					{
-						if (root != currentRoot && counts.find(currentRoot) != counts.end())
+						if (root != currentRoot && counts.count(currentRoot))
 						{ // Existing disjoint set with more than one element
 							counts[root] += counts[currentRoot];
 							counts.erase(currentRoot);
@@ -2314,7 +2314,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && routes.find(pos) != routes.end())
+					while (pos != origin && routes.count(pos))
 					{
 						pos = routes[pos];
 						result.push(pos);
@@ -2325,7 +2325,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 				{ // Obstacle. Cancel this route
 					oss.str("");
 					oss << it->row + 1 << it->col;
-					if (visited.find(oss.str()) == visited.end())
+					if (!visited.count(oss.str()))
 					{ // Prevent loop
 						positions.push_back(position_t(it->row + 1, it->col));
 						routes.emplace(oss.str(), oss1.str());
@@ -2341,7 +2341,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && routes.find(pos) != routes.end())
+					while (pos != origin && routes.count(pos))
 					{
 						pos = routes[pos];
 						result.push(pos);
@@ -2352,7 +2352,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 				{
 					oss.str("");
 					oss << it->row << it->col + 1;
-					if (visited.find(oss.str()) == visited.end())
+					if (!visited.count(oss.str()))
 					{ // Prevent loop
 						positions.push_back(position_t(it->row, it->col + 1));
 						routes.emplace(oss.str(), oss1.str());
@@ -2368,7 +2368,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && routes.find(pos) != routes.end())
+					while (pos != origin && routes.count(pos))
 					{
 						pos = routes[pos];
 						result.push(pos);
@@ -2379,7 +2379,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 				{
 					oss.str("");
 					oss << it->row - 1 << it->col;
-					if (visited.find(oss.str()) == visited.end())
+					if (!visited.count(oss.str()))
 					{ // Prevent loop
 						positions.push_back(position_t(it->row - 1, it->col));
 						routes.emplace(oss.str(), oss1.str());
@@ -2395,7 +2395,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 					result.push(oss.str());
 					pos = oss1.str();
 					result.push(pos);
-					while (pos != origin && routes.find(pos) != routes.end())
+					while (pos != origin && routes.count(pos))
 					{
 						pos = routes[pos];
 						result.push(pos);
@@ -2406,7 +2406,7 @@ bool PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t
 				{
 					oss.str("");
 					oss << it->row << it->col - 1;
-					if (visited.find(oss.str()) == visited.end())
+					if (!visited.count(oss.str()))
 					{ // Prevent loop
 						positions.push_back(position_t(it->row, it->col - 1));
 						routes.emplace(oss.str(), oss1.str());
@@ -2486,7 +2486,7 @@ bool match(string const &pattern, string const &input)
 	long captureGroup = 0;
 	for (string::const_iterator it = pattern.begin(); it != pattern.end(); it++)
 	{
-		if (patternCount.find(*it) != patternCount.end())
+		if (patternCount.count(*it))
 			regexStr << "\\" << patternCount[*it];
 		else
 		{
@@ -2503,7 +2503,7 @@ string EncodeString(string str)
 	long code = 0;
 	for (string::iterator it = str.begin(); it != str.end(); it++)
 	{
-		if (codes.find(*it) == codes.end())
+		if (!codes.count(*it))
 			codes.emplace(*it, code++);
 		oss << codes[*it];
 	}
@@ -3244,7 +3244,7 @@ vector<shared_ptr<Node<string>>> shortest_cycle_path(shared_ptr<Node<string>> no
 		q.pop_front();
 		for (set<shared_ptr<Node<string>>>::iterator i = n->m_adjacents.begin(); i != n->m_adjacents.end(); i++)
 		{
-			if (parents.find(*i) == parents.end())
+			if (!parents.count(*i))
 			{
 				parents.emplace(*i, n);
 				if (*i == node)
@@ -3918,7 +3918,7 @@ vector<int> freqQuery(vector<vector<int>> &queries)
 		}
 		break;
 		case 2: // Remove
-			if (frequency.find(queries[i][1]) != frequency.end())
+			if (frequency.count(queries[i][1]))
 			{
 				if (--frequencies[frequency[queries[i][1]]] <= 0)
 					frequencies.erase(frequency[queries[i][1]]);
@@ -3927,8 +3927,8 @@ vector<int> freqQuery(vector<vector<int>> &queries)
 			break;
 		case 3: // Find frequency
 		{
-			int j = frequencies.find(queries[i][1]) != frequencies.end() ? 1 : 0;
-			result.push_back(frequencies.find(queries[i][1]) != frequencies.end() ? 1 : 0);
+			int j = frequencies.count(queries[i][1]) ? 1 : 0;
+			result.push_back(frequencies.count(queries[i][1]) ? 1 : 0);
 		}
 		break;
 		default:
@@ -4430,9 +4430,9 @@ size_t PostmanProblem(vector<size_t> &k, vector<vector<size_t>> &roads)
 			oss2.str("");
 			oss1 << path[i] << "-" << path[i + 1];
 			oss2 << path[i + 1] << "-" << path[i];
-			if (costCache.find(oss1.str()) != costCache.end())
+			if (costCache.count(oss1.str()))
 				cost = costCache[oss1.str()];
-			else if (costCache.find(oss2.str()) != costCache.end())
+			else if (costCache.count(oss2.str()))
 				cost = costCache[oss2.str()];
 			else
 			{
@@ -4597,7 +4597,7 @@ size_t LengthOfLongestUniqueSubstring(string const &s)
 	string str;
 	for (size_t i = 0; i < s.size(); i++)
 	{
-		if (chars.find(s[i]) == chars.end())
+		if (!chars.count(s[i]))
 		{
 			str.append(1, s[i]);
 			chars.insert(s[i]);
@@ -5054,7 +5054,7 @@ bool WordBreakDynamicProgramming(string const &s, set<string> const &words)
 	for (size_t end = 1; end <= s.size(); end++) // O(N)
 		for (size_t start = 0; start < end; start++)
 		{ // O(N) -> Time complexity: O(N^2)
-			if (valid[start] && words.find(s.substr(start, end - start)) != words.end())
+			if (valid[start] && words.count(s.substr(start, end - start)))
 			{
 				valid[end] = true;
 				break;
@@ -5074,7 +5074,7 @@ void WordBreakDynamicProgramming(string const &s, set<string> const &words, vect
 	for (size_t end = 1; end <= s.size(); end++)
 		for (size_t start = 0; start < end; start++)
 		{
-			if (valid[start] && words.find(s.substr(start, end - start)) != words.end())
+			if (valid[start] && words.count(s.substr(start, end - start)))
 			{
 				valid[end] = true;
 				for (vector<string>::iterator it = strings[start].begin(); it != strings[start].end(); it++)
@@ -5180,7 +5180,7 @@ string GetHint(string const &secret, string const &guess)
 			if (--counts[secret[i]] < 0 && cows > 0)
 				cows--;
 		}
-		else if (counts.find(guess[i]) != counts.end() && counts[guess[i]] > 0)
+		else if (counts.count(guess[i]) && counts[guess[i]] > 0)
 		{
 			counts[guess[i]]--;
 			cows++;
@@ -5219,7 +5219,7 @@ vector<string> FindItinerary(vector<vector<string>> &tickets, string const &star
 	vector<string> itinerary;
 	for (vector<vector<string>>::iterator it = tickets.begin(); it != tickets.end(); it++)
 		vertices[it->front()].insert(it->back());
-	if (vertices.find(start) != vertices.end())
+	if (vertices.count(start))
 		EulerianPath(start, vertices, itinerary);
 	reverse(itinerary.begin(), itinerary.end());
 	return itinerary;
@@ -5397,7 +5397,7 @@ string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 					oss1 << i << "-" << j;
 					oss2 << j << "-" << i;
 					m.lock();
-					if (computed.find(oss1.str()) == computed.end() && computed.find(oss2.str()) == computed.end())
+					if (!computed.count(oss1.str()) && !computed.count(oss2.str()))
 					{
 						computed.emplace(oss1.str());
 						computed.emplace(oss2.str());
@@ -5435,7 +5435,7 @@ string RoadsInHackerland1(size_t n, vector<vector<size_t>> &edges)
 				ostringstream oss1, oss2;
 				oss1 << i << "-" << j;
 				oss2 << j << "-" << i;
-				if (computed.find(oss1.str()) == computed.end() && computed.find(oss2.str()) == computed.end())
+				if (!computed.count(oss1.str()) && !computed.count(oss2.str()))
 				{
 					computed.emplace(oss1.str());
 					computed.emplace(oss2.str());
@@ -5476,7 +5476,7 @@ string RoadsInHackerland2(size_t n, vector<vector<size_t>> &edges)
 					oss1 << i << "-" << j;
 					oss2 << j << "-" << i;
 					m.lock();
-					if (computed.find(oss1.str()) == computed.end() && computed.find(oss2.str()) == computed.end())
+					if (!computed.count(oss1.str()) && !computed.count(oss2.str()))
 					{
 						computed.emplace(oss1.str());
 						computed.emplace(oss2.str());
@@ -6128,7 +6128,7 @@ vector<unsigned long long> BFSNextMoves(unsigned long long state, size_t towerCo
 		 */
 		pole = (state >> (d * towerBitCount)) & towerBitMask;
 		// cout << "Current state: Pole: " << pole << ", discs: " << d << endl;
-		if (poles.find(pole) == poles.end())
+		if (!poles.count(pole))
 		{
 			topDiscs[d] = pole;
 			poles.emplace(pole);
@@ -6146,7 +6146,7 @@ vector<unsigned long long> BFSNextMoves(unsigned long long state, size_t towerCo
 		 */
 		skippedPoles.emplace(it->second); // (1) Skip it's own pole. (2) Skip poles with smaller discs on top.
 		for (size_t p = 0; p < towerCount; p++)
-			if (skippedPoles.find(p) == skippedPoles.end())
+			if (!skippedPoles.count(p))
 			{
 				size_t offset = towerBitCount * it->first;
 				unsigned long long s = state & ~(towerBitMask << offset);
@@ -6307,7 +6307,7 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 			vector<unsigned long long> states = BFSNextMoves(s.state, towerCount, discCount);
 			for (vector<unsigned long long>::const_iterator it = states.begin(); it != states.end(); it++)
 			{
-				if (visited.find(*it) == visited.end())
+				if (!visited.count(*it))
 				{
 					queue.push_back(towerofhanoi_state_t(*it, s.moves + 1));
 					visited.emplace(*it);
@@ -6880,13 +6880,13 @@ bool HappyLadyBugs(string const &str)
 	}
 	if (counts.size() == 1 && counts.begin()->first == '_')
 		return true;
-	if (counts.find('_') == counts.end())
+	if (!counts.count('_'))
 	{
 		set<char> groups;
 		char current = '\0';
 		for (string::const_iterator it = str.begin(); it != str.end(); it++)
 		{
-			if (current == '\0' || (*it != current && groups.find(*it) == groups.end()))
+			if (current == '\0' || (*it != current && !groups.count(*it)))
 			{
 				current = *it;
 				groups.emplace(current);
@@ -7273,7 +7273,7 @@ vector<bool> WeightedUniformStrings(string const &s, vector<size_t> const &queri
 			weights.emplace(weight * ++count);
 	}
 	for (vector<size_t>::const_iterator it = queries.begin(); it != queries.end(); it++)
-		result.push_back(weights.find(*it) != weights.end());
+		result.push_back(weights.count(*it));
 	return result;
 }
 /* https://www.hackerrank.com/challenges/torque-and-development/problem

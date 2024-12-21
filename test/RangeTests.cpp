@@ -81,6 +81,32 @@ INSTANTIATE_TEST_SUITE_P(
 					  // make_tuple(8, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>())
 					  make_tuple(8, []() -> generator<size_t>
 												{ co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>())));
+class MaxXorPairTestFixture : public RangeTestFixture1<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	size_t MaxXorPairTest()
+	{
+		return _rangeObj.MaxXorPair(_data);
+	}
+};
+TEST_P(MaxXorPairTestFixture, MaxXorPairTests)
+{
+	ASSERT_EQ(this->_expected, this->MaxXorPairTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MaxXorPairTests,
+	MaxXorPairTestFixture,
+	::testing::Values(make_tuple(7, vector<size_t>{1, 2, 3, 4, 5, 6, 7}),
+					  make_tuple(7, vector<size_t>{1, 2, 3, 4}),
+					  make_tuple(28, vector<size_t>{25, 10, 2, 8, 5, 3}),
+					  // make_tuple(15, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>())
+					  make_tuple(15, []() -> generator<size_t>
+												 { co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>())));
+
 class SumPairsIndicesTestFixture : public RangeTestFixture2<vector<size_t>, size_t, size_t>, public testing::TestWithParam<tuple<vector<size_t>, size_t, vector<size_t>>>
 {
 public:

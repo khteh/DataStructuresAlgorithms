@@ -523,18 +523,18 @@ bool Sort<T>::CanFinishCourseTopologicalSort(size_t numCourses, vector<vector<T>
 	queue<T> independentNodes; // Set of all nodes with no incoming edge
 	// for (size_t i = 0; i < numCourses; i++)
 	for (typename set<T>::iterator it = uniqueCourses.begin(); it != uniqueCourses.end(); it++)
-		if (dependencies.find(*it) == dependencies.end())
+		if (!dependencies.count(*it))
 			independentNodes.push(*it);
 	for (; !independentNodes.empty();)
 	{
 		T i = independentNodes.front();
 		independentNodes.pop();
 		sequence.push_back(i);
-		if (edges.find(i) != edges.end())
+		if (edges.count(i))
 			for (typename vector<T>::iterator it = edges[i].begin(); it != edges[i].end(); it++)
 			{
 				edgeCount--; // remove edge e from the graph
-				if (dependencies.find(*it) == dependencies.end() || !--dependencies[*it])
+				if (!dependencies.count(*it) || !--dependencies[*it])
 					independentNodes.push(*it);
 			}
 	}

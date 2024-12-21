@@ -87,7 +87,7 @@ void PrefixTrieNode::InsertString(string str, size_t index)
 }
 void PrefixTrieNode::RemoveString(string str)
 {
-	if (str.length() && m_children.find(str[0]) != m_children.end())
+	if (str.length() && m_children.count(str[0]))
 	{
 		m_children[str[0]]->RemoveString(str.substr(1));
 		m_children.erase(str[0]);
@@ -115,7 +115,7 @@ vector<string> PrefixTrieNode::GetNodes()
 vector<string> PrefixTrieNode::StartsWith(string const &prefix, size_t index)
 {
 	vector<string> result;
-	if (index < prefix.size() && m_children.find(prefix[index]) != m_children.end())
+	if (index < prefix.size() && m_children.count(prefix[index]))
 		result = m_children[prefix[index]]->StartsWith(prefix, index + 1);					   // Nodes with common prefix
 	else if (m_children.empty() && !m_key.empty() && m_key.substr(0, prefix.size()) == prefix) // Leaf node
 		result.push_back(m_key);
@@ -178,13 +178,13 @@ bool PrefixTrieNode::Find(string const &prefix)
 			return false; // prefix is longer than the current tree
 		}
 		else // Nodes with common prefix
-			return m_children.find(prefix[0]) != m_children.end() ? m_children[prefix[0]]->Find(prefix.substr(1)) : false;
+			return m_children.count(prefix[0]) ? m_children[prefix[0]]->Find(prefix.substr(1)) : false;
 	// Either Leaf node (!m_key.empty()) or prefix not found
 	return !m_key.empty();
 }
 PrefixTrieNode *PrefixTrieNode::GetNode(string const &prefix, size_t index)
 {
-	if (index < prefix.size() && m_children.find(prefix[index]) != m_children.end())
+	if (index < prefix.size() && m_children.count(prefix[index]))
 		return m_children[prefix[index]]->GetNode(prefix, index + 1);
 	else if (m_children.empty() || index == prefix.size())
 		return this;

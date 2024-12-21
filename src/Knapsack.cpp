@@ -23,7 +23,7 @@ set<vector<size_t>> Knapsack::CoinsChange(long amount, vector<size_t> &coins)
 			if (amount >= (long)*coin)
 			{
 				set<vector<size_t>> tmp;
-				if (coinChangeCache.find(amount - *coin) == coinChangeCache.end())
+				if (!coinChangeCache.count(amount - *coin))
 				{
 					tmp = CoinsChange(amount - *coin, coins);
 					if (!tmp.empty())
@@ -71,7 +71,7 @@ set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<
 				else if (i > *coin)
 				{ // i:5 coins[j]:2 delta:3 dp[3] = {3}
 					size_t delta = i - *coin;
-					if (dp.find(delta) != dp.end())
+					if (dp.count(delta))
 					{
 						for (set<vector<size_t>>::iterator it = dp[delta].begin(); it != dp[delta].end(); it++)
 						{
@@ -168,7 +168,7 @@ set<vector<size_t>> Knapsack::KnapsackCombinations(long amount, vector<size_t> &
 				if (amount >= (long)*number)
 				{
 					set<vector<size_t>> tmp;
-					if (knapsackCache.find(amount - *number) == knapsackCache.end())
+					if (!knapsackCache.count(amount - *number))
 					{
 						tmp = KnapsackCombinations(amount - *number, numbers);
 						if (!tmp.empty())
@@ -237,7 +237,7 @@ set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> &numb
 			if (amount >= (long)*number)
 			{
 				set<vector<size_t>> tmp;
-				if (knapsackCache.find(amount - *number) == knapsackCache.end())
+				if (!knapsackCache.count(amount - *number))
 				{
 					tmp = _BoundedKnapsack(amount - *number, numbers);
 					knapsackCache[amount - *number] = tmp;
@@ -309,7 +309,7 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t size, size_t
 		if (sum >= i)
 		{
 			set<vector<size_t>> tmp;
-			if (knapsackCache.find(sum - i) == knapsackCache.end())
+			if (!knapsackCache.count(sum - i))
 			{
 				tmp = _BoundedKnapsackCombinationSum(size, sum - i, max);
 				knapsackCache[sum - i] = tmp;
@@ -372,7 +372,7 @@ size_t Knapsack::StairsClimbingDynamicProgramming(long destination, vector<size_
 	size_t combinations = 0;
 	for (vector<size_t>::iterator it = steps.begin(); it != steps.end(); it++)
 	{
-		if (dpMemoization.find(destination - *it) == dpMemoization.end())
+		if (!dpMemoization.count(destination - *it))
 			dpMemoization[destination - *it] = StairsClimbingDynamicProgramming(destination - *it, steps);
 		combinations += dpMemoization[destination - *it];
 	}

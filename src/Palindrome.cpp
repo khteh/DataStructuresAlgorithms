@@ -212,7 +212,7 @@ size_t Palindrome::PalindromeAnagramCount1(string const &str)
             }
             else
             {
-                if (oddNumbers.find(str[i + (j - 1)]) != oddNumbers.end())
+                if (oddNumbers.count(str[i + (j - 1)]))
                     oddNumbers.erase(str[i + (j - 1)]);
                 if (--odd < 0)
                     odd = 0;
@@ -264,7 +264,7 @@ void Palindrome::HighestValuePalindrome(string &s, size_t k)
     // Change the string value if we have any spare
     for (long i = 0, j = s.size() - 1; i <= j && spare > 0; i++, j--)
     {
-        if (tofix.find(i) == tofix.end())
+        if (!tofix.count(i))
         {
             if (i == j && spare >= 1 && s[i] != '9')
             {
@@ -278,7 +278,7 @@ void Palindrome::HighestValuePalindrome(string &s, size_t k)
                 spare -= 2;
             }
         }
-        else if (tofix.find(i) != tofix.end() && spare > 0 && s[i] != '9' && s[j] != '9')
+        else if (tofix.count(i) && spare > 0 && s[i] != '9' && s[j] != '9')
         {
             s[i] = '9';
             s[j] = '9';
