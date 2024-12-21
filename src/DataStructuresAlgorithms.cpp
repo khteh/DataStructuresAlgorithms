@@ -4071,7 +4071,46 @@ string TimeInWords(size_t h, size_t m)
  * When you count the number of beautiful quadruples, you should consider two quadruples as same if the following are true:
  * They contain same integers.
  * Number of times each integers occur in the quadruple is same.
- * For example  and  should be considered as same.
+ * For example [1,1,2,3] and [1,2,1,3] should be considered as same.
+ *
+ * 1 2 3 4:
+1 1 1 1: 0
+1 1 1 2: 3
+1 1 1 3: 2
+1 1 1 4: 5
+
+1 1 2 1: 3
+1 1 2 2: 0
+1 1 2 3: 1
+1 1 2 4: 6
+
+1 1 3 1: 2
+1 1 3 2: 1
+1 1 3 3: 0
+1 1 3 4: 7
+
+1 2 1 1: 3
+1 2 1 2: 0
+1 2 1 3: 1
+1 2 1 4: 6
+
+1 2 2 1: 0
+1 2 2 2: 3
+1 2 2 3: 2
+1 2 2 4: 5
+
+1 2 3 1: 1
+1 2 3 2: 2
+1 2 3 3: 3
+1 2 3 4: 4
+
+1: [[1 1 2 3]]
+2: [[1 1 1 3],[1 2 2 3]]
+3: [[1 1 1 2],[1 2 2 2],[1 2 3 3]]
+4: [[1 2 3 4]]
+5: [[1 1 1 4],[1 2 2 4]]
+6: [[1 1 2 4]]
+7: [[1 1 3 4]]
  */
 size_t BeautifulQuadruples(size_t a, size_t b, size_t c, size_t d)
 {
