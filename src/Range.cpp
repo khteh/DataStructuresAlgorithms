@@ -473,8 +473,6 @@ void Range::SumPairs(size_t sum, vector<size_t> const &data, vector<size_t> &res
 size_t Range::MaxAndPair(vector<size_t> const &data)
 {
 	size_t result = 0, pattern = 0;
-	size_t maxElement = *ranges::max_element(data);
-	size_t bits = BitCount(maxElement);
 	size_t msb = 1 << BitCount(*ranges::max_element(data)) - 1;
 	for (; msb > 0; msb >>= 1)
 	{
