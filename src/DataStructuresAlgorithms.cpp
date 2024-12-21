@@ -4061,6 +4061,17 @@ string TimeInWords(size_t h, size_t m)
 /* https://www.hackerrank.com/challenges/xor-quadruples/problem
  * WIP
  * 100% Functionality. However, time out as it is O(N^3)
+ * Given A,B,C,D return number of quadruples which satisfy:
+ * W ^ X ^ Y ^ Z > 0
+ * 1 <= W <= A
+ * 1 <= X <= B
+ * 1 <= Y <= C
+ * 1 <= Z <= D
+ * 1 <= A,B,C,D <= 3000
+ * When you count the number of beautiful quadruples, you should consider two quadruples as same if the following are true:
+ * They contain same integers.
+ * Number of times each integers occur in the quadruple is same.
+ * For example  and  should be considered as same.
  */
 size_t BeautifulQuadruples(long a, long b, long c, long d)
 {
@@ -4077,6 +4088,15 @@ size_t BeautifulQuadruples(long a, long b, long c, long d)
 					if ((i ^ j ^ k ^ l) != 0)
 						quadruples.emplace(multiset<long>{i, j, k, l});
 	return quadruples.size();
+}
+size_t BeautifulQuadruples1(long a, long b, long c, long d)
+{
+	/*
+		if a^b^c^d = 0 then a^b = c^d, therefore sort values to avoid duplications
+	*/
+	vector<long> abcd{a, b, c, d};
+	ranges::sort(abcd);
+	return 0;
 }
 /* https://www.hackerrank.com/challenges/red-knights-shortest-path/problem
  * 100%
@@ -6138,10 +6158,118 @@ vector<unsigned long long> BFSNextMoves(unsigned long long state, size_t towerCo
 	}
 	return states;
 }
+/*
+Number of binary bits needed in a number to represent number 'n'
+0: 0
+
+1: 1 (1)
+
+2: 10 (2)
+3: 11 (2)
+
+4: 100 (3)
+5: 101 (3)
+6: 110 (3)
+7: 111 (3)
+
+8: 1000 (4)
+9: 1001 (4)
+10:1010 (4)
+
+log2(0) = -inf, ceil(log2(0)) = -inf, floor(log2(0)) = -inf
+log2(1) = 0.000000, ceil(log2(1)) = 0.000000 + 1 = 1
+
+log2(2) = 1.000000, ceil(log2(2)) = 1.000000 + 1 = 2
+log2(3) = 1.584963, ceil(log2(3)) = 2.000000 + 0 = 2
+
+log2(4) = 2.000000, ceil(log2(4)) = 2.000000 + 1 = 3
+log2(5) = 2.321928, ceil(log2(5)) = 3.000000 + 0 = 3
+log2(6) = 2.584963, ceil(log2(6)) = 3.000000 + 0 = 3
+log2(7) = 2.807355, ceil(log2(7)) = 3.000000 + 0 = 3
+
+log2(8) = 3.000000, ceil(log2(8)) = 3.000000 + 1 = 4
+log2(9) = 3.169925, ceil(log2(9)) = 4.000000 + 0 = 4
+===
+log2(0) = -inf, ceil(log2(0)) = -inf, floor(log2(0)) = -inf
+log2(1) = 0.000000, floor(log2(1)) = 0.000000 + 1 = 1
+
+log2(2) = 1.000000, floor(log2(2)) = 1.000000 + 1 = 2
+log2(3) = 1.584963, floor(log2(3)) = 1.000000 + 1 = 2
+
+log2(4) = 2.000000, floor(log2(4)) = 2.000000 + 1 = 3
+log2(5) = 2.321928, floor(log2(5)) = 2.000000 + 1 = 3
+log2(6) = 2.584963, floor(log2(6)) = 2.000000 + 1 = 3
+log2(7) = 2.807355, floor(log2(7)) = 2.000000 + 1 = 3
+
+log2(8) = 3.000000, floor(log2(8)) = 3.000000 + 1 = 4(9 choices)
+log2(9) = 3.169925, floor(log2(9)) = 3.000000 + 1 = 4(10 choices)
+
+*/
+size_t BitCount(size_t n)
+{
+	return !n ? 0 : floor(log2(n)) + 1;
+}
+/*
+Number of binary bits needed in a number to represent n number of choices
+1: 1 (1)
+2: 0 1 (1)
+
+3: 0 01 10 (2)
+4: 0 01 10 11 (2)
+
+5: 0 01 10 11 100 (3)
+6: 0 01 10 11 100 101 (3)
+7: 0 01 10 11 100 101 110 (3)
+8: 0 01 10 11 100 101 110 111 (3)
+
+9: 0 01 10 11 100 101 110 111 1000 (4)
+10:0 01 10 11 100 101 110 111 1000 1001 (4)
+
+log2(0) = -inf, ceil(log2(0)) = -inf, floor(log2(0)) = -inf
+log2(1) = 0.000000, ceil(log2(1)) = 0.000000
+log2(2) = 1.000000, ceil(log2(2)) = 1.000000
+
+log2(3) = 1.584963, ceil(log2(3)) = 2.000000
+log2(4) = 2.000000, ceil(log2(4)) = 2.000000
+
+log2(5) = 2.321928, ceil(log2(5)) = 3.000000
+log2(6) = 2.584963, ceil(log2(6)) = 3.000000
+log2(7) = 2.807355, ceil(log2(7)) = 3.000000
+log2(8) = 3.000000, ceil(log2(8)) = 3.000000
+
+log2(9) = 3.169925, ceil(log2(9)) = 4.000000
+===
+log2(1) = 0.000000, floor(log2(1)) = 0.000000 + 1 = 1(2 choices)
+
+log2(2) = 1.000000, floor(log2(2)) = 1.000000 + 1 = 2(3 choices)
+log2(3) = 1.584963, floor(log2(3)) = 1.000000 + 1 = 2(4 choices)
+
+log2(4) = 2.000000, floor(log2(4)) = 2.000000 + 1 = 3(5 choices)
+log2(5) = 2.321928, floor(log2(5)) = 2.000000 + 1 = 3(6 choices)
+log2(6) = 2.584963, floor(log2(6)) = 2.000000 + 1 = 3(7 choices)
+log2(7) = 2.807355, floor(log2(7)) = 2.000000 + 1 = 3(8 choices)
+
+log2(8) = 3.000000, floor(log2(8)) = 3.000000 + 1 = 4(9 choices)
+log2(9) = 3.169925, floor(log2(9)) = 3.000000 + 1 = 4(10 choices)
+*/
+size_t BitCountOfNChoices(size_t n)
+{
+	return !n ? 0 : n == 1 ? 1
+						   : ceil(log2(n));
+}
 int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 {
 	ostringstream oss;
-	size_t towerBitCount = (floor(log2(towerCount - 1)) + 1);
+	/*
+	4: 00 01 10 11
+	3: 00 01 10
+	5: 00 01 10 11 100
+	2^x = num
+	x = log2(num)
+	*/
+	if (towerCount <= 1)
+		return -1;
+	size_t towerBitCount = BitCountOfNChoices(towerCount); // floor(log2(towerCount - 1)) + 1;
 	size_t towerBitMask = ~(-(1 << towerBitCount));
 	size_t discCount = poles.size(), bitCount = towerBitCount * discCount;
 	if (bitCount > sizeof(unsigned long long) * 8)

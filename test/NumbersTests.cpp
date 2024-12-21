@@ -1,5 +1,89 @@
 #include "pch.h"
 using namespace std;
+class BitCountTestFixture : public testing::TestWithParam<tuple<size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+	}
+	size_t BitCountTest()
+	{
+		return BitCount(_n);
+	}
+
+protected:
+	size_t _expected;
+	size_t _n;
+};
+TEST_P(BitCountTestFixture, BitCountTests)
+{
+	ASSERT_EQ(this->_expected, this->BitCountTest());
+}
+/*
+Number of binary bits needed in a number to represent number 'n'
+0: 0
+
+1: 1 (1)
+
+2: 10 (2)
+3: 11 (2)
+
+4: 100 (3)
+5: 101 (3)
+6: 110 (3)
+7: 111 (3)
+
+8: 1000 (4)
+9: 1001 (4)
+10:1010 (4)
+*/
+INSTANTIATE_TEST_SUITE_P(
+	BitCountTests,
+	BitCountTestFixture,
+	::testing::Values(make_tuple(0, 0), make_tuple(1, 1), make_tuple(2, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(3, 5), make_tuple(3, 6), make_tuple(3, 7), make_tuple(4, 8), make_tuple(4, 9), make_tuple(4, 10)));
+class BitCountOfNChoicesTestFixture : public testing::TestWithParam<tuple<size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+	}
+	size_t BitCountOfNChoicesTest()
+	{
+		return BitCountOfNChoices(_n);
+	}
+
+protected:
+	size_t _expected;
+	size_t _n;
+};
+TEST_P(BitCountOfNChoicesTestFixture, BitCountOfNChoicesTests)
+{
+	ASSERT_EQ(this->_expected, this->BitCountOfNChoicesTest());
+}
+/*
+Number of binary bits needed in a number to represent n number of choices
+1: 1 (1)
+2: 0 1 (1)
+
+3: 0 01 10 (2)
+4: 0 01 10 11 (2)
+
+5: 0 01 10 11 100 (3)
+6: 0 01 10 11 100 101 (3)
+7: 0 01 10 11 100 101 110 (3)
+8: 0 01 10 11 100 101 110 111 (3)
+
+9: 0 01 10 11 100 101 110 111 1000 (4)
+10:0 01 10 11 100 101 110 111 1000 1001 (4)
+*/
+INSTANTIATE_TEST_SUITE_P(
+	BitCountOfNChoicesTests,
+	BitCountOfNChoicesTestFixture,
+	::testing::Values(make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(2, 4), make_tuple(3, 5), make_tuple(3, 6), make_tuple(3, 7), make_tuple(3, 8), make_tuple(4, 9), make_tuple(4, 10)));
 /*
 	assert(numberToRoman(4) == "IV");
 	assert(numberToRoman(9) == "IX");
@@ -37,7 +121,6 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple("XL", 40),
 					  make_tuple("XC", 90),
 					  make_tuple("CD", 400), make_tuple("CM", 900)));
-
 class CountDigitsTestFixture : public testing::TestWithParam<tuple<size_t, char, size_t>>
 {
 public:

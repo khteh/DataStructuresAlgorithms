@@ -362,6 +362,8 @@ typedef struct TowerOfHanoiState
 	unsigned long long state;
 	size_t moves;
 } towerofhanoi_state_t;
+size_t BitCountOfNChoices(size_t);
+size_t BitCount(size_t);
 int ResetTowerOfHanoi(size_t, vector<size_t> const &);
 long double VectorSlicesSum(vector<long double> &);
 long SteadyGene(string const &);

@@ -6,6 +6,7 @@
 #include <sstream>
 #include <math.h>
 #include "oneapi/tbb.h"
+#include "DataStructuresAlgorithms.h"
 using namespace oneapi::tbb;
 using namespace std;
 typedef enum class Direction
@@ -26,6 +27,7 @@ public:
 	long LongestNonNegativeSumSlice(vector<long> const &);
 	size_t SumPairs(size_t, vector<size_t> const &);
 	void SumPairs(size_t, vector<size_t> const &, vector<size_t> &);
+	size_t MaxAndPair(vector<size_t> const &);
 	size_t GreaterThanSumPairs(size_t, vector<size_t> const &);
 	vector<vector<long>> TripletsZeroSum(vector<long> &);
 	vector<vector<long>> QuadrupletsSum(long, vector<long> &);

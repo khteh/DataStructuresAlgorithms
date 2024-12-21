@@ -272,6 +272,11 @@ int main(int argc, char *argv[])
 	assert(numeric_limits<long double>::has_signaling_NaN);
 	assert(!(-4 % 2));
 	assert(!(0xFFFFFFFC % 2));
+	for (size_t i = 0; i < 10; i++)
+	{
+		double log = log2(i);
+		cout << fixed << "log2(" << i << ") = " << log << ", ceil(log2(" << i << ")) = " << ceil(log) << ", floor(log2(" << i << ")) = " << floor(log) << endl;
+	}
 	ul = 100;
 	generate_n(inserter(uset, uset.end()), 10, [&ul]()
 			   { return ul++; });
@@ -2138,6 +2143,9 @@ int main(int argc, char *argv[])
 	arithmetic.NumberToVector(456, udata1);
 	arithmetic.NumberVectorsMultiplication(udata, udata1, cresult);
 	assert(arithmetic.DigitsVectorToNumber(cresult) == 56088);
+	udata.clear();
+	udata = {16, 12, 8, 4};
+	assert(8 == range.MaxAndPair(udata));
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

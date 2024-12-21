@@ -470,7 +470,24 @@ void Range::SumPairs(size_t sum, vector<size_t> const &data, vector<size_t> &res
 			pairs.emplace(data[i], i);
 	}
 }
-
+size_t Range::MaxAndPair(vector<size_t> const &data)
+{
+	size_t result = 0, pattern = 0;
+	size_t maxElement = *ranges::max_element(data);
+	size_t bits = BitCount(maxElement);
+	size_t msb = 1 << BitCount(*ranges::max_element(data)) - 1;
+	for (; msb > 0; msb >>= 1)
+	{
+		pattern = result | msb;
+		size_t count = 0;
+		for (vector<size_t>::const_iterator it = data.begin(); count < 2 && it != data.end(); it++)
+			if ((*it & pattern) == pattern)
+				count++;
+		if (count >= 2)
+			result |= msb;
+	}
+	return result;
+}
 /* 0 1 2 3 4 5 6 7 8 9
  *         ^ (10 / 2 - 1)
  * (0,9), (0,8)	2
