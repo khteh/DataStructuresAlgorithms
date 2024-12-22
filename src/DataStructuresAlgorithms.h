@@ -260,6 +260,8 @@ void randomSubset(vector<long> &, size_t, vector<long> &);
 size_t CountDigits(char, size_t);
 size_t CountNumbersWithUniqueDigits(size_t);
 size_t Count1Bits(long);
+size_t BitCountOfNChoices(size_t);
+size_t BitCount(size_t);
 void WordsLadder(string const &, string const &, set<string> &, vector<string> &);
 void trim(string &);
 size_t minDiffPairs(vector<long> &, long);
@@ -362,8 +364,6 @@ typedef struct TowerOfHanoiState
 	unsigned long long state;
 	size_t moves;
 } towerofhanoi_state_t;
-size_t BitCountOfNChoices(size_t);
-size_t BitCount(size_t);
 int ResetTowerOfHanoi(size_t, vector<size_t> const &);
 long double VectorSlicesSum(vector<long double> &);
 long SteadyGene(string const &);

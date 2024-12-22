@@ -2941,6 +2941,105 @@ void BitCombinations(size_t k, vector<long> &result)
 			if (Count1Bits(j) == i)
 				result.push_back(j);
 }
+/*
+Number of binary bits needed in a number to represent number 'n'
+0: 0
+
+1: 1 (1)
+
+2: 10 (2)
+3: 11 (2)
+
+4: 100 (3)
+5: 101 (3)
+6: 110 (3)
+7: 111 (3)
+
+8: 1000 (4)
+9: 1001 (4)
+10:1010 (4)
+
+log2(0) = -inf, ceil(log2(0)) = -inf, floor(log2(0)) = -inf
+log2(1) = 0.000000, ceil(log2(1)) = 0.000000 + 1 = 1
+
+log2(2) = 1.000000, ceil(log2(2)) = 1.000000 + 1 = 2
+log2(3) = 1.584963, ceil(log2(3)) = 2.000000 + 0 = 2
+
+log2(4) = 2.000000, ceil(log2(4)) = 2.000000 + 1 = 3
+log2(5) = 2.321928, ceil(log2(5)) = 3.000000 + 0 = 3
+log2(6) = 2.584963, ceil(log2(6)) = 3.000000 + 0 = 3
+log2(7) = 2.807355, ceil(log2(7)) = 3.000000 + 0 = 3
+
+log2(8) = 3.000000, ceil(log2(8)) = 3.000000 + 1 = 4
+log2(9) = 3.169925, ceil(log2(9)) = 4.000000 + 0 = 4
+===
+log2(0) = -inf, ceil(log2(0)) = -inf, floor(log2(0)) = -inf
+log2(1) = 0.000000, floor(log2(1)) = 0.000000 + 1 = 1
+
+log2(2) = 1.000000, floor(log2(2)) = 1.000000 + 1 = 2
+log2(3) = 1.584963, floor(log2(3)) = 1.000000 + 1 = 2
+
+log2(4) = 2.000000, floor(log2(4)) = 2.000000 + 1 = 3
+log2(5) = 2.321928, floor(log2(5)) = 2.000000 + 1 = 3
+log2(6) = 2.584963, floor(log2(6)) = 2.000000 + 1 = 3
+log2(7) = 2.807355, floor(log2(7)) = 2.000000 + 1 = 3
+
+log2(8) = 3.000000, floor(log2(8)) = 3.000000 + 1 = 4(9 choices)
+log2(9) = 3.169925, floor(log2(9)) = 3.000000 + 1 = 4(10 choices)
+
+*/
+size_t BitCount(size_t n)
+{
+	return !n ? 0 : floor(log2(n)) + 1;
+}
+/*
+Number of binary bits needed in a number to represent n number of choices. 1 bit provides 2 choices of 0/1.
+1: 1 (1)
+2: 0 1 (1)
+
+3: 0 01 10 (2)
+4: 0 01 10 11 (2)
+
+5: 0 01 10 11 100 (3)
+6: 0 01 10 11 100 101 (3)
+7: 0 01 10 11 100 101 110 (3)
+8: 0 01 10 11 100 101 110 111 (3)
+
+9: 0 01 10 11 100 101 110 111 1000 (4)
+10:0 01 10 11 100 101 110 111 1000 1001 (4)
+
+log2(0) = -inf, ceil(log2(0)) = -inf, floor(log2(0)) = -inf
+log2(1) = 0.000000, ceil(log2(1)) = 0.000000
+log2(2) = 1.000000, ceil(log2(2)) = 1.000000
+
+log2(3) = 1.584963, ceil(log2(3)) = 2.000000
+log2(4) = 2.000000, ceil(log2(4)) = 2.000000
+
+log2(5) = 2.321928, ceil(log2(5)) = 3.000000
+log2(6) = 2.584963, ceil(log2(6)) = 3.000000
+log2(7) = 2.807355, ceil(log2(7)) = 3.000000
+log2(8) = 3.000000, ceil(log2(8)) = 3.000000
+
+log2(9) = 3.169925, ceil(log2(9)) = 4.000000
+===
+log2(1) = 0.000000, floor(log2(1)) = 0.000000 + 1 = 1(2 choices)
+
+log2(2) = 1.000000, floor(log2(2)) = 1.000000 + 1 = 2(3 choices)
+log2(3) = 1.584963, floor(log2(3)) = 1.000000 + 1 = 2(4 choices)
+
+log2(4) = 2.000000, floor(log2(4)) = 2.000000 + 1 = 3(5 choices)
+log2(5) = 2.321928, floor(log2(5)) = 2.000000 + 1 = 3(6 choices)
+log2(6) = 2.584963, floor(log2(6)) = 2.000000 + 1 = 3(7 choices)
+log2(7) = 2.807355, floor(log2(7)) = 2.000000 + 1 = 3(8 choices)
+
+log2(8) = 3.000000, floor(log2(8)) = 3.000000 + 1 = 4(9 choices)
+log2(9) = 3.169925, floor(log2(9)) = 3.000000 + 1 = 4(10 choices)
+*/
+size_t BitCountOfNChoices(size_t n)
+{
+	return !n ? 0 : n == 1 ? 1
+						   : ceil(log2(n));
+}
 /* https://leetcode.com/problems/gray-code/
  * 100%
  */
@@ -6203,105 +6302,6 @@ vector<unsigned long long> BFSNextMoves(unsigned long long state, size_t towerCo
 			}
 	}
 	return states;
-}
-/*
-Number of binary bits needed in a number to represent number 'n'
-0: 0
-
-1: 1 (1)
-
-2: 10 (2)
-3: 11 (2)
-
-4: 100 (3)
-5: 101 (3)
-6: 110 (3)
-7: 111 (3)
-
-8: 1000 (4)
-9: 1001 (4)
-10:1010 (4)
-
-log2(0) = -inf, ceil(log2(0)) = -inf, floor(log2(0)) = -inf
-log2(1) = 0.000000, ceil(log2(1)) = 0.000000 + 1 = 1
-
-log2(2) = 1.000000, ceil(log2(2)) = 1.000000 + 1 = 2
-log2(3) = 1.584963, ceil(log2(3)) = 2.000000 + 0 = 2
-
-log2(4) = 2.000000, ceil(log2(4)) = 2.000000 + 1 = 3
-log2(5) = 2.321928, ceil(log2(5)) = 3.000000 + 0 = 3
-log2(6) = 2.584963, ceil(log2(6)) = 3.000000 + 0 = 3
-log2(7) = 2.807355, ceil(log2(7)) = 3.000000 + 0 = 3
-
-log2(8) = 3.000000, ceil(log2(8)) = 3.000000 + 1 = 4
-log2(9) = 3.169925, ceil(log2(9)) = 4.000000 + 0 = 4
-===
-log2(0) = -inf, ceil(log2(0)) = -inf, floor(log2(0)) = -inf
-log2(1) = 0.000000, floor(log2(1)) = 0.000000 + 1 = 1
-
-log2(2) = 1.000000, floor(log2(2)) = 1.000000 + 1 = 2
-log2(3) = 1.584963, floor(log2(3)) = 1.000000 + 1 = 2
-
-log2(4) = 2.000000, floor(log2(4)) = 2.000000 + 1 = 3
-log2(5) = 2.321928, floor(log2(5)) = 2.000000 + 1 = 3
-log2(6) = 2.584963, floor(log2(6)) = 2.000000 + 1 = 3
-log2(7) = 2.807355, floor(log2(7)) = 2.000000 + 1 = 3
-
-log2(8) = 3.000000, floor(log2(8)) = 3.000000 + 1 = 4(9 choices)
-log2(9) = 3.169925, floor(log2(9)) = 3.000000 + 1 = 4(10 choices)
-
-*/
-size_t BitCount(size_t n)
-{
-	return !n ? 0 : floor(log2(n)) + 1;
-}
-/*
-Number of binary bits needed in a number to represent n number of choices
-1: 1 (1)
-2: 0 1 (1)
-
-3: 0 01 10 (2)
-4: 0 01 10 11 (2)
-
-5: 0 01 10 11 100 (3)
-6: 0 01 10 11 100 101 (3)
-7: 0 01 10 11 100 101 110 (3)
-8: 0 01 10 11 100 101 110 111 (3)
-
-9: 0 01 10 11 100 101 110 111 1000 (4)
-10:0 01 10 11 100 101 110 111 1000 1001 (4)
-
-log2(0) = -inf, ceil(log2(0)) = -inf, floor(log2(0)) = -inf
-log2(1) = 0.000000, ceil(log2(1)) = 0.000000
-log2(2) = 1.000000, ceil(log2(2)) = 1.000000
-
-log2(3) = 1.584963, ceil(log2(3)) = 2.000000
-log2(4) = 2.000000, ceil(log2(4)) = 2.000000
-
-log2(5) = 2.321928, ceil(log2(5)) = 3.000000
-log2(6) = 2.584963, ceil(log2(6)) = 3.000000
-log2(7) = 2.807355, ceil(log2(7)) = 3.000000
-log2(8) = 3.000000, ceil(log2(8)) = 3.000000
-
-log2(9) = 3.169925, ceil(log2(9)) = 4.000000
-===
-log2(1) = 0.000000, floor(log2(1)) = 0.000000 + 1 = 1(2 choices)
-
-log2(2) = 1.000000, floor(log2(2)) = 1.000000 + 1 = 2(3 choices)
-log2(3) = 1.584963, floor(log2(3)) = 1.000000 + 1 = 2(4 choices)
-
-log2(4) = 2.000000, floor(log2(4)) = 2.000000 + 1 = 3(5 choices)
-log2(5) = 2.321928, floor(log2(5)) = 2.000000 + 1 = 3(6 choices)
-log2(6) = 2.584963, floor(log2(6)) = 2.000000 + 1 = 3(7 choices)
-log2(7) = 2.807355, floor(log2(7)) = 2.000000 + 1 = 3(8 choices)
-
-log2(8) = 3.000000, floor(log2(8)) = 3.000000 + 1 = 4(9 choices)
-log2(9) = 3.169925, floor(log2(9)) = 3.000000 + 1 = 4(10 choices)
-*/
-size_t BitCountOfNChoices(size_t n)
-{
-	return !n ? 0 : n == 1 ? 1
-						   : ceil(log2(n));
 }
 int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 {
