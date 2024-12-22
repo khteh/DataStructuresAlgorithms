@@ -560,11 +560,13 @@ TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root)
 	return GetVertex(root)->MinSubGraphsDifference(root, sum);
 }
 /*
-Prune tree of leave nodes which are in nodes input parameter
+Prune tree of leave nodes which are in nodes input parameter.
+Return the total path costs pruned.
 */
 template <typename TTag, typename TItem>
-size_t Graph<TTag, TItem>::Prune(set<TTag> const &nodes)
+long Graph<TTag, TItem>::Prune(set<TTag> const &nodes)
 {
+	long cost = 0;
 	set<TTag> toRemove;
 	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = _vertices.begin(); it != _vertices.end(); it++)
 	{
@@ -578,8 +580,9 @@ size_t Graph<TTag, TItem>::Prune(set<TTag> const &nodes)
 				for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator it1 = neighbours.begin(); it1 != neighbours.end(); it1++)
 				{
 					toRemove.emplace(leaves[i]->GetTag());
+					cost += (*it1)->GetCost(leaves[i]);
 					(*it1)->RemoveNeighbour(leaves[i]);
-					if ((*it1)->NeighbourCount() == 1)
+					if ((*it1)->NeighbourCount() == 1 && nodes.count((*it1)->GetTag()))
 					{
 						leaves.push_back(*it1);
 						size++;
@@ -590,5 +593,5 @@ size_t Graph<TTag, TItem>::Prune(set<TTag> const &nodes)
 	}
 	for (typename set<TTag>::const_iterator it = toRemove.begin(); it != toRemove.end(); it++)
 		_vertices.erase(*it);
-	return toRemove.size();
+	return cost;
 }

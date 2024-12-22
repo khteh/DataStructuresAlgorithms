@@ -4555,7 +4555,7 @@ size_t PostmanProblem(size_t n, size_t letters, vector<size_t> const &cities, ve
 {
 	Permutation<size_t> permutation;
 	Graph<size_t, size_t> graph;
-	size_t totalCost = 0;
+	long totalCost = 0;
 	for (vector<vector<size_t>>::const_iterator it = roads.begin(); it != roads.end(); it++)
 	{
 		graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
@@ -4567,53 +4567,11 @@ size_t PostmanProblem(size_t n, size_t letters, vector<size_t> const &cities, ve
 			   { return i++; });
 	set<size_t> remove;
 	set_difference(cities1.begin(), cities1.end(), cities.begin(), cities.end(), inserter(remove, remove.begin()));
-	size_t removed = graph.Prune(remove);
+	long removed = graph.Prune(remove);
+	totalCost -= removed;
 	long diameter = graph.Diameter();
+	// 4 + (5 - 4)* 2 = 4 + 2 = 6
 	return diameter + (totalCost - diameter) * 2;
-#if 0
-	set<vector<size_t>> paths;
-	paths = permutation.Permute(k);
-	multimap<long, string> costs;
-	ostringstream oss, oss1, oss2;
-	map<string, size_t> costCache;
-	for (set<vector<size_t>>::iterator it = paths.begin(); it != paths.end(); it++)
-	{
-		vector<size_t> path = *it;
-		long totalCost = 0;
-		bool isValidPath = true;
-		for (size_t i = 0; i < path.size() - 1 && isValidPath; i++)
-		{
-			long cost = -1;
-			oss1.str("");
-			oss2.str("");
-			oss1 << path[i] << "-" << path[i + 1];
-			oss2 << path[i + 1] << "-" << path[i];
-			if (costCache.count(oss1.str()))
-				cost = costCache[oss1.str()];
-			else if (costCache.count(oss2.str()))
-				cost = costCache[oss2.str()];
-			else
-			{
-				cost = graph.Dijkstra(path[i], path[i + 1]);
-				costCache[oss1.str()] = cost;
-				costCache[oss2.str()] = cost;
-			}
-			// cout << path[i] << " - " << path[i + 1] << ": " << cost << endl;
-			if (cost >= 0)
-				totalCost += cost;
-			else
-				isValidPath = false;
-			oss << path[i] << "," << path[i + 1] << ",";
-		}
-		if (isValidPath)
-		{
-			costs.emplace(totalCost, oss.str());
-			oss.str("");
-		}
-	}
-	return costs.empty() ? -1 : costs.begin()->first;
-#endif
-	return 0;
 }
 /*
   https://www.hackerrank.com/challenges/cipher/problem

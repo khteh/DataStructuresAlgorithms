@@ -667,12 +667,12 @@ protected:
 	vector<size_t> _destinations;
 	vector<vector<size_t>> _edges;
 };
-TEST_P(PostmanProblemTestFixture, DISABLED_PostmanProblemTests)
+TEST_P(PostmanProblemTestFixture, PostmanProblemTests)
 {
 	ASSERT_EQ(this->_expected, this->PostmanProblemTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	DISABLED_PostmanProblemTests,
+	PostmanProblemTests,
 	PostmanProblemTestFixture,
 	::testing::Values(make_tuple(6, 5, 3, vector<size_t>{1, 3, 4}, vector<vector<size_t>>{{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}}),
 					  make_tuple(54, 20, 5, vector<size_t>{5, 11, 12, 15, 16}, vector<vector<size_t>>{{17, 4, 3}, {11, 12, 5}, {14, 2, 1}, {16, 14, 4}, {7, 8, 4}, {13, 5, 5}, {17, 15, 2}, {5, 3, 5}, {8, 6, 1}, {18, 10, 4}, {18, 1, 3}, {16, 1, 2}, {9, 2, 5}, {11, 6, 1}, {4, 9, 4}, {7, 20, 2}, {13, 19, 3}, {19, 12, 3}, {10, 20, 2}}),

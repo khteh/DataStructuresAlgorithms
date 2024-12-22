@@ -47,6 +47,6 @@ public:
 	long GetLowestPathCost(size_t, vector<TTag> &, vector<TTag> &, vector<long> &);
 	TItem MinSubGraphsDifference(TTag);
 	long EvenForest(TTag);
-	size_t Prune(set<TTag> const &);
+	long Prune(set<TTag> const &);
 	void Print(shared_ptr<Vertex<TTag, TItem>>) const;
 };
