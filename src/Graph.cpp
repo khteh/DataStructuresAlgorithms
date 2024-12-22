@@ -91,7 +91,6 @@ void Graph<TTag, TItem>::AddUndirectedEdge(TTag from, TTag to, long cost)
 	_vertices[from]->AddNeighbour(_vertices[to], cost);
 	_vertices[to]->AddNeighbour(_vertices[from], cost);
 }
-
 template <typename TTag, typename TItem>
 bool Graph<TTag, TItem>::HasVertex(TTag tag) const
 {
@@ -228,7 +227,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 					costs[*it] = costs[vertex] + uCost;
 					erase_if(costsPQ, [it](const auto &it1)
 							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
-					costsPQ.emplace(costs[vertex] + uCost, *it);
+					costsPQ.emplace(costs[*it], *it);
 				}
 			}
 		}
@@ -270,7 +269,7 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 					costs[*it] = costs[vertex] + uCost;
 					erase_if(costsPQ, [it](const auto &it1)
 							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
-					costsPQ.emplace(costs[vertex] + uCost, *it);
+					costsPQ.emplace(costs[*it], *it);
 				}
 			}
 		}
@@ -315,13 +314,72 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 					costs[*it] = costs[vertex] + uCost;
 					erase_if(costsPQ, [it](const auto &it1)
 							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
-					costsPQ.emplace(costs[vertex] + uCost, *it);
+					costsPQ.emplace(costs[*it], *it);
 				}
 			}
 		}
 	}
 	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = costs.begin(); it != costs.end(); it++)
 		distances[it->first->GetTag()] = it->second;
+}
+/*
+Get the longest distance from src to anywhere in the tree
+*/
+template <typename TTag, typename TItem>
+long Graph<TTag, TItem>::Diameter(TTag src)
+{
+	// vector<long> distances;
+	set<shared_ptr<Vertex<TTag, TItem>>>
+		spt; // spt: Shortest Path Tree
+	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(src);
+	multimap<long, shared_ptr<Vertex<TTag, TItem>>> costsPQ; // Priority Queue with min cost at *begin()
+	assert(vertex);
+	map<shared_ptr<Vertex<TTag, TItem>>, long> costs;
+	costs.emplace(vertex, 0);
+	costsPQ.emplace(0, vertex);
+	for (; !costsPQ.empty();)
+	{
+		vertex = costsPQ.begin()->second;
+		costsPQ.erase(costsPQ.begin());
+		spt.emplace(vertex);
+		// Update cost of the adjacent vertices of the picked vertex.
+		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
+		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
+		{
+			/* v is (*it); u is vertex.
+			 * Update cost[v] only if it:
+			 * (1) is not in sptSet
+			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
+			 * (3) and total cost of path from src to v through u is smaller than current value of cost[v]
+			 */
+			if (!spt.count(*it))
+			{
+				long uCost = vertex->GetCost(*it);
+				long vCost = !costs.count(*it) ? 0 : costs[*it];
+				if (costs[vertex] + uCost > vCost)
+				{
+					costs[*it] = costs[vertex] + uCost;
+					erase_if(costsPQ, [it](const auto &it1)
+							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
+					costsPQ.emplace(costs[*it], *it);
+				}
+			}
+		}
+	}
+	long result = -1;
+	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = costs.begin(); it != costs.end(); it++)
+		// distances[it->first->GetTag()] = it->second;
+		result = max(result, it->second);
+	// return *ranges::max_element(distances);
+	return result;
+}
+template <typename TTag, typename TItem>
+long Graph<TTag, TItem>::Diameter()
+{
+	long max_distance = -1;
+	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = _vertices.begin(); it != _vertices.end(); it++)
+		max_distance = max(max_distance, Diameter(it->second->GetTag()));
+	return max_distance;
 }
 /*
  * https://www.hackerrank.com/challenges/bfsshortreach
@@ -500,4 +558,37 @@ TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root)
 {
 	TItem sum = GetSubGraphSum(root);
 	return GetVertex(root)->MinSubGraphsDifference(root, sum);
+}
+/*
+Prune tree of leave nodes which are in nodes input parameter
+*/
+template <typename TTag, typename TItem>
+size_t Graph<TTag, TItem>::Prune(set<TTag> const &nodes)
+{
+	set<TTag> toRemove;
+	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = _vertices.begin(); it != _vertices.end(); it++)
+	{
+		if (!toRemove.count(it->first) && it->second->NeighbourCount() == 1 && nodes.count(it->second->GetTag()))
+		{
+			vector<shared_ptr<Vertex<TTag, TItem>>> leaves{it->second};
+			size_t size = leaves.size();
+			for (size_t i = 0; i < size; i++)
+			{
+				vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = leaves[i]->GetNeighbours();
+				for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator it1 = neighbours.begin(); it1 != neighbours.end(); it1++)
+				{
+					toRemove.emplace(leaves[i]->GetTag());
+					(*it1)->RemoveNeighbour(leaves[i]);
+					if ((*it1)->NeighbourCount() == 1)
+					{
+						leaves.push_back(*it1);
+						size++;
+					}
+				}
+			}
+		}
+	}
+	for (typename set<TTag>::const_iterator it = toRemove.begin(); it != toRemove.end(); it++)
+		_vertices.erase(*it);
+	return toRemove.size();
 }

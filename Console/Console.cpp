@@ -2143,6 +2143,16 @@ int main(int argc, char *argv[])
 	arithmetic.NumberToVector(456, udata1);
 	arithmetic.NumberVectorsMultiplication(udata, udata1, cresult);
 	assert(arithmetic.DigitsVectorToNumber(cresult) == 56088);
+	// make_tuple(6, 5, 3, vector<size_t>{1, 3, 4}, vector<vector<size_t>>{{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}})
+	// size_t PostmanProblem(size_t n, size_t letters, vector<size_t> const &cities, vector<vector<size_t>> const &roads)
+	udata.clear();
+	udata = {1, 3, 4};
+	ugrid.clear();
+	ugrid = {{1, 2, 1},
+			 {2, 3, 2},
+			 {2, 4, 2},
+			 {3, 5, 3}};
+	assert(6 == PostmanProblem(5, 3, udata, ugrid));
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

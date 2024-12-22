@@ -9,12 +9,11 @@
 #include <limits>
 using namespace std;
 template <typename TTag, typename TItem> // TTag is used as a unique ID. Graph vertices can have duplicate values of TItem
-class Vertex
+class Vertex : public enable_shared_from_this<Vertex<TTag, TItem>>
 {
 private:
 	void ResetTotalCost();
 	bool HasNeighbour(TTag, TItem) const;
-	size_t NeighbourCount() const;
 
 public:
 	Vertex();
@@ -24,6 +23,7 @@ public:
 	virtual ~Vertex();
 	TTag GetTag() const;
 	TItem GetItem() const;
+	size_t NeighbourCount() const;
 	TItem GetSubGraphSum(TTag);
 	long GetCost(shared_ptr<Vertex<TTag, TItem>>);
 	long GetTotalCost() const;

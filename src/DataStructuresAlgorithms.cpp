@@ -4540,24 +4540,37 @@ long kruskals(int nodes, vector<long> &from, vector<long> &to, vector<long> &wei
 	DisJointSet<long> disjointSet(from); // Every vertex is a disjoint set
 	disjointSet.MakeSet(to);
 	for (multiset<Edge>::iterator it = edges.begin(); it != edges.end(); it++)
-	{
 		if (disjointSet.Find(it->node1) != disjointSet.Find(it->node2))
 		{
 			sum += it->weight;
 			disjointSet.Union(it->node1, it->node2);
 		}
-	}
 	return sum;
 }
 /* https://www.hackerrank.com/challenges/jeanies-route/problem
+ * k: (the number of cities) and  (the number of letters), respectively.
  * WIP. Times out for more than 100 nodes! ;)
  */
-size_t PostmanProblem(vector<size_t> &k, vector<vector<size_t>> &roads)
+size_t PostmanProblem(size_t n, size_t letters, vector<size_t> const &cities, vector<vector<size_t>> const &roads)
 {
 	Permutation<size_t> permutation;
 	Graph<size_t, size_t> graph;
-	for (vector<vector<size_t>>::iterator it = roads.begin(); it != roads.end(); it++)
+	size_t totalCost = 0;
+	for (vector<vector<size_t>>::const_iterator it = roads.begin(); it != roads.end(); it++)
+	{
 		graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
+		totalCost += (*it)[2];
+	}
+	set<size_t> cities1;
+	size_t i = 1;
+	generate_n(inserter(cities1, cities1.begin()), n, [&i]()
+			   { return i++; });
+	set<size_t> remove;
+	set_difference(cities1.begin(), cities1.end(), cities.begin(), cities.end(), inserter(remove, remove.begin()));
+	size_t removed = graph.Prune(remove);
+	long diameter = graph.Diameter();
+	return diameter + (totalCost - diameter) * 2;
+#if 0
 	set<vector<size_t>> paths;
 	paths = permutation.Permute(k);
 	multimap<long, string> costs;
@@ -4599,6 +4612,8 @@ size_t PostmanProblem(vector<size_t> &k, vector<vector<size_t>> &roads)
 		}
 	}
 	return costs.empty() ? -1 : costs.begin()->first;
+#endif
+	return 0;
 }
 /*
   https://www.hackerrank.com/challenges/cipher/problem
