@@ -7,11 +7,11 @@
 template class Graph<long, long>;
 template class Graph<size_t, size_t>;
 template <typename TTag, typename TItem>
-Graph<TTag, TItem>::Graph()
+Graph<TTag, TItem>::Graph() : _totalCost(0)
 {
 }
 template <typename TTag, typename TItem>
-Graph<TTag, TItem>::Graph(vector<TItem> &data)
+Graph<TTag, TItem>::Graph(vector<TItem> &data) : _totalCost(0)
 {
 	AddVertices(data);
 }
@@ -29,12 +29,18 @@ Graph<TTag, TItem>::~Graph()
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::Clear()
 {
+	_totalCost = 0;
 	_vertices.clear();
 }
 template <typename TTag, typename TItem>
 size_t Graph<TTag, TItem>::Count() const
 {
 	return _vertices.size();
+}
+template <typename TTag, typename TItem>
+long Graph<TTag, TItem>::TotalCost() const
+{
+	return _totalCost;
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddVertex(shared_ptr<Vertex<TTag, TItem>> v)
@@ -61,6 +67,7 @@ void Graph<TTag, TItem>::AddDirectedEdge(shared_ptr<Vertex<TTag, TItem>> from, s
 	if (!_vertices.count(to->GetTag()))
 		_vertices.emplace(to->GetTag(), to);
 	from->AddNeighbour(to, cost);
+	_totalCost += cost;
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddDirectedEdge(TTag from, TTag to, long cost)
@@ -70,6 +77,7 @@ void Graph<TTag, TItem>::AddDirectedEdge(TTag from, TTag to, long cost)
 	if (!_vertices.count(to))
 		_vertices.emplace(to, make_shared<Vertex<TTag, TItem>>(to, to));
 	_vertices[from]->AddNeighbour(_vertices[to], cost);
+	_totalCost += cost;
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddUndirectedEdge(shared_ptr<Vertex<TTag, TItem>> from, shared_ptr<Vertex<TTag, TItem>> to, long cost)
@@ -80,6 +88,7 @@ void Graph<TTag, TItem>::AddUndirectedEdge(shared_ptr<Vertex<TTag, TItem>> from,
 		_vertices.emplace(to->GetTag(), to);
 	from->AddNeighbour(to, cost);
 	to->AddNeighbour(from, cost);
+	_totalCost += cost * 2;
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::AddUndirectedEdge(TTag from, TTag to, long cost)
@@ -90,6 +99,7 @@ void Graph<TTag, TItem>::AddUndirectedEdge(TTag from, TTag to, long cost)
 		_vertices.emplace(to, make_shared<Vertex<TTag, TItem>>(to, to)); // Tag == Item. XXX This will have undesired behaviour if there are duplicate tag values in the graph OR funtions expect TItem but tag value is used here!
 	_vertices[from]->AddNeighbour(_vertices[to], cost);
 	_vertices[to]->AddNeighbour(_vertices[from], cost);
+	_totalCost += cost * 2;
 }
 template <typename TTag, typename TItem>
 bool Graph<TTag, TItem>::HasVertex(TTag tag) const
@@ -366,7 +376,7 @@ long Graph<TTag, TItem>::Diameter(TTag src)
 			}
 		}
 	}
-	long result = -1;
+	long result = 0;
 	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = costs.begin(); it != costs.end(); it++)
 		// distances[it->first->GetTag()] = it->second;
 		result = max(result, it->second);
@@ -577,15 +587,26 @@ long Graph<TTag, TItem>::Prune(set<TTag> const &nodes)
 			for (size_t i = 0; i < size; i++)
 			{
 				vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = leaves[i]->GetNeighbours();
-				for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator it1 = neighbours.begin(); it1 != neighbours.end(); it1++)
+				for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator neighbour = neighbours.begin(); neighbour != neighbours.end(); neighbour++)
 				{
 					toRemove.emplace(leaves[i]->GetTag());
-					cost += (*it1)->GetCost(leaves[i]);
-					(*it1)->RemoveNeighbour(leaves[i]);
-					if ((*it1)->NeighbourCount() == 1 && nodes.count((*it1)->GetTag()))
+					if ((*neighbour)->HasNeighbour(leaves[i]->GetTag()))
 					{
-						leaves.push_back(*it1);
-						size++;
+						// Undirected graph
+						cost += (*neighbour)->GetCost(leaves[i]) * 2;
+						_totalCost -= (*neighbour)->GetCost(leaves[i]) * 2;
+						(*neighbour)->RemoveNeighbour(leaves[i]);
+						if ((*neighbour)->NeighbourCount() == 1 && nodes.count((*neighbour)->GetTag()))
+						{
+							leaves.push_back(*neighbour);
+							size++;
+						}
+					}
+					else
+					{
+						// Directed graph
+						cost += (*neighbour)->GetCost(leaves[i]);
+						_totalCost -= (*neighbour)->GetCost(leaves[i]);
 					}
 				}
 			}

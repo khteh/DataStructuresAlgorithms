@@ -14,6 +14,7 @@ template <typename TTag, typename TItem> // TTag is used as a unique ID. Graph v
 class Graph
 {
 private:
+	long _totalCost;
 	map<TTag, shared_ptr<Vertex<TTag, TItem>>> _vertices;
 	TItem GetSubGraphSum(TTag);
 	void AddVertex(shared_ptr<Vertex<TTag, TItem>>);
@@ -28,6 +29,7 @@ public:
 	Graph(vector<TItem> &);
 	virtual ~Graph();
 	size_t Count() const;
+	long TotalCost() const;
 	void Clear();
 	void AddVertices(vector<TItem> &);
 	shared_ptr<Vertex<TTag, TItem>> AddVertex(TTag);

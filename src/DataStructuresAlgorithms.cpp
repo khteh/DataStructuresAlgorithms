@@ -4557,10 +4557,7 @@ size_t PostmanProblem(size_t n, size_t letters, vector<size_t> const &cities, ve
 	Graph<size_t, size_t> graph;
 	long totalCost = 0;
 	for (vector<vector<size_t>>::const_iterator it = roads.begin(); it != roads.end(); it++)
-	{
 		graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
-		totalCost += (*it)[2];
-	}
 	set<size_t> cities1;
 	size_t i = 1;
 	generate_n(inserter(cities1, cities1.begin()), n, [&i]()
@@ -4568,10 +4565,10 @@ size_t PostmanProblem(size_t n, size_t letters, vector<size_t> const &cities, ve
 	set<size_t> remove;
 	set_difference(cities1.begin(), cities1.end(), cities.begin(), cities.end(), inserter(remove, remove.begin()));
 	long removed = graph.Prune(remove);
-	totalCost -= removed;
+	totalCost = graph.TotalCost() - removed;
 	long diameter = graph.Diameter();
 	// 4 + (5 - 4)* 2 = 4 + 2 = 6
-	return diameter + (totalCost - diameter) * 2;
+	return diameter + graph.TotalCost() - diameter * 2;
 }
 /*
   https://www.hackerrank.com/challenges/cipher/problem

@@ -242,6 +242,82 @@ TEST(GraphTests, DijkstraTest)
 	ASSERT_EQ(4, graph.Dijkstra(2, 3)); // 2 + 2
 	ASSERT_EQ(4, graph.Dijkstra(3, 2)); // 2 + 2
 }
+class PruneTestFixture : public testing::TestWithParam<tuple<long, size_t, vector<vector<size_t>>, set<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_vertices = get<1>(GetParam());
+		_edges = get<2>(GetParam());
+		_prune = get<3>(GetParam());
+		vector<size_t> data(_vertices);
+		ranges::generate(data, [n = 1]() mutable
+						 { return n++; }); // Item values
+		_graph.AddVertices(data);		   // Tag values are indices
+		assert(_graph.Count() == _vertices);
+		for (vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
+			_graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
+	}
+	long PruneTest()
+	{
+		return _graph.Prune(_prune);
+	}
+
+protected:
+	Graph<size_t, size_t> _graph;
+	long _expected;
+	vector<vector<size_t>> _edges;
+	size_t _vertices;
+	set<size_t> _prune;
+};
+TEST_P(PruneTestFixture, PruneTests)
+{
+	ASSERT_EQ(this->_expected, this->PruneTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	PruneTests,
+	PruneTestFixture,
+	::testing::Values(make_tuple(0, 5, vector<vector<size_t>>{{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}}, set<size_t>{}), make_tuple(6, 5, vector<vector<size_t>>{{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}}, set<size_t>{5}),
+					  make_tuple(8, 5, vector<vector<size_t>>{{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}}, set<size_t>{1, 5}),
+					  make_tuple(6, 5, vector<vector<size_t>>{{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}}, set<size_t>{1, 4})));
+class DiameterTestFixture : public testing::TestWithParam<tuple<long, size_t, vector<vector<size_t>>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_vertices = get<1>(GetParam());
+		_edges = get<2>(GetParam());
+		vector<size_t> data(_vertices);
+		ranges::generate(data, [n = 1]() mutable
+						 { return n++; }); // Item values
+		_graph.AddVertices(data);		   // Tag values are indices
+		assert(_graph.Count() == _vertices);
+		for (vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
+			_graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
+	}
+	long DiameterTest()
+	{
+		return _graph.Diameter();
+	}
+
+protected:
+	Graph<size_t, size_t> _graph;
+	long _expected;
+	vector<vector<size_t>> _edges;
+	size_t _vertices;
+};
+TEST_P(DiameterTestFixture, DiameterTests)
+{
+	ASSERT_EQ(this->_expected, this->DiameterTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	DiameterTests,
+	DiameterTestFixture,
+	::testing::Values(make_tuple(7, 5, vector<vector<size_t>>{{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}}), make_tuple(5, 5, vector<vector<size_t>>{{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {2, 5, 3}}),
+					  make_tuple(4, 4, vector<vector<size_t>>{{1, 2, 1}, {2, 3, 2}, {2, 4, 2}}),
+					  make_tuple(0, 1, vector<vector<size_t>>{}), make_tuple(10, 2, vector<vector<size_t>>{{1, 2, 10}})));
 /*
  * https://www.hackerrank.com/challenges/johnland/problem
  * Timeout!
