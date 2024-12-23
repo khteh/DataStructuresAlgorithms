@@ -4172,7 +4172,7 @@ string TimeInWords(size_t h, size_t m)
  * Number of times each integers occur in the quadruple is same.
  * For example [1,1,2,3] and [1,2,1,3] should be considered as same.
  *
- * 1 2 3 4:
+ * ABCD: 1 2 3 4:
 1 1 1 1: 0
 1 1 1 2: 3
 1 1 1 3: 2
@@ -4210,6 +4210,27 @@ string TimeInWords(size_t h, size_t m)
 5: [[1 1 1 4],[1 2 2 4]]
 6: [[1 1 2 4]]
 7: [[1 1 3 4]]
+
+w^x: w:1: [0,3]
+[1][0]: 1
+[1][3]: 1
+y^z: y:1: [0,3,2,5]
+	 y:2: [3,0,1,6]
+	 y:3: [2,1,0,7]
+[1][0]:1
+[1][2]:1
+[1][3]:1
+[1][5]:1
+
+[2][0]:1
+[2][1]:1
+[2][3]:1
+[2][6]:1
+
+[3][0]:1
+[3][1]:1
+[3][2]:1
+[3][7]:1
  */
 size_t BeautifulQuadruples(size_t a, size_t b, size_t c, size_t d)
 {
@@ -4548,14 +4569,12 @@ long kruskals(int nodes, vector<long> &from, vector<long> &to, vector<long> &wei
 	return sum;
 }
 /* https://www.hackerrank.com/challenges/jeanies-route/problem
- * k: (the number of cities) and  (the number of letters), respectively.
  * WIP. Times out for more than 100 nodes! ;)
  */
-size_t PostmanProblem(size_t n, size_t letters, vector<size_t> const &cities, vector<vector<size_t>> const &roads)
+size_t PostmanProblem(size_t n, vector<size_t> const &cities, vector<vector<size_t>> const &roads)
 {
 	Permutation<size_t> permutation;
 	Graph<size_t, size_t> graph;
-	long totalCost = 0;
 	for (vector<vector<size_t>>::const_iterator it = roads.begin(); it != roads.end(); it++)
 		graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
 	set<size_t> cities1;
@@ -4564,10 +4583,9 @@ size_t PostmanProblem(size_t n, size_t letters, vector<size_t> const &cities, ve
 			   { return i++; });
 	set<size_t> remove;
 	set_difference(cities1.begin(), cities1.end(), cities.begin(), cities.end(), inserter(remove, remove.begin()));
-	long removed = graph.Prune(remove);
-	totalCost = graph.TotalCost() - removed;
+	long removed = graph.Prune(remove); // Prune updates the total cost of the graph
 	long diameter = graph.Diameter();
-	// 4 + (5 - 4)* 2 = 4 + 2 = 6
+	//  4 + (5 - 4)* 2 = 4 + 2 = 6
 	return diameter + graph.TotalCost() - diameter * 2;
 }
 /*

@@ -471,15 +471,14 @@ void Range::SumPairs(size_t sum, vector<size_t> const &data, vector<size_t> &res
 	}
 }
 /*
-https://www.geeksforgeeks.org/maximum-value-pair-array/
-*/
+ * https://www.geeksforgeeks.org/maximum-value-pair-array/
+ * Start from MSB, add the bit to the result if there are 2 elements having the same prefix value when ANDed
+ */
 size_t Range::MaxAndPair(vector<size_t> const &data)
 {
-	size_t result = 0, pattern = 0;
-	size_t msb = 1 << BitCount(*ranges::max_element(data)) - 1;
-	for (; msb > 0; msb >>= 1)
+	size_t result = 0;
+	for (size_t msb = 1 << BitCount(*ranges::max_element(data)) - 1, pattern = result | msb; msb > 0; msb >>= 1, pattern = result | msb)
 	{
-		pattern = result | msb;
 		size_t count = 0;
 		for (vector<size_t>::const_iterator it = data.begin(); count < 2 && it != data.end(); it++)
 			if ((*it & pattern) == pattern)
@@ -494,48 +493,60 @@ https://www.geeksforgeeks.org/maximum-xor-of-two-numbers-in-an-array/
 n: [1, 2, 3, 4, 5, 6, 7]
 mask: 0x100
 prefixes: 0, 0x100
-newMax: 0x100
-   newMax ^ prefix: 0x100 ^ 0 = 0x100 => maxx = 0x100
+result: 0
+maxx: 0x100
+maxx ^ prefix: 0x100 ^ 0 = 0x100 => result = 0x100
 
 mask: 0x110
 prefixes: 0, 0x10, 0x100, 0x110
-newMax: 0x110
-   newMax ^ prefix: 0x110 ^ 0 = 0x110 => maxx = 0x110 <= (0x100 ^ 0x010 = 0x110)
+result = 0x100
+maxx: 0x110
+maxx ^ prefix: 0x110 ^ 0 = 0x110 => result = 0x110
 
 mask: 0x111
 prefixes: [1,2,3,4,5,6,7]
-newMax: 0x111
-   newMax ^ prefix: 0x111 ^ 1 = 0x110 => maxx = 0x111 <= (0x100 ^ 0x010 = 0x110)
-
+result = 0x110
+maxx: 0x111
+maxx ^ prefix: 0x111 ^ 1 = 0x110 => result = 0x111
 
 n: [1, 2, 3, 4]
 mask: 0x100
 prefixes: 0, 0x100
-newMax: 0x100
-   newMax ^ prefix: 0x100 ^ 0 = 0x100 => maxx = 0x100
+maxx: 0x100
+maxx ^ prefix: 0x100 ^ 0 = 0x100 => result = 0x100
 
 mask: 0x110
 prefixes: 0, 0x10, 0x100
-newMax: 0x110
-   newMax ^ prefix: 0x110 ^ 0 = 0x110 => max = 0x110 <= (0x100 ^ 0x010 = 0x110)
+result: 0x100
+maxx: 0x110
+maxx ^ prefix: 0x110 ^ 0 = 0x110
+			   0x110 ^ 0x10 = 0x100 => result = 0x110
 
 mask: 0x111
 prefixes: [1,2,3,4] [001, 010, 011, 100]
-newMax: 0x111
-   newMax ^ prefix: 0x111 ^ 1 = 0x110 => maxx = 0x111 <= (0x100 ^ 0x010 = 0x110)
+result = 0x110
+maxx: 0x111
+maxx ^ prefix: 0x111 ^ 1 = 0x110
+			   0x111 ^ 0x10 = 0x101
+			   0x111 ^ 0x11 = 0x100 => result = 0x111
 */
 size_t Range::MaxXorPair(vector<size_t> const &data)
 {
-	size_t mask = 0, result = 0;
-	size_t msb = 1 << BitCount(*ranges::max_element(data)) - 1;
+	size_t result = 0;
 	set<size_t> prefixes;
-	for (; msb > 0; msb >>= 1)
+	for (size_t msb = 1 << BitCount(*ranges::max_element(data)) - 1, mask = msb; msb > 0; msb >>= 1, mask |= msb)
 	{
-		mask |= msb;
 		prefixes.clear();
 		for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
 			prefixes.emplace(*it & mask);
-		size_t maxx = result | mask;
+		size_t maxx = result | msb;
+		/*
+		 Find a pair in the prefixes where a^b = maxx
+		1 ^ 2 = 3 => 1 = 3 ^ 2
+					 2 = 3 ^ 1
+		a ^ b = maxx => a = maxx ^ b (True if a is in the prefixes set)
+						b = maxx ^ a (True if b is in the prefixes set)
+		*/
 		for (set<size_t>::const_iterator it = prefixes.begin(); it != prefixes.end(); it++)
 			if (prefixes.count(*it ^ maxx))
 			{

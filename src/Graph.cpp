@@ -566,8 +566,7 @@ TItem Graph<TTag, TItem>::GetSubGraphSum(TTag root)
 template <typename TTag, typename TItem>
 TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root)
 {
-	TItem sum = GetSubGraphSum(root);
-	return GetVertex(root)->MinSubGraphsDifference(root, sum);
+	return GetVertex(root)->MinSubGraphsDifference(root, GetSubGraphSum(root));
 }
 /*
 Prune tree of leave nodes which are in nodes input parameter.
@@ -579,7 +578,6 @@ long Graph<TTag, TItem>::Prune(set<TTag> const &nodes)
 	long cost = 0;
 	set<TTag> toRemove;
 	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = _vertices.begin(); it != _vertices.end(); it++)
-	{
 		if (!toRemove.count(it->first) && it->second->NeighbourCount() == 1 && nodes.count(it->second->GetTag()))
 		{
 			vector<shared_ptr<Vertex<TTag, TItem>>> leaves{it->second};
@@ -611,7 +609,6 @@ long Graph<TTag, TItem>::Prune(set<TTag> const &nodes)
 				}
 			}
 		}
-	}
 	for (typename set<TTag>::const_iterator it = toRemove.begin(); it != toRemove.end(); it++)
 		_vertices.erase(*it);
 	return cost;
