@@ -188,6 +188,7 @@ unsigned long long _atoull(string, char base = 10);
 double _atod(string, char base = 10);
 long _atoi(string);
 generator<const size_t &> GenerateSequence(size_t, size_t);
+generator<const size_t &> Generate2Sequence(size_t, size_t, size_t, size_t);
 double round(double num, int n);
 long double Factorial(long);
 long double FactorialDynamicProgramming(long);

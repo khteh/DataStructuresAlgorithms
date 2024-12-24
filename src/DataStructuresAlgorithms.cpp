@@ -81,7 +81,15 @@ generator<const size_t &> GenerateSequence(size_t start, size_t end)
 {
 	// whatever you like here, e.g.
 	co_yield 123;
-	co_yield std::ranges::elements_of(ranges::iota_view{start, end});
+	co_yield ranges::elements_of(ranges::iota_view{start, end});
+	co_yield 456;
+}
+generator<const size_t &> Generate2Sequence(size_t start, size_t end, size_t start1, size_t end1)
+{
+	// whatever you like here, e.g.
+	co_yield 123;
+	// co_yield ranges::elements_of(ranges::views::join(ranges::iota_view{start, end}, ranges::iota_view{start1, end1}));
+	// co_yield ranges::elements_of(ranges::views::join(ranges::iota_view{start, end}, ranges::iota_view{start1, end1}));
 	co_yield 456;
 }
 /* Assume ASCII character set */
@@ -4232,7 +4240,7 @@ y^z: y:1: [0,3,2,5]
 [3][2]:1
 [3][7]:1
  */
-size_t BeautifulQuadruples(size_t a, size_t b, size_t c, size_t d)
+size_t BeautifulQuadruples1(size_t a, size_t b, size_t c, size_t d)
 {
 	/*
 		if a^b^c^d = 0 then a^b = c^d, therefore sort values to avoid duplications
@@ -4248,21 +4256,46 @@ size_t BeautifulQuadruples(size_t a, size_t b, size_t c, size_t d)
 						quadruples.emplace(multiset<size_t>{i, j, k, l});
 	return quadruples.size();
 }
-size_t BeautifulQuadruples1(size_t a, size_t b, size_t c, size_t d)
+/*
+https://www.hackerrank.com/challenges/xor-quadruples/editorial
+*/
+size_t BeautifulQuadruples(size_t a, size_t b, size_t c, size_t d)
 {
 	/*
 		if a^b^c^d = 0 then a^b = c^d, therefore sort values to avoid duplications
 	*/
 	vector<size_t> abcd{a, b, c, d};
 	ranges::sort(abcd);
-	vector<vector<size_t>> cnt(numeric_limits<size_t>::max(), vector<size_t>(numeric_limits<size_t>::max(), 0));
-	for (size_t i = 1; i <= abcd[2]; i++)
-		for (size_t j = i; j <= abcd[3]; j++)
-			cnt[i][i ^ j]++;
+	vector<size_t> totalB(abcd[1], 0); // pair# (w,x} 1 <= w <= A, 1 <= x <= B, w <= x
+	vector<size_t> data;
+	data.resize(abcd[1]);
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
+	Range range;
+	size_t maxXOR = range.MaxXorPair(data);
+	vector<vector<size_t>> cntB(abcd[1], vector<size_t>(maxXOR, 0)); // pair# {w,x} 1 <= w <= A, 1 <= x <= B, w <= x, cntB[x][1] = w ^ x
+	for (size_t w = 1; w <= abcd[0]; w++)
+		for (size_t x = w; x <= abcd[1]; x++)
+		{
+			totalB[x]++;
+			cntB[x][w ^ x]++;
+		}
+	// Create cumulative sum, such that, total[B] gives number of pair {w,x}, where 1 <= w <= A, "x <= B" and w <= x
+	for (size_t i = 1; i < totalB.size(); i++)
+		totalB[i] += totalB[i - 1];
+	// Create cumulative array, so that, cntB[B][x] gives all pairs {w,x}, where "x <= B" and cntB[x][1] = w ^ x
+	for (size_t x = 1; x <= cntB.size(); x++)
+		for (size_t z = x; z <= cntB[x].size(); z++)
+			cntB[x][z] += cntB[x - 1][z];
+	/* Now, what are the possible pairs of [w,x] that we can use together with [y,z] such that w^x^y^z != 0
+	 * We can choose from totalB[y] pairs of [w,x]. Out of these pairs there are cntB[y][i] which, when combined with [y,z], will produce 0.
+	 * This means we have a total of totalB[y] - cntB[y][i] provide non-zero result
+	 */
 	size_t result = 0;
-	// for (size_t i = 1; i <= abcd[0]; i++)
-	//	for (size_t j = i; j <= abcd[1]; j++)
-	return 0;
+	for (size_t y = 1; y <= abcd[2]; y++)
+		for (size_t z = y; z <= abcd[3]; z++)
+			result += totalB[y] - cntB[y][z];
+	return result;
 }
 /* https://www.hackerrank.com/challenges/red-knights-shortest-path/problem
  * 100%

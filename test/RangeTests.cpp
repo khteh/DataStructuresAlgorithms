@@ -105,7 +105,9 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(28, vector<size_t>{25, 10, 2, 8, 5, 3}),
 					  // make_tuple(15, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>())
 					  make_tuple(15, []() -> generator<size_t>
-												 { co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>())));
+												 { co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>()),
+					  make_tuple(4095, []() -> generator<size_t>
+												   { co_yield ranges::elements_of(ranges::iota_view(1, 3001)); }() | ranges::to<vector>())));
 
 class SumPairsIndicesTestFixture : public RangeTestFixture2<vector<size_t>, size_t, size_t>, public testing::TestWithParam<tuple<vector<size_t>, size_t, vector<size_t>>>
 {
