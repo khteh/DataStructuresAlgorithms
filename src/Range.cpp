@@ -474,13 +474,13 @@ void Range::SumPairs(size_t sum, vector<size_t> const &data, vector<size_t> &res
  * https://www.geeksforgeeks.org/maximum-value-pair-array/
  * Start from MSB, add the bit to the result if there are 2 elements having the same prefix value when ANDed
  */
-size_t Range::MaxAndPair(vector<size_t> const &data)
+unsigned long long Range::MaxAndPair(vector<unsigned long long> const &data)
 {
-	size_t result = 0;
-	for (size_t msb = 1 << BitCount(*ranges::max_element(data)) - 1, pattern = result | msb; msb > 0; msb >>= 1, pattern = result | msb)
+	unsigned long long result = 0;
+	for (unsigned long long msb = 1 << BitCount(*ranges::max_element(data)) - 1, pattern = result | msb; msb > 0; msb >>= 1, pattern = result | msb)
 	{
 		size_t count = 0;
-		for (vector<size_t>::const_iterator it = data.begin(); count < 2 && it != data.end(); it++)
+		for (vector<unsigned long long>::const_iterator it = data.begin(); count < 2 && it != data.end(); it++)
 			if ((*it & pattern) == pattern)
 				count++;
 		if (count >= 2)
@@ -530,16 +530,16 @@ maxx ^ prefix: 0x111 ^ 1 = 0x110
 			   0x111 ^ 0x10 = 0x101
 			   0x111 ^ 0x11 = 0x100 => result = 0x111
 */
-size_t Range::MaxXorPair(vector<size_t> const &data)
+unsigned long long Range::MaxXorPair(vector<unsigned long long> const &data)
 {
-	size_t result = 0;
-	set<size_t> prefixes;
-	for (size_t msb = 1 << BitCount(*ranges::max_element(data)) - 1, mask = msb; msb > 0; msb >>= 1, mask |= msb)
+	unsigned long long result = 0;
+	set<unsigned long long> prefixes;
+	for (unsigned long long msb = 1 << BitCount(*ranges::max_element(data)) - 1, mask = msb; msb > 0; msb >>= 1, mask |= msb)
 	{
 		prefixes.clear();
-		for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
+		for (vector<unsigned long long>::const_iterator it = data.begin(); it != data.end(); it++)
 			prefixes.emplace(*it & mask);
-		size_t maxx = result | msb;
+		unsigned long long maxx = result | msb;
 		/*
 		 Find a pair in the prefixes where a^b = maxx
 		1 ^ 2 = 3 => 1 = 3 ^ 2
@@ -547,7 +547,7 @@ size_t Range::MaxXorPair(vector<size_t> const &data)
 		a ^ b = maxx => a = maxx ^ b (True if a is in the prefixes set)
 						b = maxx ^ a (True if b is in the prefixes set)
 		*/
-		for (set<size_t>::const_iterator it = prefixes.begin(); it != prefixes.end(); it++)
+		for (set<unsigned long long>::const_iterator it = prefixes.begin(); it != prefixes.end(); it++)
 			if (prefixes.count(*it ^ maxx))
 			{
 				result = maxx;
@@ -1362,4 +1362,97 @@ size_t Range::LiveMedianCalculation(size_t d, vector<size_t> const &data)
 		fifo.insert(lower_bound(fifo.begin(), fifo.end(), data[i]), data[i]); // Look for element >= data[i]
 	}
 	return count;
+}
+/* https://www.hackerrank.com/challenges/xor-quadruples/problem
+ * https://www.hackerrank.com/challenges/xor-quadruples/editorial
+ * Time out using conventional 4 for loops due to O(N^3)
+ * 100%
+ * Given A,B,C,D return number of quadruples which satisfy:
+ * W ^ X ^ Y ^ Z > 0
+ * 1 <= W <= A
+ * 1 <= X <= B
+ * 1 <= Y <= C
+ * 1 <= Z <= D
+ * 1 <= A,B,C,D <= 3000
+ * When you count the number of beautiful quadruples, you should consider two quadruples as same if the following are true:
+ * They contain same integers.
+ * Number of times each integers occur in the quadruple is same.
+ * For example [1,1,2,3] and [1,2,1,3] should be considered as same.
+ *
+ * ABCD: 1 2 3 4:
+1 1 1 1: 0
+1 1 1 2: 3
+1 1 1 3: 2
+1 1 1 4: 5
+
+1 1 2 1: 3
+1 1 2 2: 0
+1 1 2 3: 1
+1 1 2 4: 6
+
+1 1 3 1: 2
+1 1 3 2: 1
+1 1 3 3: 0
+1 1 3 4: 7
+
+1 2 1 1: 3
+1 2 1 2: 0
+1 2 1 3: 1
+1 2 1 4: 6
+
+1 2 2 1: 0
+1 2 2 2: 3
+1 2 2 3: 2
+1 2 2 4: 5
+
+1 2 3 1: 1
+1 2 3 2: 2
+1 2 3 3: 3
+1 2 3 4: 4
+
+1: [[1 1 2 3]]
+2: [[1 1 1 3],[1 2 2 3]]
+3: [[1 1 1 2],[1 2 2 2],[1 2 3 3]]
+4: [[1 2 3 4]]
+5: [[1 1 1 4],[1 2 2 4]]
+6: [[1 1 2 4]]
+7: [[1 1 3 4]]
+*/
+unsigned long long Range::BeautifulQuadruples(size_t a, size_t b, size_t c, size_t d)
+{
+	/*
+		if a^b^c^d = 0 then a^b = c^d, therefore sort values to avoid duplications
+	*/
+	vector<size_t> abcd{a, b, c, d};
+	ranges::sort(abcd);
+	vector<unsigned long long> totalB(abcd[3] + 1, 0); // pair# (w,x} 1 <= w <= A, 1 <= x <= B, w <= x
+	vector<unsigned long long> data;
+	data.resize(abcd[3]);
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
+	Range range;
+	unsigned long long maxXOR = range.MaxXorPair(data);
+	vector<vector<unsigned long long>> cntB(abcd[3] + 1, vector<unsigned long long>(maxXOR + 1, 0)); // pair# {w,x} 1 <= w <= A, 1 <= x <= B, w <= x, cntB[x][1] = w ^ x
+	for (size_t w = 1; w <= abcd[0]; w++)
+		for (size_t x = w; x <= abcd[1]; x++)
+		{
+			totalB[x]++;
+			cntB[x][w ^ x]++;
+		}
+	// Create cumulative sum, such that, total[B] gives number of pair {w,x}, where 1 <= w <= A, "x <= B" and w <= x
+	for (size_t i = 1; i < totalB.size(); i++)
+		totalB[i] += totalB[i - 1];
+	// Create cumulative array, so that, cntB[B][x] gives all pairs {w,x}, where "x <= B" and cntB[x][1] = w ^ x
+	for (size_t x = 1; x < cntB.size(); x++)
+		for (size_t z = 0; z < cntB[x].size(); z++)
+			cntB[x][z] += cntB[x - 1][z];
+	/* Now, what are the possible pairs of [w,x] that we can use together with [y,z] such that w^x^y^z != 0
+	 * We can choose from totalB[y] pairs of [w,x]. Out of these pairs there are cntB[y][i] which, when combined with [y,z], will produce 0.
+	 * This means we have a total of totalB[y] - cntB[y][i] provide non-zero result
+	 */
+	unsigned long long result = 0;
+	for (size_t y = 1; y <= abcd[2]; y++)
+		for (size_t z = y; z <= abcd[3]; z++)
+			result += totalB[y] - cntB[y][y ^ z];
+	return result;
 }

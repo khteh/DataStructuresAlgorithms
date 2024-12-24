@@ -1346,15 +1346,6 @@ int main(int argc, char *argv[])
 	assert(TimeInWords(12, 29) == "twenty nine minutes past twelve");
 	assert(TimeInWords(6, 30) == "half past six");
 	assert(TimeInWords(1, 1) == "one minute past one");
-	assert(BeautifulQuadruples(1, 1, 1, 1) == 0);
-	assert(BeautifulQuadruples(1, 2, 3, 4) == 11);
-	assert(BeautifulQuadruples(3, 3, 3, 3) == 9);
-	assert(BeautifulQuadruples(50, 50, 50, 50) == 287736);
-	assert(BeautifulQuadruples(48, 46, 50, 34) == 280465);
-	assert(BeautifulQuadruples(41, 43, 44, 48) == 234686);
-	assert(BeautifulQuadruples(34, 35, 1, 50) == 16965);
-	assert(BeautifulQuadruples(20, 13, 18, 21) == 9621);
-	assert(BeautifulQuadruples(10, 3, 4, 5) == 185);
 	vector<string> paths = findShortestPath(5, 4, 1, 0, 3);
 	assert(paths.size() == 2);
 	assert(paths[0] == "2");

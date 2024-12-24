@@ -57,14 +57,14 @@ INSTANTIATE_TEST_SUITE_P(
 					  // make_tuple(4, 10, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>())
 					  make_tuple(4, 10, []() -> generator<size_t>
 													{ co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>())));
-class MaxAndPairTestFixture : public RangeTestFixture1<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+class MaxAndPairTestFixture : public RangeTestFixture1<unsigned long long, unsigned long long>, public testing::TestWithParam<tuple<unsigned long long, vector<unsigned long long>>>
 {
 public:
 	void SetUp() override
 	{
 		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
-	size_t MaxAndPairTest()
+	unsigned long long MaxAndPairTest()
 	{
 		return _rangeObj.MaxAndPair(_data);
 	}
@@ -76,19 +76,19 @@ TEST_P(MaxAndPairTestFixture, MaxAndPairTests)
 INSTANTIATE_TEST_SUITE_P(
 	MaxAndPairTests,
 	MaxAndPairTestFixture,
-	::testing::Values(make_tuple(8, vector<size_t>{16, 12, 8, 4}),
-					  make_tuple(0, vector<size_t>{4, 8, 16, 2}),
-					  // make_tuple(8, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>())
-					  make_tuple(8, []() -> generator<size_t>
+	::testing::Values(make_tuple(8, vector<unsigned long long>{16, 12, 8, 4}),
+					  make_tuple(0, vector<unsigned long long>{4, 8, 16, 2}),
+					  // make_tuple(8, ranges::iota_view(0, 10) | ranges::to<vector<unsigned long long>>())
+					  make_tuple(8, []() -> generator<unsigned long long>
 												{ co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>())));
-class MaxXorPairTestFixture : public RangeTestFixture1<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+class MaxXorPairTestFixture : public RangeTestFixture1<unsigned long long, unsigned long long>, public testing::TestWithParam<tuple<unsigned long long, vector<unsigned long long>>>
 {
 public:
 	void SetUp() override
 	{
 		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
-	size_t MaxXorPairTest()
+	unsigned long long MaxXorPairTest()
 	{
 		return _rangeObj.MaxXorPair(_data);
 	}
@@ -100,13 +100,13 @@ TEST_P(MaxXorPairTestFixture, MaxXorPairTests)
 INSTANTIATE_TEST_SUITE_P(
 	MaxXorPairTests,
 	MaxXorPairTestFixture,
-	::testing::Values(make_tuple(7, vector<size_t>{1, 2, 3, 4, 5, 6, 7}),
-					  make_tuple(7, vector<size_t>{1, 2, 3, 4}),
-					  make_tuple(28, vector<size_t>{25, 10, 2, 8, 5, 3}),
+	::testing::Values(make_tuple(7, vector<unsigned long long>{1, 2, 3, 4, 5, 6, 7}),
+					  make_tuple(7, vector<unsigned long long>{1, 2, 3, 4}),
+					  make_tuple(28, vector<unsigned long long>{25, 10, 2, 8, 5, 3}),
 					  // make_tuple(15, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>())
-					  make_tuple(15, []() -> generator<size_t>
+					  make_tuple(15, []() -> generator<unsigned long long>
 												 { co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>()),
-					  make_tuple(4095, []() -> generator<size_t>
+					  make_tuple(4095, []() -> generator<unsigned long long>
 												   { co_yield ranges::elements_of(ranges::iota_view(1, 3001)); }() | ranges::to<vector>())));
 
 class SumPairsIndicesTestFixture : public RangeTestFixture2<vector<size_t>, size_t, size_t>, public testing::TestWithParam<tuple<vector<size_t>, size_t, vector<size_t>>>
@@ -1013,3 +1013,32 @@ INSTANTIATE_TEST_SUITE_P(
 	LiveMedianCalculationTests,
 	LiveMedianCalculationTestFixture,
 	::testing::Values(make_tuple(1, 3, vector<size_t>{10, 20, 30, 40, 50}), make_tuple(2, 5, vector<size_t>{2, 3, 4, 2, 3, 6, 8, 4, 5}), make_tuple(0, 4, ranges::iota_view(1, 5) | ranges::to<vector<size_t>>())));
+class BeautifulQuadruplesTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_a = get<1>(GetParam());
+		_b = get<2>(GetParam());
+		_c = get<3>(GetParam());
+		_d = get<4>(GetParam());
+	}
+	size_t BeautifulQuadruplesTest()
+	{
+		return _rangeObj.BeautifulQuadruples(_a, _b, _c, _d);
+	}
+
+protected:
+	Range _rangeObj;
+	vector<size_t> _data;
+	size_t _expected, _a, _b, _c, _d;
+};
+TEST_P(BeautifulQuadruplesTestFixture, BeautifulQuadruplesTests)
+{
+	ASSERT_EQ(this->_expected, this->BeautifulQuadruplesTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	BeautifulQuadruplesTests,
+	BeautifulQuadruplesTestFixture,
+	::testing::Values(make_tuple(0, 1, 1, 1, 1), make_tuple(11, 1, 2, 3, 4), make_tuple(287736, 50, 50, 50, 50), make_tuple(280465, 48, 46, 50, 34), make_tuple(234686, 41, 43, 44, 48), make_tuple(16965, 34, 35, 1, 50), make_tuple(9621, 20, 13, 18, 21), make_tuple(185, 10, 3, 4, 5)));

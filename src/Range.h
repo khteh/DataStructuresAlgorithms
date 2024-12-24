@@ -27,8 +27,9 @@ public:
 	long LongestNonNegativeSumSlice(vector<long> const &);
 	size_t SumPairs(size_t, vector<size_t> const &);
 	void SumPairs(size_t, vector<size_t> const &, vector<size_t> &);
-	size_t MaxAndPair(vector<size_t> const &);
-	size_t MaxXorPair(vector<size_t> const &);
+	unsigned long long MaxAndPair(vector<unsigned long long> const &);
+	unsigned long long MaxXorPair(vector<unsigned long long> const &);
+	unsigned long long BeautifulQuadruples(size_t, size_t, size_t, size_t);
 	size_t GreaterThanSumPairs(size_t, vector<size_t> const &);
 	vector<vector<long>> TripletsZeroSum(vector<long> &);
 	vector<vector<long>> QuadrupletsSum(long, vector<long> &);
