@@ -88,8 +88,8 @@ generator<const size_t &> Generate2Sequence(size_t start, size_t end, size_t sta
 {
 	// whatever you like here, e.g.
 	co_yield 123;
-	// co_yield ranges::elements_of(ranges::views::join(ranges::iota_view{start, end}, ranges::iota_view{start1, end1}));
-	// co_yield ranges::elements_of(ranges::views::join(ranges::iota_view{start, end}, ranges::iota_view{start1, end1}));
+	co_yield ranges::elements_of(ranges::iota_view{start, end});
+	co_yield ranges::elements_of(ranges::iota_view{start1, end1});
 	co_yield 456;
 }
 /* Assume ASCII character set */
