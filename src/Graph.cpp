@@ -6,6 +6,14 @@
 #include "Graph.h"
 template class Graph<long, long>;
 template class Graph<size_t, size_t>;
+template class FurthestNode<long, long>;
+template class FurthestNode<size_t, size_t>;
+
+template <typename TTag, typename TItem>
+FurthestNode<TTag, TItem>::FurthestNode() : distance(0), vertex(nullptr) {}
+template <typename TTag, typename TItem>
+FurthestNode<TTag, TItem>::FurthestNode(shared_ptr<Vertex<TTag, TItem>> v, long d) : vertex(v), distance(d) {}
+
 template <typename TTag, typename TItem>
 Graph<TTag, TItem>::Graph() : _totalCost(0)
 {
@@ -333,63 +341,53 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 		distances[it->first->GetTag()] = it->second;
 }
 /*
-Get the longest distance from src to anywhere in the tree
+Get the longest distance from src to anywhere in the tree using DFS.
 */
 template <typename TTag, typename TItem>
-long Graph<TTag, TItem>::Diameter(TTag src)
+FurthestNode<TTag, TItem> Graph<TTag, TItem>::Diameter(TTag src)
 {
 	// vector<long> distances;
-	set<shared_ptr<Vertex<TTag, TItem>>>
-		spt; // spt: Shortest Path Tree
+	set<shared_ptr<Vertex<TTag, TItem>>> spt; // spt: Shortest Path Tree
 	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(src);
-	multimap<long, shared_ptr<Vertex<TTag, TItem>>> costsPQ; // Priority Queue with min cost at *begin()
+	multimap<long, shared_ptr<Vertex<TTag, TItem>>, greater<long>> costsPQ; // Priority Queue with max cost at *begin()
 	assert(vertex);
 	map<shared_ptr<Vertex<TTag, TItem>>, long> costs;
 	costs.emplace(vertex, 0);
 	costsPQ.emplace(0, vertex);
+	FurthestNode<TTag, TItem> result(vertex, 0);
 	for (; !costsPQ.empty();)
 	{
+		long distance = costsPQ.begin()->first;
 		vertex = costsPQ.begin()->second;
 		costsPQ.erase(costsPQ.begin());
 		spt.emplace(vertex);
-		// Update cost of the adjacent vertices of the picked vertex.
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
 		{
-			/* v is (*it); u is vertex.
-			 * Update cost[v] only if it:
-			 * (1) is not in sptSet
-			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
-			 * (3) and total cost of path from src to v through u is smaller than current value of cost[v]
-			 */
 			if (!spt.count(*it))
 			{
-				long uCost = vertex->GetCost(*it);
-				long vCost = !costs.count(*it) ? 0 : costs[*it];
-				if (costs[vertex] + uCost > vCost)
+				long d = distance + vertex->GetCost(*it);
+				if (d > result.distance)
 				{
-					costs[*it] = costs[vertex] + uCost;
-					erase_if(costsPQ, [it](const auto &it1)
-							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
-					costsPQ.emplace(costs[*it], *it);
+					result.distance = d;
+					result.vertex = *it;
+					costsPQ.emplace(result.distance, *it);
 				}
 			}
 		}
 	}
-	long result = 0;
-	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = costs.begin(); it != costs.end(); it++)
-		// distances[it->first->GetTag()] = it->second;
-		result = max(result, it->second);
-	// return *ranges::max_element(distances);
 	return result;
 }
 template <typename TTag, typename TItem>
 long Graph<TTag, TItem>::Diameter()
 {
-	long max_distance = -1;
-	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = _vertices.begin(); it != _vertices.end(); it++)
-		max_distance = max(max_distance, Diameter(it->second->GetTag()));
-	return max_distance;
+	FurthestNode<TTag, TItem> result;
+	if (!_vertices.empty())
+	{
+		result = Diameter(_vertices.begin()->first);
+		result = Diameter(result.vertex->GetTag());
+	}
+	return result.distance;
 }
 /*
  * https://www.hackerrank.com/challenges/bfsshortreach

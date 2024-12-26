@@ -10,6 +10,15 @@
 using namespace std;
 namespace ranges = std::ranges;
 using namespace oneapi::tbb;
+template <typename TTag, typename TItem>
+class FurthestNode
+{
+public:
+	FurthestNode();
+	FurthestNode(shared_ptr<Vertex<TTag, TItem>> v, long d);
+	shared_ptr<Vertex<TTag, TItem>> vertex;
+	long distance;
+};
 template <typename TTag, typename TItem> // TTag is used as a unique ID. Graph vertices can have duplicate values of TItem
 class Graph
 {
@@ -42,7 +51,7 @@ public:
 	void Dijkstra(TTag, map<shared_ptr<Vertex<TTag, TItem>>, long> &);
 	long Dijkstra(TTag, TTag);
 	void Dijkstra(TTag, vector<long> &);
-	long Diameter(TTag);
+	FurthestNode<TTag, TItem> Diameter(TTag);
 	long Diameter();
 	vector<long> BFSShortestPaths(size_t nodecount, vector<vector<TTag>> &, TTag);
 	void GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>> &, shared_ptr<Vertex<TTag, TItem>> &);

@@ -4487,7 +4487,7 @@ size_t PostmanProblem(size_t n, vector<size_t> const &cities, vector<vector<size
 	long removed = graph.Prune(remove); // Prune updates the total cost of the graph
 	long diameter = graph.Diameter();
 	//  4 + (5 - 4)* 2 = 4 + 2 = 6
-	return diameter + graph.TotalCost() - diameter * 2;
+	return graph.TotalCost() - diameter;
 }
 /*
   https://www.hackerrank.com/challenges/cipher/problem
