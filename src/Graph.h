@@ -31,7 +31,6 @@ private:
 	void AddDirectedEdge(shared_ptr<Vertex<TTag, TItem>>, shared_ptr<Vertex<TTag, TItem>>, long);
 	void AddDirectedEdge(TTag from, TTag to, long cost);
 	long GetPathsCosts(shared_ptr<Vertex<TTag, TItem>>, shared_ptr<Vertex<TTag, TItem>>);
-	void Print(TTag);
 
 public:
 	Graph();
@@ -58,6 +57,8 @@ public:
 	long GetLowestPathCost(size_t, vector<TTag> &, vector<TTag> &, vector<long> &);
 	TItem MinSubGraphsDifference(TTag);
 	long EvenForest(TTag);
-	long Prune(set<TTag> const &);
+	long Prune(set<TTag> const &, set<TTag> &);
+	void Print() const;
+	void Print(TTag);
 	void Print(shared_ptr<Vertex<TTag, TItem>>) const;
 };

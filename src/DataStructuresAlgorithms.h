@@ -331,7 +331,7 @@ string TimeInWords(size_t, size_t);
 size_t BeautifulQuadruples(size_t, size_t, size_t, size_t);
 long kruskals(int, vector<long> &, vector<long> &, vector<long> &);
 long getLowestPathCost(size_t, vector<long> &, vector<long> &, vector<long> &);
-size_t PostmanProblem(size_t, vector<size_t> const &, vector<vector<size_t>> const &);
+size_t PostmanProblem(size_t, set<size_t> const &, vector<vector<size_t>> const &, bool print = false);
 string DecryptPassword(string const &);
 unsigned long long substrings(string const &);
 vector<string> BomberMan(size_t, vector<string> const &);

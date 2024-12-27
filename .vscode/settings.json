@@ -87,7 +87,10 @@
     "target": "cpp",
     "cinttypes": "cpp",
     "__debug": "cpp",
-    "__functional_base": "cpp"
+    "__functional_base": "cpp",
+    "forward_list": "cpp",
+    "generator": "cpp",
+    "text_encoding": "cpp"
   },
   "cmake.configureSettings": {
     "gtest_build_samples": "ON"

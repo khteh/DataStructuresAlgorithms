@@ -139,11 +139,20 @@ void Graph<TTag, TItem>::Print(TTag tag)
 		Print(GetVertex(tag));
 }
 template <typename TTag, typename TItem>
+void Graph<TTag, TItem>::Print() const
+{
+	if (!_vertices.empty())
+		Print(_vertices.begin()->second);
+}
+
+template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex) const
 {
 	ostringstream oss;
 	string uni = "-->";
 	string multi = "<-->";
+	if (!vertex)
+		throw runtime_error("Invalid vertex to start printing from!");
 	vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 	oss << vertex->GetTag() << "(" << vertex->GetItem() << ") ";
 	cout << oss.str();
@@ -571,12 +580,11 @@ Prune tree of leave nodes which are in nodes input parameter.
 Return the total path costs pruned.
 */
 template <typename TTag, typename TItem>
-long Graph<TTag, TItem>::Prune(set<TTag> const &nodes)
+long Graph<TTag, TItem>::Prune(set<TTag> const &nodes, set<TTag> &removed)
 {
 	long cost = 0;
-	set<TTag> toRemove;
 	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = _vertices.begin(); it != _vertices.end(); it++)
-		if (!toRemove.count(it->first) && it->second->NeighbourCount() == 1 && nodes.count(it->second->GetTag()))
+		if (!removed.count(it->first) && it->second->NeighbourCount() == 1 && nodes.count(it->second->GetTag()))
 		{
 			vector<shared_ptr<Vertex<TTag, TItem>>> leaves{it->second};
 			size_t size = leaves.size();
@@ -585,7 +593,7 @@ long Graph<TTag, TItem>::Prune(set<TTag> const &nodes)
 				vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = leaves[i]->GetNeighbours();
 				for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator neighbour = neighbours.begin(); neighbour != neighbours.end(); neighbour++)
 				{
-					toRemove.emplace(leaves[i]->GetTag());
+					removed.emplace(leaves[i]->GetTag());
 					if ((*neighbour)->HasNeighbour(leaves[i]->GetTag()))
 					{
 						// Undirected graph
@@ -607,7 +615,7 @@ long Graph<TTag, TItem>::Prune(set<TTag> const &nodes)
 				}
 			}
 		}
-	for (typename set<TTag>::const_iterator it = toRemove.begin(); it != toRemove.end(); it++)
+	for (typename set<TTag>::const_iterator it = removed.begin(); it != removed.end(); it++)
 		_vertices.erase(*it);
 	return cost;
 }
