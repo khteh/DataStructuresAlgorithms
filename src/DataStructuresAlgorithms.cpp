@@ -4472,7 +4472,7 @@ long kruskals(int nodes, vector<long> &from, vector<long> &to, vector<long> &wei
 /* https://www.hackerrank.com/challenges/jeanies-route/problem
  * This only works for the requirement N cities and N-1 roads. It will NOT work if there is a circle/loop of nodes!
  * 'roads' will have duplicate routes just with opposite directions due to the Undirected Graph nature. For example, [1,2,3] and [2,1,3] are the same path but opposite direction.
- * WIP. Times out for more than 100 nodes! ;)
+ * 100%
  */
 size_t PostmanProblemWithoutLoop(size_t n, set<size_t> const &cities, vector<vector<size_t>> const &roads, bool print)
 {
@@ -4509,7 +4509,6 @@ size_t PostmanProblemWithoutLoop(size_t n, set<size_t> const &cities, vector<vec
 			graph.Print((long)i);
 		cout << "Graph cost: " << graph.TotalCost() << ", diameter: " << graph.Diameter() << endl;
 	}
-	//  4 + (5 - 4)* 2 = 4 + 2 = 6
 	return graph.TotalCost() - graph.Diameter();
 }
 /*

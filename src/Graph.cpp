@@ -349,44 +349,41 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = costs.begin(); it != costs.end(); it++)
 		distances[it->first->GetTag()] = it->second;
 }
-/*
-Get the longest distance from src to anywhere in the tree using DFS.
-*/
 template <typename TTag, typename TItem>
 FurthestNode<TTag, TItem> Graph<TTag, TItem>::Diameter(TTag src)
 {
 	// vector<long> distances;
 	set<shared_ptr<Vertex<TTag, TItem>>> spt; // spt: Shortest Path Tree
 	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(src);
-	multimap<long, shared_ptr<Vertex<TTag, TItem>>, greater<long>> costsPQ; // Priority Queue with max cost at *begin()
 	assert(vertex);
 	map<shared_ptr<Vertex<TTag, TItem>>, long> costs;
 	costs.emplace(vertex, 0);
-	costsPQ.emplace(0, vertex);
 	FurthestNode<TTag, TItem> result(vertex, 0);
-	for (; !costsPQ.empty();)
+	for (; !costs.empty();)
 	{
-		long distance = costsPQ.begin()->first;
-		vertex = costsPQ.begin()->second;
-		costsPQ.erase(costsPQ.begin());
+		long distance = costs.begin()->second;
+		vertex = costs.begin()->first;
+		costs.erase(costs.begin());
 		spt.emplace(vertex);
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
-		{
 			if (!spt.count(*it))
 			{
 				long d = distance + vertex->GetCost(*it);
+				costs.emplace(*it, d);
 				if (d > result.distance)
 				{
 					result.distance = d;
 					result.vertex = *it;
-					costsPQ.emplace(result.distance, *it);
 				}
 			}
-		}
 	}
 	return result;
 }
+/*
+Get the longest distance from src to anywhere in the tree using DFS.
+This only works for the requirement N cities and N-1 roads. It will NOT work if there is a circle/loop of nodes!
+*/
 template <typename TTag, typename TItem>
 long Graph<TTag, TItem>::Diameter()
 {
@@ -442,7 +439,6 @@ void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, 
 		{
 			vector<shared_ptr<Vertex<TTag, TItem>>> vertices;
 			for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator parent = result[level].begin(); parent != result[level].end(); parent++)
-			{
 				if (*parent && !visited.count(*parent))
 				{
 					visited.emplace(*parent);
@@ -465,7 +461,6 @@ void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, 
 					else
 						vertices.insert(vertices.end(), neighbours.begin(), neighbours.end());
 				}
-			}
 			if (!vertices.empty())
 				result.emplace(level + 1, vertices);
 		}
@@ -486,7 +481,6 @@ long Graph<TTag, TItem>::GetPathsCosts(shared_ptr<Vertex<TTag, TItem>> vertex, s
 		// Update dist value of the adjacent vertices of the picked vertex.
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
-		{
 			if (!spt.count(*it))
 			{
 				// Update dist[v] only if it:
@@ -502,7 +496,6 @@ long Graph<TTag, TItem>::GetPathsCosts(shared_ptr<Vertex<TTag, TItem>> vertex, s
 					(*it)->SetTotalCost(newTotalCost);
 				vertices.emplace(newTotalCost, *it);
 			}
-		}
 		vertex = vertices.empty() ? nullptr : vertices.begin()->second;
 		if (!vertices.empty())
 			vertices.erase(vertices.begin());
@@ -593,8 +586,6 @@ long Graph<TTag, TItem>::Prune(set<TTag> const &nodes, set<TTag> &removed)
 				removed.emplace(leaves[i]->GetTag());
 				vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = leaves[i]->GetNeighbours();
 				for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator neighbour = neighbours.begin(); neighbour != neighbours.end(); neighbour++)
-				{
-					// removed.emplace(leaves[i]->GetTag());
 					if ((*neighbour)->HasNeighbour(leaves[i]->GetTag()))
 					{
 						// Undirected graph
@@ -613,7 +604,6 @@ long Graph<TTag, TItem>::Prune(set<TTag> const &nodes, set<TTag> &removed)
 						cost += (*neighbour)->GetCost(leaves[i]);
 						_totalCost -= (*neighbour)->GetCost(leaves[i]);
 					}
-				}
 			}
 		}
 	for (typename set<TTag>::const_iterator it = removed.begin(); it != removed.end(); it++)
