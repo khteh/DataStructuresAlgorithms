@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 	vector<size_t> udata, udata1;
 	vector<unsigned long long> ull;
 	vector<bool> bools;
+	set<vector<size_t>> usetvec;
 	priority_queue<long, deque<long>> maxHeap;
 	priority_queue<long, deque<long>, greater<long>> minHeap;
 	PriorityQueueMedian<long> pqueue;
@@ -2147,6 +2148,11 @@ int main(int argc, char *argv[])
 	assert(arithmetic.DigitsVectorToNumber(cresult) == 56088);
 	// make_tuple(6, 5, 3, vector<size_t>{1, 3, 4}, vector<vector<size_t>>{{1, 2, 1}, {2, 3, 2}, {2, 4, 2}, {3, 5, 3}})
 	// size_t PostmanProblemWithoutLoop(size_t n, size_t letters, vector<size_t> const &cities, vector<vector<size_t>> const &roads)
+	usetvec.clear();
+	usetvec.emplace(vector<size_t>{1, 2, 3});
+	assert(usetvec.size() == 1);
+	usetvec.emplace(vector<size_t>{2, 1, 3});
+	assert(usetvec.size() == 2);
 	uset.clear();
 	graph.Clear();
 	uset = {1, 3, 4};
