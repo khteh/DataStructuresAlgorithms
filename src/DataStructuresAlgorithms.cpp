@@ -4471,9 +4471,10 @@ long kruskals(int nodes, vector<long> &from, vector<long> &to, vector<long> &wei
 }
 /* https://www.hackerrank.com/challenges/jeanies-route/problem
  * This only works for the requirement N cities and N-1 roads. It will NOT work if there is a circle/loop of nodes!
+ * 'roads' will have duplicate routes just with opposite directions due to the Undirected Graph nature. For example, [1,2,3] and [2,1,3] are the same path but opposite direction.
  * WIP. Times out for more than 100 nodes! ;)
  */
-size_t PostmanProblem(size_t n, set<size_t> const &cities, vector<vector<size_t>> const &roads, bool print)
+size_t PostmanProblemWithoutLoop(size_t n, set<size_t> const &cities, vector<vector<size_t>> const &roads, bool print)
 {
 	Graph<size_t, size_t> graph;
 	for (vector<vector<size_t>>::const_iterator it = roads.begin(); it != roads.end(); it++)
@@ -4486,7 +4487,7 @@ size_t PostmanProblem(size_t n, set<size_t> const &cities, vector<vector<size_t>
 		cout << endl;
 		for (size_t i = 1; i <= n; i++)
 			graph.Print((long)i);
-		cout << endl;
+		cout << "Graph cost: " << graph.TotalCost() << ", diameter: " << graph.Diameter() << endl;
 	}
 	set<size_t> all_cities;
 	size_t i = 1;
@@ -4495,6 +4496,7 @@ size_t PostmanProblem(size_t n, set<size_t> const &cities, vector<vector<size_t>
 	set<size_t> remove, removed;
 	set_difference(all_cities.begin(), all_cities.end(), cities.begin(), cities.end(), inserter(remove, remove.begin())); // The difference of two sets is formed by the elements that are present in the first set, but not in the second one.
 	long trimmedCost = graph.Prune(remove, removed);																	  // Prune updates the total cost of the graph
+	assert(includes(remove.begin(), remove.end(), removed.begin(), removed.end()));
 	if (print)
 	{
 		cout << "Expected removal: ";
@@ -4502,10 +4504,10 @@ size_t PostmanProblem(size_t n, set<size_t> const &cities, vector<vector<size_t>
 		cout << endl;
 		cout << "After removing [";
 		ranges::copy(removed, ostream_iterator<size_t>(cout, " "));
-		cout << "] from the tree..." << endl;
+		cout << "] from the tree...trimmed cost: " << trimmedCost << endl;
 		for (size_t i = 1; i <= n; i++)
 			graph.Print((long)i);
-		cout << endl;
+		cout << "Graph cost: " << graph.TotalCost() << ", diameter: " << graph.Diameter() << endl;
 	}
 	long diameter = graph.Diameter();
 	//  4 + (5 - 4)* 2 = 4 + 2 = 6

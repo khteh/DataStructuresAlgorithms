@@ -393,7 +393,7 @@ long Graph<TTag, TItem>::Diameter()
 	FurthestNode<TTag, TItem> result;
 	if (!_vertices.empty())
 	{
-		result = Diameter(_vertices.begin()->first);
+		result = Diameter(_vertices.begin()->second->GetTag());
 		result = Diameter(result.vertex->GetTag());
 	}
 	return result.distance;
@@ -590,10 +590,11 @@ long Graph<TTag, TItem>::Prune(set<TTag> const &nodes, set<TTag> &removed)
 			size_t size = leaves.size();
 			for (size_t i = 0; i < size; i++)
 			{
+				removed.emplace(leaves[i]->GetTag());
 				vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = leaves[i]->GetNeighbours();
 				for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator neighbour = neighbours.begin(); neighbour != neighbours.end(); neighbour++)
 				{
-					removed.emplace(leaves[i]->GetTag());
+					// removed.emplace(leaves[i]->GetTag());
 					if ((*neighbour)->HasNeighbour(leaves[i]->GetTag()))
 					{
 						// Undirected graph
