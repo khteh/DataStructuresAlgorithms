@@ -257,7 +257,6 @@ public:
 		//_graph.AddVertices(data);		   Tag values are indices which start from 0 but the test data start from 1
 		for (vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
 			_graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
-		assert(_graph.Count() == _vertices);
 	}
 	long PruneTest(set<size_t> &removed)
 	{
@@ -277,6 +276,7 @@ protected:
 TEST_P(PruneTestFixture, PruneTests)
 {
 	set<size_t> removed;
+	ASSERT_EQ(this->_vertices, _graph.Count());
 	ASSERT_EQ(this->_expected, this->PruneTest(removed));
 	ASSERT_TRUE(includes(this->_prune.begin(), this->_prune.end(), removed.begin(), removed.end()));
 }
@@ -302,7 +302,6 @@ public:
 		//_graph.AddVertices(data);		   Tag values are indices which start from 0 but the test data start from 1
 		for (vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
 			_graph.AddUndirectedEdge((*it)[0], (*it)[1], (*it)[2]);
-		assert(_graph.Count() == _vertices);
 	}
 	long DiameterTest()
 	{
@@ -317,6 +316,7 @@ protected:
 };
 TEST_P(DiameterTestFixture, DiameterTests)
 {
+	ASSERT_EQ(this->_vertices, _graph.Count());
 	ASSERT_EQ(this->_expected, this->DiameterTest());
 }
 INSTANTIATE_TEST_SUITE_P(
@@ -356,7 +356,6 @@ public:
 		ranges::generate(data, [n = 1]() mutable
 						 { return n++; }); // Item values
 		_graph.AddVertices(data);		   // Tag values are indices
-		assert(_graph.Count() == _nodes);
 		for (vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
 			_graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, 1 << (*it)[2]);
 	}
@@ -402,6 +401,7 @@ public:
 TEST_P(RoadsInHackerlandTestFixture, RoadsInHackerlandTests)
 {
 	// The root of the graph is Node 1
+	ASSERT_EQ(this->_nodes, _graph.Count());
 	ASSERT_EQ(this->_expected, this->RoadsInHackerlandTest());
 }
 INSTANTIATE_TEST_SUITE_P(
@@ -802,7 +802,6 @@ protected:
 		ranges::generate(data, [n = 1]() mutable
 						 { return n++; }); // Item values
 		_graph.AddVertices(data);		   // Tags are indices
-		ASSERT_EQ(_nodes, _graph.Count());
 		for (typename vector<vector<T>>::iterator it = _edges.begin(); it != _edges.end(); it++)
 			_graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, (*it).size() == 3 ? (*it)[2] : 0);
 	}
@@ -830,6 +829,7 @@ public:
 TEST_P(UnsignedGraphFixture, EvenForestTests)
 {
 	// The root of the graph is Node 1
+	ASSERT_EQ(this->_nodes, _graph.Count());
 	ASSERT_EQ(this->_expected, this->EvenForestTest());
 }
 INSTANTIATE_TEST_SUITE_P(
@@ -897,7 +897,6 @@ public:
 		ranges::generate(data, [n = 1]() mutable
 						 { return n++; }); // Item values
 		_graph.AddVertices(data);		   // Tags are indices
-		ASSERT_EQ(_nodes, _graph.Count());
 		for (typename vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
 			_graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, (*it)[2]);
 	}
@@ -918,6 +917,7 @@ protected:
 };
 TEST_P(ShortestPathsTestFixture, ShortestPathsTests)
 {
+	ASSERT_EQ(this->_nodes, _graph.Count());
 	ASSERT_EQ(this->_expected, this->ShortestPathsTest());
 }
 INSTANTIATE_TEST_SUITE_P(

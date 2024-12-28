@@ -4509,9 +4509,8 @@ size_t PostmanProblemWithoutLoop(size_t n, set<size_t> const &cities, vector<vec
 			graph.Print((long)i);
 		cout << "Graph cost: " << graph.TotalCost() << ", diameter: " << graph.Diameter() << endl;
 	}
-	long diameter = graph.Diameter();
 	//  4 + (5 - 4)* 2 = 4 + 2 = 6
-	return graph.TotalCost() - diameter;
+	return graph.TotalCost() - graph.Diameter();
 }
 /*
   https://www.hackerrank.com/challenges/cipher/problem
