@@ -5371,25 +5371,15 @@ vector<string> fizzBuzz(size_t n)
  */
 vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
 {
-	vector<vector<bool>> paths(n, vector<bool>(n, true));
 	vector<size_t> data(n);
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; }); // Item values
 	Graph<size_t, size_t> graph(data); // Tag values are indices
 	assert(graph.Count() == n);
+	vector<long> result(n - 1, 0);
 	for (vector<vector<size_t>>::const_iterator it = roads.begin(); it != roads.end(); it++)
-	{
-		paths[(*it)[0] - 1][(*it)[1] - 1] = false;
-		paths[(*it)[1] - 1][(*it)[0] - 1] = false;
-	}
-	for (size_t i = 0; i < n; i++)
-		for (size_t j = i + 1; j < n; j++) // O(m*n). This explodes!
-			if (paths[i][j])
-				graph.AddUndirectedEdge(i, j, 1);
-	vector<long> result(n, -1);
-	graph.Dijkstra(source - 1, result);
-	erase_if(result, [](const long &value)
-			 { return !value; });
+		graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, 1);
+	graph.UnbeatenPathsDijkstra(source - 1, result);
 	return result;
 }
 /*

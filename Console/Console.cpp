@@ -2095,6 +2095,8 @@ int main(int argc, char *argv[])
 	for (vector<shared_ptr<DVertex<string>>>::const_iterator it = dijkstraResult.begin(); it != dijkstraResult.end(); it++)
 		cout << (*it)->Value() << " -> ";
 	cout << endl;
+	uset.clear();
+	uset.erase(123);
 	udata.clear();
 	ugrid.clear();
 	ugrid = {{1, 2},

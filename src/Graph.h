@@ -50,6 +50,7 @@ public:
 	void Dijkstra(TTag, map<shared_ptr<Vertex<TTag, TItem>>, long> &);
 	long Dijkstra(TTag, TTag);
 	void Dijkstra(TTag, vector<long> &);
+	void UnbeatenPathsDijkstra(TTag, vector<long> &);
 	FurthestNode<TTag, TItem> Diameter(TTag);
 	long Diameter();
 	vector<long> BFSShortestPaths(size_t nodecount, vector<vector<TTag>> &, TTag);

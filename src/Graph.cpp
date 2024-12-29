@@ -347,16 +347,70 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 		}
 	}
 	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = costs.begin(); it != costs.end(); it++)
-		distances[it->first->GetTag()] = it->second;
+		if (it->first->GetTag() != src)
+		{
+			if (_vertices.count(0))
+				distances[it->first->GetTag() > src ? it->first->GetTag() - 1 : it->first->GetTag()] = it->second;
+			else
+				distances[it->first->GetTag() > src ? it->first->GetTag() - 2 : it->first->GetTag() - 1] = it->second;
+		}
+}
+template <typename TTag, typename TItem>
+void Graph<TTag, TItem>::UnbeatenPathsDijkstra(TTag src, vector<long> &distances)
+{
+	set<shared_ptr<Vertex<TTag, TItem>>> spt, nodes1, nodes2;
+	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(src);
+	vector<shared_ptr<Vertex<TTag, TItem>>> nodes;
+	map<shared_ptr<Vertex<TTag, TItem>>, long> costs;
+	assert(vertex);
+	nodes.push_back(vertex);
+	costs.emplace(vertex, 0);
+	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = _vertices.begin(); it != _vertices.end(); it++)
+		if (it->first != src)
+			nodes1.emplace(it->second);
+	for (; !nodes.empty();)
+	{
+		vertex = nodes.front();
+		nodes.erase(nodes.begin());
+		spt.emplace(vertex);
+		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours(); // Nodes directly connected to vertex by main roads. Therefore, they are NOT directly connect to vertex by unbeaten paths.
+		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
+			/*
+			 * nodes1 contains nodes that are directly connected to the current source by an unbeaten path (as they could not be reached by main roads)
+			 * nodes2 contains nodes that are NOT directly connected by an unbeaten path to the current source.
+			 */
+			if (!spt.count(*it))
+			{
+				nodes1.erase(*it);
+				nodes2.emplace(*it);
+			}
+		// Enqueue all the nodes in nodes1 and mark them as grey as we already know their distance from the source.
+		for (typename set<shared_ptr<Vertex<TTag, TItem>>>::iterator it = nodes1.begin(); it != nodes1.end(); it++)
+		{
+			nodes.push_back(*it);
+			spt.insert(*it);
+			costs[*it] = costs[vertex] + 1;
+		}
+		nodes1.clear();
+		nodes1 = nodes2;
+		nodes2.clear();
+	}
+	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = costs.begin(); it != costs.end(); it++)
+		if (it->first->GetTag() != src)
+		{
+			if (_vertices.count(0))
+				distances[it->first->GetTag() > src ? it->first->GetTag() - 1 : it->first->GetTag()] = it->second;
+			else
+				distances[it->first->GetTag() > src ? it->first->GetTag() - 2 : it->first->GetTag() - 1] = it->second;
+		}
 }
 template <typename TTag, typename TItem>
 FurthestNode<TTag, TItem> Graph<TTag, TItem>::Diameter(TTag src)
 {
-	// vector<long> distances;
 	set<shared_ptr<Vertex<TTag, TItem>>> spt; // spt: Shortest Path Tree
 	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(src);
-	assert(vertex);
 	map<shared_ptr<Vertex<TTag, TItem>>, long> costs;
+	assert(vertex);
 	costs.emplace(vertex, 0);
 	FurthestNode<TTag, TItem> result(vertex, 0);
 	for (; !costs.empty();)
