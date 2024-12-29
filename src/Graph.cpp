@@ -350,9 +350,9 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 		if (it->first->GetTag() != src)
 		{
 			if (_vertices.count(0))
-				distances[it->first->GetTag() > src ? it->first->GetTag() - 1 : it->first->GetTag()] = it->second;
+				distances[it->first->GetTag() < src ? it->first->GetTag() : it->first->GetTag() - 1] = it->second;
 			else
-				distances[it->first->GetTag() > src ? it->first->GetTag() - 2 : it->first->GetTag() - 1] = it->second;
+				distances[it->first->GetTag() < src ? it->first->GetTag() - 1 : it->first->GetTag() - 2] = it->second;
 		}
 }
 template <typename TTag, typename TItem>
@@ -399,9 +399,9 @@ void Graph<TTag, TItem>::UnbeatenPathsDijkstra(TTag src, vector<long> &distances
 		if (it->first->GetTag() != src)
 		{
 			if (_vertices.count(0))
-				distances[it->first->GetTag() > src ? it->first->GetTag() - 1 : it->first->GetTag()] = it->second;
+				distances[it->first->GetTag() < src ? it->first->GetTag() : it->first->GetTag() - 1] = it->second;
 			else
-				distances[it->first->GetTag() > src ? it->first->GetTag() - 2 : it->first->GetTag() - 1] = it->second;
+				distances[it->first->GetTag() < src ? it->first->GetTag() - 1 : it->first->GetTag() - 2] = it->second;
 		}
 }
 template <typename TTag, typename TItem>
