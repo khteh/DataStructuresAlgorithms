@@ -371,7 +371,7 @@ long SteadyGene(string const &);
 size_t IntervalSelection(vector<vector<size_t>> &);
 string TwentyFourHourTimeConversion(string const &);
 vector<long> KaprekarNumbers(long, long);
-size_t kMarsh(vector<string> &);
+size_t kMarsh(vector<string> const &);
 size_t MatrixPerimeter(vector<vector<size_t>> &, vector<string> &);
 bool HappyLadyBugs(string const &);
 size_t PowerSum(size_t, size_t, size_t i = 1);

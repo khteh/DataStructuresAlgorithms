@@ -1205,6 +1205,10 @@ int main(int argc, char *argv[])
 	assert(mapIt->first == 4);
 	assert((--mapIt)->first == 2);
 	mymap.emplace(3, 'C');
+	map<size_t, vector<size_t>> mapOfVectors;
+	mapOfVectors[1].push_back(2);
+	assert(!mapOfVectors.empty());
+	assert(1 == mapOfVectors.size());
 	cout << numeric_limits<int>::lowest() << endl;
 	IntervalMap<int, char> imap(0);
 	imap.emplace(0, 2, 'A'); // [0,1]: 'A'
@@ -1954,8 +1958,8 @@ int main(int argc, char *argv[])
 	a.clear();
 	strings.clear();
 	strings = {"."};
-// assert(kMarsh(strings) == 1);
-#if 0
+	// assert(kMarsh(strings) == 1);
+#if 1
 	strings.clear();
 	strings = {"x"};
 	assert(kMarsh(strings) == 0);

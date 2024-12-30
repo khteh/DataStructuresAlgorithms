@@ -4494,7 +4494,7 @@ size_t PostmanProblemWithoutLoop(size_t n, set<size_t> const &cities, vector<vec
 	generate_n(inserter(all_cities, all_cities.begin()), n, [&i]()
 			   { return i++; });
 	set<size_t> remove, removed;
-	set_difference(all_cities.begin(), all_cities.end(), cities.begin(), cities.end(), inserter(remove, remove.begin())); // The difference of two sets is formed by the elements that are present in the first set, but not in the second one.
+	set_difference(all_cities.begin(), all_cities.end(), cities.begin(), cities.end(), inserter(remove, remove.begin())); // Present in first set but not the second.
 	long trimmedCost = graph.Prune(remove, removed);																	  // Prune updates the total cost of the graph
 	assert(includes(remove.begin(), remove.end(), removed.begin(), removed.end()));
 	if (print)
@@ -5367,9 +5367,9 @@ vector<string> fizzBuzz(size_t n)
 }
 /*
  * https://www.hackerrank.com/challenges/rust-murderer/problem
- * WIP. 3 test cases failed with "Abort Called"
+ * WIP. 3 test cases failed with "Time limit exceeded"
  */
-vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
+vector<long> UnbeatenPaths1(size_t n, vector<vector<size_t>> &roads, size_t source)
 {
 	vector<size_t> data(n);
 	ranges::generate(data, [n = 1]() mutable
@@ -5380,6 +5380,58 @@ vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t sourc
 	for (vector<vector<size_t>>::const_iterator it = roads.begin(); it != roads.end(); it++)
 		graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, 1);
 	graph.UnbeatenPathsDijkstra(source - 1, result);
+	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/rust-murderer/problem
+ * WIP. 3 test cases failed with "Time limit exceeded"
+ */
+vector<long> UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
+{
+	set<size_t> visited, nodes1, nodes2;
+	map<size_t, vector<size_t>> adjacency_list;
+	map<size_t, long> costs;
+	vector<size_t> nodes;
+	vector<long> result(n - 1, 0);
+	for (vector<vector<size_t>>::const_iterator it = roads.begin(); it != roads.end(); it++)
+	{
+		adjacency_list[(*it)[0]].push_back((*it)[1]);
+		adjacency_list[(*it)[1]].push_back((*it)[0]);
+	}
+	nodes.push_back(source);
+	size_t i = 1;
+	generate_n(inserter(nodes1, nodes1.end()), n, [&i]()
+			   { return i++; });
+	nodes1.erase(source);
+	for (; !nodes.empty();)
+	{
+		size_t vertex = nodes.front();
+		nodes.erase(nodes.begin());
+		visited.emplace(vertex);
+		for (vector<size_t>::const_iterator it = adjacency_list[vertex].begin(); it != adjacency_list[vertex].end(); it++)
+			/*
+			 * nodes1 contains nodes that are directly connected to the current source by an unbeaten path (as they could not be reached by main roads)
+			 * nodes2 contains nodes that are NOT directly connected by an unbeaten path to the current source.
+			 */
+			if (!visited.count(*it))
+			{
+				nodes1.erase(*it);
+				nodes2.emplace(*it);
+			}
+		// Enqueue all the nodes in nodes1 and mark them as grey as we already know their distance from the source.
+		for (set<size_t>::iterator it = nodes1.begin(); it != nodes1.end(); it++)
+		{
+			nodes.push_back(*it);
+			visited.insert(*it);
+			costs[*it] = costs[vertex] + 1;
+		}
+		nodes1.clear();
+		nodes1 = nodes2;
+		nodes2.clear();
+	}
+	for (map<size_t, long>::const_iterator it = costs.begin(); it != costs.end(); it++)
+		if (it->first != source)
+			result[it->first < source ? it->first - 1 : it->first - 2] = it->second;
 	return result;
 }
 /*
@@ -6647,7 +6699,100 @@ size_t MatrixPerimeter(vector<vector<size_t>> &area, vector<string> &grid)
  * .x..x.
  * .xxxx.
  * ......
+ *
+ * ....
+ * ..x.
+ * ..x.
+ * x...
+ *
+ * Left:
+ * 0 1  2 3
+ * 0 1 -1 0
+ * 0 1 -1 0
+ * -10  1 2
+ *
+ * Up:
+ * 0  0  0 0
+ * 1  1 -1 1
+ * 2  2 -1 2
+ * -1 3  0 3
+ * r1:0, r2:1, c:[0,1,3]
+ * c:0 left[r1][0]:0 left[r2][0]:0 => min_left:0
+ * c:1 left[r1][1]:1 left[r2][1]:1 => min_left:0, result:4
+ * c:3 left[r1][3]:3 left[r2][3]:0 => min_left:3, l:2, result:4
+ *
+ * r1:0, r2:2, c:[0,1,3]
+ * c:0 left[r1][0]:0 left[r2][0]:0 => min_left:0
+ * c:1 left[r1][1]:1 left[r2][1]:1 => min_left:0, result:6
+ * c:3 left[r1][3]:3 left[r2][3]:0 => min_left:3, l:2, result:6
+ *
+ * r1:0, r2:3, c:[1,3]
+ * c:1 left[r1][1]:1 left[r2][1]:0 => min_left:1, result:6
+ * c:3 left[r1][3]:3 left[r2][3]:2 => min_left:1, result:10
+ *
  */
+size_t kMarsh(vector<string> const &grid)
+{
+	size_t result = 0;
+	if (!grid.empty())
+		try
+		{
+			vector<vector<long>> left(grid.size(), vector<long>(grid[0].size(), 0)), up(grid.size(), vector<long>(grid[0].size(), 0));
+			/*
+			 * pre-calculate the number of continuous points up, down, left and right of each point that does not have a marsh. This can be done in O(N^2) time.
+			 */
+			for (size_t i = 0; i < grid.size(); i++)
+				left[i][0] = grid[i][0] == '.' ? 0 : -1;
+			for (size_t i = 0; i < grid[0].size(); i++)
+				up[0][i] = grid[0][i] == '.' ? 0 : -1;
+			for (size_t i = 0; i < grid.size(); i++)
+				for (size_t j = 1; j < grid.size(); j++)
+					if (grid[i][j] == '.')
+						left[i][j] = left[i][j - 1] + 1;
+					else
+						left[i][j] = -1;
+			for (size_t i = 1; i < grid.size(); i++)
+				for (size_t j = 0; j < grid.size(); j++)
+					if (grid[i][j] == '.')
+						up[i][j] = up[i - 1][j] + 1;
+					else
+						up[i][j] = -1;
+			/*
+			 * Now we can solve by considering pairs of points as upper-left and lower-right to determine if a rectagular fence is possible in that rectangle, but it whould take O(N^4) time.
+			 * The best solution is to try row/column pairs, because there are N^2 of them. If we have a pair of rows and the pre-calculated values we can find out which columns will have no marsh between the pair of rows and store them in increasing order of columns in O(N) time resulting in a total O(N^3).
+			 * Now we have all columns to consider and we can assume one left_coloum(say l) and a right_coloum(say r) and initialize both with the first column we have stored.
+			 * Now increase the right_column in each iteration and if we cannot form a rectangular fence with these two columns, we will increase left_column until a rectangle is possible or both of them are in same column. We store the maximum perimeter.
+			 * This will result in a O(N^3) solution and we only need up[][] and left[][] pre-calculations.
+			 */
+			for (size_t r1 = 0; r1 < grid.size(); r1++)
+				for (size_t r2 = r1 + 1; r2 < grid.size(); r2++)
+				{
+					long height = r2 - r1;
+					vector<size_t> cols;
+					for (size_t i = 0; i < grid[r2].size(); i++)
+					{
+						if (up[r2][i] >= height)
+							cols.push_back(i);
+					}
+					size_t l = 0;
+					for (vector<size_t>::const_iterator it = cols.begin(); it != cols.end(); it++)
+					{
+						long min_left = *it - min(left[r1][*it], left[r2][*it]);
+						for (; cols[l] < min_left; l++)
+							;
+						if (*it > cols[l])
+							result = max(result, 2 * height + 2 * (*it - cols[l]));
+					}
+				}
+		}
+		catch (Error e)
+		{
+			cout << "Inner catch, &e: " << &e << " msg: " << e.msg_ << endl;
+			cout << "Inner re-throw..." << endl;
+			throw; // Throw the original e
+		}
+	return result;
+}
 #if 0
 /*
  * WIP - wrong answers
@@ -6758,7 +6903,6 @@ size_t kMarsh(vector<string> &grid)
 				}
 	return perimeter;
 }
-#endif
 size_t kMarsh(vector<string> &grid)
 {
 	vector<vector<size_t>> rows(grid.size(), vector<size_t>(grid[0].size())), cols(grid.size(), vector<size_t>(grid[0].size()));
@@ -6811,6 +6955,7 @@ size_t kMarsh(vector<string> &grid)
 	}
 	return result;
 }
+#endif
 
 /*
  * https://www.hackerrank.com/challenges/happy-ladybugs/problem
