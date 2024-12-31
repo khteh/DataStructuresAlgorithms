@@ -658,6 +658,147 @@ size_t Matrix<T>::TwoCrosses(vector<string> const &grid)
 	}
 	return *ranges::max_element(products);
 }
+/*
+ * https://www.hackerrank.com/challenges/mr-k-marsh/problem
+ 100% based on editorial's solution
+.	.	.	.
+.	.	x	.
+.	.	x	.
+x	.	.	.
+
+Left:
+0	1	2	3
+0	1	-1	0
+0	1	-1	0
+-1	0	1	2
+
+Up:
+0	0	0	0
+1	1	-1	1
+2	2	-1	2
+-1	3	0	3
+
+Rows: [0,1]	Height:1
+Cols: [0,1,3]
+Cols: 0		Cols: 1	Cols: 3
+min_left:0	min_left:0	min_left:3
+L:0			L:0			L:2
+Result: 0	Result: 4	Result:4
+
+Rows: [0,2]	Height:2
+Cols: [0,1,3]
+Cols: 0		Cols: 1		Cols: 3
+min_left:0	min_left:0	min_left:3
+L:0			L:0			L:2
+Result: 0	Result: 6	Result:6
+
+Rows: [0,3]	Height:3
+Cols: [1,3]
+Cols: 1		Cols: 3
+min_left:1	min_left:1
+L:0			L:0
+Result: 0	Result: 10
+
+Rows: [1,2]	Height:2
+...
+========================
+.	.	.	.
+.	.	x	.
+.	.	.	.
+x	.	x	.
+
+Left:
+0	1	2	3
+0	1	-1	0
+0	1	2	3
+-1	0	-1	0
+
+Up:
+0	0	0	0
+1	1	-1	1
+2	2	0	2
+-1	3	-1	3
+
+Rows: [0,1]
+Cols: [0,1,3]
+Cols: 0		Cols: 1		Cols: 3
+min_left:0	min_left:0	min_left:3
+L:0			L:0			L:2
+Result: 0	Result: 4	Result:4
+
+Rows: [0,2]	Height:2
+Cols: [0,1,2,3]
+Cols: 0		Cols: 1		Cols: 2		Cols: 3
+min_left:0	min_left:0	min_left:0	min_left:0
+L:0			L:0			L:0			L:0
+Result: 0	Result: 6	Result:8	Result:10
+
+Rows: [0,3]	Height:3
+Cols: [1,3]
+Cols: 1	Cols: 3
+min_left:1	min_left:3
+L:0			L:1
+Result: 0	Result: 10
+
+Rows: [1,2]	Height:2
+...
+ */
+template <typename T>
+size_t Matrix<T>::LargestPerimeter(vector<string> const &grid)
+{
+	size_t result = 0;
+	if (!grid.empty())
+	{
+		vector<vector<long>> left(grid.size(), vector<long>(grid[0].size(), 0)), up(grid.size(), vector<long>(grid[0].size(), 0));
+		/*
+		 * pre-calculate the number of continuous points up, down, left and right of each point that does not have a marsh. This can be done in O(N^2) time.
+		 */
+		for (size_t i = 0; i < grid.size(); i++)
+			left[i][0] = grid[i][0] == '.' ? 0 : -1;
+		for (size_t i = 0; i < grid[0].size(); i++)
+			up[0][i] = grid[0][i] == '.' ? 0 : -1;
+		for (size_t r = 0; r < grid.size(); r++)
+			for (size_t c = 1; c < grid[r].size(); c++)
+				if (grid[r][c] == '.')
+					left[r][c] = left[r][c - 1] + 1;
+				else
+					left[r][c] = -1;
+		for (size_t c = 0; c < grid[0].size(); c++)
+			for (size_t r = 1; r < grid.size(); r++)
+				if (grid[r][c] == '.')
+					up[r][c] = up[r - 1][c] + 1;
+				else
+					up[r][c] = -1;
+		/*
+		 * Now we can solve by considering pairs of points as upper-left and lower-right to determine if a rectagular fence is possible in that rectangle, but it whould take O(N^4) time.
+		 * The best solution is to try row/column pairs, because there are N^2 of them. If we have a pair of rows and the pre-calculated values we can find out which columns will have no marsh between the pair of rows and store them in increasing order of columns in O(N) time resulting in a total O(N^3).
+		 * Now we have all columns to consider and we can assume one left_coloum(say l) and a right_coloum(say r) and initialize both with the first column we have stored.
+		 * Now increase the right_column in each iteration and if we cannot form a rectangular fence with these two columns, we will increase left_column until a rectangle is possible or both of them are in same column. We store the maximum perimeter.
+		 * This will result in a O(N^3) solution and we only need up[][] and left[][] pre-calculations.
+		 */
+		for (size_t r1 = 0; r1 < grid.size(); r1++)
+			for (size_t r2 = r1 + 1; r2 < grid.size(); r2++)
+			{
+				long height = r2 - r1;
+				vector<size_t> cols; // This stores the indices
+				for (size_t i = 0; i < grid[r2].size(); i++)
+				{
+					if (up[r2][i] >= height)
+						cols.push_back(i);
+				}
+				size_t l = 0;
+				for (vector<size_t>::const_iterator it = cols.begin(); it != cols.end(); it++)
+				{
+					long min_left = *it - min(left[r1][*it], left[r2][*it]);
+					for (; cols[l] < min_left; l++)
+						;
+					if (*it > cols[l])
+						result = max(result, 2 * height + 2 * (*it - cols[l]));
+				}
+			}
+	}
+	return result;
+}
 /* https://www.hackerrank.com/challenges/bomber-man/problem
  * 100%
 0s:								1s:

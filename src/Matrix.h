@@ -32,6 +32,7 @@ public:
 	T GridlandMetro(T, T, vector<vector<T>> const &);
 	T SurfaceArea3D(vector<vector<T>> const &);
 	size_t TwoCrosses(vector<string> const &);
+	size_t LargestPerimeter(vector<string> const &);
 	vector<string> BomberMan(size_t, vector<string> const &);
 	T MaxQuadrantSum(vector<vector<T>> const &);
 	bool ContainersBallsSwap(vector<vector<T>> const &);

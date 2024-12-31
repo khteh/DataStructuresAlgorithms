@@ -122,7 +122,35 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(81, vector<string>{"GGGGGGGGGGGG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GBGGBBBBBBBG", "GGGGGGGGGGGG", "GBGGBBBBBBBG"}),
 					  make_tuple(189, vector<string>{"GGGGGGGGGGGG", "GGGGGGGGGGGG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "GGGGGGGGGGGG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "BGBGGGBGBGBG", "GGGGGGGGGGGG", "GGGGGGGGGGGG"}),
 					  make_tuple(25, vector<string>{"BGB", "GGG", "BGB", "BGB", "GGG", "BGB"}), make_tuple(25, vector<string>{"BGBBGB", "GGGGGG", "BGBBGB"})));
+class LargestPerimeterTestFixture : public testing::TestWithParam<tuple<size_t, vector<string>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	size_t LargestPerimeterTest()
+	{
+		return _matrix.LargestPerimeter(_data);
+	}
 
+protected:
+	Matrix<size_t> _matrix;
+	vector<string> _data;
+	size_t _expected;
+};
+TEST_P(LargestPerimeterTestFixture, LargestPerimeterTests)
+{
+	ASSERT_EQ(this->_expected, this->LargestPerimeterTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LargestPerimeterTests,
+	LargestPerimeterTestFixture,
+	::testing::Values(make_tuple(0, vector<string>{"x"}), make_tuple(10, vector<string>{"....", "..x.", "..x.", "x..."}), make_tuple(4, vector<string>{"....", "x.x.", ".x..", "x..."}), make_tuple(0, vector<string>{".x", "x."}), make_tuple(0, vector<string>{"x.", "x."}),
+					  make_tuple(0, vector<string>{"..", "xx"}), make_tuple(0, vector<string>{"xx", ".."}), make_tuple(4, vector<string>{"..", ".."}), make_tuple(0, vector<string>{"xx", "xx"}), make_tuple(0, vector<string>{"....", "xxx."}),
+					  make_tuple(0, vector<string>{".x", ".x", ".x", ".."}), make_tuple(0, vector<string>{"x.", "x.", "x.", ".."}), make_tuple(0, vector<string>{"..x..", ".x.x.", "..x.."}), make_tuple(8, vector<string>{"...x...", ".x...x.", "...x..."}), make_tuple(8, vector<string>{"...x...", ".x.x.x.", "...x..."}),
+					  make_tuple(14, vector<string>{".....", ".x.x.", ".....", "....."}), make_tuple(6, vector<string>{"..x...", "..x..."}), make_tuple(6, vector<string>{"..xx...", "..xx..."}), make_tuple(6, vector<string>{"..x.x...", "..x.x..."}), make_tuple(20, vector<string>{"......", ".xxxx.", ".x..x.", ".x..x.", ".xxxx.", "......"})));
 TEST(MatrixTests, PathExistsTest)
 {
 	vector<vector<char>> maze = {{0, 0, 1, 0, 1}, {0, 0, 0, 0, 0}, {0, 1, 1, 1, 1}, {0, 1, 1, 0, 0}};
