@@ -2040,9 +2040,9 @@ int main(int argc, char *argv[])
 	// assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 19, 81) == 922261429); // Fails. 922195893. Short of 65536 (0x10000)
 	// assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 4, 99) == 249346542); // Fails. Why is the expected value smaller than the test case above when the range is larger? Overflow.
 	// assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
-	// assert(CountArray(4, 3, 2) == 3);
-	// assert(CountArray(5, 2, 2) == 0);
-	// assert(CountArray(761, 99, 1) == 236568308);
+	assert(CountArray(4, 3, 2) == 3);
+	assert(CountArray(5, 2, 2) == 0);
+	assert(CountArray(761, 99, 1) == 236568308);
 	vector<size_t> cresult;
 	Arithmetic<size_t> arithmetic;
 	// 11111111100, 1234567890, 9876543210

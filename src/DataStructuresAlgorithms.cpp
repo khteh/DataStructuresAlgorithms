@@ -756,70 +756,17 @@ long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t> &data, vector<zerofact
 }
 /*
  * https://www.hackerrank.com/challenges/construct-the-array/problem
- * WIP
+ * 100% editorial solution but I don't fully understand how it works, especially the line:
+ * cout << (x == 1 ? 1LL * (k - 1) * d[n - 2] % mod : d[n - 1]) << endl;
  */
-#if 0
-size_t CountArray(size_t n, size_t k, size_t x)
+unsigned long long CountArray(size_t n, size_t k, size_t x)
 {
-	size_t ul = 1, count = 0;
-	set<size_t> uset;
-	Permutation<size_t> permutation;
-	generate_n(inserter(uset, uset.end()), k, [&ul]()
-			   { return ul++; });
-	vector<vector<size_t>> ugrid = permutation.RangePermutations(vector<size_t>{}, uset, n - 2, 1);
-	for (vector<vector<size_t>>::const_iterator it = ugrid.begin(); it != ugrid.end(); it++)
-		if (it->size() == n - 2 && *(it->begin()) != 1 && it->back() != x)
-			count++;
-	return count;
-}
-size_t CountArray(size_t n, size_t k, size_t x)
-{
-	ostringstream oss;
-	for (size_t i = 1; i <= k; i++)
-		oss << i;
-	Permutation<string> permutation;
-	set<string> permutations = permutation.Permute(oss.str());
-	size_t result = 0;
-	for (set<string>::const_iterator it = permutations.begin(); it != permutations.end(); it++)
-		if ((*it)[0] != '1' && (*it)[n - 2] != x)
-			result++;
-	return result;
-}
-#endif
-size_t CountArray(size_t n, size_t k, size_t x)
-{
-	vector<vector<size_t>> result(BinomialCoefficients(k, n - 2), vector<size_t>(n, 0));
-	for (size_t i = 0; i < n; i++)
-	{
-		if (!i)
-		{
-			for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
-			{
-				(*it)[0] = 1;
-				(*it)[n - 1] = x;
-			}
-		}
-		else
-		{
-			for (size_t j = 1; j <= k; j++)
-			{
-				for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
-				{
-					if ((i != n - 2 && (*it)[i - 1] != j) || (i == n - 2 && j != x))
-						(*it)[i] = j;
-				}
-			}
-		}
-	}
-	size_t count = 0;
-	for (vector<vector<size_t>>::iterator it = result.begin(); it != result.end(); it++)
-	{
-		vector<size_t>::iterator it1 = ranges::find_if(*it, [](const auto &value)
-													   { return !value; }); // Look for element <= data[i]
-		if (it1 == it->end())
-			count++;
-	}
-	return count;
+	const long double modulo = 1e9 + 7L;
+	vector<unsigned long long> dp = {0, 1};
+	for (size_t i = 2; i < n; i++) // Up to f(n-1)
+		dp[i % 2] = fmodl(fmodl(dp[(i - 2) % 2] * (k - 1), modulo) + fmodl(dp[(i - 1) % 2] * (k - 2), modulo), modulo);
+	//  f(n)
+	return x == 1 ? fmodl(dp[(n - 2) % 2] * (k - 1), modulo) : dp[(n - 1) % 2]; // XXX: Don't understand this!
 }
 string insertCharAt(char toInsert, string str, size_t offset)
 {
