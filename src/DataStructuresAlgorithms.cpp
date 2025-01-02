@@ -756,16 +756,60 @@ long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t> &data, vector<zerofact
 }
 /*
  * https://www.hackerrank.com/challenges/construct-the-array/problem
+ * Constraint Satisfaction problem
  * 100% editorial solution but I don't fully understand how it works, especially the line:
  * cout << (x == 1 ? 1LL * (k - 1) * d[n - 2] % mod : d[n - 1]) << endl;
+ *
+n:3, k:3, x:1
+1 [2,3] 1
+1 [k-1] 1 => 2
+i:2 [1,1] Actual dp: [0,1,1]
+result: dp[(n-2)%2] * (k-1) = dp[1]*2 = 2
+
+n:3, k:3, x:2
+1 [3] 2
+1 [k-2] 2 => 1
+i:2 [1,1] Actual dp: [0,1,1]
+result: dp[(n-1)%2] = 1
+
+n:3, k:3, x:3
+1 [2] 3
+1 [k-2] 3 => 1
+i:2 [1,1] Actual dp: [0,1,1]
+result: dp[(n-1)%2] = 1
+
+n:4, k:3, x:1
+1 [2,3] [2,3] 1
+1 [2] [3] 1
+1 [3] [2] 1 => 2
+i:2 [1,1] Actual dp: [0,1,1]
+i:3 [1,2+1] = [1,3] Actual dp: [0,1,1,3]
+result: dp[(n-2)%2] * (k - 1) = dp[0] * 2 = 2
+
+n:4, k:3, x:2
+1 [2,3] [1,3] 2
+1 [2] [1] 2
+1 [2] [3] 2
+1 [3] [1] 2 => 3
+i:2 [1,1] Actual dp: [0,1,1]
+i:3 [1,2+1] = [1,3] Actual dp: [0,1,1,3]
+result: dp[(n-1)%2] = 3
+
+n:4, k:3, x:3
+1 [2,3] [1,2] 3
+1 [2] [1] 3
+1 [3] [2] 3
+1 [3] [1] 3 => 3
+i:2 [1,1] Actual dp: [0,1,1]
+i:3 [1,2+1] = [1,3] Actual dp: [0,1,1,3]
+result: dp[(n-1)%2] = 3
  */
-unsigned long long CountArray(size_t n, size_t k, size_t x)
+unsigned long long WaysToFillRange(size_t n, size_t k, size_t x)
 {
 	const long double modulo = 1e9 + 7L;
 	vector<unsigned long long> dp = {0, 1};
-	for (size_t i = 2; i < n; i++) // Up to f(n-1)
+	for (size_t i = 2; i < n; i++)
 		dp[i % 2] = fmodl(fmodl(dp[(i - 2) % 2] * (k - 1), modulo) + fmodl(dp[(i - 1) % 2] * (k - 2), modulo), modulo);
-	//  f(n)
 	return x == 1 ? fmodl(dp[(n - 2) % 2] * (k - 1), modulo) : dp[(n - 1) % 2]; // XXX: Don't understand this!
 }
 string insertCharAt(char toInsert, string str, size_t offset)

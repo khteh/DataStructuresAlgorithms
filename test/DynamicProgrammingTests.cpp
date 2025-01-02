@@ -213,7 +213,6 @@ INSTANTIATE_TEST_SUITE_P(
 	FibonacciModifiedDPTests,
 	FibonacciModifiedDPTesFixture,
 	::testing::Values(make_tuple("5", 0, 1, 4), make_tuple("27", 0, 1, 5), make_tuple("734", 0, 1, 6), make_tuple("538783", 0, 1, 7), make_tuple("290287121823", 0, 1, 8), make_tuple("2", 2, 0, 0), make_tuple("0", 2, 0, 1), make_tuple("2", 2, 0, 2), make_tuple("4", 2, 0, 3), make_tuple("18", 2, 0, 4), make_tuple("328", 2, 0, 5), make_tuple("107602", 2, 0, 6), make_tuple("11578190732", 2, 0, 7), make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)));
-
 class FactorialDPTestFixture : public testing::TestWithParam<tuple<long double, long>>
 {
 public:
@@ -239,8 +238,7 @@ INSTANTIATE_TEST_SUITE_P(
 	FactorialDPTests,
 	FactorialDPTestFixture,
 	::testing::Values(make_tuple(1, 1), make_tuple(2, 2), make_tuple(6, 3), make_tuple(24, 4), make_tuple(120, 5), make_tuple(2432902008176640000, 20)));
-
-class NumberSolitaireFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+class NumberSolitaireTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
 {
 public:
 	void SetUp() override
@@ -258,12 +256,39 @@ protected:
 	vector<long> _data;
 	long _expected;
 };
-TEST_P(NumberSolitaireFixture, NumberSolitaireTests)
+TEST_P(NumberSolitaireTestFixture, NumberSolitaireTests)
 {
 	ASSERT_EQ(this->_expected, this->NumberSolitaireTest());
 }
 INSTANTIATE_TEST_SUITE_P(
 	NumberSolitaireTests,
-	NumberSolitaireFixture,
+	NumberSolitaireTestFixture,
 	::testing::Values(make_tuple(8, vector<long>{1, -2, 0, 9, -1, -2}), make_tuple(3, vector<long>{1, -2, 4, 3, -1, -3, -7, 4, -9}),
 					  make_tuple(-12, vector<long>{0, -4, -5, -2, -7, -9, -3, -10}), make_tuple(-13, vector<long>{-1, -4, -5, -2, -7, -9, -3, -10})));
+class WaysToFillRangeTestFixture : public testing::TestWithParam<tuple<unsigned long long, size_t, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+		_k = get<2>(GetParam());
+		_x = get<3>(GetParam());
+	}
+	unsigned long long WaysToFillRangeTest()
+	{
+		return WaysToFillRange(_n, _k, _x);
+	}
+
+protected:
+	unsigned long long _expected;
+	size_t _n, _k, _x;
+};
+TEST_P(WaysToFillRangeTestFixture, WaysToFillRangeTests)
+{
+	ASSERT_EQ(this->_expected, this->WaysToFillRangeTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	WaysToFillRangeTests,
+	WaysToFillRangeTestFixture,
+	::testing::Values(make_tuple(2, 3, 3, 1), make_tuple(1, 3, 3, 2), make_tuple(3, 4, 3, 2), make_tuple(0, 5, 2, 2), make_tuple(236568308, 761, 99, 1), make_tuple(151337967, 100000, 100000, 1), make_tuple(413130667, 72071, 66860, 44594)));
