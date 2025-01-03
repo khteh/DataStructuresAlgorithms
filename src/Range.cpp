@@ -805,22 +805,6 @@ long Range::StockMaxProfit1(vector<long> const &prices)
 	}
 	return profit;
 }
-/* https://codility.com/demo/take-sample-test/number_solitaire/
- * https://codesays.com/2015/solution-to-number-solitaire-by-codility/
- * Return the maximal result that can be achieved on the board represented by data
- *       0  1 2 3  4  5  6 7
- * data: 1 -2 0 9 -1 -2 -3 9
- * dp  : 1,-1, MAX(-1, 1) = 1, MAX(10, 8, 10) = 10, MAX(0, -2, 0, 9) = 9, MAX(-1, -3, -1, 8, 7) = 8, MAX(-2, -4, -2, 7, 6, 5) = 7, MAX(10, 8, 10, 19, 18, 17, 16) = 19
- */
-long Range::NumberSolitaire(vector<long> const &data)
-{
-	vector<long> dp(data.size(), numeric_limits<long>::min());
-	dp[0] = data[0];
-	for (long i = 1; i < (long)data.size(); i++)
-		for (long j = 1; j < 7 && (i - j) >= 0; j++)
-			dp[i] = max(dp[i], data[i] + dp[i - j]);
-	return dp[data.size() - 1];
-}
 /*
 	https://www.hackerrank.com/challenges/sherlock-and-cost/problem
 	100%

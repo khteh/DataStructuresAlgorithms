@@ -36,6 +36,7 @@
 #include "oneapi/tbb.h"
 #include "Arithmetic.h"
 #include "Dijkstra.h"
+#include "DynamicProgramming.h"
 #include "NameHidingExample.h"
 #include "Singleton.h"
 #include "Graph.h"
@@ -343,21 +344,16 @@ long BasicCalculator(string const &);
 vector<long> productExceptSelf(vector<long> &);
 size_t hIndex(vector<size_t> &);
 void PhoneKeyLetters(string const &, vector<string> &);
-bool WordBreakDynamicProgramming(string const &, set<string> const &);
-void WordBreakDynamicProgramming(string const &, set<string> const &, vector<string> &);
 vector<string> WordBreakDFS(string const &, set<string> const &);
 vector<string> WordBreakDFS(string const &, set<string> const &, map<string, vector<string>> &);
 string GetHint(string const &, string const &);
-size_t LargestNumberCompositionProductWithDynamicProgramming(size_t);
 vector<string> FindItinerary(vector<vector<string>> &, string const &);
 void EulerianPath(string, map<string, multiset<string>> &, vector<string> &);
-size_t EggDrops(size_t, size_t);
 vector<string> fizzBuzz(size_t);
 vector<long> UnbeatenPaths(size_t, vector<vector<size_t>> &, size_t);
 string RoadsInHackerland(size_t, vector<vector<size_t>> &);
 string RoadsInHackerland1(size_t, vector<vector<size_t>> &);
 string RoadsInHackerland2(size_t, vector<vector<size_t>> &);
-bool Abbreviation(string const &, string const &);
 typedef struct TowerOfHanoiState
 {
 	TowerOfHanoiState() : state(0), moves(0) {}

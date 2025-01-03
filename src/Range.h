@@ -20,7 +20,6 @@ typedef enum class Direction
 class Range
 {
 public:
-	long NumberSolitaire(vector<long> const &);
 	long ConsecutiveMaximumSum(vector<long> const &, vector<long> &);
 	size_t ConsecutiveMaximumSumModulo(vector<long> const &, size_t);
 	long ConsecutiveLargestProduct(vector<long> const &);

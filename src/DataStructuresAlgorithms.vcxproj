@@ -177,6 +177,7 @@
     <ClInclude Include="DiamondProblem.h" />
     <ClInclude Include="Dijkstra.h" />
     <ClInclude Include="DisJointSet.h" />
+    <ClInclude Include="DynamicProgramming.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Employee.h" />
     <ClInclude Include="Error.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="DiamondProblem.cpp" />
     <ClCompile Include="DisJointSet.cpp" />
+    <ClCompile Include="DynamicProgramming.cpp" />
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="FenwickTree.cpp" />
     <ClCompile Include="FunctionObject.cpp" />
