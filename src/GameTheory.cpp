@@ -52,7 +52,7 @@ size_t GameTheory<T>::SnakesAndLaddersGame(vector<vector<T>> const &ladders, vec
                 parent = make_shared<Vertex<T, T>>(i);
                 vertices.emplace(i, parent);
             }
-            for (size_t j = min(6L, (long)(100L - i)); j > 0; j--)
+            for (size_t j = min<long>(6L, 100L - i); j > 0; j--)
             {
                 size_t next = i + j;
                 if (laddermap.count(next))
@@ -102,7 +102,7 @@ size_t GameTheory<T>::SnakesAndLaddersGameFast(vector<vector<T>> const &ladders,
     for (size_t i = 1; i <= 100; i++)
         if (!laddermap.count(i) && !snakemap.count(i))
         { // Skip the number if it is at the beginning of a ladder
-            for (size_t j = min(6L, (long)(100L - i)); j > 0; j--)
+            for (size_t j = min<long>(6L, 100L - i); j > 0; j--)
             {
                 size_t next = i + j;
                 if (laddermap.count(next))

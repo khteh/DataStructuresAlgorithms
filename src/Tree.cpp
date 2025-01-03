@@ -727,16 +727,14 @@ T Tree<T>::MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> curren
 	{
 		minimum = MinDiffInBST(current, current->Left());
 		if (previous)
-		{
 			if constexpr (is_integral<T>::value)
 			{
-				minimum = min((long)minimum, abs((long)(current->Item() - previous->Item())));
+				minimum = min<T>(minimum, abs((long)(current->Item() - previous->Item())));
 			}
 			else if constexpr (is_floating_point<T>::value)
 			{
-				minimum = min((double)minimum, abs((double)(current->Item() - previous->Item())));
+				minimum = min<T>(minimum, abs((double)(current->Item() - previous->Item())));
 			}
-		}
 		minimum = min(minimum, MinDiffInBST(current, current->Right()));
 	}
 	return minimum;

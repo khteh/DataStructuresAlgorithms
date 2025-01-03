@@ -260,7 +260,7 @@ size_t Range::MinimumBribes(size_t maxBribes, vector<long> const &data)
 		 */
 		if (data[i] - (i + 1) > (long)maxBribes)
 			return -1;
-		for (long j = max(0L, data[i] - (long)maxBribes); j < i; j++)
+		for (long j = max<long>(0L, data[i] - maxBribes); j < i; j++)
 			if (data[j] > data[i])
 				bribes++;
 	}
@@ -1153,10 +1153,10 @@ size_t Range::MaxNonDivisableSubset(vector<size_t> const &data, size_t k)
 	 * Case 2: if ((A+B) % k), p + q = k
 	 * case k is even and p=k-q: Cannot have two numbers which have remainder k/2 and k/2 be in S` at the same time. For example, [21, 63, 75], k = 6 => 21+63=84, 21+75=96, 63+75=138 all are divisible by k.
 	 */
-	size_t result = min(counts[0], (size_t)1); // case p = 0; q = 0
+	size_t result = min<size_t>(counts[0], 1); // case p = 0; q = 0
 	bool even = !(k % 2);
 	for (size_t p = 1; p <= k / 2; p++)
-		result += (!even || p != k / 2) ? max(counts[p], counts[k - p]) : min(counts[p], (size_t)1);
+		result += (!even || p != k / 2) ? max(counts[p], counts[k - p]) : min<size_t>(counts[p], 1);
 	return result;
 }
 /*

@@ -832,7 +832,7 @@ long LongestValidParenthesesWithFixes(string const &str, size_t k)
 		if (list[0] == -1 || list.size() == 1)
 		{
 			result = !(list[0] % 2) ? list[0] : list[0] + 1;
-			result = list.size() == str.size() + 1 && str.size() > 1 ? 2 : min((long)k, result / 2) * 2;
+			result = list.size() == str.size() + 1 && str.size() > 1 ? 2 : min<long>(k, result / 2) * 2;
 		}
 		else
 		{
@@ -842,7 +842,7 @@ long LongestValidParenthesesWithFixes(string const &str, size_t k)
 						// if (list[0] != 0) {
 			result = !(size % 2) ? size : size - 1;
 			if ((list[0] == 0 && (long)k > (result / 2)) || (list[0] && (long)k >= (result / 2)))
-				result = min((long)(k * 2), result);
+				result = min<long>(k * 2, result);
 			else
 				result = 0;
 			//}
@@ -4530,12 +4530,12 @@ string ZigZagConvert(string const &s, size_t numRows)
 			row--;
 		if (row == numRows)
 		{
-			row -= min((int)numRows, 2);
+			row -= min<size_t>(numRows, 2);
 			direction = !direction;
 		}
 		else if (row < 0)
 		{
-			row += min((int)numRows, 2);
+			row += min<size_t>(numRows, 2);
 			direction = !direction;
 		}
 	}
