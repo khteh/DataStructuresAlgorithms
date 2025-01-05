@@ -352,7 +352,9 @@ T DynamicProgramming<T>::NumberSolitaire(vector<T> const &data)
  * Constraint Satisfaction problem
  * 100% editorial solution but I don't fully understand how it works, especially the line:
  * cout << (x == 1 ? 1LL * (k - 1) * d[n - 2] % mod : d[n - 1]) << endl;
- *
+ * f(n) = (k-1)f(n-2) + (k-2)f(n-1)
+ * f(0) = 0
+ * f(1) = 1
 n:3, k:3, x:1
 1 [2,3] 1
 1 [k-1] 1 => 2
