@@ -6745,3 +6745,32 @@ char SuperDigit(string const &n, size_t k)
 	}
 	return sum;
 }
+/*
+ * https://www.hackerrank.com/challenges/subset-component/problem?isFullScreen=true
+ * WIP
+ */
+size_t FindConnectedComponents(vector<long> const &data)
+{
+	size_t result = 0;
+	for (vector<long>::const_iterator it = data.begin(); it != data.end(); it++)
+	{
+		size_t setBits = Count1Bits(*it);
+		result += sizeof(long) * 8 - setBits + 1;
+	}
+	Permutation<long> permutation;
+	for (size_t i = 2; i < data.size(); i++)
+	{
+		set<long> tmp;
+		set<long> available(data.begin(), data.end());
+		set<set<long>> r = permutation.RangeUniquePermutations(tmp, available, i, 1);
+		for (set<set<long>>::const_iterator it = r.begin(); it != r.end(); it++)
+		{
+			long value = 0;
+			for (set<long>::const_iterator it1 = it->begin(); it1 != it->end(); it1++)
+				value |= *it1;
+			size_t setBits = Count1Bits(value);
+			result += sizeof(long) * 8 - setBits + 1;
+		}
+	}
+	return result;
+}

@@ -377,3 +377,4 @@ string SuperReducedString(string const &);
 vector<bool> WeightedUniformStrings(string const &, vector<size_t> const &);
 size_t RoadsAndLibraries(size_t, size_t, size_t, vector<vector<size_t>> const &);
 char SuperDigit(string const &, size_t);
+size_t FindConnectedComponents(vector<long> const &);

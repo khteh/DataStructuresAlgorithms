@@ -83,12 +83,13 @@ public:
     {
         set<vector<long>> permutations;
         permutations = _permutation.Permute(_var);
-        /*
+#if 0
         for (set<vector<long>>::iterator it = permutations.begin(); it != permutations.end(); it++)
         {
             ranges::copy(*it, ostream_iterator<long>(cout, " "));
             cout << endl;
-        }*/
+        }
+#endif
         return permutations.size();
     }
 
@@ -135,7 +136,7 @@ TEST_P(RangePermutationsTestFixture, RangePermutationsTests)
 INSTANTIATE_TEST_SUITE_P(
     RangePermutationsTests,
     RangePermutationsTestFixture,
-    ::testing::Values(make_tuple(6, 3, 3, 1), make_tuple(6, 3, 2, 1), make_tuple(120, 5, 5, 1), make_tuple(5040, 7, 7, 1), make_tuple(362880, 9, 9, 1)));
+    ::testing::Values(make_tuple(3, 3, 1, 1), make_tuple(6, 3, 3, 1), make_tuple(6, 3, 2, 1), make_tuple(120, 5, 5, 1), make_tuple(5040, 7, 7, 1), make_tuple(362880, 9, 9, 1)));
 class PermutationGameTestFixture : public testing::TestWithParam<tuple<bool, vector<size_t>>>
 {
 public:

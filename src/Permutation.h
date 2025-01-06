@@ -29,6 +29,8 @@ public:
         requires integral_type<T>;
     vector<vector<T>> RangePermutations(vector<T>, set<T>, size_t, size_t)
         requires integral_type<T>;
+    set<set<T>> RangeUniquePermutations(set<T>, set<T>, size_t, size_t)
+        requires integral_type<T>;
     bool PermutationGame(const vector<T>)
         requires integral_type<T>;
 };

@@ -2065,6 +2065,35 @@ int main(int argc, char *argv[])
 	assert(usetvec.size() == 1);
 	usetvec.emplace(vector<size_t>{2, 1, 3});
 	assert(usetvec.size() == 2);
+	udata.clear();
+	uset.clear();
+	uset = {1, 2, 3};
+	ugrid = ulPermutation.RangePermutations(udata, uset, 1, 1);
+	for (vector<vector<size_t>>::const_iterator it = ugrid.begin(); it != ugrid.end(); it++)
+	{
+		ranges::copy(*it, ostream_iterator<size_t>(cout, ", "));
+		cout << endl;
+	}
+	udata.clear();
+	ugrid = ulPermutation.RangePermutations(udata, uset, 2, 1);
+	for (vector<vector<size_t>>::const_iterator it = ugrid.begin(); it != ugrid.end(); it++)
+	{
+		ranges::copy(*it, ostream_iterator<size_t>(cout, ", "));
+		cout << endl;
+	}
+	udata.clear();
+	ugrid = ulPermutation.RangePermutations(udata, uset, 3, 1);
+	for (vector<vector<size_t>>::const_iterator it = ugrid.begin(); it != ugrid.end(); it++)
+	{
+		ranges::copy(*it, ostream_iterator<size_t>(cout, ", "));
+		cout << endl;
+	}
+	a.clear();
+	a = {1, 2, 3, 5};
+	assert(944 == FindConnectedComponents(a));
+	a.clear();
+	a = {2, 5, 9};
+	assert(504 == FindConnectedComponents(a));
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

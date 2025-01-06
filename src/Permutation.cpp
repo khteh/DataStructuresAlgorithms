@@ -31,7 +31,15 @@ vector<T> Permutation<T>::InsertItemAt(T toInsert, vector<T> &items, size_t offs
     result.insert(result.end(), items.begin() + offset, items.end());
     return result;
 }
-// O(n!)
+/* O(n!)
+data: [1,2,3]
+1 2 3
+1 3 2
+2 1 3
+2 3 1
+3 1 2
+3 2 1
+*/
 template <typename T>
 set<vector<T>> Permutation<T>::Permute(vector<T> &data)
     requires integral_type<T>
@@ -67,7 +75,7 @@ vector<vector<T>> Permutation<T>::RangePermutations(vector<T> sequence, set<T> a
     requires integral_type<T>
 {
     vector<vector<T>> result;
-    if (available.empty())
+    if (available.empty() || sequence.size() == size)
     {
         result.push_back(sequence);
         return result;
@@ -84,6 +92,37 @@ vector<vector<T>> Permutation<T>::RangePermutations(vector<T> sequence, set<T> a
         }
         else if (sequence.size() == size)
             result.push_back(sequence);
+    return result;
+}
+/// @brief
+/// @tparam T
+/// @param sequence : Intermediate result sequence
+/// @param available : Available pool of numbers to add to result sequence
+/// @param size : Size of the result sequence
+/// @param step : Increment step between successive numbers in the result sequence
+/// @return
+template <typename T>
+set<set<T>> Permutation<T>::RangeUniquePermutations(set<T> sequence, set<T> available, size_t size, size_t step)
+    requires integral_type<T>
+{
+    set<set<T>> result;
+    if (available.empty() || sequence.size() == size)
+    {
+        result.insert(sequence);
+        return result;
+    }
+    for (typename set<T>::iterator it = available.begin(); it != available.end(); it++)
+        if (sequence.size() < size && (sequence.empty() || abs((long)*it - (long)*sequence.rbegin()) >= step))
+        {
+            set<T> tmp(sequence);
+            tmp.insert(*it);
+            set<T> setTmp(available);
+            setTmp.erase(*it);
+            set<set<T>> tmpResult = RangeUniquePermutations(tmp, setTmp, size, step);
+            result.insert(tmpResult.begin(), tmpResult.end());
+        }
+        else if (sequence.size() == size)
+            result.insert(sequence);
     return result;
 }
 template <typename T>
