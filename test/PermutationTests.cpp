@@ -106,15 +106,28 @@ INSTANTIATE_TEST_SUITE_P(
     ListPermutationTests,
     ListPermutationTestFixture,
     ::testing::Values(make_tuple(6, ranges::iota_view(1, 4) | ranges::to<vector<long>>()), make_tuple(120, ranges::iota_view(1, 6) | ranges::to<vector<long>>())));
-class RangePermutationsTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t, size_t>>
+template <typename T>
+class RangePermutationsTestFixtureBase
+{
+public:
+    void SetUp(T expected, T size, T resultSize, T step)
+    {
+        _expected = expected;
+        _size = size;
+        _resultSize = resultSize;
+        _step = step;
+    }
+
+protected:
+    Permutation<T> _permutation;
+    T _expected, _size, _step, _resultSize;
+};
+class RangePermutationsTestFixture : public RangePermutationsTestFixtureBase<size_t>, public testing::TestWithParam<tuple<size_t, size_t, size_t, size_t>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _size = get<1>(GetParam());
-        _resultSize = get<2>(GetParam());
-        _step = get<3>(GetParam());
+        RangePermutationsTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
     }
     size_t RangePermutationsTest()
     {
@@ -124,10 +137,6 @@ public:
                    { return ul++; });
         return _permutation.RangePermutations(vector<size_t>{}, uset, _resultSize, _step).size();
     }
-
-protected:
-    Permutation<size_t> _permutation;
-    size_t _expected, _size, _step, _resultSize;
 };
 TEST_P(RangePermutationsTestFixture, RangePermutationsTests)
 {
@@ -137,6 +146,32 @@ INSTANTIATE_TEST_SUITE_P(
     RangePermutationsTests,
     RangePermutationsTestFixture,
     ::testing::Values(make_tuple(3, 3, 1, 1), make_tuple(6, 3, 3, 1), make_tuple(6, 3, 2, 1), make_tuple(120, 5, 5, 1), make_tuple(5040, 7, 7, 1), make_tuple(362880, 9, 9, 1)));
+class RangeUniquePermutationsTestFixture : public RangePermutationsTestFixtureBase<size_t>, public testing::TestWithParam<tuple<size_t, size_t, size_t, size_t>>
+{
+public:
+    void SetUp() override
+    {
+        RangePermutationsTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
+    }
+    size_t RangeUniquePermutationsTest()
+    {
+        size_t ul = 1;
+        set<size_t> uset;
+        generate_n(inserter(uset, uset.end()), _size, [&ul]()
+                   { return ul++; });
+        set<set<size_t>> result = _permutation.RangeUniquePermutations(set<size_t>{}, uset, _resultSize, _step);
+        return result.size();
+    }
+};
+TEST_P(RangeUniquePermutationsTestFixture, RangeUniquePermutationsTests)
+{
+    ASSERT_EQ(this->_expected, this->RangeUniquePermutationsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    RangeUniquePermutationsTests,
+    RangeUniquePermutationsTestFixture,
+    ::testing::Values(make_tuple(3, 3, 1, 1), make_tuple(1, 3, 3, 1), make_tuple(3, 3, 2, 1)));
+
 class PermutationGameTestFixture : public testing::TestWithParam<tuple<bool, vector<size_t>>>
 {
 public:

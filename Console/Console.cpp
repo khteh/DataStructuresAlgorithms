@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	int i, j, *iPtr;
 	unsigned int ui;
 	unsigned long long mask = 0;
-	set<size_t> uset;
+	set<size_t> uset1, uset2;
 	set<string> stringset, stringset1;
 	set<long> lset;
 	vector<string> strings, strings1;
@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
 	vector<unsigned long long> ull;
 	vector<bool> bools;
 	set<vector<size_t>> usetvec;
+	set<set<size_t>> usetgrid;
 	priority_queue<long, deque<long>> maxHeap;
 	priority_queue<long, deque<long>, greater<long>> minHeap;
 	PriorityQueueMedian<long> pqueue;
@@ -279,10 +280,10 @@ int main(int argc, char *argv[])
 		cout << fixed << "log2(" << i << ") = " << log << ", ceil(log2(" << i << ")) = " << ceil(log) << ", floor(log2(" << i << ")) = " << floor(log) << endl;
 	}
 	ul = 100;
-	generate_n(inserter(uset, uset.end()), 10, [&ul]()
+	generate_n(inserter(uset1, uset1.end()), 10, [&ul]()
 			   { return ul++; });
-	set<size_t>::const_iterator it = uset.begin();
-	for (size_t i = 0; it != uset.end(); it++, i++)
+	set<size_t>::const_iterator it = uset1.begin();
+	for (size_t i = 0; it != uset1.end(); it++, i++)
 		assert(*it == 100 + i);
 
 	time_point timestamp = system_clock::now();
@@ -2010,8 +2011,8 @@ int main(int argc, char *argv[])
 	for (vector<shared_ptr<DVertex<string>>>::const_iterator it = dijkstraResult.begin(); it != dijkstraResult.end(); it++)
 		cout << (*it)->Value() << " -> ";
 	cout << endl;
-	uset.clear();
-	uset.erase(123);
+	uset1.clear();
+	uset1.erase(123);
 	udata.clear();
 	ugrid.clear();
 	ugrid = {{1, 2},
@@ -2066,24 +2067,51 @@ int main(int argc, char *argv[])
 	usetvec.emplace(vector<size_t>{2, 1, 3});
 	assert(usetvec.size() == 2);
 	udata.clear();
-	uset.clear();
-	uset = {1, 2, 3};
-	ugrid = ulPermutation.RangePermutations(udata, uset, 1, 1);
+	uset1.clear();
+	uset1 = {1, 2, 3};
+	ugrid = ulPermutation.RangePermutations(udata, uset1, 1, 1);
 	for (vector<vector<size_t>>::const_iterator it = ugrid.begin(); it != ugrid.end(); it++)
 	{
 		ranges::copy(*it, ostream_iterator<size_t>(cout, ", "));
 		cout << endl;
 	}
 	udata.clear();
-	ugrid = ulPermutation.RangePermutations(udata, uset, 2, 1);
+	ugrid = ulPermutation.RangePermutations(udata, uset1, 2, 1);
 	for (vector<vector<size_t>>::const_iterator it = ugrid.begin(); it != ugrid.end(); it++)
 	{
 		ranges::copy(*it, ostream_iterator<size_t>(cout, ", "));
 		cout << endl;
 	}
 	udata.clear();
-	ugrid = ulPermutation.RangePermutations(udata, uset, 3, 1);
+	ugrid = ulPermutation.RangePermutations(udata, uset1, 3, 1);
 	for (vector<vector<size_t>>::const_iterator it = ugrid.begin(); it != ugrid.end(); it++)
+	{
+		ranges::copy(*it, ostream_iterator<size_t>(cout, ", "));
+		cout << endl;
+	}
+	uset1.clear();
+	uset2.clear();
+	uset2 = {1, 2, 3};
+	usetgrid = ulPermutation.RangeUniquePermutations(uset1, uset2, 1, 1);
+	for (set<set<size_t>>::const_iterator it = usetgrid.begin(); it != usetgrid.end(); it++)
+	{
+		ranges::copy(*it, ostream_iterator<size_t>(cout, ", "));
+		cout << endl;
+	}
+	uset1.clear();
+	uset2.clear();
+	uset2 = {1, 2, 3};
+	usetgrid = ulPermutation.RangeUniquePermutations(uset1, uset2, 2, 1);
+	for (set<set<size_t>>::const_iterator it = usetgrid.begin(); it != usetgrid.end(); it++)
+	{
+		ranges::copy(*it, ostream_iterator<size_t>(cout, ", "));
+		cout << endl;
+	}
+	uset1.clear();
+	uset2.clear();
+	uset2 = {1, 2, 3};
+	usetgrid = ulPermutation.RangeUniquePermutations(uset1, uset2, 3, 1);
+	for (set<set<size_t>>::const_iterator it = usetgrid.begin(); it != usetgrid.end(); it++)
 	{
 		ranges::copy(*it, ostream_iterator<size_t>(cout, ", "));
 		cout << endl;
