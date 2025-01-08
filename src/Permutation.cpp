@@ -81,7 +81,7 @@ vector<vector<T>> Permutation<T>::RangePermutations(vector<T> sequence, set<T> a
         return result;
     }
     for (typename set<T>::iterator it = available.begin(); it != available.end(); it++)
-        if (sequence.size() < size && (sequence.empty() || abs((long)*it - (long)sequence.back()) >= step))
+        if (sequence.empty() || abs((long)*it - (long)sequence.back()) >= step)
         {
             vector<T> tmp(sequence);
             tmp.push_back(*it);
@@ -90,8 +90,6 @@ vector<vector<T>> Permutation<T>::RangePermutations(vector<T> sequence, set<T> a
             vector<vector<T>> tmpResult = RangePermutations(tmp, setTmp, size, step);
             result.insert(result.end(), tmpResult.begin(), tmpResult.end());
         }
-        else if (sequence.size() == size)
-            result.push_back(sequence);
     return result;
 }
 /// @brief
@@ -112,7 +110,7 @@ set<set<T>> Permutation<T>::RangeUniquePermutations(set<T> sequence, set<T> avai
         return result;
     }
     for (typename set<T>::iterator it = available.begin(); it != available.end(); it++)
-        if (sequence.size() < size && (sequence.empty() || abs((long)*it - (long)*sequence.rbegin()) >= step))
+        if (sequence.empty() || abs((long)*it - (long)*sequence.rbegin()) >= step)
         {
             set<T> tmp(sequence);
             tmp.insert(*it);
@@ -121,8 +119,6 @@ set<set<T>> Permutation<T>::RangeUniquePermutations(set<T> sequence, set<T> avai
             set<set<T>> tmpResult = RangeUniquePermutations(tmp, setTmp, size, step);
             result.insert(tmpResult.begin(), tmpResult.end());
         }
-        else if (sequence.size() == size)
-            result.insert(sequence);
     return result;
 }
 template <typename T>
