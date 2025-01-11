@@ -2827,6 +2827,18 @@ size_t Count1Bits(long a)
 			count++;
 	return count;
 }
+// Count number of '1' bits
+size_t Count1Bits(long a, set<size_t> &positions)
+{
+	size_t count = 0;
+	for (long i = 1, j = 0; i <= a; i <<= 1, j++)
+		if (i & a)
+		{
+			count++;
+			positions.emplace(j);
+		}
+	return count;
+}
 /* Returns a sequence of bit patterns with increasing number of '1' bits
  * k: total number of bits in the bit patterns
  */
@@ -6748,29 +6760,61 @@ char SuperDigit(string const &n, size_t k)
 /*
  * https://www.hackerrank.com/challenges/subset-component/problem?isFullScreen=true
  * WIP
+ * Treat 1s in an integer as the edges of a connected component,
+	and all 0s as singletons. How many connected components are in
+	the powerset of all the integers?
+a:[1]
+b:0 zeros:1 result:2
+b:1 zeros:1 result:4
+b:2 zeros:1 result:6
+b:3 zeros:1 result:8
+result += 1 129
+zeroes = [0]
+result -= 1 = 128
+
+a:[0, 0, 3, 5] [0,0,0x011,0x101]
+b:0 zeros:2 result:4
+b:1 zeros:3 result:12
+b:2 zeros:3 result:20
+b:3 zeros:3 result:28
+result += 15 = 508+15=523
+zeroes = [0, 0]
+result -= 3 = 523-3 = 520
+
+a:[0,5,9] [0, 0x0101, 0x1001]
+b:0 zeros:1 result:2
+b:1 zeros:3 result:10
+b:2 zeros:2 result:14
+b:3 zeros:2 result:18
+result += 7 = 498 + 7 = 505
+zeroes = [0]
+result -= 1 = 504
  */
-size_t FindConnectedComponents(vector<long> const &data)
+size_t FindConnectedComponents(vector<long> &data)
 {
+	// Remove singletons (less than 2 set bits)
+	ranges::transform(data, data.begin(), [](const long &i) mutable
+					  { return Count1Bits(i) < 2 ? 0 : i; });
 	size_t result = 0;
-	for (vector<long>::const_iterator it = data.begin(); it != data.end(); it++)
+	for (size_t i = 0; i < sizeof(long) * 8; i++)
 	{
-		size_t setBits = Count1Bits(*it);
-		result += sizeof(long) * 8 - setBits + 1;
+		size_t zeroes = 0; // Number of zeroes at this bit for all numbers
+		zeroes = parallel_reduce(
+			blocked_range<size_t>(0, data.size()), 0,
+			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
+			{
+				for (size_t j = r.begin(); j < r.end(); j++)
+					running_total += !(data[j] & (1L << i)) ? 1 : 0;
+				return running_total;
+			},
+			std::plus<size_t>());
+		if (zeroes)
+			result += 1 << zeroes;
 	}
-	Permutation<long> permutation;
-	for (size_t i = 2; i < data.size(); i++)
-	{
-		set<long> tmp;
-		set<long> available(data.begin(), data.end());
-		set<set<long>> r = permutation.RangeUniquePermutations(tmp, available, i, 1);
-		for (set<set<long>>::const_iterator it = r.begin(); it != r.end(); it++)
-		{
-			long value = 0;
-			for (set<long>::const_iterator it1 = it->begin(); it1 != it->end(); it1++)
-				value |= *it1;
-			size_t setBits = Count1Bits(value);
-			result += sizeof(long) * 8 - setBits + 1;
-		}
-	}
-	return result;
+	result += data.empty() ? 0 : (1 << data.size()) - 1; // XXX
+	// result += (1 << data.size()) - 1; // XXX
+	size_t count = ranges::count_if(data, [](size_t i)
+									{ return !i; });
+	//  return result - ((1 << count) - 1);
+	return result - (count ? ((1 << count) - 1) : 0);
 }

@@ -248,7 +248,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 			if (!spt.count(*it))
 			{
 				long uCost = vertex->GetCost(*it);
-				long vCost = !costs.count(*it) ? numeric_limits<long>::max() : costs[*it];
+				long vCost = costs.count(*it) ? costs[*it] : numeric_limits<long>::max();
 				if (costs[vertex] + uCost < vCost)
 				{
 					costs[*it] = costs[vertex] + uCost;
@@ -290,7 +290,7 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 			if (!spt.count(*it))
 			{
 				long uCost = vertex->GetCost(*it);
-				long vCost = !costs.count(*it) ? numeric_limits<long>::max() : costs[*it];
+				long vCost = costs.count(*it) ? costs[*it] : numeric_limits<long>::max();
 				if (costs[vertex] + uCost < vCost)
 				{
 					costs[*it] = costs[vertex] + uCost;
@@ -335,7 +335,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 			if (!spt.count(*it))
 			{
 				long uCost = vertex->GetCost(*it);
-				long vCost = !costs.count(*it) ? numeric_limits<long>::max() : costs[*it];
+				long vCost = costs.count(*it) ? costs[*it] : numeric_limits<long>::max();
 				if (costs[vertex] + uCost < vCost)
 				{
 					costs[*it] = costs[vertex] + uCost;
