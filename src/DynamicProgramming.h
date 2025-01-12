@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <stack>
 #include <set>
+#include <limits>
 #include <map>
 #include <math.h>
 #include <ranges>
@@ -35,4 +36,6 @@ public:
         requires arithmetic_type<T>;
     unsigned long long WaysToFillRange(T, T, T)
         requires arithmetic_type<T>;
+    void FloydWarshall(size_t, vector<vector<T>> const &, vector<vector<T>> &)
+        requires signed_integral_type<T>;
 };

@@ -320,3 +320,60 @@ INSTANTIATE_TEST_SUITE_P(
 	WaysToFillRangeTests,
 	WaysToFillRangeTestFixture,
 	::testing::Values(make_tuple(2, 3, 3, 1), make_tuple(1, 3, 3, 2), make_tuple(3, 4, 3, 2), make_tuple(0, 5, 2, 2), make_tuple(236568308, 761, 99, 1), make_tuple(151337967, 100000, 100000, 1), make_tuple(413130667, 72071, 66860, 44594)));
+class FloydWarshallTestFixture : public testing::TestWithParam<tuple<vector<long>, size_t, vector<vector<long>>, vector<vector<size_t>>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+		_edges = get<2>(GetParam());
+		_queries = get<3>(GetParam());
+	}
+	vector<long> FloydWarshallTest()
+	{
+		vector<long> result;
+		vector<vector<long>> distances;
+		_dp.FloydWarshall(_n, _edges, distances);
+		for (vector<vector<size_t>>::const_iterator it = _queries.begin(); it != _queries.end(); it++)
+			result.push_back(distances[(*it)[0]][(*it)[1]] == numeric_limits<long>::max() ? -1 : distances[(*it)[0]][(*it)[1]]);
+		return result;
+	}
+
+protected:
+	DynamicProgramming<long> _dp;
+	vector<vector<long>> _edges;
+	vector<long> _expected;
+	vector<vector<size_t>> _queries;
+	size_t _n;
+};
+TEST_P(FloydWarshallTestFixture, FloydWarshallTests)
+{
+	ASSERT_EQ(this->_expected, this->FloydWarshallTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	FloydWarshallTests,
+	FloydWarshallTestFixture,
+	::testing::Values(make_tuple(vector<long>{70, -1, 130, 40, 70, 20, -1, 20}, 5, vector<vector<long>>{{1, 2, 20}, {1, 3, 50}, {1, 4, 70}, {1, 5, 90}, {2, 3, 30}, {3, 4, 40}, {4, 5, 60}},
+								 vector<vector<size_t>>{{1, 4},
+														{5, 1},
+														{2, 5},
+														{3, 4},
+														{1, 4},
+														{1, 2},
+														{3, 1},
+														{1, 2}}),
+					  make_tuple(vector<long>{150, 1, 99, 1}, 4, vector<vector<long>>{{1, 2, 1}, {3, 2, 150}, {4, 3, 99}, {1, 4, 100}, {3, 1, 200}},
+								 vector<vector<size_t>>{{3, 2},
+														{1, 2},
+														{4, 3},
+														{1, 2}}),
+					  make_tuple(vector<long>{6, -1, 0, 106}, 4, vector<vector<long>>{{2, 1, 298}, {3, 4, 299}, {2, 4, 200}, {2, 4, 100}, {3, 2, 300}, {3, 2, 6}},
+								 vector<vector<size_t>>{{3, 2},
+														{4, 1},
+														{1, 1},
+														{3, 4}}),
+					  make_tuple(vector<long>{5, -1, 11}, 4, vector<vector<long>>{{1, 2, 5}, {1, 4, 24}, {2, 4, 6}, {3, 4, 4}, {3, 2, 7}},
+								 vector<vector<size_t>>{{1, 2},
+														{3, 1},
+														{1, 4}})));

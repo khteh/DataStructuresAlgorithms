@@ -377,6 +377,7 @@ n:4, k:3, x:1
 1 [2,3] [2,3] 1
 1 [2] [3] 1
 1 [3] [2] 1 => 2
+1 [k-1] [k-1] 1
 i:2 [1,1] Actual dp: [0,1,1]
 i:3 [1,2+1] = [1,3] Actual dp: [0,1,1,3]
 result: dp[(n-2)%2] * (k - 1) = dp[0] * 2 = 2
@@ -386,6 +387,7 @@ n:4, k:3, x:2
 1 [2] [1] 2
 1 [2] [3] 2
 1 [3] [1] 2 => 3
+1 [k-1] [k-1] 2
 i:2 [1,1] Actual dp: [0,1,1]
 i:3 [1,2+1] = [1,3] Actual dp: [0,1,1,3]
 result: dp[(n-1)%2] = 3
@@ -408,4 +410,27 @@ unsigned long long DynamicProgramming<T>::WaysToFillRange(T n, T k, T x)
     for (T i = 2; i < n; i++)
         dp[i % 2] = fmodl(fmodl(dp[(i - 2) % 2] * (k - 1), modulo) + fmodl(dp[(i - 1) % 2] * (k - 2), modulo), modulo);
     return x == 1 ? fmodl(dp[(n - 2) % 2] * (k - 1), modulo) : dp[(n - 1) % 2]; // XXX: Don't understand this!
+}
+/*
+ * https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm
+ * https://www.hackerrank.com/challenges/floyd-city-of-blinding-lights/problem
+ * 100%
+ */
+template <typename T>
+void DynamicProgramming<T>::FloydWarshall(size_t n, vector<vector<T>> const &edges, vector<vector<T>> &distances)
+    requires signed_integral_type<T>
+{
+    distances.resize(n + 1);
+    for (size_t i = 0; i <= n; i++)
+    {
+        distances[i] = vector<T>(n + 1, numeric_limits<T>::max());
+        distances[i][i] = 0;
+    }
+    for (typename vector<vector<T>>::const_iterator it = edges.begin(); it != edges.end(); it++)
+        distances[(*it)[0]][(*it)[1]] = (*it)[2];
+    for (size_t k = 1; k <= n; k++) // Assuming 1-based index for vertex
+        for (size_t i = 1; i <= n; i++)
+            for (size_t j = 1; j <= n; j++)
+                if (distances[i][k] != numeric_limits<T>::max() && distances[k][j] != numeric_limits<T>::max())
+                    distances[i][j] = min<T>(distances[i][j], distances[i][k] + distances[k][j]);
 }
