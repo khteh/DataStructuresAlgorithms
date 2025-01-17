@@ -5956,7 +5956,6 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 }
 /*
  * https://www.hackerrank.com/challenges/summing-pieces/problem
-
  1 2 3 (n = 3)
 [1] [2] [3]
 [1 2] [3]
@@ -6759,7 +6758,7 @@ char SuperDigit(string const &n, size_t k)
 }
 /*
  * https://www.hackerrank.com/challenges/subset-component/problem?isFullScreen=true
- * WIP
+ * WIP. Bad problem description.
  * Treat 1s in an integer as the edges of a connected component,
 	and all 0s as singletons. How many connected components are in
 	the powerset of all the integers?
