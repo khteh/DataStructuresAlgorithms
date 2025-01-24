@@ -38,4 +38,6 @@ public:
         requires arithmetic_type<T>;
     void FloydWarshall(size_t, vector<vector<T>> const &, vector<vector<T>> &)
         requires signed_integral_type<T>;
+    T VectorSlicesSum(vector<T> const &)
+        requires arithmetic_type<T>;
 };

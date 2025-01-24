@@ -1042,25 +1042,3 @@ INSTANTIATE_TEST_SUITE_P(
 	BeautifulQuadruplesTests,
 	BeautifulQuadruplesTestFixture,
 	::testing::Values(make_tuple(0, 1, 1, 1, 1), make_tuple(11, 1, 2, 3, 4), make_tuple(287736, 50, 50, 50, 50), make_tuple(280465, 48, 46, 50, 34), make_tuple(234686, 41, 43, 44, 48), make_tuple(16965, 34, 35, 1, 50), make_tuple(9621, 20, 13, 18, 21), make_tuple(185, 10, 3, 4, 5)));
-class VectorSlicesSumTestFixture : public RangeTestFixture1<long, long>, public testing::TestWithParam<tuple<long, vector<long>>>
-{
-public:
-	void SetUp() override
-	{
-		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-	}
-	long VectorSlicesSumTest()
-	{
-		return _rangeObj.VectorSlicesSum(_data);
-	}
-};
-TEST_P(VectorSlicesSumTestFixture, VectorSlicesSumTests)
-{
-	ASSERT_EQ(this->_expected, this->VectorSlicesSumTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	VectorSlicesSumTests,
-	VectorSlicesSumTestFixture,
-	::testing::Values(make_tuple(44, vector<long>{1, 2, 3}), make_tuple(73, vector<long>{1, 3, 6}), make_tuple(282, vector<long>{1, 3, 6, 7}), make_tuple(971, vector<long>{4, 2, 9, 10, 1}),
-					  make_tuple(868784194, vector<long>{477, 392, 161, 421, 245, 50, 530, 889, 750, 16, 545, 303, 898, 785, 162, 279, 677, 664, 126, 149, 814, 360, 334, 681, 473, 293, 267, 120, 825, 21, 267, 301, 413, 779, 73, 657, 181, 602, 897, 930, 969, 441, 232, 218, 577, 745, 848, 253}),
-					  make_tuple(818555228, vector<long>{695, 14, 706, 200, 379, 690, 991, 128, 60, 998, 730, 381, 301, 559, 192, 686, 608, 907, 256, 584, 177, 319, 843, 87, 446, 37, 520, 464, 483, 685, 894, 177, 50, 952, 376, 781, 641, 718, 908, 700, 715, 989, 432, 367, 547, 624, 52, 507, 530, 659, 90, 58, 978, 932, 497, 423, 321, 16, 238, 803, 52, 484, 979, 101, 435, 706, 881, 427, 423, 141, 126, 489, 129, 909, 207, 28, 884, 610, 534})));
