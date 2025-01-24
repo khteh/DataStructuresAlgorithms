@@ -161,10 +161,20 @@ int main(int argc, char *argv[])
 	assert(1e9 + 7 == pow(10, 9) + 7);
 	cout << "1e9: " << 1e9 << ", 10e9: " << 10e9 << endl;
 	cout << "1e5: " << 1e5 << ", pow(10, 5): " << pow(10, 5) << ", " << pow(2, pow(10, 5)) << endl;
-	/* (a/b)*b + a%b = a
-	 * -3/2 = -1 => *b = -2 => -2 + a%b = -3 => a%b = -3 + 2 = -1
-	 * 3/-2 = -1 => *b = 2 => 2 + a%b = 3 => a%b = 1
-	 * -3/-2 = 1 => *b = -2 => -2 + a%b = -3 => a%b = -3 + 2 = -1
+	/*
+	 * https://stackoverflow.com/questions/42963913/what-actually-is-the-modulo-of-a-negative-number
+	 * (a/b)*b + a%b == a
+	 * a:3, b:4
+	 * (3/4)*4 + 3%4 = 3
+	 *
+	 * a:7, b:5
+	 * (7/5)*5 + 7%5 = 5 + 2 = 7
+	 *
+	 * a:-7, b:5
+	 * (-7/5)*5 + -7%5 = -5 + ? = -7 => -7%5 = -2
+	 *
+	 * a:7, b:-5
+	 * (7/-5)*-5 + 7%-5 = 5 + ? = 7 => 7%-5 = 2
 	 */
 	assert(-3 % 2 == -1);
 	assert(3 % -2 == 1);
@@ -2032,8 +2042,8 @@ int main(int argc, char *argv[])
 	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 2, 40) == 740299127);
 	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 5, 41) == 556755193);
 	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 43) == 1);
-	// assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 19, 81) == 922261429); // Fails. 922195893. Short of 65536 (0x10000)
-	// assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 4, 99) == 249346542); // Fails. Why is the expected value smaller than the test case above when the range is larger? Overflow.
+	assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 19, 81) == 922261429); // Fails. 922195893. Short of 65536 (0x10000)
+	assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 4, 99) == 249346542);	// Fails. Why is the expected value smaller than the test case above when the range is larger? Overflow.
 	// assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
 	vector<size_t> cresult;
 	Arithmetic<size_t> arithmetic;
