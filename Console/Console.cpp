@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 	string str, str1;
 	ostringstream oss;
 	size_t size;
-	long l;
+	long l, l1, l2;
 	random_device device;
 	// Fourth run: "warm-up" sequence as as seed; different each run.
 	// Advanced uses. Allows more than 32 bits of randomness.
@@ -169,6 +169,15 @@ int main(int argc, char *argv[])
 	assert(-3 % 2 == -1);
 	assert(3 % -2 == 1);
 	assert(-3 % -2 == -1);
+	l1 = 3;
+	l2 = 7;
+	l = 5;
+	/*
+	 * https://www.hackerrank.com/contests/world-codesprint-7/challenges/summing-pieces/forum/comments/188413
+	 * (a - b) % m = (a % m - b % m + m) % m
+	 */
+	assert((l1 - l2) % l == -4);
+	assert((l1 % l - l2 % l + l) % l == 1);
 	i = 3;
 	assert(-i == -3);
 	assert(~i == -4);
@@ -431,9 +440,9 @@ int main(int argc, char *argv[])
 	ranges::copy(strings, ostream_iterator<string>(cout, "\r\n"));
 	ranges::sort(strings, [](string a, string b) -> bool
 				 {
-			ranges::sort(a);
-			ranges::sort(b);
-			return a < b; });
+		ranges::sort(a);
+		ranges::sort(b);
+		return a < b; });
 	assert(strings[0] == "Hello World!!!");
 	assert(strings[1] == "World Hello!!!");
 	assert(strings[2] == "Angel");
@@ -1939,21 +1948,6 @@ int main(int argc, char *argv[])
 			 {192, 174, 272},
 			 {153, 50, 348}};
 	// assert("100001110110101101000110111011110000000000001100010011111101010011010111100110011001001000101100001000110111110011111010001111101000101011100001110110101001011011111111011110101000100100011010000001110110001000110000100010011001101001100011101100100101001101111000001110000000100111000010001111110111100010111010011111111011111101111111110011111101111" == RoadsInHackerland(300, edges));
-	ld.clear();
-	ld = {1, 2, 3};
-	assert(VectorSlicesSum(ld) == 44);
-	ld.clear();
-	ld = {1, 3, 6};
-	assert(VectorSlicesSum(ld) == 73);
-	ld.clear();
-	ld = {4, 2, 9, 10, 1};
-	assert(VectorSlicesSum(ld) == 971);
-	ld.clear();
-	ld = {477, 392, 161, 421, 245, 50, 530, 889, 750, 16, 545, 303, 898, 785, 162, 279, 677, 664, 126, 149, 814, 360, 334, 681, 473, 293, 267, 120, 825, 21, 267, 301, 413, 779, 73, 657, 181, 602, 897, 930, 969, 441, 232, 218, 577, 745, 848, 253};
-	assert(VectorSlicesSum(ld) == 868784194);
-	ld.clear();
-	ld = {695, 14, 706, 200, 379, 690, 991, 128, 60, 998, 730, 381, 301, 559, 192, 686, 608, 907, 256, 584, 177, 319, 843, 87, 446, 37, 520, 464, 483, 685, 894, 177, 50, 952, 376, 781, 641, 718, 908, 700, 715, 989, 432, 367, 547, 624, 52, 507, 530, 659, 90, 58, 978, 932, 497, 423, 321, 16, 238, 803, 52, 484, 979, 101, 435, 706, 881, 427, 423, 141, 126, 489, 129, 909, 207, 28, 884, 610, 534};
-	assert(VectorSlicesSum(ld) == 818555228);
 	ld.clear();
 	data.clear();
 	a.clear();

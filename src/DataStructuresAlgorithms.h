@@ -260,7 +260,7 @@ size_t CountDigits(char, size_t);
 size_t CountNumbersWithUniqueDigits(size_t);
 size_t Count1Bits(long);
 size_t Count1Bits(long, set<size_t> &);
-	size_t BitCountOfNChoices(size_t);
+size_t BitCountOfNChoices(size_t);
 size_t BitCount(size_t);
 void WordsLadder(string const &, string const &, set<string> &, vector<string> &);
 void trim(string &);
@@ -359,7 +359,7 @@ typedef struct TowerOfHanoiState
 	size_t moves;
 } towerofhanoi_state_t;
 int ResetTowerOfHanoi(size_t, vector<size_t> const &);
-long double VectorSlicesSum(vector<long double> &);
+long VectorSlicesSum(vector<long> const &);
 long SteadyGene(string const &);
 size_t IntervalSelection(vector<vector<size_t>> &);
 string TwentyFourHourTimeConversion(string const &);
