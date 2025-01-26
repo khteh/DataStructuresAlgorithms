@@ -2037,8 +2037,7 @@ int main(int argc, char *argv[])
 		[&](tbb::blocked_range<long> const &r, long running_total)
 		{
 			for (size_t i = r.begin(); i < r.end(); i++)
-				running_total = (running_total * a[i]); // % l;
-			cout << "running_total: " << running_total << endl;
+				running_total *= a[i];
 			return running_total;
 		},
 		multiplies<long>());

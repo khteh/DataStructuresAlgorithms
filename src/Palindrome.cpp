@@ -450,7 +450,7 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
         for (vector<vector<long double>>::iterator it1 = divisors.begin(); it1 != divisors.end() && !removed; it1++)
         {
             vector<long double>::iterator it2 = ranges::find_if(*it1, [it](const auto &value)
-                                                                { return value == *it; }); // Look for element <= data[i]
+                                                                { return value == *it; });
             if (it2 != it1->end())
             {
                 removed = true;
@@ -464,11 +464,11 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
     // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
     // https://en.wikipedia.org/wiki/Identity_element
     sum = parallel_reduce(
-        blocked_range<long double>(0, sum1.size()), 1.0L /* Identity for Multiplication */,
-        [&](tbb::blocked_range<long double> const &r, long running_total)
+        blocked_range<size_t>(0, sum1.size()), 1.0L /* Identity for Multiplication */,
+        [&](tbb::blocked_range<size_t> const &r, long double running_total)
         {
             for (size_t i = r.begin(); i < r.end(); i++)
-                running_total = (running_total * sum1[i]); // % modulo;
+                running_total *= sum1[i];
             return running_total;
         },
         multiplies<long double>());
@@ -477,11 +477,11 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
         // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
         // https://en.wikipedia.org/wiki/Identity_element
         divisor *= parallel_reduce(
-            blocked_range<long double>(0, it->size()), 1.0L /* Identity for Multiplication */,
-            [&](tbb::blocked_range<long double> const &r, long running_total)
+            blocked_range<size_t>(0, it->size()), 1.0L /* Identity for Multiplication */,
+            [&](tbb::blocked_range<size_t> const &r, long double running_total)
             {
                 for (size_t i = r.begin(); i < r.end(); i++)
-                    running_total = (running_total * (*it)[i]); // % modulo;
+                    running_total *= (*it)[i];
                 return running_total;
             },
             multiplies<long double>());
