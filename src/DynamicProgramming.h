@@ -18,7 +18,7 @@ template <typename T>
 class DynamicProgramming
 {
 public:
-    long double Factorial(T)
+    long double Factorial(T, T modulo = 0)
         requires arithmetic_type<T>;
     long double Fibonacci(T)
         requires arithmetic_type<T>;

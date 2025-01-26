@@ -7,7 +7,7 @@ template class DynamicProgramming<long long>;
 template class DynamicProgramming<unsigned long long>;
 template class DynamicProgramming<string>;
 template <typename T>
-long double DynamicProgramming<T>::Factorial(T n)
+long double DynamicProgramming<T>::Factorial(T n, T modulo)
     requires arithmetic_type<T>
 {
     /* 0 1 2 3 4
@@ -17,8 +17,12 @@ long double DynamicProgramming<T>::Factorial(T n)
     long double result = 1;
     if (n <= 0)
         return 1;
-    for (size_t i = 2; i <= (size_t)n; result *= i++)
-        ;
+    for (size_t i = 2; i <= (size_t)n; i++)
+    {
+        result *= i;
+        if (modulo)
+            result = fmodl(result, modulo);
+    }
     return result;
 }
 
@@ -517,7 +521,7 @@ T DynamicProgramming<T>::VectorSlicesSum(vector<T> const &data)
     requires arithmetic_type<T>
 {
     T result = 0;
-    const T modulo = 1e9 + 7L;
+    const long modulo = 1e9 + 7L;
     if (!data.empty())
     {
         vector<T> twoPower = {1};

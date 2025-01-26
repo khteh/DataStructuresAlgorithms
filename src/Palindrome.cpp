@@ -394,7 +394,7 @@ size_t Palindrome::ShortPalindrome(const string &s)
  * https://chalkdustmagazine.com/features/counting-palindromes/
  * WIP: 11/32 test cases failed and timeout for some! :(
  */
-long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
+long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
 {
     const long double modulo = 1e9 + 7L;
     string str = s.substr(l, r - l + 1);
@@ -411,6 +411,8 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
     }
     long double singulars = 0, sum = 0, divisor = 1;
     vector<vector<long double>> divisors;
+    DynamicProgramming<size_t> dp;
+    DynamicProgramming<long double> dpl;
     for (typename map<char, size_t>::const_iterator it = chars.begin(); it != chars.end(); it++)
         if (it->second == 1)
             singulars++;
@@ -419,18 +421,29 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
             // once you have settled the left half of a palindrome (finding all unique permutations of the numbers that end up in that left half) , the right half is fully determined
             size_t sumHalved = (it->second - it->second % 2) / 2;
             sum += sumHalved;
-            // divisor *= Factorial(sumHalved);
+#if 0
+            divisor = fmodl(divisor * dp.Factorial(sumHalved, modulo), modulo);
+#else
             vector<long double> d(sumHalved);
             ranges::generate(d, [n = 1]() mutable
                              { return n++; });
             divisors.push_back(d);
+#endif
             singulars += it->second % 2;
         }
-    // sum = Factorial(sum);
-    // long double count = sum / divisor;
+#if 0
+    sum = dpl.Factorial(sum, modulo);
+    long double count = sum / divisor;
+    long double result = fmodl(count * (singulars > 0 ? singulars : 1), modulo);
+#else
     vector<long double> sum1(sum);
     ranges::generate(sum1, [n = 1]() mutable
                      { return n++; });
+    /*
+     * Remove common terms from devidend and divisor.
+     * Example: (1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9) / ((1 * 2 * 3) * (1 * 2 * 3 * 4))
+     *      => (1 * 5 * 6 * 7 * 8 * 9) / ((1) * (1 * 2 * 3))
+     */
     for (vector<long double>::iterator it = sum1.begin(); it != sum1.end();)
     {
         bool removed = false;
@@ -451,30 +464,31 @@ long double Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t
     // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
     // https://en.wikipedia.org/wiki/Identity_element
     sum = parallel_reduce(
-        blocked_range<size_t>(0, sum1.size()), 1.0L /* Identity for Multiplication */,
-        [&](tbb::blocked_range<size_t> const &r, long double running_total)
+        blocked_range<long double>(0, sum1.size()), 1.0L /* Identity for Multiplication */,
+        [&](tbb::blocked_range<long double> const &r, long running_total)
         {
             for (size_t i = r.begin(); i < r.end(); i++)
-                running_total *= sum1[i];
+                running_total = (running_total * sum1[i]); // % modulo;
             return running_total;
         },
-        std::multiplies<long double>());
+        multiplies<long double>());
     for (vector<vector<long double>>::iterator it = divisors.begin(); it != divisors.end(); it++)
     {
         // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
         // https://en.wikipedia.org/wiki/Identity_element
         divisor *= parallel_reduce(
-            blocked_range<size_t>(0, it->size()), 1.0L /* Identity for Multiplication */,
-            [&](tbb::blocked_range<size_t> const &r, long double running_total)
+            blocked_range<long double>(0, it->size()), 1.0L /* Identity for Multiplication */,
+            [&](tbb::blocked_range<long double> const &r, long running_total)
             {
                 for (size_t i = r.begin(); i < r.end(); i++)
-                    running_total *= (*it)[i];
+                    running_total = (running_total * (*it)[i]); // % modulo;
                 return running_total;
             },
-            std::multiplies<long double>());
+            multiplies<long double>());
     }
     long double count = sum / divisor;
     long double result = fmodl(count * (singulars > 0 ? singulars : 1), modulo);
+#endif
     cout << fixed << setprecision(0) << result << endl;
     return result;
 }

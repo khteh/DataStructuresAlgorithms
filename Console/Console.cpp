@@ -2028,6 +2028,23 @@ int main(int argc, char *argv[])
 	ugrid = {{12397, 52974}, {107864, 38870}};
 	// a = UnbeatenPaths(110857, ugrid, 47678);
 	grid1.clear();
+	a.clear();
+	a = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
+	l = 1e9 + 7L;
+	l1 = ranges::fold_left(a, 1, multiplies());
+	l2 = parallel_reduce(
+		blocked_range<long>(0, a.size()), 1l /* Identity for Multiplication */,
+		[&](tbb::blocked_range<long> const &r, long running_total)
+		{
+			for (size_t i = r.begin(); i < r.end(); i++)
+				running_total = (running_total * a[i]); // % l;
+			cout << "running_total: " << running_total << endl;
+			return running_total;
+		},
+		multiplies<long>());
+	assert(l2 == l1);
+	l2 = accumulate(a.begin(), a.end(), 1l, multiplies());
+	assert(l2 == l1);
 	assert(palindrome.MaxSizePalindromeCount("week", 0, 3) == 2);
 	assert(palindrome.MaxSizePalindromeCount("week", 1, 2) == 1);
 	assert(palindrome.MaxSizePalindromeCount("abab", 0, 3) == 2);
