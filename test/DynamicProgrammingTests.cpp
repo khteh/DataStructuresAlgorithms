@@ -239,23 +239,51 @@ INSTANTIATE_TEST_SUITE_P(
 	FibonacciModifiedTests,
 	FibonacciModifiedTestFixture,
 	::testing::Values(make_tuple("5", 0, 1, 4), make_tuple("27", 0, 1, 5), make_tuple("734", 0, 1, 6), make_tuple("538783", 0, 1, 7), make_tuple("290287121823", 0, 1, 8), make_tuple("2", 2, 0, 0), make_tuple("0", 2, 0, 1), make_tuple("2", 2, 0, 2), make_tuple("4", 2, 0, 3), make_tuple("18", 2, 0, 4), make_tuple("328", 2, 0, 5), make_tuple("107602", 2, 0, 6), make_tuple("11578190732", 2, 0, 7), make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)));
-class FactorialTestFixture : public testing::TestWithParam<tuple<long double, long>>
+class FactorialLDTestFixture : public testing::TestWithParam<tuple<long double, size_t, size_t>>
 {
 public:
 	void SetUp() override
 	{
 		_expected = get<0>(GetParam());
-		_data = get<1>(GetParam());
+		_n = get<1>(GetParam());
+		_modulo = get<2>(GetParam());
 	}
-	long double FactorialTest()
+	long double FactorialLDTest()
 	{
-		return _dp.Factorial(_data);
+		return _dp.FactorialLD(_n, _modulo);
 	}
 
 protected:
-	DynamicProgramming<long> _dp;
+	DynamicProgramming<size_t> _dp;
 	long double _expected;
-	long _data;
+	size_t _n, _modulo;
+};
+TEST_P(FactorialLDTestFixture, FactorialLDTests)
+{
+	ASSERT_EQ(this->_expected, this->FactorialLDTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	FactorialLDTests,
+	FactorialLDTestFixture,
+	::testing::Values(make_tuple(178290591, 14, 1e9 + 7), make_tuple(146326063, 20, 1e9 + 7), make_tuple(440732388, 25, 1e9 + 7)));
+class FactorialTestFixture : public testing::TestWithParam<tuple<long, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());	
+		_modulo = get<2>(GetParam());
+	}
+	long FactorialTest()
+	{
+		return _dp.Factorial(_n, _modulo);
+	}
+
+protected:
+	DynamicProgramming<size_t> _dp;
+	long _expected;
+	size_t _n, _modulo;
 };
 TEST_P(FactorialTestFixture, FactorialTests)
 {
@@ -264,7 +292,8 @@ TEST_P(FactorialTestFixture, FactorialTests)
 INSTANTIATE_TEST_SUITE_P(
 	FactorialTests,
 	FactorialTestFixture,
-	::testing::Values(make_tuple(1, 1), make_tuple(2, 2), make_tuple(6, 3), make_tuple(24, 4), make_tuple(120, 5), make_tuple(2432902008176640000, 20)));
+	::testing::Values(make_tuple(178290591, 14, 1e9 + 7), make_tuple(146326063, 20, 1e9 + 7), make_tuple(440732388, 25, 1e9 + 7)));
+
 class NumberSolitaireTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
 {
 public:

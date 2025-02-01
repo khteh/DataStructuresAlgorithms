@@ -299,3 +299,31 @@ INSTANTIATE_TEST_SUITE_P(
 	ReversePolishNotationTests,
 	ReversePolishNotationTestFixture,
 	::testing::Values(make_tuple(9, vector<string>{"2", "1", "+", "3", "*"}), make_tuple(6, vector<string>{"4", "13", "5", "/", "+"}), make_tuple(22, vector<string>{"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"})));
+class MultinomialCoefficientsTestFixture : public testing::TestWithParam<tuple<long double, size_t, vector<size_t>, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+		_k = get<2>(GetParam());
+		_modulo = get<3>(GetParam());
+	}
+	long MultinomialCoefficientsTest()
+	{
+		return MultinomialCoefficients(_n, _k, _modulo);
+	}
+
+protected:
+	long _expected;
+	size_t _n, _modulo;
+	vector<size_t> _k;
+};
+TEST_P(MultinomialCoefficientsTestFixture, MultinomialCoefficientsTests)
+{
+	ASSERT_EQ(this->_expected, this->MultinomialCoefficientsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MultinomialCoefficientsTests,
+	MultinomialCoefficientsTestFixture,
+	::testing::Values(make_tuple(60540480, 14, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(271629395, 20, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(358639400, 25, vector<size_t>{3, 5, 2}, 1e9 + 7)));

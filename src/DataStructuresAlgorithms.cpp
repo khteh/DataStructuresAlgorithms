@@ -528,12 +528,18 @@ long double BinomialCoefficients(size_t n, size_t k)
  * https://en.wikipedia.org/wiki/Multinomial_theorem
  * Permutations of length-nword with n1 a's, n2 b's, ..., nk z's = n! / (n1! * n2! * ... * nk!)
  */
-long double MultinomialCoefficients(size_t n, vector<size_t> const &k)
+long double MultinomialCoefficients(size_t n, vector<size_t> const &k, size_t modulo)
 {
 	long double divisor = 1;
+	DynamicProgramming<size_t> dp;
 	for (vector<size_t>::const_iterator it = k.begin(); it != k.end(); it++)
-		divisor *= Factorial(*it);
-	return Factorial(n) / divisor;
+	{
+		divisor *= dp.FactorialLD(*it);
+		// if (modulo)
+		//	divisor = fmodl(divisor, modulo);
+	}
+	long double result = dp.FactorialLD(n) / divisor;
+	return fmodl(result, modulo);
 }
 long SequenceSum(long n)
 {

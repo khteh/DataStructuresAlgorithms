@@ -7,7 +7,26 @@ template class DynamicProgramming<long long>;
 template class DynamicProgramming<unsigned long long>;
 template class DynamicProgramming<string>;
 template <typename T>
-long double DynamicProgramming<T>::Factorial(T n, T modulo)
+long DynamicProgramming<T>::Factorial(T n, T modulo)
+    requires arithmetic_type<T>
+{
+    /* 0 1 2 3 4
+     * {1 1 2 6 24 ...}
+     * result = 1,
+     */
+    long result = 1;
+    if (n <= 0)
+        return 1;
+    for (size_t i = 2; i <= (size_t)n; i++)
+    {
+        result *= i;
+        if (modulo)
+            result %= modulo;
+    }
+    return result;
+}
+template <typename T>
+long double DynamicProgramming<T>::FactorialLD(T n, T modulo)
     requires arithmetic_type<T>
 {
     /* 0 1 2 3 4
@@ -25,7 +44,6 @@ long double DynamicProgramming<T>::Factorial(T n, T modulo)
     }
     return result;
 }
-
 /* Bottom-up Dynamic Programming
  */
 template <typename T>
