@@ -326,4 +326,4 @@ TEST_P(MultinomialCoefficientsTestFixture, MultinomialCoefficientsTests)
 INSTANTIATE_TEST_SUITE_P(
 	MultinomialCoefficientsTests,
 	MultinomialCoefficientsTestFixture,
-	::testing::Values(make_tuple(60540480, 14, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(271629395, 20, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(358639400, 25, vector<size_t>{3, 5, 2}, 1e9 + 7)));
+	::testing::Values(make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 0), make_tuple(1689515283456000, 20, vector<size_t>{3, 5, 2}, 0), make_tuple(10771673641202074000000, 25, vector<size_t>{3, 5, 2}, 0), make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(271629395, 20, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(358639400, 25, vector<size_t>{3, 5, 2}, 1e9 + 7)));

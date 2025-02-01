@@ -491,10 +491,10 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
             },
             multiplies<long double>());
     }
-    long double count = sum / divisor;
-    long double result = fmodl(count * (singulars ? singulars : 1), modulo);
+    // long double count = sum / divisor;
+    long double result = fmodl(sum * (singulars ? singulars : 1) / divisor, modulo);
     long double result1 = fmodl(multinomial * (singulars ? singulars : 1), modulo);
 #endif
-    cout << fixed << setprecision(0) << "count: " << count << ", result: " << result << ", " << result1 << endl;
-    return result1;
+    cout << fixed << setprecision(0) << ", result: " << result << ", " << result1 << endl;
+    return result;
 }
