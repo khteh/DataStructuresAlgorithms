@@ -398,10 +398,11 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
 {
     const long double modulo = 1e9 + 7L;
     string str = s.substr(l, r - l + 1);
+    set<char> unique(str.begin(), str.end());
     map<char, size_t> chars;
     if (str.empty())
         return 0;
-    else if (l == r && l >= 0 && l < s.size())
+    else if ((l == r && l >= 0 && l < s.size()) || unique.size() == 1)
         return 1;
     for (string::const_iterator it = str.begin(); it != str.end(); it++)
     {
