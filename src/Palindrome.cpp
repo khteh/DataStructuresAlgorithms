@@ -396,7 +396,7 @@ size_t Palindrome::ShortPalindrome(const string &s)
  */
 long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
 {
-    const unsigned long long modulo = 1e9 + 7L;
+    const long double modulo = 1e9 + 7L;
     string str = s.substr(l, r - l + 1);
     map<char, size_t> chars;
     if (str.empty())
@@ -410,7 +410,7 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
             chars[*it]++;
     }
     size_t n = 0;
-    unsigned long long singulars = 0, divisor = 1;
+    long double singulars = 0, divisor = 1;
     vector<vector<long>> divisors;
     vector<size_t> multinomialDivisors;
     DynamicProgramming<size_t> dp;
@@ -467,34 +467,32 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
     }
     // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
     // https://en.wikipedia.org/wiki/Identity_element
-    unsigned long long sum = parallel_reduce(
-                                 blocked_range<size_t>(0, sum1.size()), 1 /* Identity for Multiplication */,
-                                 [&](tbb::blocked_range<size_t> const &r, unsigned long long running_total)
-                                 {
-                                     for (size_t i = r.begin(); i < r.end(); i++)
-                                         running_total = (running_total * sum1[i]) % modulo;
-                                     return running_total;
-                                 },
-                                 multiplies<unsigned long long>()) %
-                             modulo;
+    long double sum = parallel_reduce(
+        blocked_range<size_t>(0, sum1.size()), 1.0L /* Identity for Multiplication */,
+        [&](tbb::blocked_range<size_t> const &r, long double running_total)
+        {
+            for (size_t i = r.begin(); i < r.end(); i++)
+                running_total *= sum1[i];
+            return running_total;
+        },
+        multiplies<long double>());
     for (vector<vector<long>>::iterator it = divisors.begin(); it != divisors.end(); it++)
     {
         // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
         // https://en.wikipedia.org/wiki/Identity_element
-        divisor = (divisor * parallel_reduce(
-                                 blocked_range<size_t>(0, it->size()), 1 /* Identity for Multiplication */,
-                                 [&](tbb::blocked_range<size_t> const &r, unsigned long long running_total)
-                                 {
-                                     for (size_t i = r.begin(); i < r.end(); i++)
-                                         running_total = (running_total * (*it)[i]) % modulo;
-                                     return running_total;
-                                 },
-                                 multiplies<unsigned long long>())) %
-                  modulo;
+        divisor *= parallel_reduce(
+            blocked_range<size_t>(0, it->size()), 1.0L /* Identity for Multiplication */,
+            [&](tbb::blocked_range<size_t> const &r, long double running_total)
+            {
+                for (size_t i = r.begin(); i < r.end(); i++)
+                    running_total *= (*it)[i];
+                return running_total;
+            },
+            multiplies<long double>());
     }
-    unsigned long long count = sum / divisor;
-    unsigned long long result = (count * (singulars ? singulars : 1)) % modulo;
-    unsigned long long result1 = fmodl(multinomial * (singulars ? singulars : 1), modulo);
+    long double count = sum / divisor;
+    long double result = fmodl(count * (singulars ? singulars : 1), modulo);
+    long double result1 = fmodl(multinomial * (singulars ? singulars : 1), modulo);
 #endif
     cout << fixed << setprecision(0) << "count: " << count << ", result: " << result << ", " << result1 << endl;
     return result1;

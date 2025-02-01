@@ -533,13 +533,8 @@ long double MultinomialCoefficients(size_t n, vector<size_t> const &k, size_t mo
 	long double divisor = 1;
 	DynamicProgramming<size_t> dp;
 	for (vector<size_t>::const_iterator it = k.begin(); it != k.end(); it++)
-	{
 		divisor *= dp.FactorialLD(*it);
-		// if (modulo)
-		//	divisor = fmodl(divisor, modulo);
-	}
-	long double result = dp.FactorialLD(n) / divisor;
-	return fmodl(result, modulo);
+	return fmodl(dp.FactorialLD(n) / divisor, modulo);
 }
 long SequenceSum(long n)
 {
