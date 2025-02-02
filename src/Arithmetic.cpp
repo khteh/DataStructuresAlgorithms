@@ -6,6 +6,35 @@ template class Arithmetic<long>;
 template class Arithmetic<long long>;
 template class Arithmetic<unsigned long long>;
 template class Arithmetic<string>;
+/* http://en.wikipedia.org/wiki/Greatest_common_divisor
+ * the largest positive integer that divides the numbers without a remainder
+ */
+template <typename T>
+T Arithmetic<T>::gcd_euclidean(T a, T b)
+	requires arithmetic_type<T>
+{
+	return !(a % b) ? b : gcd_euclidean(b, a % b);
+}
+template <typename T>
+T Arithmetic<T>::gcd(T a, T b)
+	requires arithmetic_type<T>
+{
+	if (!a)
+		return b;
+	else if (!b)
+		return a;
+	else
+		return a >= b ? gcd_euclidean(a, b) : gcd_euclidean(b, a);
+}
+/* http://en.wikipedia.org/wiki/Least_common_multiple */
+/* The smallest positive integer that is divisible by both a and b.[1] If either a or b is 0, LCM(a, b) is defined to be zero. */
+template <typename T>
+T Arithmetic<T>::lcm(T a, T b)
+	requires arithmetic_type<T>
+{
+	return (!a || !b) ? 0 : (a * b) / gcd(a, b);
+}
+
 template <typename T>
 T Arithmetic<T>::XOR(T n)
 	requires arithmetic_type<T>

@@ -14,6 +14,12 @@ private:
 	bool CheckIfAdditiveSequence(size_t, size_t, string const &);
 
 public:
+	T gcd(T, T)
+		requires arithmetic_type<T>;
+	T gcd_euclidean(T, T)
+		requires arithmetic_type<T>;
+	T lcm(T, T)
+		requires arithmetic_type<T>;
 	T XOR(T)
 		requires arithmetic_type<T>;
 	T XorSequence(T, T)
