@@ -16,7 +16,11 @@ private:
 public:
 	T gcd(T, T)
 		requires arithmetic_type<T>;
+	T gcd_extended(T, T)
+		requires arithmetic_type<T>;
 	T gcd_euclidean(T, T)
+		requires arithmetic_type<T>;
+	T gcd_euclidean_extended(T, T, T &, T &)
 		requires arithmetic_type<T>;
 	T lcm(T, T)
 		requires arithmetic_type<T>;

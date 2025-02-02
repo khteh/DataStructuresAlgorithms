@@ -15,6 +15,35 @@ T Arithmetic<T>::gcd_euclidean(T a, T b)
 {
 	return !(a % b) ? b : gcd_euclidean(b, a % b);
 }
+/*
+https://www.geeksforgeeks.org/euclidean-algorithms-basic-and-extended/
+Extended Euclidean algorithm also finds integer coefficients x and y such that: ax + by = gcd(a, b)
+ax + by = gcd(a, b)
+gcd(a, b) = gcd(b, a % b)
+gcd(b, a % b) = b*x1 + (a % b)y1
+ax + by = b*x1 + (a % b)y1
+ax + by = b*x1 + (a - (a/b)*b)y1
+ax + by = b(x1 - (a/b) * y1) + a*y1
+
+Comparing LHS and RHS,
+y = x1 – (a/b) * y1
+x = y1
+*/
+template <typename T>
+T Arithmetic<T>::gcd_euclidean_extended(T a, T b, T &x, T &y)
+	requires arithmetic_type<T>
+{
+	if (!(a % b))
+	{ // a == b || !a
+		x = 0;
+		y = 1;
+		return b;
+	}
+	T x1, y1, gcd = gcd_euclidean_extended(b, a % b, x, y);
+	y = x1 - (a / b) * y1;
+	y = y1;
+	return gcd;
+}
 template <typename T>
 T Arithmetic<T>::gcd(T a, T b)
 	requires arithmetic_type<T>
@@ -25,6 +54,20 @@ T Arithmetic<T>::gcd(T a, T b)
 		return a;
 	else
 		return a >= b ? gcd_euclidean(a, b) : gcd_euclidean(b, a);
+}
+template <typename T>
+T Arithmetic<T>::gcd_extended(T a, T b)
+	requires arithmetic_type<T>
+{
+	if (!a)
+		return b;
+	else if (!b)
+		return a;
+	else
+	{
+		T x, y;
+		return a >= b ? gcd_euclidean_extended(a, b, x, y) : gcd_euclidean_extended(b, a, x, y);
+	}
 }
 /* http://en.wikipedia.org/wiki/Least_common_multiple */
 /* The smallest positive integer that is divisible by both a and b.[1] If either a or b is 0, LCM(a, b) is defined to be zero. */

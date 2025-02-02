@@ -48,6 +48,47 @@ protected:
 	Arithmetic<T> _arithmetic;
 	T _var1, _var2, _expected;
 };
+class GCDTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
+{
+public:
+	void SetUp() override
+	{
+		ArithmerticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	long GCDTest()
+	{
+		return _arithmetic.gcd(_var1, _var2);
+	}
+};
+TEST_P(GCDTestFixture, GCDTests)
+{
+	ASSERT_EQ(this->_expected, this->GCDTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	GCDTests,
+	GCDTestFixture,
+	::testing::Values(make_tuple(5, 10, 15), make_tuple(5, 10, 35), make_tuple(1, 2, 31), make_tuple(5, 15, 35)));
+class GCDExtendedTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
+{
+public:
+	void SetUp() override
+	{
+		ArithmerticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	long GCDExtendedTest()
+	{
+		return _arithmetic.gcd_extended(_var1, _var2);
+	}
+};
+TEST_P(GCDExtendedTestFixture, GCDExtendedTests)
+{
+	ASSERT_EQ(this->_expected, this->GCDExtendedTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	GCDExtendedTests,
+	GCDExtendedTestFixture,
+	::testing::Values(make_tuple(5, 15, 35), make_tuple(10, 20, 30)));
+
 class DivideWithPlusSignTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
 {
 public:
@@ -73,7 +114,7 @@ TEST_P(DivideWithPlusSignTestFixture, DivisionTests)
 	ASSERT_EQ(this->_expected, this->DivisionTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	ArithmerticOperationsTests,
+	DivisionOperationsTests,
 	DivideWithPlusSignTestFixture,
 	::testing::Values(make_tuple(3, 10, 3), make_tuple(-3, 10, -3), make_tuple(-3, -10, 3), make_tuple(3, -10, -3), make_tuple(10, -10, -1), make_tuple(-1, -1, 1), make_tuple(-1, 1, -1), make_tuple(1, -1, -1),
 					  make_tuple(2147483648L, -2147483648, -1), make_tuple(-2147483648, -2147483648, 1), make_tuple(-2147483648, 2147483648L, -1)));
