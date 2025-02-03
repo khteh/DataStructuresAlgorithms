@@ -228,7 +228,7 @@ T Arithmetic<T>::Divide(T dividend, T divisor)
 		;
 	return isNegative ? -quotient : quotient;
 }
-/*
+/* https://www.geeksforgeeks.org/modular-division/
  * x / y == x * y^(-1) == x * z (where z is multiplicative inverse of y).
  * y_inv = findMMI(y, M);
  * z = (x * y_inv) % M;
