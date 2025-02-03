@@ -6,6 +6,30 @@ template class Arithmetic<long>;
 template class Arithmetic<long long>;
 template class Arithmetic<unsigned long long>;
 template class Arithmetic<string>;
+template class GCDExtendedEuclideanResult<char>;
+template class GCDExtendedEuclideanResult<int>;
+template class GCDExtendedEuclideanResult<size_t>;
+template class GCDExtendedEuclideanResult<long>;
+template class GCDExtendedEuclideanResult<long long>;
+template class GCDExtendedEuclideanResult<unsigned long long>;
+template <typename T>
+GCDExtendedEuclideanResult<T>::GCDExtendedEuclideanResult()
+	requires arithmetic_type<T>
+	: gcd(0), x(0), y(0)
+{
+}
+template <typename T>
+GCDExtendedEuclideanResult<T>::GCDExtendedEuclideanResult(T gcd, T x, T y)
+	requires arithmetic_type<T>
+	: gcd(gcd), x(x), y(y)
+{
+}
+template <typename T>
+bool GCDExtendedEuclideanResult<T>::operator==(GCDExtendedEuclideanResult<T> &rhs)
+	requires arithmetic_type<T>
+{
+	return gcd == rhs.gcd && x == rhs.x && y == rhs.y;
+}
 /* http://en.wikipedia.org/wiki/Greatest_common_divisor
  * the largest positive integer that divides the numbers without a remainder
  */
@@ -30,19 +54,17 @@ y = x1 – (a/b) * y1
 x = y1
 */
 template <typename T>
-T Arithmetic<T>::gcd_euclidean_extended(T a, T b, T &x, T &y)
+GCDExtendedEuclideanResult<T> Arithmetic<T>::gcd_euclidean_extended(T a, T b)
 	requires arithmetic_type<T>
 {
 	if (!(a % b))
 	{ // a == b || !a
-		x = 0;
-		y = 1;
-		return b;
+		return GCDExtendedEuclideanResult<T>(b, 0, 1);
 	}
-	T x1, y1, gcd = gcd_euclidean_extended(b, a % b, x, y);
-	y = x1 - (a / b) * y1;
-	y = y1;
-	return gcd;
+	GCDExtendedEuclideanResult<T> gcd = gcd_euclidean_extended(b, a % b);
+	T y = gcd.x - (a / b) * gcd.y;
+	T x = gcd.y;
+	return GCDExtendedEuclideanResult<T>(gcd.gcd, x, y);
 }
 template <typename T>
 T Arithmetic<T>::gcd(T a, T b)
@@ -55,19 +77,30 @@ T Arithmetic<T>::gcd(T a, T b)
 	else
 		return a >= b ? gcd_euclidean(a, b) : gcd_euclidean(b, a);
 }
+/*
+https://www.geeksforgeeks.org/euclidean-algorithms-basic-and-extended/
+Extended Euclidean algorithm also finds integer coefficients x and y such that: ax + by = gcd(a, b)
+ax + by = gcd(a, b)
+gcd(a, b) = gcd(b, a % b)
+gcd(b, a % b) = b*x1 + (a % b)y1
+ax + by = b*x1 + (a % b)y1
+ax + by = b*x1 + (a - (a/b)*b)y1
+ax + by = b(x1 - (a/b) * y1) + a*y1
+
+Comparing LHS and RHS,
+y = x1 – (a/b) * y1
+x = y1
+*/
 template <typename T>
-T Arithmetic<T>::gcd_extended(T a, T b)
+GCDExtendedEuclideanResult<T> Arithmetic<T>::gcd_extended(T a, T b)
 	requires arithmetic_type<T>
 {
 	if (!a)
-		return b;
+		return GCDExtendedEuclideanResult<T>(b, 0, 1);
 	else if (!b)
-		return a;
+		return GCDExtendedEuclideanResult<T>(a, 1, 0);
 	else
-	{
-		T x, y;
-		return a >= b ? gcd_euclidean_extended(a, b, x, y) : gcd_euclidean_extended(b, a, x, y);
-	}
+		return a >= b ? gcd_euclidean_extended(a, b) : gcd_euclidean_extended(b, a);
 }
 /* http://en.wikipedia.org/wiki/Least_common_multiple */
 /* The smallest positive integer that is divisible by both a and b.[1] If either a or b is 0, LCM(a, b) is defined to be zero. */
@@ -77,7 +110,24 @@ T Arithmetic<T>::lcm(T a, T b)
 {
 	return (!a || !b) ? 0 : (a * b) / gcd(a, b);
 }
-
+/* https://www.geeksforgeeks.org/multiplicative-inverse-under-modulo-m/
+ * https://www.geeksforgeeks.org/euclidean-algorithms-basic-and-extended/
+ * How is Extended Algorithm Useful?
+ * The extended Euclidean algorithm is particularly useful when a and b are coprime (or gcd is 1).
+ * Since x is the modular multiplicative inverse of “a modulo b”, and y is the modular multiplicative inverse of “b modulo a”.
+ * In particular, the computation of the modular multiplicative inverse is an essential step in RSA public-key encryption method.
+ */
+template <typename T>
+T Arithmetic<T>::ModInverse(T num, T mod)
+	requires arithmetic_type<T>
+{
+	GCDExtendedEuclideanResult<T> result = gcd_extended(num, mod);
+	if (result.gcd != 1)
+		throw invalid_argument("ModInverse does not exist for the input params");
+	// m is added to handle negative x
+	T modInverse = (result.y % mod + mod) % mod;
+	return modInverse;
+}
 template <typename T>
 T Arithmetic<T>::XOR(T n)
 	requires arithmetic_type<T>
@@ -149,7 +199,7 @@ T Arithmetic<T>::DivideWithPlusSign(T a, T b)
 	return isNegative ? -quotient : quotient;
 }
 template <typename T>
-T Arithmetic<T>::divide(T dividend, T divisor)
+T Arithmetic<T>::Divide(T dividend, T divisor)
 	requires arithmetic_type<T>
 {
 	if (!divisor)
@@ -178,7 +228,21 @@ T Arithmetic<T>::divide(T dividend, T divisor)
 		;
 	return isNegative ? -quotient : quotient;
 }
-/* https://leetcode.com/problems/sum-of-two-integers/			   1
+/*
+ * x / y == x * y^(-1) == x * z (where z is multiplicative inverse of y).
+ * y_inv = findMMI(y, M);
+ * z = (x * y_inv) % M;
+ */
+template <typename T>
+T Arithmetic<T>::Divide(T dividend, T divisor, T modulo)
+	requires arithmetic_type<T>
+{
+	T y_inv = ModInverse(divisor, modulo);
+	if (y_inv == -1)
+		throw invalid_argument("Undefined divide with modulo operation!");
+	return (dividend * y_inv) % modulo;
+}
+/* https://leetcode.com/problems/sum-of-two-integers/
  * 1 + 1 = 10b, 1 + 0 = 1b, 0 + 0 = 0b
  * Only 1 1 has carry
  * https://stackoverflow.com/questions/55615186/c-left-shift-overflow-for-negative-numbers

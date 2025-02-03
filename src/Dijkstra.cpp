@@ -45,7 +45,6 @@ bool DVertex<T>::operator<(const DVertex<T> &other) const
 {
     return _value < other._value;
 }
-
 template <typename T>
 bool DVertex<T>::operator==(DVertex<T> &rhs)
 {

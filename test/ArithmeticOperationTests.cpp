@@ -67,18 +67,27 @@ TEST_P(GCDTestFixture, GCDTests)
 INSTANTIATE_TEST_SUITE_P(
 	GCDTests,
 	GCDTestFixture,
-	::testing::Values(make_tuple(5, 10, 15), make_tuple(5, 10, 35), make_tuple(1, 2, 31), make_tuple(5, 15, 35)));
-class GCDExtendedTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
+	::testing::Values(make_tuple(5, 10, 15), make_tuple(5, 35, 10), make_tuple(1, 31, 2), make_tuple(5, 15, 35)));
+#if 0
+https://github.com/google/googletest/issues/4715
+class GCDExtendedTestFixture : public testing::TestWithParam<tuple<tuple<GCDExtendedEuclideanResult<long>, long, long>, long, long>>
 {
 public:
 	void SetUp() override
 	{
-		ArithmerticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+		_expected = get<0>(GetParam());
+		_var1 = get<1>(GetParam());
+		_var2 = get<2>(GetParam());
 	}
-	long GCDExtendedTest()
+	GCDExtendedEuclideanResult<long> GCDExtendedTest()
 	{
 		return _arithmetic.gcd_extended(_var1, _var2);
 	}
+
+protected:
+	Arithmetic<long> _arithmetic;
+	long _var1, _var2;
+	GCDExtendedEuclideanResult<long> _expected;
 };
 TEST_P(GCDExtendedTestFixture, GCDExtendedTests)
 {
@@ -87,8 +96,62 @@ TEST_P(GCDExtendedTestFixture, GCDExtendedTests)
 INSTANTIATE_TEST_SUITE_P(
 	GCDExtendedTests,
 	GCDExtendedTestFixture,
-	::testing::Values(make_tuple(5, 15, 35), make_tuple(10, 20, 30)));
+	::testing::Values(make_tuple(GCDExtendedEuclideanResult<long>(5, 1, -2), 15, 35), make_tuple(GCDExtendedEuclideanResult<long>(10, 1, -1), 20, 30)));
+#endif
+/*
+	assert(4 == larithmetic.ModInverse(3, 11));	  // (3 * 4) % 11 = 1
+	assert(12 == larithmetic.ModInverse(10, 17)); // (10 * 12) % 17 = 1
+	assert(2 == larithmetic.ModInverse(4, 7));	  // (2 * 4) % 7 = 1
+	assert(8 == larithmetic.ModInverse(7, 11));	  // (8 * 7) % 11 = 1
+	assert(2 == larithmetic.ModInverse(7, 13));	  // (2 * 7) % 13 = 1
+*/
+class ModInverseTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
+{
+public:
+	void SetUp() override
+	{
+		ArithmerticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	long ModInverseTest()
+	{
+		return _arithmetic.ModInverse(_var1, _var2);
+	}
+};
+TEST_P(ModInverseTestFixture, ModInverseTests)
+{
+	ASSERT_EQ(this->_expected, this->ModInverseTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	ModInverseTests,
+	ModInverseTestFixture,
+	::testing::Values(make_tuple(4, 3, 11), make_tuple(12, 10, 17), make_tuple(2, 4, 7), make_tuple(8, 7, 11), make_tuple(2, 7, 13)));
+class DivideModuloTestFixture : public testing::TestWithParam<tuple<long, long, long, long>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_dividend = get<1>(GetParam());
+		_divisor = get<2>(GetParam());
+		_modulo = get<3>(GetParam());
+	}
+	long DivideModuloTest()
+	{
+		return _arithmetic.Divide(_dividend, _divisor, _modulo);
+	}
 
+protected:
+	Arithmetic<long> _arithmetic;
+	long _expected, _dividend, _divisor, _modulo;
+};
+TEST_P(DivideModuloTestFixture, DivideModuloTests)
+{
+	ASSERT_EQ(this->_expected, this->DivideModuloTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	DivideModuloTests,
+	DivideModuloTestFixture,
+	::testing::Values(make_tuple(2, 8, 4, 5), make_tuple(1, 8, 3, 5), make_tuple(4, 11, 4, 5)));
 class DivideWithPlusSignTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
 {
 public:
@@ -102,7 +165,7 @@ public:
 	}
 	long DivisionTest()
 	{
-		return _arithmetic.divide(_var1, _var2);
+		return _arithmetic.Divide(_var1, _var2);
 	}
 };
 TEST_P(DivideWithPlusSignTestFixture, DivideWithPlusSignTests)

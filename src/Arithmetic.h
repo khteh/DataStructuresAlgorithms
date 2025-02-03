@@ -8,6 +8,18 @@
 #include "GenericConstraints.h"
 using namespace std;
 template <typename T>
+class GCDExtendedEuclideanResult
+{
+public:
+	GCDExtendedEuclideanResult()
+		requires arithmetic_type<T>;
+	GCDExtendedEuclideanResult(T, T, T)
+		requires arithmetic_type<T>;
+	T gcd, x, y;
+	bool operator==(GCDExtendedEuclideanResult<T> &)
+		requires arithmetic_type<T>;
+};
+template <typename T>
 class Arithmetic
 {
 private:
@@ -16,13 +28,15 @@ private:
 public:
 	T gcd(T, T)
 		requires arithmetic_type<T>;
-	T gcd_extended(T, T)
+	GCDExtendedEuclideanResult<T> gcd_extended(T, T)
 		requires arithmetic_type<T>;
 	T gcd_euclidean(T, T)
 		requires arithmetic_type<T>;
-	T gcd_euclidean_extended(T, T, T &, T &)
+	GCDExtendedEuclideanResult<T> gcd_euclidean_extended(T, T)
 		requires arithmetic_type<T>;
 	T lcm(T, T)
+		requires arithmetic_type<T>;
+	T ModInverse(T, T)
 		requires arithmetic_type<T>;
 	T XOR(T)
 		requires arithmetic_type<T>;
@@ -40,7 +54,9 @@ public:
 		requires arithmetic_type<T>;
 	T DivideWithPlusSign(T, T)
 		requires arithmetic_type<T>;
-	T divide(T, T)
+	T Divide(T, T)
+		requires arithmetic_type<T>;
+	T Divide(T, T, T)
 		requires arithmetic_type<T>;
 	T AddWithoutArithmetic(T, T)
 		requires arithmetic_type<T>;
