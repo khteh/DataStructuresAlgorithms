@@ -42,6 +42,8 @@ int main(int argc, char *argv[])
 	vector<vector<string>> sgrid;
 	vector<vector<size_t>> ugrid, ugrid1;
 	Graph<size_t, size_t> graph;
+	Arithmetic<size_t> arithmetic;
+	Arithmetic<long> larithmetic;
 	Range range;
 	Palindrome palindrome;
 	Permutation<long> lPermutation;
@@ -188,6 +190,29 @@ int main(int argc, char *argv[])
 	 */
 	assert((l1 - l2) % l == -4);
 	assert((l1 % l - l2 % l + l) % l == 1);
+	/*
+	a % b
+	a: 3
+	b: 5
+	a/b = 0
+	a - (a/b)b = 3 - 0 = 3
+
+	a: 7
+	b: 5
+	a/b = 1
+	a - (a/b)b = 7 - 5 = 2
+	*/
+	l1 = 3;
+	l2 = 5;
+	assert(l1 % l2 == l1 - (l1 / l2) * l2);
+	l1 = 7;
+	l2 = 5;
+	assert(l1 % l2 == l1 - (l1 / l2) * l2);
+	// GCDExtendedEuclideanResult<long>(5, 1, -2), 15, 35), make_tuple(GCDExtendedEuclideanResult<long>(10, 1, -1), 20, 30)
+	GCDExtendedEuclideanResult<long> gcdExtendedResult = GCDExtendedEuclideanResult<long>(5, 1, -2);
+	assert(gcdExtendedResult == larithmetic.gcd_extended(15, 35));
+	gcdExtendedResult = GCDExtendedEuclideanResult<long>(10, 1, -1);
+	assert(gcdExtendedResult == larithmetic.gcd_extended(20, 30));
 	i = 3;
 	assert(-i == -3);
 	assert(~i == -4);
@@ -2044,6 +2069,7 @@ int main(int argc, char *argv[])
 	assert(l2 == l1);
 	l2 = accumulate(a.begin(), a.end(), 1l, multiplies());
 	assert(l2 == l1);
+	tuple<GCDExtendedEuclideanResult<long>, long, long> t = make_tuple(GCDExtendedEuclideanResult<long>(5, 1, -2), 15, 35);
 	assert(palindrome.MaxSizePalindromeCount("week", 0, 3) == 2);
 	assert(palindrome.MaxSizePalindromeCount("week", 1, 2) == 1);
 	assert(palindrome.MaxSizePalindromeCount("abab", 0, 3) == 2);
@@ -2062,7 +2088,6 @@ int main(int argc, char *argv[])
 	assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 19, 81) == 922261429); // Fails. 922195893. Short of 65536 (0x10000)
 	// assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
 	vector<size_t> cresult;
-	Arithmetic<size_t> arithmetic;
 	// 11111111100, 1234567890, 9876543210
 	arithmetic.NumberToVector(1234567890, udata);
 	arithmetic.NumberToVector(9876543210, udata1);
