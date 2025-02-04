@@ -12,24 +12,24 @@ template class Heap<string>;
 
 template<typename T>
 Heap<T>::Heap(HeapType t)
-	: type_(t)
+	: _type(t)
 {
 }
 
 template<typename T>
 Heap<T>::Heap(T item, HeapType t)
-	: type_(t), Tree<T>::Tree(item)
+	: _type(t), Tree<T>::Tree(item)
 {
 }
 
 template<typename T>
 Heap<T>::Heap(shared_ptr<Node<T>>& node, HeapType t)
-	: type_(t), Tree<T>::Tree(node)
+	: _type(t), Tree<T>::Tree(node)
 {
 }
 template<typename T>
 Heap<T>::Heap(vector<T>& data, HeapType type)
-	: type_(type)
+	: _type(type)
 {
 	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
 		InsertItem(*it);
@@ -108,7 +108,7 @@ template<typename T>
 void Heap<T>::HeapifyUp(shared_ptr<Node<T>>& node, unsigned long level)
 {
 	if (node && level >= 0) {
-		switch (type_) {
+		switch (_type) {
 		case HeapType::MinHeap:
 			if (node->Next() && *node < *node->Next()) {
 				shared_ptr<Node<T>> n(node->Next());
@@ -185,7 +185,7 @@ template<typename T>
 void Heap<T>::HeapifyDown(shared_ptr<Node<T>>& node)
 {
 	if (node) {
-		switch (type_) {
+		switch (_type) {
 		case HeapType::MinHeap:
 			if (node->Left() && *node > *node->Left()) { // Next minimum must come from the left branch since the tree is filled from left to right
 				shared_ptr<Node<T>> n(node->Left());

@@ -152,7 +152,7 @@ void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex) const
 	string uni = "-->";
 	string multi = "<-->";
 	if (!vertex)
-		throw runtime_error("Invalid vertex to start printing from!");
+		throw invalid_argument("Invalid vertex to start printing from!");
 	vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 	oss << vertex->GetTag() << "(" << vertex->GetItem() << ") ";
 	cout << oss.str();
@@ -563,7 +563,7 @@ template <typename TTag, typename TItem>
 long Graph<TTag, TItem>::GetLowestPathCost(size_t nodecount, vector<TTag> &from, vector<TTag> &to, vector<long> &weight)
 {
 	if (from.size() != to.size() || from.size() != weight.size())
-		throw runtime_error("from, to and weight data point counts must match!");
+		throw invalid_argument("from, to and weight data point counts must match!");
 	for (size_t i = 0; i < from.size(); i++)
 		AddUndirectedEdge(from[i], to[i], weight[i]);
 	assert(Count() == nodecount);

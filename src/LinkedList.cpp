@@ -136,7 +136,7 @@ template <typename T>
 size_t LinkedList<T>::Join(LinkedList<T> &other)
 {
 	if (*this == other)
-		throw runtime_error("LinkedList Cannot join itself!");
+		throw invalid_argument("LinkedList Cannot join itself!");
 	shared_ptr<Node<T>> tail = Tail();
 	if (tail)
 		tail->SetNext(other.Head());

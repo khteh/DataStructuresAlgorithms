@@ -12,7 +12,7 @@ class Heap : public Tree<T>
 {
 private:
 	using Tree<T>::m_root;
-	HeapType type_;
+	HeapType _type;
 	shared_ptr<Node<T>> FindEmptyLeafParent();
 	shared_ptr<Node<T>> FindLastLeaf();
 	void HeapifyUp(shared_ptr<Node<T>> &, unsigned long level = 0);

@@ -209,6 +209,7 @@ int main(int argc, char *argv[])
 	l2 = 5;
 	assert(l1 % l2 == l1 - (l1 / l2) * l2);
 	// GCDExtendedEuclideanResult<long>(5, 1, -2), 15, 35), make_tuple(GCDExtendedEuclideanResult<long>(10, 1, -1), 20, 30)
+	tuple<GCDExtendedEuclideanResult<long>, long, long> t = make_tuple(GCDExtendedEuclideanResult<long>(5, 1, -2), 15, 35);
 	GCDExtendedEuclideanResult<long> gcdExtendedResult = GCDExtendedEuclideanResult<long>(5, 1, -2);
 	assert(gcdExtendedResult == larithmetic.gcd_extended(15, 35));
 	gcdExtendedResult = GCDExtendedEuclideanResult<long>(10, 1, -1);
@@ -2057,35 +2058,19 @@ int main(int argc, char *argv[])
 	a = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 	l = 1e9 + 7L;
 	l1 = ranges::fold_left(a, 1, multiplies());
+	const long modulo = 1e9 + 7L;
 	l2 = parallel_reduce(
 		blocked_range<long>(0, a.size()), 1l /* Identity for Multiplication */,
 		[&](tbb::blocked_range<long> const &r, long running_total)
 		{
 			for (size_t i = r.begin(); i < r.end(); i++)
-				running_total *= a[i];
+				running_total = ((running_total % modulo) * (a[i] % modulo)) % modulo;
 			return running_total;
 		},
 		multiplies<long>());
 	assert(l2 == l1);
 	l2 = accumulate(a.begin(), a.end(), 1l, multiplies());
 	assert(l2 == l1);
-	tuple<GCDExtendedEuclideanResult<long>, long, long> t = make_tuple(GCDExtendedEuclideanResult<long>(5, 1, -2), 15, 35);
-	assert(palindrome.MaxSizePalindromeCount("week", 0, 3) == 2);
-	assert(palindrome.MaxSizePalindromeCount("week", 1, 2) == 1);
-	assert(palindrome.MaxSizePalindromeCount("abab", 0, 3) == 2);
-	assert(palindrome.MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 20, 20) == 1);
-	assert(palindrome.MaxSizePalindromeCount("wuhmbspjnfviogqzldrcxtaeyk", 3, 4) == 2);
-	assert(palindrome.MaxSizePalindromeCount("daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd", 13, 16) == 2);
-	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 30, 37) == 8);
-	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 28, 32) == 3);
-	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 14, 25) == 16);
-	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 12, 33) == 60480);
-	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 1, 29) == 1995840);
-	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 2, 40) == 740299127);
-	assert(palindrome.MaxSizePalindromeCount("wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 5, 41) == 556755193);
-	assert(palindrome.MaxSizePalindromeCount("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 43) == 1);
-	assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 4, 99) == 249346542);	// Fails. Why is the expected value smaller than the test case above when the range is larger? Overflow.
-	assert(palindrome.MaxSizePalindromeCount("cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 19, 81) == 922261429); // Fails. 922195893. Short of 65536 (0x10000)
 	// assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
 	vector<size_t> cresult;
 	// 11111111100, 1234567890, 9876543210

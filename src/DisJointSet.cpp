@@ -22,7 +22,7 @@ T DisJointSet<T>::Find(T item)
 	{
 		ostringstream oss;
 		oss << item << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << item << ");";
-		throw runtime_error(oss.str());
+		throw invalid_argument(oss.str());
 	}
 	// Find the root of the set in which element belongs
 	if (_sets[item] == item)
@@ -57,13 +57,13 @@ T DisJointSet<T>::Union(T x, T y)
 	{
 		ostringstream oss;
 		oss << x << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << x << ");";
-		throw runtime_error(oss.str());
+		throw invalid_argument(oss.str());
 	}
 	if (rootY == numeric_limits<T>::min())
 	{
 		ostringstream oss;
 		oss << y << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << y << ");";
-		throw runtime_error(oss.str());
+		throw invalid_argument(oss.str());
 	}
 	T root = T();
 	if (rootX != rootY)

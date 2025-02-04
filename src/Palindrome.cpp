@@ -424,12 +424,14 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
             // once you have settled the left half of a palindrome (finding all unique permutations of the numbers that end up in that left half) , the right half is fully determined
             size_t sumHalved = (it->second - it->second % 2) / 2;
             n += sumHalved;
-            multinomialDivisors.push_back(sumHalved);
-            vector<long> d(sumHalved);
-            ranges::generate(d, [n = 1]() mutable
-                             { return n++; });
-            if (d != vector<long>{1} || ranges::find(divisors, d) == divisors.end())
+            if (sumHalved > 1)
+            {
+                multinomialDivisors.push_back(sumHalved);
+                vector<long> d(sumHalved - 1);
+                ranges::generate(d, [n = 2]() mutable
+                                 { return n++; });
                 divisors.push_back(d);
+            }
             singulars += it->second % 2;
         }
     long double multinomial = MultinomialCoefficients(n, multinomialDivisors, modulo);

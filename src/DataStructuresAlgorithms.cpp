@@ -1196,7 +1196,7 @@ size_t CountDigits(char digit, size_t n)
 {
 	unsigned long power = 1, MSBs = 0;
 	if (digit < 0 || digit > 9)
-		throw runtime_error("digit must be between 0 and 9!");
+		throw invalid_argument("digit must be between 0 and 9!");
 	if (!n)
 		return 0;
 	for (; (power * 10) < n; power *= 10)
@@ -4785,7 +4785,7 @@ long BasicCalculator(string const &s)
 				break;
 			}
 			default:
-				throw runtime_error("Invalid arithmetic sign!");
+				throw invalid_argument("Invalid arithmetic sign!");
 			}
 			num = 0;
 			sign = s[i];
@@ -5892,7 +5892,7 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 	if (bitCount > sizeof(unsigned long long) * 8)
 	{
 		oss << "Too many discs/poles! " << towerCount << " towers " << discCount << " discs needs " << bitCount << " number of bits!";
-		throw runtime_error(oss.str());
+		throw invalid_argument(oss.str());
 	}
 	unsigned long long state = 0; // 64-bit
 	// bitset<64> bm(towerBitMask);

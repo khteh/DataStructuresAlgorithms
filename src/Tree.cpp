@@ -86,7 +86,7 @@ void Tree<T>::LoadData(vector<T> &data, TreeType type)
 			m_root = AddToTree(data);
 			break;
 		default:
-			throw runtime_error("Invalid Tree type!");
+			throw invalid_argument("Invalid Tree type!");
 		}
 		for (shared_ptr<Node<T>> n = m_root; n; minStack.push(n), n = n->Left())
 			;
@@ -108,7 +108,7 @@ Tree<T>::Tree(TraversalType type, vector<T> &inorder, vector<T> &otherorder)
 			m_root = BuildTreePostOrder(inorder, otherorder, otherorder.size() - 1, 0, inorder.size() - 1);
 			break;
 		default:
-			throw runtime_error("Invalid traversal type!");
+			throw invalid_argument("Invalid traversal type!");
 			break;
 		}
 	}
@@ -139,7 +139,7 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePreOrder(vector<T> &inorder, vector<T> &pr
 		 */
 		typename vector<T>::iterator inOrderRoot = ranges::find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, preorder[prestart]);
 		if (inOrderRoot == (inorder.begin() + instart + (inend - instart) + 1))
-			throw runtime_error("Invalid tree input parameters! No root found!");
+			throw invalid_argument("Invalid tree input parameters! No root found!");
 		root = make_shared<Node<T>>(preorder[prestart]);
 		size_t middle = distance(inorder.begin(), inOrderRoot);
 		shared_ptr<Node<T>> left = BuildTreePreOrder(inorder, preorder, prestart + 1 /*Root of pre-order left tree*/, instart, middle - 1 /*In-order left tree*/);
@@ -188,7 +188,7 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePostOrder(vector<T> &inorder, vector<T> &p
 		 */
 		typename vector<T>::iterator inOrderRoot = ranges::find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, postorder[pstart]);
 		if (inOrderRoot == inorder.begin() + instart + (inend - instart) + 1)
-			throw runtime_error("Invalid tree input parameters! No root found!");
+			throw invalid_argument("Invalid tree input parameters! No root found!");
 		root = make_shared<Node<T>>(postorder[pstart]);
 		size_t middle = distance(inorder.begin(), inOrderRoot);
 		size_t rightSize = inend - middle + 1; // Include the root node itself

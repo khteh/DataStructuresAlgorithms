@@ -46,7 +46,7 @@ void Tower<T>::Add(T disc)
 	{
 		ostringstream oss;
 		oss << "Cannot stack bigger disc " << disc << " on smaller disc";
-		throw runtime_error(oss.str());
+		throw invalid_argument(oss.str());
 	}
 	else
 		m_discs.push(disc);

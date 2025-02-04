@@ -171,7 +171,7 @@ T Arithmetic<T>::DivideWithPlusSign(T a, T b)
 	requires arithmetic_type<T>
 {
 	if (!b)
-		throw runtime_error("Divide by zero exception");
+		throw invalid_argument("Divide by zero exception");
 	bool isNegative = (a < 0) ^ (b < 0);
 	if (b == 1 || b == -1)
 	{
@@ -203,7 +203,7 @@ T Arithmetic<T>::Divide(T dividend, T divisor)
 	requires arithmetic_type<T>
 {
 	if (!divisor)
-		throw runtime_error("Divide by zero exception");
+		throw invalid_argument("Divide by zero exception");
 	int quotient = 0;
 	bool isNegative = (dividend < 0) ^ (divisor < 0);
 	if (divisor == 1 || divisor == -1)
@@ -258,7 +258,7 @@ T Arithmetic<T>::Divide(T dividend, T divisor, T modulo)
 {
 	T y_inv = ModInverse(divisor, modulo);
 	if (y_inv == -1)
-		throw invalid_argument("Undefined divide with modulo operation!");
+		throw runtime_error("Undefined divide with modulo operation!");
 	return (dividend * y_inv) % modulo;
 }
 /* https://leetcode.com/problems/sum-of-two-integers/
@@ -565,7 +565,7 @@ T Arithmetic<T>::ReversePolishNotation(vector<string> const &tokens)
 				num1 /= num2;
 				break;
 			default:
-				throw runtime_error("Invalid operator!");
+				throw invalid_argument("Invalid operator!");
 			}
 			numbers.push(num1);
 		}

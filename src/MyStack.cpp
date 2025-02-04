@@ -110,7 +110,7 @@ void MyStack<T>::SortStack(MyStack<T> &src, MyStack<T> &dest, sort_order_t order
 				src.push(dest.pop());
 			break;
 		default:
-			throw runtime_error("Invalid sort order");
+			throw invalid_argument("Invalid sort order");
 			break;
 		}
 		dest.push(item);
