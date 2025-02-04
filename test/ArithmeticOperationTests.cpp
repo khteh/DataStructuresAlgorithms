@@ -151,7 +151,7 @@ TEST_P(DivideModuloTestFixture, DivideModuloTests)
 INSTANTIATE_TEST_SUITE_P(
 	DivideModuloTests,
 	DivideModuloTestFixture,
-	::testing::Values(make_tuple(2, 8, 4, 5), make_tuple(1, 8, 3, 5), make_tuple(4, 11, 4, 5)));
+	::testing::Values(make_tuple(2, 8, 4, 5), make_tuple(1, 8, 3, 5), make_tuple(4, 11, 4, 5), make_tuple(10, 15, 7, 11), make_tuple(16, 23, 11, 17)));
 class DivideWithPlusSignTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
 {
 public:

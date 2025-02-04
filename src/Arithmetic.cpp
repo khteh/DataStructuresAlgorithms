@@ -232,6 +232,25 @@ T Arithmetic<T>::Divide(T dividend, T divisor)
  * x / y == x * y^(-1) == x * z (where z is multiplicative inverse of y).
  * y_inv = findMMI(y, M);
  * z = (x * y_inv) % M;
+ *
+ * Input  : a  = 8, b = 4, m = 5
+Output : 2
+
+Input  : a  = 8, b = 3, m = 5
+Output : 1
+Note that (1*3)%5 is same as 8%5
+
+Input  : a  = 11, b = 4, m = 5
+Output : 4
+Note that (4*4)%5 is same as 11%5
+
+Input  : a  = 15, b = 7, m = 11
+Output : 10
+Note that (10*7)%11 is same as 15%11
+
+Input  : a  = 23, b = 11, m = 17
+Output : 16
+Note that (16*11)%17=6 is same as 23%17
  */
 template <typename T>
 T Arithmetic<T>::Divide(T dividend, T divisor, T modulo)

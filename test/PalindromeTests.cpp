@@ -270,7 +270,7 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(4, "abbaab"),
 					  make_tuple(2, "akakak"),
 					  make_tuple(242745, "cbbdcacccdaddbaabbaacbacacaaddaaacdbccccccbbadbbcdddddddaccbdbddcbacaaadbbdcbcbcdabdddbbcdccaacdccab")));
-class MaxSizePalindromeCountTestFixture : public testing::TestWithParam<tuple<long double, string, size_t, size_t>>
+class MaxSizePalindromeCountTestFixture : public testing::TestWithParam<tuple<long, string, size_t, size_t>>
 {
 public:
 	void SetUp() override
@@ -288,7 +288,7 @@ public:
 protected:
 	Palindrome _palindrome;
 	string _data;
-	long double _expected;
+	long _expected;
 	size_t _l, _r;
 };
 TEST_P(MaxSizePalindromeCountTestFixture, MaxSizePalindromeCountTests)
@@ -313,4 +313,5 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 0),
 					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 1),
 					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 2),
-					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 43)));
+					  make_tuple(249346542, "cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 4, 99),
+					  make_tuple(922261429, "cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 19, 81)));
