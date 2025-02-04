@@ -434,7 +434,7 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
             }
             singulars += it->second % 2;
         }
-    long double multinomial = MultinomialCoefficients(n, multinomialDivisors, modulo);
+    long double multinomial = MultinomialCoefficients(n, multinomialDivisors, modulo); // This actually gives more accurate result. However, it will fail hackerrank challenge due to the modulo restriction.
     vector<long> sum1(n);
     ranges::generate(sum1, [n = 1]() mutable
                      { return n++; });
