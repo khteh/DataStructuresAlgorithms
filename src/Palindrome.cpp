@@ -431,7 +431,5 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
     sum = factorials[n];
     Arithmetic<long> arithmetic;
     // ( a * b) % c = ( ( a % c ) * ( b % c ) ) % c
-    long result = singulars ? ((sum % modulo) * (singulars % modulo)) % modulo : sum;
-    result = arithmetic.Divide(result, divisor, modulo);
-    return result;
+    return arithmetic.Divide(singulars ? ((sum % modulo) * (singulars % modulo)) % modulo : sum, divisor, modulo);
 }
