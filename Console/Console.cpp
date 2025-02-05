@@ -2167,25 +2167,16 @@ int main(int argc, char *argv[])
 	set.extract(2);
 	set.extract(4);
 	assert(set1 == set);
-#if 0
+	concurrent_set<size_t> cuset;
 	size = 1;
-	uset1.clear();
-	generate_n(inserter(uset1, uset1.begin()), 100, [&size]()
+	generate_n(inserter(cuset, cuset.begin()), 100, [&size]()
 			   { return size++; });
-	size = parallel_reduce(
-		blocked_range<set<size_t>::const_iterator>(uset1.begin(), uset1.end()), 1 /* Identity for Multiplication */,
-		[&](tbb::blocked_range<set<size_t>::const_iterator> const &r, size_t running_total)
-		{
-			for (set<size_t>::const_iterator it = r.begin(); it != r.end(); it++)
-				running_total = ((running_total % modulo) * (*it % modulo)) % modulo;
-			return running_total;
-		},
-		[&modulo](size_t x, size_t y) -> size_t
-		{
-			return ((x % modulo) * (y % modulo) % modulo);
-		});
+	size = parallel_reduce(cuset.range(), 0 /* Identity for Addition */, [&](concurrent_set<size_t>::range_type const &r, size_t running_total)
+						   {
+		for (auto it = r.begin(); it != r.end(); it++)
+			running_total += *it;
+		return running_total; }, plus<size_t>());
 	assert(5050 == size);
-#endif
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
