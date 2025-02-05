@@ -2055,10 +2055,11 @@ int main(int argc, char *argv[])
 	// a = UnbeatenPaths(110857, ugrid, 47678);
 	grid1.clear();
 	a.clear();
+	const long modulo = 1e9 + 7L;
 	a = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 	l = 1e9 + 7L;
-	l1 = ranges::fold_left(a, 1, multiplies());
-	const long modulo = 1e9 + 7L;
+	l1 = ranges::fold_left(a, 1, [&modulo](long x, long y) -> long
+						   { return ((x % modulo) * (y % modulo) % modulo); });
 	l2 = parallel_reduce(
 		blocked_range<long>(0, a.size()), 1l /* Identity for Multiplication */,
 		[&](tbb::blocked_range<long> const &r, long running_total)
@@ -2067,9 +2068,13 @@ int main(int argc, char *argv[])
 				running_total = ((running_total % modulo) * (a[i] % modulo)) % modulo;
 			return running_total;
 		},
-		multiplies<long>());
+		[&modulo](long x, long y) -> long
+		{
+			return ((x % modulo) * (y % modulo) % modulo);
+		});
 	assert(l2 == l1);
-	l2 = accumulate(a.begin(), a.end(), 1l, multiplies());
+	l2 = accumulate(a.begin(), a.end(), 1l, [&modulo](long x, long y) -> long
+					{ return ((x % modulo) * (y % modulo) % modulo); });
 	assert(l2 == l1);
 	// assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
 	vector<size_t> cresult;
@@ -2158,6 +2163,29 @@ int main(int argc, char *argv[])
 	a.clear();
 	a = {2, 5, 9};
 	// assert(504 == FindConnectedComponents(a));
+	multiset<long> set{1, 1, 2, 2, 3, 3}, set1{1, 1, 2, 3, 3};
+	set.extract(2);
+	set.extract(4);
+	assert(set1 == set);
+#if 0
+	size = 1;
+	uset1.clear();
+	generate_n(inserter(uset1, uset1.begin()), 100, [&size]()
+			   { return size++; });
+	size = parallel_reduce(
+		blocked_range<set<size_t>::const_iterator>(uset1.begin(), uset1.end()), 1 /* Identity for Multiplication */,
+		[&](tbb::blocked_range<set<size_t>::const_iterator> const &r, size_t running_total)
+		{
+			for (set<size_t>::const_iterator it = r.begin(); it != r.end(); it++)
+				running_total = ((running_total % modulo) * (*it % modulo)) % modulo;
+			return running_total;
+		},
+		[&modulo](size_t x, size_t y) -> size_t
+		{
+			return ((x % modulo) * (y % modulo) % modulo);
+		});
+	assert(5050 == size);
+#endif
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
