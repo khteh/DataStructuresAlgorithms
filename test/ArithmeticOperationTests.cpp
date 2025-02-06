@@ -68,9 +68,7 @@ INSTANTIATE_TEST_SUITE_P(
 	GCDTests,
 	GCDTestFixture,
 	::testing::Values(make_tuple(5, 10, 15), make_tuple(5, 35, 10), make_tuple(1, 31, 2), make_tuple(5, 15, 35)));
-#if 0
-https://github.com/google/googletest/issues/4715
-class GCDExtendedTestFixture : public testing::TestWithParam<tuple<tuple<GCDExtendedEuclideanResult<long>, long, long>, long, long>>
+class GCDExtendedTestFixture : public testing::TestWithParam<tuple<GCDExtendedEuclideanResult<long>, long, long>>
 {
 public:
 	void SetUp() override
@@ -97,14 +95,6 @@ INSTANTIATE_TEST_SUITE_P(
 	GCDExtendedTests,
 	GCDExtendedTestFixture,
 	::testing::Values(make_tuple(GCDExtendedEuclideanResult<long>(5, 1, -2), 15, 35), make_tuple(GCDExtendedEuclideanResult<long>(10, 1, -1), 20, 30)));
-#endif
-/*
-	assert(4 == larithmetic.ModInverse(3, 11));	  // (3 * 4) % 11 = 1
-	assert(12 == larithmetic.ModInverse(10, 17)); // (10 * 12) % 17 = 1
-	assert(2 == larithmetic.ModInverse(4, 7));	  // (2 * 4) % 7 = 1
-	assert(8 == larithmetic.ModInverse(7, 11));	  // (8 * 7) % 11 = 1
-	assert(2 == larithmetic.ModInverse(7, 13));	  // (2 * 7) % 13 = 1
-*/
 class ModInverseTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
 {
 public:

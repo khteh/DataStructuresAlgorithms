@@ -16,7 +16,7 @@ public:
 	GCDExtendedEuclideanResult(T, T, T)
 		requires arithmetic_type<T>;
 	T gcd, x, y;
-	bool operator==(GCDExtendedEuclideanResult<T> &)
+	bool operator==(GCDExtendedEuclideanResult<T> const &) const
 		requires arithmetic_type<T>;
 };
 template <typename T>

@@ -143,6 +143,7 @@ int main(int argc, char *argv[])
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
 	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << " (0x" << hex << numeric_limits<int>::min() << dec << "), numeric_limits<int>::max(): " << numeric_limits<int>::max() << " (0x" << hex << numeric_limits<int>::max() << "), numeric_limits<int>::min() *-1 = " << numeric_limits<int>::min() * -1 << endl;
 	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << " (0x" << hex << numeric_limits<long>::min() << dec << "), numeric_limits<long>::max(): " << numeric_limits<long>::max() << " (0x" << hex << numeric_limits<long>::max() << dec << "), numeric_limits<long>::min() * -1 = " << numeric_limits<long>::min() * -1 << endl;
+	cout << "numeric_limits<long double>::min(): " << numeric_limits<long double>::min() << " (0x" << hex << numeric_limits<long double>::min() << dec << "), numeric_limits<long double>::max(): " << dec << fixed << numeric_limits<long double>::max() << " (0x" << hex << numeric_limits<long double>::max() << dec << "), numeric_limits<long double>::min() * -1 = " << numeric_limits<long double>::min() * -1 << endl;
 	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	// assert(numeric_limits<int>::min() / -1 == numeric_limits<int>::min()); Integer overflow as 0x8000_0000 positive is > numeric_limits<int>::max()
 	assert(numeric_limits<int>::max() * -1 == numeric_limits<int>::min() + 1); // 0x7FFFF_FFFF * -1 = -0x7FFF_FFFF = 0x8000_0001
@@ -208,12 +209,6 @@ int main(int argc, char *argv[])
 	l1 = 7;
 	l2 = 5;
 	assert(l1 % l2 == l1 - (l1 / l2) * l2);
-	// GCDExtendedEuclideanResult<long>(5, 1, -2), 15, 35), make_tuple(GCDExtendedEuclideanResult<long>(10, 1, -1), 20, 30)
-	tuple<GCDExtendedEuclideanResult<long>, long, long> t = make_tuple(GCDExtendedEuclideanResult<long>(5, 1, -2), 15, 35);
-	GCDExtendedEuclideanResult<long> gcdExtendedResult = GCDExtendedEuclideanResult<long>(5, 1, -2);
-	assert(gcdExtendedResult == larithmetic.gcd_extended(15, 35));
-	gcdExtendedResult = GCDExtendedEuclideanResult<long>(10, 1, -1);
-	assert(gcdExtendedResult == larithmetic.gcd_extended(20, 30));
 	i = 3;
 	assert(-i == -3);
 	assert(~i == -4);
