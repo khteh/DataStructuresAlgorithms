@@ -58,9 +58,8 @@ GCDExtendedEuclideanResult<T> Arithmetic<T>::gcd_euclidean_extended(T a, T b)
 	requires arithmetic_type<T>
 {
 	if (!(a % b))
-	{ // a == b || !a
+		// a == b || !a
 		return GCDExtendedEuclideanResult<T>(b, 0, 1);
-	}
 	GCDExtendedEuclideanResult<T> gcd = gcd_euclidean_extended(b, a % b);
 	T y = gcd.x - (a / b) * gcd.y;
 	T x = gcd.y;
@@ -76,6 +75,15 @@ T Arithmetic<T>::gcd(T a, T b)
 		return a;
 	else
 		return a >= b ? gcd_euclidean(a, b) : gcd_euclidean(b, a);
+}
+/* http://en.wikipedia.org/wiki/Least_common_multiple
+ * The smallest positive integer that is divisible by both a and b.[1] If either a or b is 0, LCM(a, b) is defined to be zero.
+ */
+template <typename T>
+T Arithmetic<T>::lcm(T a, T b)
+	requires arithmetic_type<T>
+{
+	return (!a || !b) ? 0 : (a * b) / gcd(a, b);
 }
 /*
 https://www.geeksforgeeks.org/euclidean-algorithms-basic-and-extended/
@@ -102,14 +110,6 @@ GCDExtendedEuclideanResult<T> Arithmetic<T>::gcd_extended(T a, T b)
 	else
 		return a >= b ? gcd_euclidean_extended(a, b) : gcd_euclidean_extended(b, a);
 }
-/* http://en.wikipedia.org/wiki/Least_common_multiple */
-/* The smallest positive integer that is divisible by both a and b.[1] If either a or b is 0, LCM(a, b) is defined to be zero. */
-template <typename T>
-T Arithmetic<T>::lcm(T a, T b)
-	requires arithmetic_type<T>
-{
-	return (!a || !b) ? 0 : (a * b) / gcd(a, b);
-}
 /* https://www.geeksforgeeks.org/multiplicative-inverse-under-modulo-m/
  * https://www.geeksforgeeks.org/euclidean-algorithms-basic-and-extended/
  * How is Extended Algorithm Useful?
@@ -124,7 +124,7 @@ T Arithmetic<T>::ModInverse(T num, T mod)
 	GCDExtendedEuclideanResult<T> result = gcd_extended(num, mod);
 	if (result.gcd != 1)
 		throw invalid_argument("ModInverse does not exist for the input params");
-	// m is added to handle negative x
+	// m is added to handle negative x. Due to the difference in implementation, the 'x' and 'y' are flipped based on the reference URL.
 	T modInverse = (result.y % mod + mod) % mod;
 	return modInverse;
 }
