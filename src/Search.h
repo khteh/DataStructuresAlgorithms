@@ -21,4 +21,5 @@ public:
     int BinarySearchCountLower(vector<long> const &, long, long, long);
     int BinarySearch(const string &, vector<string> const &);
     bool GridSearch(vector<string> const &, vector<string> const &);
+    vector<string> FindShortestPath(int, int, int, int, int);
 };

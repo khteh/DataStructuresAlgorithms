@@ -277,7 +277,6 @@ typedef struct PathResult
 } pathResult_t;
 pathResult_t FindMaxPath(vector<vector<size_t>> &, size_t, size_t);
 bool PathExists(vector<vector<char>> &, size_t, size_t, size_t, size_t, queue<string> &, char);
-vector<string> findShortestPath(int, int, int, int, int);
 bool FindShortestPath(vector<vector<char>> &, size_t, size_t, queue<string> &, char, char);
 size_t ConnectedCellsInAGridLinkedList(vector<vector<long>> &);
 size_t ConnectedCellsInAGrid(vector<vector<long>> &);

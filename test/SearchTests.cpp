@@ -291,3 +291,39 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(vector<size_t>{15}, "ABC ABCDAB ABCDABCDABDE", "ABCDABD"),
 					  make_tuple(vector<size_t>{6, 13, 17}, "ABC ABCDAB ABCDABCDABDE", "CD"),
 					  make_tuple(vector<size_t>{11, 12, 13}, "Hello World!!!", "!")));
+class FindShortestPathTestFixture : public testing::TestWithParam<tuple<vector<string>, int, int, int, int, int>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		n = get<1>(GetParam());
+		i_start = get<2>(GetParam());
+		j_start = get<3>(GetParam());
+		i_end = get<4>(GetParam());
+		j_end = get<5>(GetParam());
+	}
+	vector<string> FindShortestPathTest()
+	{
+		return _search.FindShortestPath(n, i_start, j_start, i_end, j_end);
+	}
+
+protected:
+	Search _search;
+	vector<string> _expected;
+	int n, i_start, j_start, i_end, j_end;
+};
+TEST_P(FindShortestPathTestFixture, FindShortestPathTests)
+{
+	ASSERT_EQ(this->_expected, this->FindShortestPathTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	FindShortestPathTests,
+	FindShortestPathTestFixture,
+	::testing::Values(make_tuple(vector<string>{"2", "UR UR"}, 5, 4, 1, 0, 3),
+					  make_tuple(vector<string>{"4", "UL UL UL L"}, 7, 6, 6, 0, 1),
+					  make_tuple(vector<string>{"Impossible"}, 6, 5, 1, 0, 5),
+					  make_tuple(vector<string>{"2", "LR LL"}, 7, 0, 3, 4, 3),
+					  make_tuple(vector<string>{"49", "R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R R LR LR LR LR LR LR LR LR LR LR LR"}, 150, 24, 15, 46, 102),
+					  make_tuple(vector<string>{"30", "LR LR LR LR LR LR LR LR LR LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL LL"}, 70, 7, 15, 67, 3),
+					  make_tuple(vector<string>{"45", "LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LL LL LL LL LL LL LL LL LL LL LL LL"}, 100, 2, 24, 92, 45)));
