@@ -33,12 +33,16 @@ long double DynamicProgramming<T>::FactorialLD(T n, T modulo)
      * {1 1 2 6 24 ...}
      * result = 1,
      */
+    // https://stackoverflow.com/questions/79421066/c-long-double-128-bit-precision
+    feclearexcept(FE_INEXACT);
     long double result = 1;
     if (n <= 0)
         return 1;
     for (size_t i = 2; i <= (size_t)n; i++)
     {
         result *= i;
+        if (std::fetestexcept(FE_INEXACT))
+            cout << "Inexact with i=" << i << endl;
         if (modulo)
             result = fmodl(result, modulo);
     }
@@ -54,11 +58,17 @@ long double DynamicProgramming<T>::Fibonacci(T n)
      * {0 1 1 2 3 5 8}
      * {0, 1}, {1, 1}, {1, 2}, {3, 2}, {3, 5}
      */
+    // https://stackoverflow.com/questions/79421066/c-long-double-128-bit-precision
+    feclearexcept(FE_INEXACT);
     vector<long double> result = {0, 1};
     if (n <= 1)
         return n;
     for (size_t i = 2; i <= (size_t)n; i++)
+    {
         result[i % 2] = result[(i - 2) % 2] + result[(i - 1) % 2];
+        if (std::fetestexcept(FE_INEXACT))
+            cout << "Inexact with i=" << i << endl;
+    }
     return result[n % 2];
 }
 /*

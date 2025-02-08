@@ -11,6 +11,7 @@
 #include <map>
 #include <math.h>
 #include <ranges>
+#include <cfenv>
 #include "GenericConstraints.h"
 #include "Arithmetic.h"
 using namespace std;

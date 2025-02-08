@@ -94,7 +94,8 @@ TEST_P(GCDExtendedTestFixture, GCDExtendedTests)
 INSTANTIATE_TEST_SUITE_P(
 	GCDExtendedTests,
 	GCDExtendedTestFixture,
-	::testing::Values(make_tuple(GCDExtendedEuclideanResult<long>(5, 1, -2), 15, 35), make_tuple(GCDExtendedEuclideanResult<long>(10, 1, -1), 20, 30)));
+	::testing::Values(make_tuple(GCDExtendedEuclideanResult<long>(5, 1, -2), 15, 35), make_tuple(GCDExtendedEuclideanResult<long>(10, 1, -1), 20, 30), make_tuple(GCDExtendedEuclideanResult<long>(7, 1, -1), 14, 21),
+					  make_tuple(GCDExtendedEuclideanResult<long>(11, 1, -2), 55, 121), make_tuple(GCDExtendedEuclideanResult<long>(13, -1, 2), 91, 169)));
 class ModInverseTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
 {
 public:

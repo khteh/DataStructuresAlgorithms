@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
 	Graph<size_t, size_t> graph;
 	Arithmetic<size_t> arithmetic;
 	Arithmetic<long> larithmetic;
+	DynamicProgramming<size_t> dp;
 	Range range;
 	Palindrome palindrome;
 	Permutation<long> lPermutation;
@@ -143,6 +144,7 @@ int main(int argc, char *argv[])
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
 	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << " (0x" << hex << numeric_limits<int>::min() << dec << "), numeric_limits<int>::max(): " << numeric_limits<int>::max() << " (0x" << hex << numeric_limits<int>::max() << "), numeric_limits<int>::min() *-1 = " << numeric_limits<int>::min() * -1 << endl;
 	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << " (0x" << hex << numeric_limits<long>::min() << dec << "), numeric_limits<long>::max(): " << numeric_limits<long>::max() << " (0x" << hex << numeric_limits<long>::max() << dec << "), numeric_limits<long>::min() * -1 = " << numeric_limits<long>::min() * -1 << endl;
+	cout << "numeric_limits<unsigned long long>::min(): " << numeric_limits<unsigned long long>::min() << " (0x" << hex << numeric_limits<unsigned long long>::min() << dec << "), numeric_limits<unsigned long long>::max(): " << dec << fixed << numeric_limits<unsigned long long>::max() << " (0x" << hex << numeric_limits<unsigned long long>::max() << dec << "), numeric_limits<unsigned long long>::min() * -1 = " << numeric_limits<unsigned long long>::min() * -1 << endl;
 	cout << "numeric_limits<long double>::min(): " << numeric_limits<long double>::min() << " (0x" << hex << numeric_limits<long double>::min() << dec << "), numeric_limits<long double>::max(): " << dec << fixed << numeric_limits<long double>::max() << " (0x" << hex << numeric_limits<long double>::max() << dec << "), numeric_limits<long double>::min() * -1 = " << numeric_limits<long double>::min() * -1 << endl;
 	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	// assert(numeric_limits<int>::min() / -1 == numeric_limits<int>::min()); Integer overflow as 0x8000_0000 positive is > numeric_limits<int>::max()
@@ -337,6 +339,8 @@ int main(int argc, char *argv[])
 	cpp20readonlyranges();
 	cpp20ranges();
 	cpp20variants();
+	cout << "30! " << dp.FactorialLD(30) << endl;			// The CPU signals loss of precision via a flag in the FPU control registers starting from i=26
+	cout << "Fibonacci(100) " << dp.Fibonacci(100) << endl; // The CPU signals loss of precision via a flag in the FPU control registers starting from i=94
 	grid = {{1, 3, 5}, {2, 4, 6}, {7, 8, 9}};
 	// grid.back() = {7,8,9}
 	assert(grid.back().back() == 9);
@@ -1419,7 +1423,6 @@ int main(int argc, char *argv[])
 	assert(paths.size() == 2);
 	assert(paths[0] == "45");
 	assert(paths[1] == "LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LR LL LL LL LL LL LL LL LL LL LL LL LL");
-
 	udata.clear();
 	assert(substrings(string("123")) == 164);
 	assert(substrings(string("1234")) == 1670);
@@ -2172,9 +2175,12 @@ int main(int argc, char *argv[])
 			running_total += *it;
 		return running_total; }, plus<size_t>());
 	assert(5050 == size);
+	GCDExtendedEuclideanResult<long> gcdResult = larithmetic.gcd_extended(55, 121);
+	cout << "gcd: " << gcdResult.gcd << ", x: " << gcdResult.x << ", y: " << gcdResult.y << endl;
+	gcdResult = larithmetic.gcd_extended(91, 169);
+	cout << "gcd: " << gcdResult.gcd << ", x: " << gcdResult.x << ", y: " << gcdResult.y << endl;
 	/***** The End *****/
-	cout
-		<< "Press ENTER to exit";
+	cout << "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }
