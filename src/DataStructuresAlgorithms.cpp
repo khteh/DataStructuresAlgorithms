@@ -2874,7 +2874,6 @@ log2(7) = 2.807355, floor(log2(7)) = 2.000000 + 1 = 3
 
 log2(8) = 3.000000, floor(log2(8)) = 3.000000 + 1 = 4(9 choices)
 log2(9) = 3.169925, floor(log2(9)) = 3.000000 + 1 = 4(10 choices)
-
 */
 size_t BitCount(size_t n)
 {
@@ -3117,10 +3116,11 @@ void decimal_to_binary(long decimal, vector<bool> &binary, size_t width)
 		decimal >>= 1;
 	}
 }
-// Find longest sequence of zeros in binary representation of an integer.
-// 9: 1001 => 2
-// 529: 1000010001  => 4
-// 32: 100000 => 0
+/* Find longest sequence of zeros in binary representation of an integer.
+ * 9: 1001 => 2
+ * 529: 1000010001  => 4
+ * 32: 100000 => 0
+ */
 size_t binary_gap(long n)
 {
 	bool start = false;
@@ -3191,17 +3191,18 @@ void PlayTreasureGame()
 	// cout << "Start with room a " << game.hasTreasure(&a) << endl;
 	assert(game.hasTreasure(&a));
 }
-// Given a matrix of N * M, given the coordinates(x, y) present in a matrix,
-// Find the number of paths that can reach(0, 0) from the(x, y) points with k steps(requires exactly k, k> = 0)
-// From each point you can go up, down, left and right in four directions.
-//  https://www.geeksforgeeks.org/check-if-it-is-possible-to-move-from-0-0-to-x-y-in-exactly-k-steps/
-// For example, the following matrix :
-//----------
-// 0 0 0 0 0
-// 0 0 0 0 0
-// 0 0 0 0 0
-// 0 0 0 0 0
-//(x, y) = (1, 1), k = 2, the output is 2
+/* Given a matrix of N * M, given the coordinates(x, y) present in a matrix,
+ * Find the number of paths that can reach(0, 0) from the(x, y) points with k steps(requires exactly k, k> = 0)
+ * From each point you can go up, down, left and right in four directions.
+ *  https://www.geeksforgeeks.org/check-if-it-is-possible-to-move-from-0-0-to-x-y-in-exactly-k-steps/
+ * For example, the following matrix :
+ * ----------
+ * 0 0 0 0 0
+ * 0 0 0 0 0
+ * 0 0 0 0 0
+ * 0 0 0 0 0
+ * (x, y) = (1, 1), k = 2, the output is 2
+ */
 const long moves[][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 size_t countPaths(size_t m, size_t n, size_t x, size_t y, size_t k)
 {
