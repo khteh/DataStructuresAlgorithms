@@ -2,6 +2,13 @@
 
 C++-latest data structures and algorithms using only standard libraries. This answers many of the challenges in HackerRank, LeetCode and some in Codility.
 
+## Dependencies
+
+### Permuted Congruential Generator-64 (PCG64)
+
+- Download the zip file from https://www.pcg-random.org/download.html#cpp-implementation
+- Extract the zip file and put all the `.hpp` into `src/` folder
+
 ## Windows
 
 - Use Visual Studio 2022, latest Windows SDK and ISO C++23 Standard.

@@ -333,15 +333,17 @@ TEST(SortTests, LexicographicSortTest)
 TEST(SortTests, Merge2SortedListsTest)
 {
 	vector<long> a, b;
-	random_device device;
-	mt19937_64 engine(device());
+	// Seed with a real random value, if available
+	pcg_extras::seed_seq_from<random_device> seed_source;
+	// Make a random number engine
+	pcg32 rng(seed_source);
 	uniform_int_distribution<long> uniformDistribution;
 	a.resize(10);
 	b.resize(20);
 	ranges::generate(a, [&]
-					 { return uniformDistribution(engine); });
+					 { return uniformDistribution(rng); });
 	ranges::generate(b, [&]
-					 { return uniformDistribution(engine); });
+					 { return uniformDistribution(rng); });
 	ranges::sort(a);
 	ranges::sort(b);
 	Merge(a, b);
@@ -351,9 +353,9 @@ TEST(SortTests, Merge2SortedListsTest)
 	a.resize(20);
 	b.resize(10);
 	ranges::generate(a, [&]
-					 { return uniformDistribution(engine); });
+					 { return uniformDistribution(rng); });
 	ranges::generate(b, [&]
-					 { return uniformDistribution(engine); });
+					 { return uniformDistribution(rng); });
 	ranges::sort(a);
 	ranges::sort(b);
 	Merge(a, b);

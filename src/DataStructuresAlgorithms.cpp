@@ -1093,10 +1093,10 @@ void shuffleCards(vector<long> &cards)
 	unsigned long long mask = 0; // bitmask of 52 cards.
 	int tmp, index;
 	random_device device;
-	vector<unsigned int> seeds(mt19937_64::state_size);
-	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
-	seed_seq sequence(seeds.begin(), seeds.end());
-	mt19937_64 engine(sequence);
+	// Seed with a real random value, if available
+	pcg_extras::seed_seq_from<random_device> seed_source;
+	// Make a random number engine
+	pcg32 rng(seed_source);
 	if (!cards.empty() && cards.size() <= 52)
 	{
 		for (size_t i = 0; i < 52; i++)
@@ -1112,7 +1112,7 @@ void shuffleCards(vector<long> &cards)
 			 * i: 51 (rand() % 1) + 51  = 51 (Last card left)
 			 */
 			uniform_int_distribution<int> dist(i, 51);
-			index = dist(engine);
+			index = dist(rng);
 			assert(!(mask & ((unsigned long long)1 << cards[index])));
 			mask |= ((unsigned long long)1 << cards[index]);
 			tmp = cards[i];
@@ -1127,16 +1127,15 @@ void randomSubset(vector<long> &source, size_t count, vector<long> &result)
 	long index, tmp;
 	if (count > source.size())
 		return;
-	random_device device;
-	vector<unsigned int> seeds(mt19937_64::state_size);
-	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
-	seed_seq sequence(seeds.begin(), seeds.end());
-	mt19937_64 engine(sequence);
+	//  Seed with a real random value, if available
+	pcg_extras::seed_seq_from<random_device> seed_source;
+	// Make a random number engine
+	pcg32 rng(seed_source);
 	for (size_t i = 0; i < count; i++)
 	{
 		// index = (rand() % (source.size() - i)) + i;
 		uniform_int_distribution<long> dist(i, source.size() - 1);
-		index = dist(engine);
+		index = dist(rng);
 		// cout << "source[" << index << "]: " << source[index] << endl;
 		assert(!masks.count(source[index]));
 		masks.emplace(source[index]);
@@ -2652,6 +2651,16 @@ void TestRandom()
 	seed_seq sequence(seeds.begin(), seeds.end());
 	mt19937_64 non_deterministic_seed_sequence_mersene_twister_engine{sequence};
 	TestURNG(non_deterministic_seed_sequence_mersene_twister_engine);
+
+	/*
+	permuted congruential generator-64 (PCG64)
+	https://www.pcg-random.org/using-pcg-cpp.html
+	*/
+	// Seed with a real random value, if available
+	pcg_extras::seed_seq_from<random_device> seed_source;
+	// Make a random number engine
+	pcg32 rng(seed_source);
+	TestURNG(rng);
 }
 long concat(vector<long> &data)
 {
@@ -5335,8 +5344,10 @@ void cpp20ranges()
 	// shuffle
 	// std::random_shuffle was deprecated and removed in C++17
 	cout << "C++23 ranges shuffle:" << endl;
-	random_device device;
-	mt19937_64 rng{device()};
+	//  Seed with a real random value, if available
+	pcg_extras::seed_seq_from<random_device> seed_source;
+	// Make a random number engine
+	pcg32 rng(seed_source);
 	nodes.clear();
 	nodes.resize(10);
 	ranges::generate(nodes, [n = -5]() mutable

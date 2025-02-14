@@ -34,6 +34,7 @@
 #include <concepts>
 #include <generator>
 #include "oneapi/tbb.h"
+#include "pcg_random.hpp"
 #include "Arithmetic.h"
 #include "Dijkstra.h"
 #include "DynamicProgramming.h"

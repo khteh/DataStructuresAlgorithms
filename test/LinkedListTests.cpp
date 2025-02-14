@@ -3,17 +3,15 @@ using namespace std;
 TEST(LinkedListTests, SplitLinkedListTest)
 {
 	vector<long> a, b;
-	random_device device;
-	vector<unsigned int> seeds;
-	seeds.resize(mt19937_64::state_size);
-	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
-	seed_seq sequence(seeds.begin(), seeds.end());
-	mt19937_64 engine(sequence);
+	// Seed with a real random value, if available
+	pcg_extras::seed_seq_from<random_device> seed_source;
+	// Make a random number engine
+	pcg32 rng(seed_source);
 	uniform_int_distribution<long> uniformDistribution;
 	a.clear();
 	a.resize(10);
 	ranges::generate(a, [&]
-					 { return uniformDistribution(engine); });
+					 { return uniformDistribution(rng); });
 	LinkedList<long> ll(a);
 	ASSERT_EQ(10, ll.Length());
 	b.clear();
@@ -35,19 +33,17 @@ TEST(LinkedListTests, SplitLinkedListTest)
 TEST(LinkedListTests, LinkedListJoinTest)
 {
 	vector<long> a, b;
-	random_device device;
-	vector<unsigned int> seeds;
-	seeds.resize(mt19937_64::state_size);
-	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
-	seed_seq sequence(seeds.begin(), seeds.end());
-	mt19937_64 engine(sequence);
+	// Seed with a real random value, if available
+	pcg_extras::seed_seq_from<random_device> seed_source;
+	// Make a random number engine
+	pcg32 rng(seed_source);
 	uniform_int_distribution<long> uniformDistribution;
 	a.resize(10);
 	b.resize(10);
 	ranges::generate(a, [&]
-					 { return uniformDistribution(engine); });
+					 { return uniformDistribution(rng); });
 	ranges::generate(b, [&]
-					 { return uniformDistribution(engine); });
+					 { return uniformDistribution(rng); });
 	LinkedList<long> lla(a), llb(b);
 	ASSERT_EQ(10, lla.Length());
 	ASSERT_EQ(10, llb.Length());
