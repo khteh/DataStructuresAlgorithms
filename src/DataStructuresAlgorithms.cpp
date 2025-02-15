@@ -1096,7 +1096,7 @@ void shuffleCards(vector<long> &cards)
 	// Seed with a real random value, if available
 	pcg_extras::seed_seq_from<random_device> seed_source;
 	// Make a random number engine
-	pcg32 rng(seed_source);
+	pcg64 rng(seed_source);
 	if (!cards.empty() && cards.size() <= 52)
 	{
 		for (size_t i = 0; i < 52; i++)
@@ -1130,7 +1130,7 @@ void randomSubset(vector<long> &source, size_t count, vector<long> &result)
 	//  Seed with a real random value, if available
 	pcg_extras::seed_seq_from<random_device> seed_source;
 	// Make a random number engine
-	pcg32 rng(seed_source);
+	pcg64 rng(seed_source);
 	for (size_t i = 0; i < count; i++)
 	{
 		// index = (rand() % (source.size() - i)) + i;
@@ -2659,7 +2659,7 @@ void TestRandom()
 	// Seed with a real random value, if available
 	pcg_extras::seed_seq_from<random_device> seed_source;
 	// Make a random number engine
-	pcg32 rng(seed_source);
+	pcg64 rng(seed_source);
 	TestURNG(rng);
 }
 long concat(vector<long> &data)
@@ -5347,7 +5347,7 @@ void cpp20ranges()
 	//  Seed with a real random value, if available
 	pcg_extras::seed_seq_from<random_device> seed_source;
 	// Make a random number engine
-	pcg32 rng(seed_source);
+	pcg64 rng(seed_source);
 	nodes.clear();
 	nodes.resize(10);
 	ranges::generate(nodes, [n = -5]() mutable

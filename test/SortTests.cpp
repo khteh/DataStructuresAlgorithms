@@ -336,7 +336,7 @@ TEST(SortTests, Merge2SortedListsTest)
 	// Seed with a real random value, if available
 	pcg_extras::seed_seq_from<random_device> seed_source;
 	// Make a random number engine
-	pcg32 rng(seed_source);
+	pcg64 rng(seed_source);
 	uniform_int_distribution<long> uniformDistribution;
 	a.resize(10);
 	b.resize(20);
