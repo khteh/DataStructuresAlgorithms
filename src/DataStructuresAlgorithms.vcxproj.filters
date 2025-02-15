@@ -252,6 +252,15 @@
     <ClInclude Include="Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pcg_extras.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pcg_random">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pcg_uint128">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Palindrome.h">
       <Filter>Header Files</Filter>
     </ClInclude>

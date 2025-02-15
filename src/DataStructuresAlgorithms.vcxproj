@@ -202,6 +202,9 @@
     <ClInclude Include="MyStack.h" />
     <ClInclude Include="NameHidingExample.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="pcg_extras.hpp" />
+    <ClInclude Include="pcg_random.hpp" />
+    <ClInclude Include="pcg_uint128.hpp" />
     <ClInclude Include="Palindrome.h" />
     <ClInclude Include="Permutation.h" />
     <ClInclude Include="Poker.h" />
