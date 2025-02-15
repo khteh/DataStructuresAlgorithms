@@ -170,6 +170,7 @@ template <typename T>
 T Arithmetic<T>::DivideWithPlusSign(T a, T b)
 	requires arithmetic_type<T>
 {
+#pragma warning(disable:4146)
 	if (!b)
 		throw invalid_argument("Divide by zero exception");
 	bool isNegative = (a < 0) ^ (b < 0);
@@ -202,6 +203,7 @@ template <typename T>
 T Arithmetic<T>::Divide(T dividend, T divisor)
 	requires arithmetic_type<T>
 {
+#pragma warning(disable:4146)
 	if (!divisor)
 		throw invalid_argument("Divide by zero exception");
 	int quotient = 0;
