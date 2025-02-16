@@ -41,9 +41,10 @@ public:
 	// Node<T> &operator=(const Node<T> &); // Copy assignment operator
 	// Node<T> &operator=(Node<T> &&); // Move assignment operator
 	/*
-    The above 2 operators can be implemented as 1 operator, like below.
-    This allows the caller to decide whether to construct the rhs parameter
-    using its copy constructor or move constructor...	
+	https://stackoverflow.com/questions/64378721/what-is-the-difference-between-the-copy-constructor-and-move-constructor-in-c
+	The above 2 operators can be implemented as 1 operator, like below.
+	This allows the caller to decide whether to construct the rhs parameter
+	using its copy constructor or move constructor...
 	*/
 	Node<T> &operator=(Node<T>);
 	bool operator==(Node<T>) const;
