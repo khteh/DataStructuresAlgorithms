@@ -10,13 +10,15 @@ template <typename T>
 class MyStack
 {
 private:
-	shared_ptr<Node<T>> m_top;
-	size_t m_size;
+	shared_ptr<Node<T>> _top;
+	size_t _size;
+	void Swap(MyStack &);
 
 public:
 	MyStack();
-	MyStack(const MyStack &);
-	~MyStack();
+	MyStack(const MyStack &); // Copy constructor
+	MyStack(MyStack &&);	  // Move constructor
+	virtual ~MyStack();
 	bool isEmpty() const;
 	T pop();
 	void push(T);

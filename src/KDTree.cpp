@@ -51,7 +51,7 @@ shared_ptr<KDNode<T>> KDNode<T>::Right()
 template <typename T>
 KDTree<T>::KDTree(vector<vector<T>> &data, long depth)
 {
-	m_root = Construct(data, depth);
+	_root = Construct(data, depth);
 }
 
 template <typename T>
@@ -68,7 +68,7 @@ shared_ptr<KDNode<T>> KDTree<T>::Construct(vector<vector<T>> data, long depth)
 	// Assume all points have the same dimension
 	long axis = depth % data[0].size();
 	ranges::sort(data, [axis](const std::vector<T> &a, const std::vector<T> &b)
-		 { return a[axis] < b[axis]; });
+				 { return a[axis] < b[axis]; });
 	long median = data.size() / 2;
 	vector<vector<T>> left, right;
 	if (median)
@@ -81,14 +81,14 @@ template <typename T>
 void KDTree<T>::PrintTree()
 {
 	// Use Pre-Order traversal to print node values
-	if (!m_root)
+	if (!_root)
 	{
 		cout << "Empty tree!" << endl;
 		return;
 	}
 	unsigned long level = 0;
 	map<long, vector<shared_ptr<KDNode<T>>>> levels;
-	levels.emplace(level, vector<shared_ptr<KDNode<T>>>{m_root});
+	levels.emplace(level, vector<shared_ptr<KDNode<T>>>{_root});
 	for (; !levels[level].empty(); level++)
 	{
 		vector<shared_ptr<KDNode<T>>> nodes;

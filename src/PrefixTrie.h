@@ -10,7 +10,7 @@ class PrefixTrieNode;
 class PrefixTrie
 {
 private:
-	unique_ptr<PrefixTrieNode> m_root;
+	unique_ptr<PrefixTrieNode> _root;
 
 public:
 	PrefixTrie();
@@ -30,8 +30,8 @@ public:
 class PrefixTrieNode
 {
 private:
-	string m_key;
-	map<char, unique_ptr<PrefixTrieNode>> m_children;
+	string _key;
+	map<char, unique_ptr<PrefixTrieNode>> _children;
 	string ExtendPrefix();
 
 public:

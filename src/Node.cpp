@@ -49,7 +49,6 @@ void Node<T>::Swap(Node<T> &other)
 	swap(_left, other._left);
 	swap(_right, other._right);
 }
-
 template <typename T>
 T Node<T>::Item() const
 {

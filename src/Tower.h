@@ -9,8 +9,8 @@ template <typename T>
 class Tower : public enable_shared_from_this<Tower<T>>
 {
 private:
-	size_t m_index;
-	MyStack<T> m_discs;
+	size_t _index;
+	MyStack<T> _discs;
 
 public:
 	Tower(size_t);

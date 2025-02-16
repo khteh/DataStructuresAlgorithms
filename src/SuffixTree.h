@@ -32,13 +32,13 @@ class SuffixTreeNode;
 class SuffixTree
 {
 private:
-	vector<string> m_strings;
-	unique_ptr<SuffixTreeNode> m_root;
+	vector<string> _strings;
+	unique_ptr<SuffixTreeNode> _root;
 	const vector<size_t> GetIndexes();
 
 public:
 	SuffixTree();
-	SuffixTree(string const &);
+	explicit SuffixTree(string const &);
 	~SuffixTree();
 	void InsertString(string const &);
 	void RemoveString(string const &);
@@ -52,12 +52,12 @@ public:
 class SuffixTreeNode
 {
 private:
-	char m_char;
-	map<char, unique_ptr<SuffixTreeNode>> m_children;
-	set<size_t> m_indices;
+	char _char;
+	map<char, unique_ptr<SuffixTreeNode>> _children;
+	set<size_t> _indices;
 
 public:
-	SuffixTreeNode(char);
+	explicit SuffixTreeNode(char);
 	~SuffixTreeNode();
 	void InsertString(string const &, size_t);
 	void RemoveString(string const &);

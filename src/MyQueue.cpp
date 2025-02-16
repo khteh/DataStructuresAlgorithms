@@ -1,62 +1,63 @@
 #include "stdafx.h"
 #include "MyQueue.h"
-
 template class MyQueue<int>;
 
-template<typename T>
+template <typename T>
 MyQueue<T>::MyQueue()
 {
 }
-template<typename T>
+template <typename T>
 MyQueue<T>::~MyQueue()
 {
 }
 
-template<typename T>
+template <typename T>
 size_t MyQueue<T>::size()
 {
-	return front_.size() + back_.size();
+	return _front.size() + _back.size();
 }
 
-template<typename T>
+template <typename T>
 bool MyQueue<T>::isEmpty()
 {
 	return size() == 0;
 }
 
-template<typename T>
+template <typename T>
 T MyQueue<T>::peek()
 {
-	if (!front_.isEmpty())
-		return front_.peek();
-	else if (!back_.isEmpty()) {
+	if (!_front.isEmpty())
+		return _front.peek();
+	else if (!_back.isEmpty())
+	{
 		back2front();
-		return front_.peek();
+		return _front.peek();
 	}
 	return numeric_limits<T>::min();
 }
 
-template<typename T>
+template <typename T>
 T MyQueue<T>::front()
 {
-	if (!front_.isEmpty())
-		return front_.pop();
-	else if (!back_.isEmpty()) {
+	if (!_front.isEmpty())
+		return _front.pop();
+	else if (!_back.isEmpty())
+	{
 		back2front();
-		return front_.pop();
+		return _front.pop();
 	}
 	return numeric_limits<T>::min();
 }
 
-template<typename T>
+template <typename T>
 void MyQueue<T>::push_back(T item)
 {
-	back_.push(item);
+	_back.push(item);
 }
 
-template<typename T>
+template <typename T>
 void MyQueue<T>::back2front()
 {
-	while (!back_.isEmpty())
-		front_.push(back_.pop());
+	while (!_back.isEmpty())
+		_front.push(_back.pop());
 }

@@ -6,14 +6,14 @@ template class CircularLinkedList<string>;
 template <typename T>
 CircularLinkedList<T>::CircularLinkedList(vector<T> &data)
 {
-	m_head.reset();
+	_head.reset();
 	shared_ptr<Node<T>> tail = nullptr;
 	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
-		if (!m_head)
+		if (!_head)
 		{
-			m_head = make_shared<Node<T>>(*it);
-			tail = m_head;
+			_head = make_shared<Node<T>>(*it);
+			tail = _head;
 		}
 		else
 		{
@@ -37,7 +37,7 @@ size_t CircularLinkedList<T>::Length() const
 {
 	size_t length = 0;
 	set<shared_ptr<Node<T>>> visited;
-	for (shared_ptr<Node<T>> node = m_head; node && !visited.count(node); node = node->Next())
+	for (shared_ptr<Node<T>> node = _head; node && !visited.count(node); node = node->Next())
 	{
 		length++;
 		visited.insert(node);
@@ -48,7 +48,7 @@ template <typename T>
 void CircularLinkedList<T>::Print(shared_ptr<Node<T>> node)
 {
 	set<shared_ptr<Node<T>>> visited;
-	for (shared_ptr<Node<T>> n = node ? node : m_head; n && !visited.count(node); n = n->Next())
+	for (shared_ptr<Node<T>> n = node ? node : _head; n && !visited.count(node); n = n->Next())
 	{
 		cout << n->Item() << " ";
 		visited.insert(node);
@@ -59,21 +59,21 @@ template <typename T>
 void CircularLinkedList<T>::Clear()
 {
 	set<shared_ptr<Node<T>>> visited;
-	for (shared_ptr<Node<T>> n = m_head; n && !visited.count(n);)
+	for (shared_ptr<Node<T>> n = _head; n && !visited.count(n);)
 	{
 		visited.insert(n);
 		shared_ptr<Node<T>> tmp = n;
 		n = n->Next();
 		tmp.reset();
 	}
-	m_head.reset();
+	_head.reset();
 }
 template <typename T>
 shared_ptr<Node<T>> CircularLinkedList<T>::Find(Node<T> &n)
 {
 	set<shared_ptr<Node<T>>> visited;
 	shared_ptr<Node<T>> node = nullptr;
-	for (node = m_head; node; node = node->Next())
+	for (node = _head; node; node = node->Next())
 	{
 		if (!visited.count(node))
 		{

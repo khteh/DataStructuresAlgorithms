@@ -19,7 +19,7 @@ protected:
 
 public:
 	Node();
-	explicit Node(T item);
+	explicit Node(T);
 	Node(const Node &); // Copy constructor
 	Node(Node &&);		// Move constructor
 	Node(const shared_ptr<Node>);

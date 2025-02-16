@@ -12,7 +12,7 @@ template <typename T>
 class LinkedList
 {
 protected:
-	shared_ptr<Node<T>> m_head;
+	shared_ptr<Node<T>> _head;
 	void SetHead(shared_ptr<Node<T>>);
 	shared_ptr<Node<T>> Split(shared_ptr<Node<T>>, size_t);
 	void Merge(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);

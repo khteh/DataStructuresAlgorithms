@@ -45,8 +45,9 @@ class Tree
 {
 protected:
 	vector<size_t> levelNodeCount;
-	shared_ptr<Node<T>> m_root;
+	shared_ptr<Node<T>> _root;
 	stack<shared_ptr<Node<T>>> minStack, maxStack;
+	void Swap(Tree &);
 	void Clear(shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T> &, long, long);
 	shared_ptr<Node<T>> AddToTree(vector<T> &);
@@ -74,7 +75,8 @@ protected:
 
 public:
 	Tree();
-	Tree(Tree<T> &);
+	Tree(Tree<T> const &); // Copy constructor
+	Tree(Tree<T> &&);	   // Move constructor
 	explicit Tree(T);
 	Tree(vector<T> &, TreeType);
 	Tree(TraversalType, vector<T> &preorder, vector<T> &inorder);
@@ -82,7 +84,15 @@ public:
 	void LoadData(vector<T> &, TreeType);
 	virtual ~Tree();
 	void Clear();
-	Tree<T> &operator=(Tree<T> &);
+	// Tree<T> &operator=(Tree<T> const &); // Copy assignment operator
+	// Tree<T> &operator=(Tree<T> &&); // Move assignment operator
+	/*
+	https://stackoverflow.com/questions/64378721/what-is-the-difference-between-the-copy-constructor-and-move-constructor-in-c
+	The above 2 operators can be implemented as 1 operator, like below.
+	This allows the caller to decide whether to construct the rhs parameter
+	using its copy constructor or move constructor...
+	*/
+	Tree<T> &operator=(Tree<T>);
 	bool operator==(const Tree<T> &) const;
 	void Serialize(const shared_ptr<Node<T>> &, vector<T> &);
 	shared_ptr<Node<T>> Root() const;

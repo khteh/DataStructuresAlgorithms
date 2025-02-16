@@ -5,7 +5,7 @@ template class Tower<long>;
 
 template <typename T>
 Tower<T>::Tower(size_t index)
-	: m_index(index)
+	: _index(index)
 {
 }
 
@@ -17,45 +17,45 @@ Tower<T>::~Tower()
 template <typename T>
 size_t Tower<T>::Index() const
 {
-	return m_index;
+	return _index;
 }
 template <typename T>
 size_t Tower<T>::DiscCount() const
 {
-	return m_discs.size();
+	return _discs.size();
 }
 template <typename T>
 bool Tower<T>::isEmpty() const
 {
-	return m_discs.isEmpty();
+	return _discs.isEmpty();
 }
 template <typename T>
 void Tower<T>::Clear()
 {
-	m_discs.clear();
+	_discs.clear();
 }
 template <typename T>
 T Tower<T>::TopDisc() const
 {
-	return m_discs.peek();
+	return _discs.peek();
 }
 template <typename T>
 void Tower<T>::Add(T disc)
 {
-	if (!m_discs.isEmpty() && m_discs.peek() <= disc)
+	if (!_discs.isEmpty() && _discs.peek() <= disc)
 	{
 		ostringstream oss;
 		oss << "Cannot stack bigger disc " << disc << " on smaller disc";
 		throw invalid_argument(oss.str());
 	}
 	else
-		m_discs.push(disc);
+		_discs.push(disc);
 }
 
 template <typename T>
 void Tower<T>::MoveTopTo(shared_ptr<Tower<T>> &t)
 {
-	t->Add(m_discs.pop());
+	t->Add(_discs.pop());
 }
 
 template <typename T>
@@ -72,8 +72,8 @@ bool Tower<T>::operator>(Tower<T> &rhs) const
 template <typename T>
 void Tower<T>::print()
 {
-	cout << "Tower " << m_index << " content: ";
-	m_discs.PrintStack();
+	cout << "Tower " << _index << " content: ";
+	_discs.PrintStack();
 }
 
 // http://en.wikipedia.org/wiki/Tower_of_Hanoi

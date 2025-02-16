@@ -4,8 +4,8 @@ template <typename T>
 class MyQueue
 {
 private:
-	MyStack<T> front_;
-	MyStack<T> back_;
+	MyStack<T> _front;
+	MyStack<T> _back;
 	void back2front();
 
 public:

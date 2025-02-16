@@ -8,7 +8,7 @@ template <typename K, typename V>
 class IntervalMap
 {
 private:
-	map<K, V> m_map;
+	map<K, V> _map;
 
 public:
 	// constructor associates whole range of K with val by inserting (K_min, val)

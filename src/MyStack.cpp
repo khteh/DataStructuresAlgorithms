@@ -9,78 +9,80 @@ template class MyStack<long>;
 template class MyStack<string>;
 template <typename T>
 MyStack<T>::MyStack()
-	: m_top(nullptr), m_size(0)
+	: _top(nullptr), _size(0)
 {
 }
-
 template <typename T>
-MyStack<T>::MyStack(const MyStack &stack)
+MyStack<T>::MyStack(const MyStack &stack) : _size(stack._size), _top(stack._top)
 {
-	m_size = stack.m_size;
-	m_top = stack.m_top;
 }
-
+template <typename T>
+MyStack<T>::MyStack(MyStack &&stack)
+{
+	stack.Swap(*this);
+}
+template <typename T>
+void MyStack<T>::Swap(MyStack<T> &other)
+{
+	swap(_top, other._top);
+	swap(_size, other._size);
+}
 template <typename T>
 MyStack<T>::~MyStack()
 {
 	clear();
 }
-
 template <typename T>
 bool MyStack<T>::isEmpty() const
 {
-	return !m_top;
+	return !_top;
 }
-
 template <typename T>
 T MyStack<T>::pop()
 {
-	shared_ptr<Node<T>> top = m_top;
-	m_top = m_top->Next();
-	m_size--;
-	if (!m_size)
-		m_top = nullptr;
+	shared_ptr<Node<T>> top = _top;
+	_top = _top->Next();
+	_size--;
+	if (!_size)
+		_top = nullptr;
 	return top->Item();
 }
-
 template <typename T>
 void MyStack<T>::push(T item)
 {
-	shared_ptr<Node<T>> node = m_top;
-	m_top = make_shared<Node<T>>(item);
-	m_top->SetNext(node);
-	m_size++;
+	shared_ptr<Node<T>> node = _top;
+	_top = make_shared<Node<T>>(item);
+	_top->SetNext(node);
+	_size++;
 }
-
 template <typename T>
 T MyStack<T>::peek() const
 {
-	return !isEmpty() ? m_top->Item() : numeric_limits<T>::max();
+	return !isEmpty() ? _top->Item() : numeric_limits<T>::max();
 }
-
 template <typename T>
 size_t MyStack<T>::size() const
 {
-	return m_size;
+	return _size;
 }
 
 template <typename T>
 void MyStack<T>::clear()
 {
 	shared_ptr<Node<T>> next;
-	for (shared_ptr<Node<T>> node = m_top; node;)
+	for (shared_ptr<Node<T>> node = _top; node;)
 	{
 		next = node->Next();
 		node.reset();
 		node = next;
 	}
-	m_top.reset();
-	m_size = 0;
+	_top.reset();
+	_size = 0;
 }
 template <typename T>
 bool MyStack<T>::Has(T item) const
 {
-	for (shared_ptr<Node<T>> node = m_top; node; node = node->Next())
+	for (shared_ptr<Node<T>> node = _top; node; node = node->Next())
 		if (node->Item() == item)
 			return true;
 	return false;
@@ -88,7 +90,7 @@ bool MyStack<T>::Has(T item) const
 template <typename T>
 void MyStack<T>::PrintStack()
 {
-	for (shared_ptr<Node<T>> node = m_top; node; node = node->Next())
+	for (shared_ptr<Node<T>> node = _top; node; node = node->Next())
 		cout << node->Item() << " ";
 	cout << endl;
 }

@@ -14,7 +14,7 @@ template <typename T>
 class Trie
 {
 private:
-	shared_ptr<TrieNode<T>> m_root;
+	shared_ptr<TrieNode<T>> _root;
 	T FindFast(string const &, shared_ptr<TrieNode<T>> &);
 
 public:
@@ -34,8 +34,8 @@ template <typename T>
 class TrieNode : enable_shared_from_this<TrieNode<T>>
 {
 private:
-	T m_key;
-	map<char, shared_ptr<TrieNode<T>>> m_children;
+	T _key;
+	map<char, shared_ptr<TrieNode<T>>> _children;
 
 public:
 	typedef typename map<char, shared_ptr<TrieNode<T>>>::const_iterator IteratorType;

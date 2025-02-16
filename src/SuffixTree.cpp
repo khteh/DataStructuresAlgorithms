@@ -28,7 +28,7 @@ void splitString(size_t count, const string &s, char delim, set<string> &elems, 
 		}
 }
 SuffixTree::SuffixTree()
-	: m_root(make_unique<SuffixTreeNode>(0))
+	: _root(make_unique<SuffixTreeNode>(0))
 {
 }
 
@@ -45,54 +45,54 @@ SuffixTree::~SuffixTree()
 
 void SuffixTree::Clear()
 {
-	m_strings.clear();
-	m_root.reset();
+	_strings.clear();
+	_root.reset();
 }
 size_t SuffixTree::Count() const
 {
-	return m_root ? m_root->Count() : 0;
+	return _root ? _root->Count() : 0;
 }
 void SuffixTree::InsertString(string const &str)
 {
-	if (!str.empty() && ranges::find(m_strings, str) == m_strings.end())
+	if (!str.empty() && ranges::find(_strings, str) == _strings.end())
 	{
 		size_t index = 0;
 		// First, look for unused index
-		for (vector<string>::iterator it = m_strings.begin(); it != m_strings.end(); it++)
+		for (vector<string>::iterator it = _strings.begin(); it != _strings.end(); it++)
 			index += it->size();
-		m_strings.push_back(str);
-		if (!m_root)
-			m_root = make_unique<SuffixTreeNode>(0);
+		_strings.push_back(str);
+		if (!_root)
+			_root = make_unique<SuffixTreeNode>(0);
 		for (size_t i = 0; i < str.size(); i++)
-			m_root->InsertString(str.substr(i), index + i);
+			_root->InsertString(str.substr(i), index + i);
 	}
 }
 void SuffixTree::RemoveString(string const &str)
 {
-	m_root->RemoveString(str);
+	_root->RemoveString(str);
 }
 const vector<size_t> SuffixTree::GetIndexes()
 {
 	vector<size_t> result;
-	set<size_t> tmp = m_root->GetIndexes();
+	set<size_t> tmp = _root->GetIndexes();
 	result.assign(tmp.begin(), tmp.end());
 	return result;
 }
 const vector<size_t> SuffixTree::GetIndexes(string const &s)
 {
 	vector<size_t> result;
-	set<size_t> tmp = m_root->GetIndexes(s);
+	set<size_t> tmp = _root->GetIndexes(s);
 	result.assign(tmp.begin(), tmp.end());
 	return result;
 }
 const vector<string> SuffixTree::LongestRepeatedSubstring()
 {
 	map<size_t, vector<string>> repeats;
-	if (!m_strings.empty())
+	if (!_strings.empty())
 	{
 		string str;
-		str.resize(m_strings[0].size());
-		map<string, size_t> result = m_root->LongestRepeatedSubstring();
+		str.resize(_strings[0].size());
+		map<string, size_t> result = _root->LongestRepeatedSubstring();
 		size_t count = 0;
 		long index = -1;
 		for (map<string, size_t>::iterator it = result.begin(); it != result.end(); it++)
@@ -103,10 +103,10 @@ const vector<string> SuffixTree::LongestRepeatedSubstring()
 			{
 				count = it->second;
 				index = tmp[0];
-				repeats[count].push_back(m_strings[0].substr(index, count));
+				repeats[count].push_back(_strings[0].substr(index, count));
 			}
 		}
-		// return index > -1 ? m_strings[0].substr(index, count) : "";
+		// return index > -1 ? _strings[0].substr(index, count) : "";
 	}
 	// return "";
 	return repeats.empty() ? vector<string>() : repeats.rbegin()->second;
@@ -118,9 +118,9 @@ const vector<string> SuffixTree::LongestRepeatedSubstring()
 const size_t SuffixTree::LongestCommonSubstring(long n)
 {
 	size_t count = 0;
-	if (!m_strings.empty())
+	if (!_strings.empty())
 	{
-		map<string, size_t> result = m_root->LongestRepeatedSubstring();
+		map<string, size_t> result = _root->LongestRepeatedSubstring();
 		long index1 = -1, index2 = -1;
 		for (map<string, size_t>::iterator it = result.begin(); it != result.end(); it++)
 		{
@@ -128,7 +128,7 @@ const size_t SuffixTree::LongestCommonSubstring(long n)
 			split(it->first, ',', tmp);
 			if (it->second > count)
 			{
-				if (tmp.size() == m_strings.size())
+				if (tmp.size() == _strings.size())
 				{
 					count = it->second;
 					index1 = tmp[0];
@@ -142,33 +142,33 @@ const size_t SuffixTree::LongestCommonSubstring(long n)
 		// cout << "index: " << index1 << ", count: " << count << endl;
 		if (n > 0)
 		{
-			index2 -= m_strings[0].size();
+			index2 -= _strings[0].size();
 			long start1 = index1 - n >= 0 ? index1 - n : 0;
 			long start2 = index2 - n >= 0 ? index2 - n : 0;
 			long end1 = index1 + count + (n - (index1 - start1));
 			long end2 = index2 + count + (n - (index2 - start2));
-			if (end1 > (long)m_strings[0].size())
-				end1 = m_strings[0].size();
-			if (end2 > (long)m_strings[1].size())
-				end2 = m_strings[1].size();
+			if (end1 > (long)_strings[0].size())
+				end1 = _strings[0].size();
+			if (end2 > (long)_strings[1].size())
+				end2 = _strings[1].size();
 			map<size_t, size_t> lengths; // Key: length, Value: start index
 			for (;;)
 			{
-				string s1 = m_strings[0].substr(start1, end1 - start1);
-				string s2 = m_strings[1].substr(start2, end2 - start2);
+				string s1 = _strings[0].substr(start1, end1 - start1);
+				string s2 = _strings[1].substr(start2, end2 - start2);
 				long matches = 0 - count;
 				for (size_t i = 0; i < min(s1.size(), s2.size()); i++)
 					if (s1[i] == s2[i])
 						matches++;
 				lengths.emplace(count + n + matches, start1);
 				bool breakOut = true;
-				if (start1 < index1 && end1 < (long)m_strings[0].size())
+				if (start1 < index1 && end1 < (long)_strings[0].size())
 				{
 					start1++;
 					end1++;
 					breakOut = false;
 				}
-				if (start2 < index2 && end2 < (long)m_strings[1].size())
+				if (start2 < index2 && end2 < (long)_strings[1].size())
 				{
 					start2++;
 					end2++;
@@ -184,18 +184,18 @@ const size_t SuffixTree::LongestCommonSubstring(long n)
 	return count;
 }
 SuffixTreeNode::SuffixTreeNode(char c)
-	: m_char(c)
+	: _char(c)
 {
 }
 SuffixTreeNode::~SuffixTreeNode()
 {
-	m_children.clear();
-	m_indices.clear();
+	_children.clear();
+	_indices.clear();
 }
 size_t SuffixTreeNode::Count() const
 {
-	size_t count = m_children.size();
-	for (map<char, unique_ptr<SuffixTreeNode>>::const_iterator it = m_children.begin(); it != m_children.end(); it++)
+	size_t count = _children.size();
+	for (map<char, unique_ptr<SuffixTreeNode>>::const_iterator it = _children.begin(); it != _children.end(); it++)
 		if (it->second)
 			count += it->second->Count();
 		else
@@ -204,34 +204,34 @@ size_t SuffixTreeNode::Count() const
 }
 void SuffixTreeNode::InsertString(string const &str, size_t index)
 {
-	m_indices.insert(index);
+	_indices.insert(index);
 	if (!str.empty())
 	{
-		if (!m_children.count(str[0]))
-			m_children.emplace(str[0], make_unique<SuffixTreeNode>(str[0]));
-		m_children[str[0]]->InsertString(str.substr(1), index);
+		if (!_children.count(str[0]))
+			_children.emplace(str[0], make_unique<SuffixTreeNode>(str[0]));
+		_children[str[0]]->InsertString(str.substr(1), index);
 	}
 }
 void SuffixTreeNode::RemoveString(string const &str)
 {
-	if (!str.empty() && m_children.count(str[0]))
+	if (!str.empty() && _children.count(str[0]))
 	{
-		m_children[str[0]]->RemoveString(str.substr(1));
-		m_children.erase(str[0]);
+		_children[str[0]]->RemoveString(str.substr(1));
+		_children.erase(str[0]);
 	}
 }
 const set<size_t> SuffixTreeNode::GetIndexes()
 {
-	return m_indices;
+	return _indices;
 }
 // Returns the indexes recorded by the last matched charater
 const set<size_t> SuffixTreeNode::GetIndexes(string const &str)
 {
 	set<size_t> result;
 	if (str.empty())
-		result = m_indices; // End of search string. Return indexes of this node.
-	else if (m_children.count(str[0]))
-		result = m_children[str[0]]->GetIndexes(str.substr(1));
+		result = _indices; // End of search string. Return indexes of this node.
+	else if (_children.count(str[0]))
+		result = _children[str[0]]->GetIndexes(str.substr(1));
 	return result;
 }
 const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
@@ -267,12 +267,12 @@ const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
 	   <0>
 	*/
 	ostringstream oss;
-	ranges::copy(m_indices, ostream_iterator<size_t>(oss, ","));
+	ranges::copy(_indices, ostream_iterator<size_t>(oss, ","));
 	string indices = oss.str();
 	map<string, size_t> result;
-	if (m_char != '\0' && m_indices.size() > 1)
+	if (_char != '\0' && _indices.size() > 1)
 		result.emplace(indices, 1);
-	for (map<char, unique_ptr<SuffixTreeNode>>::iterator it = m_children.begin(); it != m_children.end(); it++)
+	for (map<char, unique_ptr<SuffixTreeNode>>::iterator it = _children.begin(); it != _children.end(); it++)
 	{
 		map<string, size_t> tmp = it->second->LongestRepeatedSubstring();
 		for (map<string, size_t>::iterator it1 = tmp.begin(); it1 != tmp.end(); it1++)
@@ -280,10 +280,10 @@ const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
 			bool isSamePath = false;
 			vector<size_t> indexList;
 			split(it1->first, ',', indexList);
-			if (m_char != '\0' && indices.size() > it1->first.size())
+			if (_char != '\0' && indices.size() > it1->first.size())
 			{
 				for (vector<size_t>::iterator it = indexList.begin(); it != indexList.end(); it++)
-					if (m_indices.count(*it))
+					if (_indices.count(*it))
 						isSamePath = true;
 					else
 					{
@@ -292,9 +292,9 @@ const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
 					}
 			}
 			pair<map<string, size_t>::iterator, bool> tmp1 = result.emplace(it1->first, it1->second);
-			if (!tmp1.second && (m_char != '\0' || indexList.size() > 1))
+			if (!tmp1.second && (_char != '\0' || indexList.size() > 1))
 				result[it1->first] += it1->second;
-			if (m_char != '\0' && isSamePath)
+			if (_char != '\0' && isSamePath)
 				result[it1->first]++;
 		}
 	}

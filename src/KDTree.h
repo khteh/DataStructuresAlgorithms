@@ -37,7 +37,7 @@ template <typename T>
 class KDTree
 {
 private:
-	shared_ptr<KDNode<T>> m_root;
+	shared_ptr<KDNode<T>> _root;
 	shared_ptr<KDNode<T>> Construct(vector<vector<T>> data, long depth = 0);
 
 public:

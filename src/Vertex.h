@@ -17,9 +17,9 @@ private:
 
 public:
 	Vertex();
-	Vertex(TTag tag);
-	Vertex(TTag tag, TItem item);
-	Vertex(TTag tag, TItem item, map<shared_ptr<Vertex<TTag, TItem>>, long>);
+	explicit Vertex(TTag);
+	explicit Vertex(TTag, TItem);
+	Vertex(TTag, TItem, map<shared_ptr<Vertex<TTag, TItem>>, long>);
 	virtual ~Vertex();
 	TTag GetTag() const;
 	TItem GetItem() const;

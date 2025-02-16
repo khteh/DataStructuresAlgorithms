@@ -11,7 +11,7 @@ template <typename T>
 class Heap : public Tree<T>
 {
 private:
-	using Tree<T>::m_root;
+	using Tree<T>::_root;
 	HeapType _type;
 	shared_ptr<Node<T>> FindEmptyLeafParent();
 	shared_ptr<Node<T>> FindLastLeaf();
