@@ -11,15 +11,17 @@ template <typename T>
 class Node : public enable_shared_from_this<Node<T>>
 {
 protected:
-	T m_item;
-	shared_ptr<Node<T>> m_next, m_previous, m_left, m_right;
+	T _item;
+	shared_ptr<Node<T>> _next, _previous, _left, _right;
 	T MinSubTreesDifference(shared_ptr<Node<T>>, T, T)
 		requires arithmetic_type<T>;
+	void Swap(Node &);
 
 public:
 	Node();
 	explicit Node(T item);
-	Node(const Node &);
+	Node(const Node &); // Copy constructor
+	Node(Node &&);		// Move constructor
 	Node(const shared_ptr<Node>);
 	virtual ~Node();
 	T Item() const;
@@ -36,7 +38,13 @@ public:
 	void SetRight(shared_ptr<Node<T>>);
 	void SetItem(T);
 	Node<T> &operator=(T);
-	Node<T> &operator=(Node<T> &);
+	// Node<T> &operator=(const Node<T> &); // Copy assignment operator
+	// Node<T> &operator=(Node<T> &&); // Move assignment operator
+	/*
+    The above 2 operators can be implemented as 1 operator, like below.
+    This allows the caller to decide whether to construct the rhs parameter
+    using its copy constructor or move constructor...	
+	*/
 	Node<T> &operator=(Node<T>);
 	bool operator==(Node<T>) const;
 	bool operator!=(Node<T> &) const;
