@@ -60,6 +60,7 @@ vcpkg.exe install gtest:x64-windows
 
 ### Build
 
+- Press `CTRL + SHFT + P`, type `CMAKE: Select Variant` to choose the target build type. For example, "Debug" or "Release".
 - Press `CTRL + SHFT + B` and select one of the options
 
 ### Run Without Debug
