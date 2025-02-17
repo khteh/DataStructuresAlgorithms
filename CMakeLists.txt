@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.30.3 FATAL_ERROR)
 
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 
