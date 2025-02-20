@@ -1,14 +1,29 @@
 cmake_minimum_required(VERSION 3.30.3 FATAL_ERROR)
 
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
-
 project(DataStructuresAlgorithms CXX)
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE "Debug")
 
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++23 -Os")
+# ###############################################################################
+# Global compiler options
+# https://stackoverflow.com/questions/79444534/vscode-cmake-configure-does-not-generate-cmakecache-txt-from-cmakelists-txt
+# CMAKE_CXX_COMPILER_ID is set only at the project() call, when CMake actually detect compilers.
+# ###############################################################################
+if(MSVC)
+    # remove default flags provided with CMake for MSVC
+    set(CMAKE_CXX_FLAGS "")
+    set(CMAKE_CXX_FLAGS_DEBUG "")
+    set(CMAKE_CXX_FLAGS_RELEASE "")
+elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+    message("-- Setting GNU options from CMakeLists.txt")
+    set(CMAKE_CXX_FLAGS "-std=gnu++23" CACHE STRING "CXX build flags" FORCE)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb3 -Og" CACHE STRING "Debug build flags" FORCE)
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG" CACHE STRING "Release build flags" FORCE)
+endif()
 
 # ###############################################################################
 # Set target arch type if empty. Visual studio solution generator provides it.
@@ -30,18 +45,8 @@ endif()
 set(CMAKE_CONFIGURATION_TYPES
     "Debug"
     "Release"
-    CACHE STRING "" FORCE
+    CACHE STRING "Configuration" FORCE
 )
-
-# ###############################################################################
-# Global compiler options
-# ###############################################################################
-if(MSVC)
-    # remove default flags provided with CMake for MSVC
-    set(CMAKE_CXX_FLAGS "")
-    set(CMAKE_CXX_FLAGS_DEBUG "")
-    set(CMAKE_CXX_FLAGS_RELEASE "")
-endif()
 
 # ###############################################################################
 # Global linker options
@@ -88,7 +93,7 @@ enable_testing()
 # ###############################################################################
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-set(BUILD_STATIC_LIBS ON)
+# set(BUILD_STATIC_LIBS ON)
 
 # ###############################################################################
 # Sub-projects

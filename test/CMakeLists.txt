@@ -1,4 +1,4 @@
-set(PROJECT_NAME DataStructuresAlgorithmsTests)
+set(PROJECT_NAME DataStructuresAlgorithms.Tests)
 
 # ###############################################################################
 # Source groups
@@ -63,6 +63,7 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE
 )
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
+set(ROOT_NAMESPACE DataStructuresAlgorithms.Tests)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
@@ -187,7 +188,7 @@ endif()
 # ###############################################################################
 # Link with other targets.
 target_link_libraries(${PROJECT_NAME} PUBLIC
-    DataStructuresAlgorithms
+    DataStructuresAlgorithms.Core
     gtest
     gtest_main
 )

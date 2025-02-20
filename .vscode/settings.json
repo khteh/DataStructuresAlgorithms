@@ -92,6 +92,7 @@
     "generator": "cpp",
     "text_encoding": "cpp"
   },
+  "cmake.generator":"Ninja Multi-Config",
   "cmake.configureSettings": {
     "gtest_build_samples": "ON"
   },

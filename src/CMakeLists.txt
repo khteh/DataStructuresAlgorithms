@@ -1,4 +1,4 @@
-set(PROJECT_NAME DataStructuresAlgorithms)
+set(PROJECT_NAME DataStructuresAlgorithms.Core)
 
 # ###############################################################################
 # Source groups
@@ -123,6 +123,7 @@ set(ALL_FILES
     ${Headers}
     ${Sources}
 )
+
 set(BUILD_STATIC_LIBS ON)
 
 # ###############################################################################
@@ -135,7 +136,7 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE
 )
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
-set(ROOT_NAMESPACE DataStructuresAlgorithms)
+set(ROOT_NAMESPACE DataStructuresAlgorithms.Core)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
@@ -200,8 +201,8 @@ elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
 endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
-    message("-- Setting GNU options")
-    include_directories("/usr/include/tbb")
+    message("-- Setting GNU options from src/CMakeLists.txt")
+    include_directories("/opt/intel/oneapi/tbb/latest/include")
     link_directories(${CMAKE_SOURCE_DIR}/lib/x86_64-linux-gnu)
     target_link_libraries(${PROJECT_NAME} tbb)
 endif()

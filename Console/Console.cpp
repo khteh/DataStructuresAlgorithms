@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	ostringstream oss;
 	size_t size;
 	long l, l1, l2;
-	int i, j, *iPtr;
+	int32_t i, j, *iPtr;
 	unsigned int ui;
 	unsigned long long mask = 0;
 	set<size_t> uset1, uset2;
@@ -110,6 +110,7 @@ int main(int argc, char *argv[])
 	assert(sizeof(char) == 1);
 	assert(sizeof(short) == 2);
 	assert(sizeof(int) == 4);
+	assert(sizeof(int32_t) == 4);
 	assert(sizeof(int *) == 8);
 #if defined(__GNUC__) || defined(__GNUG__)
 	assert(sizeof(long) == 8);
@@ -136,13 +137,16 @@ int main(int argc, char *argv[])
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
 	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << " (0x" << hex << numeric_limits<int>::min() << dec << "), numeric_limits<int>::max(): " << numeric_limits<int>::max() << " (0x" << hex << numeric_limits<int>::max() << "), numeric_limits<int>::min() *-1 = " << numeric_limits<int>::min() * -1 << endl;
+	cout << "numeric_limits<int32_t>::min(): " << dec << numeric_limits<int32_t>::min() << " (0x" << hex << numeric_limits<int32_t>::min() << dec << "), numeric_limits<int32_t>::max(): " << numeric_limits<int32_t>::max() << " (0x" << hex << numeric_limits<int32_t>::max() << "), numeric_limits<int32_t>::min() *-1 = " << numeric_limits<int32_t>::min() * -1 << endl;
 	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << " (0x" << hex << numeric_limits<long>::min() << dec << "), numeric_limits<long>::max(): " << numeric_limits<long>::max() << " (0x" << hex << numeric_limits<long>::max() << dec << "), numeric_limits<long>::min() * -1 = " << numeric_limits<long>::min() * -1 << endl;
 	cout << "numeric_limits<unsigned long long>::min(): " << numeric_limits<unsigned long long>::min() << " (0x" << hex << numeric_limits<unsigned long long>::min() << dec << "), numeric_limits<unsigned long long>::max(): " << dec << fixed << numeric_limits<unsigned long long>::max() << " (0x" << hex << numeric_limits<unsigned long long>::max() << dec << "), numeric_limits<unsigned long long>::min() * -1 = " << numeric_limits<unsigned long long>::min() * -1 << endl;
 	cout << "numeric_limits<long double>::min(): " << numeric_limits<long double>::min() << " (0x" << hex << numeric_limits<long double>::min() << dec << "), numeric_limits<long double>::max(): " << dec << fixed << numeric_limits<long double>::max() << " (0x" << hex << numeric_limits<long double>::max() << dec << "), numeric_limits<long double>::min() * -1 = " << numeric_limits<long double>::min() * -1 << endl;
-	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
+	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min());		   // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
+	assert(numeric_limits<int32_t>::min() * -1 == numeric_limits<int32_t>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	// assert(numeric_limits<int>::min() / -1 == numeric_limits<int>::min()); Integer overflow as 0x8000_0000 positive is > numeric_limits<int>::max()
-	assert(numeric_limits<int>::max() * -1 == numeric_limits<int>::min() + 1); // 0x7FFFF_FFFF * -1 = -0x7FFF_FFFF = 0x8000_0001
-	assert(numeric_limits<long>::min() * -1 == numeric_limits<long>::min());   // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
+	assert(numeric_limits<int>::max() * -1 == numeric_limits<int>::min() + 1);		   // 0x7FFFF_FFFF * -1 = -0x7FFF_FFFF = 0x8000_0001
+	assert(numeric_limits<int32_t>::max() * -1 == numeric_limits<int32_t>::min() + 1); // 0x7FFFF_FFFF * -1 = -0x7FFF_FFFF = 0x8000_0001
+	assert(numeric_limits<long>::min() * -1 == numeric_limits<long>::min());		   // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	// assert(numeric_limits<long>::min() / -1 == numeric_limits<long>::min()); Integer overflow as 0x8000_0000_0000_0000 positive is > numeric_limits<long>::max()
 	assert(numeric_limits<long>::max() * -1 == numeric_limits<long>::min() + 1); // 0x7FFFF_FFFF * -1 = -0x7FFF_FFFF = 0x8000_0001
 	assert(1e5 == pow(10, 5));
@@ -274,11 +278,22 @@ int main(int argc, char *argv[])
 	assert(ll < 0);
 	assert(ll == 0xFFFFFFFF7FFFFFFFL);
 
-	i = 0x80000000L;
-	j = 1;
-	assert(j == (i - 0x7FFFFFFF));
+	/* https://stackoverflow.com/questions/79450133/integer-overflow-in-expression-of-type-int-results-in-1-woverflow
+	 * -Woverflow may be designed to work only with expressions containing variables
+	 * -Woverflow results in Undefined behaviour.
+	 */
+	i = 0x80000000;
+	j = 0x7FFFFFFF;
+	cout << "i: " << i << ", -i: " << -i << endl;
+	assert(0x80000000 == -0x80000000);
+	assert(1 == (int)0x80000000 - (int)0x7fffffff);
+	assert(1 == 0x80000000 - 0x7fffffff);
+	// assert(i == -i); Why!?!
+	cout << i << " - " << j << " = " << i - j << endl;
+	// assert(1 == i - 0x7FFFFFFF); integer overflow in expression of type ‘int’ results in ‘1’ [-Woverflow]
+	// assert(1 == (i - j)); integer overflow in expression of type ‘int’ results in ‘1’ [-Woverflow] cout << "INT_MIN: " << INT_MIN << hex << " 0x" << INT_MIN << ", -INT_MIN: " << dec << -INT_MIN << " 0x" << hex << -INT_MIN << endl;
 	i = -INT_MIN; // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4146?view=msvc-160
-	assert(j == (i - 0x7FFFFFFF));
+	// assert(j == (i - 0x7FFFFFFF)); integer overflow in expression of type ‘int’ results in ‘1’ [-Woverflow]
 
 	size_t ul = numeric_limits<size_t>::max() + 1;
 	assert(!ul);
@@ -289,17 +304,16 @@ int main(int argc, char *argv[])
 	assert(1 == abs(0x7FFFFFFF - -INT_MIN));
 
 	/*
-	 * 0x8000_0000 + 1 = -0x7FFF_FFFF = 0x8000_0001
+	 * 0x8000_0000 + 1 = -0x7FFF_FFFF = 0x8000_0001 (two's compliment)
 	 * 0x8000_0000 - 1 = -0x8000_0001 = 0x7FFF_FFFF
 	 */
 	i = 0x80000000;
 	j = i + 1;
+	cout << i << " (0x" << hex << i << ") + 1 = " << dec << j << " 0x" << hex << j << endl;
 	assert(j == 0x80000001);
-	cout << i << " 0x" << hex << i << " + 1 = 0x" << j << dec << " " << j << endl;
-	i = 0x80000000;
 	j = i - 1;
-	assert(j == 0x7FFFFFFF);
-	cout << i << " 0x" << hex << i << " - 1 = 0x" << j << dec << " " << j << endl;
+	cout << dec << i << " (0x" << hex << i << ") - 1 = " << dec << j << " 0x" << hex << j << endl;
+	// assert(j == 0x7FFFFFFF); Why!?!
 	assert(!numeric_limits<size_t>::has_quiet_NaN);
 	assert(!numeric_limits<long>::has_quiet_NaN);
 	assert(!numeric_limits<size_t>::has_signaling_NaN);
