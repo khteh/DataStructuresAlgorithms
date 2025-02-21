@@ -1,0 +1,61 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cmake",
+			"label": "CMake: build all",
+			"command": "build",
+			"targets": [
+				"all"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"detail": "CMake build all"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: build Console",
+			"command": "build",
+			"targets": [
+				"Console"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"detail": "CMake build Console"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: build Core",
+			"command": "build",
+			"targets": [
+				"DataStructuresAlgorithms.Core"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"detail": "CMake build Core"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: build Tests",
+			"command": "build",
+			"targets": [
+				"DataStructuresAlgorithms.Tests"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"detail": "CMake build Tests"
+		},
+	]
+}
