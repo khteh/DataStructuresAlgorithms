@@ -1,6 +1,6 @@
 # Data Structures and Algorithms
 
-C++-latest data structures and algorithms using only standard libraries. This answers many of the challenges in HackerRank, LeetCode and some in Codility.
+C++-latest data structures and algorithms using only standard libraries. This answers many of the challenges in HackerRank, LeetCode and some in Codility. > 1000 Google Test cases and counting.
 
 ## Dependencies
 
