@@ -6,8 +6,8 @@ C++-latest data structures and algorithms using only standard libraries. This an
 
 ### Permuted Congruential Generator-64 (PCG64)
 
-- Download the zip file from https://www.pcg-random.org/download.html#cpp-implementation
-- Extract the zip file and put all the `.hpp` into `src/` folder
+- Download the header files from https://github.com/brt-v/pcg-cpp
+- Put all the `.hpp` into `src/` folder
 
 ## Windows
 
