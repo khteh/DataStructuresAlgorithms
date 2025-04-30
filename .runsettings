@@ -1,6 +1,7 @@
 <RunSettings>
   <RunConfiguration>
     <TargetPlatform>x64</TargetPlatform>
+	<ForceListContent>true</ForceListContent>
   </RunConfiguration>
   <GoogleTestAdapterSettings>
     <SolutionSettings>

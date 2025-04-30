@@ -300,7 +300,7 @@ long Range::MinEnergyInstallations(vector<size_t> &data, long k)
 	for (size_t i = 0; i < data.size(); i = installations.back() + k)
 	{
 		bool found = false;
-		for (long j = min(data.size() - 1, i + k - 1), lowerbound = installations.empty() ? 0 : installations.back() + 1; !found && j >= lowerbound; j--)
+		for (long j = min<size_t>(data.size() - 1, i + k - 1), lowerbound = installations.empty() ? 0 : installations.back() + 1; !found && j >= lowerbound; j--)
 			if (data[j])
 			{
 				found = true;

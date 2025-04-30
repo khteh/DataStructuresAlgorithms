@@ -424,7 +424,7 @@ T Matrix<T>::ChessQueensMoveCount(T dimension, T r_q /*[1,dimension]*/, T c_q /*
 {
 	r_q--;
 	c_q--;
-	T count = 0, bottom = -1, left = -1, top = dimension, right = dimension, top_left = min(dimension - r_q - 1l, c_q), top_right = min(dimension - r_q - 1l, dimension - c_q - 1l), bottom_left = min(r_q, c_q), bottom_right = min(r_q, dimension - c_q - 1l);
+	T count = 0, bottom = -1, left = -1, top = dimension, right = dimension, top_left = min<T>(dimension - r_q - 1l, c_q), top_right = min<T>(dimension - r_q - 1l, dimension - c_q - 1l), bottom_left = min<T>(r_q, c_q), bottom_right = min<T>(r_q, dimension - c_q - 1l);
 	for (vector<vector<size_t>>::const_iterator it = obstacles.begin(); it != obstacles.end(); it++)
 	{
 		T r /*y*/ = (*it)[0] - 1, c /*x*/ = (*it)[1] - 1;
@@ -793,7 +793,7 @@ size_t Matrix<T>::LargestPerimeter(vector<string> const &grid)
 					for (; cols[l] < min_left; l++)
 						;
 					if (*it > cols[l])
-						result = max(result, 2 * height + 2 * (*it - cols[l]));
+						result = max<size_t>(result, 2 * height + 2 * (*it - cols[l]));
 				}
 			}
 	}
