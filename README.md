@@ -18,14 +18,29 @@ C++-latest data structures and algorithms using only standard libraries. This an
 
 ### Google Test
 
-To use the latest version of Google Test, use vcpkg to install it: https://github.com/microsoft/vcpkg
+#### Build the latest GTest and GMock libraries from source
+- Get the source code of Googletest 1.16.0 (repro1.gif)
+1) Download GoogleTest source code from https://github.com/google/googletest/releases/tag/v1.16.0
+2) Open the project folder using VS and generate CMake cache, click “Build All” and it will generate lib files.
+3) Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn
+4) Set the property page
 
+C/C++ > General > Additional Include Directories: adds the googletest/include and googlemock/include paths.
+Linker > General > Additional Library Directories: point to the path of the compiled .lib file (e.g. googletest-1.16.0\out\build\x64-debug\lib).
+Linker > Input > Additional Dependencies: adds gtest.lib and gtest_main.lib.
+C/C++ > Code Generation > Run Library: match the compilation configuration of the Googletest libraries (e.g. MTd for Debug mode)
+(5) Then the Google Test project can be built successfully.
+
+#### Use vcpkg
+- Use vcpkg to download (Note: Currently in vcpkg, gtest version is 1.14.0) (repro2.gif)
 ```
-git clone https://github.com/microsoft/vcpkg
+git clone https://github.com/Microsoft/vcpkg.git
 cd vcpkg
 bootstrap-vcpkg.bat
 vcpkg integrate install
 vcpkg.exe install gtest:x64-windows
+Use ‘vcpkg list’ to view installed Google Test versions
+Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn and then build it.
 ```
 
 ## Ubuntu

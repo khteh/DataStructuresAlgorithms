@@ -266,6 +266,7 @@ INSTANTIATE_TEST_SUITE_P(
 	FactorialLDTests,
 	FactorialLDTestFixture,
 	::testing::Values(make_tuple(178290591, 14, 1e9 + 7), make_tuple(146326063, 20, 1e9 + 7), make_tuple(440732388, 25, 1e9 + 7)));
+#if defined(__GNUC__) || defined(__GNUG__)
 class FactorialTestFixture : public testing::TestWithParam<tuple<long, size_t, size_t>>
 {
 public:
@@ -293,7 +294,7 @@ INSTANTIATE_TEST_SUITE_P(
 	FactorialTests,
 	FactorialTestFixture,
 	::testing::Values(make_tuple(178290591, 14, 1e9 + 7), make_tuple(146326063, 20, 1e9 + 7), make_tuple(440732388, 25, 1e9 + 7)));
-
+#endif
 class NumberSolitaireTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
 {
 public:

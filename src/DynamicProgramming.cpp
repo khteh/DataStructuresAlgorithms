@@ -19,6 +19,10 @@ long DynamicProgramming<T>::Factorial(T n, T modulo)
         return 1;
     for (size_t i = 2; i <= (size_t)n; i++)
     {
+        if (result > 0 && (result * i) > std::numeric_limits<long>::max())
+            throw std::range_error("overflow!");
+        if (result < 0 && (result * i) < std::numeric_limits<long>::min())
+            throw std::range_error("overflow!");
         result *= i;
         if (modulo)
             result %= modulo;
@@ -553,9 +557,18 @@ T DynamicProgramming<T>::VectorSlicesSum(vector<T> const &data)
     if (!data.empty())
     {
         vector<T> twoPower = {1};
-        for (size_t i = 0; i < data.size(); i++)
+        for (size_t i = 0; i < data.size(); i++) {
+            if (twoPower.back() > 0 && (twoPower.back() * 2) > std::numeric_limits<T>::max())
+                throw std::range_error("overflow!");
+            if (twoPower.back() < 0 && (twoPower.back() * 2) < std::numeric_limits<T>::min())
+                throw std::range_error("overflow!");
             twoPower.push_back((twoPower.back() * 2) % modulo);
+        }
         T sum = twoPower.back() - 1;
+        if (sum > 0 && (data[0] * sum) > std::numeric_limits<T>::max())
+            throw std::range_error("overflow!");
+        if (sum < 0 && (data[0] * sum) < std::numeric_limits<T>::min())
+            throw std::range_error("overflow!");
         result = (data[0] * sum) % modulo;
         for (size_t i = 1, y = data.size() - 2L; i < data.size(); i++, y--)
         {
@@ -564,7 +577,19 @@ T DynamicProgramming<T>::VectorSlicesSum(vector<T> const &data)
              * (a - b) % m = (a % m - b % m + m) % m
              */
             T tmp = (twoPower[y] % modulo - twoPower[i - 1] % modulo + modulo) % modulo;
+            if (sum > 0 && tmp > std::numeric_limits<T>::max() - sum)
+                throw std::range_error("overflow!");
+            if (sum < 0 && tmp < std::numeric_limits<T>::min() - sum)
+                throw std::range_error("overflow!");
             sum = (sum + tmp) % modulo;
+            if (data[i] > 0 && (data[i] * sum) > std::numeric_limits<T>::max())
+                throw std::range_error("overflow!");
+            if (data[i] < 0 && (data[i] * sum) < std::numeric_limits<T>::min())
+                throw std::range_error("overflow!");
+            if (result > 0 && ((data[i] * sum) % modulo) > std::numeric_limits<T>::max() - result)
+                throw std::range_error("overflow!");
+            if (result < 0 && ((data[i] * sum) % modulo) < std::numeric_limits<T>::min() - result)
+                throw std::range_error("overflow!");
             result = (result + (data[i] * sum) % modulo) % modulo;
         }
     }

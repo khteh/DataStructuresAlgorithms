@@ -295,6 +295,7 @@ TEST_P(MaxSizePalindromeCountTestFixture, MaxSizePalindromeCountTests)
 {
 	ASSERT_EQ(this->_expected, this->MaxSizePalindromeCountTest());
 }
+#if defined(__GNUC__) || defined(__GNUG__)
 INSTANTIATE_TEST_SUITE_P(
 	MaxSizePalindromeCountTests,
 	MaxSizePalindromeCountTestFixture,
@@ -310,8 +311,22 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(1995840, "wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 1, 29),
 					  make_tuple(740299127, "wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 2, 40),
 					  make_tuple(556755193, "wldsfubcsxrryqpqyqqxrlffumtuwymbybnpemdiwyqz", 5, 41),
+						make_tuple(249346542, "cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 4, 99),
+					make_tuple(922261429, "cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 19, 81),
 					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 0),
 					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 1),
-					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 2),
-					  make_tuple(249346542, "cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 4, 99),
-					  make_tuple(922261429, "cstniwwvbkyrxzvjpegpgtwwxkdujwbmsqrmkurdprzfftazyonxmawydyjgmipyassxnafluvaouoiuxrqrbrjmzisptfhqqaxq", 19, 81)));
+					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 2)
+	));
+#else
+INSTANTIATE_TEST_SUITE_P(
+	MaxSizePalindromeCountTests,
+	MaxSizePalindromeCountTestFixture,
+	::testing::Values(make_tuple(2, "week", 0, 3),
+		make_tuple(1, "week", 1, 2),
+		make_tuple(2, "abab", 0, 3),
+		make_tuple(1, "wuhmbspjnfviogqzldrcxtaeyk", 20, 20),
+		make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 0),
+		make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 1),
+		make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 2)
+	));
+#endif
