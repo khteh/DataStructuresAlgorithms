@@ -418,7 +418,14 @@ TEST_P(MultinomialCoefficientsTestFixture, MultinomialCoefficientsTests)
 {
 	ASSERT_EQ(this->_expected, this->MultinomialCoefficientsTest());
 }
+#if defined(__GNUC__) || defined(__GNUG__)
 INSTANTIATE_TEST_SUITE_P(
 	MultinomialCoefficientsTests,
 	MultinomialCoefficientsTestFixture,
 	::testing::Values(make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 0), make_tuple(1689515283456000, 20, vector<size_t>{3, 5, 2}, 0), make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(271629395, 20, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(358639400, 25, vector<size_t>{3, 5, 2}, 1e9 + 7)));
+#else
+INSTANTIATE_TEST_SUITE_P(
+	MultinomialCoefficientsTests,
+	MultinomialCoefficientsTestFixture,
+	::testing::Values(make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 0), make_tuple(1689515283456000, 20, vector<size_t>{3, 5, 2}, 0), make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(271629395, 20, vector<size_t>{3, 5, 2}, 1e9 + 7)));
+#endif
