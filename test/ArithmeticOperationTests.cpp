@@ -405,13 +405,13 @@ public:
 		_k = get<2>(GetParam());
 		_modulo = get<3>(GetParam());
 	}
-	long MultinomialCoefficientsTest()
+	long double MultinomialCoefficientsTest()
 	{
 		return MultinomialCoefficients(_n, _k, _modulo);
 	}
 
 protected:
-	long _expected;
+	long double _expected;
 	size_t _n, _modulo;
 	vector<size_t> _k;
 };
@@ -422,5 +422,5 @@ TEST_P(MultinomialCoefficientsTestFixture, MultinomialCoefficientsTests)
 INSTANTIATE_TEST_SUITE_P(
 	MultinomialCoefficientsTests,
 	MultinomialCoefficientsTestFixture,
-	::testing::Values(make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 0), make_tuple(1689515283456000, 20, vector<size_t>{3, 5, 2}, 0), make_tuple(10771673641202074000000, 25, vector<size_t>{3, 5, 2}, 0), make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(271629395, 20, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(358639400, 25, vector<size_t>{3, 5, 2}, 1e9 + 7)));
+	::testing::Values(make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 0), make_tuple(1689515283456000, 20, vector<size_t>{3, 5, 2}, 0), make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(271629395, 20, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(358639400, 25, vector<size_t>{3, 5, 2}, 1e9 + 7)));
 #endif

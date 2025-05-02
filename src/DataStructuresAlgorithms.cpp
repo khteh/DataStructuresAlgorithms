@@ -530,10 +530,18 @@ long double BinomialCoefficients(size_t n, size_t k)
  */
 long double MultinomialCoefficients(size_t n, vector<size_t> const &k, size_t modulo)
 {
-	long double divisor = 1;
+	long double divisor = 1.0L;
 	DynamicProgramming<size_t> dp;
+	feclearexcept(FE_INEXACT);
 	for (vector<size_t>::const_iterator it = k.begin(); it != k.end(); it++)
+	{
 		divisor *= dp.FactorialLD(*it);
+		if (std::fetestexcept(FE_INEXACT))
+		{
+			cout << "Inexact with k = " << *it << endl;
+			throw std::range_error("overflow!");
+		}
+	}
 	long double result = dp.FactorialLD(n) / divisor;
 	return modulo ? fmodl(result, modulo) : result;
 }

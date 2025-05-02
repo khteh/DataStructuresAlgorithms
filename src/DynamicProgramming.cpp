@@ -19,9 +19,10 @@ long DynamicProgramming<T>::Factorial(T n, T modulo)
         return 1;
     for (size_t i = 2; i <= (size_t)n; i++)
     {
-        if ((result > 0 && (result * i) < 0) || (result < 0 && (result * i) > 0))
+        long tmp = result * i;
+        if ((result > 0 && tmp < 0) || (result < 0 && tmp > 0))
             throw std::range_error("overflow!");
-        result *= i;
+        result = tmp;
         if (modulo)
             result %= modulo;
     }
@@ -37,13 +38,13 @@ long double DynamicProgramming<T>::FactorialLD(T n, T modulo)
      */
     // https://stackoverflow.com/questions/79421066/c-long-double-128-bit-precision
     feclearexcept(FE_INEXACT);
-    long double result = 1;
+    long double result = 1.0L;
     if (n <= 0)
         return 1;
     for (size_t i = 2; i <= (size_t)n; i++)
     {
         result *= i;
-        if (std::fetestexcept(FE_INEXACT))
+        if (fetestexcept(FE_INEXACT))
             cout << "Inexact with i=" << i << endl;
         if (modulo)
             result = fmodl(result, modulo);
@@ -555,15 +556,17 @@ T DynamicProgramming<T>::VectorSlicesSum(vector<T> const &data)
     if (!data.empty())
     {
         vector<T> twoPower = {1};
-        for (size_t i = 0; i < data.size(); i++) {
-            if ((twoPower.back() > 0 && (twoPower.back() * 2) < 0) || (twoPower.back() < 0 && (twoPower.back() * 2) > 0))
+        for (size_t i = 0; i < data.size(); i++)
+        {
+            T tmp = twoPower.back() * 2;
+            if ((twoPower.back() > 0 && tmp < 0) || (twoPower.back() < 0 && tmp > 0))
                 throw std::range_error("overflow!");
-            twoPower.push_back((twoPower.back() * 2) % modulo);
+            twoPower.push_back(tmp % modulo);
         }
-        T sum = twoPower.back() - 1;
-        if (((sum > 0 && data[0] > 0) || (sum < 0 && data[0] < 0)) && (data[0] * sum) < 0)
+        T sum = twoPower.back() - 1, tmp = data[0] * sum;
+        if (((sum > 0 && data[0] > 0) || (sum < 0 && data[0] < 0)) && tmp < 0)
             throw std::range_error("overflow!");
-        result = (data[0] * sum) % modulo;
+        result = tmp % modulo;
         T prevResult = result;
         for (size_t i = 1, y = data.size() - 2L; i < data.size(); i++, y--)
         {
@@ -577,14 +580,15 @@ T DynamicProgramming<T>::VectorSlicesSum(vector<T> const &data)
             if (sum < 0 && tmp < std::numeric_limits<T>::min() - sum)
                 throw std::range_error("overflow!");
             sum = (sum + tmp) % modulo;
-            if (((data[i] > 0 && sum > 0) || (data[i] < 0 && sum < 0)) && (data[i] * sum) < 0)
+            tmp = data[i] * sum;
+            if (((data[i] > 0 && sum > 0) || (data[i] < 0 && sum < 0)) && tmp < 0)
                 throw std::range_error("overflow!");
-            if (result > 0 && ((data[i] * sum) % modulo) > std::numeric_limits<T>::max() - result)
+            if (result > 0 && (tmp % modulo) > std::numeric_limits<T>::max() - result)
                 throw std::range_error("overflow!");
-            if (result < 0 && ((data[i] * sum) % modulo) < std::numeric_limits<T>::min() - result)
+            if (result < 0 && (tmp % modulo) < std::numeric_limits<T>::min() - result)
                 throw std::range_error("overflow!");
             prevResult = result;
-            result = (result + (data[i] * sum) % modulo) % modulo;
+            result = (result + tmp % modulo) % modulo;
         }
     }
     return result;

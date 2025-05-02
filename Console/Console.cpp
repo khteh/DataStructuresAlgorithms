@@ -14,12 +14,13 @@ int main(int argc, char *argv[])
 	int32_t i, j, *iPtr;
 	unsigned int ui;
 	unsigned long long mask = 0;
+	long double ld;
 	set<size_t> uset1, uset2;
 	set<string> stringset, stringset1;
 	set<long> lset;
 	vector<string> strings, strings1;
 	vector<long> a, b, sortData;
-	vector<long double> ld;
+	vector<long double> vld;
 	vector<int> data, data1;
 	vector<size_t> udata, udata1;
 	vector<unsigned long long> ull;
@@ -140,7 +141,10 @@ int main(int argc, char *argv[])
 	cout << "numeric_limits<int32_t>::min(): " << dec << numeric_limits<int32_t>::min() << " (0x" << hex << numeric_limits<int32_t>::min() << dec << "), numeric_limits<int32_t>::max(): " << numeric_limits<int32_t>::max() << " (0x" << hex << numeric_limits<int32_t>::max() << "), numeric_limits<int32_t>::min() *-1 = " << numeric_limits<int32_t>::min() * -1 << endl;
 	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << " (0x" << hex << numeric_limits<long>::min() << dec << "), numeric_limits<long>::max(): " << numeric_limits<long>::max() << " (0x" << hex << numeric_limits<long>::max() << dec << "), numeric_limits<long>::min() * -1 = " << numeric_limits<long>::min() * -1 << endl;
 	cout << "numeric_limits<unsigned long long>::min(): " << numeric_limits<unsigned long long>::min() << " (0x" << hex << numeric_limits<unsigned long long>::min() << dec << "), numeric_limits<unsigned long long>::max(): " << dec << fixed << numeric_limits<unsigned long long>::max() << " (0x" << hex << numeric_limits<unsigned long long>::max() << dec << "), numeric_limits<unsigned long long>::min() * -1 = " << numeric_limits<unsigned long long>::min() * -1 << endl;
-	cout << "numeric_limits<long double>::min(): " << numeric_limits<long double>::min() << " (0x" << hex << numeric_limits<long double>::min() << dec << "), numeric_limits<long double>::max(): " << dec << fixed << numeric_limits<long double>::max() << " (0x" << hex << numeric_limits<long double>::max() << dec << "), numeric_limits<long double>::min() * -1 = " << numeric_limits<long double>::min() * -1 << endl;
+	cout << "numeric_limits<long double>::min(): " << numeric_limits<long double>::min() << " (0x" << hex << numeric_limits<long double>::min() << dec << "),  " << endl;
+	cout << "numeric_limits<long double>::max(): " << dec << fixed << numeric_limits<long double>::max() << endl;
+	cout << "numeric_limits<long double>::max(): 0x" << hex << numeric_limits<long double>::max() << dec << endl;
+	cout << "numeric_limits<long double>::min() * -1 = " << numeric_limits<long double>::min() * -1 << endl;
 	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min());		   // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	assert(numeric_limits<int32_t>::min() * -1 == numeric_limits<int32_t>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	// assert(numeric_limits<int>::min() / -1 == numeric_limits<int>::min()); Integer overflow as 0x8000_0000 positive is > numeric_limits<int>::max()
@@ -2142,7 +2146,8 @@ int main(int argc, char *argv[])
 	gcdResult = larithmetic.gcd_extended(91, 169);
 	cout << "gcd: " << gcdResult.gcd << ", x: " << gcdResult.x << ", y: " << gcdResult.y << endl;
 	/***** The End *****/
-	cout << "Press ENTER to exit";
+	cout
+		<< "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }
