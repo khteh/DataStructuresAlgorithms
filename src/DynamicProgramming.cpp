@@ -575,17 +575,17 @@ T DynamicProgramming<T>::VectorSlicesSum(vector<T> const &data)
              * (a - b) % m = (a % m - b % m + m) % m
              */
             T tmp = (twoPower[y] % modulo - twoPower[i - 1] % modulo + modulo) % modulo;
-            if (sum > 0 && tmp > std::numeric_limits<T>::max() - sum)
+            if (sum > 0 && tmp > numeric_limits<T>::max() - sum)
                 throw std::range_error("overflow!");
-            if (sum < 0 && tmp < std::numeric_limits<T>::min() - sum)
+            if (sum < 0 && tmp < numeric_limits<T>::min() - sum)
                 throw std::range_error("overflow!");
             sum = (sum + tmp) % modulo;
             tmp = data[i] * sum;
             if (((data[i] > 0 && sum > 0) || (data[i] < 0 && sum < 0)) && tmp < 0)
                 throw std::range_error("overflow!");
-            if (result > 0 && (tmp % modulo) > std::numeric_limits<T>::max() - result)
+            if (result > 0 && (tmp % modulo) > numeric_limits<T>::max() - result)
                 throw std::range_error("overflow!");
-            if (result < 0 && (tmp % modulo) < std::numeric_limits<T>::min() - result)
+            if (result < 0 && (tmp % modulo) < numeric_limits<T>::min() - result)
                 throw std::range_error("overflow!");
             prevResult = result;
             result = (result + tmp % modulo) % modulo;
