@@ -146,6 +146,8 @@ int main(int argc, char *argv[])
 	cout << "numeric_limits<long double>::max(): " << dec << fixed << numeric_limits<long double>::max() << endl;
 	cout << "numeric_limits<long double>::max(): 0x" << hex << numeric_limits<long double>::max() << dec << endl;
 	cout << "numeric_limits<long double>::min() * -1 = " << numeric_limits<long double>::min() * -1 << endl;
+	// https://en.cppreference.com/w/cpp/types/numeric_limits/is_iec559
+	cout << "numeric_limits<long double>::is_iec559: " << numeric_limits<long double>::is_iec559 << ", has_infinity: " << numeric_limits<long double>::has_infinity << ", has_quiet_NaN: " << numeric_limits<long double>::has_quiet_NaN << ", has_signaling_NaN: " << numeric_limits<long double>::has_signaling_NaN << endl;
 	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min());		   // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	assert(numeric_limits<int32_t>::min() * -1 == numeric_limits<int32_t>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	// assert(numeric_limits<int>::min() / -1 == numeric_limits<int>::min()); Integer overflow as 0x8000_0000 positive is > numeric_limits<int>::max()
