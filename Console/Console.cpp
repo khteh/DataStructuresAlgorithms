@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
 	string str, str1;
 	ostringstream oss;
-	size_t size;
+	size_t size, size1;
 	long l, l1, l2;
 	int32_t i, j, *iPtr;
 	unsigned int ui;
@@ -2166,6 +2166,20 @@ int main(int argc, char *argv[])
 		ld = ld1;
 	}
 	cout << "ld: " << ld << endl;
+	feclearexcept(FE_INEXACT);
+	volatile long double ld2 = 1.0L, ld3 = 3.0L;
+	volatile long double ld4 = ld2 / ld3;
+	assert(fetestexcept(FE_INEXACT));
+	// if( x > static_cast<src_T>(limits<dst_T>::max()) )
+	ld = numeric_limits<long double>::max();
+	ld1 = static_cast<long double>(numeric_limits<size_t>::max());
+	cout << fixed << "ld: " << ld << ", ld1: " << ld1 << endl;
+	// https://stackoverflow.com/questions/79602836/c-23-numeric-limitslong-doublemax-use-case#79604603
+	assert(ld > static_cast<long double>(numeric_limits<size_t>::max())); // overflow!
+	size = numeric_limits<size_t>::max();
+	size1 = static_cast<size_t>(numeric_limits<long double>::max());
+	cout << fixed << "size: " << size << ", size: " << size1 << endl;
+	assert(!(size > static_cast<size_t>(numeric_limits<long double>::max()))); // No overflow!
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

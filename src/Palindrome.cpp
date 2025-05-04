@@ -406,11 +406,12 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
     else if ((l == r && l >= 0 && l < s.size()) || unique.size() == 1)
         return 1;
     factorials.push_back(1);
-    for (size_t i = 1; i <= s.size() / 2; i++) {
+    for (size_t i = 1; i <= s.size() / 2; i++)
+    {
         if (factorials.back() > 0 && (factorials.back() * i) > std::numeric_limits<long>::max())
-            throw std::range_error("overflow!");
+            throw range_error("overflow!");
         if (factorials.back() < 0 && (factorials.back() * i) < std::numeric_limits<long>::min())
-            throw std::range_error("overflow!");
+            throw range_error("overflow!");
         factorials.push_back((factorials.back() * i) % modulo);
     }
     for (string::const_iterator it = str.begin(); it != str.end(); it++)

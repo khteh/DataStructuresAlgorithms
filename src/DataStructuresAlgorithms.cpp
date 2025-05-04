@@ -536,10 +536,10 @@ long double MultinomialCoefficients(size_t n, vector<size_t> const &k, size_t mo
 	for (vector<size_t>::const_iterator it = k.begin(); it != k.end(); it++)
 	{
 		divisor *= dp.FactorialLD(*it);
-		if (std::fetestexcept(FE_INEXACT))
+		if (fetestexcept(FE_INEXACT))
 		{
 			cout << "Inexact with k = " << *it << endl;
-			throw std::range_error("overflow!");
+			throw range_error("overflow!");
 		}
 	}
 	long double result = dp.FactorialLD(n) / divisor;
