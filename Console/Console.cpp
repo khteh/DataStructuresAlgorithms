@@ -9,12 +9,12 @@ int main(int argc, char *argv[])
 {
 	string str, str1;
 	ostringstream oss;
-	size_t size;
+	size_t size, size1;
 	long l, l1, l2;
 	int32_t i, j, *iPtr;
 	unsigned int ui;
 	unsigned long long mask = 0;
-	long double ld;
+	long double ld, ld1;
 	set<size_t> uset1, uset2;
 	set<string> stringset, stringset1;
 	set<long> lset;
@@ -140,11 +140,14 @@ int main(int argc, char *argv[])
 	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << " (0x" << hex << numeric_limits<int>::min() << dec << "), numeric_limits<int>::max(): " << numeric_limits<int>::max() << " (0x" << hex << numeric_limits<int>::max() << "), numeric_limits<int>::min() *-1 = " << numeric_limits<int>::min() * -1 << endl;
 	cout << "numeric_limits<int32_t>::min(): " << dec << numeric_limits<int32_t>::min() << " (0x" << hex << numeric_limits<int32_t>::min() << dec << "), numeric_limits<int32_t>::max(): " << numeric_limits<int32_t>::max() << " (0x" << hex << numeric_limits<int32_t>::max() << "), numeric_limits<int32_t>::min() *-1 = " << numeric_limits<int32_t>::min() * -1 << endl;
 	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << " (0x" << hex << numeric_limits<long>::min() << dec << "), numeric_limits<long>::max(): " << numeric_limits<long>::max() << " (0x" << hex << numeric_limits<long>::max() << dec << "), numeric_limits<long>::min() * -1 = " << numeric_limits<long>::min() * -1 << endl;
+	cout << "numeric_limits<long long>::min(): " << numeric_limits<long long>::min() << " (0x" << hex << numeric_limits<long long>::min() << dec << "), numeric_limits<long long>::max(): " << dec << fixed << numeric_limits<long long>::max() << " (0x" << hex << numeric_limits<long long>::max() << dec << "), numeric_limits<long long>::min() * -1 = " << numeric_limits<long long>::min() * -1 << endl;
 	cout << "numeric_limits<unsigned long long>::min(): " << numeric_limits<unsigned long long>::min() << " (0x" << hex << numeric_limits<unsigned long long>::min() << dec << "), numeric_limits<unsigned long long>::max(): " << dec << fixed << numeric_limits<unsigned long long>::max() << " (0x" << hex << numeric_limits<unsigned long long>::max() << dec << "), numeric_limits<unsigned long long>::min() * -1 = " << numeric_limits<unsigned long long>::min() * -1 << endl;
 	cout << "numeric_limits<long double>::min(): " << numeric_limits<long double>::min() << " (0x" << hex << numeric_limits<long double>::min() << dec << "),  " << endl;
 	cout << "numeric_limits<long double>::max(): " << dec << fixed << numeric_limits<long double>::max() << endl;
 	cout << "numeric_limits<long double>::max(): 0x" << hex << numeric_limits<long double>::max() << dec << endl;
 	cout << "numeric_limits<long double>::min() * -1 = " << numeric_limits<long double>::min() * -1 << endl;
+	// https://en.cppreference.com/w/cpp/types/numeric_limits/is_iec559
+	cout << "numeric_limits<long double>::is_iec559: " << numeric_limits<long double>::is_iec559 << ", has_infinity: " << numeric_limits<long double>::has_infinity << ", has_quiet_NaN: " << numeric_limits<long double>::has_quiet_NaN << ", has_signaling_NaN: " << numeric_limits<long double>::has_signaling_NaN << endl;
 	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min());		   // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	assert(numeric_limits<int32_t>::min() * -1 == numeric_limits<int32_t>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	// assert(numeric_limits<int>::min() / -1 == numeric_limits<int>::min()); Integer overflow as 0x8000_0000 positive is > numeric_limits<int>::max()
@@ -2145,9 +2148,40 @@ int main(int argc, char *argv[])
 	cout << "gcd: " << gcdResult.gcd << ", x: " << gcdResult.x << ", y: " << gcdResult.y << endl;
 	gcdResult = larithmetic.gcd_extended(91, 169);
 	cout << "gcd: " << gcdResult.gcd << ", x: " << gcdResult.x << ", y: " << gcdResult.y << endl;
+	ld = numeric_limits<long double>::max();
+	assert(10771673641202074000000.0L < ld);
+	cout << "10771673641202074000000.0L: " << 10771673641202074000000.0L << endl;
+	// https://stackoverflow.com/questions/79602836/c-23-numeric-limitslong-doublemax-use-case
+	cout << "long double radix: " << numeric_limits<long double>::radix << ", digits: " << numeric_limits<long double>::digits << ",  digits10: " << numeric_limits<long double>::digits10 << ", max_digits10: " << numeric_limits<long double>::max_digits10 << endl;
+	feclearexcept(FE_INEXACT);
+	ld = 1.0L;
+	for (size_t i = 2; ld < numeric_limits<long double>::max(); i++)
+	{
+		ld1 = ld * i;
+		if (fetestexcept(FE_INEXACT))
+		{
+			cout << "Inexact with i = " << i << endl;
+			break;
+		}
+		ld = ld1;
+	}
+	cout << "ld: " << ld << endl;
+	feclearexcept(FE_INEXACT);
+	volatile long double ld2 = 1.0L, ld3 = 3.0L;
+	volatile long double ld4 = ld2 / ld3;
+	assert(fetestexcept(FE_INEXACT));
+	// if( x > static_cast<src_T>(limits<dst_T>::max()) )
+	ld = numeric_limits<long double>::max();
+	ld1 = static_cast<long double>(numeric_limits<size_t>::max());
+	cout << fixed << "ld: " << ld << ", ld1: " << ld1 << endl;
+	// https://stackoverflow.com/questions/79602836/c-23-numeric-limitslong-doublemax-use-case#79604603
+	assert(ld > static_cast<long double>(numeric_limits<size_t>::max())); // overflow!
+	size = numeric_limits<size_t>::max();
+	size1 = static_cast<size_t>(numeric_limits<long double>::max());
+	cout << fixed << "size: " << size << ", size: " << size1 << endl;
+	assert(!(size > static_cast<size_t>(numeric_limits<long double>::max()))); // No overflow!
 	/***** The End *****/
-	cout
-		<< "Press ENTER to exit";
+	cout << "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }
