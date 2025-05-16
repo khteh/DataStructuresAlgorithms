@@ -308,11 +308,17 @@ int main(int argc, char *argv[])
 	 * https://stackoverflow.com/questions/14695118/2147483648-0-returns-true-in-c/14695202
 	 * -2147483648 is not a "number". C++ language does not support negative literal values.
 
-	 * -2147483648 is actually an expression: a positive literal value 2147483648 with unary - operator in front of it. Value 2147483648 is apparently too large for the positive side of int range on your platform. If type long int had greater range on your platform, the compiler would have to automatically assume that 2147483648 has long int type. (In C++11 the compiler would also have to consider long long int type.) This would make the compiler to evaluate -2147483648 in the domain of larger type and the result would be negative, as one would expect.
+	 * -2147483648 is actually an expression: a positive literal value 2147483648 with unary - operator in front of it. Value 2147483648 is apparently too large for the positive side of int range on your platform.
+	 * If type long int had greater range on your platform, the compiler would have to automatically assume that 2147483648 has long int type.
+	 * (In C++11 the compiler would also have to consider long long int type.) This would make the compiler to evaluate -2147483648 in the domain of larger type and the result would be negative, as one would expect.
 
-	 * However, apparently in your case the range of long int is the same as range of int, and in general there's no integer type with greater range than int on your platform. This formally means that positive constant 2147483648 overflows all available signed integer types, which in turn means that the behavior of your program is undefined. (It is a bit strange that the language specification opts for undefined behavior in such cases, instead of requiring a diagnostic message, but that's the way it is.)
+	 * However, apparently in your case the range of long int is the same as range of int, and in general there's no integer type with greater range than int on your platform.
+	 * This formally means that positive constant 2147483648 overflows all available signed integer types, which in turn means that the behavior of your program is undefined.
+	 * (It is a bit strange that the language specification opts for undefined behavior in such cases, instead of requiring a diagnostic message, but that's the way it is.)
 
-	 * In practice, taking into account that the behavior is undefined, 2147483648 might get interpreted as some implementation-dependent negative value which happens to turn positive after having unary - applied to it. Alternatively, some implementations might decide to attempt using unsigned types to represent the value (for example, in C89/90 compilers were required to use unsigned long int, but not in C99 or C++). Implementations are allowed to do anything, since the behavior is undefined anyway.
+	 * In practice, taking into account that the behavior is undefined, 2147483648 might get interpreted as some implementation-dependent negative value which happens to turn positive after having unary - applied to it.
+	 * Alternatively, some implementations might decide to attempt using unsigned types to represent the value (for example, in C89/90 compilers were required to use unsigned long int, but not in C99 or C++).
+	 * Implementations are allowed to do anything, since the behavior is undefined anyway.
 
 	 * As a side note, this is the reason why constants like INT_MIN are typically defined as
 
