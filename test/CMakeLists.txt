@@ -32,7 +32,6 @@ set(Sources
     "NumbersTests.cpp"
     "PalindromeTests.cpp"
     "PermutationTests.cpp"
-    "pch.cpp"
     "PrefixTrieTests.cpp"
     "QueueTests.cpp"
     "SearchTests.cpp"

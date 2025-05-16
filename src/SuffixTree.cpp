@@ -42,7 +42,6 @@ SuffixTree::~SuffixTree()
 {
 	Clear();
 }
-
 void SuffixTree::Clear()
 {
 	_strings.clear();
@@ -98,7 +97,7 @@ const vector<string> SuffixTree::LongestRepeatedSubstring()
 		for (map<string, size_t>::iterator it = result.begin(); it != result.end(); it++)
 		{
 			vector<size_t> tmp;
-			split(it->first, ',', tmp);
+			::split(it->first, ',', tmp);
 			if (it->second >= count)
 			{
 				count = it->second;
@@ -125,7 +124,7 @@ const size_t SuffixTree::LongestCommonSubstring(long n)
 		for (map<string, size_t>::iterator it = result.begin(); it != result.end(); it++)
 		{
 			vector<size_t> tmp;
-			split(it->first, ',', tmp);
+			::split(it->first, ',', tmp);
 			if (it->second > count)
 			{
 				if (tmp.size() == _strings.size())
@@ -279,7 +278,7 @@ const map<string, size_t> SuffixTreeNode::LongestRepeatedSubstring()
 		{
 			bool isSamePath = false;
 			vector<size_t> indexList;
-			split(it1->first, ',', indexList);
+			::split(it1->first, ',', indexList);
 			if (_char != '\0' && indices.size() > it1->first.size())
 			{
 				for (vector<size_t>::iterator it = indexList.begin(); it != indexList.end(); it++)
