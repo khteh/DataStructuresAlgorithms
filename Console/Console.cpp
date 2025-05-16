@@ -104,13 +104,13 @@ int main(int argc, char *argv[])
 	assert(str1.empty());
 	char cstr[8];
 	cout << "sizeof(int): " << sizeof(int) << endl;								  // Linux: 4, Windows: 4
-	cout << "sizeof(size_t): " << sizeof(size_t) << endl;						  // Linux: 8
-	cout << "sizeof(long): " << sizeof(long) << endl;							  // Linux: 8
-	cout << "sizeof(unsigned long long): " << sizeof(unsigned long long) << endl; // Linux: 8
-	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;						  // Linux: 8
-	cout << "sizeof(void*): " << sizeof(void *) << endl;						  // Linux: 8
-	cout << "sizeof(double): " << sizeof(double) << endl;						  // LInux: 8
-	cout << "sizeof(long double): " << sizeof(long double) << endl;				  // Linux: 16
+	cout << "sizeof(size_t): " << sizeof(size_t) << endl;						  // Linux: 8, Windows: 8
+	cout << "sizeof(long): " << sizeof(long) << endl;							  // Linux: 8, Widnows: 4
+	cout << "sizeof(unsigned long long): " << sizeof(unsigned long long) << endl; // Linux: 8, Windows: 8
+	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;						  // Linux: 8, Windows: 8
+	cout << "sizeof(void*): " << sizeof(void *) << endl;						  // Linux: 8, Windows: 8
+	cout << "sizeof(double): " << sizeof(double) << endl;						  // LInux: 8, Windows: 8
+	cout << "sizeof(long double): " << sizeof(long double) << endl;				  // Linux: 16, Windows: 8
 	assert(sizeof(char) == 1);
 	assert(sizeof(short) == 2);
 	assert(sizeof(int) == 4);
@@ -302,12 +302,29 @@ int main(int argc, char *argv[])
 	i = 0x80000000;
 	j = 0x7FFFFFFF;
 	cout << "i: " << i << ", -i: " << -i << endl;
-	/* On Windows MSVC:
+	/*
 	 * numeric_limits<int>::min(): -2147483648 (0x80000000), numeric_limits<int>::max(): 2147483647 (0x7fffffff), numeric_limits<int>::min() *-1 = 80000000
 	 * numeric_limits<unsigned int>::min(): 0 (0x0), numeric_limits<unsigned int>::max(): 4294967295 (0xffffffff), numeric_limits<unsigned int>::min() *-1 = 0
 	 * https://stackoverflow.com/questions/14695118/2147483648-0-returns-true-in-c/14695202
+	 * -2147483648 is not a "number". C++ language does not support negative literal values.
+
+	 * -2147483648 is actually an expression: a positive literal value 2147483648 with unary - operator in front of it. Value 2147483648 is apparently too large for the positive side of int range on your platform. If type long int had greater range on your platform, the compiler would have to automatically assume that 2147483648 has long int type. (In C++11 the compiler would also have to consider long long int type.) This would make the compiler to evaluate -2147483648 in the domain of larger type and the result would be negative, as one would expect.
+
+	 * However, apparently in your case the range of long int is the same as range of int, and in general there's no integer type with greater range than int on your platform. This formally means that positive constant 2147483648 overflows all available signed integer types, which in turn means that the behavior of your program is undefined. (It is a bit strange that the language specification opts for undefined behavior in such cases, instead of requiring a diagnostic message, but that's the way it is.)
+
+	 * In practice, taking into account that the behavior is undefined, 2147483648 might get interpreted as some implementation-dependent negative value which happens to turn positive after having unary - applied to it. Alternatively, some implementations might decide to attempt using unsigned types to represent the value (for example, in C89/90 compilers were required to use unsigned long int, but not in C99 or C++). Implementations are allowed to do anything, since the behavior is undefined anyway.
+
+	 * As a side note, this is the reason why constants like INT_MIN are typically defined as
+
+	 * #define INT_MIN (-2147483647 - 1)
+	 * instead of the seemingly more straightforward
+
+	 * #define INT_MIN -2147483648
+	 * The latter would not work as intended.
 	 */
+#if defined(__GNUC__) || defined(__GNUG__)
 	assert(0x80000000 == -0x80000000); // Windows MSVC: C4146 "unary minus operator applied to unsigned type.result still unsigned"
+#endif
 	assert(1 == (int)0x80000000 - (int)0x7fffffff);
 	assert(1 == 0x80000000 - 0x7fffffff);
 	// assert(i == -i); Why!?!
