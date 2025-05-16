@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "LRUCache.h"
 template class LRUCache<long, long>;
 

@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Sort.h"
 template class Sort<int>;
 template class Sort<size_t>;

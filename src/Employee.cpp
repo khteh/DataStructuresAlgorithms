@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Employee.h"
 
 Employee::Employee(Rank r)

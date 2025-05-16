@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+﻿#include "pch.h"
 #include "Tower.h"
 template class Tower<size_t>;
 template class Tower<long>;

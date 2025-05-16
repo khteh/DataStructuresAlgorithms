@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Poker.h"
 
 Poker::Poker(int v, Suit s)

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "ListRangeSum.h"
 template class ListRangeSum<long>;
 /* https://leetcode.com/problems/range-sum-query-mutable/

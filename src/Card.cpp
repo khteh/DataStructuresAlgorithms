@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Card.h"
 
 Card::Card(int v, Suit s)

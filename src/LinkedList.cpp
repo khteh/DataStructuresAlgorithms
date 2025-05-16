@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "LinkedList.h"
 template class LinkedList<int>;
 template class LinkedList<size_t>;

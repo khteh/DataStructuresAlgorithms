@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Tree.h"
 #include <iostream>
 using namespace std;

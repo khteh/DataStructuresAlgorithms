@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "LongestCommonSubsequence.h"
 template class LongestCommonSubsequence<size_t>;
 template class LongestCommonSubsequence<char>;

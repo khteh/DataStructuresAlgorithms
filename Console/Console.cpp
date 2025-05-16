@@ -106,6 +106,7 @@ int main(int argc, char *argv[])
 	cout << "sizeof(size_t): " << sizeof(size_t) << ", sizeof(long): " << sizeof(long) << endl;
 	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;
 	cout << "sizeof(void*): " << sizeof(void *) << endl;
+	cout << "sizeof(double): " << sizeof(double) << endl;
 	cout << "sizeof(long double): " << sizeof(long double) << endl;
 	cout << "sizeof(unsigned long long): " << sizeof(unsigned long long) << endl;
 	assert(sizeof(char) == 1);
@@ -141,7 +142,13 @@ int main(int argc, char *argv[])
 	cout << "numeric_limits<int32_t>::min(): " << dec << numeric_limits<int32_t>::min() << " (0x" << hex << numeric_limits<int32_t>::min() << dec << "), numeric_limits<int32_t>::max(): " << numeric_limits<int32_t>::max() << " (0x" << hex << numeric_limits<int32_t>::max() << "), numeric_limits<int32_t>::min() *-1 = " << numeric_limits<int32_t>::min() * -1 << endl;
 	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << " (0x" << hex << numeric_limits<long>::min() << dec << "), numeric_limits<long>::max(): " << numeric_limits<long>::max() << " (0x" << hex << numeric_limits<long>::max() << dec << "), numeric_limits<long>::min() * -1 = " << numeric_limits<long>::min() * -1 << endl;
 	cout << "numeric_limits<long long>::min(): " << numeric_limits<long long>::min() << " (0x" << hex << numeric_limits<long long>::min() << dec << "), numeric_limits<long long>::max(): " << dec << fixed << numeric_limits<long long>::max() << " (0x" << hex << numeric_limits<long long>::max() << dec << "), numeric_limits<long long>::min() * -1 = " << numeric_limits<long long>::min() * -1 << endl;
-	cout << "numeric_limits<unsigned long long>::min(): " << numeric_limits<unsigned long long>::min() << " (0x" << hex << numeric_limits<unsigned long long>::min() << dec << "), numeric_limits<unsigned long long>::max(): " << dec << fixed << numeric_limits<unsigned long long>::max() << " (0x" << hex << numeric_limits<unsigned long long>::max() << dec << "), numeric_limits<unsigned long long>::min() * -1 = " << numeric_limits<unsigned long long>::min() * -1 << endl;
+	cout << "numeric_limits<size_t>::min(): " << numeric_limits<size_t>::min() << " (0x" << hex << numeric_limits<size_t>::min() << "), numeric_limits<size_t>::max(): " << dec << fixed << numeric_limits<size_t>::max() << " (0x" << hex << numeric_limits<size_t>::max() << dec << "), numeric_limits<size_t>::min() * -1 = " << numeric_limits<size_t>::min() * -1 << endl;
+
+	cout << "numeric_limits<double>::min(): " << numeric_limits<double>::min() << " (0x" << hex << numeric_limits<double>::min() << dec << "),  " << endl;
+	cout << "numeric_limits<double>::max(): " << dec << fixed << numeric_limits<double>::max() << endl;
+	cout << "numeric_limits<double>::max(): 0x" << hex << numeric_limits<double>::max() << dec << endl;
+	cout << "numeric_limits<double>::min() * -1 = " << numeric_limits<double>::min() * -1 << endl;
+
 	cout << "numeric_limits<long double>::min(): " << numeric_limits<long double>::min() << " (0x" << hex << numeric_limits<long double>::min() << dec << "),  " << endl;
 	cout << "numeric_limits<long double>::max(): " << dec << fixed << numeric_limits<long double>::max() << endl;
 	cout << "numeric_limits<long double>::max(): 0x" << hex << numeric_limits<long double>::max() << dec << endl;
@@ -292,7 +299,7 @@ int main(int argc, char *argv[])
 	i = 0x80000000;
 	j = 0x7FFFFFFF;
 	cout << "i: " << i << ", -i: " << -i << endl;
-	assert(0x80000000 == -0x80000000);
+	assert(i == -i);
 	assert(1 == (int)0x80000000 - (int)0x7fffffff);
 	assert(1 == 0x80000000 - 0x7fffffff);
 	// assert(i == -i); Why!?!
@@ -2178,8 +2185,11 @@ int main(int argc, char *argv[])
 	assert(ld > static_cast<long double>(numeric_limits<size_t>::max())); // overflow!
 	size = numeric_limits<size_t>::max();
 	size1 = static_cast<size_t>(numeric_limits<long double>::max());
-	cout << fixed << "size: " << size << ", size: " << size1 << endl;
+	cout << fixed << "size: " << size << ", size1: " << size1 << endl;
+#if defined(__GNUC__) || defined(__GNUG__)
+	// Only works when long double has a size greater than 64 bits.
 	assert(!(size > static_cast<size_t>(numeric_limits<long double>::max()))); // No overflow!
+#endif
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

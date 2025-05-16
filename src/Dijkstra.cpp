@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Dijkstra.h"
 template class DEdge<long>;
 template class DEdge<size_t>;

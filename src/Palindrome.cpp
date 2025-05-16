@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Palindrome.h"
 /*
  * This is loose palindrome detection. Returns true for any string which can be a palindrome by rearranging the characters.

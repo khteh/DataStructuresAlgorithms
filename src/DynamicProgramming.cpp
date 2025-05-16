@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "DynamicProgramming.h"
 template class DynamicProgramming<char>;
 template class DynamicProgramming<int>;

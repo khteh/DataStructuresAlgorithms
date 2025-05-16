@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "MyStack.h"
 #include <iostream>
 #include <string>

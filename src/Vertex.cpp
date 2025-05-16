@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Vertex.h"
 template class Vertex<int, int>;
 template class Vertex<long, long>;

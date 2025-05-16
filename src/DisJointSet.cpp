@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "DisJointSet.h"
 template class DisJointSet<int>;
 template class DisJointSet<long>;

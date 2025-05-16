@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "TreasureGame.h"
 Door::Door(Room *r, int lock)
 	: next_(r), lock_(lock)

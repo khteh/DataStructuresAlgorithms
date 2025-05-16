@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "FenwickTree.h"
 template class FenwickTree<size_t>;
 template class FenwickTree<int>;

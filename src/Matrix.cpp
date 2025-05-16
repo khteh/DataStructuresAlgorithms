@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Matrix.h"
 template class Matrix<long>;
 template class Matrix<size_t>;

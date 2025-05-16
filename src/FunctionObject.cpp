@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "FunctionObject.h"
 struct Foo {
 	Foo(int num) : num_(num) {}

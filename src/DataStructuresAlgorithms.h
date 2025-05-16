@@ -1,42 +1,5 @@
 #pragma once
-#include <limits>
-#include <memory>
-#include <utility>
-#include <thread>
-#include <assert.h>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <functional>
-#include <numeric>
-#include <map>
-#include <vector>
-#include <random>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <assert.h>
-#include <queue>
-#include <set>
-#include <unordered_set>
-#include <bitset>
-#include <iomanip>
-#include <regex>
-#include <exception>
-#include <cstring>
-#include <ranges>
-#include <variant>
-#include <typeinfo>
-#include <limits.h>
-#include <cmath>
-#include <chrono>
-#include <concepts>
-#include <generator>
-#include "oneapi/tbb.h"
-#include "pcg_extras.hpp"
-#include "pcg_random.hpp"
-#include "pcg_uint128.hpp"
+#include "pch.h"
 #include "Arithmetic.h"
 #include "Dijkstra.h"
 #include "DynamicProgramming.h"
@@ -232,7 +195,6 @@ vector<size_t> grayCode(size_t);
 void OrderedMergedCombinations(set<string> &, string const &, string const &, string);
 void numberCombinations1(size_t, size_t, size_t, vector<size_t> &, vector<vector<size_t>> &);
 void numberCombinations(size_t, size_t, vector<vector<size_t>> &);
-string insertCharAt(char, string, size_t);
 void findDistinct(vector<long> &, vector<long> &);
 void findPrimes(unsigned long, vector<long> &);
 bool isPrime(unsigned long);

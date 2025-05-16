@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Singleton.h"
 #include <iostream>
 using namespace std;

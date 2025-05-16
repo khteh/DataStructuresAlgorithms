@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "PriorityQueueMedian.h"
 
 template class PriorityQueueMedian<long>;

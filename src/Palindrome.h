@@ -6,7 +6,7 @@
 #include <ranges>
 #include <sstream>
 #include "oneapi/tbb.h"
-#include "DataStructuresAlgorithms.h"
+#include "Arithmetic.h"
 using namespace oneapi::tbb;
 using namespace std;
 class Palindrome

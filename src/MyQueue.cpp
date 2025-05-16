@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "MyQueue.h"
 template class MyQueue<int>;
 

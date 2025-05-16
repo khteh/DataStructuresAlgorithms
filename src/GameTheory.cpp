@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GameTheory.h"
 template class GameTheory<long>;
 template class GameTheory<size_t>;

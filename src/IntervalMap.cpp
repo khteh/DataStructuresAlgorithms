@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "IntervalMap.h"
 template class IntervalMap<int, char>;
 template class IntervalMap<size_t, char>;

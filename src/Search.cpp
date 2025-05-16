@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Search.h"
 /* https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm
  * https://cp-algorithms.com/string/prefix-function.html

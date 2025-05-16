@@ -151,6 +151,9 @@
     <ClCompile Include="DynamicProgramming.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arithmetic.h">
@@ -322,6 +325,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pcg_uint128.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

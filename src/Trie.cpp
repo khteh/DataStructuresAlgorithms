@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Trie.h"
 template class Trie<int>;
 

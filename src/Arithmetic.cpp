@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Arithmetic.h"
 template class Arithmetic<char>;
 template class Arithmetic<int>;

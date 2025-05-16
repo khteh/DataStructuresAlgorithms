@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "PrefixTrie.h"
 PrefixTrie::PrefixTrie()
 	: _root(make_unique<PrefixTrieNode>())

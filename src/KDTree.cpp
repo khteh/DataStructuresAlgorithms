@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "KDTree.h"
 template class KDTreeCompare<long>;
 template class KDNode<long>;

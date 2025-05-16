@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "VariantVisitor.h"
 template void VariantVisitor::print<int>(int);
 template void VariantVisitor::print<long>(long);

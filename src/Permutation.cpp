@@ -1,7 +1,16 @@
+#include "pch.h"
 #include "Permutation.h"
 template class Permutation<long>;
 template class Permutation<string>;
 template class Permutation<size_t>;
+template <typename T>
+string Permutation<T>::insertCharAt(char toInsert, string str, size_t offset)
+{
+    string start = str.substr(0, offset);
+    string end = str.substr(offset);
+    return start + toInsert + end;
+}
+
 template <typename T>
 set<string> Permutation<T>::Permute(string const &str)
 {

@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+﻿#include "pch.h"
 #include "DataStructuresAlgorithms.h"
 namespace ranges = std::ranges;
 using namespace oneapi::tbb;
@@ -718,12 +718,6 @@ long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t> &data, vector<zerofact
 	if (start != data.end() && end != data.end())
 		result.assign(start, end + 1);
 	return max_so_far;
-}
-string insertCharAt(char toInsert, string str, size_t offset)
-{
-	string start = str.substr(0, offset);
-	string end = str.substr(offset);
-	return start + toInsert + end;
 }
 void Parentheses(vector<string> &result, string &str, size_t index, long left, long right)
 {

@@ -153,9 +153,10 @@
       <ConformanceMode>true</ConformanceMode>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -171,9 +172,10 @@
       <ConformanceMode>true</ConformanceMode>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -221,6 +223,7 @@
     <ClInclude Include="pcg_random.hpp" />
     <ClInclude Include="pcg_uint128.hpp" />
     <ClInclude Include="Palindrome.h" />
+    <ClInclude Include="pch.h" />
     <ClInclude Include="Permutation.h" />
     <ClInclude Include="Poker.h" />
     <ClInclude Include="PrefixTrie.h" />
@@ -264,6 +267,9 @@
     <ClCompile Include="LongestCommonSubsequence.cpp" />
     <ClCompile Include="LRUCache.cpp" />
     <ClCompile Include="Palindrome.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Permutation.cpp" />
     <ClCompile Include="Range.cpp" />
     <ClCompile Include="Sort.cpp" />

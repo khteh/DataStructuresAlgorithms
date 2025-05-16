@@ -7,19 +7,19 @@
 #include <ranges>
 #include <sstream>
 #include "oneapi/tbb.h"
-#include "DataStructuresAlgorithms.h"
+#include "GenericConstraints.h"
 using namespace oneapi::tbb;
 using namespace std;
 template <typename T>
 class Permutation
 {
 private:
-    vector<T> InsertItemAt(T toInsert, vector<T> &items, size_t offset)
+    vector<T> InsertItemAt(T, vector<T> &, size_t)
         requires integral_type<T>;
     set<vector<T>> _permutationGameWinningNumbersCache;
     bool IsIncreasingSequence(vector<T> const &)
         requires integral_type<T>;
-
+    string insertCharAt(char, string, size_t);
 public:
     set<string> Permute(string const &);
     set<vector<T>> Permute(vector<T> &)

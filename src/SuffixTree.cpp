@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "SuffixTree.h"
 #include <iterator>
 void split(const string &s, char delim, vector<size_t> &elems)
