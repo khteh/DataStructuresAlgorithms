@@ -103,7 +103,9 @@ int main(int argc, char *argv[])
 	str1 = str.substr(0, 0);
 	assert(str1.empty());
 	char cstr[8];
-	cout << "sizeof(size_t): " << sizeof(size_t) << ", sizeof(long): " << sizeof(long) << endl;
+	cout << "sizeof(int): " << sizeof(int) << endl; // 32-bit on windows
+	cout << "sizeof(size_t): " << sizeof(size_t) << endl;
+	cout << "sizeof(long): " << sizeof(long) << endl;
 	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;
 	cout << "sizeof(void*): " << sizeof(void *) << endl;
 	cout << "sizeof(double): " << sizeof(double) << endl;
@@ -139,6 +141,7 @@ int main(int argc, char *argv[])
 	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
 	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
 	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << " (0x" << hex << numeric_limits<int>::min() << dec << "), numeric_limits<int>::max(): " << numeric_limits<int>::max() << " (0x" << hex << numeric_limits<int>::max() << "), numeric_limits<int>::min() *-1 = " << numeric_limits<int>::min() * -1 << endl;
+	cout << "numeric_limits<unsigned int>::min(): " << numeric_limits<unsigned int>::min() << " (0x" << hex << numeric_limits<unsigned int>::min() << dec << "), numeric_limits<unsigned int>::max(): " << numeric_limits<unsigned int>::max() << " (0x" << hex << numeric_limits<unsigned int>::max() << "), numeric_limits<unsigned int>::min() *-1 = " << numeric_limits<unsigned int>::min() * -1 << endl;
 	cout << "numeric_limits<int32_t>::min(): " << dec << numeric_limits<int32_t>::min() << " (0x" << hex << numeric_limits<int32_t>::min() << dec << "), numeric_limits<int32_t>::max(): " << numeric_limits<int32_t>::max() << " (0x" << hex << numeric_limits<int32_t>::max() << "), numeric_limits<int32_t>::min() *-1 = " << numeric_limits<int32_t>::min() * -1 << endl;
 	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << " (0x" << hex << numeric_limits<long>::min() << dec << "), numeric_limits<long>::max(): " << numeric_limits<long>::max() << " (0x" << hex << numeric_limits<long>::max() << dec << "), numeric_limits<long>::min() * -1 = " << numeric_limits<long>::min() * -1 << endl;
 	cout << "numeric_limits<long long>::min(): " << numeric_limits<long long>::min() << " (0x" << hex << numeric_limits<long long>::min() << dec << "), numeric_limits<long long>::max(): " << dec << fixed << numeric_limits<long long>::max() << " (0x" << hex << numeric_limits<long long>::max() << dec << "), numeric_limits<long long>::min() * -1 = " << numeric_limits<long long>::min() * -1 << endl;
@@ -299,7 +302,11 @@ int main(int argc, char *argv[])
 	i = 0x80000000;
 	j = 0x7FFFFFFF;
 	cout << "i: " << i << ", -i: " << -i << endl;
-	assert(0x80000000 == -0x80000000); // Fails on windows
+	/* On Windows MSVC:
+	* numeric_limits<int>::min(): -2147483648 (0x80000000), numeric_limits<int>::max(): 2147483647 (0x7fffffff), numeric_limits<int>::min() *-1 = 80000000
+	* numeric_limits<unsigned int>::min(): 0 (0x0), numeric_limits<unsigned int>::max(): 4294967295 (0xffffffff), numeric_limits<unsigned int>::min() *-1 = 0
+	*/
+	assert(0x80000000 == -0x80000000); // Windows MSVC: C4146 "unary minus operator applied to unsigned type.result still unsigned"
 	assert(1 == (int)0x80000000 - (int)0x7fffffff);
 	assert(1 == 0x80000000 - 0x7fffffff);
 	// assert(i == -i); Why!?!
