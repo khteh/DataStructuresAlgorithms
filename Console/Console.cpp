@@ -103,14 +103,14 @@ int main(int argc, char *argv[])
 	str1 = str.substr(0, 0);
 	assert(str1.empty());
 	char cstr[8];
-	cout << "sizeof(int): " << sizeof(int) << endl; // 32-bit on windows
-	cout << "sizeof(size_t): " << sizeof(size_t) << endl;
-	cout << "sizeof(long): " << sizeof(long) << endl;
-	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;
-	cout << "sizeof(void*): " << sizeof(void *) << endl;
-	cout << "sizeof(double): " << sizeof(double) << endl;
-	cout << "sizeof(long double): " << sizeof(long double) << endl;
-	cout << "sizeof(unsigned long long): " << sizeof(unsigned long long) << endl;
+	cout << "sizeof(int): " << sizeof(int) << endl;								  // Linux: 4, Windows: 4
+	cout << "sizeof(size_t): " << sizeof(size_t) << endl;						  // Linux: 8
+	cout << "sizeof(long): " << sizeof(long) << endl;							  // Linux: 8
+	cout << "sizeof(unsigned long long): " << sizeof(unsigned long long) << endl; // Linux: 8
+	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;						  // Linux: 8
+	cout << "sizeof(void*): " << sizeof(void *) << endl;						  // Linux: 8
+	cout << "sizeof(double): " << sizeof(double) << endl;						  // LInux: 8
+	cout << "sizeof(long double): " << sizeof(long double) << endl;				  // Linux: 16
 	assert(sizeof(char) == 1);
 	assert(sizeof(short) == 2);
 	assert(sizeof(int) == 4);
@@ -303,9 +303,10 @@ int main(int argc, char *argv[])
 	j = 0x7FFFFFFF;
 	cout << "i: " << i << ", -i: " << -i << endl;
 	/* On Windows MSVC:
-	* numeric_limits<int>::min(): -2147483648 (0x80000000), numeric_limits<int>::max(): 2147483647 (0x7fffffff), numeric_limits<int>::min() *-1 = 80000000
-	* numeric_limits<unsigned int>::min(): 0 (0x0), numeric_limits<unsigned int>::max(): 4294967295 (0xffffffff), numeric_limits<unsigned int>::min() *-1 = 0
-	*/
+	 * numeric_limits<int>::min(): -2147483648 (0x80000000), numeric_limits<int>::max(): 2147483647 (0x7fffffff), numeric_limits<int>::min() *-1 = 80000000
+	 * numeric_limits<unsigned int>::min(): 0 (0x0), numeric_limits<unsigned int>::max(): 4294967295 (0xffffffff), numeric_limits<unsigned int>::min() *-1 = 0
+	 * https://stackoverflow.com/questions/14695118/2147483648-0-returns-true-in-c/14695202
+	 */
 	assert(0x80000000 == -0x80000000); // Windows MSVC: C4146 "unary minus operator applied to unsigned type.result still unsigned"
 	assert(1 == (int)0x80000000 - (int)0x7fffffff);
 	assert(1 == 0x80000000 - 0x7fffffff);
