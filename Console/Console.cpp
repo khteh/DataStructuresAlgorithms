@@ -299,7 +299,7 @@ int main(int argc, char *argv[])
 	i = 0x80000000;
 	j = 0x7FFFFFFF;
 	cout << "i: " << i << ", -i: " << -i << endl;
-	assert(i == -i);
+	assert(0x80000000 == -0x80000000); // Fails on windows
 	assert(1 == (int)0x80000000 - (int)0x7fffffff);
 	assert(1 == 0x80000000 - 0x7fffffff);
 	// assert(i == -i); Why!?!
@@ -2181,7 +2181,9 @@ int main(int argc, char *argv[])
 	ld = numeric_limits<long double>::max();
 	ld1 = static_cast<long double>(numeric_limits<size_t>::max());
 	cout << fixed << "ld: " << ld << ", ld1: " << ld1 << endl;
-	// https://stackoverflow.com/questions/79602836/c-23-numeric-limitslong-doublemax-use-case#79604603
+	/* https://stackoverflow.com/questions/79602836/c-23-numeric-limitslong-doublemax-use-case#79604603
+	if( x > static_cast<src_T>(limits<dst_T>::max()) ) it's out of range
+	*/
 	assert(ld > static_cast<long double>(numeric_limits<size_t>::max())); // overflow!
 	size = numeric_limits<size_t>::max();
 	size1 = static_cast<size_t>(numeric_limits<long double>::max());
