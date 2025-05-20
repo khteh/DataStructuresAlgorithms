@@ -1,14 +1,4 @@
 #pragma once
-#include <map>
-#include <vector>
-#include <list>
-#include <sstream>
-#include <algorithm>
-#include <numeric>
-#include <stack>
-#include <limits>
-#include <limits.h>
-#include <memory>
 #include "Node.h"
 using namespace std;
 /*

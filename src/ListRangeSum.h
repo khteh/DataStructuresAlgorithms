@@ -1,13 +1,12 @@
 #pragma once
-#include <vector>
-using namespace std;
-template<typename T>
+template <typename T>
 class ListRangeSum
 {
 private:
 	vector<T> _data;
+
 public:
-	ListRangeSum(vector<T>&);
+	ListRangeSum(vector<T> &);
 	T Sum(size_t, size_t);
 	void Update(size_t, T);
 };

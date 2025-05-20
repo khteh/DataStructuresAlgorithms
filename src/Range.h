@@ -1,13 +1,5 @@
 #pragma once
-#include <algorithm>
-#include <set>
-#include <map>
-#include <vector>
-#include <sstream>
-#include <math.h>
-#include "oneapi/tbb.h"
 #include "DataStructuresAlgorithms.h"
-using namespace oneapi::tbb;
 using namespace std;
 typedef enum class Direction
 {

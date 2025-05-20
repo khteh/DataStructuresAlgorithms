@@ -1,15 +1,5 @@
 #pragma once
-#include <limits>
-#include <vector>
-#include <map>
-#include <set>
-#include <sstream>
-#include <ranges>
-#include <memory>
-#include "oneapi/tbb.h"
 #include "Vertex.h"
-using namespace oneapi::tbb;
-using namespace std;
 template <typename T>
 class GameTheory
 {

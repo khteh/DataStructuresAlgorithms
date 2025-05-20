@@ -1,13 +1,4 @@
 #pragma once
-#include <set>
-#include <map>
-#include <vector>
-#include <memory>
-#include <algorithm>
-#include <string>
-#include <sstream>
-#include <limits>
-using namespace std;
 template <typename TTag, typename TItem> // TTag is used as a unique ID. Graph vertices can have duplicate values of TItem
 class Vertex : public enable_shared_from_this<Vertex<TTag, TItem>>
 {

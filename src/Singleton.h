@@ -1,14 +1,15 @@
 #pragma once
-#include <string>
-using namespace std;
+#include "pch.h"
 class Singleton
 {
 public:
-	static Singleton* Instance();
+	static Singleton *Instance();
 	void Print(string);
+
 protected:
 	Singleton();
 	virtual ~Singleton();
+
 private:
-	static Singleton* _instance;
+	static Singleton *_instance;
 };

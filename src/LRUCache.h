@@ -1,8 +1,5 @@
 #pragma once
-#include <list>
-#include <map>
-using namespace std;
-template<typename TKey, typename TValue>
+template <typename TKey, typename TValue>
 class LRUCache
 {
 private:
@@ -10,6 +7,7 @@ private:
 	list<TKey> _entries; // Front: Most recently used. Back: Least recently used
 	size_t _capacity;
 	void RefreshCacheLine(TKey);
+
 public:
 	LRUCache(size_t);
 	TValue Get(TKey);

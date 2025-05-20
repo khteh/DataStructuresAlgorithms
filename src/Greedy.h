@@ -1,14 +1,5 @@
 #pragma once
-#include <assert.h>
-#include <iomanip>
-#include <map>
-#include <set>
-#include <numeric>
-#include <sstream>
-#include "oneapi/tbb.h"
 #include "Vertex.h"
-using namespace oneapi::tbb;
-using namespace std;
 template <typename T>
 class Greedy
 {

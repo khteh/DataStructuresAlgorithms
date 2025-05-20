@@ -1,15 +1,4 @@
 #pragma once
-#include <algorithm>
-#include <concepts>
-#include <set>
-#include <map>
-#include <vector>
-#include <ranges>
-#include <sstream>
-#include "oneapi/tbb.h"
-#include "GenericConstraints.h"
-using namespace oneapi::tbb;
-using namespace std;
 template <typename T>
 class Permutation
 {
@@ -20,6 +9,7 @@ private:
     bool IsIncreasingSequence(vector<T> const &)
         requires integral_type<T>;
     string insertCharAt(char, string, size_t);
+
 public:
     set<string> Permute(string const &);
     set<vector<T>> Permute(vector<T> &)

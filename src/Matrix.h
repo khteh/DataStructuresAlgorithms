@@ -1,8 +1,4 @@
 #pragma once
-#include <vector>
-#include <limits>
-#include <ranges>
-#include <algorithm>
 #include "Sort.h"
 using namespace std;
 namespace ranges = std::ranges;

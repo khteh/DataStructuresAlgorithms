@@ -1,12 +1,5 @@
 #pragma once
-#include <algorithm>
-#include <set>
-#include <map>
-#include <vector>
-#include <sstream>
-#include "oneapi/tbb.h"
-using namespace oneapi::tbb;
-using namespace std;
+#include "pch.h"
 class Search
 {
 private:

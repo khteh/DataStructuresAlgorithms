@@ -1,15 +1,5 @@
 #pragma once
-#include <map>
-#include <set>
-#include <vector>
-#include <string>
-#include <algorithm>
-#include <numeric>
-#include <sstream>
-#include <iostream>
-#include <assert.h>
-#include <memory>
-using namespace std;
+#include "pch.h"
 class SuffixTreeNode;
 
 /*

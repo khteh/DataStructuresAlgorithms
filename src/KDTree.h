@@ -1,11 +1,5 @@
 #pragma once
 #include "Tree.h"
-#include <iostream>
-#include <vector>
-#include <map>
-#include <algorithm>
-#include <iterator>
-#include <memory>
 // https://en.wikipedia.org/wiki/K-d_tree
 template <typename T>
 class KDTreeCompare

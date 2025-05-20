@@ -1,8 +1,4 @@
 #pragma once
-#include <string>
-#include <sstream>
-#include <iostream>
-#include <memory>
 #include "MyStack.h"
 using namespace std;
 template <typename T>

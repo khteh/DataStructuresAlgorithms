@@ -1,7 +1,4 @@
 #pragma once
-#include <queue>
-#include <functional>
-using namespace std;
 /*
  maxHeap...Median...minHeap
  */

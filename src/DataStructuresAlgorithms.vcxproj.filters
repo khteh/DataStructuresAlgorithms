@@ -121,9 +121,6 @@
     <ClCompile Include="Square.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SuffixTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -286,9 +283,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Square.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SuffixTree.h">

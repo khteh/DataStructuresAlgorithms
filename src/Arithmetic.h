@@ -1,11 +1,4 @@
 #pragma once
-#include <limits>
-#include <vector>
-#include <iostream>
-#include <sstream>
-#include <stdexcept>
-#include <stack>
-#include "GenericConstraints.h"
 using namespace std;
 template <typename T>
 class GCDExtendedEuclideanResult

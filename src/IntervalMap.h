@@ -1,9 +1,5 @@
 #pragma once
-#include <map>
-#include <limits>
-#include <iostream>
 using namespace std;
-
 template <typename K, typename V>
 class IntervalMap
 {

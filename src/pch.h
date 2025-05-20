@@ -1,9 +1,16 @@
 #pragma once
+#include "targetver.h"
+
+#include <stdio.h>
+#ifdef _MSC_VER
+#include <tchar.h>
+#endif
+
+#include <assert.h>
 #include <limits>
 #include <memory>
 #include <utility>
 #include <thread>
-#include <assert.h>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -11,12 +18,15 @@
 #include <functional>
 #include <numeric>
 #include <map>
+#include <unordered_map>
 #include <vector>
+#include <set>
+#include <stack>
+#include <queue>
 #include <random>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <assert.h>
 #include <queue>
 #include <set>
 #include <unordered_set>
@@ -32,10 +42,20 @@
 #include <cmath>
 #include <chrono>
 #include <concepts>
+#include <functional>
 #include <generator>
+#include <sstream>
+#include <stdexcept>
+#include <charconv>
+#include <cstdint>
+#include <cstddef>
+#include <math.h>
+#include <cfenv>
+#include <iterator>
 #include "oneapi/tbb.h"
 #include "pcg_extras.hpp"
 #include "pcg_random.hpp"
 #include "pcg_uint128.hpp"
 #include "GenericConstraints.h"
 using namespace std;
+using namespace oneapi::tbb;

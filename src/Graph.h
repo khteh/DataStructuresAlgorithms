@@ -1,15 +1,7 @@
 #pragma once
-#include <assert.h>
-#include <iomanip>
-#include <map>
-#include <set>
-#include <numeric>
-#include <sstream>
-#include "oneapi/tbb.h"
 #include "Vertex.h"
 using namespace std;
 namespace ranges = std::ranges;
-using namespace oneapi::tbb;
 template <typename TTag, typename TItem>
 class FurthestNode
 {

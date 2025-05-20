@@ -1,11 +1,5 @@
 #pragma once
-#include <set>
-#include <map>
-#include <vector>
-#include <sstream>
-#include <memory>
-#include <assert.h>
-using namespace std;
+#include "pch.h"
 class PrefixTrieNode;
 class PrefixTrie
 {

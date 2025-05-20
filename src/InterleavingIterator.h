@@ -1,8 +1,5 @@
 #pragma once
 #include "IIterator.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <vector>
 template <typename T>
 class InterleavingIterator : public IIterator<T>
 {

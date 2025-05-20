@@ -1,12 +1,4 @@
 #pragma once
-#include <iostream>
-#include <sstream>
-#include <vector>
-#include <unordered_map>
-#include <limits>
-#include <map>
-#include <cmath>
-#include <concepts>
 using namespace std;
 template <typename T>
 class DisJointSet

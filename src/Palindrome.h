@@ -1,14 +1,6 @@
 #pragma once
-#include <algorithm>
-#include <set>
-#include <map>
-#include <vector>
-#include <ranges>
-#include <sstream>
-#include "oneapi/tbb.h"
+#include "pch.h"
 #include "Arithmetic.h"
-using namespace oneapi::tbb;
-using namespace std;
 class Palindrome
 {
 public:

@@ -1,5 +1,8 @@
 #pragma once
 #include "pch.h"
+#if defined(__GNUC__) || defined(__GNUG__)
+#include "cout128.h"
+#endif
 #include "Arithmetic.h"
 #include "Dijkstra.h"
 #include "DynamicProgramming.h"

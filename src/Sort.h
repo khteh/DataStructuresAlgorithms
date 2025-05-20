@@ -1,19 +1,5 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <locale>
-#include <vector>
-#include <map>
-#include <queue>
-#include <limits>
-#include <ranges>
-#include <assert.h>
-#include <cstring>
-#include "oneapi/tbb.h"
 #include "Heap.h"
-using namespace std;
-using namespace oneapi::tbb;
 namespace ranges = std::ranges;
 template <typename T>
 class Sort

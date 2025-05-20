@@ -1,14 +1,5 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include <map>
-#include <set>
-#include <algorithm>
-#include <numeric>
-#include <ranges>
-#include "oneapi/tbb.h"
-using namespace oneapi::tbb;
-using namespace std;
+#include "pch.h"
 namespace ranges = std::ranges;
 class Knapsack
 {

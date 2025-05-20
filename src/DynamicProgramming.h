@@ -1,18 +1,4 @@
 #pragma once
-#include <algorithm>
-#include <limits>
-#include <vector>
-#include <iostream>
-#include <sstream>
-#include <stdexcept>
-#include <stack>
-#include <set>
-#include <limits>
-#include <map>
-#include <math.h>
-#include <ranges>
-#include <cfenv>
-#include "GenericConstraints.h"
 #include "Arithmetic.h"
 using namespace std;
 template <typename T>

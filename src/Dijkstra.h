@@ -1,18 +1,7 @@
 #pragma once
-#include <assert.h>
-#include <iomanip>
-#include <map>
-#include <set>
-#include <numeric>
-#include <sstream>
-#include <string>
-#include <set>
-#include <iostream>
-#include <limits>
-#include "oneapi/tbb.h"
+#include "pch.h"
 #include "Vertex.h"
 using namespace std;
-using namespace oneapi::tbb;
 namespace ranges = std::ranges;
 template <typename T>
 class DEdge;
