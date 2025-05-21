@@ -1,9 +1,9 @@
 ﻿#include "pch.h"
 #include "DataStructuresAlgorithms.h"
 #if defined(__GNUC__) || defined(__GNUG__)
-template __int128 MultinomialCoefficients(size_t, vector<size_t> const &, __int128 modulo = 0);
+template __int128 MultinomialCoefficients(size_t, vector<size_t> const &, __int128);
 #else
-template long long MultinomialCoefficients(size_t, vector<size_t> const &, long long modulo = 0);
+template long long MultinomialCoefficients(size_t, vector<size_t> const &, long long);
 #endif
 namespace ranges = std::ranges;
 using namespace oneapi::tbb;
