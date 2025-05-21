@@ -443,14 +443,14 @@ i:3 [1,2+1] = [1,3] Actual dp: [0,1,1,3]
 result: dp[(n-1)%2] = 3
  */
 template <typename T>
-unsigned long long DynamicProgramming<T>::WaysToFillRange(T n, T k, T x)
+T DynamicProgramming<T>::WaysToFillRange(size_t n, size_t k, size_t x)
     requires arithmetic_type<T>
 {
-    const long double modulo = 1e9 + 7L;
-    vector<unsigned long long> dp = {0, 1};
+    const T modulo = 1e9 + 7L;
+    vector<T> dp = {0, 1};
     for (T i = 2; i < n; i++)
-        dp[i % 2] = fmodl(fmodl(dp[(i - 2) % 2] * (k - 1), modulo) + fmodl(dp[(i - 1) % 2] * (k - 2), modulo), modulo);
-    return x == 1 ? fmodl(dp[(n - 2) % 2] * (k - 1), modulo) : dp[(n - 1) % 2]; // XXX: Don't understand this!
+        dp[i % 2] = ((dp[(i - 2) % 2] * (k - 1)) % modulo + (dp[(i - 1) % 2] * (k - 2)) % modulo) % modulo;
+    return x == 1 ? (dp[(n - 2) % 2] * (k - 1)) % modulo : dp[(n - 1) % 2]; // XXX: Don't understand this!
 }
 /*
  * https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm

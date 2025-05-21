@@ -336,7 +336,6 @@ bool HappyLadyBugs(string const &);
 size_t PowerSum(size_t, size_t, size_t i = 1);
 string MorganAndString(string const &, string const &);
 unsigned long long DistinctPairs(size_t, vector<vector<long>> const &);
-unsigned long long WaysToFillRange(size_t, size_t, size_t);
 void Z(vector<size_t> &, string const &);
 string NextBiggerString(string &);
 size_t AlternateChars(string const &);

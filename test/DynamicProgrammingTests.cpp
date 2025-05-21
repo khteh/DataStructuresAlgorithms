@@ -216,18 +216,10 @@ TEST_P(FibonacciTestFixture, FibonacciTests)
 {
 	ASSERT_EQ(this->_expected, this->FibonacciTest());
 }
-// long double is 128-bit on Linux but only 64-bit on Windows
-#if defined(__GNUC__) || defined(__GNUG__)
 INSTANTIATE_TEST_SUITE_P(
 	FibonacciTests,
 	FibonacciTestFixture,
-	::testing::Values(make_tuple(-1, -1), make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(5, 5), make_tuple(8, 6), make_tuple(13, 7), make_tuple(21, 8), make_tuple(34, 9), make_tuple(2880067194370816120ULL, 90)));
-#else
-INSTANTIATE_TEST_SUITE_P(
-	FibonacciTests,
-	FibonacciTestFixture,
-	::testing::Values(make_tuple(-1, -1), make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(5, 5), make_tuple(8, 6), make_tuple(13, 7), make_tuple(21, 8), make_tuple(34, 9)));
-#endif
+	::testing::Values(make_tuple(-1, -1), make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(5, 5), make_tuple(8, 6), make_tuple(13, 7), make_tuple(21, 8), make_tuple(34, 9), make_tuple(2880067194370816120, 90)));
 class FibonacciModifiedTestFixture : public testing::TestWithParam<tuple<string, long, long, long>>
 {
 public:
@@ -336,25 +328,44 @@ INSTANTIATE_TEST_SUITE_P(
 	NumberSolitaireTestFixture,
 	::testing::Values(make_tuple(8, vector<long>{1, -2, 0, 9, -1, -2}), make_tuple(3, vector<long>{1, -2, 4, 3, -1, -3, -7, 4, -9}),
 					  make_tuple(-12, vector<long>{0, -4, -5, -2, -7, -9, -3, -10}), make_tuple(-13, vector<long>{-1, -4, -5, -2, -7, -9, -3, -10})));
-class WaysToFillRangeTestFixture : public testing::TestWithParam<tuple<unsigned long long, size_t, size_t, size_t>>
+template <typename T>
+class WaysToFillRangeTestFixtureBase
 {
 public:
-	void SetUp() override
+	void SetUp(T expected, size_t n, size_t k, size_t x)
 	{
-		_expected = get<0>(GetParam());
-		_n = get<1>(GetParam());
-		_k = get<2>(GetParam());
-		_x = get<3>(GetParam());
+		_expected = expected;
+		_n = n;
+		_k = k;
+		_x = x;
 	}
-	unsigned long long WaysToFillRangeTest()
+	T WaysToFillRangeTest()
 	{
 		return _dp.WaysToFillRange(_n, _k, _x);
 	}
 
 protected:
-	DynamicProgramming<size_t> _dp;
-	unsigned long long _expected;
+	DynamicProgramming<T> _dp;
+	T _expected;
 	size_t _n, _k, _x;
+};
+class WaysToFillRangeTestFixture :
+#if defined(__GNUC__) || defined(__GNUG__)
+	public WaysToFillRangeTestFixtureBase<__int128>,
+	public testing::TestWithParam<tuple<__int128, size_t, size_t, size_t>>
+#else
+	public WaysToFillRangeTestFixtureBase<unsigned long long>,
+	public testing::TestWithParam<tuple<unsigned long long, size_t, size_t, size_t>>
+#endif
+{
+public:
+	void SetUp() override
+	{
+		WaysToFillRangeTestFixtureBase::SetUp(get<0>(GetParam()),
+											  get<1>(GetParam()),
+											  get<2>(GetParam()),
+											  get<3>(GetParam()));
+	}
 };
 TEST_P(WaysToFillRangeTestFixture, WaysToFillRangeTests)
 {

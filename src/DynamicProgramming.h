@@ -22,7 +22,7 @@ public:
     size_t FindSubsequence(string const &, string const &);
     T NumberSolitaire(vector<T> const &)
         requires arithmetic_type<T>;
-    unsigned long long WaysToFillRange(T, T, T)
+    T WaysToFillRange(size_t, size_t, size_t)
         requires arithmetic_type<T>;
     void FloydWarshall(size_t, vector<vector<T>> const &, vector<vector<T>> &)
         requires signed_integral_type<T>;
