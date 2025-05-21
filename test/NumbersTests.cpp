@@ -260,6 +260,60 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(6, 4, 2),
 					  make_tuple(252, 10, 5),
 					  make_tuple(184756, 20, 10)));
+template <typename T>
+class MultinomialCoefficientsFixtureBase
+{
+public:
+	void SetUp(T expected, size_t n, vector<size_t> k, T modulo)
+	{
+		_expected = expected;
+		_n = n;
+		_k = k;
+		_modulo = modulo;
+	}
+	T MultinomialCoefficientsTest()
+	{
+		return MultinomialCoefficients(_n, _k, _modulo);
+	}
+
+protected:
+	T _expected, _modulo;
+	size_t _n;
+	vector<size_t> _k;
+};
+class MultinomialCoefficientsTestFixture :
+#if defined(__GNUC__) || defined(__GNUG__)
+	public MultinomialCoefficientsFixtureBase<__int128>,
+	public testing::TestWithParam<tuple<__int128, size_t, vector<size_t>, __int128>>
+#else
+	public MultinomialCoefficientsFixtureBase<long long>,
+	public testing::TestWithParam<tuple<long long, size_t, vector<size_t>, long long>>
+#endif
+{
+public:
+	void SetUp() override
+	{
+		MultinomialCoefficientsFixtureBase::SetUp(get<0>(GetParam()),
+			get<1>(GetParam()),
+			get<2>(GetParam()),
+			get<3>(GetParam()));
+	}
+};
+TEST_P(MultinomialCoefficientsTestFixture, MultinomialCoefficientsTests)
+{
+	ASSERT_EQ(this->_expected, this->MultinomialCoefficientsTest());
+}
+#if defined(__GNUC__) || defined(__GNUG__)
+INSTANTIATE_TEST_SUITE_P(
+	MultinomialCoefficientsTests,
+	MultinomialCoefficientsTestFixture,
+	::testing::Values(make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 0), make_tuple(1689515283456000, 20, vector<size_t>{3, 5, 2}, 0), make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(271629395, 20, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(358639400, 25, vector<size_t>{3, 5, 2}, 1e9 + 7)));
+#else
+INSTANTIATE_TEST_SUITE_P(
+	MultinomialCoefficientsTests,
+	MultinomialCoefficientsTestFixture,
+	::testing::Values(make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 0), make_tuple(1689515283456000, 20, vector<size_t>{3, 5, 2}, 0), make_tuple(908107200, 15, vector<size_t>{3, 5, 2}, 1e9 + 7), make_tuple(271629395, 20, vector<size_t>{3, 5, 2}, 1e9 + 7)));
+#endif
 class PowerSumTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t>>
 {
 public:
