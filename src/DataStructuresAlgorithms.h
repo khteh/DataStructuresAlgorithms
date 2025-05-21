@@ -57,11 +57,13 @@ typedef union
 	long long ll;
 	double d;
 } sixty_four_bit;
+#if defined(__GNUC__) || defined(__GNUG__)
 typedef union
 {
-	long double ll;
-	double d;
+	__int128 lll;
+	long double ld;
 } one_two_eight_bit;
+#endif
 typedef struct ZeroFactors
 {
 	long two, five, value, minValue;
