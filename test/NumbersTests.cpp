@@ -213,23 +213,42 @@ INSTANTIATE_TEST_SUITE_P(
 	KaprekarNumbersTestFixture,
 	::testing::Values(make_tuple(vector<long>{1, 9, 45, 55, 99}, 1, 100),
 					  make_tuple(vector<long>{1, 9, 45, 55, 99, 297, 703, 999, 2223, 2728, 4950, 5050, 7272, 7777, 9999, 17344, 22222, 77778, 82656, 95121, 99999}, 1, 99999)));
-class BinomialCoefficientsTestFixture : public testing::TestWithParam<tuple<unsigned long long, size_t, size_t>>
+template <typename T>
+class BinomialCoefficientsTestFixtureBase
+{
+public:
+	void SetUp(T expected, size_t n, size_t k)
+	{
+		_expected = expected;
+		_n = n;
+		_k = k;
+	}
+	T BinomialCoefficientsTest()
+	{
+		return BinomialCoefficients<T>(_n, _k);
+	}
+
+protected:
+	T _expected;
+	size_t _n, _k;
+};
+
+class BinomialCoefficientsTestFixture :
+#if defined(__GNUC__) || defined(__GNUG__)
+	public BinomialCoefficientsTestFixtureBase<unsigned __int128>,
+	public testing::TestWithParam<tuple<unsigned long long, size_t, size_t>>
+#else
+	public BinomialCoefficientsTestFixtureBase<unsigned long long>,
+	public testing::TestWithParam<tuple<unsigned long long, size_t, size_t>>
+#endif
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_n = get<1>(GetParam());
-		_k = get<2>(GetParam());
+		BinomialCoefficientsTestFixtureBase::SetUp(get<0>(GetParam()),
+												   get<1>(GetParam()),
+												   get<2>(GetParam()));
 	}
-	unsigned long long BinomialCoefficientsTest()
-	{
-		return BinomialCoefficients(_n, _k);
-	}
-
-protected:
-	unsigned long long _expected;
-	size_t _n, _k;
 };
 TEST_P(BinomialCoefficientsTestFixture, BinomialCoefficientsTests)
 {

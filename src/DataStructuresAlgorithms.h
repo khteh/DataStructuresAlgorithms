@@ -155,10 +155,12 @@ long _atoi(string);
 generator<const size_t &> GenerateSequence(size_t, size_t);
 generator<const size_t &> Generate2Sequence(size_t, size_t, size_t, size_t);
 double round(double num, int n);
-long double Factorial(long);
+template <typename T>
+T Factorial(long);
 long FactorialTrailingZeroesCount(long);
 long SequenceSum(long);
-long double BinomialCoefficients(size_t, size_t);
+template <typename T>
+T BinomialCoefficients(size_t, size_t);
 template <typename T>
 T MultinomialCoefficients(size_t, vector<size_t> const &, T modulo = 0);
 void MultiplesCount(int, long &, long &);
@@ -190,7 +192,8 @@ void RotateRightArray(vector<int> &, int);
 vector<int> RotateLeftArray(vector<int> &, int);
 vector<size_t> FindSubString(string const &, string const);
 void copy_on_write_string();
-long double Fibonacci(long);
+template <typename T>
+T Fibonacci(long);
 string FibonacciModified(size_t, size_t, size_t);
 void BitCombinations(size_t, vector<long> &);
 vector<size_t> grayCode(size_t);

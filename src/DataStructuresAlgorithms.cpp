@@ -1,10 +1,20 @@
 ﻿#include "pch.h"
 #include "DataStructuresAlgorithms.h"
 #if defined(__GNUC__) || defined(__GNUG__)
+template __int128 Fibonacci(long);
+template __int128 Factorial(long);
+template __int128 BinomialCoefficients(size_t, size_t);
 template __int128 MultinomialCoefficients(size_t, vector<size_t> const &, __int128);
-#else
-template long long MultinomialCoefficients(size_t, vector<size_t> const &, long long);
+template unsigned __int128 Fibonacci(long);
+template unsigned __int128 Factorial(long);
+template unsigned __int128 BinomialCoefficients(size_t, size_t);
+template unsigned __int128 MultinomialCoefficients(size_t, vector<size_t> const &, unsigned __int128);
 #endif
+template long long Fibonacci(long);
+template long long Factorial(long);
+template long long BinomialCoefficients(size_t, size_t);
+template unsigned long long BinomialCoefficients(size_t, size_t);
+template long long MultinomialCoefficients(size_t, vector<size_t> const &, long long);
 namespace ranges = std::ranges;
 using namespace oneapi::tbb;
 long **my2DAlloc(long rows, long cols)
@@ -445,10 +455,11 @@ void copy_on_write_string()
 	cout << hex << "s1 @ " << (void *)(cptr) << endl;
 	cout << "s2 @ " << (void *)(cptr1) << endl;
 }
-long double Fibonacci(long n)
+template <typename T>
+T Fibonacci(long n)
 {
 	// {0 1 1 2 ...}
-	return (n <= 1) ? n : Fibonacci(n - 2) + Fibonacci(n - 1);
+	return (n <= 1) ? n : Fibonacci<T>(n - 2) + Fibonacci<T>(n - 1);
 }
 /* https://www.hackerrank.com/challenges/fibonacci-modified/problem
  * t1:0, t2: 1, n:4
@@ -482,9 +493,10 @@ string FibonacciModified(size_t t1, size_t t2, size_t n)
 // http://web2.0calc.com/
 // 64-bit max is 18446744073709551615
 // Overflow happens at 21!
-long double Factorial(long n)
+template <typename T>
+T Factorial(long n)
 {
-	return (n <= 0) ? 1 : n * Factorial(n - 1);
+	return (n <= 0) ? 1 : n * Factorial<T>(n - 1);
 }
 /*
  * https://en.wikipedia.org/wiki/Binomial_coefficient
@@ -519,7 +531,8 @@ a b c d e f
 5 4 3 2 1 0 => 5 + 4 + 3 + 2 + 1 = 15
 
  */
-long double BinomialCoefficients(size_t n, size_t k)
+template <typename T>
+T BinomialCoefficients(size_t n, size_t k)
 {
 	if (n == k)
 		return 1;
@@ -527,7 +540,7 @@ long double BinomialCoefficients(size_t n, size_t k)
 		return 0;
 	else if (k == 2)
 		return n * (n - 1) / 2;
-	return Factorial(n) / (Factorial(k) * Factorial(n - k));
+	return Factorial<T>(n) / (Factorial<T>((long)k) * Factorial<T>((long)(n - k)));
 }
 /*
  * https://en.wikipedia.org/wiki/Multinomial_theorem
@@ -6201,7 +6214,7 @@ unsigned long long DistinctPairs(size_t n, vector<vector<long>> const &astronaut
 		if (it->second > 1)
 		{
 			if (it->first == 1)
-				sum += BinomialCoefficients(it->second, 2);
+				sum += BinomialCoefficients<unsigned long long>(it->second, 2);
 			else
 			{
 				for (unsigned long long i = s1 - it->first; i > 0; i -= it->first)

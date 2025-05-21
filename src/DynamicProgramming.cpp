@@ -9,6 +9,7 @@ template class DynamicProgramming<unsigned long long>;
 template class DynamicProgramming<string>;
 #if defined(__GNUC__) || defined(__GNUG__)
 template class DynamicProgramming<__int128>;
+template class DynamicProgramming<unsigned __int128>;
 #endif
 template <typename T>
 T DynamicProgramming<T>::Factorial(size_t n, T modulo)
