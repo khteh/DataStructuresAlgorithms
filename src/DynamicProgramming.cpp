@@ -7,20 +7,23 @@ template class DynamicProgramming<long>;
 template class DynamicProgramming<long long>;
 template class DynamicProgramming<unsigned long long>;
 template class DynamicProgramming<string>;
+#if defined(__GNUC__) || defined(__GNUG__)
+template class DynamicProgramming<__int128>;
+#endif
 template <typename T>
-long DynamicProgramming<T>::Factorial(T n, T modulo)
+T DynamicProgramming<T>::Factorial(size_t n, T modulo)
     requires arithmetic_type<T>
 {
     /* 0 1 2 3 4
      * {1 1 2 6 24 ...}
      * result = 1,
      */
-    long result = 1;
+    T result = 1;
     if (n <= 0)
         return 1;
     for (size_t i = 2; i <= (size_t)n; i++)
     {
-        long tmp = result * i;
+        T tmp = result * i;
         if ((result > 0 && tmp < 0) || (result < 0 && tmp > 0))
             throw range_error("overflow!");
         result = tmp;
@@ -29,33 +32,10 @@ long DynamicProgramming<T>::Factorial(T n, T modulo)
     }
     return result;
 }
-template <typename T>
-long double DynamicProgramming<T>::FactorialLD(T n, T modulo)
-    requires arithmetic_type<T>
-{
-    /* 0 1 2 3 4
-     * {1 1 2 6 24 ...}
-     * result = 1,
-     */
-    // https://stackoverflow.com/questions/79421066/c-long-double-128-bit-precision
-    feclearexcept(FE_INEXACT);
-    long double result = 1.0L;
-    if (n <= 0)
-        return 1;
-    for (size_t i = 2; i <= (size_t)n; i++)
-    {
-        result *= i;
-        if (fetestexcept(FE_INEXACT))
-            cout << "Inexact with i=" << i << endl;
-        if (modulo)
-            result = fmodl(result, modulo);
-    }
-    return result;
-}
 /* Bottom-up Dynamic Programming
  */
 template <typename T>
-long double DynamicProgramming<T>::Fibonacci(T n)
+T DynamicProgramming<T>::Fibonacci(long n)
     requires arithmetic_type<T>
 {
     /* 0 1 2 3
@@ -63,33 +43,32 @@ long double DynamicProgramming<T>::Fibonacci(T n)
      * {0, 1}, {1, 1}, {1, 2}, {3, 2}, {3, 5}
      */
     // https://stackoverflow.com/questions/79421066/c-long-double-128-bit-precision
-    feclearexcept(FE_INEXACT);
-    vector<long double> result = {0, 1};
+    vector<T> result = {0, 1};
     if (n <= 1)
         return n;
     for (size_t i = 2; i <= (size_t)n; i++)
-    {
         result[i % 2] = result[(i - 2) % 2] + result[(i - 1) % 2];
-        if (fetestexcept(FE_INEXACT))
-            cout << "Inexact with i=" << i << endl;
-    }
     return result[n % 2];
 }
 /*
  * This is slightly better. It fails 2 tests due to timeout!
  */
 template <typename T>
-string DynamicProgramming<T>::FibonacciModified(T t1, T t2, T n)
+string DynamicProgramming<T>::FibonacciModified(T t1, T t2, size_t n)
     requires arithmetic_type<T>
 {
     // Index: 0 1 2 3 4 5  6   7	  8
     // Value: 0 1 1 2 5 27 734 538783 ...
+    ostringstream oss1, oss2;
+    oss1 << t1;
+    oss2 << t2;
     if (!n)
-        return to_string(t1);
+        return oss1.str(); // to_string(t1);
     else if (n == 1)
-        return to_string(t2);
-    Arithmetic<T> arithmetic;
-    vector<string> result = {to_string(t1), to_string(t2)};
+        return oss2.str(); // to_string(t2);
+    Arithmetic<string> arithmetic;
+    vector<string> result = {oss1.str(),
+                             oss2.str()}; //{to_string(t1), to_string(t2)};
     for (size_t i = 2; i <= (size_t)n; i++)
         result[i % 2] = arithmetic.NumberStringSum(result[(i - 2) % 2], arithmetic.NumberStringMultiplication(result[(i - 1) % 2], result[(i - 1) % 2]));
     return result[n % 2];

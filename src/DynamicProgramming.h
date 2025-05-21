@@ -1,17 +1,16 @@
 #pragma once
 #include "Arithmetic.h"
+#include "cout128.h"
 using namespace std;
 template <typename T>
 class DynamicProgramming
 {
 public:
-    long double FactorialLD(T, T modulo = 0)
+    T Factorial(size_t, T modulo = 0)
         requires arithmetic_type<T>;
-    long Factorial(T, T modulo = 0)
+    T Fibonacci(long)
         requires arithmetic_type<T>;
-    long double Fibonacci(T)
-        requires arithmetic_type<T>;
-    string FibonacciModified(T, T, T)
+    string FibonacciModified(T, T, size_t)
         requires arithmetic_type<T>;
     T LargestNumberCompositionProduct(T)
         requires arithmetic_type<T>;

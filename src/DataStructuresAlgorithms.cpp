@@ -1,5 +1,10 @@
 ﻿#include "pch.h"
 #include "DataStructuresAlgorithms.h"
+#if defined(__GNUC__) || defined(__GNUG__)
+template __int128 MultinomialCoefficients(size_t, vector<size_t> const &, __int128 modulo = 0);
+#else
+template long long MultinomialCoefficients(size_t, vector<size_t> const &, long long modulo = 0);
+#endif
 namespace ranges = std::ranges;
 using namespace oneapi::tbb;
 long **my2DAlloc(long rows, long cols)
@@ -528,22 +533,15 @@ long double BinomialCoefficients(size_t n, size_t k)
  * https://en.wikipedia.org/wiki/Multinomial_theorem
  * Permutations of length-nword with n1 a's, n2 b's, ..., nk z's = n! / (n1! * n2! * ... * nk!)
  */
-long double MultinomialCoefficients(size_t n, vector<size_t> const &k, size_t modulo)
+template <typename T>
+T MultinomialCoefficients(size_t n, vector<size_t> const &k, T modulo)
 {
-	long double divisor = 1.0L;
-	DynamicProgramming<size_t> dp;
-	feclearexcept(FE_INEXACT);
+	T divisor = 1;
+	DynamicProgramming<T> dp;
 	for (vector<size_t>::const_iterator it = k.begin(); it != k.end(); it++)
-	{
-		divisor *= dp.FactorialLD(*it);
-		if (fetestexcept(FE_INEXACT))
-		{
-			cout << "Inexact with k = " << *it << endl;
-			throw range_error("overflow!");
-		}
-	}
-	long double result = dp.FactorialLD(n) / divisor;
-	return modulo ? fmodl(result, modulo) : result;
+		divisor *= dp.Factorial(*it);
+	T result = dp.Factorial(n) / divisor;
+	return modulo ? result % modulo : result;
 }
 long SequenceSum(long n)
 {

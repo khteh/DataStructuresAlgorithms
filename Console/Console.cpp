@@ -106,11 +106,15 @@ int main(int argc, char *argv[])
 	cout << "sizeof(int): " << sizeof(int) << endl;								  // Linux: 4, Windows: 4
 	cout << "sizeof(size_t): " << sizeof(size_t) << endl;						  // Linux: 8, Windows: 8
 	cout << "sizeof(long): " << sizeof(long) << endl;							  // Linux: 8, Widnows: 4
+	cout << "sizeof(long long): " << sizeof(long long) << endl;					  // Linux: 8, Windows: 8
 	cout << "sizeof(unsigned long long): " << sizeof(unsigned long long) << endl; // Linux: 8, Windows: 8
 	cout << "sizeof(char[8]): " << sizeof(cstr) << endl;						  // Linux: 8, Windows: 8
 	cout << "sizeof(void*): " << sizeof(void *) << endl;						  // Linux: 8, Windows: 8
 	cout << "sizeof(double): " << sizeof(double) << endl;						  // LInux: 8, Windows: 8
 	cout << "sizeof(long double): " << sizeof(long double) << endl;				  // Linux: 16, Windows: 8
+#if defined(__GNUC__) || defined(__GNUG__)
+	cout << "sizeof(__int128): " << sizeof(__int128) << endl; // Linux: 16, Windows: 8
+#endif
 	assert(sizeof(char) == 1);
 	assert(sizeof(short) == 2);
 	assert(sizeof(int) == 4);
@@ -145,6 +149,9 @@ int main(int argc, char *argv[])
 	cout << "numeric_limits<int32_t>::min(): " << dec << numeric_limits<int32_t>::min() << " (0x" << hex << numeric_limits<int32_t>::min() << dec << "), numeric_limits<int32_t>::max(): " << numeric_limits<int32_t>::max() << " (0x" << hex << numeric_limits<int32_t>::max() << "), numeric_limits<int32_t>::min() *-1 = " << numeric_limits<int32_t>::min() * -1 << endl;
 	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << " (0x" << hex << numeric_limits<long>::min() << dec << "), numeric_limits<long>::max(): " << numeric_limits<long>::max() << " (0x" << hex << numeric_limits<long>::max() << dec << "), numeric_limits<long>::min() * -1 = " << numeric_limits<long>::min() * -1 << endl;
 	cout << "numeric_limits<long long>::min(): " << numeric_limits<long long>::min() << " (0x" << hex << numeric_limits<long long>::min() << dec << "), numeric_limits<long long>::max(): " << dec << fixed << numeric_limits<long long>::max() << " (0x" << hex << numeric_limits<long long>::max() << dec << "), numeric_limits<long long>::min() * -1 = " << numeric_limits<long long>::min() * -1 << endl;
+#if defined(__GNUC__) || defined(__GNUG__)
+	cout << "numeric_limits<__int128>::min(): " << numeric_limits<__int128>::min() << " (0x" << hex << numeric_limits<__int128>::min() << dec << "), numeric_limits<__int128>::max(): " << dec << fixed << numeric_limits<__int128>::max() << " (0x" << hex << numeric_limits<__int128>::max() << dec << "), numeric_limits<__int128>::min() * -1 = " << numeric_limits<__int128>::min() * -1 << endl;
+#endif
 	cout << "numeric_limits<size_t>::min(): " << numeric_limits<size_t>::min() << " (0x" << hex << numeric_limits<size_t>::min() << "), numeric_limits<size_t>::max(): " << dec << fixed << numeric_limits<size_t>::max() << " (0x" << hex << numeric_limits<size_t>::max() << dec << "), numeric_limits<size_t>::min() * -1 = " << numeric_limits<size_t>::min() * -1 << endl;
 
 	cout << "numeric_limits<double>::min(): " << numeric_limits<double>::min() << " (0x" << hex << numeric_limits<double>::min() << dec << "),  " << endl;
@@ -391,7 +398,7 @@ int main(int argc, char *argv[])
 	cpp20readonlyranges();
 	cpp20ranges();
 	cpp20variants();
-	cout << "30! " << dp.FactorialLD(30) << endl;			// The CPU signals loss of precision via a flag in the FPU control registers starting from i=26
+	cout << "30! " << dp.Factorial(30) << endl;				// The CPU signals loss of precision via a flag in the FPU control registers starting from i=26
 	cout << "Fibonacci(100) " << dp.Fibonacci(100) << endl; // The CPU signals loss of precision via a flag in the FPU control registers starting from i=94
 	grid = {{1, 3, 5}, {2, 4, 6}, {7, 8, 9}};
 	// grid.back() = {7,8,9}

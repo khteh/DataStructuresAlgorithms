@@ -177,23 +177,40 @@ INSTANTIATE_TEST_SUITE_P(
 	FindSubsequenceTests,
 	FindSubsequenceTestFixture,
 	::testing::Values(make_tuple(2, "1221", "12"), make_tuple(0, "1234", "56"), make_tuple(15, "kkkkkkz", "kkkk"), make_tuple(6, "kkkkkkz", "kkkkk"), make_tuple(1, "kkkkkkz", "kkkkkk"), make_tuple(0, "DeadBeef", "FeedBeef"), make_tuple(1, "DeadBeef", "Beef"), make_tuple(1, "DeadBeef", "dBeef"), make_tuple(0, "DeadBeef", "eedBeef"), make_tuple(1, "DeadBeef", "edBeef")));
-class FibonacciTestFixture : public testing::TestWithParam<tuple<long double, long>>
+template <typename T>
+class FibonacciTestFixtureBase
+{
+public:
+	void SetUp(T expected, long n)
+	{
+		_expected = expected;
+		_n = n;
+	}
+	T FibonacciTest()
+	{
+		return _dp.Fibonacci(_n);
+	}
+
+protected:
+	DynamicProgramming<T> _dp;
+	T _expected;
+	long _n;
+};
+
+class FibonacciTestFixture :
+#if defined(__GNUC__) || defined(__GNUG__)
+	public FibonacciTestFixtureBase<__int128>,
+	public testing::TestWithParam<tuple<__int128, long>>
+#else
+	public FibonacciTestFixtureBase<long long>,
+	public testing::TestWithParam<tuple<long long, long>>
+#endif
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_data = get<1>(GetParam());
+		FibonacciTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
-	long double FibonacciTest()
-	{
-		return _dp.Fibonacci(_data);
-	}
-
-protected:
-	DynamicProgramming<long> _dp;
-	long _data;
-	long double _expected;
 };
 TEST_P(FibonacciTestFixture, FibonacciTests)
 {
@@ -239,62 +256,59 @@ INSTANTIATE_TEST_SUITE_P(
 	FibonacciModifiedTests,
 	FibonacciModifiedTestFixture,
 	::testing::Values(make_tuple("5", 0, 1, 4), make_tuple("27", 0, 1, 5), make_tuple("734", 0, 1, 6), make_tuple("538783", 0, 1, 7), make_tuple("290287121823", 0, 1, 8), make_tuple("2", 2, 0, 0), make_tuple("0", 2, 0, 1), make_tuple("2", 2, 0, 2), make_tuple("4", 2, 0, 3), make_tuple("18", 2, 0, 4), make_tuple("328", 2, 0, 5), make_tuple("107602", 2, 0, 6), make_tuple("11578190732", 2, 0, 7), make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)));
-class FactorialLDTestFixture : public testing::TestWithParam<tuple<long double, size_t, size_t>>
-{
-public:
-	void SetUp() override
-	{
-		_expected = get<0>(GetParam());
-		_n = get<1>(GetParam());
-		_modulo = get<2>(GetParam());
-	}
-	long double FactorialLDTest()
-	{
-		return _dp.FactorialLD(_n, _modulo);
-	}
 
-protected:
-	DynamicProgramming<size_t> _dp;
-	long double _expected;
-	size_t _n, _modulo;
-};
-TEST_P(FactorialLDTestFixture, FactorialLDTests)
-{
-	ASSERT_EQ(this->_expected, this->FactorialLDTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	FactorialLDTests,
-	FactorialLDTestFixture,
-	::testing::Values(make_tuple(178290591, 14, 1e9 + 7), make_tuple(146326063, 20, 1e9 + 7), make_tuple(440732388, 25, 1e9 + 7)));
-#if defined(__GNUC__) || defined(__GNUG__)
-class FactorialTestFixture : public testing::TestWithParam<tuple<long, size_t, size_t>>
+template <typename T>
+class FactorialTestFixtureBase
 {
 public:
-	void SetUp() override
+	void SetUp(T expected, size_t n, T modulo)
 	{
-		_expected = get<0>(GetParam());
-		_n = get<1>(GetParam());	
-		_modulo = get<2>(GetParam());
+		_expected = expected;
+		_n = n;
+		_modulo = modulo;
 	}
-	long FactorialTest()
+	T FactorialTest()
 	{
 		return _dp.Factorial(_n, _modulo);
 	}
 
 protected:
-	DynamicProgramming<size_t> _dp;
-	long _expected;
-	size_t _n, _modulo;
+	DynamicProgramming<T> _dp;
+	T _expected, _modulo;
+	size_t _n;
+};
+
+class FactorialTestFixture :
+#if defined(__GNUC__) || defined(__GNUG__)
+	public FactorialTestFixtureBase<__int128>,
+	public testing::TestWithParam<tuple<__int128, size_t, size_t>>
+#else
+	public FactorialTestFixtureBase<long long>,
+	public testing::TestWithParam<tuple<long long, size_t, size_t>>
+#endif
+
+{
+public:
+	void SetUp() override
+	{
+		FactorialTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
 };
 TEST_P(FactorialTestFixture, FactorialTests)
 {
 	ASSERT_EQ(this->_expected, this->FactorialTest());
 }
+/*
+https://gcc.gnu.org/onlinedocs/gcc/_005f_005fint128.html
+As an extension the integer scalar type __int128 is supported for targets which have an integer mode wide enough to hold 128 bits. Simply write __int128 for a signed 128-bit integer, or unsigned __int128 for an unsigned 128-bit integer.
+There is no support in GCC for expressing an integer constant of type __int128 for targets with long long integer less than 128 bits wide.
+
+sizeof(long long): 8 (64-bit) ::max() = 9223372036854775807. So, the max constant is 20!
+*/
 INSTANTIATE_TEST_SUITE_P(
 	FactorialTests,
 	FactorialTestFixture,
-	::testing::Values(make_tuple(178290591, 14, 1e9 + 7), make_tuple(146326063, 20, 1e9 + 7), make_tuple(440732388, 25, 1e9 + 7)));
-#endif
+	::testing::Values(make_tuple(178290591, 14, 1e9 + 7), make_tuple(146326063, 20, 1e9 + 7), make_tuple(440732388, 25, 1e9 + 7), make_tuple(2432902008176640000, 20, 0)));
 class NumberSolitaireTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
 {
 public:

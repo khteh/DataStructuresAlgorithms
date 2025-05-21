@@ -394,25 +394,44 @@ INSTANTIATE_TEST_SUITE_P(
 	ReversePolishNotationTests,
 	ReversePolishNotationTestFixture,
 	::testing::Values(make_tuple(9, vector<string>{"2", "1", "+", "3", "*"}), make_tuple(6, vector<string>{"4", "13", "5", "/", "+"}), make_tuple(22, vector<string>{"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"})));
-class MultinomialCoefficientsTestFixture : public testing::TestWithParam<tuple<long double, size_t, vector<size_t>, size_t>>
+template <typename T>
+class MultinomialCoefficientsFixtureBase
 {
 public:
-	void SetUp() override
+	void SetUp(T expected, size_t n, vector<size_t> k, T modulo)
 	{
-		_expected = get<0>(GetParam());
-		_n = get<1>(GetParam());
-		_k = get<2>(GetParam());
-		_modulo = get<3>(GetParam());
+		_expected = expected;
+		_n = n;
+		_k = k;
+		_modulo = modulo;
 	}
-	long double MultinomialCoefficientsTest()
+	T MultinomialCoefficientsTest()
 	{
 		return MultinomialCoefficients(_n, _k, _modulo);
 	}
 
 protected:
-	long double _expected;
-	size_t _n, _modulo;
+	T _expected, _modulo;
+	size_t _n;
 	vector<size_t> _k;
+};
+class MultinomialCoefficientsTestFixture :
+#if defined(__GNUC__) || defined(__GNUG__)
+	public MultinomialCoefficientsFixtureBase<__int128>,
+	public testing::TestWithParam<tuple<__int128, size_t, vector<size_t>, __int128>>
+#else
+	public MultinomialCoefficientsFixtureBase<long long>,
+	public testing::TestWithParam<tuple<long long, size_t, vector<size_t>, long long>>
+#endif
+{
+public:
+	void SetUp() override
+	{
+		MultinomialCoefficientsFixtureBase::SetUp(get<0>(GetParam()),
+												  get<1>(GetParam()),
+												  get<2>(GetParam()),
+												  get<3>(GetParam()));
+	}
 };
 TEST_P(MultinomialCoefficientsTestFixture, MultinomialCoefficientsTests)
 {

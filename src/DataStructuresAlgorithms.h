@@ -1,8 +1,6 @@
 #pragma once
 #include "pch.h"
-#if defined(__GNUC__) || defined(__GNUG__)
 #include "cout128.h"
-#endif
 #include "Arithmetic.h"
 #include "Dijkstra.h"
 #include "DynamicProgramming.h"
@@ -161,7 +159,8 @@ long double Factorial(long);
 long FactorialTrailingZeroesCount(long);
 long SequenceSum(long);
 long double BinomialCoefficients(size_t, size_t);
-long double MultinomialCoefficients(size_t, vector<size_t> const &, size_t modulo = 0);
+template <typename T>
+T MultinomialCoefficients(size_t, vector<size_t> const &, T modulo = 0);
 void MultiplesCount(int, long &, long &);
 long MaxZeroProductBruteForce(vector<int> const &);
 long MaxZeroProduct(vector<int> const &, size_t count = 3);
