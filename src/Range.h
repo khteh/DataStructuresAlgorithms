@@ -31,7 +31,7 @@ public:
 	long MaxProfit(vector<long> const &);
 	size_t MinSumSubSequence(size_t, vector<size_t> const &);
 	size_t MinimumLoss(vector<size_t> const &);
-	size_t MinimumBribes(size_t, vector<long> const &);
+	long MinimumBribes(size_t, vector<long> const &);
 	size_t MinimumCandies(vector<size_t> const &);
 	long MinEnergyInstallations(vector<size_t> &, long);
 	long StockMaxProfit(vector<long> const &);

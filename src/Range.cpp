@@ -242,9 +242,9 @@ size_t Range::MinimumLoss(vector<size_t> const &data)
  * i: 1 -> [5]
  * i: 0
  */
-size_t Range::MinimumBribes(size_t maxBribes, vector<long> const &data)
+long Range::MinimumBribes(size_t maxBribes, vector<long> const &data)
 {
-	size_t bribes = 0;
+	long bribes = 0;
 	for (long i = data.size() - 1; i >= 0; i--)
 	{
 		/*

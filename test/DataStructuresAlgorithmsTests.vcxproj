@@ -24,15 +24,21 @@
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <UseInteloneTBB>true</UseInteloneTBB>
     <UseDebugLibraries>true</UseDebugLibraries>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <UseInteloneTBB>true</UseInteloneTBB>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <EnableManagedIncrementalBuild>true</EnableManagedIncrementalBuild>
+  </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnableManifest>false</VcpkgEnableManifest>
     <VcpkgEnabled>false</VcpkgEnabled>
@@ -106,6 +112,7 @@
       <LanguageStandard>stdcpp23</LanguageStandard>
       <AdditionalIncludeDirectories>C:\Projects\C++\googletest\googletest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj</AdditionalOptions>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -125,6 +132,7 @@
       <AdditionalIncludeDirectories>C:\Projects\C++\googletest\googletest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <AdditionalOptions>/bigobj</AdditionalOptions>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
