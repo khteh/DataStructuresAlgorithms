@@ -59,16 +59,12 @@ string DynamicProgramming<T>::FibonacciModified(T t1, T t2, size_t n)
 {
     // Index: 0 1 2 3 4 5  6   7	  8
     // Value: 0 1 1 2 5 27 734 538783 ...
-    ostringstream oss1, oss2;
-    oss1 << t1;
-    oss2 << t2;
     if (!n)
-        return oss1.str(); // to_string(t1);
+        return to_string(t1);
     else if (n == 1)
-        return oss2.str(); // to_string(t2);
+        return to_string(t2);
     Arithmetic<string> arithmetic;
-    vector<string> result = {oss1.str(),
-                             oss2.str()}; //{to_string(t1), to_string(t2)};
+    vector<string> result = {to_string(t1), to_string(t2)};
     for (size_t i = 2; i <= (size_t)n; i++)
         result[i % 2] = arithmetic.NumberStringSum(result[(i - 2) % 2], arithmetic.NumberStringMultiplication(result[(i - 1) % 2], result[(i - 1) % 2]));
     return result[n % 2];

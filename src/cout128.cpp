@@ -62,3 +62,17 @@ ostream &operator<<(ostream &out, uint128_t x)
     to_chars_result result = ::to_chars(buffer, end(buffer), x);
     return out << string_view{buffer, result.ptr};
 }
+string to_string(int128_t x)
+{
+    // 40 characters is always enough to fit 128-bit integers.
+    char buffer[40];
+    to_chars_result result = ::to_chars(buffer, end(buffer), x);
+    return string{buffer, result.ptr};
+}
+string to_string(uint128_t x)
+{
+    // 40 characters is always enough to fit 128-bit integers.
+    char buffer[40];
+    to_chars_result result = ::to_chars(buffer, end(buffer), x);
+    return string{buffer, result.ptr};
+}
