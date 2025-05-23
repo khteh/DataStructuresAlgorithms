@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "cout128.h"
+template ostream &operator<<(ostream &, __int128);
+template ostream &operator<<(ostream &, unsigned __int128);
+template string to_string(__int128);
+template string to_string(unsigned __int128);
 // https://stackoverflow.com/questions/25114597/how-to-print-int128-in-g
 to_chars_result to_chars(char *begin, char *end, uint128_t x) noexcept
 {
@@ -48,28 +52,18 @@ to_chars_result to_chars(char *begin, char *end, int128_t x) noexcept
     *begin = '-';
     return ::to_chars(begin + 1, end, -uint128_t(x));
 }
-ostream &operator<<(ostream &out, int128_t x)
+template <typename T>
+ostream &operator<<(ostream &out, T x)
+    requires is_128bit<T>
 {
     // 40 characters is always enough to fit 128-bit integers.
     char buffer[40];
     to_chars_result result = ::to_chars(buffer, end(buffer), x);
     return out << string_view{buffer, result.ptr};
 }
-ostream &operator<<(ostream &out, uint128_t x)
-{
-    // 40 characters is always enough to fit 128-bit integers.
-    char buffer[40];
-    to_chars_result result = ::to_chars(buffer, end(buffer), x);
-    return out << string_view{buffer, result.ptr};
-}
-string to_string(int128_t x)
-{
-    // 40 characters is always enough to fit 128-bit integers.
-    char buffer[40];
-    to_chars_result result = ::to_chars(buffer, end(buffer), x);
-    return string{buffer, result.ptr};
-}
-string to_string(uint128_t x)
+template <typename T>
+string to_string(T x)
+    requires is_128bit<T>
 {
     // 40 characters is always enough to fit 128-bit integers.
     char buffer[40];
