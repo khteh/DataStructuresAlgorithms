@@ -8,8 +8,8 @@ to_chars_result to_chars(char *, char *, uint128_t) noexcept;
 to_chars_result to_chars(char *, char *, int128_t) noexcept;
 template <typename T>
 ostream &operator<<(ostream &, T)
-    requires is_128bit<T>;
+    requires is_128_bits<T>;
 template <typename T>
 string to_string(T)
-    requires is_128bit<T>;
+    requires is_128_bits<T>;
 #endif

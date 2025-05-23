@@ -54,7 +54,7 @@ to_chars_result to_chars(char *begin, char *end, int128_t x) noexcept
 }
 template <typename T>
 ostream &operator<<(ostream &out, T x)
-    requires is_128bit<T>
+    requires is_128_bits<T>
 {
     // 40 characters is always enough to fit 128-bit integers.
     char buffer[40];
@@ -63,7 +63,7 @@ ostream &operator<<(ostream &out, T x)
 }
 template <typename T>
 string to_string(T x)
-    requires is_128bit<T>
+    requires is_128_bits<T>
 {
     // 40 characters is always enough to fit 128-bit integers.
     char buffer[40];
