@@ -11,6 +11,7 @@ concept signed_integral_type = signed_integral<T>;
 template <class T, class U>
 concept Derived = is_base_of<U, T>::value;
 
+// https://stackoverflow.com/questions/79634906/c-23-generic-constraints-of-specific-types
 // A generic size concept:
 template <typename T, size_t num_bits>
 concept is_num_bits = is_integral_v<T> && sizeof(T) == num_bits / 8;
