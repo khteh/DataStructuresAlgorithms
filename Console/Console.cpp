@@ -173,6 +173,7 @@ int main(int argc, char *argv[])
 	cout << "numeric_limits<long double>::is_iec559: " << numeric_limits<long double>::is_iec559 << ", has_infinity: " << numeric_limits<long double>::has_infinity << ", has_quiet_NaN: " << numeric_limits<long double>::has_quiet_NaN << ", has_signaling_NaN: " << numeric_limits<long double>::has_signaling_NaN << endl;
 	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min());		   // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	assert(numeric_limits<int32_t>::min() * -1 == numeric_limits<int32_t>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
+	assert(INT_MIN * -1 == INT_MIN);											   // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	// assert(numeric_limits<int>::min() / -1 == numeric_limits<int>::min()); Integer overflow as 0x8000_0000 positive is > numeric_limits<int>::max()
 	assert(numeric_limits<int>::max() * -1 == numeric_limits<int>::min() + 1);		   // 0x7FFFF_FFFF * -1 = -0x7FFF_FFFF = 0x8000_0001
 	assert(numeric_limits<int32_t>::max() * -1 == numeric_limits<int32_t>::min() + 1); // 0x7FFFF_FFFF * -1 = -0x7FFF_FFFF = 0x8000_0001
@@ -269,7 +270,9 @@ int main(int argc, char *argv[])
 	cout << "(int)0x80000000 - 1: " << i << ", long long: " << (long long)(i) << endl; // integer overflow
 	cout << "(long long)0x80000000 - 1: " << ll << endl;
 	i = 0x80000000;
+	cout << "INT_MIN: " << INT_MIN << ", 0x" << hex << INT_MIN << dec << endl;
 	j = -INT_MIN; // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4146?view=msvc-160
+	assert(INT_MIN == -INT_MIN);
 	assert(i == j);
 	assert(i < 0);
 	assert(j < 0);
