@@ -73,17 +73,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # ###############################################################################
 get_property(MSVC_RUNTIME_LIBRARY_DEFAULT TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY)
 
-if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
-    string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
-        $<$<CONFIG:Debug>:
-        MultiThreadedDebugDLL
-        >
-        $<$<CONFIG:Release>:
-        MultiThreadedDLL
-        >
-        $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
-    )
-elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
     string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
         $<$<CONFIG:Debug>:
         MultiThreadedDebugDLL
@@ -106,18 +96,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     "_UNICODE"
 )
 
-if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE
-        "$<$<CONFIG:Debug>:"
-        "_DEBUG"
-        ">"
-        "$<$<CONFIG:Release>:"
-        "NDEBUG"
-        ">"
-        "WIN32;"
-        "_CONSOLE"
-    )
-elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         "$<$<CONFIG:Debug>:"
         "_DEBUG"
@@ -134,20 +113,7 @@ endif()
 # Compile and link options
 # ###############################################################################
 if(MSVC)
-    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
-        target_compile_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Debug>:
-            /Od;
-            /RTC1;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
-            >
-            $<$<CONFIG:Release>:
-            /Zi
-            >
-            /W3;
-            ${DEFAULT_CXX_EXCEPTION_HANDLING}
-        )
-    elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
             /Od;
@@ -162,16 +128,7 @@ if(MSVC)
         )
     endif()
 
-    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
-        target_link_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Release>:
-            /OPT:REF;
-            /OPT:ICF
-            >
-            /DEBUG;
-            /SUBSYSTEM:CONSOLE
-        )
-    elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_link_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Release>:
             /OPT:REF;
@@ -193,9 +150,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     gtest_main
 )
 
-if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
-    use_package(${PROJECT_NAME} Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.7)
-elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
     include(GoogleTest) # To use gtest_discover_tests
     gtest_discover_tests(${PROJECT_NAME}) # Runs GTest with CTest
 endif()
