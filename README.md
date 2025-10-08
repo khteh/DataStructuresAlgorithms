@@ -13,26 +13,28 @@ C++-latest data structures and algorithms using only standard libraries. This an
 
 - Use Visual Studio 2022, latest Windows SDK and ISO C++23 Standard.
 - Download googletest from https://github.com/google/googletest/releases and extract to C:\Projects\C++\googletest
-- Intel oneAPI toolkits: https://www.intel.com/content/www/us/en/docs/onetbb/get-started-guide/2021-6/install-onetbb-on-windows-os.html
+- Intel oneAPI toolkits: https://www.intel.com/content/www/us/en/docs/onetbb/get-started-guide/2022-2/overview.html
 - Run `C:\Program Files (x86)\Intel\oneAPI\setvars.bat`
 
 ### Google Test
 
 #### Build the latest GTest and GMock libraries from source
-- Get the source code of Googletest 1.16.0 (repro1.gif)
-1) Download GoogleTest source code from https://github.com/google/googletest/releases/tag/v1.16.0
-2) Open the project folder using VS and generate CMake cache, click “Build All” and it will generate lib files.
-3) Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn
-4) Set the property page
+
+1. Download GoogleTest source code from https://github.com/google/googletest/releases
+2. Open the project folder using VS and generate CMake cache, click “Build All” and it will generate lib files.
+3. Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn
+4. Set the property page
 
 C/C++ > General > Additional Include Directories: adds the googletest/include and googlemock/include paths.
-Linker > General > Additional Library Directories: point to the path of the compiled .lib file (e.g. googletest-1.16.0\out\build\x64-debug\lib).
+Linker > General > Additional Library Directories: point to the path of the compiled .lib file (e.g. googletest-1.17.0\out\build\x64-debug\lib).
 Linker > Input > Additional Dependencies: adds gtest.lib and gtest_main.lib.
 C/C++ > Code Generation > Run Library: match the compilation configuration of the Googletest libraries (e.g. MTd for Debug mode)
 (5) Then the Google Test project can be built successfully.
 
 #### Use vcpkg
-- Use vcpkg to download (Note: Currently in vcpkg, gtest version is 1.14.0) (repro2.gif)
+
+- Use vcpkg to download (Note: Currently in vcpkg, gtest version is 1.14.0)
+
 ```
 git clone https://github.com/Microsoft/vcpkg.git
 cd vcpkg
@@ -64,7 +66,7 @@ Create a Google Test project, manage nuget packages and uninstall the package Mi
   - libtbb-dev (Intel® Threading Building Blocks)
   - libgtest-dev
   - ninja-build
-  - Intel oneAPI toolkits: https://www.intel.com/content/www/us/en/docs/oneapi/installation-guide-linux/2024-2/overview.html
+  - Intel oneAPI toolkits: https://www.intel.com/content/www/us/en/docs/oneapi/installation-guide-linux
   - Add the following to `/etc/profile`:
 
   ```
