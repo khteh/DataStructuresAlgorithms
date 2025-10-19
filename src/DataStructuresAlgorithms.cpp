@@ -5788,7 +5788,6 @@ long SteadyGene(string const &gene)
 	 * 'T': 1, j:8
 	 */
 	for (long i = 0, j = 0; i < gene.size() && j < gene.size();)
-	{
 		if (genes['A'] <= balancedCount && genes['C'] <= balancedCount && genes['G'] <= balancedCount && genes['T'] <= balancedCount)
 		{
 			count = min(count, j - i);
@@ -5796,7 +5795,6 @@ long SteadyGene(string const &gene)
 		}
 		else
 			genes[gene[j++]]--;
-	}
 	return count;
 }
 /*

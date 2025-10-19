@@ -415,7 +415,7 @@ TEST_P(SteadyGeneChallengeTestFixture, SteadyGeneChallengeTests)
 INSTANTIATE_TEST_SUITE_P(
     SteadyGeneChallengeTests,
     SteadyGeneChallengeTestFixture,
-    ::testing::Values(make_tuple(1, "ACGTCCGT"), make_tuple(0, "AAGTGCCT"), make_tuple(2, "ACTGAAAG")));
+    ::testing::Values(make_tuple(1, "ACGTCCGT"), make_tuple(0, "AAGTGCCT"), make_tuple(2, "ACTGAAAG"), make_tuple(5, "GAAATAAA"), make_tuple(5, "TGATGCCGTCCCCTCAACTTGAGTGCTCCTAATGCGTTGC")));
 class WordsLadderTestFixture : public testing::TestWithParam<tuple<vector<string>, string, string, set<string>>>
 {
 public:
