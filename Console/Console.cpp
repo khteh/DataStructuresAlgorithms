@@ -2230,18 +2230,19 @@ int main(int argc, char *argv[])
 	ld1 = static_cast<long double>(numeric_limits<size_t>::max());
 	cout << fixed << "ld: " << ld << ", ld1: " << ld1 << endl;
 	/* https://stackoverflow.com/questions/79602836/c-23-numeric-limitslong-doublemax-use-case#79604603
-	if( x > static_cast<dst_T>(limits<src_T>::max()) ) it's out of range
+	If you want to convert src_t x to a dst_t with a smaller range, you want to do a compare using the source type to see if the value would fit or not.
+	if( x > static_cast<src_T>(limits<dst_T>::max()) ) it's out of range
+	src_t = long double ld
+	dst_t = size_t
 	*/
 	assert(ld > static_cast<long double>(numeric_limits<size_t>::max())); // No out of range
 	size = numeric_limits<size_t>::max();
-	size1 = numeric_limits<long double>::max();
 	size2 = static_cast<size_t>(numeric_limits<long double>::max());
 	cout << fixed << "size: " << size << ", size1: " << size1 << ", size2: " << size2 << endl;
 #if defined(__GNUC__) || defined(__GNUG__)
-	// For conversion, you can test which type has the larger max, and if the source type is larger then if( x > static_cast<dst_T>(limits<src_T>::max()) ) it's out of range.
+	// For conversion, you can test which type has the larger max, and if the source type is larger then if( x > static_cast<src_T>(limits<dst_T>::max()) ) it's out of range.
 	// Only works when long double has a size greater than 64 bits.
-	assert(size > size1); // Out of range
-	assert(size > size2); // Out of range
+	assert(ld > static_cast<long double>(numeric_limits<size_t>::max())); // Out of range
 #endif
 	/***** The End *****/
 	cout << "Press ENTER to exit";
