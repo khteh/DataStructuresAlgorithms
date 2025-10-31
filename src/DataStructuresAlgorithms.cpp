@@ -5043,7 +5043,7 @@ string RoadsInHackerland2(size_t n, vector<vector<size_t>> &edges)
 void cpp20readonlyranges()
 {
 	// 1. all_of, any_of, none_of
-	cout << "C++23 ranges all_of, any_of, none_of:" << endl;
+	cout << "c++26 ranges all_of, any_of, none_of:" << endl;
 	const vector<int> nums = {1, 2, 3, -4, 5, 6, 7, 8};
 	auto is_positive = [](const auto &v)
 	{ return v > 0; };
@@ -5070,7 +5070,7 @@ void cpp20readonlyranges()
 	assert(ranges::any_of(nodes, is_positive, &Node<int>::Item));
 
 	// 2. for_each
-	cout << "C++23 ranges for_each:" << endl;
+	cout << "c++26 ranges for_each:" << endl;
 	auto print = [](const auto &v)
 	{ cout << v << ", "; };
 	// standard version:
@@ -5093,7 +5093,7 @@ void cpp20readonlyranges()
 	cout << endl;
 
 	// 3. count_if
-	cout << "C++23 count_if:" << endl;
+	cout << "c++26 count_if:" << endl;
 	// standard version:
 	assert(5 == count_if(nodes.begin(), nodes.end(), [](Node<int> &n)
 						 { return n.Item() >= 0; }));
@@ -5103,7 +5103,7 @@ void cpp20readonlyranges()
 	assert(1 == ranges::count(nodes, 0, &Node<int>::Item));
 
 	// 4. find_if
-	cout << "C++23 find_if:" << endl;
+	cout << "c++26 find_if:" << endl;
 	// standard version:
 	vector<Node<int>>::iterator it = find_if(nodes.begin(), nodes.end(), [](Node<int> &n)
 											 { return n.Item() >= 0; });
@@ -5117,7 +5117,7 @@ void cpp20readonlyranges()
 	assert(it->Item() == 0);
 
 	// 5. find_first_of
-	cout << "C++23 find_first_of:" << endl;
+	cout << "c++26 find_first_of:" << endl;
 	vector<Node<int>> invalids;
 	invalids.push_back(Node<int>(-3));
 	invalids.push_back(Node<int>(3));
@@ -5144,7 +5144,7 @@ void cpp20readonlyranges()
 	assert(distance(it, it2) == 6);
 
 	// 6. mismatch
-	cout << "C++23 mismatch:" << endl;
+	cout << "c++26 mismatch:" << endl;
 	const string firstStr = "Hello Super World";
 	const string secondStr = "Hello Amazing World";
 	// standard version :
@@ -5203,7 +5203,7 @@ void cpp20ranges()
 	for (size_t i = 0; i < 10; i++, n++)
 		nodes.push_back(Node<int>(n));
 	// copy_if
-	cout << "C++23 ranges copy_if:" << endl;
+	cout << "c++26 ranges copy_if:" << endl;
 	// standard version:
 	copy_if(nodes.begin(), nodes.end(), ostream_iterator<Node<int>>(cout, ", "), [](const Node<int> &n)
 			{ return n.Item() >= 0; });
@@ -5214,7 +5214,7 @@ void cpp20ranges()
 	cout << endl;
 
 	// fill
-	cout << "C++23 ranges fill:" << endl;
+	cout << "c++26 ranges fill:" << endl;
 	nodes.clear();
 	nodes.resize(5);
 	// standard version
@@ -5229,7 +5229,7 @@ void cpp20ranges()
 	cout << endl;
 
 	// generate
-	cout << "C++23 ranges generate:" << endl;
+	cout << "c++26 ranges generate:" << endl;
 	// standard version
 	generate(nodes.begin(), nodes.end(), [n = 1]() mutable
 			 { return n++; });
@@ -5242,7 +5242,7 @@ void cpp20ranges()
 	cout << endl;
 
 	// transform
-	cout << "C++23 ranges transform:" << endl;
+	cout << "c++26 ranges transform:" << endl;
 	// standard version
 	transform(nodes.begin(), nodes.end(), nodes.begin(), [](const Node<int> &n) mutable
 			  { return n.Item() * -10; });
@@ -5268,7 +5268,7 @@ void cpp20ranges()
 	cout << endl;
 
 	// remove
-	cout << "C++23 ranges remove:" << endl;
+	cout << "c++26 ranges remove:" << endl;
 	nodes.clear();
 	nodes.resize(10);
 	ranges::generate(nodes, [n = -5]() mutable
@@ -5294,7 +5294,7 @@ void cpp20ranges()
 	cout << "vector<Nodes<int>> after ranges::remove_if: ";
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
-	// C++23 version:
+	// c++26 version:
 	nodes.clear();
 	nodes.resize(10);
 	ranges::generate(nodes, [n = -5]() mutable
@@ -5307,7 +5307,7 @@ void cpp20ranges()
 	cout << endl;
 
 	// replace
-	cout << "C++23 ranges replace:" << endl;
+	cout << "c++26 ranges replace:" << endl;
 	// standard version
 	nodes.clear();
 	nodes.resize(10);
@@ -5321,7 +5321,7 @@ void cpp20ranges()
 	cout << endl;
 
 	// reverse
-	cout << "C++23 ranges reverse:" << endl;
+	cout << "c++26 ranges reverse:" << endl;
 	nodes.clear();
 	nodes.resize(10);
 	ranges::generate(nodes, [n = -5]() mutable
@@ -5334,7 +5334,7 @@ void cpp20ranges()
 	cout << endl;
 
 	// rotate
-	cout << "C++23 ranges rotate:" << endl;
+	cout << "c++26 ranges rotate:" << endl;
 	// standard version
 	Node<int> firstNode(nodes[0]);
 	auto newPos = rotate(nodes.begin(), next(nodes.begin(), 1), nodes.end());
@@ -5357,7 +5357,7 @@ void cpp20ranges()
 
 	// shuffle
 	// std::random_shuffle was deprecated and removed in C++17
-	cout << "C++23 ranges shuffle:" << endl;
+	cout << "c++26 ranges shuffle:" << endl;
 	//  Seed with a real random value, if available
 	pcg_extras::seed_seq_from<random_device> seed_source;
 	// Make a random number engine
@@ -5378,7 +5378,7 @@ void cpp20ranges()
 	cout << endl;
 
 	// sample
-	cout << "C++23 ranges sample:" << endl;
+	cout << "c++26 ranges sample:" << endl;
 	vector<Node<int>> firstSample, secondSample;
 	sample(nodes.begin(), nodes.end(), back_inserter(firstSample), 5, rng);
 	assert(!firstSample.empty());
@@ -5390,7 +5390,7 @@ void cpp20ranges()
 	cout << endl;
 
 	// unique
-	cout << "C++23 ranges unique:" << endl;
+	cout << "c++26 ranges unique:" << endl;
 	nodes.clear();
 	// 1, 1, 5, 5, 2, 2, 3, 3, 4, 4, 2, 2, 5, 5
 	// 1, 5, 2, 3, 4, 2, 5

@@ -7,6 +7,7 @@
 #endif
 
 #include <assert.h>
+#include <cfloat>
 #include <limits>
 #include <memory>
 #include <utility>

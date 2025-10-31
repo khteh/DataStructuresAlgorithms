@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
 	string str, str1;
 	ostringstream oss;
-	size_t size, size1;
+	size_t size, size1, size2;
 	long l, l1, l2;
 	int32_t i, j, *iPtr;
 	unsigned int ui;
@@ -2225,20 +2225,23 @@ int main(int argc, char *argv[])
 	volatile long double ld2 = 1.0L, ld3 = 3.0L;
 	volatile long double ld4 = ld2 / ld3;
 	assert(fetestexcept(FE_INEXACT));
-	// if( x > static_cast<src_T>(limits<dst_T>::max()) )
+	// if( x > static_cast<dst_T>(limits<src_T>::max()) )
 	ld = numeric_limits<long double>::max();
 	ld1 = static_cast<long double>(numeric_limits<size_t>::max());
 	cout << fixed << "ld: " << ld << ", ld1: " << ld1 << endl;
 	/* https://stackoverflow.com/questions/79602836/c-23-numeric-limitslong-doublemax-use-case#79604603
-	if( x > static_cast<src_T>(limits<dst_T>::max()) ) it's out of range
+	if( x > static_cast<dst_T>(limits<src_T>::max()) ) it's out of range
 	*/
-	assert(ld > static_cast<long double>(numeric_limits<size_t>::max())); // overflow!
+	assert(ld > static_cast<long double>(numeric_limits<size_t>::max())); // No out of range
 	size = numeric_limits<size_t>::max();
-	size1 = static_cast<size_t>(numeric_limits<long double>::max());
-	cout << fixed << "size: " << size << ", size1: " << size1 << endl;
+	size1 = numeric_limits<long double>::max();
+	size2 = static_cast<size_t>(numeric_limits<long double>::max());
+	cout << fixed << "size: " << size << ", size1: " << size1 << ", size2: " << size2 << endl;
 #if defined(__GNUC__) || defined(__GNUG__)
+	// For conversion, you can test which type has the larger max, and if the source type is larger then if( x > static_cast<dst_T>(limits<src_T>::max()) ) it's out of range.
 	// Only works when long double has a size greater than 64 bits.
-	assert(!(size > static_cast<size_t>(numeric_limits<long double>::max()))); // No overflow!
+	assert(size > size1); // Out of range
+	assert(size > size2); // Out of range
 #endif
 	/***** The End *****/
 	cout << "Press ENTER to exit";

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.30.3 FATAL_ERROR)
 
 project(DataStructuresAlgorithms CXX)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_BUILD_TYPE "Debug")
@@ -19,7 +19,7 @@ if(MSVC)
     set(CMAKE_CXX_FLAGS_RELEASE "")
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     message("-- Setting GNU options from CMakeLists.txt")
-    set(CMAKE_CXX_FLAGS "-std=gnu++23 -fdiagnostics-color=always" CACHE STRING "CXX build flags" FORCE)
+    set(CMAKE_CXX_FLAGS "-std=gnu++26 -fdiagnostics-color=always" CACHE STRING "CXX build flags" FORCE)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb3 -Og" CACHE STRING "Debug build flags" FORCE)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG" CACHE STRING "Release build flags" FORCE)
 endif()

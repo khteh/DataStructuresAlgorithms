@@ -170,7 +170,7 @@ if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
 endif()
 
 # set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY_STR})
-set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 23)
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 26)
 
 # ###############################################################################
 # Compile definitions
@@ -204,14 +204,14 @@ if(MSVC)
     if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_compile_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Debug>:
-            /std:C++23;
+            /std:c++26;
             /permissive-;
             /sdl;
             /arch:AVX;
             /Y-
             >
             $<$<CONFIG:Release>:
-            /std:C++23;
+            /std:c++26;
             /O2;
             /Oi;
             /Gy
@@ -225,7 +225,7 @@ if(MSVC)
     if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
         target_link_options(${PROJECT_NAME} PRIVATE
             $<$<CONFIG:Release>:
-            /std:C++23;
+            /std:c++26;
             /DEBUG;
             /OPT:REF;
             /OPT:ICF;
