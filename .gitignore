@@ -9,6 +9,7 @@
 **/*workspace
 # User-specific files (MonoDevelop/Xamarin Studio)
 **/*.userprefs
+**/linkrepro*
 nuget.config
 packages
 # Build results
