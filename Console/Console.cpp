@@ -2238,7 +2238,7 @@ int main(int argc, char *argv[])
 	assert(ld > static_cast<long double>(numeric_limits<size_t>::max())); // No out of range
 	size = numeric_limits<size_t>::max();
 	size2 = static_cast<size_t>(numeric_limits<long double>::max());
-	cout << fixed << "size: " << size << ", size1: " << size1 << ", size2: " << size2 << endl;
+	cout << fixed << "size: " << size << ", size2: " << size2 << endl;
 #if defined(__GNUC__) || defined(__GNUG__)
 	// For conversion, you can test which type has the larger max, and if the source type is larger then if( x > static_cast<src_T>(limits<dst_T>::max()) ) it's out of range.
 	// Only works when long double has a size greater than 64 bits.
