@@ -3649,9 +3649,7 @@ size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &data)
 		for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
 		{
 			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), *it); // Look for element >= data[i]
-			if (it1 != tails.end())														 // *it1 >= data[i]
-				*it1 = *it;																 // *it1 = data[i]
-			else
+			if (it1 == tails.end())														 // *it1 < data[i] -> New tail
 				tails.push_back(*it);
 		}
 	}
@@ -3707,9 +3705,7 @@ size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &data)
 		{
 			vector<size_t>::iterator it1 = ranges::find_if(tails, [it](const auto &value)
 														   { return value <= *it; }); // Look for element <= data[i]
-			if (it1 != tails.end())													  // *it1 <= data[i]
-				*it1 = *it;
-			else
+			if (it1 == tails.end())													  // *it1 >= data[i]
 				tails.push_back(*it);
 		}
 	}
