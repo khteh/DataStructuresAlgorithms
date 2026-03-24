@@ -3649,7 +3649,9 @@ size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &data)
 		for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
 		{
 			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), *it); // Look for element >= data[i]
-			if (it1 == tails.end())														 // *it1 < data[i] -> New tail
+			if (it1 != tails.end())														 // *it1 >= data[i]
+				*it1 = *it;																 // *it1 = data[i]
+			else
 				tails.push_back(*it);
 		}
 	}
@@ -3705,13 +3707,59 @@ size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &data)
 		{
 			vector<size_t>::iterator it1 = ranges::find_if(tails, [it](const auto &value)
 														   { return value <= *it; }); // Look for element <= data[i]
-			if (it1 == tails.end())													  // *it1 >= data[i]
+			if (it1 != tails.end())													  // *it1 <= data[i]
+				*it1 = *it;
+			else
 				tails.push_back(*it);
 		}
 	}
 	return tails.size();
 }
-
+/* https://leetcode.com/problems/longest-substring-without-repeating-characters/
+ * 100%
+ * "aabaab!bb"
+ * a
+ * ab -> strings
+ * ba
+ * a
+ * ab
+ * ab! -> strings
+ * !b	-> strings
+ */
+size_t LengthOfLongestSubstring(string const &s)
+{
+	set<string> strings;
+	string str;
+	for (string::const_iterator it = s.begin(); it != s.end(); it++)
+	{
+		char c = *it;
+		size_t offset = str.find_last_of(*it);
+		if (offset == string::npos)
+		{
+			str.append(1, *it);
+			if (next(it) == s.end())
+				strings.emplace(str);
+		}
+		else
+		{
+			strings.emplace(str);
+			str = str.substr(offset + 1);
+			str.append(1, *it);
+		}
+	}
+	// Use std::max_element with a custom lambda comparator
+	if (!strings.empty())
+	{
+		const auto longest = max_element(
+			strings.cbegin(), strings.cend(),
+			[](const std::string &lhs, const std::string &rhs)
+			{
+				return lhs.size() < rhs.size();
+			});
+		return longest->size();
+	}
+	return 0;
+}
 bool IncreasingTriplet(vector<size_t> &data)
 {
 	vector<size_t> tails;

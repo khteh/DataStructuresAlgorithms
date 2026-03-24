@@ -280,6 +280,7 @@ bool IsValidMatrix(vector<vector<char>> const &);
 size_t ZigZagEscape(vector<long> &);
 size_t ZigZagEscape(vector<long> &, set<string> &);
 vector<string> ZigZagEscape(vector<long> &, vector<long> &, size_t lIndex, size_t rIndex, long current, bool dir);
+size_t LengthOfLongestSubstring(string const &);
 size_t IncreasingSequences(vector<long> &, vector<long> &);
 size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &);
 size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &);

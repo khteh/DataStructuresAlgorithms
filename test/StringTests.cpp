@@ -57,6 +57,28 @@ INSTANTIATE_TEST_SUITE_P(
     BasicCalculatorTests,
     BasicCalculatorTestFixture,
     ::testing::Values(make_tuple(6, "3+2*2-1"), make_tuple(5, "3+2"), make_tuple(7, "10-3"), make_tuple(8, "3*2+2"), make_tuple(-15, "3+2-4*5"), make_tuple(7, "3*2+5/4")));
+
+class LongestSubstringTestFixture : public StringTestFixture<size_t, string>, public testing::TestWithParam<tuple<size_t, string>>
+{
+public:
+    void SetUp() override
+    {
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+    }
+    size_t LongestSubstringTest()
+    {
+        return LengthOfLongestSubstring(_var1);
+    }
+};
+TEST_P(LongestSubstringTestFixture, LongestSubstringTests)
+{
+    ASSERT_EQ(this->_expected, this->LongestSubstringTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    LongestSubstringTests,
+    LongestSubstringTestFixture,
+    ::testing::Values(make_tuple(0, ""), make_tuple(1, " "), make_tuple(3, "abcabcbb"), make_tuple(1, "aaa"), make_tuple(3, "pwwkew"), make_tuple(3, "aabaab!bb")));
+
 class TwentyFourHourTimeConversionTestFixture : public StringTestFixture<string, string>, public testing::TestWithParam<tuple<string, string>>
 {
 public:

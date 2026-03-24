@@ -2245,7 +2245,8 @@ int main(int argc, char *argv[])
 	assert(ld > static_cast<long double>(numeric_limits<size_t>::max())); // Out of range
 #endif
 	/***** The End *****/
-	cout << "Press ENTER to exit";
+	cout
+		<< "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }
