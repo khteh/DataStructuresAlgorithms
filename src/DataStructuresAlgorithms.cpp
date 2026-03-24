@@ -3718,13 +3718,16 @@ size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &data)
 /* https://leetcode.com/problems/longest-substring-without-repeating-characters/
  * 100%
  * "aabaab!bb"
- * a
- * ab -> strings
- * ba
- * a
- * ab
- * ab! -> strings
- * !b	-> strings
+ * *it  str  result
+ * a -> a
+ * a -> a    a
+ * b -> ab	 a
+ * a -> ba   ab
+ * a -> a    ab
+ * b -> ab   ab
+ * ! -> ab!  ab
+ * b -> !b   ab!
+ * b -> b	 ab!
  */
 size_t LengthOfLongestSubstring(string const &s)
 {
