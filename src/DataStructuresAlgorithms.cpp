@@ -272,6 +272,31 @@ void reverseWordsTrimmed(string &str)
 		j = i + 1;
 	}
 }
+/*
+ * https://leetcode.com/problems/reverse-integer/
+ * 100%
+ * numeric_limits<int32_t>::min(): -2147483648 (0x80000000), numeric_limits<int32_t>::max(): 2147483647 (0x7fffffff)
+ * 																							  964632435
+ */
+int32_t reverseInt32(int32_t x)
+{
+	bool positive = x >= 0;
+	int32_t y = 0;
+	size_t count = 0;
+	for (int32_t i = numeric_limits<int32_t>::max(); i > 0; i /= 10, count++)
+		;
+	for (size_t i = 0; x != 0; x /= 10, i++)
+	{
+		if (i == (count - 1) && ((positive && y > numeric_limits<int32_t>::max() / 10) || (!positive && y < numeric_limits<int32_t>::min() / 10)))
+			return 0;
+		y *= 10;
+		if ((positive && y >= 0) || (!positive && y <= 0))
+			y += x % 10;
+		if ((positive && y < 0) || (!positive && y > 0))
+			return 0;
+	}
+	return y;
+}
 /* 0 1   2   3
  *  a b   b   c
  *    i,t

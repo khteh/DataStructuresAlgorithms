@@ -84,14 +84,31 @@ INSTANTIATE_TEST_SUITE_P(
 	BitCountOfNChoicesTests,
 	BitCountOfNChoicesTestFixture,
 	::testing::Values(make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(2, 4), make_tuple(3, 5), make_tuple(3, 6), make_tuple(3, 7), make_tuple(3, 8), make_tuple(4, 9), make_tuple(4, 10)));
-/*
-	assert(numberToRoman(4) == "IV");
-	assert(numberToRoman(9) == "IX");
-	assert(numberToRoman(40) == "XL");
-	assert(numberToRoman(90) == "XC");
-	assert(numberToRoman(400) == "CD");
-	assert(numberToRoman(900) == "CM");
-*/
+
+class ReverseInt32TestFixture : public testing::TestWithParam<tuple<int32_t, int32_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_x = get<1>(GetParam());
+	}
+	int32_t ReverseInt32Test()
+	{
+		return reverseInt32(_x);
+	}
+
+protected:
+	int32_t _expected, _x;
+};
+TEST_P(ReverseInt32TestFixture, ReverseInt32Tests)
+{
+	ASSERT_EQ(this->_expected, this->ReverseInt32Test());
+}
+INSTANTIATE_TEST_SUITE_P(
+	ReverseInt32Tests,
+	ReverseInt32TestFixture,
+	::testing::Values(make_tuple(321, 123), make_tuple(-321, -123), make_tuple(21, 120), make_tuple(-21, -120), make_tuple(0, 1534236469), make_tuple(214748365, 563847412)));
 class NumberToRomanTestFixture : public testing::TestWithParam<tuple<string, size_t>>
 {
 public:
@@ -294,9 +311,9 @@ public:
 	void SetUp() override
 	{
 		MultinomialCoefficientsFixtureBase::SetUp(get<0>(GetParam()),
-			get<1>(GetParam()),
-			get<2>(GetParam()),
-			get<3>(GetParam()));
+												  get<1>(GetParam()),
+												  get<2>(GetParam()),
+												  get<3>(GetParam()));
 	}
 };
 TEST_P(MultinomialCoefficientsTestFixture, MultinomialCoefficientsTests)

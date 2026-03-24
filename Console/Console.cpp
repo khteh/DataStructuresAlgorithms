@@ -171,6 +171,10 @@ int main(int argc, char *argv[])
 	cout << "numeric_limits<long double>::min() * -1 = " << numeric_limits<long double>::min() * -1 << endl;
 	// https://en.cppreference.com/w/cpp/types/numeric_limits/is_iec559
 	cout << "numeric_limits<long double>::is_iec559: " << numeric_limits<long double>::is_iec559 << ", has_infinity: " << numeric_limits<long double>::has_infinity << ", has_quiet_NaN: " << numeric_limits<long double>::has_quiet_NaN << ", has_signaling_NaN: " << numeric_limits<long double>::has_signaling_NaN << endl;
+	i = -123;
+	j = -321;
+	str = to_string(i);
+	cout << "-123: 0x" << hex << i << " " << str << ", -321: 0x" << j << dec << endl;
 	assert(numeric_limits<int>::min() * -1 == numeric_limits<int>::min());		   // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	assert(numeric_limits<int32_t>::min() * -1 == numeric_limits<int32_t>::min()); // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
 	assert(INT_MIN * -1 == INT_MIN);											   // 0x8000_0000 * -1 = 0xFFFF_FFFF_8000_0000
@@ -2208,6 +2212,7 @@ int main(int argc, char *argv[])
 	cout << "10771673641202074000000.0L: " << 10771673641202074000000.0L << endl;
 	// https://stackoverflow.com/questions/79602836/c-23-numeric-limitslong-doublemax-use-case
 	cout << "long double radix: " << numeric_limits<long double>::radix << ", digits: " << numeric_limits<long double>::digits << ",  digits10: " << numeric_limits<long double>::digits10 << ", max_digits10: " << numeric_limits<long double>::max_digits10 << endl;
+	cout << "int32_t radix: " << numeric_limits<int32_t>::radix << ", digits: " << numeric_limits<int32_t>::digits << ",  digits10: " << numeric_limits<int32_t>::digits10 << ", max_digits10: " << numeric_limits<int32_t>::max_digits10 << endl;
 	feclearexcept(FE_INEXACT);
 	ld = 1.0L;
 	for (size_t i = 2; ld < numeric_limits<long double>::max(); i++)

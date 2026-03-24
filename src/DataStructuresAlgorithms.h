@@ -182,6 +182,7 @@ size_t binary_gap(long);
 void reverse(string &);
 void reverseWords(string &);
 void reverseWordsTrimmed(string &);
+int32_t reverseInt32(int32_t);
 void RemoveDuplicateCharacters(string &);
 void RemoveDuplicateCharactersLexicographicalOrder(string &);
 bool AreAnagrams(string const &, string const &);
