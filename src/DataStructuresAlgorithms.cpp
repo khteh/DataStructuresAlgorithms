@@ -4285,12 +4285,34 @@ size_t LengthOfLongestUniqueSubstring(string const &s)
 /*
  * https://leetcode.com/problems/zigzag-conversion/
  * 100%
+rows: 2, incr: 2, 2
+P Y A I H R N
+A P L S I I G
+
+rows: 3, incr: 4, 2, 4, 2, 4
+P   A   H   N
+A P L S I I G
+Y   I   R
+
+rows: 4, incr: 6, 4, 2, 6, 4, 2, 6
+P     I    N
+A   L S  I G
+Y A   H R
+P     I
+
+rows: 5, incr: 8, 6, 4, 2, 8, 6, 4, 2
+P       H
+A     S   I
+Y   I       R
+P L            I     G
+A                 N
  */
 string ZigZagConvert(string const &s, size_t numRows)
 {
 	bool direction = false;
 	vector<string> str(numRows);
-	for (long i = 0, row = 0; i < (long)s.size(); i++)
+	long row = 0;
+	for (size_t i = 0; i < s.size(); i++)
 	{
 		str[row].append(1, s[i]);
 		if (!direction)
