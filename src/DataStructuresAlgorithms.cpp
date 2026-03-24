@@ -3728,37 +3728,25 @@ size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &data)
  */
 size_t LengthOfLongestSubstring(string const &s)
 {
-	set<string> strings;
-	string str;
+	string str, result;
 	for (string::const_iterator it = s.begin(); it != s.end(); it++)
 	{
-		char c = *it;
-		size_t offset = str.find_last_of(*it);
+		size_t offset = str.find(*it);
 		if (offset == string::npos)
 		{
 			str.append(1, *it);
-			if (next(it) == s.end())
-				strings.emplace(str);
+			if (next(it) == s.end() && str.size() > result.size())
+				result = str;
 		}
 		else
 		{
-			strings.emplace(str);
+			if (str.size() > result.size())
+				result = str;
 			str = str.substr(offset + 1);
 			str.append(1, *it);
 		}
 	}
-	// Use std::max_element with a custom lambda comparator
-	if (!strings.empty())
-	{
-		const auto longest = max_element(
-			strings.cbegin(), strings.cend(),
-			[](const std::string &lhs, const std::string &rhs)
-			{
-				return lhs.size() < rhs.size();
-			});
-		return longest->size();
-	}
-	return 0;
+	return result.size();
 }
 bool IncreasingTriplet(vector<size_t> &data)
 {
