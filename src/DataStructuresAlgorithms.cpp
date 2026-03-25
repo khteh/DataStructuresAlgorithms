@@ -780,6 +780,25 @@ void Parentheses(vector<string> &result, size_t count)
 	Parentheses(result, str, 0, count, count);
 }
 /*
+ * https://leetcode.com/problems/valid-parentheses/
+ * 100%
+ */
+bool IsValidParentheses(string const &s)
+{
+	stack<char> stk;
+	map<char, char> pairs = {{'(', ')'}, {'[', ']'}, {'{', '}'}};
+	for (string::const_iterator it = s.begin(); it != s.end(); it++)
+	{
+		if (pairs.count(*it))
+			stk.push(*it);
+		else if (stk.empty() || *it != pairs[stk.top()])
+			return false;
+		else
+			stk.pop();
+	}
+	return stk.empty();
+}
+/*
  * i - stack.peek()
  * ()
  * 0: -1, 0

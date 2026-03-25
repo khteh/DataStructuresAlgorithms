@@ -221,6 +221,27 @@ INSTANTIATE_TEST_SUITE_P(
     ParenthesesTestFixture,
     ::testing::Values(make_tuple(vector<string>{"(())", "()()"}, 2), make_tuple(vector<string>{"((()))", "(()())", "(())()", "()(())", "()()()"}, 3)));
 
+class IsValidParenthesesTestFixture : public StringTestFixture<bool, string>, public testing::TestWithParam<tuple<bool, string>>
+{
+public:
+    void SetUp() override
+    {
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+    }
+    bool IsValidParenthesesTest()
+    {
+        return IsValidParentheses(_var1);
+    }
+};
+TEST_P(IsValidParenthesesTestFixture, IsValidParenthesesTests)
+{
+    ASSERT_EQ(this->_expected, this->IsValidParenthesesTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    IsValidParenthesesTests,
+    IsValidParenthesesTestFixture,
+    ::testing::Values(make_tuple(true, "()"), make_tuple(true, "([])"), make_tuple(true, "()[]{}"), make_tuple(false, "(]"), make_tuple(false, "([)]")));
+
 class LongestValidParenthesesTestFixture : public StringTestFixture<long, string>, public testing::TestWithParam<tuple<long, string>>
 {
 public:

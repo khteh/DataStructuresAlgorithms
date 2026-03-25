@@ -211,6 +211,7 @@ unsigned long long findMax(vector<unsigned long long> const &);
 void Merge(vector<long> &, vector<long> &);
 void Parentheses(vector<string> &, size_t);
 void Parentheses(vector<string> &, string &, size_t, long, long);
+bool IsValidParentheses(string const &);
 long LongestValidParentheses(string const &);
 long LongestValidParenthesesWithFixes(string const &, size_t k);
 vector<long> diffWaysToCompute(string);
