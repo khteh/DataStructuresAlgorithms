@@ -614,7 +614,6 @@ vector<vector<long>> Range::TripletsZeroSum(vector<long> &nums)
 	// -1,0,1,2,-1,-4 => -1, -1, 0, 1, 2, 4
 	// -4,-1,-1,0,1,2
 	for (size_t i = 0; i < nums.size(); i++)
-	{
 		for (size_t j = i + 1, k = nums.size() - 1; j < k;)
 		{
 			long sum = nums[i] + nums[j] + nums[k];
@@ -625,7 +624,6 @@ vector<vector<long>> Range::TripletsZeroSum(vector<long> &nums)
 			else
 				k--;
 		}
-	}
 	return vector<vector<long>>(result.begin(), result.end());
 }
 /* https://leetcode.com/problems/4sum/
@@ -640,7 +638,6 @@ vector<vector<long>> Range::QuadrupletsSum(long target, vector<long> &nums)
 	// -1,0,1,2,-1,-4 => -1, -1, 0, 1, 2, 4
 	// -4,-1,-1,0,1,2
 	for (size_t i = 0; i < nums.size(); i++)
-	{
 		for (size_t j = i + 1, k = nums.size() - 1; j < k; j++)
 			for (size_t l = j + 1, m = k; l < m;)
 			{
@@ -652,7 +649,6 @@ vector<vector<long>> Range::QuadrupletsSum(long target, vector<long> &nums)
 				else
 					m--;
 			}
-	}
 	return vector<vector<long>>(result.begin(), result.end());
 }
 /* https://www.hackerrank.com/challenges/pairs/problem
