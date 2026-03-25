@@ -325,6 +325,19 @@ void RemoveDuplicateCharacters(string &str)
 		str.resize(tail);
 	}
 }
+/*
+ * https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+ * 100%
+ */
+size_t RemoveDuplicates(vector<long> &nums)
+{
+	// remove consecutive (adjacent) duplicates
+	// Ex: {1, 2, 1, 1, 3, 3, 3, 4, 5, 4};
+	const auto ret = ranges::unique(nums);
+	// v now holds {1 2 1 3 4 5 4 x x x}, where 'x' is indeterminate
+	nums.erase(ret.begin(), ret.end());
+	return nums.size();
+}
 /* https://leetcode.com/problems/remove-duplicate-letters/
 * 100%
 bcabc

@@ -183,6 +183,7 @@ void reverse(string &);
 void reverseWords(string &);
 void reverseWordsTrimmed(string &);
 int32_t reverseInt32(int32_t);
+size_t RemoveDuplicates(vector<long> &);
 void RemoveDuplicateCharacters(string &);
 void RemoveDuplicateCharactersLexicographicalOrder(string &);
 bool AreAnagrams(string const &, string const &);

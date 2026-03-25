@@ -57,6 +57,29 @@ INSTANTIATE_TEST_SUITE_P(
 					  // make_tuple(4, 10, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>())
 					  make_tuple(4, 10, []() -> generator<size_t>
 													{ co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>())));
+class RemoveDuplicatesTestFixture : public RangeTestFixture1<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	size_t RemoveDuplicatesTest()
+	{
+		return RemoveDuplicates(_data);
+	}
+};
+TEST_P(RemoveDuplicatesTestFixture, RemoveDuplicatesTests)
+{
+	ASSERT_EQ(this->_expected, this->RemoveDuplicatesTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	RemoveDuplicatesTests,
+	RemoveDuplicatesTestFixture,
+	::testing::Values(make_tuple(2, vector<long>{1, 1, 2}),
+					  make_tuple(5, vector<long>{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}),
+					  make_tuple(5, vector<long>{-1, -1, -1, 2, 3, 3, 3, 4, 4, 5})));
+
 class MaxAndPairTestFixture : public RangeTestFixture1<unsigned long long, unsigned long long>, public testing::TestWithParam<tuple<unsigned long long, vector<unsigned long long>>>
 {
 public:
