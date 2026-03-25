@@ -600,3 +600,30 @@ INSTANTIATE_TEST_SUITE_P(
     WeightedUniformStringsTests,
     WeightedUniformStringsTestFixture,
     ::testing::Values(make_tuple(vector<bool>{true, false, false, true, false}, "abbcccdddd", vector<size_t>{1, 7, 5, 4, 15}), make_tuple(vector<bool>{true, true, true, true, false, false}, "abccddde", vector<size_t>{1, 3, 12, 5, 9, 10}), make_tuple(vector<bool>{true, false, true, true, false}, "aaabbbbcccddd", vector<size_t>{9, 7, 8, 12, 5})));
+
+class LongestCommonPrefixTestFixture : public testing::TestWithParam<tuple<string, vector<string>>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _data = get<1>(GetParam());
+    }
+    string LongestCommonPrefixTest()
+    {
+        return LongestCommonPrefix(_data);
+    }
+
+protected:
+    string _expected;
+    vector<string> _data;
+};
+TEST_P(LongestCommonPrefixTestFixture, LongestCommonPrefixTests)
+{
+    ASSERT_EQ(this->_expected, this->LongestCommonPrefixTest());
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    LongestCommonPrefixTests,
+    LongestCommonPrefixTestFixture,
+    ::testing::Values(make_tuple("fl", vector<string>{"flower", "flow", "flight"}), make_tuple("", vector<string>{"dog", "racecar", "car"}), make_tuple("c", vector<string>{"cir", "car"})));

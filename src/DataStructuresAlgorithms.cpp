@@ -6575,3 +6575,26 @@ size_t MaxArea(vector<size_t> const &heights)
 	}
 	return result;
 }
+/*
+ * https://leetcode.com/problems/longest-common-prefix/
+ * 100%
+ */
+string LongestCommonPrefix(vector<string> const &data)
+{
+	string result;
+	if (data.size() == 1)
+		return data[0];
+	// Use std::max_element with a lambda function to compare strings by size
+	vector<string>::const_iterator it = ranges::max_element(data, [](const string &a, const string &b)
+															{ return a.size() < b.size(); });
+	size_t length = it != data.end() ? it->size() : 0;
+	bool match = true;
+	for (size_t i = 0; i < length && match; i++)
+	{
+		for (size_t j = 1; j < data.size() && match; j++)
+			match = data[j][i] == data[0][i];
+		if (match)
+			result.append(1, data[0][i]);
+	}
+	return result;
+}
