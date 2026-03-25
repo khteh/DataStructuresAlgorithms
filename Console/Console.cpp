@@ -2249,6 +2249,15 @@ int main(int argc, char *argv[])
 	// Only works when long double has a size greater than 64 bits.
 	assert(ld > static_cast<long double>(numeric_limits<size_t>::max())); // Out of range
 #endif
+	udata.clear();
+	udata = {1, 8, 6, 2, 5, 4, 8, 3, 7};
+	assert(49 == MaxArea(udata));
+	udata.clear();
+	udata = {1, 1};
+	assert(1 == MaxArea(udata));
+	udata.clear();
+	udata = {1, 3, 2, 5, 25, 24, 5};
+	assert(24 == MaxArea(udata));
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

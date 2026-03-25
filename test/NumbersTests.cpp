@@ -138,6 +138,36 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple("XL", 40),
 					  make_tuple("XC", 90),
 					  make_tuple("CD", 400), make_tuple("CM", 900)));
+class RomanToNumberTestFixture : public testing::TestWithParam<tuple<size_t, string>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+	}
+	size_t RomanToNumberTest()
+	{
+		return RomanToNumber(_n);
+	}
+
+protected:
+	size_t _expected;
+	string _n;
+};
+TEST_P(RomanToNumberTestFixture, RomanToNumberTests)
+{
+	ASSERT_EQ(this->_expected, this->RomanToNumberTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	RomanToNumberTests,
+	RomanToNumberTestFixture,
+	::testing::Values(make_tuple(4, "IV"),
+					  make_tuple(9, "IX"),
+					  make_tuple(40, "XL"),
+					  make_tuple(90, "XC"),
+					  make_tuple(400, "CD"), make_tuple(900, "CM"), make_tuple(58, "LVIII"), make_tuple(1994, "MCMXCIV")));
+
 class CountDigitsTestFixture : public testing::TestWithParam<tuple<size_t, char, size_t>>
 {
 public:

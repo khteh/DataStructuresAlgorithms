@@ -4367,11 +4367,8 @@ string ZigZagConvert(string const &s, size_t numRows)
 string NumberToRoman(size_t num)
 {
 	string roman;
-	size_t symbols;
 	// >= 1000
-	symbols = num / 1000;
-	for (size_t i = 0; i < symbols; i++)
-		roman.append(1, 'M');
+	roman.append(num / 1000, 'M');
 	if (num >= 1000)
 		num %= 1000;
 
@@ -4385,9 +4382,7 @@ string NumberToRoman(size_t num)
 	// 500 - 900
 	if (num >= 500)
 	{
-		symbols = num / 500;
-		for (size_t i = 0; i < symbols; i++)
-			roman.append(1, 'D');
+		roman.append(num / 500, 'D');
 		num %= 500;
 	}
 
@@ -4401,9 +4396,7 @@ string NumberToRoman(size_t num)
 	// 100 -
 	if (num >= 100)
 	{
-		symbols = num / 100;
-		for (size_t i = 0; i < symbols; i++)
-			roman.append(1, 'C');
+		roman.append(num / 100, 'C');
 		num %= 100;
 	}
 
@@ -4417,9 +4410,7 @@ string NumberToRoman(size_t num)
 	// 50 - 89
 	if (num >= 50)
 	{
-		symbols = num / 50;
-		for (size_t i = 0; i < symbols; i++)
-			roman.append(1, 'L');
+		roman.append(num / 50, 'L');
 		num %= 50;
 	}
 
@@ -4429,9 +4420,7 @@ string NumberToRoman(size_t num)
 		roman.append("XL");
 		num -= 40;
 	}
-	symbols = num / 10;
-	for (size_t i = 0; i < symbols; i++)
-		roman.append(1, 'X');
+	roman.append(num / 10, 'X');
 	if (num >= 10)
 		num %= 10;
 
@@ -4446,16 +4435,38 @@ string NumberToRoman(size_t num)
 		roman.append("IV");
 		num -= 4;
 	}
-	symbols = num / 5;
-	for (size_t i = 0; i < symbols; i++)
-		roman.append(1, 'V');
+	roman.append(num / 5, 'V');
 	if (num >= 5)
 		num %= 5;
 
-	symbols = num;
-	for (size_t i = 0; i < symbols; i++)
-		roman.append(1, 'I');
+	roman.append(num, 'I');
 	return roman;
+}
+/*
+ * https://leetcode.com/problems/roman-to-integer/
+ * 100%
+ */
+size_t RomanToNumber(string const &s)
+{
+	size_t result = 0;
+	for (size_t m = s.find('M'); m != string::npos; m = s.find('M', m + 1))
+		result += (m > 0 && s[m - 1] == 'C') ? 900 : 1000;
+	for (size_t d = s.find('D'); d != string::npos; d = s.find('D', d + 1))
+		result += (d > 0 && s[d - 1] == 'C') ? 400 : 500;
+	for (size_t c = s.find('C'); c != string::npos; c = s.find('C', c + 1))
+		if (c == s.size() - 1 || (s[c + 1] != 'D' && s[c + 1] != 'M'))
+			result += (c > 0 && s[c - 1] == 'X') ? 90 : 100;
+	for (size_t l = s.find('L'); l != string::npos; l = s.find('L', l + 1))
+		result += (l > 0 && s[l - 1] == 'X') ? 40 : 50;
+	for (size_t x = s.find('X'); x != string::npos; x = s.find('X', x + 1))
+		if (x == s.size() - 1 || (s[x + 1] != 'L' && s[x + 1] != 'C'))
+			result += (x > 0 && s[x - 1] == 'I') ? 9 : 10;
+	for (size_t v = s.find('V'); v != string::npos; v = s.find('V', v + 1))
+		result += (v > 0 && s[v - 1] == 'I') ? 4 : 5;
+	for (size_t i = s.find('I'); i != string::npos; i = s.find('I', i + 1))
+		if (i == s.size() - 1 || (s[i + 1] != 'V' && s[i + 1] != 'X'))
+			result += 1;
+	return result;
 }
 /*
 * Calculate the median of 2 sorted lists of numbers in O(log (m+n))
@@ -6546,4 +6557,21 @@ size_t FindConnectedComponents(vector<long> &data)
 									{ return !i; });
 	//  return result - ((1 << count) - 1);
 	return result - (count ? ((1 << count) - 1) : 0);
+}
+/*
+ * https://leetcode.com/problems/container-with-most-water/
+ * 100%
+ */
+size_t MaxArea(vector<size_t> const &heights)
+{
+	size_t result = 0;
+	for (size_t i = 0, j = heights.size() - 1; i < j;)
+	{
+		result = max(result, (j - i) * min(heights[i], heights[j]));
+		if (heights[i] < heights[j])
+			i++;
+		else
+			j--;
+	}
+	return result;
 }
