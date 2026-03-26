@@ -2502,7 +2502,7 @@ vector<vector<long>> MergeIntervals(vector<vector<long>> &intervals)
 	{
 		if (!i)
 			result.push_back(intervals[i]);
-		else if (intervals[i][1] < result.back()[0] || intervals[i][0] > result.back()[1])
+		else if (intervals[i][1] < result.back()[0] || intervals[i][0] > result.back()[1]) // New interval
 			result.push_back(intervals[i]);
 		else if (intervals[i][0] <= result.back()[0])
 		{
