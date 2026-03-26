@@ -383,12 +383,15 @@ size_t Knapsack::StairsClimbingDynamicProgramming(long destination, vector<size_
  * Steps: {1,2} Destination: 6
  *  0 1 2 3 4 5 6
  * {1,1,2,3,5,8,13} <= [i] = [i-1] + [i-2]
- * {1,0}, {1,1}, {2,1}, {2,3}, {5,3}, {5,8}, {13,8} => [N%2] = 13
+ * {1,0}, {1,1}, {2,1}, {2,3}, {5,3}, {5,8}, {13,8} => [N % 2] = 13
  *
  * Steps: {1,2,3} Destination: 6
  *  0 1 2 3 4 5  6
  * {1,1,2,4,7,13,24} <= [i] = [i-1] + [i-2] + [i-3]
- * {1,0,0}, {1,1,0}, {1,1,2}, {4,1,2}, {4,7,2}, {4,7,13}, {24,7,13} => [n%3] = 24
+ * {1,0,0}, {1,1,0}, {1,1,2}, {4,1,2}, {4,7,2}, {4,7,13}, {24,7,13} => [n % 3] = 24
+ *
+ * https://leetcode.com/problems/climbing-stairs/
+ * 100%
  */
 size_t Knapsack::StairsClimbingDynamicProgrammingBottomUp(long destination, vector<size_t> &steps)
 {
@@ -397,7 +400,7 @@ size_t Knapsack::StairsClimbingDynamicProgrammingBottomUp(long destination, vect
 	for (size_t i = 1; i <= (size_t)destination; i++)
 	{
 		combinations[i % combinations.size()] = parallel_reduce(
-			blocked_range<size_t>(0, combinations.size()), (size_t)0,
+			blocked_range<size_t>(0, combinations.size()), (size_t)0, // Sum of [0, steps.size()] elements
 			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 			{
 				for (size_t i = r.begin(); i < r.end(); i++)
