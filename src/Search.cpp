@@ -101,13 +101,16 @@ vector<long> Search::SearchRange(size_t target, vector<size_t> const &nums)
     }
     return result;
 }
-// Binary Search (http://en.wikipedia.org/wiki/Binary_search_algorithm)
-// Dichotomic Divide And Conquer: O(Log n). In case of duplicates, the algorithm drops to linear search O(n)
-// Assumption: source is sorted in increasing order and rotated a number of times
-// Ex: Input: find 5 in array (15 16 19 20 25 1 3 4 5 7 10 14)
-//			                   L             M              U
-// 4 8 9 9 9 10 12 13 1 2 2 3
-// L            M           U
+/* Binary Search (http://en.wikipedia.org/wiki/Binary_search_algorithm)
+ * Dichotomic Divide And Conquer: O(Log n). In case of duplicates, the algorithm drops to linear search O(n)
+ * Assumption: source is sorted in increasing order and rotated a number of times
+ * Ex: Input: find 5 in array (15 16 19 20 25 1 3 4 5 7 10 14)
+ *			                   L             M              U
+ * 4 8 9 9 9 10 12 13 1 2 2 3
+ * L            M           U
+ * https://leetcode.com/problems/search-in-rotated-sorted-array/
+ * 100%
+ */
 long Search::BinarySearch(size_t toSearch, vector<size_t> const &data)
 {
     for (size_t lower = 0, middle = 0, upper = data.size() - 1; lower <= upper;)

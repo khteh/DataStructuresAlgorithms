@@ -7,6 +7,7 @@ namespace ranges = std::ranges;
 using namespace oneapi::tbb;
 int main(int argc, char *argv[])
 {
+	bool flag;
 	string str, str1;
 	ostringstream oss;
 	size_t size, size1, size2;
@@ -2258,6 +2259,45 @@ int main(int argc, char *argv[])
 	udata.clear();
 	udata = {1, 3, 2, 5, 25, 24, 5};
 	assert(24 == MaxArea(udata));
+
+	// The following checks and validates the next_permutation library functionality
+	udata.clear();
+	udata = {1, 2, 3};
+	flag = next_permutation(udata.begin(), udata.end());
+	udata1.clear();
+	udata1 = {1, 3, 2};
+	assert(flag);
+	assert(udata1 == udata);
+
+	flag = next_permutation(udata.begin(), udata.end());
+	udata1.clear();
+	udata1 = {2, 1, 3};
+	assert(flag);
+	assert(udata1 == udata);
+
+	flag = next_permutation(udata.begin(), udata.end());
+	udata1.clear();
+	udata1 = {2, 3, 1};
+	assert(flag);
+	assert(udata1 == udata);
+
+	flag = next_permutation(udata.begin(), udata.end());
+	udata1.clear();
+	udata1 = {3, 1, 2};
+	assert(flag);
+	assert(udata1 == udata);
+
+	flag = next_permutation(udata.begin(), udata.end());
+	udata1.clear();
+	udata1 = {3, 2, 1};
+	assert(flag);
+	assert(udata1 == udata);
+
+	flag = next_permutation(udata.begin(), udata.end());
+	udata1.clear();
+	udata1 = {1, 2, 3};
+	assert(!flag);
+	assert(udata1 == udata);
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);
