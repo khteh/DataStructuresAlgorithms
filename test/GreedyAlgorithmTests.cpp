@@ -128,3 +128,24 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(927, vector<size_t>{851, 183, 48, 473, 610, 678, 725, 87, 95, 50, 311, 258, 854}),
 					  make_tuple(1123, vector<size_t>{249, 666, 500, 101, 227, 85, 963, 681, 331, 119, 448, 587, 668, 398, 802}),
 					  make_tuple(5104, vector<size_t>{512, 125, 928, 381, 890, 90, 512, 789, 469, 473, 908, 990, 195, 763, 102, 643, 458, 366, 684, 857, 126, 534, 974, 875, 459, 892, 686, 373, 127, 297, 576, 991, 774, 856, 372, 664, 946, 237, 806, 767, 62, 714, 758, 258, 477, 860, 253, 287, 579, 289, 496})));
+class MaxAreaTestFixture : public GreedyAlgorithmFixture<size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_dataCollection1 = get<1>(GetParam());
+	}
+	size_t MaxAreaTest()
+	{
+		return _greedy.MaxArea(_dataCollection1);
+	}
+};
+TEST_P(MaxAreaTestFixture, MaxAreaTests)
+{
+	ASSERT_EQ(this->_expected, this->MaxAreaTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MaxAreaTests,
+	MaxAreaTestFixture,
+	::testing::Values(make_tuple(49, vector<size_t>{1, 8, 6, 2, 5, 4, 8, 3, 7}), make_tuple(1, vector<size_t>{1, 1}), make_tuple(24, vector<size_t>{1, 3, 2, 5, 25, 24, 5})));

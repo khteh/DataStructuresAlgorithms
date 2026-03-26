@@ -79,6 +79,28 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(2, vector<long>{1, 1, 2}),
 					  make_tuple(5, vector<long>{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}),
 					  make_tuple(5, vector<long>{-1, -1, -1, 2, 3, 3, 3, 4, 4, 5})));
+class TrapRainWaterTestFixture : public RangeTestFixture1<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	size_t TrapRainWaterTest()
+	{
+		return _rangeObj.TrapRainWater(_data);
+	}
+};
+TEST_P(TrapRainWaterTestFixture, TrapRainWaterTests)
+{
+	ASSERT_EQ(this->_expected, this->TrapRainWaterTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	TrapRainWaterTests,
+	TrapRainWaterTestFixture,
+	::testing::Values(make_tuple(6, vector<size_t>{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}),
+					  make_tuple(9, vector<size_t>{4, 2, 0, 3, 2, 5}),
+					  make_tuple(1, vector<size_t>{4, 2, 3}), make_tuple(1, vector<size_t>{5, 4, 1, 2})));
 
 class MaxAndPairTestFixture : public RangeTestFixture1<unsigned long long, unsigned long long>, public testing::TestWithParam<tuple<unsigned long long, vector<unsigned long long>>>
 {

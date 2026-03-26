@@ -1437,3 +1437,56 @@ unsigned long long Range::BeautifulQuadruples(size_t a, size_t b, size_t c, size
 			result += totalB[y] - cntB[y][y ^ z];
 	return result;
 }
+/*
+ * https://leetcode.com/problems/trapping-rain-water/
+ * 100%
+ */
+size_t Range::TrapRainWater(vector<size_t> const &walls)
+{
+	size_t result = 0;
+	cout << endl;
+	for (size_t i = 0; i < walls.size();)
+		if (walls[i] > 0)
+		{
+			// Cannot use lower_bound as the range is not sorted or properly partitioned.
+			vector<size_t>::const_iterator it = ranges::find_if(walls.begin() + i + 1, walls.end(), [&](const auto &value)
+																{ return value >= walls[i]; }); // Look for element >= walls[i]
+			if (it != walls.end())
+			{
+				size_t j = distance(walls.begin(), it);
+				for (size_t k = i + 1; k < j; k++)
+					result += walls[i] - walls[k];
+				i = j;
+			}
+			else
+			{
+				// [4,2,3]
+				bool found = false;
+				for (size_t h = walls[i] - 1; h > 0 && !found; h--)
+				{
+					cout << "i: " << i << " Searching for height: " << h << endl;
+					vector<size_t>::const_iterator it = ranges::find_if(walls.begin() + i + 1, walls.end(), [h](const auto &value)
+																		{ return value >= h; }); // Look for element >= h
+					if (it != walls.end())
+					{
+						size_t j = distance(walls.begin(), it);
+						for (size_t k = i + 1; k < j; k++)
+						{
+							cout << "(i,j,k): (" << i << "," << j << "," << k << ")" << " h: " << h << ", walls[k]: " << walls[k] << endl;
+							assert(h >= walls[k]);
+							result += h - walls[k];
+						}
+						i = j;
+						found = true;
+					}
+					else
+						cout << "Height " << h << " not found!" << endl;
+				}
+				if (!found)
+					i++;
+			}
+		}
+		else
+			i++;
+	return result;
+}

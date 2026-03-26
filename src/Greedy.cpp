@@ -5,7 +5,7 @@ template class Greedy<size_t>;
  * 100%
  */
 template <typename T>
-T Greedy<T>::MaxNonOverlappingSegments(vector<T> &head, vector<T> &tail)
+T Greedy<T>::MaxNonOverlappingSegments(vector<T> const &head, vector<T> const &tail)
 {
     size_t count = 0, last_nonoverlapping_tail;
     if (!head.empty() && !tail.empty() && head.size() == tail.size())
@@ -36,10 +36,10 @@ T Greedy<T>::MaxNonOverlappingSegments(vector<T> &head, vector<T> &tail)
  * {0,1,2},{3},{4,5,6}
  */
 template <typename T>
-T Greedy<T>::TieRopes(T n, vector<T> &data)
+T Greedy<T>::TieRopes(T n, vector<T> const &data)
 {
     size_t result = 0;
-    for (vector<size_t>::iterator it = data.begin(); it != data.end();)
+    for (vector<size_t>::const_iterator it = data.begin(); it != data.end();)
     {
         size_t sum = 0;
         for (; sum < n && it != data.end(); sum += *it++)
@@ -136,7 +136,7 @@ T Greedy<T>::MaxMin(T k, vector<T> &arr)
  * There are only 3 baselines: min value, min - 1, min - 2
  */
 template <typename T>
-T Greedy<T>::EqualDistribution(vector<T> &data)
+T Greedy<T>::EqualDistribution(vector<T> const &data)
 {
     size_t count = numeric_limits<size_t>::max();
     T minElement = *ranges::min_element(data);
@@ -152,4 +152,22 @@ T Greedy<T>::EqualDistribution(vector<T> &data)
         count = min(count, steps);
     }
     return count;
+}
+/*
+ * https://leetcode.com/problems/container-with-most-water/
+ * 100%
+ */
+template <typename T>
+T Greedy<T>::MaxArea(vector<T> const &heights)
+{
+    T result = 0;
+    for (size_t i = 0, j = heights.size() - 1; i < j;)
+    {
+        result = max(result, (j - i) * min(heights[i], heights[j]));
+        if (heights[i] < heights[j])
+            i++;
+        else
+            j--;
+    }
+    return result;
 }

@@ -6591,23 +6591,6 @@ size_t FindConnectedComponents(vector<long> &data)
 	return result - (count ? ((1 << count) - 1) : 0);
 }
 /*
- * https://leetcode.com/problems/container-with-most-water/
- * 100%
- */
-size_t MaxArea(vector<size_t> const &heights)
-{
-	size_t result = 0;
-	for (size_t i = 0, j = heights.size() - 1; i < j;)
-	{
-		result = max(result, (j - i) * min(heights[i], heights[j]));
-		if (heights[i] < heights[j])
-			i++;
-		else
-			j--;
-	}
-	return result;
-}
-/*
  * https://leetcode.com/problems/longest-common-prefix/
  * 100%
  */

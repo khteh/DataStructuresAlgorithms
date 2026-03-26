@@ -2250,16 +2250,6 @@ int main(int argc, char *argv[])
 	// Only works when long double has a size greater than 64 bits.
 	assert(ld > static_cast<long double>(numeric_limits<size_t>::max())); // Out of range
 #endif
-	udata.clear();
-	udata = {1, 8, 6, 2, 5, 4, 8, 3, 7};
-	assert(49 == MaxArea(udata));
-	udata.clear();
-	udata = {1, 1};
-	assert(1 == MaxArea(udata));
-	udata.clear();
-	udata = {1, 3, 2, 5, 25, 24, 5};
-	assert(24 == MaxArea(udata));
-
 	// The following checks and validates the next_permutation library functionality
 	udata.clear();
 	udata = {1, 2, 3};
@@ -2298,6 +2288,12 @@ int main(int argc, char *argv[])
 	udata1 = {1, 2, 3};
 	assert(!flag);
 	assert(udata1 == udata);
+
+	udata.clear();
+	udata = {5, 4};
+	vector<size_t>::const_iterator it1 = lower_bound(udata.begin() + 1, udata.end(), 4);
+	assert(it1 != udata.end());
+
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

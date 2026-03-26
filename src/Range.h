@@ -50,5 +50,6 @@ public:
 	size_t ChiefHopper(vector<size_t> const &);
 	size_t MaxClosestDistance(size_t, vector<size_t> &);
 	size_t LiveMedianCalculation(size_t, vector<size_t> const &);
-	long VectorSlicesSum(vector<long> const &data);
+	long VectorSlicesSum(vector<long> const &);
+	size_t TrapRainWater(vector<size_t> const &);
 };
