@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "LRUCache.h"
 template class LRUCache<long, long>;
-
+// https://leetcode.com/problems/lru-cache
 template <typename TKey, typename TValue>
 LRUCache<TKey, TValue>::LRUCache(size_t capacity)
     : _capacity(capacity)
@@ -10,6 +10,10 @@ LRUCache<TKey, TValue>::LRUCache(size_t capacity)
 template <typename TKey, typename TValue>
 void LRUCache<TKey, TValue>::RefreshCacheLine(TKey key)
 {
+    /*
+     * _entries: Front: Most recently used. Back: Least recently used
+     * _cache[key].first: list<TKey>::iterator
+     */
     _entries.erase(_cache[key].first);
     _entries.push_front(key);
     _cache[key].first = _entries.begin();

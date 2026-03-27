@@ -238,7 +238,8 @@ void WordsLadder(string const &, string const &, set<string> &, vector<string> &
 void trim(string &);
 size_t minDiffPairs(vector<long> &, long);
 string uncompress(string const &);
-size_t findLongestContiguousPattern(string &, char);
+size_t FindLongestContiguousPattern(string &, char);
+size_t LongestConsecutive(vector<size_t> &);
 string GetRange(vector<long> &);
 vector<vector<long>> MergeIntervals(vector<vector<long>> &);
 bool IsSparseNumber(long);

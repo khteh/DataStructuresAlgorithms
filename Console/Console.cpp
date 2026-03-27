@@ -437,15 +437,15 @@ int main(int argc, char *argv[])
 	assert(uncompress(str) == "ababcababcababc");
 	cout << "uncompress(" << quoted(str) << "): " << uncompress(str) << endl;
 	str = "0010110100";
-	size = findLongestContiguousPattern(str, '1');
+	size = FindLongestContiguousPattern(str, '1');
 	assert(size == 4);
 	assert(str == "0010111100");
-	cout << "findLongestContiguousPattern(\"0010110100\", \'1\'): " << str << " size: " << size << endl;
+	cout << "FindLongestContiguousPattern(\"0010110100\", \'1\'): " << str << " size: " << size << endl;
 	str = "00101101100";
-	size = findLongestContiguousPattern(str, '1');
+	size = FindLongestContiguousPattern(str, '1');
 	assert(size == 5);
 	assert(str == "00101111100");
-	cout << "findLongestContiguousPattern(\"00101101100\", \'1\'): " << str << " size: " << size << endl;
+	cout << "FindLongestContiguousPattern(\"00101101100\", \'1\'): " << str << " size: " << size << endl;
 
 	// Test C++ *& "pointer reference" construct
 	iPtr = (int *)malloc(10 * sizeof(int));

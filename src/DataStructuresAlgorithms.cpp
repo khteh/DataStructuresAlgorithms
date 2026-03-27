@@ -1105,7 +1105,7 @@ string uncompress(string const &str)
  "0010110100" => Length: 4
  "0010110110" => Length: 5
  */
-size_t findLongestContiguousPattern(string &str, char c)
+size_t FindLongestContiguousPattern(string &str, char c)
 {
 	size_t max = 0;
 	int index = -1;
@@ -1130,6 +1130,29 @@ size_t findLongestContiguousPattern(string &str, char c)
 	if (index > 0)
 		str[index] = c;
 	return max;
+}
+/*
+ * https://leetcode.com/problems/longest-consecutive-sequence/
+ * 100%
+ */
+size_t LongestConsecutive(vector<size_t> &nums)
+{
+	if (nums.empty())
+		return 0;
+	ranges::sort(nums);
+	size_t longest = 0, cnt = 1;
+	for (size_t i = 1; i < nums.size(); i++)
+	{
+		if (nums[i] == nums[i - 1] + 1)
+			cnt++;
+		else if (nums[i] != nums[i - 1])
+		{
+			if (cnt > longest)
+				longest = cnt;
+			cnt = 1;
+		}
+	}
+	return max(cnt, longest);
 }
 /*
  * dest:  {1,3,5,7,9,11,13,15}

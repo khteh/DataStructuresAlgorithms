@@ -221,16 +221,17 @@ void Sort<T>::Merge(vector<T> &source, vector<T> &dest, size_t start, size_t mid
 		 * Example:
 		 * width: 1
 		 * source: [0,2(R),1] dest: [] [start, middle, end] = [0,1,2)
-		 * left:0, right: 1, middle: 1, end: 2
+		 * left:0, middle: 1, right: 1, end: 2
 		 * dest[0] = 0, Take left. left == middle == 1
 		 * dest[1] = 2 (left == middle), Take right.
+		 *
 		 * source: [0,2,1] dest: [0,2] [start, middle, end] = [2,3,3)
-		 * left:2, right: 3, middle: 3, end: 3
+		 * left:2, middle: 3, right: 3, end: 3
 		 * dest[2] = 1 (right == end), Take left. left == middle == 3
 		 *
 		 * width: 2
 		 * source: [0,2,1(R)] dest: [0,2,1] [start, middle, end] = [0,2,3)
-		 * left:0, right: 2, middle: 2, end: 3
+		 * left:0, middle: 2, right: 2, end: 3
 		 * dest[0] = 0, Take left. left = 1
 		 * dest[1] = 1, Take right (1 < 2). right = 3 == end [Inversion count = right - i = 2 - 1 = 1]
 		 * dest[2] = 2, Take left (right == end). left = 2
@@ -305,18 +306,19 @@ void Sort<T>::BottomUpMergeSort(vector<T> &A, vector<T> &B)
 		// Array A is full of runs of length width.
 		// width: 1, i(+2): 0, 2, 4, 6, 8, 10
 		// width: 2, i(+4): 0, 4, 8, 12,16,20
-		for (size_t i = 0; i < A.size(); i += 2 * width)			  // Range of each Merge call. Total is O(N).
-																	  /* Merge two runs: A[i:i+width-1] and A[i+width:i+2*width-1] to B[]
-																	   * width: 1
-																	   *   i:0 Merge two runs: A[0:0] and A[1:1] to B[] [start, middle, end] : [0,1,2)
-																	   *   i:2 Merge two runs: A[2:2] and A[3:3] to B[] [start, middle, end] : [2,3,4)
-																	   *   i:4 Merge two runs: A[4:4] and A[5:5] to B[] [start, middle, end] : [4,5,6)
-																	   *  width: 2
-																	   *   i:0 Merge two runs: A[0:1] and A[2:3] to B[] [start, middle, end] : [0,2,4)
-																	   *   i:2 Merge two runs: A[2:3] and A[4:5] to B[] [start, middle, end] : [2,4,6)
-																	   *   i:4 Merge two runs: A[4:5] and A[6:7] to B[] [start, middle, end] : [4,6,8)
-																	   *  or copy A[i:n-1] to B[] ( if (i+width >= n) )
-																	   */
+		for (size_t i = 0; i < A.size(); i += 2 * width)
+			// Range of each Merge call. Total is O(N).
+			/* Merge two runs: A[i:i+width-1] and A[i+width:i+2*width-1] to B[]
+			 * width: 1
+			 *   i:0 Merge two runs: A[0:0] and A[1:1] to B[] [start, middle, end] : [0,1,2)
+			 *   i:2 Merge two runs: A[2:2] and A[3:3] to B[] [start, middle, end] : [2,3,4)
+			 *   i:4 Merge two runs: A[4:4] and A[5:5] to B[] [start, middle, end] : [4,5,6)
+			 * width: 2
+			 *   i:0 Merge two runs: A[0:1] and A[2:3] to B[] [start, middle, end] : [0,2,4)
+			 *   i:2 Merge two runs: A[2:3] and A[4:5] to B[] [start, middle, end] : [2,4,6)
+			 *   i:4 Merge two runs: A[4:5] and A[6:7] to B[] [start, middle, end] : [4,6,8)
+			 * or copy A[i:n-1] to B[] ( if (i+width >= n) )
+			 */
 			Merge(A, B, i, min(i + width, n), min(i + 2 * width, n)); // O(N)
 		// Now work array B is full of runs of length 2*width.
 		// Copy array B to array A for next iteration.
