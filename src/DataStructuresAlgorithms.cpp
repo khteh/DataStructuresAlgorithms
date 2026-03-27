@@ -3720,6 +3720,7 @@ size_t IncreasingSequences(vector<long> &a, vector<long> &b)
 	return outOfSequence ? -1 : min(swapRecord, fixRecord);
 }
 /*
+   https://leetcode.com/problems/longest-increasing-subsequence/
    https://www.hackerrank.com/challenges/longest-increasing-subsequent/problem
    100%
    https://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/
