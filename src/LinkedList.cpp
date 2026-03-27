@@ -256,6 +256,9 @@ shared_ptr<Node<T>> LinkedList<T>::RemoveHead()
  * startNode: Node before the reversed sublist
  * tail: Tail of the reversed sublist
  * head: head of the reversed sublist
+ *
+ * https://leetcode.com/problems/reverse-linked-list
+ * 100%
  */
 template <typename T>
 void LinkedList<T>::Reverse(size_t start, size_t end)
@@ -264,7 +267,7 @@ void LinkedList<T>::Reverse(size_t start, size_t end)
 	for (size_t i = 0; it && end > start && i <= end; i++, it = it->Next())
 	{
 		if (start > 0 && i == start - 1)
-			startNode = it;
+			startNode = it; // Node before the reversed sublist
 		if (i >= start)
 		{
 			if (!head)

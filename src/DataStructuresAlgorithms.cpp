@@ -2218,6 +2218,57 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 	}
 	return max;
 }
+/*
+ * https://leetcode.com/problems/number-of-islands/
+ * WIP
+ */
+size_t NumIslands(vector<vector<char>> &grid)
+{
+	size_t islands = 0;
+	set<char> pending;
+	char current = 0;
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[i].size(); j++)
+		{
+			if (grid[i][j] == '1')
+			{
+				if (!i && !j)
+					islands++;
+				else if (!i && grid[i][j - 1] == '0') // first row
+					islands++;
+				else if (!j && grid[i - 1][j] == '0')
+				{ // first col
+					if (j == grid[i].size() - 1 || grid[i][j + 1] == '0')
+					{
+						if (pending.count(current + 1))
+							current++;
+						islands++;
+					}
+					else
+					{
+						grid[i][j] = current;
+						pending.emplace(current);
+					}
+				}
+				else if (i > 0 && j > 0)
+				{
+					if (grid[i - 1][j] == '0' && grid[i][j - 1] == '0')
+					{
+						if (pending.count(current + 1))
+							current++;
+						islands++;
+					}
+					else if (grid[i][j - 1] == current)
+					{
+						pending.erase(current);
+						for (int k = j - 1; k >= 0 && grid[i][k] == current; k--)
+							grid[i][k] = '1'; // Put back the '1' so that the following row will be able to recognize it
+					}
+				}
+			}
+		}
+	return islands + pending.size();
+}
 /* https://leetcode.com/problems/word-search/
  * 100%
  */
@@ -3908,6 +3959,8 @@ void RotateRightArray(vector<int> &data, int n)
 /*
  * https://www.hackerrank.com/challenges/ctci-array-left-rotation/problem?
  * 100%
+ * 1 2 3 4 5, n = 2
+ * 3 4 5 1 2
  */
 vector<int> RotateLeftArray(vector<int> &a, int d)
 {

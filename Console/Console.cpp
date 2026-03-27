@@ -1261,30 +1261,33 @@ int main(int argc, char *argv[])
 	data.clear();
 	data = {0, 0, 0, 0, 1};
 	assert(findMinFlip(data) == 2);
-	vector<vector<char>> m = {
+	cgrid1.clear();
+	cgrid1 = {
 		{'R', 'G', 'R', 'B'},
 		{'R', 'Y', 'G', 'R'},
 		{'G', 'B', 'Y', 'Y'},
 		{'Y', 'G', 'B', 'G'},
 		{'B', 'R', 'Y', 'B'},
 	};
-	assert(IsValidMatrix(m));
-	vector<vector<char>> m1 = {
+	assert(IsValidMatrix(cgrid1));
+	cgrid1.clear();
+	cgrid1 = {
 		{'R', 'G', 'R', 'B'},
 		{'R', 'Y', 'G', 'R'},
 		{'G', 'B', 'B', 'B'},
 		{'Y', 'G', 'B', 'G'},
 		{'B', 'R', 'Y', 'B'},
 	};
-	assert(!IsValidMatrix(m1));
-	vector<vector<char>> m2 = {
+	assert(!IsValidMatrix(cgrid1));
+	cgrid1.clear();
+	cgrid1 = {
 		{'R', 'G', 'R', 'B'},
 		{'R', 'Y', 'G', 'R'},
 		{'G', 'B', 'G', 'Y'},
 		{'Y', 'G', 'G', 'G'},
 		{'B', 'R', 'Y', 'B'},
 	};
-	assert(!IsValidMatrix(m2));
+	assert(!IsValidMatrix(cgrid1));
 	a.clear();
 	a = {13, 2, 5};
 	stringset.clear();
@@ -2293,6 +2296,27 @@ int main(int argc, char *argv[])
 	udata = {5, 4};
 	vector<size_t>::const_iterator it1 = lower_bound(udata.begin() + 1, udata.end(), 4);
 	assert(it1 != udata.end());
+
+	cgrid1.clear();
+	cgrid1 = {
+		{'1', '1', '1', '1', '0'},
+		{'1', '1', '0', '1', '0'},
+		{'1', '1', '0', '0', '0'},
+		{'0', '0', '0', '0', '0'}};
+	assert(1 == NumIslands(cgrid1));
+
+	cgrid1.clear();
+	cgrid1 = {
+		{'1', '1', '0', '0', '0'},
+		{'1', '1', '0', '0', '0'},
+		{'0', '0', '1', '0', '0'},
+		{'0', '0', '0', '1', '1'}};
+	assert(3 == NumIslands(cgrid1));
+
+	cgrid1.clear();
+	cgrid1 = {
+		{'1', '0', '1', '1', '1'}, {'1', '0', '1', '0', '1'}, {'1', '1', '1', '0', '1'}};
+	// assert(1 == NumIslands(cgrid1)); WIP
 
 	/***** The End *****/
 	cout << "Press ENTER to exit";
