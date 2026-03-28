@@ -376,17 +376,71 @@ protected:
 	vector<vector<T2>> _grid;
 	T1 _expected;
 };
+class LargestGridCluster_BFSTestFixture : public ConnectedCellsInAGridTestFixture<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
+{
+public:
+	void SetUp() override
+	{
+		ConnectedCellsInAGridTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		_matrix = Matrix<long>(_grid, 1, 0);
+	}
+	size_t LargestGridCluster_BFSTest()
+	{
+		return _matrix.LargestGridCluster_BFS();
+	}
+};
+TEST_P(LargestGridCluster_BFSTestFixture, LargestGridCluster_BFSTests)
+{
+	ASSERT_EQ(this->_expected, this->LargestGridCluster_BFSTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LargestGridCluster_BFSTests,
+	LargestGridCluster_BFSTestFixture,
+	::testing::Values(make_tuple(5, vector<vector<long>>{{1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0}}),
+					  make_tuple(8, vector<vector<long>>{{0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}}),
+					  make_tuple(5, vector<vector<long>>{{1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1}}),
+					  make_tuple(15, vector<vector<long>>{{0, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 1, 0, 1, 0}, {0, 1, 0, 1, 1}, {0, 1, 1, 1, 0}}),
+					  make_tuple(9, vector<vector<long>>{{1, 1, 1, 0, 1}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 0}, {0, 1, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 1, 0}}),
+					  make_tuple(1, vector<vector<long>>{{1, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 0, 0, 1, 0, 0}})));
+
+class LargestGridCluster_DFSTestFixture : public ConnectedCellsInAGridTestFixture<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
+{
+public:
+	void SetUp() override
+	{
+		ConnectedCellsInAGridTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		_matrix = Matrix<long>(_grid, 1, 0);
+	}
+	size_t LargestGridCluster_DFSTest()
+	{
+		return _matrix.LargestGridCluster_DFS();
+	}
+};
+TEST_P(LargestGridCluster_DFSTestFixture, LargestGridCluster_DFSTests)
+{
+	ASSERT_EQ(this->_expected, this->LargestGridCluster_DFSTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LargestGridCluster_DFSTests,
+	LargestGridCluster_DFSTestFixture,
+	::testing::Values(make_tuple(5, vector<vector<long>>{{1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0}}),
+					  make_tuple(8, vector<vector<long>>{{0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}}),
+					  make_tuple(5, vector<vector<long>>{{1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1}}),
+					  make_tuple(15, vector<vector<long>>{{0, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 1, 0, 1, 0}, {0, 1, 0, 1, 1}, {0, 1, 1, 1, 0}}),
+					  make_tuple(9, vector<vector<long>>{{1, 1, 1, 0, 1}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 0}, {0, 1, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 1, 0}}),
+					  make_tuple(1, vector<vector<long>>{{1, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 0, 0, 1, 0, 0}})));
+
 class LargestGridCluster_LinkedList_BFSTestFixture : public ConnectedCellsInAGridTestFixture<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
 {
 public:
 	void SetUp() override
 	{
 		ConnectedCellsInAGridTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-		_matrix = Matrix<long>(1, 0);
+		_matrix = Matrix<long>(_grid, 1, 0);
 	}
 	size_t LargestGridCluster_LinkedList_BFSTest()
 	{
-		return _matrix.LargestGridCluster_LinkedList_BFS(_grid);
+		return _matrix.LargestGridCluster_LinkedList_BFS();
 	}
 };
 TEST_P(LargestGridCluster_LinkedList_BFSTestFixture, LargestGridCluster_LinkedList_BFSTests)
@@ -408,11 +462,11 @@ public:
 	void SetUp() override
 	{
 		ConnectedCellsInAGridTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-		_matrix = Matrix<long>(1, 0);
+		_matrix = Matrix<long>(_grid, 1, 0);
 	}
 	size_t LargestGridCluster_LinkedList_DFSTest()
 	{
-		return _matrix.LargestGridCluster_LinkedList_DFS(_grid);
+		return _matrix.LargestGridCluster_LinkedList_DFS();
 	}
 };
 TEST_P(LargestGridCluster_LinkedList_DFSTestFixture, LargestGridCluster_LinkedList_DFSTests)
@@ -434,11 +488,11 @@ public:
 	void SetUp() override
 	{
 		ConnectedCellsInAGridTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-		_matrix = Matrix<long>(1, 0);
+		_matrix = Matrix<long>(_grid, 1, 0);
 	}
 	size_t LargestGridCluster_DisjointSet_BFSTest()
 	{
-		return _matrix.LargestGridCluster_DisjointSet_BFS(_grid);
+		return _matrix.LargestGridCluster_DisjointSet_BFS();
 	}
 };
 TEST_P(LargestGridCluster_DisjointSet_BFSTestFixture, LargestGridCluster_DisjointSet_BFSTests)
@@ -460,11 +514,11 @@ public:
 	void SetUp() override
 	{
 		ConnectedCellsInAGridTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-		_matrix = Matrix<long>(1, 0);
+		_matrix = Matrix<long>(_grid, 1, 0);
 	}
 	size_t LargestGridCluster_DisjointSet_DFSTest()
 	{
-		return _matrix.LargestGridCluster_DisjointSet_DFS(_grid);
+		return _matrix.LargestGridCluster_DisjointSet_DFS();
 	}
 };
 TEST_P(LargestGridCluster_DisjointSet_DFSTestFixture, LargestGridCluster_DisjointSet_DFSTests)
@@ -486,12 +540,12 @@ class GridClusterCountBFSTestFixture : public ConnectedCellsInAGridTestFixture<s
 public:
 	void SetUp() override
 	{
-		_matrix = Matrix<char>('1', '0');
 		ConnectedCellsInAGridTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		_matrix = Matrix<char>(_grid, '1', '0');
 	}
 	size_t GridClusterCountBFSTest()
 	{
-		return _matrix.GridClusterCountBFS(_grid);
+		return _matrix.GridClusterCountBFS();
 	}
 };
 TEST_P(GridClusterCountBFSTestFixture, GridClusterCountBFSTests)
@@ -507,24 +561,18 @@ INSTANTIATE_TEST_SUITE_P(
 										{'1', '1', '0', '0', '0'},
 										{'0', '0', '0', '0', '0'}}),
 					  make_tuple(3, vector<vector<char>>{{'1', '1', '0', '0', '0'}, {'1', '1', '0', '0', '0'}, {'0', '0', '1', '0', '0'}, {'0', '0', '0', '1', '1'}}), make_tuple(1, vector<vector<char>>{{'1', '0', '1', '1', '1'}, {'1', '0', '1', '0', '1'}, {'1', '1', '1', '0', '1'}})));
-class GridClusterCountDFSTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<char>>>>
+class GridClusterCountDFSTestFixture : public ConnectedCellsInAGridTestFixture<size_t, char>, public testing::TestWithParam<tuple<size_t, vector<vector<char>>>>
 {
 public:
 	void SetUp() override
 	{
-		_matrix = Matrix<char>('1', '0');
-		_expected = get<0>(GetParam());
-		_data = get<1>(GetParam());
+		ConnectedCellsInAGridTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		_matrix = Matrix<char>(_grid, '1', '0');
 	}
 	size_t GridClusterCountDFSTest()
 	{
-		return _matrix.GridClusterCountDFS(_data);
+		return _matrix.GridClusterCountDFS();
 	}
-
-protected:
-	Matrix<char> _matrix;
-	vector<vector<char>> _data;
-	size_t _expected;
 };
 TEST_P(GridClusterCountDFSTestFixture, GridClusterCountDFSTests)
 {

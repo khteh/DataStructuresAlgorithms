@@ -8,14 +8,15 @@ class Matrix
 {
 private:
 	T _active, _inactive;
-	vector<vector<T>> _matrix;
-	size_t DisconnectCell(vector<vector<T>> &, size_t, size_t);
-	size_t DisconnectCellAllDirections_LinkedList(vector<vector<T>> &, size_t, size_t, shared_ptr<Node<string>> &);
-	size_t DisconnectCellAllDirections_DisjointSet(vector<vector<T>> &, T, size_t, size_t, DisJointSet<T> &, map<T, size_t> &);
+	vector<vector<T>> _grid;
+	size_t DisconnectCell(size_t, size_t);
+	size_t DisconnectCellAllDirections(size_t, size_t, set<string> &);
+	size_t DisconnectCellAllDirections_LinkedList(size_t, size_t, shared_ptr<Node<string>> &);
+	size_t DisconnectCellAllDirections_DisjointSet(T, size_t, size_t, DisJointSet<T> &, map<T, size_t> &);
 
 public:
 	Matrix();
-	Matrix(T, T);
+	Matrix(vector<vector<T>> &, T, T);
 	Matrix(vector<vector<T>> &);
 	void MatrixDistance(vector<vector<T>> &, size_t, size_t);
 	void MatrixSort(vector<vector<T>> &);
@@ -38,10 +39,12 @@ public:
 	vector<string> BomberMan(size_t, vector<string> const &);
 	T MaxQuadrantSum(vector<vector<T>> const &);
 	bool ContainersBallsSwap(vector<vector<T>> const &);
-	size_t LargestGridCluster_DisjointSet_BFS(vector<vector<T>> &);
-	size_t LargestGridCluster_DisjointSet_DFS(vector<vector<T>> &);
-	size_t LargestGridCluster_LinkedList_BFS(vector<vector<T>> &);
-	size_t LargestGridCluster_LinkedList_DFS(vector<vector<T>> &);
-	size_t GridClusterCountBFS(vector<vector<T>> &);
-	size_t GridClusterCountDFS(vector<vector<T>> &);
+	size_t LargestGridCluster_BFS();
+	size_t LargestGridCluster_DFS();
+	size_t LargestGridCluster_DisjointSet_BFS();
+	size_t LargestGridCluster_DisjointSet_DFS();
+	size_t LargestGridCluster_LinkedList_BFS();
+	size_t LargestGridCluster_LinkedList_DFS();
+	size_t GridClusterCountBFS();
+	size_t GridClusterCountDFS();
 };

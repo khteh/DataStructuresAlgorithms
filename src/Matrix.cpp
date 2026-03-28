@@ -7,7 +7,7 @@ template <typename T>
 Matrix<T>::Matrix() {}
 
 template <typename T>
-Matrix<T>::Matrix(T active, T inactive) : _active(active), _inactive(inactive) {}
+Matrix<T>::Matrix(vector<vector<T>> &grid, T active, T inactive) : _grid(grid), _active(active), _inactive(inactive) {}
 
 /*
 * Matrix area sum using bottom-up dynamic programming
@@ -31,18 +31,18 @@ https://www.youtube.com/watch?v=PwDqpOMwg6U
 */
 template <typename T>
 Matrix<T>::Matrix(vector<vector<T>> &matrix)
-	: _matrix(matrix.size(), vector<T>(matrix.empty() ? 0 : matrix[0].size())) // Defaults to zero initial value
+	: _grid(matrix.size(), vector<T>(matrix.empty() ? 0 : matrix[0].size())) // Defaults to zero initial value
 {
 	for (size_t i = 0; i < matrix.size(); i++)
 		for (size_t j = 0; j < matrix[i].size(); j++)
 		{
-			_matrix[i][j] = matrix[i][j];
+			_grid[i][j] = matrix[i][j];
 			if (i > 0)
-				_matrix[i][j] += _matrix[i - 1][j];
+				_grid[i][j] += _grid[i - 1][j];
 			if (j > 0)
-				_matrix[i][j] += _matrix[i][j - 1];
+				_grid[i][j] += _grid[i][j - 1];
 			if (i > 0 && j > 0)
-				_matrix[i][j] -= _matrix[i - 1][j - 1];
+				_grid[i][j] -= _grid[i - 1][j - 1];
 		}
 }
 // -1  0 -1
@@ -139,28 +139,28 @@ T Matrix<T>::MatrixPatternCount(vector<vector<T>> const &data)
 template <typename T>
 T Matrix<T>::Sum(vector<vector<size_t>> &area)
 {
-	if (_matrix.empty() || area.empty() || area.size() < 2 || area[0].size() < 2)
+	if (_grid.empty() || area.empty() || area.size() < 2 || area[0].size() < 2)
 		return 0;
 	size_t r1 = area[0][0], c1 = area[0][1], r2 = area[1][0], c2 = area[1][1];
-	if (r1 < 0 || c1 < 0 || r2 < 0 || c2 < 0 || r2 < r1 || c2 < c1 || r2 >= _matrix.size() || c2 >= _matrix[0].size())
+	if (r1 < 0 || c1 < 0 || r2 < 0 || c2 < 0 || r2 < r1 || c2 < c1 || r2 >= _grid.size() || c2 >= _grid[0].size())
 		return 0;
-	T sum = _matrix[r2][c2];
+	T sum = _grid[r2][c2];
 	if (r1 > 0)
-		sum -= _matrix[r1 - 1][c2];
+		sum -= _grid[r1 - 1][c2];
 	if (c1 > 0)
-		sum -= _matrix[r2][c1 - 1];
+		sum -= _grid[r2][c1 - 1];
 	if (r1 > 0 && c1 > 0)
-		sum += _matrix[r1 - 1][c1 - 1];
+		sum += _grid[r1 - 1][c1 - 1];
 	return sum;
 }
 template <typename T>
 T Matrix<T>::LargestSumSubmatrix(vector<vector<size_t>> &matrix)
 {
 	T sum = numeric_limits<T>::min();
-	for (size_t r1 = 0; r1 < _matrix.size(); r1++)
-		for (size_t r2 = r1; r2 < _matrix.size(); r2++)
-			for (size_t c1 = 0; c1 < _matrix[r1].size(); c1++)
-				for (size_t c2 = c1; c2 < _matrix[r2].size(); c2++)
+	for (size_t r1 = 0; r1 < _grid.size(); r1++)
+		for (size_t r2 = r1; r2 < _grid.size(); r2++)
+			for (size_t c1 = 0; c1 < _grid[r1].size(); c1++)
+				for (size_t c2 = c1; c2 < _grid[r2].size(); c2++)
 				{
 					vector<vector<size_t>> area = vector<vector<size_t>>{{r1, c1}, {r2, c2}};
 					T tmp = Sum(area);
@@ -1017,24 +1017,24 @@ bool Matrix<T>::ContainersBallsSwap(vector<vector<T>> const &containers)
 /*
  * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
  * 100%
- * This is more useful to check matching grids compared to using DisJointSet
  */
 template <typename T>
-size_t Matrix<T>::LargestGridCluster_LinkedList_BFS(vector<vector<T>> &grid)
+size_t Matrix<T>::LargestGridCluster_BFS()
 {
 	size_t result = 0;
+	set<set<string>> clusters; // This is useful to check matching grids
 	ostringstream location;
-	set<shared_ptr<LinkedList<string>>> clusters;
 	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
-	for (size_t i = 0; i < grid.size(); i++)
-		for (size_t j = 0; j < grid[0].size(); j++)
-			if (grid[i][j] == _active)
+	for (size_t i = 0; i < _grid.size(); i++)
+		for (size_t j = 0; j < _grid[0].size(); j++)
+			if (_grid[i][j] == _active)
 			{
+				set<string> cluster;
 				location.str("");
 				location << i << "," << j;
-				shared_ptr<Node<string>> node(make_shared<Node<string>>(location.str())), tail = node;
+				cluster.emplace(location.str());
 				size_t count = 1;
-				grid[i][j] = _inactive;
+				_grid[i][j] = _inactive;
 				queue<pair<size_t, size_t>> todo;
 				todo.emplace(i, j);
 				for (; !todo.empty();)
@@ -1044,22 +1044,113 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_BFS(vector<vector<T>> &grid)
 					for (size_t k = 0; k < steps.size() - 1; k++)
 					{
 						int r = cell.first + steps[k], c = cell.second + steps[k + 1];
-						if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 						{
 							location.str("");
 							location << r << "," << c;
-							shared_ptr<Node<string>> n(make_shared<Node<string>>(location.str()));
-							tail->SetNext(n);
-							tail = n;
+							cluster.emplace(location.str());
 							count++;
-							grid[r][c] = _inactive;
+							_grid[r][c] = _inactive;
 							todo.emplace(r, c);
 						}
 					}
 					for (size_t k = 0; k < diagonals.size() - 1; k++)
 					{
 						int r = cell.first + diagonals[k], c = cell.second + diagonals[k + 1];
-						if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
+						{
+							location.str("");
+							location << r << "," << c;
+							cluster.emplace(location.str());
+							count++;
+							_grid[r][c] = _inactive;
+							todo.emplace(r, c);
+						}
+					}
+				}
+				result = max(result, count);
+				clusters.emplace(cluster);
+			}
+	cout << clusters.size() << " clusters" << endl;
+	size_t max1 = 0;
+	for (set<set<string>>::iterator it = clusters.begin(); it != clusters.end(); it++)
+	{
+		cout << "cluster: ";
+		ranges::copy(*it, ostream_iterator<string>(cout, " "));
+		cout << endl;
+		// cout << "Length: " << (*it)->Length() << endl;
+		max1 = max(max1, it->size());
+	}
+	clusters.clear();
+	cout << "result: " << result << ", max1: " << max1 << endl;
+	assert(result == max1);
+	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+ * 100%
+ */
+template <typename T>
+size_t Matrix<T>::LargestGridCluster_DFS()
+{
+	size_t result = 0;
+	set<set<string>> clusters; // This is useful to check matching grids
+	ostringstream location;
+	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
+	for (size_t i = 0; i < _grid.size(); i++)
+		for (size_t j = 0; j < _grid[0].size(); j++)
+			if (_grid[i][j] == _active)
+			{
+				set<string> cluster;
+				result = max(result, DisconnectCellAllDirections(i, j, cluster));
+				clusters.emplace(cluster);
+			}
+	cout << clusters.size() << " clusters" << endl;
+	size_t max1 = 0;
+	for (set<set<string>>::iterator it = clusters.begin(); it != clusters.end(); it++)
+	{
+		cout << "cluster: ";
+		ranges::copy(*it, ostream_iterator<string>(cout, " "));
+		cout << endl;
+		// cout << "Length: " << (*it)->Length() << endl;
+		max1 = max(max1, it->size());
+	}
+	clusters.clear();
+	cout << "result: " << result << ", max1: " << max1 << endl;
+	assert(result == max1);
+	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+ * 100%
+ * This is more useful to check matching grids compared to using DisJointSet
+ */
+template <typename T>
+size_t Matrix<T>::LargestGridCluster_LinkedList_BFS()
+{
+	size_t result = 0;
+	ostringstream location;
+	set<shared_ptr<LinkedList<string>>> clusters;
+	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
+	for (size_t i = 0; i < _grid.size(); i++)
+		for (size_t j = 0; j < _grid[0].size(); j++)
+			if (_grid[i][j] == _active)
+			{
+				location.str("");
+				location << i << "," << j;
+				shared_ptr<Node<string>> node(make_shared<Node<string>>(location.str())), tail = node;
+				size_t count = 1;
+				_grid[i][j] = _inactive;
+				queue<pair<size_t, size_t>> todo;
+				todo.emplace(i, j);
+				for (; !todo.empty();)
+				{
+					pair<size_t, size_t> cell = todo.front();
+					todo.pop();
+					for (size_t k = 0; k < steps.size() - 1; k++)
+					{
+						int r = cell.first + steps[k], c = cell.second + steps[k + 1];
+						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 						{
 							location.str("");
 							location << r << "," << c;
@@ -1067,7 +1158,22 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_BFS(vector<vector<T>> &grid)
 							tail->SetNext(n);
 							tail = n;
 							count++;
-							grid[r][c] = _inactive;
+							_grid[r][c] = _inactive;
+							todo.emplace(r, c);
+						}
+					}
+					for (size_t k = 0; k < diagonals.size() - 1; k++)
+					{
+						int r = cell.first + diagonals[k], c = cell.second + diagonals[k + 1];
+						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
+						{
+							location.str("");
+							location << r << "," << c;
+							shared_ptr<Node<string>> n(make_shared<Node<string>>(location.str()));
+							tail->SetNext(n);
+							tail = n;
+							count++;
+							_grid[r][c] = _inactive;
 							todo.emplace(r, c);
 						}
 					}
@@ -1098,26 +1204,25 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_BFS(vector<vector<T>> &grid)
  * 100%
  */
 template <typename T>
-size_t Matrix<T>::LargestGridCluster_DisjointSet_BFS(vector<vector<T>> &grid)
+size_t Matrix<T>::LargestGridCluster_DisjointSet_BFS()
 {
-	vector<T> data(grid.size() * grid[0].size());
+	vector<T> data(_grid.size() * _grid[0].size());
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; });
 	DisJointSet<T> disjointSet(data);
-	size_t width = grid[0].size();
+	size_t width = _grid[0].size();
 	map<T, size_t> counts;
 	size_t result = 0, largest = 0;
 	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
-	for (size_t i = 0; i < grid.size(); i++)
-		for (size_t j = 0; j < grid[0].size(); j++)
-		{
-			if (grid[i][j] == _active)
+	for (size_t i = 0; i < _grid.size(); i++)
+		for (size_t j = 0; j < _grid[0].size(); j++)
+			if (_grid[i][j] == _active)
 			{
 				largest = 1; // This is needed
 				size_t count = 1;
 				T node = i * width + j + 1; // Node id is 1-based
 				T currentRoot = disjointSet.Find(node);
-				grid[i][j] = _inactive;
+				_grid[i][j] = _inactive;
 				queue<pair<size_t, size_t>> todo;
 				todo.emplace(i, j);
 				for (; !todo.empty();)
@@ -1127,10 +1232,10 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_BFS(vector<vector<T>> &grid)
 					for (size_t k = 0; k < steps.size() - 1; k++)
 					{
 						int r = cell.first + steps[k], c = cell.second + steps[k + 1];
-						if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 						{
 							count++;
-							grid[r][c] = _inactive;
+							_grid[r][c] = _inactive;
 							T neighbour = r * width + c + 1; // Node id is 1-based
 							T root = disjointSet.Union(node, neighbour);
 							if (root != numeric_limits<T>::min()) // If it was a new join
@@ -1153,10 +1258,10 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_BFS(vector<vector<T>> &grid)
 					for (size_t k = 0; k < diagonals.size() - 1; k++)
 					{
 						int r = cell.first + diagonals[k], c = cell.second + diagonals[k + 1];
-						if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 						{
 							count++;
-							grid[r][c] = _inactive;
+							_grid[r][c] = _inactive;
 							T neighbour = r * width + c + 1; // Node id is 1-based
 							T root = disjointSet.Union(node, neighbour);
 							if (root != numeric_limits<T>::min())
@@ -1179,7 +1284,6 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_BFS(vector<vector<T>> &grid)
 				}
 				result = max(result, count);
 			}
-		}
 	for (typename map<T, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
 	{
 		// cout << "Length: " << it->second << endl;
@@ -1187,7 +1291,7 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_BFS(vector<vector<T>> &grid)
 			largest = it->second;
 	}
 	assert(result == largest);
-	disjointSet.Print(data, grid[0].size());
+	disjointSet.Print(data, _grid[0].size());
 	map<T, vector<T>> sets;
 	disjointSet.GetSets(data, sets);
 	for (typename map<T, vector<T>>::const_iterator it = sets.begin(); it != sets.end(); it++)
@@ -1204,18 +1308,18 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_BFS(vector<vector<T>> &grid)
  * This is more useful to check matching grids compared to using DisJointSet
  */
 template <typename T>
-size_t Matrix<T>::LargestGridCluster_LinkedList_DFS(vector<vector<T>> &grid)
+size_t Matrix<T>::LargestGridCluster_LinkedList_DFS()
 {
 	size_t result = 0;
 	ostringstream location;
 	set<shared_ptr<LinkedList<string>>> clusters;
 	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
-	for (size_t i = 0; i < grid.size(); i++)
-		for (size_t j = 0; j < grid[0].size(); j++)
-			if (grid[i][j] == _active)
+	for (size_t i = 0; i < _grid.size(); i++)
+		for (size_t j = 0; j < _grid[0].size(); j++)
+			if (_grid[i][j] == _active)
 			{
 				shared_ptr<Node<string>> node(nullptr);
-				result = max(result, DisconnectCellAllDirections_LinkedList(grid, i, j, node));
+				result = max(result, DisconnectCellAllDirections_LinkedList(i, j, node));
 				shared_ptr<Node<string>> n = node;
 				for (; n && n->Previous(); n = n->Previous())
 					;
@@ -1244,24 +1348,24 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_DFS(vector<vector<T>> &grid)
  * 100%
  */
 template <typename T>
-size_t Matrix<T>::LargestGridCluster_DisjointSet_DFS(vector<vector<T>> &grid)
+size_t Matrix<T>::LargestGridCluster_DisjointSet_DFS()
 {
-	vector<T> data(grid.size() * grid[0].size());
+	vector<T> data(_grid.size() * _grid[0].size());
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; });
 	DisJointSet<T> disjointSet(data);
-	size_t width = grid[0].size();
+	size_t width = _grid[0].size();
 	map<T, size_t> counts;
 	size_t result = 0, largest = 0;
 	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
-	for (size_t i = 0; i < grid.size(); i++)
-		for (size_t j = 0; j < grid[0].size(); j++)
-			if (grid[i][j] == _active)
+	for (size_t i = 0; i < _grid.size(); i++)
+		for (size_t j = 0; j < _grid[0].size(); j++)
+			if (_grid[i][j] == _active)
 			{
 				largest = 1; // This is needed
 				size_t count = 1;
 				long node = i * width + j + 1; // Node id is 1-based
-				result = max(result, DisconnectCellAllDirections_DisjointSet(grid, node, i, j, disjointSet, counts));
+				result = max(result, DisconnectCellAllDirections_DisjointSet(node, i, j, disjointSet, counts));
 			}
 	for (typename map<T, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
 	{
@@ -1271,7 +1375,7 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_DFS(vector<vector<T>> &grid)
 	}
 	cout << "result: " << result << ", largest: " << largest << endl;
 	assert(result == largest);
-	disjointSet.Print(data, grid[0].size());
+	disjointSet.Print(data, _grid[0].size());
 	map<T, vector<T>> sets;
 	disjointSet.GetSets(data, sets);
 	for (typename map<T, vector<T>>::const_iterator it = sets.begin(); it != sets.end(); it++)
@@ -1288,16 +1392,16 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_DFS(vector<vector<T>> &grid)
  * Each time when see a '1', increment the counter and then erase all connected '1's using a queue.
  */
 template <typename T>
-size_t Matrix<T>::GridClusterCountBFS(vector<vector<T>> &grid)
+size_t Matrix<T>::GridClusterCountBFS()
 {
 	size_t clusters = 0;
 	vector<int> steps = {0, 1, 0, -1, 0};
-	for (size_t i = 0; i < grid.size(); i++)
-		for (size_t j = 0; j < grid[i].size(); j++)
-			if (grid[i][j] == _active)
+	for (size_t i = 0; i < _grid.size(); i++)
+		for (size_t j = 0; j < _grid[i].size(); j++)
+			if (_grid[i][j] == _active)
 			{
 				clusters++;
-				grid[i][j] = _inactive;
+				_grid[i][j] = _inactive;
 				queue<pair<size_t, size_t>> todo;
 				todo.emplace(i, j);
 				for (; !todo.empty();)
@@ -1307,9 +1411,9 @@ size_t Matrix<T>::GridClusterCountBFS(vector<vector<T>> &grid)
 					for (size_t k = 0; k < steps.size() - 1; k++)
 					{
 						int r = cell.first + steps[k], c = cell.second + steps[k + 1];
-						if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 						{
-							grid[r][c] = _inactive;
+							_grid[r][c] = _inactive;
 							todo.emplace(r, c);
 						}
 					}
@@ -1323,42 +1427,66 @@ size_t Matrix<T>::GridClusterCountBFS(vector<vector<T>> &grid)
  * Erase all connected cells using DFS
  */
 template <typename T>
-size_t Matrix<T>::GridClusterCountDFS(vector<vector<T>> &grid)
+size_t Matrix<T>::GridClusterCountDFS()
 {
 	size_t clusters = 0;
-	for (size_t i = 0; i < grid.size(); i++)
-		for (size_t j = 0; j < grid[i].size(); j++)
-			if (grid[i][j] == _active)
+	for (size_t i = 0; i < _grid.size(); i++)
+		for (size_t j = 0; j < _grid[i].size(); j++)
+			if (_grid[i][j] == _active)
 			{
 				clusters++;
-				DisconnectCell(grid, i, j);
+				DisconnectCell(i, j);
 			}
 	return clusters;
 }
 template <typename T>
-size_t Matrix<T>::DisconnectCell(vector<vector<T>> &grid, size_t r, size_t c)
+size_t Matrix<T>::DisconnectCell(size_t r, size_t c)
 {
 	size_t count = 0;
-	if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+	if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 	{
 		count++;
-		grid[r][c] = _inactive;
-		count += DisconnectCell(grid, r - 1, c);
-		count += DisconnectCell(grid, r + 1, c);
-		count += DisconnectCell(grid, r, c - 1);
-		count += DisconnectCell(grid, r, c + 1);
+		_grid[r][c] = _inactive;
+		count += DisconnectCell(r - 1, c);
+		count += DisconnectCell(r + 1, c);
+		count += DisconnectCell(r, c - 1);
+		count += DisconnectCell(r, c + 1);
 	}
 	return count;
 }
 template <typename T>
-size_t Matrix<T>::DisconnectCellAllDirections_LinkedList(vector<vector<T>> &grid, size_t r, size_t c, shared_ptr<Node<string>> &node)
+size_t Matrix<T>::DisconnectCellAllDirections(size_t r, size_t c, set<string> &cluster)
 {
 	size_t count = 0;
 	ostringstream location;
-	if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+	if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 	{
 		count++;
-		grid[r][c] = _inactive;
+		_grid[r][c] = _inactive;
+		location.str("");
+		location << r << "," << c;
+		cluster.emplace(location.str());
+		count += DisconnectCellAllDirections(r - 1, c, cluster);
+		count += DisconnectCellAllDirections(r + 1, c, cluster);
+		count += DisconnectCellAllDirections(r, c - 1, cluster);
+		count += DisconnectCellAllDirections(r, c + 1, cluster);
+		count += DisconnectCellAllDirections(r - 1, c - 1, cluster);
+		count += DisconnectCellAllDirections(r - 1, c + 1, cluster);
+		count += DisconnectCellAllDirections(r + 1, c - 1, cluster);
+		count += DisconnectCellAllDirections(r + -1, c + 1, cluster);
+	}
+	return count;
+}
+
+template <typename T>
+size_t Matrix<T>::DisconnectCellAllDirections_LinkedList(size_t r, size_t c, shared_ptr<Node<string>> &node)
+{
+	size_t count = 0;
+	ostringstream location;
+	if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
+	{
+		count++;
+		_grid[r][c] = _inactive;
 		location.str("");
 		location << r << "," << c;
 		shared_ptr<Node<string>> n(make_shared<Node<string>>(location.str()));
@@ -1368,26 +1496,26 @@ size_t Matrix<T>::DisconnectCellAllDirections_LinkedList(vector<vector<T>> &grid
 			n->SetPrevious(node);
 		}
 		node = n;
-		count += DisconnectCellAllDirections_LinkedList(grid, r - 1, c, node);
-		count += DisconnectCellAllDirections_LinkedList(grid, r + 1, c, node);
-		count += DisconnectCellAllDirections_LinkedList(grid, r, c - 1, node);
-		count += DisconnectCellAllDirections_LinkedList(grid, r, c + 1, node);
-		count += DisconnectCellAllDirections_LinkedList(grid, r - 1, c - 1, node);
-		count += DisconnectCellAllDirections_LinkedList(grid, r - 1, c + 1, node);
-		count += DisconnectCellAllDirections_LinkedList(grid, r + 1, c - 1, node);
-		count += DisconnectCellAllDirections_LinkedList(grid, r + -1, c + 1, node);
+		count += DisconnectCellAllDirections_LinkedList(r - 1, c, node);
+		count += DisconnectCellAllDirections_LinkedList(r + 1, c, node);
+		count += DisconnectCellAllDirections_LinkedList(r, c - 1, node);
+		count += DisconnectCellAllDirections_LinkedList(r, c + 1, node);
+		count += DisconnectCellAllDirections_LinkedList(r - 1, c - 1, node);
+		count += DisconnectCellAllDirections_LinkedList(r - 1, c + 1, node);
+		count += DisconnectCellAllDirections_LinkedList(r + 1, c - 1, node);
+		count += DisconnectCellAllDirections_LinkedList(r + -1, c + 1, node);
 	}
 	return count;
 }
 template <typename T>
-size_t Matrix<T>::DisconnectCellAllDirections_DisjointSet(vector<vector<T>> &grid, T neighbour, size_t r, size_t c, DisJointSet<T> &disjointSet, map<T, size_t> &counts)
+size_t Matrix<T>::DisconnectCellAllDirections_DisjointSet(T neighbour, size_t r, size_t c, DisJointSet<T> &disjointSet, map<T, size_t> &counts)
 {
 	size_t count = 0;
-	size_t width = grid[0].size();
-	if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+	size_t width = _grid[0].size();
+	if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 	{
 		count++;
-		grid[r][c] = _inactive;
+		_grid[r][c] = _inactive;
 		T currentRoot = disjointSet.Find(neighbour);
 		T node = r * width + c + 1; // Node id is 1-based
 		if (node != neighbour)
@@ -1408,14 +1536,14 @@ size_t Matrix<T>::DisconnectCellAllDirections_DisjointSet(vector<vector<T>> &gri
 				}
 			}
 		}
-		count += DisconnectCellAllDirections_DisjointSet(grid, node, r - 1, c, disjointSet, counts);
-		count += DisconnectCellAllDirections_DisjointSet(grid, node, r + 1, c, disjointSet, counts);
-		count += DisconnectCellAllDirections_DisjointSet(grid, node, r, c - 1, disjointSet, counts);
-		count += DisconnectCellAllDirections_DisjointSet(grid, node, r, c + 1, disjointSet, counts);
-		count += DisconnectCellAllDirections_DisjointSet(grid, node, r - 1, c - 1, disjointSet, counts);
-		count += DisconnectCellAllDirections_DisjointSet(grid, node, r - 1, c + 1, disjointSet, counts);
-		count += DisconnectCellAllDirections_DisjointSet(grid, node, r + 1, c - 1, disjointSet, counts);
-		count += DisconnectCellAllDirections_DisjointSet(grid, node, r + -1, c + 1, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(node, r - 1, c, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(node, r + 1, c, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(node, r, c - 1, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(node, r, c + 1, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(node, r - 1, c - 1, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(node, r - 1, c + 1, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(node, r + 1, c - 1, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(node, r + -1, c + 1, disjointSet, counts);
 	}
 	return count;
 }
