@@ -376,36 +376,6 @@ protected:
 	vector<vector<T2>> _grid;
 	T1 _expected;
 };
-#if 0
-class ConnectedCellsInAGridTestFixture
-{
-public:
-public:
-	void SetUp(T expected, T var1, T var2)
-	{
-		_expected = expected;
-		_var1 = var1;
-		_var2 = var2;
-	}
-
-protected:
-	Matrix<long> _matrix;
-	size_t _expected;
-};
-TEST_P(ConnectedCellsInAGridTestFixture, ConnectedCellsInAGridTests)
-{
-	ASSERT_EQ(this->_expected, this->ConnectedCellsInAGridTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	ConnectedCellsInAGridTests,
-	ConnectedCellsInAGridTestFixture,
-	::testing::Values(make_tuple(5, vector<vector<long>>{{1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0}}),
-					  make_tuple(8, vector<vector<long>>{{0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}}),
-					  make_tuple(5, vector<vector<long>>{{1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1}}),
-					  make_tuple(15, vector<vector<long>>{{0, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 1, 0, 1, 0}, {0, 1, 0, 1, 1}, {0, 1, 1, 1, 0}}),
-					  make_tuple(9, vector<vector<long>>{{1, 1, 1, 0, 1}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 0}, {0, 1, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 1, 0}}),
-					  make_tuple(1, vector<vector<long>>{{1, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 0, 0, 1, 0, 0}})));
-#endif
 class LargestGridCluster_LinkedList_BFSTestFixture : public ConnectedCellsInAGridTestFixture<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
 {
 public:
@@ -452,6 +422,58 @@ TEST_P(LargestGridCluster_LinkedList_DFSTestFixture, LargestGridCluster_LinkedLi
 INSTANTIATE_TEST_SUITE_P(
 	LargestGridCluster_LinkedList_DFSTests,
 	LargestGridCluster_LinkedList_DFSTestFixture,
+	::testing::Values(make_tuple(5, vector<vector<long>>{{1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0}}),
+					  make_tuple(8, vector<vector<long>>{{0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}}),
+					  make_tuple(5, vector<vector<long>>{{1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1}}),
+					  make_tuple(15, vector<vector<long>>{{0, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 1, 0, 1, 0}, {0, 1, 0, 1, 1}, {0, 1, 1, 1, 0}}),
+					  make_tuple(9, vector<vector<long>>{{1, 1, 1, 0, 1}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 0}, {0, 1, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 1, 0}}),
+					  make_tuple(1, vector<vector<long>>{{1, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 0, 0, 1, 0, 0}})));
+class LargestGridCluster_DisjointSet_BFSTestFixture : public ConnectedCellsInAGridTestFixture<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
+{
+public:
+	void SetUp() override
+	{
+		ConnectedCellsInAGridTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		_matrix = Matrix<long>(1, 0);
+	}
+	size_t LargestGridCluster_DisjointSet_BFSTest()
+	{
+		return _matrix.LargestGridCluster_DisjointSet_BFS(_grid);
+	}
+};
+TEST_P(LargestGridCluster_DisjointSet_BFSTestFixture, LargestGridCluster_DisjointSet_BFSTests)
+{
+	ASSERT_EQ(this->_expected, this->LargestGridCluster_DisjointSet_BFSTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LargestGridCluster_DisjointSet_BFSTests,
+	LargestGridCluster_DisjointSet_BFSTestFixture,
+	::testing::Values(make_tuple(5, vector<vector<long>>{{1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0}}),
+					  make_tuple(8, vector<vector<long>>{{0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}}),
+					  make_tuple(5, vector<vector<long>>{{1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1}}),
+					  make_tuple(15, vector<vector<long>>{{0, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 1, 0, 1, 0}, {0, 1, 0, 1, 1}, {0, 1, 1, 1, 0}}),
+					  make_tuple(9, vector<vector<long>>{{1, 1, 1, 0, 1}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 0}, {0, 1, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 1, 0}}),
+					  make_tuple(1, vector<vector<long>>{{1, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 0, 0, 1, 0, 0}})));
+class LargestGridCluster_DisjointSet_DFSTestFixture : public ConnectedCellsInAGridTestFixture<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
+{
+public:
+	void SetUp() override
+	{
+		ConnectedCellsInAGridTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		_matrix = Matrix<long>(1, 0);
+	}
+	size_t LargestGridCluster_DisjointSet_DFSTest()
+	{
+		return _matrix.LargestGridCluster_DisjointSet_DFS(_grid);
+	}
+};
+TEST_P(LargestGridCluster_DisjointSet_DFSTestFixture, LargestGridCluster_DisjointSet_DFSTests)
+{
+	ASSERT_EQ(this->_expected, this->LargestGridCluster_DisjointSet_DFSTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LargestGridCluster_DisjointSet_DFSTests,
+	LargestGridCluster_DisjointSet_DFSTestFixture,
 	::testing::Values(make_tuple(5, vector<vector<long>>{{1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0}}),
 					  make_tuple(8, vector<vector<long>>{{0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}}),
 					  make_tuple(5, vector<vector<long>>{{1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1}}),

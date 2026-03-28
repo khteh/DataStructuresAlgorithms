@@ -1017,147 +1017,6 @@ bool Matrix<T>::ContainersBallsSwap(vector<vector<T>> const &containers)
 /*
  * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
  * 100%
- */
-template <typename T>
-size_t Matrix<T>::ConnectedCellsInAGrid(vector<vector<T>> &grid)
-{
-	vector<T> data(grid.size() * grid[0].size());
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
-	DisJointSet<T> disjointSet(data);
-	size_t width = grid[0].size();
-	map<T, size_t> counts;
-	size_t max = 0;
-	for (size_t i = 0; i < grid.size(); i++)
-		for (size_t j = 0; j < grid[0].size(); j++)
-		{
-			if (grid[i][j] == _active)
-			{
-				max = 1; // This is needed
-				long node = i * width + j + 1;
-				T currentRoot = disjointSet.Find(node);
-				// Upper Left
-				if (i > 0 && j > 0 && grid[i - 1][j - 1] == _active)
-				{
-					long neighbour = (i - 1) * width + j;
-					T root = disjointSet.Union(node, neighbour);
-					if (root != numeric_limits<T>::min())
-					{
-						if (root != currentRoot && counts.count(currentRoot))
-						{ // Existing disjoint set with more than one element
-							counts[root] += counts[currentRoot];
-							counts.erase(currentRoot);
-						}
-						else
-						{ // Single-element set
-							pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
-							if (!result.second)
-								counts[root]++;
-						}
-					}
-				}
-				// Up
-				if (i > 0 && grid[i - 1][j] == _active)
-				{
-					long neighbour = (i - 1) * width + j + 1;
-					T root = disjointSet.Union(node, neighbour);
-					if (root != numeric_limits<T>::min())
-					{
-						if (root != currentRoot && counts.count(currentRoot))
-						{ // Existing disjoint set with more than one element
-							counts[root] += counts[currentRoot];
-							counts.erase(currentRoot);
-						}
-						else
-						{ // Single-element set
-							pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
-							if (!result.second)
-								counts[root]++;
-						}
-					}
-				}
-				// Upper Right
-				if (i > 0 && j < grid[0].size() - 1 && grid[i - 1][j + 1] == _active)
-				{
-					long neighbour = (i - 1) * width + j + 2;
-					T root = disjointSet.Union(node, neighbour);
-					if (root != numeric_limits<T>::min())
-					{
-						if (root != currentRoot && counts.count(currentRoot))
-						{ // Existing disjoint set with more than one element
-							counts[root] += counts[currentRoot];
-							counts.erase(currentRoot);
-						}
-						else
-						{ // Single-element set
-							pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
-							if (!result.second)
-								counts[root]++;
-						}
-					}
-				}
-				// Left
-				if (j > 0 && grid[i][j - 1] == _active)
-				{
-					long neighbour = i * width + j;
-					T root = disjointSet.Union(node, neighbour);
-					if (root != numeric_limits<T>::min())
-					{
-						if (root != currentRoot && counts.count(currentRoot))
-						{ // Existing disjoint set with more than one element
-							counts[root] += counts[currentRoot];
-							counts.erase(currentRoot);
-						}
-						else
-						{ // Single-element set
-							pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
-							if (!result.second)
-								counts[root]++;
-						}
-					}
-				}
-				// Right
-				if (j < grid[0].size() - 1 && grid[i][j + 1] == _active)
-				{
-					long neighbour = i * width + j + 2;
-					T root = disjointSet.Union(node, neighbour);
-					if (root != numeric_limits<T>::min())
-					{
-						if (root != currentRoot && counts.count(currentRoot))
-						{ // Existing disjoint set with more than one element
-							counts[root] += counts[currentRoot];
-							counts.erase(currentRoot);
-						}
-						else
-						{ // Single-element set
-							pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
-							if (!result.second)
-								counts[root]++;
-						}
-					}
-				}
-			} // if (grid[i][j] == _active) {
-		} // for (size_t j = 0; j < grid[0].size(); j++) {
-	for (typename map<T, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
-	{
-		// cout << "Length: " << it->second << endl;
-		if (it->second > max)
-			max = it->second;
-	}
-	disjointSet.Print(data, grid[0].size());
-	map<T, vector<T>> sets;
-	disjointSet.GetSets(data, sets);
-	for (typename map<T, vector<T>>::const_iterator it = sets.begin(); it != sets.end(); it++)
-	{
-		cout << it->first << ": ";
-		ranges::copy(it->second, ostream_iterator<long>(cout, " "));
-		cout << endl;
-	}
-	return max;
-}
-/*
- * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
- * 100%
  * This is more useful to check matching grids compared to using DisJointSet
  */
 template <typename T>
@@ -1237,6 +1096,111 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_BFS(vector<vector<T>> &grid)
 /*
  * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
  * 100%
+ */
+template <typename T>
+size_t Matrix<T>::LargestGridCluster_DisjointSet_BFS(vector<vector<T>> &grid)
+{
+	vector<T> data(grid.size() * grid[0].size());
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
+	DisJointSet<T> disjointSet(data);
+	size_t width = grid[0].size();
+	map<T, size_t> counts;
+	size_t result = 0, largest = 0;
+	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[0].size(); j++)
+		{
+			if (grid[i][j] == _active)
+			{
+				largest = 1; // This is needed
+				size_t count = 1;
+				T node = i * width + j + 1; // Node id is 1-based
+				T currentRoot = disjointSet.Find(node);
+				grid[i][j] = _inactive;
+				queue<pair<size_t, size_t>> todo;
+				todo.emplace(i, j);
+				for (; !todo.empty();)
+				{
+					pair<size_t, size_t> cell = todo.front();
+					todo.pop();
+					for (size_t k = 0; k < steps.size() - 1; k++)
+					{
+						int r = cell.first + steps[k], c = cell.second + steps[k + 1];
+						if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+						{
+							count++;
+							grid[r][c] = _inactive;
+							T neighbour = r * width + c + 1; // Node id is 1-based
+							T root = disjointSet.Union(node, neighbour);
+							if (root != numeric_limits<T>::min()) // If it was a new join
+							{
+								if (root != currentRoot && counts.count(currentRoot))
+								{ // Existing disjoint set with more than one element
+									counts[root] += counts[currentRoot];
+									counts.erase(currentRoot);
+								}
+								else
+								{ // Single-element set
+									pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
+									if (!result.second)
+										counts[root]++;
+								}
+							}
+							todo.emplace(r, c);
+						}
+					}
+					for (size_t k = 0; k < diagonals.size() - 1; k++)
+					{
+						int r = cell.first + diagonals[k], c = cell.second + diagonals[k + 1];
+						if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+						{
+							count++;
+							grid[r][c] = _inactive;
+							T neighbour = r * width + c + 1; // Node id is 1-based
+							T root = disjointSet.Union(node, neighbour);
+							if (root != numeric_limits<T>::min())
+							{
+								if (root != currentRoot && counts.count(currentRoot))
+								{ // Existing disjoint set with more than one element
+									counts[root] += counts[currentRoot];
+									counts.erase(currentRoot);
+								}
+								else
+								{ // Single-element set
+									pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
+									if (!result.second)
+										counts[root]++;
+								}
+							}
+							todo.emplace(r, c);
+						}
+					}
+				}
+				result = max(result, count);
+			}
+		}
+	for (typename map<T, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+	{
+		// cout << "Length: " << it->second << endl;
+		if (it->second > largest)
+			largest = it->second;
+	}
+	assert(result == largest);
+	disjointSet.Print(data, grid[0].size());
+	map<T, vector<T>> sets;
+	disjointSet.GetSets(data, sets);
+	for (typename map<T, vector<T>>::const_iterator it = sets.begin(); it != sets.end(); it++)
+	{
+		cout << it->first << ": ";
+		ranges::copy(it->second, ostream_iterator<T>(cout, " "));
+		cout << endl;
+	}
+	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+ * 100%
  * This is more useful to check matching grids compared to using DisJointSet
  */
 template <typename T>
@@ -1251,7 +1215,7 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_DFS(vector<vector<T>> &grid)
 			if (grid[i][j] == _active)
 			{
 				shared_ptr<Node<string>> node(nullptr);
-				result = max(result, DisconnectCellAllDirections(grid, i, j, node));
+				result = max(result, DisconnectCellAllDirections_LinkedList(grid, i, j, node));
 				shared_ptr<Node<string>> n = node;
 				for (; n && n->Previous(); n = n->Previous())
 					;
@@ -1273,6 +1237,49 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_DFS(vector<vector<T>> &grid)
 	clusters.clear();
 	cout << "result: " << result << ", max1: " << max1 << endl;
 	assert(result == max1);
+	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+ * 100%
+ */
+template <typename T>
+size_t Matrix<T>::LargestGridCluster_DisjointSet_DFS(vector<vector<T>> &grid)
+{
+	vector<T> data(grid.size() * grid[0].size());
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
+	DisJointSet<T> disjointSet(data);
+	size_t width = grid[0].size();
+	map<T, size_t> counts;
+	size_t result = 0, largest = 0;
+	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[0].size(); j++)
+			if (grid[i][j] == _active)
+			{
+				largest = 1; // This is needed
+				size_t count = 1;
+				long node = i * width + j + 1; // Node id is 1-based
+				result = max(result, DisconnectCellAllDirections_DisjointSet(grid, node, i, j, disjointSet, counts));
+			}
+	for (typename map<T, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+	{
+		// cout << "Length: " << it->second << endl;
+		if (it->second > largest)
+			largest = it->second;
+	}
+	cout << "result: " << result << ", largest: " << largest << endl;
+	assert(result == largest);
+	disjointSet.Print(data, grid[0].size());
+	map<T, vector<T>> sets;
+	disjointSet.GetSets(data, sets);
+	for (typename map<T, vector<T>>::const_iterator it = sets.begin(); it != sets.end(); it++)
+	{
+		cout << it->first << ": ";
+		ranges::copy(it->second, ostream_iterator<long>(cout, " "));
+		cout << endl;
+	}
 	return result;
 }
 /*
@@ -1344,7 +1351,7 @@ size_t Matrix<T>::DisconnectCell(vector<vector<T>> &grid, size_t r, size_t c)
 	return count;
 }
 template <typename T>
-size_t Matrix<T>::DisconnectCellAllDirections(vector<vector<T>> &grid, size_t r, size_t c, shared_ptr<Node<string>> &node)
+size_t Matrix<T>::DisconnectCellAllDirections_LinkedList(vector<vector<T>> &grid, size_t r, size_t c, shared_ptr<Node<string>> &node)
 {
 	size_t count = 0;
 	ostringstream location;
@@ -1361,14 +1368,54 @@ size_t Matrix<T>::DisconnectCellAllDirections(vector<vector<T>> &grid, size_t r,
 			n->SetPrevious(node);
 		}
 		node = n;
-		count += DisconnectCellAllDirections(grid, r - 1, c, node);
-		count += DisconnectCellAllDirections(grid, r + 1, c, node);
-		count += DisconnectCellAllDirections(grid, r, c - 1, node);
-		count += DisconnectCellAllDirections(grid, r, c + 1, node);
-		count += DisconnectCellAllDirections(grid, r - 1, c - 1, node);
-		count += DisconnectCellAllDirections(grid, r - 1, c + 1, node);
-		count += DisconnectCellAllDirections(grid, r + 1, c - 1, node);
-		count += DisconnectCellAllDirections(grid, r + -1, c + 1, node);
+		count += DisconnectCellAllDirections_LinkedList(grid, r - 1, c, node);
+		count += DisconnectCellAllDirections_LinkedList(grid, r + 1, c, node);
+		count += DisconnectCellAllDirections_LinkedList(grid, r, c - 1, node);
+		count += DisconnectCellAllDirections_LinkedList(grid, r, c + 1, node);
+		count += DisconnectCellAllDirections_LinkedList(grid, r - 1, c - 1, node);
+		count += DisconnectCellAllDirections_LinkedList(grid, r - 1, c + 1, node);
+		count += DisconnectCellAllDirections_LinkedList(grid, r + 1, c - 1, node);
+		count += DisconnectCellAllDirections_LinkedList(grid, r + -1, c + 1, node);
+	}
+	return count;
+}
+template <typename T>
+size_t Matrix<T>::DisconnectCellAllDirections_DisjointSet(vector<vector<T>> &grid, T neighbour, size_t r, size_t c, DisJointSet<T> &disjointSet, map<T, size_t> &counts)
+{
+	size_t count = 0;
+	size_t width = grid[0].size();
+	if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+	{
+		count++;
+		grid[r][c] = _inactive;
+		T currentRoot = disjointSet.Find(neighbour);
+		T node = r * width + c + 1; // Node id is 1-based
+		if (node != neighbour)
+		{
+			T root = disjointSet.Union(node, neighbour);
+			if (root != numeric_limits<T>::min())
+			{
+				if (root != currentRoot && counts.count(currentRoot))
+				{ // Existing disjoint set with more than one element
+					counts[root] += counts[currentRoot];
+					counts.erase(currentRoot);
+				}
+				else
+				{ // Single-element set
+					pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
+					if (!result.second)
+						counts[root]++;
+				}
+			}
+		}
+		count += DisconnectCellAllDirections_DisjointSet(grid, node, r - 1, c, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(grid, node, r + 1, c, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(grid, node, r, c - 1, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(grid, node, r, c + 1, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(grid, node, r - 1, c - 1, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(grid, node, r - 1, c + 1, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(grid, node, r + 1, c - 1, disjointSet, counts);
+		count += DisconnectCellAllDirections_DisjointSet(grid, node, r + -1, c + 1, disjointSet, counts);
 	}
 	return count;
 }
