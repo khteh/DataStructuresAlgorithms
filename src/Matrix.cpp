@@ -1017,201 +1017,6 @@ bool Matrix<T>::ContainersBallsSwap(vector<vector<T>> const &containers)
 /*
  * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
  * 100%
- * This is more useful to check matching grids compared to using DisJointSet
- */
-template <typename T>
-size_t Matrix<T>::ConnectedCellsInAGridLinkedList(vector<vector<T>> &grid)
-{
-	map<string, shared_ptr<Node<string>>> nodes;
-	set<shared_ptr<LinkedList<string>>> clusters;
-	ostringstream location, oss;
-	for (size_t i = 0; i < grid.size(); i++)
-		for (size_t j = 0; j < grid[0].size(); j++)
-		{
-			if (grid[i][j] == _active)
-			{
-				location.str("");
-				location << i << "," << j;
-				// Node<string>* node = new Node<string>(location.str());
-				shared_ptr<Node<string>> node(make_shared<Node<string>>(location.str()));
-				// nodes[location.str()] = shared_ptr<Node<string>>(node);
-				nodes[location.str()] = node;
-				shared_ptr<Node<string>> parent = nullptr;
-				set<shared_ptr<LinkedList<string>>> joins;
-				bool skip = false;
-				// Upper Left
-				if (i > 0 && j > 0 && grid[i - 1][j - 1] == _active)
-				{
-					oss.str("");
-					oss << i - 1 << "," << j - 1;
-					parent = nodes[oss.str()];
-					if (parent)
-					{
-						shared_ptr<Node<string>> tail = nullptr;
-						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++)
-						{
-							shared_ptr<Node<string>> head = (*it)->Find(*parent);
-							if (head)
-							{
-								tail = (*it)->Tail();
-								if (tail)
-									joins.emplace(*it);
-							}
-						}
-						if (!skip && tail)
-						{
-							tail->SetNext(node);
-							// continue;
-							skip = true;
-						}
-					}
-				}
-				// Up
-				if (i > 0 && grid[i - 1][j] == _active)
-				{
-					oss.str("");
-					oss << i - 1 << "," << j;
-					parent = nodes[oss.str()];
-					if (parent)
-					{
-						shared_ptr<Node<string>> tail = nullptr;
-						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++)
-						{
-							shared_ptr<Node<string>> head = (*it)->Find(*parent);
-							if (head)
-							{
-								tail = (*it)->Tail();
-								if (tail)
-									joins.emplace(*it);
-							}
-						}
-						if (!skip && tail)
-						{
-							tail->SetNext(node);
-							// continue;
-							skip = true;
-						}
-					}
-				}
-				// Upper Right
-				if (i > 0 && j < grid[0].size() - 1 && grid[i - 1][j + 1] == _active)
-				{
-					oss.str("");
-					oss << i - 1 << "," << j + 1;
-					parent = nodes[oss.str()];
-					if (parent)
-					{
-						shared_ptr<Node<string>> tail = nullptr;
-						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++)
-						{
-							shared_ptr<Node<string>> head = (*it)->Find(*parent);
-							if (head)
-							{
-								tail = (*it)->Tail();
-								if (tail)
-									joins.emplace(*it);
-							}
-						}
-						if (!skip && tail)
-						{
-							tail->SetNext(node);
-							// continue;
-							skip = true;
-						}
-					}
-				}
-				// Left
-				if (j > 0 && grid[i][j - 1] == _active)
-				{
-					oss.str("");
-					oss << i << "," << j - 1;
-					parent = nodes[oss.str()];
-					if (parent)
-					{
-						shared_ptr<Node<string>> tail = nullptr;
-						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++)
-						{
-							shared_ptr<Node<string>> head = (*it)->Find(*parent);
-							if (head)
-							{
-								tail = (*it)->Tail();
-								if (tail)
-									joins.emplace(*it);
-							}
-						}
-						if (!skip && tail)
-						{
-							tail->SetNext(node);
-							// continue;
-							skip = true;
-						}
-					}
-				}
-				// Right
-				if (j < grid[0].size() - 1 && grid[i][j + 1] == _active)
-				{
-					oss.str("");
-					oss << i << "," << j + 1;
-					parent = nodes[oss.str()];
-					if (parent)
-					{
-						shared_ptr<Node<string>> tail = nullptr;
-						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++)
-						{
-							shared_ptr<Node<string>> head = (*it)->Find(*parent);
-							if (head)
-							{
-								tail = (*it)->Tail();
-								if (tail)
-									joins.emplace(*it);
-							}
-						}
-						if (!skip && tail)
-						{
-							tail->SetNext(node);
-							// continue;
-							skip = true;
-						}
-					}
-				}
-				// Join the overlapping clusters
-				if (!joins.empty() && joins.size() > 1)
-				{
-					set<shared_ptr<LinkedList<string>>>::iterator it = joins.begin();
-					set<shared_ptr<LinkedList<string>>>::iterator joinTo = clusters.find(*it++); // Get the first cluster from "clusters" and join the others to it
-					for (; it != joins.end(); it++)
-					{
-						set<shared_ptr<LinkedList<string>>>::iterator it1 = clusters.find(*it);
-						(*joinTo)->Join(**it1);
-						clusters.erase(*it1);
-					}
-				}
-				if (!skip)
-					clusters.emplace(make_shared<LinkedList<string>>(node));
-				joins.clear();
-			} // if (grid[i][j] == _active) {
-		}
-	cout << clusters.size() << " clusters" << endl;
-	size_t max = 0;
-	for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end(); it++)
-	{
-		vector<string> d;
-		(*it)->ToVector(d); // This is useful to find matching grids
-		//(*it)->Print();
-		cout << "vector: ";
-		ranges::copy(d, ostream_iterator<string>(cout, " "));
-		cout << endl;
-		// cout << "Length: " << (*it)->Length() << endl;
-		if ((*it)->Length() > max)
-			max = (*it)->Length();
-	}
-	nodes.clear();
-	clusters.clear();
-	return max;
-}
-/*
- * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
- * 100%
  */
 template <typename T>
 size_t Matrix<T>::ConnectedCellsInAGrid(vector<vector<T>> &grid)
@@ -1351,6 +1156,126 @@ size_t Matrix<T>::ConnectedCellsInAGrid(vector<vector<T>> &grid)
 	return max;
 }
 /*
+ * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+ * 100%
+ * This is more useful to check matching grids compared to using DisJointSet
+ */
+template <typename T>
+size_t Matrix<T>::LargestGridCluster_LinkedList_BFS(vector<vector<T>> &grid)
+{
+	size_t result = 0;
+	ostringstream location;
+	set<shared_ptr<LinkedList<string>>> clusters;
+	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[0].size(); j++)
+			if (grid[i][j] == _active)
+			{
+				location.str("");
+				location << i << "," << j;
+				shared_ptr<Node<string>> node(make_shared<Node<string>>(location.str())), tail = node;
+				size_t count = 1;
+				grid[i][j] = _inactive;
+				queue<pair<size_t, size_t>> todo;
+				todo.emplace(i, j);
+				for (; !todo.empty();)
+				{
+					pair<size_t, size_t> cell = todo.front();
+					todo.pop();
+					for (size_t k = 0; k < steps.size() - 1; k++)
+					{
+						int r = cell.first + steps[k], c = cell.second + steps[k + 1];
+						if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+						{
+							location.str("");
+							location << r << "," << c;
+							shared_ptr<Node<string>> n(make_shared<Node<string>>(location.str()));
+							tail->SetNext(n);
+							tail = n;
+							count++;
+							grid[r][c] = _inactive;
+							todo.emplace(r, c);
+						}
+					}
+					for (size_t k = 0; k < diagonals.size() - 1; k++)
+					{
+						int r = cell.first + diagonals[k], c = cell.second + diagonals[k + 1];
+						if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+						{
+							location.str("");
+							location << r << "," << c;
+							shared_ptr<Node<string>> n(make_shared<Node<string>>(location.str()));
+							tail->SetNext(n);
+							tail = n;
+							count++;
+							grid[r][c] = _inactive;
+							todo.emplace(r, c);
+						}
+					}
+				}
+				result = max(result, count);
+				clusters.emplace(make_shared<LinkedList<string>>(node));
+			}
+	cout << clusters.size() << " clusters" << endl;
+	size_t max1 = 0;
+	for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end(); it++)
+	{
+		vector<string> d;
+		(*it)->ToVector(d); // This is useful to find matching grids
+		//(*it)->Print();
+		cout << "vector: ";
+		ranges::copy(d, ostream_iterator<string>(cout, " "));
+		cout << endl;
+		// cout << "Length: " << (*it)->Length() << endl;
+		max1 = max(max1, (*it)->Length());
+	}
+	clusters.clear();
+	cout << "result: " << result << ", max1: " << max1 << endl;
+	assert(result == max1);
+	return result;
+}
+/*
+ * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+ * 100%
+ * This is more useful to check matching grids compared to using DisJointSet
+ */
+template <typename T>
+size_t Matrix<T>::LargestGridCluster_LinkedList_DFS(vector<vector<T>> &grid)
+{
+	size_t result = 0;
+	ostringstream location;
+	set<shared_ptr<LinkedList<string>>> clusters;
+	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[0].size(); j++)
+			if (grid[i][j] == _active)
+			{
+				shared_ptr<Node<string>> node(nullptr);
+				result = max(result, DisconnectCellAllDirections(grid, i, j, node));
+				shared_ptr<Node<string>> n = node;
+				for (; n && n->Previous(); n = n->Previous())
+					;
+				clusters.emplace(make_shared<LinkedList<string>>(n));
+			}
+	cout << clusters.size() << " clusters" << endl;
+	size_t max1 = 0;
+	for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end(); it++)
+	{
+		vector<string> d;
+		(*it)->ToVector(d); // This is useful to find matching grids
+		//(*it)->Print();
+		cout << "vector: ";
+		ranges::copy(d, ostream_iterator<string>(cout, " "));
+		cout << endl;
+		// cout << "Length: " << (*it)->Length() << endl;
+		max1 = max(max1, (*it)->Length());
+	}
+	clusters.clear();
+	cout << "result: " << result << ", max1: " << max1 << endl;
+	assert(result == max1);
+	return result;
+}
+/*
  * https://leetcode.com/problems/number-of-islands/
  * 100%
  * Each time when see a '1', increment the counter and then erase all connected '1's using a queue.
@@ -1404,14 +1329,46 @@ size_t Matrix<T>::GridClusterCountDFS(vector<vector<T>> &grid)
 	return clusters;
 }
 template <typename T>
-void Matrix<T>::DisconnectCell(vector<vector<T>> &grid, size_t r, size_t c)
+size_t Matrix<T>::DisconnectCell(vector<vector<T>> &grid, size_t r, size_t c)
 {
+	size_t count = 0;
 	if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
 	{
+		count++;
 		grid[r][c] = _inactive;
-		DisconnectCell(grid, r - 1, c);
-		DisconnectCell(grid, r + 1, c);
-		DisconnectCell(grid, r, c - 1);
-		DisconnectCell(grid, r, c + 1);
+		count += DisconnectCell(grid, r - 1, c);
+		count += DisconnectCell(grid, r + 1, c);
+		count += DisconnectCell(grid, r, c - 1);
+		count += DisconnectCell(grid, r, c + 1);
 	}
+	return count;
+}
+template <typename T>
+size_t Matrix<T>::DisconnectCellAllDirections(vector<vector<T>> &grid, size_t r, size_t c, shared_ptr<Node<string>> &node)
+{
+	size_t count = 0;
+	ostringstream location;
+	if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+	{
+		count++;
+		grid[r][c] = _inactive;
+		location.str("");
+		location << r << "," << c;
+		shared_ptr<Node<string>> n(make_shared<Node<string>>(location.str()));
+		if (node)
+		{
+			node->SetNext(n);
+			n->SetPrevious(node);
+		}
+		node = n;
+		count += DisconnectCellAllDirections(grid, r - 1, c, node);
+		count += DisconnectCellAllDirections(grid, r + 1, c, node);
+		count += DisconnectCellAllDirections(grid, r, c - 1, node);
+		count += DisconnectCellAllDirections(grid, r, c + 1, node);
+		count += DisconnectCellAllDirections(grid, r - 1, c - 1, node);
+		count += DisconnectCellAllDirections(grid, r - 1, c + 1, node);
+		count += DisconnectCellAllDirections(grid, r + 1, c - 1, node);
+		count += DisconnectCellAllDirections(grid, r + -1, c + 1, node);
+	}
+	return count;
 }

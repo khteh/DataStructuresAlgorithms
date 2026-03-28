@@ -9,7 +9,8 @@ class Matrix
 private:
 	T _active, _inactive;
 	vector<vector<T>> _matrix;
-	void DisconnectCell(vector<vector<T>> &, size_t, size_t);
+	size_t DisconnectCell(vector<vector<T>> &, size_t, size_t);
+	size_t DisconnectCellAllDirections(vector<vector<T>> &, size_t, size_t, shared_ptr<Node<string>> &);
 
 public:
 	Matrix();
@@ -37,7 +38,10 @@ public:
 	T MaxQuadrantSum(vector<vector<T>> const &);
 	bool ContainersBallsSwap(vector<vector<T>> const &);
 	size_t ConnectedCellsInAGrid(vector<vector<T>> &);
-	size_t ConnectedCellsInAGridLinkedList(vector<vector<T>> &);
+	// size_t ConnectedCellsInAGridBFS(vector<vector<T>> &);
+	size_t LargestGridCluster_LinkedList_BFS(vector<vector<T>> &);
+	// size_t ConnectedCellsInAGridDFS(vector<vector<T>> &);
+	size_t LargestGridCluster_LinkedList_DFS(vector<vector<T>> &);
 	size_t GridClusterCountBFS(vector<vector<T>> &);
 	size_t GridClusterCountDFS(vector<vector<T>> &);
 };
