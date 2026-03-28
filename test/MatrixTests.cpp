@@ -361,7 +361,70 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(102, vector<vector<size_t>>{{1, 2, 3, 4, 5, 4, 5, 4, 3, 2, 1}}),
 					  make_tuple(102, vector<vector<size_t>>{{1}, {2}, {3}, {4}, {5}, {4}, {5}, {4}, {3}, {2}, {1}}),
 					  make_tuple(1482, vector<vector<size_t>>{{51}, {32}, {28}, {49}, {28}, {21}, {98}, {56}, {99}, {77}})));
+class ConnectedCellsInAGridTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
+{
+public:
+	void SetUp() override
+	{
+		_matrix = Matrix<long>(1, 0);
+		_expected = get<0>(GetParam());
+		_grid = get<1>(GetParam());
+	}
+	size_t ConnectedCellsInAGridTest()
+	{
+		return _matrix.ConnectedCellsInAGrid(_grid);
+	}
 
+protected:
+	Matrix<long> _matrix;
+	vector<vector<long>> _grid;
+	size_t _expected;
+};
+TEST_P(ConnectedCellsInAGridTestFixture, ConnectedCellsInAGridTests)
+{
+	ASSERT_EQ(this->_expected, this->ConnectedCellsInAGridTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	ConnectedCellsInAGridTests,
+	ConnectedCellsInAGridTestFixture,
+	::testing::Values(make_tuple(5, vector<vector<long>>{{1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0}}),
+					  make_tuple(8, vector<vector<long>>{{0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}}),
+					  make_tuple(5, vector<vector<long>>{{1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1}}),
+					  make_tuple(15, vector<vector<long>>{{0, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 1, 0, 1, 0}, {0, 1, 0, 1, 1}, {0, 1, 1, 1, 0}}),
+					  make_tuple(9, vector<vector<long>>{{1, 1, 1, 0, 1}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 0}, {0, 1, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 1, 0}}),
+					  make_tuple(1, vector<vector<long>>{{1, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 0, 0, 1, 0, 0}})));
+class LinkedListConnectedCellsInAGridTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<long>>>>
+{
+public:
+	void SetUp() override
+	{
+		_matrix = Matrix<long>(1, 0);
+		_expected = get<0>(GetParam());
+		_grid = get<1>(GetParam());
+	}
+	size_t LinkedListConnectedCellsInAGridTest()
+	{
+		return _matrix.ConnectedCellsInAGridLinkedList(_grid);
+	}
+
+protected:
+	Matrix<long> _matrix;
+	vector<vector<long>> _grid;
+	size_t _expected;
+};
+TEST_P(LinkedListConnectedCellsInAGridTestFixture, LinkedListConnectedCellsInAGridTests)
+{
+	ASSERT_EQ(this->_expected, this->LinkedListConnectedCellsInAGridTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LinkedListConnectedCellsInAGridTests,
+	LinkedListConnectedCellsInAGridTestFixture,
+	::testing::Values(make_tuple(5, vector<vector<long>>{{1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {1, 0, 0, 0}}),
+					  make_tuple(8, vector<vector<long>>{{0, 0, 1, 1}, {0, 0, 1, 0}, {0, 1, 1, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}}),
+					  make_tuple(5, vector<vector<long>>{{1, 1, 0, 0, 0}, {0, 1, 1, 0, 0}, {0, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {0, 1, 0, 1, 1}}),
+					  make_tuple(15, vector<vector<long>>{{0, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 1, 0, 1, 0}, {0, 1, 0, 1, 1}, {0, 1, 1, 1, 0}}),
+					  make_tuple(9, vector<vector<long>>{{1, 1, 1, 0, 1}, {0, 0, 1, 0, 0}, {1, 1, 0, 1, 0}, {0, 1, 1, 0, 0}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 0}, {0, 0, 1, 1, 0}}),
+					  make_tuple(1, vector<vector<long>>{{1, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0}, {1, 0, 0, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 0, 0, 1, 0, 0}})));
 class GridClusterCountBFSTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<char>>>>
 {
 public:

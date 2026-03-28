@@ -1,5 +1,6 @@
 #pragma once
 #include "Sort.h"
+#include "LinkedList.h"
 using namespace std;
 namespace ranges = std::ranges;
 template <typename T>
@@ -35,6 +36,8 @@ public:
 	vector<string> BomberMan(size_t, vector<string> const &);
 	T MaxQuadrantSum(vector<vector<T>> const &);
 	bool ContainersBallsSwap(vector<vector<T>> const &);
+	size_t ConnectedCellsInAGrid(vector<vector<T>> &);
+	size_t ConnectedCellsInAGridLinkedList(vector<vector<T>> &);
 	size_t GridClusterCountBFS(vector<vector<T>> &);
 	size_t GridClusterCountDFS(vector<vector<T>> &);
 };

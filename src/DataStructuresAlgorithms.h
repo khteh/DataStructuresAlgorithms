@@ -254,8 +254,6 @@ typedef struct PathResult
 pathResult_t FindMaxPath(vector<vector<size_t>> &, size_t, size_t);
 bool PathExists(vector<vector<char>> &, size_t, size_t, size_t, size_t, queue<string> &, char);
 bool FindShortestPath(vector<vector<char>> &, size_t, size_t, queue<string> &, char, char);
-size_t ConnectedCellsInAGridLinkedList(vector<vector<long>> &);
-size_t ConnectedCellsInAGrid(vector<vector<long>> &);
 bool WordExistsInGrid(vector<vector<char>> &, string const &);
 bool WordExistsInGrid(vector<vector<char>> &, string const &, long, long, size_t);
 void EqualAverageDivide(vector<long> &, vector<long> &);

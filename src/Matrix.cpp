@@ -1015,6 +1015,342 @@ bool Matrix<T>::ContainersBallsSwap(vector<vector<T>> const &containers)
 	return rowSums == colSums;
 }
 /*
+ * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+ * 100%
+ * This is more useful to check matching grids compared to using DisJointSet
+ */
+template <typename T>
+size_t Matrix<T>::ConnectedCellsInAGridLinkedList(vector<vector<T>> &grid)
+{
+	map<string, shared_ptr<Node<string>>> nodes;
+	set<shared_ptr<LinkedList<string>>> clusters;
+	ostringstream location, oss;
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[0].size(); j++)
+		{
+			if (grid[i][j] == _active)
+			{
+				location.str("");
+				location << i << "," << j;
+				// Node<string>* node = new Node<string>(location.str());
+				shared_ptr<Node<string>> node(make_shared<Node<string>>(location.str()));
+				// nodes[location.str()] = shared_ptr<Node<string>>(node);
+				nodes[location.str()] = node;
+				shared_ptr<Node<string>> parent = nullptr;
+				set<shared_ptr<LinkedList<string>>> joins;
+				bool skip = false;
+				// Upper Left
+				if (i > 0 && j > 0 && grid[i - 1][j - 1] == _active)
+				{
+					oss.str("");
+					oss << i - 1 << "," << j - 1;
+					parent = nodes[oss.str()];
+					if (parent)
+					{
+						shared_ptr<Node<string>> tail = nullptr;
+						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++)
+						{
+							shared_ptr<Node<string>> head = (*it)->Find(*parent);
+							if (head)
+							{
+								tail = (*it)->Tail();
+								if (tail)
+									joins.emplace(*it);
+							}
+						}
+						if (!skip && tail)
+						{
+							tail->SetNext(node);
+							// continue;
+							skip = true;
+						}
+					}
+				}
+				// Up
+				if (i > 0 && grid[i - 1][j] == _active)
+				{
+					oss.str("");
+					oss << i - 1 << "," << j;
+					parent = nodes[oss.str()];
+					if (parent)
+					{
+						shared_ptr<Node<string>> tail = nullptr;
+						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++)
+						{
+							shared_ptr<Node<string>> head = (*it)->Find(*parent);
+							if (head)
+							{
+								tail = (*it)->Tail();
+								if (tail)
+									joins.emplace(*it);
+							}
+						}
+						if (!skip && tail)
+						{
+							tail->SetNext(node);
+							// continue;
+							skip = true;
+						}
+					}
+				}
+				// Upper Right
+				if (i > 0 && j < grid[0].size() - 1 && grid[i - 1][j + 1] == _active)
+				{
+					oss.str("");
+					oss << i - 1 << "," << j + 1;
+					parent = nodes[oss.str()];
+					if (parent)
+					{
+						shared_ptr<Node<string>> tail = nullptr;
+						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++)
+						{
+							shared_ptr<Node<string>> head = (*it)->Find(*parent);
+							if (head)
+							{
+								tail = (*it)->Tail();
+								if (tail)
+									joins.emplace(*it);
+							}
+						}
+						if (!skip && tail)
+						{
+							tail->SetNext(node);
+							// continue;
+							skip = true;
+						}
+					}
+				}
+				// Left
+				if (j > 0 && grid[i][j - 1] == _active)
+				{
+					oss.str("");
+					oss << i << "," << j - 1;
+					parent = nodes[oss.str()];
+					if (parent)
+					{
+						shared_ptr<Node<string>> tail = nullptr;
+						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++)
+						{
+							shared_ptr<Node<string>> head = (*it)->Find(*parent);
+							if (head)
+							{
+								tail = (*it)->Tail();
+								if (tail)
+									joins.emplace(*it);
+							}
+						}
+						if (!skip && tail)
+						{
+							tail->SetNext(node);
+							// continue;
+							skip = true;
+						}
+					}
+				}
+				// Right
+				if (j < grid[0].size() - 1 && grid[i][j + 1] == _active)
+				{
+					oss.str("");
+					oss << i << "," << j + 1;
+					parent = nodes[oss.str()];
+					if (parent)
+					{
+						shared_ptr<Node<string>> tail = nullptr;
+						for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end() && !tail; it++)
+						{
+							shared_ptr<Node<string>> head = (*it)->Find(*parent);
+							if (head)
+							{
+								tail = (*it)->Tail();
+								if (tail)
+									joins.emplace(*it);
+							}
+						}
+						if (!skip && tail)
+						{
+							tail->SetNext(node);
+							// continue;
+							skip = true;
+						}
+					}
+				}
+				// Join the overlapping clusters
+				if (!joins.empty() && joins.size() > 1)
+				{
+					set<shared_ptr<LinkedList<string>>>::iterator it = joins.begin();
+					set<shared_ptr<LinkedList<string>>>::iterator joinTo = clusters.find(*it++); // Get the first cluster from "clusters" and join the others to it
+					for (; it != joins.end(); it++)
+					{
+						set<shared_ptr<LinkedList<string>>>::iterator it1 = clusters.find(*it);
+						(*joinTo)->Join(**it1);
+						clusters.erase(*it1);
+					}
+				}
+				if (!skip)
+					clusters.emplace(make_shared<LinkedList<string>>(node));
+				joins.clear();
+			} // if (grid[i][j] == _active) {
+		}
+	cout << clusters.size() << " clusters" << endl;
+	size_t max = 0;
+	for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end(); it++)
+	{
+		vector<string> d;
+		(*it)->ToVector(d); // This is useful to find matching grids
+		//(*it)->Print();
+		cout << "vector: ";
+		ranges::copy(d, ostream_iterator<string>(cout, " "));
+		cout << endl;
+		// cout << "Length: " << (*it)->Length() << endl;
+		if ((*it)->Length() > max)
+			max = (*it)->Length();
+	}
+	nodes.clear();
+	clusters.clear();
+	return max;
+}
+/*
+ * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
+ * 100%
+ */
+template <typename T>
+size_t Matrix<T>::ConnectedCellsInAGrid(vector<vector<T>> &grid)
+{
+	vector<T> data(grid.size() * grid[0].size());
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });
+	DisJointSet<T> disjointSet(data);
+	size_t width = grid[0].size();
+	map<T, size_t> counts;
+	size_t max = 0;
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[0].size(); j++)
+		{
+			if (grid[i][j] == _active)
+			{
+				max = 1; // This is needed
+				long node = i * width + j + 1;
+				T currentRoot = disjointSet.Find(node);
+				// Upper Left
+				if (i > 0 && j > 0 && grid[i - 1][j - 1] == _active)
+				{
+					long neighbour = (i - 1) * width + j;
+					T root = disjointSet.Union(node, neighbour);
+					if (root != numeric_limits<T>::min())
+					{
+						if (root != currentRoot && counts.count(currentRoot))
+						{ // Existing disjoint set with more than one element
+							counts[root] += counts[currentRoot];
+							counts.erase(currentRoot);
+						}
+						else
+						{ // Single-element set
+							pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
+							if (!result.second)
+								counts[root]++;
+						}
+					}
+				}
+				// Up
+				if (i > 0 && grid[i - 1][j] == _active)
+				{
+					long neighbour = (i - 1) * width + j + 1;
+					T root = disjointSet.Union(node, neighbour);
+					if (root != numeric_limits<T>::min())
+					{
+						if (root != currentRoot && counts.count(currentRoot))
+						{ // Existing disjoint set with more than one element
+							counts[root] += counts[currentRoot];
+							counts.erase(currentRoot);
+						}
+						else
+						{ // Single-element set
+							pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
+							if (!result.second)
+								counts[root]++;
+						}
+					}
+				}
+				// Upper Right
+				if (i > 0 && j < grid[0].size() - 1 && grid[i - 1][j + 1] == _active)
+				{
+					long neighbour = (i - 1) * width + j + 2;
+					T root = disjointSet.Union(node, neighbour);
+					if (root != numeric_limits<T>::min())
+					{
+						if (root != currentRoot && counts.count(currentRoot))
+						{ // Existing disjoint set with more than one element
+							counts[root] += counts[currentRoot];
+							counts.erase(currentRoot);
+						}
+						else
+						{ // Single-element set
+							pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
+							if (!result.second)
+								counts[root]++;
+						}
+					}
+				}
+				// Left
+				if (j > 0 && grid[i][j - 1] == _active)
+				{
+					long neighbour = i * width + j;
+					T root = disjointSet.Union(node, neighbour);
+					if (root != numeric_limits<T>::min())
+					{
+						if (root != currentRoot && counts.count(currentRoot))
+						{ // Existing disjoint set with more than one element
+							counts[root] += counts[currentRoot];
+							counts.erase(currentRoot);
+						}
+						else
+						{ // Single-element set
+							pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
+							if (!result.second)
+								counts[root]++;
+						}
+					}
+				}
+				// Right
+				if (j < grid[0].size() - 1 && grid[i][j + 1] == _active)
+				{
+					long neighbour = i * width + j + 2;
+					T root = disjointSet.Union(node, neighbour);
+					if (root != numeric_limits<T>::min())
+					{
+						if (root != currentRoot && counts.count(currentRoot))
+						{ // Existing disjoint set with more than one element
+							counts[root] += counts[currentRoot];
+							counts.erase(currentRoot);
+						}
+						else
+						{ // Single-element set
+							pair<typename map<T, size_t>::iterator, bool> result = counts.emplace(root, 2);
+							if (!result.second)
+								counts[root]++;
+						}
+					}
+				}
+			} // if (grid[i][j] == _active) {
+		} // for (size_t j = 0; j < grid[0].size(); j++) {
+	for (typename map<T, size_t>::iterator it = counts.begin(); it != counts.end(); it++)
+	{
+		// cout << "Length: " << it->second << endl;
+		if (it->second > max)
+			max = it->second;
+	}
+	disjointSet.Print(data, grid[0].size());
+	map<T, vector<T>> sets;
+	disjointSet.GetSets(data, sets);
+	for (typename map<T, vector<T>>::const_iterator it = sets.begin(); it != sets.end(); it++)
+	{
+		cout << it->first << ": ";
+		ranges::copy(it->second, ostream_iterator<long>(cout, " "));
+		cout << endl;
+	}
+	return max;
+}
+/*
  * https://leetcode.com/problems/number-of-islands/
  * 100%
  * Each time when see a '1', increment the counter and then erase all connected '1's using a queue.

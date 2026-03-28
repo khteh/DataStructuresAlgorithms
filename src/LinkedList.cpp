@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "LinkedList.h"
+template class LinkedList<char>;
 template class LinkedList<int>;
 template class LinkedList<size_t>;
 template class LinkedList<long>;

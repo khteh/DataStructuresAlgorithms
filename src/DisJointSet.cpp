@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "DisJointSet.h"
+template class DisJointSet<char>;
 template class DisJointSet<int>;
+template class DisJointSet<size_t>;
 template class DisJointSet<long>;
 template <typename T>
 DisJointSet<T>::DisJointSet(vector<T> const &data)
