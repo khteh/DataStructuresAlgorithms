@@ -2,6 +2,7 @@
 #include "Heap.h"
 #include <assert.h>
 using namespace std;
+template class Heap<char>;
 template class Heap<int>;
 template class Heap<long>;
 template class Heap<size_t>;

@@ -2,6 +2,7 @@
 #include "Node.h"
 #include <iostream>
 #include <set>
+template class Node<char>;
 template class Node<int>;
 template class Node<long>;
 template class Node<string>;

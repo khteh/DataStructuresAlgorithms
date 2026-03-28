@@ -1,9 +1,14 @@
 #include "pch.h"
 #include "Matrix.h"
+template class Matrix<char>;
 template class Matrix<long>;
 template class Matrix<size_t>;
 template <typename T>
 Matrix<T>::Matrix() {}
+
+template <typename T>
+Matrix<T>::Matrix(T active, T inactive) : _active(active), _inactive(inactive) {}
+
 /*
 * Matrix area sum using bottom-up dynamic programming
 * 	0	1	2	3
@@ -1008,4 +1013,69 @@ bool Matrix<T>::ContainersBallsSwap(vector<vector<T>> const &containers)
 	ranges::sort(rowSums);
 	ranges::sort(colSums);
 	return rowSums == colSums;
+}
+/*
+ * https://leetcode.com/problems/number-of-islands/
+ * 100%
+ * Each time when see a '1', increment the counter and then erase all connected '1's using a queue.
+ */
+template <typename T>
+size_t Matrix<T>::GridClusterCountBFS(vector<vector<T>> &grid)
+{
+	size_t clusters = 0;
+	vector<int> steps = {0, 1, 0, -1, 0};
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[i].size(); j++)
+			if (grid[i][j] == _active)
+			{
+				clusters++;
+				grid[i][j] = _inactive;
+				queue<pair<size_t, size_t>> todo;
+				todo.emplace(i, j);
+				for (; !todo.empty();)
+				{
+					pair<size_t, size_t> cell = todo.front();
+					todo.pop();
+					for (size_t k = 0; k < steps.size() - 1; k++)
+					{
+						int r = cell.first + steps[k], c = cell.second + steps[k + 1];
+						if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+						{
+							grid[r][c] = _inactive;
+							todo.emplace(r, c);
+						}
+					}
+				}
+			}
+	return clusters;
+}
+/*
+ * https://leetcode.com/problems/number-of-islands/
+ * 100%
+ * Erase all connected cells using DFS
+ */
+template <typename T>
+size_t Matrix<T>::GridClusterCountDFS(vector<vector<T>> &grid)
+{
+	size_t clusters = 0;
+	for (size_t i = 0; i < grid.size(); i++)
+		for (size_t j = 0; j < grid[i].size(); j++)
+			if (grid[i][j] == _active)
+			{
+				clusters++;
+				DisconnectCell(grid, i, j);
+			}
+	return clusters;
+}
+template <typename T>
+void Matrix<T>::DisconnectCell(vector<vector<T>> &grid, size_t r, size_t c)
+{
+	if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size() && grid[r][c] == _active)
+	{
+		grid[r][c] = _inactive;
+		DisconnectCell(grid, r - 1, c);
+		DisconnectCell(grid, r + 1, c);
+		DisconnectCell(grid, r, c - 1);
+		DisconnectCell(grid, r, c + 1);
+	}
 }

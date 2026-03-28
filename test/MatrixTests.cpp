@@ -362,6 +362,71 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(102, vector<vector<size_t>>{{1}, {2}, {3}, {4}, {5}, {4}, {5}, {4}, {3}, {2}, {1}}),
 					  make_tuple(1482, vector<vector<size_t>>{{51}, {32}, {28}, {49}, {28}, {21}, {98}, {56}, {99}, {77}})));
 
+class GridClusterCountBFSTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<char>>>>
+{
+public:
+	void SetUp() override
+	{
+		_matrix = Matrix<char>('1', '0');
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	size_t GridClusterCountBFSTest()
+	{
+		return _matrix.GridClusterCountBFS(_data);
+	}
+
+protected:
+	Matrix<char> _matrix;
+	vector<vector<char>> _data;
+	size_t _expected;
+};
+TEST_P(GridClusterCountBFSTestFixture, GridClusterCountBFSTests)
+{
+	ASSERT_EQ(this->_expected, this->GridClusterCountBFSTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	GridClusterCountBFSTests,
+	GridClusterCountBFSTestFixture,
+	::testing::Values(make_tuple(1, vector<vector<char>>{
+										{'1', '1', '1', '1', '0'},
+										{'1', '1', '0', '1', '0'},
+										{'1', '1', '0', '0', '0'},
+										{'0', '0', '0', '0', '0'}}),
+					  make_tuple(3, vector<vector<char>>{{'1', '1', '0', '0', '0'}, {'1', '1', '0', '0', '0'}, {'0', '0', '1', '0', '0'}, {'0', '0', '0', '1', '1'}}), make_tuple(1, vector<vector<char>>{{'1', '0', '1', '1', '1'}, {'1', '0', '1', '0', '1'}, {'1', '1', '1', '0', '1'}})));
+class GridClusterCountDFSTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<char>>>>
+{
+public:
+	void SetUp() override
+	{
+		_matrix = Matrix<char>('1', '0');
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	size_t GridClusterCountDFSTest()
+	{
+		return _matrix.GridClusterCountDFS(_data);
+	}
+
+protected:
+	Matrix<char> _matrix;
+	vector<vector<char>> _data;
+	size_t _expected;
+};
+TEST_P(GridClusterCountDFSTestFixture, GridClusterCountDFSTests)
+{
+	ASSERT_EQ(this->_expected, this->GridClusterCountDFSTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	GridClusterCountDFSTests,
+	GridClusterCountDFSTestFixture,
+	::testing::Values(make_tuple(1, vector<vector<char>>{
+										{'1', '1', '1', '1', '0'},
+										{'1', '1', '0', '1', '0'},
+										{'1', '1', '0', '0', '0'},
+										{'0', '0', '0', '0', '0'}}),
+					  make_tuple(3, vector<vector<char>>{{'1', '1', '0', '0', '0'}, {'1', '1', '0', '0', '0'}, {'0', '0', '1', '0', '0'}, {'0', '0', '0', '1', '1'}}), make_tuple(1, vector<vector<char>>{{'1', '0', '1', '1', '1'}, {'1', '0', '1', '0', '1'}, {'1', '1', '1', '0', '1'}})));
+
 TEST(MatrixTests, MatrixSumTest)
 {
 	vector<vector<long>> grid;

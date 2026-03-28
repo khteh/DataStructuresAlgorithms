@@ -256,7 +256,6 @@ bool PathExists(vector<vector<char>> &, size_t, size_t, size_t, size_t, queue<st
 bool FindShortestPath(vector<vector<char>> &, size_t, size_t, queue<string> &, char, char);
 size_t ConnectedCellsInAGridLinkedList(vector<vector<long>> &);
 size_t ConnectedCellsInAGrid(vector<vector<long>> &);
-size_t NumIslands(vector<vector<char>> &);
 bool WordExistsInGrid(vector<vector<char>> &, string const &);
 bool WordExistsInGrid(vector<vector<char>> &, string const &, long, long, size_t);
 void EqualAverageDivide(vector<long> &, vector<long> &);

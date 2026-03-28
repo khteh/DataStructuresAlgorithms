@@ -29,6 +29,7 @@ Left child: 2i + 1
 Right child: 2i + 2
 Parent: |(i - 1) / 2|, assuming root at i=0
  */
+template class Tree<char>;
 template class Tree<int>;
 template class Tree<long>;
 template class Tree<size_t>;

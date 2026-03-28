@@ -2096,7 +2096,7 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 		{
 			if (grid[i][j] == 1)
 			{
-				max = 1;
+				max = 1; // This is needed
 				long node = i * width + j + 1;
 				long currentRoot = disjointSet.Find(node);
 				// Upper Left
@@ -2217,57 +2217,6 @@ size_t ConnectedCellsInAGrid(vector<vector<long>> &grid)
 		cout << endl;
 	}
 	return max;
-}
-/*
- * https://leetcode.com/problems/number-of-islands/
- * WIP
- */
-size_t NumIslands(vector<vector<char>> &grid)
-{
-	size_t islands = 0;
-	set<char> pending;
-	char current = 0;
-	for (size_t i = 0; i < grid.size(); i++)
-		for (size_t j = 0; j < grid[i].size(); j++)
-		{
-			if (grid[i][j] == '1')
-			{
-				if (!i && !j)
-					islands++;
-				else if (!i && grid[i][j - 1] == '0') // first row
-					islands++;
-				else if (!j && grid[i - 1][j] == '0')
-				{ // first col
-					if (j == grid[i].size() - 1 || grid[i][j + 1] == '0')
-					{
-						if (pending.count(current + 1))
-							current++;
-						islands++;
-					}
-					else
-					{
-						grid[i][j] = current;
-						pending.emplace(current);
-					}
-				}
-				else if (i > 0 && j > 0)
-				{
-					if (grid[i - 1][j] == '0' && grid[i][j - 1] == '0')
-					{
-						if (pending.count(current + 1))
-							current++;
-						islands++;
-					}
-					else if (grid[i][j - 1] == current)
-					{
-						pending.erase(current);
-						for (int k = j - 1; k >= 0 && grid[i][k] == current; k--)
-							grid[i][k] = '1'; // Put back the '1' so that the following row will be able to recognize it
-					}
-				}
-			}
-		}
-	return islands + pending.size();
 }
 /* https://leetcode.com/problems/word-search/
  * 100%
@@ -4343,6 +4292,37 @@ string DecryptPassword(string const &s)
 			result.push_back(s[i++]);
 	}
 	return result;
+}
+/*
+ * https://leetcode.com/problems/decode-string/
+ */
+string DecodeString(string const &str)
+{
+	long n;
+	string encoded;
+	ostringstream oss;
+	regex re("(\\d+)(\\[[a-zA-Z]+\\])");
+	for (sregex_iterator it = sregex_iterator(str.begin(), str.end(), re);
+		 it != sregex_iterator();
+		 it++)
+	{
+		smatch const &match = *it;
+		// cout << "Match: " << match.str() << endl;
+		//  for (const auto &sub_match : match)
+		//	cout << "  Sub-match: " << sub_match.str() << endl;
+		if (match.size() == 3)
+		// for (size_t i = 1; i < match.size(); ++i)
+		{
+			cout << "Match: " << match.str(0) << endl;
+			// cout << "  Submatch " << i << ": " << match.str(i) << endl;
+			istringstream(match.str(1)) >> n;
+			string encoded = match.str(2);
+			encoded = encoded.substr(1, encoded.size() - 2);
+			for (size_t i = 0; i < n; i++)
+				oss << encoded;
+		}
+	}
+	return oss.str();
 }
 /* https://www.hackerrank.com/challenges/sam-and-substrings/problem
  * 100%

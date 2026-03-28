@@ -6,10 +6,13 @@ template <typename T>
 class Matrix
 {
 private:
+	T _active, _inactive;
 	vector<vector<T>> _matrix;
+	void DisconnectCell(vector<vector<T>> &, size_t, size_t);
 
 public:
 	Matrix();
+	Matrix(T, T);
 	Matrix(vector<vector<T>> &);
 	void MatrixDistance(vector<vector<T>> &, size_t, size_t);
 	void MatrixSort(vector<vector<T>> &);
@@ -32,4 +35,6 @@ public:
 	vector<string> BomberMan(size_t, vector<string> const &);
 	T MaxQuadrantSum(vector<vector<T>> const &);
 	bool ContainersBallsSwap(vector<vector<T>> const &);
+	size_t GridClusterCountBFS(vector<vector<T>> &);
+	size_t GridClusterCountDFS(vector<vector<T>> &);
 };

@@ -2297,27 +2297,67 @@ int main(int argc, char *argv[])
 	vector<size_t>::const_iterator it1 = lower_bound(udata.begin() + 1, udata.end(), 4);
 	assert(it1 != udata.end());
 
-	cgrid1.clear();
-	cgrid1 = {
-		{'1', '1', '1', '1', '0'},
-		{'1', '1', '0', '1', '0'},
-		{'1', '1', '0', '0', '0'},
-		{'0', '0', '0', '0', '0'}};
-	assert(1 == NumIslands(cgrid1));
-
-	cgrid1.clear();
-	cgrid1 = {
-		{'1', '1', '0', '0', '0'},
-		{'1', '1', '0', '0', '0'},
-		{'0', '0', '1', '0', '0'},
-		{'0', '0', '0', '1', '1'}};
-	assert(3 == NumIslands(cgrid1));
-
-	cgrid1.clear();
-	cgrid1 = {
-		{'1', '0', '1', '1', '1'}, {'1', '0', '1', '0', '1'}, {'1', '1', '1', '0', '1'}};
-	// assert(1 == NumIslands(cgrid1)); WIP
-
+	regex re("(\\d+)(\\[[a-zA-Z]+\\])");
+	str = "3[a]2[bc]";
+	cout << endl
+		 << str << ": " << endl;
+	for (sregex_iterator it = sregex_iterator(str.begin(), str.end(), re);
+		 it != sregex_iterator();
+		 it++)
+	{
+		smatch const &match = *it;
+		cout << "Match: " << match.str() << endl;
+		for (size_t i = 0; i < match.size(); ++i)
+			cout << "  Submatch " << i << ": " << match.str(i) << endl;
+	}
+	str = "3[a2[c]]";
+	cout << endl
+		 << str << ": " << endl;
+	for (sregex_iterator it = sregex_iterator(str.begin(), str.end(), re);
+		 it != sregex_iterator();
+		 it++)
+	{
+		smatch const &match = *it;
+		cout << "Match: " << match.str() << endl;
+		for (size_t i = 0; i < match.size(); ++i)
+			cout << "  Submatch " << i << ": " << match.str(i) << endl;
+	}
+	str = "2[abc]3[cd]ef";
+	cout << endl
+		 << str << ": " << endl;
+	for (sregex_iterator it = sregex_iterator(str.begin(), str.end(), re);
+		 it != sregex_iterator();
+		 it++)
+	{
+		smatch const &match = *it;
+		cout << "Match: " << match.str() << endl;
+		for (size_t i = 0; i < match.size(); ++i)
+			cout << "  Submatch " << i << ": " << match.str(i) << endl;
+	}
+	str = "2[abc]ef3[cd]";
+	cout << endl
+		 << str << ": " << endl;
+	for (sregex_iterator it = sregex_iterator(str.begin(), str.end(), re);
+		 it != sregex_iterator();
+		 it++)
+	{
+		smatch const &match = *it;
+		cout << "Match: " << match.str() << endl;
+		for (size_t i = 0; i < match.size(); ++i)
+			cout << "  Submatch " << i << ": " << match.str(i) << endl;
+	}
+	str = "ef2[abc]3[cd]";
+	cout << endl
+		 << str << ": " << endl;
+	for (sregex_iterator it = sregex_iterator(str.begin(), str.end(), re);
+		 it != sregex_iterator();
+		 it++)
+	{
+		smatch const &match = *it;
+		cout << "Match: " << match.str() << endl;
+		for (size_t i = 0; i < match.size(); ++i)
+			cout << "  Submatch " << i << ": " << match.str(i) << endl;
+	}
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);
