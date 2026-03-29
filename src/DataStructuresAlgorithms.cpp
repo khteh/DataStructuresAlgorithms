@@ -3961,8 +3961,10 @@ string DecryptPassword(string const &s)
 }
 /*
  * https://leetcode.com/problems/decode-string/
+ * https://stackoverflow.com/questions/79915702/regex-nested-recursive-pattern
+ * Needs to use either Boost:regex or PCRE2 library
  */
-string DecodeString(string const &str)
+string DecodeStringRegex(string const &str)
 {
 	long n;
 	string encoded;
@@ -3987,6 +3989,85 @@ string DecodeString(string const &str)
 			for (size_t i = 0; i < n; i++)
 				oss << encoded;
 		}
+	}
+	return oss.str();
+}
+/*
+ * https://leetcode.com/problems/decode-string/
+ * 100%
+ */
+string DecodeString(string const &str)
+{
+	stack<string> stk;
+	ostringstream oss;
+	for (string::const_reverse_iterator it = str.crbegin(); it != str.crend();)
+	{
+		if (*it == ']')
+		{
+			/*
+			2[3[ab]cd]
+			2[ab3[cd]]
+			*/
+			if (!oss.str().empty())
+			{
+				string s = oss.str();
+				ranges::reverse(s);
+				stk.push(s);
+				oss.str("");
+			}
+			stk.push(string(1, *it));
+			it++;
+		}
+		else if (*it == '[')
+		{
+			/*
+			 * 3[abc]
+			 */
+			if (!oss.str().empty())
+			{
+				string s = oss.str();
+				ranges::reverse(s);
+				stk.push(s);
+				oss.str("");
+			}
+			it++;
+		}
+		else if (isalpha(*it))
+			oss << *it++;
+		else if (isdigit(*it))
+		{
+			size_t num;
+			for (; it != str.crend() && isdigit(*it); it++)
+				oss << *it;
+			string s = oss.str();
+			ranges::reverse(s);
+			istringstream(s) >> num;
+			oss.str("");
+			ostringstream repeat;
+			for (; !stk.empty() && stk.top() != "]"; stk.pop())
+				repeat << stk.top();
+			if (stk.top() == "]")
+				stk.pop();
+			if (!repeat.str().empty())
+			{
+				for (size_t i = 0; i < num; i++)
+					oss << repeat.str();
+				stk.push(oss.str());
+			}
+			oss.str("");
+		}
+	}
+	if (!oss.str().empty())
+	{
+		string s = oss.str();
+		ranges::reverse(s);
+		stk.push(s);
+	}
+	oss.str("");
+	for (; !stk.empty();)
+	{
+		oss << stk.top();
+		stk.pop();
 	}
 	return oss.str();
 }

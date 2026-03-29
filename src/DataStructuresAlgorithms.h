@@ -351,3 +351,4 @@ size_t RoadsAndLibraries(size_t, size_t, size_t, vector<vector<size_t>> const &)
 char SuperDigit(string const &, size_t);
 size_t FindConnectedComponents(vector<long> &);
 string LongestCommonPrefix(vector<string> const &);
+string DecodeString(string const &);

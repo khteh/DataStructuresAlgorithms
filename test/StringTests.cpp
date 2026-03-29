@@ -312,6 +312,27 @@ INSTANTIATE_TEST_SUITE_P(
     DecryptPasswordTests,
     DecryptPasswordTestFixture,
     ::testing::Values(make_tuple("hAck3rr4nk", "43Ah*ck0rr0nk"), make_tuple("aP1pL5e", "51Pa*0Lp*0e")));
+class DecodeStringTestFixture : public StringTestFixture<string, string>, public testing::TestWithParam<tuple<string, string>>
+{
+public:
+    void SetUp() override
+    {
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+    }
+    string DecodeStringTest()
+    {
+        return DecodeString(_var1);
+    }
+};
+TEST_P(DecodeStringTestFixture, DecodeStringTests)
+{
+    ASSERT_EQ(this->_expected, this->DecodeStringTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    DecodeStringTests,
+    DecodeStringTestFixture,
+    ::testing::Values(make_tuple("aaabcbc", "3[a]2[bc]"), make_tuple("accaccacc", "3[a2[c]]"), make_tuple("abcabccdcdcdef", "2[abc]3[cd]ef"), make_tuple("abccdcdcdxyz", "abc3[cd]xyz")));
+
 class LengthOfLongestUniqueSubstringTestFixture : public StringTestFixture<size_t, string>, public testing::TestWithParam<tuple<size_t, string>>
 {
 public:
