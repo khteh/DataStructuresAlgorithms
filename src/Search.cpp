@@ -557,8 +557,8 @@ vector<string> Search::FindShortestPath(int n, int i_start, int j_start, int i_e
 }
 /*
  * https://leetcode.com/problems/koko-eating-bananas/
- * Use binary search to determine min duration for all piles.
- * hours
+ * Find the minimum speed needed to consume all piles in the given hours.
+ * Use binary search
  */
 size_t Search::MinEatingSpeed(vector<size_t> const &piles, size_t hours)
 {
