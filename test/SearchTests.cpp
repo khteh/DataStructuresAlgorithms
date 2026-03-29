@@ -170,7 +170,7 @@ TEST_P(VectorBinarySearchTestFixture, VectorBinarySearchTests)
 	ASSERT_EQ(this->_expected, this->VectorBinarySearchTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	SearchTests,
+	VectorBinarySearchTests,
 	VectorBinarySearchTestFixture,
 	::testing::Values(make_tuple(vector<long>{3, 4}, 8, vector<size_t>{5, 7, 7, 8, 8, 10}), make_tuple(vector<long>{-1, -1}, 0, vector<size_t>{5, 7, 7, 8, 8, 10}),
 					  make_tuple(vector<long>{0, 0}, 1, vector<size_t>{1}), make_tuple(vector<long>{0, 0}, 1, vector<size_t>{1, 3}),
@@ -209,10 +209,41 @@ TEST_P(BinarySearchStringTestFixture, BinarySearchStringTests)
 	ASSERT_EQ(this->_toSearch, this->_range[this->_expected]);
 }
 INSTANTIATE_TEST_SUITE_P(
-	SearchTests,
+	BinarySearchStringTests,
 	BinarySearchStringTestFixture,
 	::testing::Values(make_tuple(2, "123", vector<string>{"abc", "ABC", "", "123", "789", "xyz", "XYZ", ""}),
 					  make_tuple(6, "abc", vector<string>{"abc", "ABC", "", "123", "789", "xyz", "XYZ", ""})));
+class MinEatingSpeedTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_piles = get<1>(GetParam());
+		_hours = get<2>(GetParam());
+	}
+	size_t MinEatingSpeedTest()
+	{
+		return _search.MinEatingSpeed(_piles, _hours);
+	}
+
+protected:
+	Search _search;
+	size_t _expected, _hours;
+	vector<size_t> _piles;
+};
+TEST_P(MinEatingSpeedTestFixture, MinEatingSpeedTests)
+{
+	ASSERT_EQ(this->_expected, this->MinEatingSpeedTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MinEatingSpeedTests,
+	MinEatingSpeedTestFixture,
+	::testing::Values(make_tuple(2, vector<size_t>{2, 2}, 2),
+					  make_tuple(4, vector<size_t>{3, 6, 7, 11}, 8),
+					  make_tuple(30, vector<size_t>{30, 11, 23, 4, 20}, 5),
+					  make_tuple(23, vector<size_t>{30, 11, 23, 4, 20}, 6)));
+
 TEST(SearchTests, BinarySearchCountTest)
 {
 	Search search;

@@ -555,3 +555,33 @@ vector<string> Search::FindShortestPath(int n, int i_start, int j_start, int i_e
     result.push_back(oss.str());
     return result;
 }
+/*
+ * https://leetcode.com/problems/koko-eating-bananas/
+ * Use binary search to determine min duration for all piles.
+ * hours
+ */
+size_t Search::MinEatingSpeed(vector<size_t> const &piles, size_t hours)
+{
+    /*
+    rate = n / duration
+    duration = n / rate
+    */
+    size_t start = 1, mid = 0, end = pow(10, 9); // h <= 10^9 start=0 will hit division-by-zero
+    for (; start <= end;)
+    {
+        // mid = (end - start)/2 + (end - start) % 2; Runs out of time
+        mid = start + (end - start) / 2;
+        if (CanEatAllBananasInTime(piles, mid, hours))
+            end = mid - 1;
+        else
+            start = mid + 1;
+    }
+    return start;
+}
+bool Search::CanEatAllBananasInTime(vector<size_t> const &piles, size_t rate, size_t hours)
+{
+    size_t duration = 0;
+    for (vector<size_t>::const_iterator it = piles.begin(); it != piles.end(); it++)
+        duration += (size_t)(*it / rate) + ((*it % rate) ? 1 : 0);
+    return duration <= hours;
+}
