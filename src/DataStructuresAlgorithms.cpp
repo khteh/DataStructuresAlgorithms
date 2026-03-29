@@ -1113,20 +1113,21 @@ size_t FindLongestContiguousPattern(string &str, char c)
 	for (size_t i = 0; i < str.size(); i++)
 		if (str[i] == c)
 			count++;
-		else
+		else if (max < count)
 		{
-			if (max < count)
+			max = count;
+			if (i > 0 && str[i - 1] == c && str[i + 1] == c)
 			{
-				max = count;
-				if (i > 0 && str[i - 1] == c && str[i + 1] == c)
-				{
-					count = (index != -1) ? i - index : count + 1;
-					index = i;
-				}
+				/*
+				11011 -> i:2, count:2, index: 3, max:2
+				11011101 -> i:6, count: 6-3=3, index: 6
+				*/
+				count = (index != -1) ? i - index : count + 1;
+				index = i;
 			}
-			else
-				count = 0;
 		}
+		else
+			count = 0;
 	if (index > 0)
 		str[index] = c;
 	return max;
@@ -3478,25 +3479,26 @@ size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &data)
  */
 size_t LengthOfLongestSubstring(string const &s)
 {
-	string str, result;
-	for (string::const_iterator it = s.begin(); it != s.end(); it++)
+	size_t result = 0;
+	string str;
+	for (string::const_iterator it = s.cbegin(); it != s.cend(); it++)
 	{
 		size_t offset = str.find(*it);
 		if (offset == string::npos)
 		{
 			str.append(1, *it);
-			if (next(it) == s.end() && str.size() > result.size())
-				result = str;
+			if (next(it) == s.end() && str.size() > result)
+				result = str.size();
 		}
 		else
 		{
-			if (str.size() > result.size())
-				result = str;
+			if (str.size() > result)
+				result = str.size();
 			str = str.substr(offset + 1);
 			str.append(1, *it);
 		}
 	}
-	return result.size();
+	return result;
 }
 bool IncreasingTriplet(vector<size_t> &data)
 {
