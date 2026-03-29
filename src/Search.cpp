@@ -201,10 +201,7 @@ int Search::BinarySearchCountLower(vector<long> const &source, long toSearch, lo
 }
 int Search::BinarySearch(const string &toSearch, vector<string> const &source)
 {
-    int lower, middle, upper;
-    lower = 0;
-    upper = source.size() - 1;
-    while (lower <= upper)
+    for (int lower = 0, upper = source.size() - 1, middle = 0; lower <= upper;)
     {
         while (lower <= upper && source[upper].empty())
             upper--;
@@ -569,8 +566,7 @@ size_t Search::MinEatingSpeed(vector<size_t> const &piles, size_t hours)
     size_t start = 1, mid = 0, end = pow(10, 9); // h <= 10^9 start=0 will hit division-by-zero
     for (; start <= end;)
     {
-        // mid = (end - start)/2 + (end - start) % 2; Runs out of time
-        mid = start + (end - start) / 2;
+        mid = start + (end - start) / 2 + (end - start) % 2;
         if (CanEatAllBananasInTime(piles, mid, hours))
             end = mid - 1;
         else
