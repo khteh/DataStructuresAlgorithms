@@ -4122,7 +4122,7 @@ size_t LengthOfLongestUniqueSubstring(string const &s)
 		if (!chars.count(s[i]))
 		{
 			str.append(1, s[i]);
-			chars.insert(s[i]);
+			chars.emplace(s[i]);
 		}
 		else
 		{
@@ -4130,12 +4130,11 @@ size_t LengthOfLongestUniqueSubstring(string const &s)
 				maxLength = str.size();
 			chars.clear();
 			size_t offset = str.find_first_of(s[i]) + 1;
-			if (offset > str.size())
+			if (offset > str.size()) // s[i] is the last character in str
 				str.clear();
 			else
-			{
-				for (size_t j = offset; j <= str.size(); j++)
-					chars.insert(str[j]);
+			{ // s[i] in the middle of str
+				chars.insert(str.begin() + offset, str.end());
 				str = str.substr(offset);
 			}
 			chars.insert(s[i]);
