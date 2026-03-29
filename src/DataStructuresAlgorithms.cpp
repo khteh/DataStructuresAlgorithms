@@ -3500,6 +3500,13 @@ size_t LengthOfLongestSubstring(string const &s)
 	}
 	return result;
 }
+/*
+ * https://leetcode.com/problems/longest-repeating-character-replacement/
+ */
+size_t characterReplacement(string s, size_t k)
+{
+}
+
 bool IncreasingTriplet(vector<size_t> &data)
 {
 	vector<size_t> tails;
@@ -5612,6 +5619,7 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 /*
  * https://www.hackerrank.com/challenges/bear-and-steady-gene/problem
  * 100%
+ * find the length of the smallest possible substring that he can replace to make  a steady gene
  * Sliding window implementation
  */
 long SteadyGene(string const &gene)
@@ -5622,11 +5630,7 @@ long SteadyGene(string const &gene)
 	size_t balancedCount = gene.size() / 4;
 	map<char, size_t> genes;
 	for (string::const_iterator it = gene.begin(); it != gene.end(); it++)
-	{
-		pair<map<char, size_t>::iterator, bool> result = genes.emplace(*it, 1);
-		if (!result.second)
-			result.first->second++;
-	}
+		genes[*it]++;
 	/*
 	 * ACGTCCGT : length = 8, N = 2
 	 * 'A': 1
@@ -5697,7 +5701,7 @@ long SteadyGene(string const &gene)
 	 * i: 5, j: 5 ACGTC[C]GT
 	 * 'A': 1
 	 * 'G': 2
-	 * 'C': 2 -> j:6
+	 * 'C': 2 -> j:6, i:5
 	 * 'T': 2
 	 *
 	 * i: 5, j: 6 ACGTC[CG]T => ACGTCAGT
@@ -5708,7 +5712,7 @@ long SteadyGene(string const &gene)
 	 *
 	 * i: 6, j: 6 ACGTCC[G]T
 	 * 'A': 1
-	 * 'G': 1 -> j:7
+	 * 'G': 1 -> j:7, i:6
 	 * 'C': 3
 	 * 'T': 2
 	 *
@@ -5716,7 +5720,7 @@ long SteadyGene(string const &gene)
 	 * 'A': 1
 	 * 'G': 1
 	 * 'C': 3
-	 * 'T': 1, j:8
+	 * 'T': 1, j:8, i:6
 	 */
 	for (long i = 0, j = 0; i < gene.size() && j < gene.size();)
 		if (genes['A'] <= balancedCount && genes['C'] <= balancedCount && genes['G'] <= balancedCount && genes['T'] <= balancedCount)
@@ -5728,6 +5732,25 @@ long SteadyGene(string const &gene)
 			genes[gene[j++]]--;
 	return count;
 }
+/*
+ * https://leetcode.com/problems/longest-repeating-character-replacement/
+ * 100%
+ * Sliding window implementation
+ */
+size_t LongestStringWithCharacterReplacement(string const &s, size_t k)
+{
+	map<char, size_t> freqs;
+	size_t maxLength = 0, maxFreq = 0, length = 0;
+	for (size_t i = 0, j = 0; i < s.size() && j < s.size(); j++)
+	{
+		maxFreq = max(maxFreq, ++freqs[s[j]]);
+		for (; (j - i + 1 - maxFreq) > k && i < s.size(); freqs[s[i++]]--)
+			;
+		maxLength = max(maxLength, j - i + 1);
+	}
+	return maxLength;
+}
+
 /*
  * https://www.hackerrank.com/challenges/time-conversion/problem
  * 100%

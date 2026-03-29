@@ -480,6 +480,33 @@ INSTANTIATE_TEST_SUITE_P(
     SteadyGeneChallengeTests,
     SteadyGeneChallengeTestFixture,
     ::testing::Values(make_tuple(1, "ACGTCCGT"), make_tuple(0, "AAGTGCCT"), make_tuple(2, "ACTGAAAG"), make_tuple(5, "GAAATAAA"), make_tuple(5, "TGATGCCGTCCCCTCAACTTGAGTGCTCCTAATGCGTTGC")));
+class LongestStringWithCharacterReplacementTestFixture : public testing::TestWithParam<tuple<size_t, string, size_t>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _string = get<1>(GetParam());
+        _k = get<2>(GetParam());
+    }
+    size_t LongestStringWithCharacterReplacementTest()
+    {
+        return LongestStringWithCharacterReplacement(_string, _k);
+    }
+
+protected:
+    size_t _expected, _k;
+    string _string;
+};
+TEST_P(LongestStringWithCharacterReplacementTestFixture, LongestStringWithCharacterReplacementTests)
+{
+    ASSERT_EQ(this->_expected, this->LongestStringWithCharacterReplacementTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    LongestStringWithCharacterReplacementTests,
+    LongestStringWithCharacterReplacementTestFixture,
+    ::testing::Values(make_tuple(4, "ABAB", 2), make_tuple(4, "AABABBA", 1), make_tuple(4, "ACTGAAAG", 1), make_tuple(7, "GAAATAAA", 1)));
+
 class WordsLadderTestFixture : public testing::TestWithParam<tuple<vector<string>, string, string, set<string>>>
 {
 public:

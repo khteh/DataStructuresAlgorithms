@@ -352,3 +352,4 @@ char SuperDigit(string const &, size_t);
 size_t FindConnectedComponents(vector<long> &);
 string LongestCommonPrefix(vector<string> const &);
 string DecodeString(string const &);
+size_t LongestStringWithCharacterReplacement(string const &, size_t);
