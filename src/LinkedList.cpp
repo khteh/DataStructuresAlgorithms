@@ -508,11 +508,11 @@ shared_ptr<Node<T>> LinkedList<T>::NthElementFromBack(long n) // n starts from 1
 }
 /*
  * 0->1->2->3->4->5->6->7->8->9
- * 1  2  3  4  5  6  7  8  9 10
- * n=5: p2: n-2 = 3
- * 0  1  2  3
- * p1      p2
- *                   p1      p2
+ * 10 9  8  7  6  5  4  3  2  1, n:5
+ * n=5: p2: n-1 = 4
+ * 0  1  2  3  4
+ * p1          p2
+ *                p1          p2
  * Return the nth element from the back after successful removal
  */
 template <typename T>
