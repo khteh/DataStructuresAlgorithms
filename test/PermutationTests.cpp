@@ -198,3 +198,30 @@ INSTANTIATE_TEST_SUITE_P(
     PermutationGameTests,
     PermutationGameTestFixture,
     ::testing::Values(make_tuple(true, vector<size_t>{1, 3, 2}), make_tuple(true, vector<size_t>{4, 2, 3, 1}), make_tuple(false, vector<size_t>{5, 3, 2, 1, 4}), make_tuple(false, vector<size_t>{11, 9, 10, 5, 8, 3, 2, 7, 6, 4, 1}), make_tuple(true, vector<size_t>{10, 7, 9, 2, 5, 8, 4, 1, 3, 6})));
+
+class LetterCombinationsTestFixture : public testing::TestWithParam<tuple<vector<string>, string>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _data = get<1>(GetParam());
+    }
+    vector<string> LetterCombinationsTest()
+    {
+        return _permutation.LetterCombinations(_data);
+    }
+
+protected:
+    Permutation<string> _permutation;
+    vector<string> _expected;
+    string _data;
+};
+TEST_P(LetterCombinationsTestFixture, LetterCombinationsTests)
+{
+    ASSERT_EQ(this->_expected, this->LetterCombinationsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    LetterCombinationsTests,
+    LetterCombinationsTestFixture,
+    ::testing::Values(make_tuple(vector<string>{"ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"}, "23"), make_tuple(vector<string>{"a", "b", "c"}, "2")));

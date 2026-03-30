@@ -134,7 +134,6 @@ template <typename T>
 void Permutation<T>::GetPermutations(string &w, set<string> &dictionary, set<string> &result)
 {
     for (set<string>::iterator it = dictionary.begin(); it != dictionary.end(); it++)
-    {
         if (it->size() == w.size() && *it != w)
         {
             size_t count = 0;
@@ -144,7 +143,6 @@ void Permutation<T>::GetPermutations(string &w, set<string> &dictionary, set<str
             if (count < 2)
                 result.insert(*it);
         }
-    }
 }
 /* https://www.hackerrank.com/challenges/absolute-permutation/problem
  * 100%
@@ -160,7 +158,6 @@ vector<T> Permutation<T>::AbsolutePermutation(size_t n, size_t k)
     vector<T> a;
     set<T> exists;
     for (size_t i = 1; i <= n; i++)
-    {
         if (i > k && !exists.count(i - k))
         {
             a.push_back(i - k);
@@ -173,7 +170,6 @@ vector<T> Permutation<T>::AbsolutePermutation(size_t n, size_t k)
         }
         else
             return vector<T>(1, -1);
-    }
     vector<T> result(a);
     ranges::sort(a);
     return a == sequence ? result : vector<T>(1, -1);
@@ -222,4 +218,63 @@ bool Permutation<T>::IsIncreasingSequence(vector<T> const &numbers)
         prev = *it;
     }
     return true;
+}
+/*
+ * https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/
+ * 100%
+ */
+template <typename T>
+vector<string> Permutation<T>::LetterCombinations(string const &digits)
+{
+    map<char, string> letters{
+        {'1', ""},
+        {'2', "abc"},
+        {'3', "def"},
+        {'4', "ghi"},
+        {'5', "jkl"},
+        {'6', "mno"},
+        {'7', "pqrs"},
+        {'8', "tuv"},
+        {'9', "wxyz"}};
+    vector<string> result;
+    if (digits.empty())
+        return result;
+    for (size_t i = 0; i < digits.size();)
+    {
+        vector<string> tmp;
+        string str1 = letters[digits[i]];
+        if (!i)
+        {
+            string str2 = i < digits.size() - 1 ? letters[digits[i + 1]] : "";
+            if (str2.empty())
+            {
+                for (size_t j = 0; j < str1.size(); j++)
+                    tmp.push_back(string(1, str1[j]));
+            }
+            else
+            {
+                for (size_t j = 0; j < str1.size(); j++)
+                    for (size_t k = 0; k < str2.size(); k++)
+                    {
+                        ostringstream oss;
+                        oss << str1[j] << str2[k];
+                        tmp.push_back(oss.str());
+                    }
+            }
+            i += 2;
+        }
+        else
+        {
+            for (size_t j = 0; j < str1.size(); j++)
+                for (vector<string>::iterator it = result.begin(); it != result.end(); it++)
+                {
+                    ostringstream oss;
+                    oss << *it << str1[j];
+                    tmp.push_back(oss.str());
+                }
+            i++;
+        }
+        result = tmp;
+    }
+    return result;
 }
