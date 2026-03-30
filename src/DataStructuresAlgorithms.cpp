@@ -786,6 +786,10 @@ void Parentheses(vector<string> &result, string &str, size_t index, long left, l
 		}
 	}
 }
+/*
+ * https://leetcode.com/problems/generate-parentheses/
+ * 100%
+ */
 void Parentheses(vector<string> &result, size_t count)
 {
 	string str;
