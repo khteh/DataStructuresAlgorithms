@@ -10,6 +10,7 @@ private:
 	priority_queue<T, vector<T>, greater<T>> _minHeap; // The list grows up. Top() returns minimum value.
 public:
 	PriorityQueueMedian();
+	PriorityQueueMedian(vector<T> const &);
 	~PriorityQueueMedian();
 	void Add(T);
 	double GetMedian();

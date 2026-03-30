@@ -1336,10 +1336,24 @@ size_t Range::LiveMedianCalculation(size_t d, vector<size_t> const &data)
 	ranges::sort(fifo);
 	for (size_t i = d; i < data.size(); i++)
 	{
+		/* [10, 20, 30, 40, 50], d:3
+		 * fifo: [10, 20, 30], data[i]: 40
+		 * m: 20
+		 *
+		 * fifo: [20, 30, 40], data[i]: 50
+		 * m: 30
+		 */
 		double m = odd ? fifo[d / 2] : (double)(fifo[d / 2 - 1] + fifo[d / 2]) / 2l;
 		if (data[i] >= 2 * m)
 			count++;
-		fifo.erase(find(fifo.begin(), fifo.end(), data[i - d]));
+		/*
+		 * data[i - d] = data[0] = 10
+		 * fifo: [20, 20] -> [20, 30, 40]
+		 *
+		 * data[i - d] = data[1] = 20
+		 * fifo: [30, 40] -> [30, 40, 50]
+		 */
+		fifo.erase(find(fifo.begin(), fifo.end(), data[i - d]));			  // Can't fifo.erase(fifo.begin()); as it was sorted!
 		fifo.insert(lower_bound(fifo.begin(), fifo.end(), data[i]), data[i]); // Look for element >= data[i]
 	}
 	return count;

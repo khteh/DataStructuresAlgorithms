@@ -865,26 +865,6 @@ int main(int argc, char *argv[])
 		assert(minHeap.top() == i);
 		minHeap.pop();
 	}
-	pqueue.Clear();
-	pqueue.Add(6);
-	pqueue.Add(5);
-	pqueue.Add(1);
-	pqueue.Add(3);
-	pqueue.Add(2);
-	pqueue.Add(7);
-	assert(pqueue.GetMedian() == 4);
-	pqueue.Add(8);
-	assert(pqueue.GetMedian() == 5);
-	pqueue.Clear();
-	// Test Priority Queue which returns median value
-	// -10 -9 -8 -7 -6 -5 -4 -3 -2 -1 0 1 2 3 4 5 6 7 8 9
-	for (i = -10; i < 10; i++) // 20 numbers. Median = (10th + 11th) / 2
-		pqueue.Add(i);
-	assert(pqueue.GetMedian() == -0.5);
-	pqueue.Add(10); // 21 numbers. Median = 11th number = 0
-	assert(pqueue.GetMedian() == 0);
-	pqueue.Clear();
-	assert(pqueue.GetMedian() == 0);
 	a.clear();
 	b.clear();
 	a.push_back(123);

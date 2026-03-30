@@ -7,7 +7,12 @@ template <typename T>
 PriorityQueueMedian<T>::PriorityQueueMedian()
 {
 }
-
+template <typename T>
+PriorityQueueMedian<T>::PriorityQueueMedian(vector<T> const &data)
+{
+	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
+		Add(*it);
+}
 template <typename T>
 PriorityQueueMedian<T>::~PriorityQueueMedian()
 {
@@ -44,22 +49,20 @@ void PriorityQueueMedian<T>::Add(T item)
 {
 	if (_minHeap.empty() && _maxHeap.empty())
 		_minHeap.push(item); // If start with maxHeap, the logic below has to toggle.
+	else if (item < _minHeap.top())
+		_maxHeap.push(item);
 	else
+		_minHeap.push(item);
+	// Rebalance
+	if ((int)(_maxHeap.size() - _minHeap.size()) > 1)
 	{
-		if (item < _minHeap.top())
-			_maxHeap.push(item);
-		else
-			_minHeap.push(item);
-		if ((int)(_maxHeap.size() - _minHeap.size()) > 1)
-		{
-			_minHeap.push(_maxHeap.top());
-			_maxHeap.pop();
-		}
-		else if ((int)(_minHeap.size() - _maxHeap.size()) > 1)
-		{
-			_maxHeap.push(_minHeap.top());
-			_minHeap.pop();
-		}
+		_minHeap.push(_maxHeap.top());
+		_maxHeap.pop();
+	}
+	else if ((int)(_minHeap.size() - _maxHeap.size()) > 1)
+	{
+		_maxHeap.push(_minHeap.top());
+		_minHeap.pop();
 	}
 }
 template <typename T>
@@ -73,6 +76,5 @@ double PriorityQueueMedian<T>::GetMedian()
 		return _maxHeap.top();
 	else if (_minHeap.size() == _maxHeap.size())
 		return (double)((double)_minHeap.top() + (double)_maxHeap.top()) / 2;
-	else
-		return _maxHeap.size() > _minHeap.size() ? _maxHeap.top() : _minHeap.top();
+	return _maxHeap.size() > _minHeap.size() ? _maxHeap.top() : _minHeap.top();
 }

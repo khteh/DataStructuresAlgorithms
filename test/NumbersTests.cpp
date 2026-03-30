@@ -416,3 +416,34 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(8, "9875", 4),
 					  make_tuple(3, "148", 3), make_tuple(1, "1000000000", 1000),
 					  make_tuple(9, "123", 3), make_tuple(9, "9999999999", 1000)));
+class PriorityQueueMedianTestFixture : public testing::TestWithParam<tuple<double, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_pqueue = PriorityQueueMedian<long>(_data);
+	}
+	double PriorityQueueMedianTest()
+	{
+		return _pqueue.GetMedian();
+	}
+
+protected:
+	PriorityQueueMedian<long> _pqueue;
+	double _expected;
+	vector<long> _data;
+};
+TEST_P(PriorityQueueMedianTestFixture, PriorityQueueMedianTests)
+{
+	ASSERT_EQ(this->_expected, this->PriorityQueueMedianTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	PriorityQueueMedianTests,
+	PriorityQueueMedianTestFixture,
+	::testing::Values(make_tuple(7, vector<long>{6, 13, 1, 10, 3, 8}),							// 1 3 6 8 10 13
+					  make_tuple(7, vector<long>{6, 13, -1, 10, -3, 8}),						// -3 -1 6 8 10 13
+					  make_tuple(8, vector<long>{6, 13, -1, 10, -3, 8, 17}),					// -3 -1 6 8 10 13, 17
+					  make_tuple(-0.5, ranges::iota_view(-10, 10) | ranges::to<vector<long>>()) // [-10, 10)
+					  ));
