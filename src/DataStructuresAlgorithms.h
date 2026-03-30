@@ -44,6 +44,10 @@
 #include "VariantVisitor.h"
 #include "GameTheory.h"
 #include "Permutation.h"
+/*
+ * https://stackoverflow.com/questions/1452721/whats-the-problem-with-using-namespace-std
+ * https://stackoverflow.com/questions/495021/why-can-templates-only-be-implemented-in-the-header-file
+ */
 using namespace std;
 using namespace chrono;
 using namespace oneapi::tbb;
