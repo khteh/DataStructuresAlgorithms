@@ -2338,6 +2338,15 @@ int main(int argc, char *argv[])
 		for (size_t i = 0; i < match.size(); ++i)
 			cout << "  Submatch " << i << ": " << match.str(i) << endl;
 	}
+	// map<string, size_t> myKeyCount;
+	myKeyCount.clear();
+	myKeyCount["Hello"] = 1;
+	myKeyCount["World!!!"] = 2;
+	multimap<size_t, string> myFlippedMap = flip_map(myKeyCount);
+	multimap<size_t, string>::const_iterator myFlippedMapIt = myFlippedMap.find(1);
+	assert("Hello" == myFlippedMapIt->second);
+	myFlippedMapIt = myFlippedMap.find(2);
+	assert("World!!!" == myFlippedMapIt->second);
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

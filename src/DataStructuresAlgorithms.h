@@ -141,6 +141,10 @@ public:
 	}
 	operator long() { throw long(123); }
 };
+template <typename A, typename B>
+pair<B, A> flip_pair(const pair<A, B> &);
+template <typename A, typename B, typename Cmp = less<B>>
+multimap<B, A, Cmp> flip_map(const map<A, B> &);
 void cpp20readonlyranges();
 void cpp20ranges();
 void cpp20variants();

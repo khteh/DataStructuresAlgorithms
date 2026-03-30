@@ -15,6 +15,7 @@ template long long Factorial(long);
 template long long BinomialCoefficients(size_t, size_t);
 template unsigned long long BinomialCoefficients(size_t, size_t);
 template long long MultinomialCoefficients(size_t, vector<size_t> const &, long long);
+template multimap<size_t, string, less<size_t>> flip_map(const map<string, size_t> &);
 namespace ranges = std::ranges;
 using namespace oneapi::tbb;
 long **my2DAlloc(long rows, long cols)
@@ -1882,10 +1883,10 @@ pair<B, A> flip_pair(const pair<A, B> &p)
 	return pair<B, A>(p.second, p.first);
 }
 
-template <typename A, typename B, typename Compare = std::less<typename iterator_traits<B>::value_type>>
-multimap<B, A, Compare> flip_map(const map<A, B> &src)
+template <typename A, typename B, typename Cmp>
+multimap<B, A, Cmp> flip_map(const map<A, B> &src)
 {
-	multimap<B, A, Compare> dst;
+	multimap<B, A, Cmp> dst;
 	ranges::transform(src, inserter(dst, dst.begin()), flip_pair<A, B>);
 	return dst;
 }
@@ -3504,13 +3505,6 @@ size_t LengthOfLongestSubstring(string const &s)
 	}
 	return result;
 }
-/*
- * https://leetcode.com/problems/longest-repeating-character-replacement/
- */
-size_t characterReplacement(string s, size_t k)
-{
-}
-
 bool IncreasingTriplet(vector<size_t> &data)
 {
 	vector<size_t> tails;
