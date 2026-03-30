@@ -27,6 +27,8 @@ void PriorityQueueMedian<T>::Clear()
 		_minHeap.pop();
 }
 /*
+ * https://leetcode.com/problems/median-of-two-sorted-arrays/
+ * 100%
  maxHeap...Median...minHeap
 	pqueue.Add(6);
 	pqueue.Add(5);
@@ -48,8 +50,8 @@ template <typename T>
 void PriorityQueueMedian<T>::Add(T item)
 {
 	if (_minHeap.empty() && _maxHeap.empty())
-		_minHeap.push(item); // If start with maxHeap, the logic below has to toggle.
-	else if (item < _minHeap.top())
+		_minHeap.push(item);							 // If start with maxHeap, the logic below has to toggle.
+	else if (!_minHeap.empty() && item < _minHeap.top()) // Checking for empty container before accessing it is critical to avoid undefined behaviour!
 		_maxHeap.push(item);
 	else
 		_minHeap.push(item);

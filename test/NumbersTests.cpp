@@ -442,8 +442,9 @@ TEST_P(PriorityQueueMedianTestFixture, PriorityQueueMedianTests)
 INSTANTIATE_TEST_SUITE_P(
 	PriorityQueueMedianTests,
 	PriorityQueueMedianTestFixture,
-	::testing::Values(make_tuple(7, vector<long>{6, 13, 1, 10, 3, 8}),							// 1 3 6 8 10 13
-					  make_tuple(7, vector<long>{6, 13, -1, 10, -3, 8}),						// -3 -1 6 8 10 13
-					  make_tuple(8, vector<long>{6, 13, -1, 10, -3, 8, 17}),					// -3 -1 6 8 10 13, 17
-					  make_tuple(-0.5, ranges::iota_view(-10, 10) | ranges::to<vector<long>>()) // [-10, 10)
+	::testing::Values(make_tuple(2.5L, vector<long>{3, 2, 1, 4}),								 // 1 2 3 4
+					  make_tuple(7, vector<long>{6, 13, 1, 10, 3, 8}),							 // 1 3 6 8 10 13
+					  make_tuple(7, vector<long>{6, 13, -1, 10, -3, 8}),						 // -3 -1 6 8 10 13
+					  make_tuple(8, vector<long>{6, 13, -1, 10, -3, 8, 17}),					 // -3 -1 6 8 10 13, 17
+					  make_tuple(-0.5L, ranges::iota_view(-10, 10) | ranges::to<vector<long>>()) // [-10, 10)
 					  ));
