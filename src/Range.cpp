@@ -1504,3 +1504,50 @@ size_t Range::TrapRainWater(vector<size_t> const &walls)
 			i++;
 	return result;
 }
+/*
+ * https://leetcode.com/problems/first-missing-positive/
+ * 100%
+ */
+size_t Range::FirstMissingPositive(vector<long> &data)
+{
+	/*
+	1 2 0
+	1: A[0]=1 A[A[i] - 1] = A[1-1] = A[0] = 1
+	2: A[1]=2 A[A[i] - 1] = A[2-1] = A[1] = 2
+
+	2 3 0
+	2: A[0]=2 A[A[i] - 1] = A[2-1] = A[1] = 3 != A[0]
+	   A[0]=3, A[1]=2
+	   3 2 0
+	   A[0]=3 a[A[i] - 1] = A[3-1] = A[2] = 0 != A[0]
+	   A[0]=0 A[2]=3
+	   0 2 3
+
+	2: A[1]=2 A[A[i] - 1] = A[2-1] = A[1] = 2
+	3: A[2]=3 A[A[i] - 1] = A[3-1] = A[2] = 3
+
+	0 1 2
+	0:
+	1: A[1]=1 A[A[i] - 1] = A[1-1] = A[0] = 0 != A[1]
+	   A[1]=0 A[0]=1
+	   1 0 2
+	2: A[2]=2 A[A[i] - 1] = A[2-1] = A[1] = 0 != A[2]
+	   A[1]=2 A[2]=0
+	   1 2 0
+
+	10 3 5
+	10: A[0] > n
+	3:  A[1]=3 A[A[i] - 1] = A[3-1] = A[2] = 5
+		A[1]=5 A[2]=3
+		10 5 3
+		A[1]=5 > n
+	3: A[2]=3 A[A[i] - 1] = A[3-1] = A[2] = 3
+	*/
+	for (size_t i = 0; i < data.size(); i++)
+		for (; data[i] > 0 && data[i] <= data.size() && data[data[i] - 1] != data[i];)
+			swap(data[i], data[data[i] - 1]);
+	for (size_t i = 0; i < data.size(); i++)
+		if (data[i] != i + 1)
+			return i + 1;
+	return data.size() + 1;
+}

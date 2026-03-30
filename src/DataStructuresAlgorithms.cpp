@@ -15,7 +15,7 @@ template long long Factorial(long);
 template long long BinomialCoefficients(size_t, size_t);
 template unsigned long long BinomialCoefficients(size_t, size_t);
 template long long MultinomialCoefficients(size_t, vector<size_t> const &, long long);
-template multimap<size_t, string, less<size_t>> flip_map(const map<string, size_t> &);
+template multimap<size_t, string, less<size_t>> flip_map(const map<string, size_t> &, less<size_t>);
 namespace ranges = std::ranges;
 using namespace oneapi::tbb;
 long **my2DAlloc(long rows, long cols)
@@ -1882,13 +1882,11 @@ pair<B, A> flip_pair(const pair<A, B> &p)
 {
 	return pair<B, A>(p.second, p.first);
 }
-
+// https://stackoverflow.com/questions/79916950/how-to-declare-and-define-a-generic-template-flip-map-function#79916950
 template <typename A, typename B, typename Cmp>
-multimap<B, A, Cmp> flip_map(const map<A, B> &src)
+multimap<B, A, Cmp> flip_map(const map<A, B> &src, Cmp cmp)
 {
-	multimap<B, A, Cmp> dst;
-	ranges::transform(src, inserter(dst, dst.begin()), flip_pair<A, B>);
-	return dst;
+	return {from_range, src | views::transform(flip_pair<A, B>), cmp};
 }
 /* https://leetcode.com/problems/word-search/
  * 100%

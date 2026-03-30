@@ -2342,11 +2342,14 @@ int main(int argc, char *argv[])
 	myKeyCount.clear();
 	myKeyCount["Hello"] = 1;
 	myKeyCount["World!!!"] = 2;
+	myKeyCount["There!!!"] = 2;
 	multimap<size_t, string> myFlippedMap = flip_map(myKeyCount);
 	multimap<size_t, string>::const_iterator myFlippedMapIt = myFlippedMap.find(1);
 	assert("Hello" == myFlippedMapIt->second);
-	myFlippedMapIt = myFlippedMap.find(2);
-	assert("World!!!" == myFlippedMapIt->second);
+	cout << "Flipped map with key 2: ";
+	for (auto [itr, rangeEnd] = myFlippedMap.equal_range(2); itr != rangeEnd; ++itr)
+		cout << itr->second << ", ";
+	cout << endl;
 	/***** The End *****/
 	cout << "Press ENTER to exit";
 	getline(cin, str);

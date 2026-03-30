@@ -52,4 +52,5 @@ public:
 	size_t LiveMedianCalculation(size_t, vector<size_t> const &);
 	long VectorSlicesSum(vector<long> const &);
 	size_t TrapRainWater(vector<size_t> const &);
+	size_t FirstMissingPositive(vector<long> &);
 };
