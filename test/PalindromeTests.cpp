@@ -35,7 +35,8 @@ TEST_P(FindBiggestPalindromeSubstringTestFixture, FindBiggestPalindromeSubstring
 INSTANTIATE_TEST_SUITE_P(
 	FindBiggestPalindromeSubstringTests,
 	FindBiggestPalindromeSubstringTestFixture,
-	::testing::Values(make_tuple("ABCDCBA", "AABCDCBA"),
+	::testing::Values(make_tuple("", ""), make_tuple("a", "a"), make_tuple("aa", "aa"),
+					  make_tuple("ABCDCBA", "AABCDCBA"),
 					  make_tuple("ABCDDCBA", "AABCDDCBA"),
 					  make_tuple("ABCBA", "DEFABCBAYT"),
 					  make_tuple("ABCCBA", "DEFABCCBAYT")));

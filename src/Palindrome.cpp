@@ -69,7 +69,8 @@ bool Palindrome::IsPalindrome2(string const &s)
     }
     return true;
 }
-/*
+/* https://leetcode.com/problems/longest-palindromic-substring
+ * 100%
  * "" -> ""
  * "a" -> ""
  * "ab" -> "a"
@@ -77,39 +78,29 @@ bool Palindrome::IsPalindrome2(string const &s)
  */
 string Palindrome::FindBiggestPalindromeSubstring(string const &s)
 {
-    string tmp, palindrome;
-    for (int i = 1; i < s.size() - 1; i++)
+    string result;
+    set<char> chars(s.begin(), s.end());
+    if (chars.size() == 1)
+        return s;
+    size_t length = s.size();
+    for (size_t center = 0; center < 2 * length; center++)
     {
-        if (s[i] == s[i + 1])
-        { // Even palindrome: abba
-            for (int j = i, k = i + 1; j >= 0 && k < s.size(); j--, k++)
-            {
-                if (s[j] == s[k])
-                {
-                    tmp = s.substr(j, k - j + 1);
-                    if (tmp.size() > palindrome.size())
-                        palindrome = tmp;
-                }
-                else
-                    break;
-            }
+        /*
+         * [left, center, right] : [0,0,0], [0,1,1], [1,2,1], [1,3,2], ...
+         */
+        long left = center / 2;
+        long right = left + center % 2;
+        string palindrome; // Keep the biggest palindrome around the current 'center'
+        while (left >= 0 && right < (long)length && s[left] == s[right])
+        {
+            palindrome = s.substr(left, right - left + 1);
+            left--;
+            right++;
         }
-        else if (s[i - 1] == s[i + 1])
-        { // Odd palindrome: aba
-            for (int j = i - 1, k = i + 1; j >= 0 && k < s.size(); j--, k++)
-            {
-                if (s[j] == s[k])
-                {
-                    tmp = s.substr(j, k - j + 1);
-                    if (tmp.size() > palindrome.size())
-                        palindrome = tmp;
-                }
-                else
-                    break;
-            }
-        }
+        if (palindrome.size() > result.size())
+            result = palindrome;
     }
-    return palindrome;
+    return result;
 }
 /*
 "aa"
