@@ -267,6 +267,9 @@ bool Matrix<T>::SearchMatrixCol(vector<vector<T>> const &matrix, T target, size_
 }
 /* https://leetcode.com/problems/spiral-matrix/
  * 100%
+ * 1 2 3
+ * 4 5 6
+ * 7 8 9
  */
 template <typename T>
 vector<T> Matrix<T>::MatrixSprialOrder(vector<vector<T>> const &matrix)
@@ -276,36 +279,36 @@ vector<T> Matrix<T>::MatrixSprialOrder(vector<vector<T>> const &matrix)
 	int left = 0, right = matrix[0].size() - 1, top = 0, bottom = matrix.size() - 1;
 	for (row = top, col = left; top <= bottom && left <= right;)
 	{
-		// left to right
+		// left to right: [1 2 3]
 		for (; col <= right; col++)
 			result.push_back(matrix[row][col]);
-		top++;
-		col--;
-		row++;
-		if (!(top <= bottom))
+		top++; // top: 1
+		col--; // col: 2
+		row++; // row: 1
+		if (top > bottom)
 			return result;
-		// top to bottom
+		// top to bottom: [3 6 9]
 		for (; row <= bottom; row++)
 			result.push_back(matrix[row][col]);
-		right--;
-		bottom--;
-		row--;
-		col--;
-		if (!(left <= right))
+		right--;  // right: 1
+		bottom--; // bottom: 1
+		row--;	  // row: 2
+		col--;	  // col: 1
+		if (left > right)
 			return result;
-		// right to left
+		// right to left [9 8 7]
 		for (; col >= left; col--)
 			result.push_back(matrix[row][col]);
-		col++;
-		row--;
-		if (!(top <= bottom))
+		col++; // col: 0
+		row--; // row: 1
+		if (top > bottom)
 			return result;
-		// bottom to top
+		// bottom to top [7 4 1]
 		for (; row >= top; row--)
 			result.push_back(matrix[row][col]);
-		left++;
-		row++;
-		col++;
+		left++; // left: 1
+		row++;	// row: 0
+		col++;	// col: 1
 	}
 	return result;
 }
