@@ -164,10 +164,9 @@ long Range::ConsecutiveLargestProduct(vector<long> const &data)
 	   j i		sum: 6
 	   j   i	sum: 9 count: 3
 		 j i	sum: 7 count: 2
-[1 4 4]
+[1 4 4] target: 4
  j i     sum: 5 count: 2
    i,j   sum: 4 count: 1
-   j i   sum: 8 count: 2
 	 i,j sum: 4 count: 1
 */
 size_t Range::MinSumSubSequence(size_t target, vector<size_t> const &data)
