@@ -3,6 +3,11 @@
 template class Greedy<size_t>;
 /* https://app.codility.com/programmers/lessons/16-greedy_algorithms/max_nonoverlapping_segments/
  * 100%
+    A[0] = 1    B[0] = 5
+    A[1] = 3    B[1] = 6
+    A[2] = 7    B[2] = 8
+    A[3] = 9    B[3] = 9
+    A[4] = 9    B[4] = 10
  */
 template <typename T>
 T Greedy<T>::MaxNonOverlappingSegments(vector<T> const &head, vector<T> const &tail)
@@ -13,27 +18,19 @@ T Greedy<T>::MaxNonOverlappingSegments(vector<T> const &head, vector<T> const &t
         last_nonoverlapping_tail = tail[0];
         count++;
         for (size_t i = 1; i < head.size(); i++)
-        {
             if (head[i] > last_nonoverlapping_tail)
             {
                 last_nonoverlapping_tail = tail[i];
                 count++;
             }
-        }
     }
     return count;
 }
 /* https://app.codility.com/programmers/lessons/16-greedy_algorithms/tie_ropes/
  * 100%
- * A[0] = 1
- * A[1] = 2
- * A[2] = 3
- * A[3] = 4
- * A[4] = 1
- * A[5] = 1
- * A[6] = 3
+ * [1, 2, 3, 4, 1, 1, 3], n:4
  * n: 4
- * {0,1,2},{3},{4,5,6}
+ * {1,2,3} {4} {1,1,3} -> max #ropes = 3
  */
 template <typename T>
 T Greedy<T>::TieRopes(T n, vector<T> const &data)
@@ -52,6 +49,8 @@ T Greedy<T>::TieRopes(T n, vector<T> const &data)
 /*
  * https://www.hackerrank.com/challenges/greedy-florist/problem
  * 100%
+ * [1 2 3 4], k=3 => 3 people 4 flowers.
+ * Each will buy a flower which costs  [2 3 4], 4th flower costs (1 + 1) * 1 = 2. Total cost = 2+3+4+2 = 11
 [1 2 3 4 5 6 7 8 9 10] k: 3 => 3 people; 10 flowers. 1 extra flower
 [10 9  8  7    6    5    4    3    2    1]
  P1 P2 P3 P1+1 P2+1 P3+1 P1+2 P2+2 P3+2 P1+3
@@ -73,23 +72,20 @@ T Greedy<T>::GetMinimumCost(T n, vector<T> &costs)
 /*
  * https://www.hackerrank.com/challenges/angry-children/problem
  * 100%
+ * [1, 2, 4, 7], k:2
+ * [1, 2]: 1
+ *
  */
 template <typename T>
 T Greedy<T>::MaxMin(T k, vector<T> &arr)
 {
     ranges::sort(arr);
     T unfair = numeric_limits<T>::max();
-    T max = 0;
-    for (size_t i = 0; i < arr.size() && max < arr.size() - 1; i++)
+    for (size_t i = 0, j = i + k - 1; i <= arr.size() - k && j < arr.size(); i++, j++)
     {
-        for (max = i + k - 1; max >= arr.size(); max--)
-            ;
-        if (i != max)
-        {
-            size_t diff = abs(abs((long)arr[max]) - abs((long)arr[i]));
-            if (diff < unfair)
-                unfair = diff;
-        }
+        size_t diff = abs(abs((long)arr[j]) - abs((long)arr[i]));
+        if (diff < unfair)
+            unfair = diff;
     }
     return unfair;
 }
@@ -97,6 +93,7 @@ T Greedy<T>::MaxMin(T k, vector<T> &arr)
  * https://www.hackerrank.com/challenges/equal/problem
  * https://rohangupta-3817.medium.com/hackerrank-dp-equal-5adc78771571
  * 100%
+ * Minimum rounds to level all the elements in the vector.
  *
  * Each round can add 1, 2 or 5 to all except one element
  *

@@ -54,7 +54,7 @@ TEST_P(TieRopesTestTestFixture, TieRopesTestTests)
 INSTANTIATE_TEST_SUITE_P(
 	TieRopesTestTests,
 	TieRopesTestTestFixture,
-	::testing::Values(make_tuple(3, 4, vector<size_t>{1, 2, 3, 4, 1, 1, 3})));
+	::testing::Values(make_tuple(3, 4, vector<size_t>{1, 2, 3, 4, 1, 1, 3}), make_tuple(0, 4, vector<size_t>{3}), make_tuple(1, 3, vector<size_t>{4})));
 class GetMinimumCostTestTestFixture : public GreedyAlgorithmFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
 public:
@@ -98,7 +98,7 @@ TEST_P(MaxMinTestFixture, MaxMinTests)
 INSTANTIATE_TEST_SUITE_P(
 	MaxMinTests,
 	MaxMinTestFixture,
-	::testing::Values(make_tuple(20, 3, vector<size_t>{10, 100, 300, 200, 1000, 20, 30}), make_tuple(3, 4, vector<size_t>{1, 2, 3, 4, 10, 20, 30, 40, 100, 200}), make_tuple(0, 2, vector<size_t>{1, 2, 1, 2, 1}), make_tuple(2, 3, vector<size_t>{100, 200, 300, 350, 400, 401, 402})));
+	::testing::Values(make_tuple(1, 2, vector<size_t>{1, 4, 7, 2}), make_tuple(20, 3, vector<size_t>{10, 100, 300, 200, 1000, 20, 30}), make_tuple(3, 4, vector<size_t>{1, 2, 3, 4, 10, 20, 30, 40, 100, 200}), make_tuple(0, 2, vector<size_t>{1, 2, 1, 2, 1}), make_tuple(2, 3, vector<size_t>{100, 200, 300, 350, 400, 401, 402})));
 
 class EqualDistributionTestFixture : public GreedyAlgorithmFixture<size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
 {
