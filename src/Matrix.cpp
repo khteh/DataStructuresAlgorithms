@@ -312,14 +312,17 @@ vector<T> Matrix<T>::MatrixSprialOrder(vector<vector<T>> const &matrix)
 /* https://leetcode.com/problems/rotate-image/
  * Rotate a NxN 2D matrix 90 degree clockwise in-place.
  * 100%
+ * (1) swap(matrix[i][i + k], matrix[i + k][j]):
  * [1] 2 [3]	7 [2]  1     7 4 1
- * 4   5  6  => 4  5  [6] => 8 5 2
- * 7  8   9     9  8   3     9 6 3
+ *  4  5  6  =>[4] 5  [6] => 8 5 2
+ *  7 8  9      9 [8]  3     9 6 3
  *
+ * (2) swap(matrix[i][i + k], matrix[j][j - k]);
  * [3] 2  1     7 [6] 1
  * 4   5  6     4  5  2
  * 7   8 [9]    9 [8] 3
  *
+ * (3) swap(matrix[i][i + k], matrix[j - k][i]);
  * [9] 2 1      7  [8] 1
  * 4   5 6      [4] 5  2
  * [7] 8 3      9   6  3
@@ -328,14 +331,12 @@ template <typename T>
 void Matrix<T>::RotateMatrix90DegressClockwise(vector<vector<T>> &matrix)
 {
 	for (long i = 0, j = matrix.size() - 1; i < j; i++, j--)
-	{
 		for (size_t k = 0; k < (size_t)(j - i); k++)
 		{
 			swap(matrix[i][i + k], matrix[i + k][j]);
 			swap(matrix[i][i + k], matrix[j][j - k]);
 			swap(matrix[i][i + k], matrix[j - k][i]);
 		}
-	}
 }
 /*
  * https://www.hackerrank.com/challenges/matrix-rotation-algo/problem
