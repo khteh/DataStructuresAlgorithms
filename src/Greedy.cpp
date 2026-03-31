@@ -171,3 +171,32 @@ T Greedy<T>::MaxArea(vector<T> const &heights)
     }
     return result;
 }
+/*
+ * https://leetcode.com/problems/jump-game/
+ * 100%
+    [2,3,1,1,4]
+    i:0 2: i == maxReach,maxReach:2
+    i:1 3: i < maxReach, maxReach: max(2, 1+3) = max(2, 4) = 4
+    i:2 1: i < maxReach, maxReach: max(4, 2+1) = 4
+    i:3 1: i < maxReach, maxReach: max(4, 3+1) = 4
+    i:4 4: i == maxReach, maxReach: max(4, 4+4) = 8
+
+    [3,2,1,0,4]
+    i:0 3: i == maxReach, maxReach:3
+    i:1 2: i < maxReach, maxReach: max(3, 1+2) = 3
+    i:2 1: i < maxReach, maxReach: max(3, 2+1) = 3
+    i:3 0: i == maxReach, maxReach: max(3,3+0) = 3
+    i:4 4: i > maxReach -> false
+*/
+template <typename T>
+bool Greedy<T>::CanReachDestination(vector<T> const &steps)
+{
+    T maxReach = T();
+    for (size_t i = 0; i < steps.size(); i++)
+    {
+        if (i > maxReach)
+            return false;
+        maxReach = max(maxReach, (T)i + steps[i]);
+    }
+    return true;
+}

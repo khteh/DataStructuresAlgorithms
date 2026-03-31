@@ -395,12 +395,13 @@ size_t Knapsack::StairsClimbingDynamicProgramming(long destination, vector<size_
  */
 size_t Knapsack::StairsClimbingDynamicProgrammingBottomUp(long destination, vector<size_t> &steps)
 {
+	/* Limitation: The steps are 1 apart: [1,2,3,...] <- diff=1. What happens if the steps are varying sizes: [1,3,6,8...] <- diffs are different */
 	vector<size_t> combinations(steps.size(), 0);
 	combinations[0] = 1;
 	for (size_t i = 1; i <= (size_t)destination; i++)
 	{
 		combinations[i % combinations.size()] = parallel_reduce(
-			blocked_range<size_t>(0, combinations.size()), (size_t)0, // Sum of [0, steps.size()] elements
+			blocked_range<size_t>(0, combinations.size()), (size_t)0, // Sum of half-open [0, steps.size()) elements
 			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 			{
 				for (size_t i = r.begin(); i < r.end(); i++)

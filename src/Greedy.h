@@ -10,4 +10,5 @@ public:
     T MaxMin(T, vector<T> &);
     T EqualDistribution(vector<T> const &);
     T MaxArea(vector<T> const &);
+    bool CanReachDestination(vector<T> const &);
 };

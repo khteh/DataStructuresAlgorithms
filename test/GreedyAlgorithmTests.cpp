@@ -149,3 +149,24 @@ INSTANTIATE_TEST_SUITE_P(
 	MaxAreaTests,
 	MaxAreaTestFixture,
 	::testing::Values(make_tuple(49, vector<size_t>{1, 8, 6, 2, 5, 4, 8, 3, 7}), make_tuple(1, vector<size_t>{1, 1}), make_tuple(24, vector<size_t>{1, 3, 2, 5, 25, 24, 5})));
+class CanReachDestinationTestFixture : public GreedyAlgorithmFixture<size_t>, public testing::TestWithParam<tuple<bool, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_dataCollection1 = get<1>(GetParam());
+	}
+	bool CanReachDestinationTest()
+	{
+		return _greedy.CanReachDestination(_dataCollection1);
+	}
+};
+TEST_P(CanReachDestinationTestFixture, CanReachDestinationTests)
+{
+	ASSERT_EQ(this->_expected, this->CanReachDestinationTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	CanReachDestinationTests,
+	CanReachDestinationTestFixture,
+	::testing::Values(make_tuple(true, vector<size_t>{2, 3, 1, 1, 4}), make_tuple(false, vector<size_t>{3, 2, 1, 0, 4}), make_tuple(false, vector<size_t>{0, 2, 3})));
