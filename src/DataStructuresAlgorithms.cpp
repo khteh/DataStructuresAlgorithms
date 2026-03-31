@@ -1882,10 +1882,13 @@ pair<B, A> flip_pair(const pair<A, B> &p)
 {
 	return pair<B, A>(p.second, p.first);
 }
-// https://stackoverflow.com/questions/79916950/how-to-declare-and-define-a-generic-template-flip-map-function#79916950
+/* https://stackoverflow.com/questions/79916950/how-to-declare-and-define-a-generic-template-flip-map-function#79916950
+ * B is the map's ::mapped_type
+ */
 template <typename A, typename B, typename Cmp>
 multimap<B, A, Cmp> flip_map(const map<A, B> &src, Cmp cmp)
 {
+	// using multimap's std::from_range constructor overload
 	return {from_range, src | views::transform(flip_pair<A, B>), cmp};
 }
 /* https://leetcode.com/problems/word-search/
