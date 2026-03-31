@@ -552,6 +552,7 @@ INSTANTIATE_TEST_SUITE_P(
 	ConsecutiveMaximumSumTests,
 	ConsecutiveMaximumSumTestFixture,
 	::testing::Values(make_tuple(5, vector<long>{2, 3}, vector<long>{2, 3, -6}),
+					  make_tuple(-1, vector<long>{-1}, vector<long>{-1}),
 					  make_tuple(15, vector<long>{4, 5, 6}, vector<long>{2, 3, -6, 4, 5, 6, -20}),
 					  make_tuple(1, vector<long>{0, 0, 1}, vector<long>{0, -1, 0, 0, 1, 0, -1, -1}),
 					  make_tuple(2, vector<long>{1, 1}, vector<long>{-1, -1, -1, -1, -1, -1, 1, 1}),

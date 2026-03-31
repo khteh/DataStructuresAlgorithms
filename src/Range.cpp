@@ -2,30 +2,38 @@
 #include "Range.h"
 /* https://en.wikipedia.org/wiki/Maximum_subarray_problem
  * Kadane's algorithm
+ * https://leetcode.com/problems/maximum-subarray/
+ * 100%
  */
 long Range::ConsecutiveMaximumSum(vector<long> const &data, vector<long> &result)
 {
 	vector<long> kadane;
 	map<long, vector<long>> results;
-	long max_ending_here = 0, max_so_far = 0; // max_so_far = max of all max_ending_here's found
+	long sum = 0, largest = 0;
 	for (vector<long>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
-		max_ending_here += *it;
-		if (max_ending_here < 0)
+		sum += *it;
+		if (sum < 0)
 		{
-			max_ending_here = 0;
+			sum = 0;
 			kadane.clear();
 		}
 		else
 			kadane.push_back(*it);
-		if (max_so_far < max_ending_here)
+		if (sum > largest)
 		{
-			max_so_far = max_ending_here;
-			results.emplace(max_so_far, kadane);
+			largest = sum;
+			results.emplace(largest, kadane);
 		}
 	}
-	result = results[max_so_far];
-	return max_so_far;
+	if (results.empty())
+	{
+		largest = *ranges::max_element(data);
+		result.push_back(largest);
+	}
+	else
+		result = results[largest];
+	return largest;
 }
 /*
  * https://www.hackerrank.com/challenges/maximum-subarray-sum/problem
