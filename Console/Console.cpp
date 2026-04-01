@@ -2350,6 +2350,14 @@ int main(int argc, char *argv[])
 	for (auto [itr, rangeEnd] = myFlippedMap.equal_range(2); itr != rangeEnd; ++itr)
 		cout << itr->second << ", ";
 	cout << endl;
+	str = arithmetic.Add2Binary("11", "1");
+	assert("100" == arithmetic.Add2Binary("11", "1"));
+	str = arithmetic.Add2Binary("1010", "1011");
+	assert("10101" == arithmetic.Add2Binary("1010", "1011"));
+	str = arithmetic.Add2Binary("100", "10");
+	assert("110" == arithmetic.Add2Binary("100", "10"));
+	str = arithmetic.Add2Binary("100", "110010");
+	assert("110110" == arithmetic.Add2Binary("100", "110010"));
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

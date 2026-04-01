@@ -291,6 +291,41 @@ T Arithmetic<T>::AddWithoutArithmetic(T sum, T carry)
 	return !carry ? sum : AddWithoutArithmetic(sum ^ carry, (unsigned long long)(sum & carry) << 1);
 }
 template <typename T>
+char Arithmetic<T>::Add2BinaryDigits(string &result, char a, char b, char carry)
+{
+	char sum = a + b + carry - (3 * '0');
+	carry = (sum / 2) ? '1' : '0';
+	result.append(1, !(sum % 2) ? '0' : '1');
+	return carry;
+}
+/*
+ * https://leetcode.com/problems/add-binary/
+ * 100%
+ */
+template <typename T>
+string Arithmetic<T>::Add2Binary(string const &a, string const &b)
+{
+	string result;
+	char carry = '0';
+	for (int i = a.size() - 1, j = b.size() - 1; i >= 0 && j >= 0; i--, j--)
+		carry = Add2BinaryDigits(result, a[i], b[j], carry);
+	if (a.size() > b.size())
+	{
+		for (int i = a.size() - b.size() - 1; i >= 0; i--)
+			carry = Add2BinaryDigits(result, a[i], '0', carry);
+	}
+	else if (b.size() > a.size())
+	{
+		for (int i = b.size() - a.size() - 1; i >= 0; i--)
+			carry = Add2BinaryDigits(result, b[i], '0', carry);
+	}
+	if (carry == '1')
+		result.append(1, '1');
+	ranges::reverse(result);
+	return result;
+}
+
+template <typename T>
 // Function for finding sum of larger numbers
 string Arithmetic<T>::NumberStringSum(const string &str1, const string &str2)
 {

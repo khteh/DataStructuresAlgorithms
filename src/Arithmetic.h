@@ -17,6 +17,7 @@ class Arithmetic
 {
 private:
 	bool CheckIfAdditiveSequence(size_t, size_t, string const &);
+	char Add2BinaryDigits(string &, char, char, char);
 
 public:
 	T gcd(T, T)
@@ -53,6 +54,7 @@ public:
 		requires arithmetic_type<T>;
 	T AddWithoutArithmetic(T, T)
 		requires arithmetic_type<T>;
+	string Add2Binary(string const &, string const &);
 	bool IsAdditiveNumber(string const &);
 	void NumberToVector(T, vector<T> &)
 		requires arithmetic_type<T>;
