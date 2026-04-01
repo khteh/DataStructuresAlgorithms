@@ -52,9 +52,7 @@ template <typename T>
 void Matrix<T>::MatrixDistance(vector<vector<T>> &data, size_t x, size_t y)
 {
 	if (x < data.size() && y < data[0].size())
-	{
 		for (size_t i = 0; i < data.size(); i++)
-		{
 			for (size_t j = 0; j < data[0].size(); j++)
 			{
 				if (x != i && y != j)
@@ -64,8 +62,6 @@ void Matrix<T>::MatrixDistance(vector<vector<T>> &data, size_t x, size_t y)
 				else if (x != i && y == j)
 					data[i][j] = abs((long)(x - i));
 			}
-		}
-	}
 }
 template <typename T>
 void Matrix<T>::MatrixSort(vector<vector<T>> &data)
@@ -462,6 +458,49 @@ T Matrix<T>::ChessQueensMoveCount(T dimension, T r_q /*[1,dimension]*/, T c_q /*
 	return count;
 }
 /*
+ * https://leetcode.com/problems/n-queens/description/
+ * 100%
+ * Fill up queens from row-0 to bottom. In each row, check if the col is safe and recurse.
+ */
+template <typename T>
+void Matrix<T>::ChessQueensPlacements(vector<string> &board, size_t r, vector<vector<string>> &result)
+{
+	if (r == board.size())
+	{
+		result.push_back(board);
+		return;
+	}
+	for (size_t c = 0; c < board[r].size(); c++)
+	{
+		bool isSafe = true;
+		// Check if c is safe: no other queens in c. Since this is iterator over columns, there is no need to check the validity of columns.
+		for (size_t i = 0; i < r && isSafe; i++)
+			if (board[i][c] == 'Q')
+				isSafe = false;
+		if (isSafe)
+		{
+			// Check Upper-left diagonal
+			for (size_t i = 1; i <= min(r, c) && isSafe; i++)
+				if (board[r - i][c - i] == 'Q')
+					isSafe = false;
+		}
+		if (isSafe)
+		{
+			// Check Upper-right diagonal
+			// [0 1 2 3 4]: c:2
+			for (size_t i = 1; i <= min(r, board[r].size() - 1 - c) && isSafe; i++)
+				if (board[r - i][c + i] == 'Q')
+					isSafe = false;
+		}
+		if (isSafe)
+		{
+			board[r][c] = 'Q';
+			ChessQueensPlacements(board, r + 1, result);
+			board[r][c] = '.'; // Reset the column for the following iterations
+		}
+	}
+}
+/*
  * https://www.hackerrank.com/challenges/gridland-metro/problem
  * 100%
  */
@@ -522,7 +561,6 @@ T Matrix<T>::SurfaceArea3D(vector<vector<T>> const &data)
 {
 	T zArea = 0, xArea = 0, yArea = 0;
 	for (size_t i = 0; i < data.size(); i++)
-	{
 		for (size_t j = 0; j < data[i].size(); j++)
 		{
 			if (data[i][j] > 0)
@@ -550,7 +588,6 @@ T Matrix<T>::SurfaceArea3D(vector<vector<T>> const &data)
 			if (j && j != data[i].size() - 1)
 				yArea += abs((long)(data[i][j] - data[i][j - 1]));
 		}
-	}
 	return xArea + yArea + zArea * 2;
 }
 /* https://www.hackerrank.com/challenges/two-pluses/problem
@@ -563,7 +600,6 @@ size_t Matrix<T>::TwoCrosses(vector<string> const &grid)
 	// Firstly, record all the crosses with size > 1. A single cell is considered a valid cross
 	for (size_t i = 1; i < grid.size(); i++)
 		for (size_t j = 1; j < grid[i].size(); j++)
-		{
 			if (grid[i][j] == 'G')
 			{
 				size_t up = 0, down = 0, left = 0, right = 0;
@@ -585,7 +621,6 @@ size_t Matrix<T>::TwoCrosses(vector<string> const &grid)
 				for (; size; size--)
 					crosses.emplace(size * 4 + 1, vector<size_t>{i, j});
 			}
-		}
 	// If no crosses with size > 1 found, return if there is a 'G' cell in the grid
 	if (crosses.empty())
 	{
@@ -605,7 +640,6 @@ size_t Matrix<T>::TwoCrosses(vector<string> const &grid)
 		firstWidth = (it1->first - 1) / 4;
 		products.insert(product);
 		for (multimap<size_t, vector<size_t>>::iterator it = it1; it != crosses.end(); it++)
-		{
 			if (it->first > 1)
 			{
 				size_t x = it->second[1], y = it->second[0];
@@ -663,7 +697,6 @@ size_t Matrix<T>::TwoCrosses(vector<string> const &grid)
 						products.insert(product * it->first);
 				}
 			}
-		}
 	}
 	return *ranges::max_element(products);
 }

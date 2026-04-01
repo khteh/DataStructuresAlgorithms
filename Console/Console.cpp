@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 	vector<vector<unsigned long>> grid;
 	vector<vector<long>> grid1, grid2;
 	vector<vector<char>> cgrid1, cgrid2;
-	vector<vector<string>> sgrid;
+	vector<vector<string>> sgrid, sgrid1;
 	vector<vector<size_t>> ugrid, ugrid1;
 	Graph<size_t, size_t> graph;
 	Arithmetic<size_t> arithmetic;
@@ -2350,8 +2350,16 @@ int main(int argc, char *argv[])
 	for (auto [itr, rangeEnd] = myFlippedMap.equal_range(2); itr != rangeEnd; ++itr)
 		cout << itr->second << ", ";
 	cout << endl;
+	sgrid.clear();
+	strings.clear();
+	strings = vector<string>(4, string(4, '.')); // 4x4 grid
+	matrix.ChessQueensPlacements(strings, 0, sgrid);
+	sgrid1.clear();
+	sgrid1 = vector<vector<string>>{{".Q..", "...Q", "Q...", "..Q."}, {"..Q.", "Q...", "...Q", ".Q.."}};
+	assert(sgrid1 == sgrid);
 	/***** The End *****/
-	cout << "Press ENTER to exit";
+	cout
+		<< "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }

@@ -175,7 +175,7 @@ T Greedy<T>::MaxArea(vector<T> const &heights)
 {
     T result = 0;
     for (size_t i = 0, j = heights.size() - 1; i < j;)
-    {
+    {   
         result = max(result, (j - i) * min(heights[i], heights[j]));
         if (heights[i] < heights[j])
             i++;

@@ -32,6 +32,7 @@ public:
 	void RotateMatrixRTimesAntiClockwise(vector<vector<T>> &, size_t);
 	vector<T> MatrixSprialOrder(vector<vector<T>> const &);
 	T ChessQueensMoveCount(T, T /*[1,rows]*/, T /*[1,cols]*/, vector<vector<size_t>> const &);
+	void ChessQueensPlacements(vector<string> &, size_t, vector<vector<string>> &);
 	T GridlandMetro(T, T, vector<vector<T>> const &);
 	T SurfaceArea3D(vector<vector<T>> const &);
 	size_t TwoCrosses(vector<string> const &);

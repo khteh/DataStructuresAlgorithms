@@ -677,6 +677,36 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(0, 1, 1, 1, vector<vector<size_t>>{}),
 					  make_tuple(0, 88587, 20001, 20003, vector<vector<size_t>>{{20001, 20002}, {20001, 20004}, {20000, 20003}, {20002, 20003}, {20000, 20004}, {20000, 20002}, {20002, 20004}, {20002, 20002}, {564, 323}}),
 					  make_tuple(308369, 100000, 4187, 5068, vector<vector<size_t>>{})));
+class ChessQueensPlacementsTestFixture : public testing::TestWithParam<tuple<vector<vector<string>>, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+	}
+	vector<vector<string>> ChessQueensPlacementsTest()
+	{
+		vector<string> board = vector<string>(_n, string(_n, '.')); // _n square chess board
+		vector<vector<string>> result;
+		_matrix.ChessQueensPlacements(board, 0, result);
+		return result;
+	}
+
+protected:
+	Matrix<long> _matrix;
+	size_t _n;
+	vector<vector<string>> _expected;
+};
+TEST_P(ChessQueensPlacementsTestFixture, ChessQueensPlacementsTests)
+{
+	ASSERT_EQ(this->_expected, this->ChessQueensPlacementsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	ChessQueensPlacementsTests,
+	ChessQueensPlacementsTestFixture,
+	::testing::Values(make_tuple(vector<vector<string>>{{".Q..", "...Q", "Q...", "..Q."}, {"..Q.", "Q...", "...Q", ".Q.."}}, 4),
+					  make_tuple(vector<vector<string>>{{"Q"}}, 1)));
 
 class GridlandMetroTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t, vector<vector<size_t>>>>
 {
