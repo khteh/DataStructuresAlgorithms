@@ -145,7 +145,7 @@ long Knapsack::CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size
 	for (size_t i = coins[0]; i <= amount; i++)
 		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end() && i >= *coin; coin++)
 			if (dp[i - *coin] != numeric_limits<size_t>::max())
-				dp[i] = min(dp[i], dp[i - *coin] + 1);
+				dp[i] = min(dp[i], dp[i - *coin] + 1); // +1 because there is a coin value of 1. Otherwise, there would not be amount of $3 and others which need $1 coin.
 	return dp[amount] == numeric_limits<size_t>::max() ? -1 : dp[amount];
 }
 /* https://www.hackerrank.com/challenges/unbounded-knapsack/problem
