@@ -569,3 +569,19 @@ T DynamicProgramming<T>::VectorSlicesSum(vector<T> const &data)
     }
     return result;
 }
+/*
+ * https://leetcode.com/problems/unique-paths/description/
+ * 100%
+ */
+template <typename T>
+size_t DynamicProgramming<T>::UniquePaths(size_t rows, size_t cols)
+{
+    vector<vector<size_t>> dp(rows, vector<size_t>(cols, 0));
+    ranges::fill(dp[0], 1);
+    for (size_t i = 0; i < rows; i++)
+        dp[i][0] = 1;
+    for (size_t i = 1; i < rows; i++)
+        for (size_t j = 1; j < cols; j++)
+            dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+    return dp[rows - 1][cols - 1];
+}

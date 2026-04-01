@@ -467,3 +467,29 @@ INSTANTIATE_TEST_SUITE_P(
 	VectorSlicesSumTestFixture,
 	::testing::Values(make_tuple(44, vector<long>{1, 2, 3}), make_tuple(73, vector<long>{1, 3, 6}), make_tuple(282, vector<long>{1, 3, 6, 7}), make_tuple(971, vector<long>{4, 2, 9, 10, 1})));
 #endif
+class UniquePathsTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_rows = get<1>(GetParam());
+		_cols = get<2>(GetParam());
+	}
+	size_t UniquePathsTest()
+	{
+		return _dp.UniquePaths(_rows, _cols);
+	}
+
+protected:
+	DynamicProgramming<long> _dp;
+	size_t _expected, _rows, _cols;
+};
+TEST_P(UniquePathsTestFixture, UniquePathsTests)
+{
+	ASSERT_EQ(this->_expected, this->UniquePathsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	UniquePathsTests,
+	UniquePathsTestFixture,
+	::testing::Values(make_tuple(28, 3, 7), make_tuple(3, 3, 2)));
