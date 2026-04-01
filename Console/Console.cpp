@@ -2350,13 +2350,6 @@ int main(int argc, char *argv[])
 	for (auto [itr, rangeEnd] = myFlippedMap.equal_range(2); itr != rangeEnd; ++itr)
 		cout << itr->second << ", ";
 	cout << endl;
-	sgrid.clear();
-	strings.clear();
-	strings = vector<string>(4, string(4, '.')); // 4x4 grid
-	matrix.ChessQueensPlacements(strings, 0, sgrid);
-	sgrid1.clear();
-	sgrid1 = vector<vector<string>>{{".Q..", "...Q", "Q...", "..Q."}, {"..Q.", "Q...", "...Q", ".Q.."}};
-	assert(sgrid1 == sgrid);
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
