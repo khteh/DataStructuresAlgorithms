@@ -73,7 +73,6 @@ set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<
 				{ // i:5 coins[j]:2 delta:3 dp[3] = {3}
 					size_t delta = i - *coin;
 					if (dp.count(delta))
-					{
 						for (set<vector<size_t>>::iterator it = dp[delta].begin(); it != dp[delta].end(); it++)
 						{
 							vector<size_t> tmp = *it;
@@ -81,7 +80,6 @@ set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<
 							ranges::sort(tmp);
 							dp[i].insert(tmp);
 						}
-					}
 				}
 			}
 	return dp[amount];
@@ -134,8 +132,8 @@ size_t Knapsack::CoinsChangeDuplicateWaysDynamicProgramming(long amount, vector<
 /* https://leetcode.com/problems/coin-change/
  * 100%
  * coins: {1,2,5}, amount: 10
- * i:    0 1 2     3     4     5        6       7      8       9       10
- * ways: 0 1 {2,1} {2,2} {3,2} {3,3,1} {2,3,2} {3,2,2} {3,3,3} {4,3,3} {4,4,2}
+ * i(amount): 0 1 2     3     4     5        6       7      8       9       10
+ *      ways: 0 1 {2,1} {2,2} {3,2} {3,3,1} {2,3,2} {3,2,2} {3,3,3} {4,3,3} {4,4,2}
  */
 long Knapsack::CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size_t> &coins)
 {
