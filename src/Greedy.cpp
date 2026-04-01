@@ -94,10 +94,14 @@ T Greedy<T>::MaxMin(T k, vector<T> &arr)
  * https://rohangupta-3817.medium.com/hackerrank-dp-equal-5adc78771571
  * 100%
  * Minimum rounds to level all the elements in the vector.
- *
  * Each round can add 1, 2 or 5 to all except one element
  *
- * Strategy: Only need to consider the unique numbers. Converge the range to the max number.
+ * The following examples show reasoning behind establikshing the baseline values:
+ *
+ * [0 5] => [0 0] (baseline: min element)
+ * [0 4] => [0 2] => [0 0] (baseline: min element)
+ * [0 4] => [0 -1] => [-1 -1] (baseline: min element - 1)
+ * [0 3] => [0 1] => [0 0] (baseline: min element)
  *
  * 1 1 5 => 1 1 3 => 1 1 1 (baseline: min element)
  *
@@ -136,17 +140,29 @@ template <typename T>
 T Greedy<T>::EqualDistribution(vector<T> const &data)
 {
     size_t count = numeric_limits<size_t>::max();
-    T minElement = *ranges::min_element(data);
+    T minElement = *ranges::min_element(data); // [0 3 3]: min: 0
     for (size_t base = 0; base <= 2; base++)
     {
         size_t steps = 0;
-        long step = minElement - base;
+        long step = minElement - base; // 0, -1, -2
         for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
         {
-            long diff = *it - step;
-            steps += diff / 5 + (diff % 5) / 2 + (diff % 5) % 2;
+            long diff = *it - step; // base:0 -> step:0 diff: [0, 3, 3] | base:1 -> step: -1 diff: [1, 4, 4] | base:2 -> step: -2 diff: [2, 5, 5]
+            /*
+             * Reduce the dist by 5 (/5), then by 2 ((%5)/2), and then by 1 ((%5)%2).
+             * Example:
+             * base:0 -> step:0, diff:3 => 3 -> 1 -> 0 (2 steps)
+             * 3: 3/5=0 (3%5)/2 = 3/2 = 1 (3%5)%2 = 3%2 = 1 sum: 2
+             *
+             * base:1 -> step:-1, diff:4 => 3 -> 1 -> -1 (2 steps)
+             * 3: 4/5=0 (4%5)/2 = 4/2 = 2 (4%5)%2 = 4%2 = 0 sum: 2
+             *
+             * base:2 -> step:-2, diff:5 => 3 -> -2 (1 steps)
+             * 3: 5/5=1 (5%5)/2 = 0 (4%5)%2 = 0 sum: 1
+             */
+            steps += diff / 5 + (diff % 5) / 2 + (diff % 5) % 2; // base:0 -> steps: [0, 2, 2] | base:1 -> steps: [1, 2, 2] | base:2 -> steps: [1, 1, 1]
         }
-        count = min(count, steps);
+        count = min(count, steps); // 0
     }
     return count;
 }
