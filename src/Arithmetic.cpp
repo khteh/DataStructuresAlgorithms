@@ -171,7 +171,7 @@ template <typename T>
 T Arithmetic<T>::DivideWithPlusSign(T a, T b)
 	requires arithmetic_type<T>
 {
-#pragma warning(disable:4146)
+#pragma warning(disable : 4146)
 	if (!b)
 		throw invalid_argument("Divide by zero exception");
 	bool isNegative = (a < 0) ^ (b < 0);
@@ -204,7 +204,7 @@ template <typename T>
 T Arithmetic<T>::Divide(T dividend, T divisor)
 	requires arithmetic_type<T>
 {
-#pragma warning(disable:4146)
+#pragma warning(disable : 4146)
 	if (!divisor)
 		throw invalid_argument("Divide by zero exception");
 	int quotient = 0;
@@ -269,6 +269,20 @@ T Arithmetic<T>::Divide(T dividend, T divisor, T modulo)
  * Only 1 1 has carry
  * https://stackoverflow.com/questions/55615186/c-left-shift-overflow-for-negative-numbers
  * Left-shifting a negative value results in undefined behaviour. Use unsigned for bit manipulations.
+ *
+ * 1+1:
+ * sum 1, carry 1
+ * sum^carry = 0, (sum & carry) << 1 = 0x10
+ *
+ * sum 0 carry 0x10
+ * sum ^ carry=0x10, (sum & carry) << 1 = 0 => return 0x10
+ *
+ * 1+0:
+ * sum 1, carry 0 => return 1
+ *
+ * 0+1:
+ * sum 0, carry 1
+ * sum^carry = 1 (sum & carry) << 1 = 0 => return 1
  */
 template <typename T>
 T Arithmetic<T>::AddWithoutArithmetic(T sum, T carry)

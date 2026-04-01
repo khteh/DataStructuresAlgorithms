@@ -346,6 +346,14 @@ size_t DynamicProgramming<T>::FindSubsequence(string const &str, string const &t
  *       0  1 2 3  4  5  6 7
  * data: 1 -2 0 9 -1 -2 -3 9
  * dp  : 1,-1, MAX(-1, 1) = 1, MAX(10, 8, 10) = 10, MAX(0, -2, 0, 9) = 9, MAX(-1, -3, -1, 8, 7) = 8, MAX(-2, -4, -2, 7, 6, 5) = 7, MAX(10, 8, 10, 19, 18, 17, 16) = 19
+ *
+ * i:1, j:[1] -> dp[1] = max(dp[1], data[1] + dp[0]) = max(-inf, -1)  = -1
+ * i:2, j:[1, 2] -> dp[2] = max(dp[2], data[2] + dp[1]) = max(-inf, -1)  = -1
+ *                  dp[2] = max(dp[2], data[2] + dp[0]) = max(-1, 1)  = 1
+ * i:3, j:[1, 3] -> dp[3] = max(dp[3], data[3] + dp[2]) = max(-inf, 10)  = 10
+ *                  dp[3] = max(dp[3], data[3] + dp[1]) = max(10, 8)  = 10
+ *                  dp[3] = max(dp[3], data[3] + dp[0]) = max(10, 10)  = 10
+ * dp[n] = max(dp[n], max(max(data[n] + dp[n-1], data[n] + dp[n - 2]), data[n] + dp[n - 3])...)
  */
 template <typename T>
 T DynamicProgramming<T>::NumberSolitaire(vector<T> const &data)
@@ -354,7 +362,7 @@ T DynamicProgramming<T>::NumberSolitaire(vector<T> const &data)
     vector<T> dp(data.size(), numeric_limits<T>::min());
     dp[0] = data[0];
     for (long i = 1; i < (long)data.size(); i++)
-        for (long j = 1; j < 7 && (i - j) >= 0; j++)
+        for (long j = 1; j < 7 && (i - j) >= 0; j++) // To achieve the position i, we can only come from the positions i-6, i-5, i-4, i-3, i-2, and i-1.
             dp[i] = max<T>(dp[i], data[i] + dp[i - j]);
     return dp[data.size() - 1];
 }
