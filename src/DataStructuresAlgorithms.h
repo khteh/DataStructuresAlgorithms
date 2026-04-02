@@ -253,13 +253,6 @@ vector<vector<long>> MergeIntervals(vector<vector<long>> &);
 bool IsSparseNumber(long);
 long NextSparseNumber(long);
 long KthNumberWith357PrimeFactors(long);
-typedef struct PathResult
-{
-	PathResult() : sum(0), path("") {}
-	unsigned long sum;
-	string path;
-} pathResult_t;
-pathResult_t FindMaxPath(vector<vector<size_t>> &, size_t, size_t);
 bool PathExists(vector<vector<char>> &, size_t, size_t, size_t, size_t, queue<string> &, char);
 bool FindShortestPath(vector<vector<char>> &, size_t, size_t, queue<string> &, char, char);
 bool WordExistsInGrid(vector<vector<char>> &, string const &);

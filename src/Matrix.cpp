@@ -1051,6 +1051,33 @@ bool Matrix<T>::ContainersBallsSwap(vector<vector<T>> const &containers)
 	ranges::sort(colSums);
 	return rowSums == colSums;
 }
+/* Given a 2-dimensional array with arbitrary sizes and contains random positive values, you are required to move from the first element [0][0] to the last
+ * element [n][n] using the path which will yield the maximum sum of all the elements traversed. You can only move right and down; NOT left and up.
+ * 1 2
+ */
+template <typename T>
+pathResult_t Matrix<T>::FindMaxPath(vector<vector<T>> &grid, size_t r, size_t c)
+	requires integral_type<T>
+{
+	ostringstream oss;
+	pathResult_t result;
+	if (r < grid.size() && c < grid[r].size())
+	{
+		if (r == grid.size() - 1 && c == grid[r].size() - 1)
+		{
+			result.sum = grid[r][c];
+			oss << "[" << r << "][" << c << "]";
+			result.path = oss.str();
+			return result;
+		}
+		pathResult_t path1 = FindMaxPath(grid, r, c + 1);
+		pathResult_t path2 = FindMaxPath(grid, r + 1, c);
+		oss << "[" << r << "][" << c << "] " << ((path1.sum >= path2.sum) ? path1.path : path2.path);
+		result.sum = grid[r][c] + max(path1.sum, path2.sum);
+		result.path = oss.str();
+	}
+	return result;
+}
 /*
  * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
  * 100%

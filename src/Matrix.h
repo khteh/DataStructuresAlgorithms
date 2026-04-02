@@ -1,8 +1,16 @@
 #pragma once
 #include "Sort.h"
 #include "LinkedList.h"
+#include "GenericConstraints.h"
 using namespace std;
 namespace ranges = std::ranges;
+typedef struct PathResult
+{
+	PathResult() : sum(0), path("") {}
+	long sum;
+	string path;
+} pathResult_t;
+
 template <typename T>
 class Matrix
 {
@@ -40,6 +48,8 @@ public:
 	vector<string> BomberMan(size_t, vector<string> const &);
 	T MaxQuadrantSum(vector<vector<T>> const &);
 	bool ContainersBallsSwap(vector<vector<T>> const &);
+	pathResult_t FindMaxPath(vector<vector<T>> &, size_t, size_t)
+		requires integral_type<T>;
 	size_t LargestGridCluster_BFS();
 	size_t LargestGridCluster_DFS();
 	size_t LargestGridCluster_DisjointSet_BFS();

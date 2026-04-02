@@ -1,12 +1,5 @@
 #include "pch.h"
 using namespace std;
-TEST(MatrixTests, FindMaxPathTests)
-{
-	vector<vector<size_t>> grid;
-	grid = {{1, 3, 5}, {2, 4, 6}, {7, 8, 9}};
-	pathResult_t pathResult = FindMaxPath(grid, 0, 0);
-	ASSERT_EQ(27, pathResult.sum);
-}
 TEST(MatrixTests, FindShortestPathTests)
 {
 	vector<vector<char>> maze = {{'1', '1', '1', '1', '1'}, {'S', '1', 'X', '1', '1'}, {'1', '1', '1', '1', '1'}, {'X', '1', '1', 'E', '1'}, {'1', '1', '1', '1', 'X'}};
@@ -59,6 +52,34 @@ TEST(MatrixTests, MatrixSortWithHeapTest)
 		cout << endl;
 	}
 }
+class MatrixMaxPathTestFixture : public testing::TestWithParam<tuple<long, vector<vector<size_t>>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	long MatrixMaxPathTest()
+	{
+		pathResult_t result = _matrix.FindMaxPath(_data, 0, 0);
+		return result.sum;
+	}
+
+protected:
+	Matrix<size_t> _matrix;
+	vector<vector<size_t>> _data;
+	long _expected;
+};
+TEST_P(MatrixMaxPathTestFixture, MatrixMaxPathTests)
+{
+	ASSERT_EQ(this->_expected, this->MatrixMaxPathTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MatrixMaxPathTests,
+	MatrixMaxPathTestFixture,
+	::testing::Values(make_tuple(27, vector<vector<size_t>>{{1, 3, 5}, {2, 4, 6}, {7, 8, 9}})));
+
 class MatrixPatternCountTestFixture : public testing::TestWithParam<tuple<long, vector<vector<long>>>>
 {
 public:
@@ -87,7 +108,6 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(3l, vector<vector<long>>{{0, 0, 1}, {0, 1, 1}, {1, 1, 1}}),
 					  make_tuple(4l, vector<vector<long>>{{0, 0, 1}, {0, 0, 1}, {1, 1, 1}}),
 					  make_tuple(6l, vector<vector<long>>{{0, 0, 0, 1}, {0, 0, 1, 1}, {0, 1, 1, 1}, {1, 1, 1, 1}})));
-
 class TwoCrossesChallengeTestFixture : public testing::TestWithParam<tuple<size_t, vector<string>>>
 {
 public:
