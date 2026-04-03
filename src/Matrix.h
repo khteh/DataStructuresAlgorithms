@@ -1,4 +1,5 @@
 #pragma once
+#include "Position.h"
 #include "Sort.h"
 #include "LinkedList.h"
 #include "GenericConstraints.h"
@@ -17,6 +18,7 @@ class Matrix
 private:
 	T _active, _inactive;
 	vector<vector<T>> _grid;
+	vector<int> _steps = {0, 1, 0, -1, 0}, _diagonals = {-1, -1, 1, 1, -1};
 	size_t DisconnectCell(size_t, size_t);
 	size_t DisconnectCellAllDirections(size_t, size_t, set<string> &);
 	size_t DisconnectCellAllDirections_LinkedList(size_t, size_t, shared_ptr<Node<string>> &);
@@ -50,6 +52,8 @@ public:
 	bool ContainersBallsSwap(vector<vector<T>> const &);
 	pathResult_t FindMaxPath(vector<vector<T>> &, size_t, size_t)
 		requires integral_type<T>;
+	size_t PathExists(vector<vector<char>> &, size_t, size_t, size_t, size_t, stack<position_t> &, char);
+	size_t FindShortestPath(vector<vector<char>> &, size_t, size_t, stack<position_t> &, char, char);
 	size_t LargestGridCluster_BFS();
 	size_t LargestGridCluster_DFS();
 	size_t LargestGridCluster_DisjointSet_BFS();

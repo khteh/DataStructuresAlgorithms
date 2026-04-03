@@ -46,6 +46,7 @@ set(Headers
     "pch.h"
     "Permutation.h"
     "Poker.h"
+    "Position.h"
     "PrefixTrie.h"
     "PriorityQueueMedian.h"
     "Range.h"

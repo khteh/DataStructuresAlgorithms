@@ -150,6 +150,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Permutation.h" />
     <ClInclude Include="Poker.h" />
+    <ClInclude Include="Position.h" />
     <ClInclude Include="PrefixTrie.h" />
     <ClInclude Include="PriorityQueueMedian.h" />
     <ClInclude Include="Range.h" />

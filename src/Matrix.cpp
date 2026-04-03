@@ -1078,6 +1078,140 @@ pathResult_t Matrix<T>::FindMaxPath(vector<vector<T>> &grid, size_t r, size_t c)
 	}
 	return result;
 }
+/* S: Start; X: Obstacle E: Destination
+ * 1 1 1 1 1
+ * S 1 X 1 1
+ * 1 1 1 1 1
+ * X 1 1 E 1
+ * 1 1 1 1 X
+ *
+ * Returns min #steps from [r,c] to dest
+ */
+template <typename T>
+size_t Matrix<T>::FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, stack<position_t> &result, char dest, char obstacle)
+{
+	position_t origin(r, c);
+	set<position_t> visited;
+	map<position_t, position_t> routes; // Key: current Value: parent
+	queue<position_t> positions;
+	positions.push(origin);
+	if (grid.empty())
+		return 0;
+	if (r >= grid.size() || c >= grid[0].size())
+		throw invalid_argument("Start/end indices out of range!");
+	// [1,0] -> [2,0] -> [2,1] -> [3,1] -> [3,2] -> [3,3]
+	while (!positions.empty())
+	{
+		position_t parent = positions.front();
+		positions.pop();
+		for (size_t k = 0; k < _steps.size() - 1; k++)
+		{
+			int r = parent.row + _steps[k], c = parent.col + _steps[k + 1];
+			if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size())
+			{
+				position_t current(r, c);
+				if (grid[r][c] == dest)
+				{ // Reach destination. The first reach is the shortest path
+					result.push(current);
+					result.push(parent);
+					for (position_t pos = parent; pos != origin && routes.count(pos); result.push(pos), pos = routes[pos])
+						;
+					return result.size();
+				}
+				else if (grid[r][c] != obstacle && !visited.count(current))
+				{ // Obstacle. Cancel this route
+				  // Prevent loop
+					positions.push(current);
+					routes.emplace(current, parent);
+					visited.emplace(current);
+				}
+			}
+		}
+	}
+	return 0;
+}
+/*
+* 0 0 1 0 1
+* 0 0 0 0 0
+* 0 1 1 1 1
+* 0 1 1 0 0
+* Start: y:1 x:4 End: y: 0 x: 3=> true
+
+* 0 0 1 1 1
+* 0 1 0 0 0
+* 1 1 1 1 1
+* 0 0 0 0 1
+* Start: y:0 x:0 End: y: 2 x: 1  => false
+
+* Returns min #steps from [r,c] to dest, 0 if no path exists
+*/
+template <typename T>
+size_t Matrix<T>::PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t x, stack<position_t> &result, char obstacle)
+{
+	position_t origin(r, c), destination(y, x);
+	set<position_t> visited;
+	map<position_t, position_t> routes; // Key: current Value: parent
+	queue<position_t> positions;
+	positions.push(origin);
+	if (grid.empty())
+		return 0;
+	if (r >= grid.size() || y >= grid.size() || c >= grid[0].size() || x >= grid[0].size())
+		throw invalid_argument("Start/end indices out of range!");
+	if (origin == destination)
+	{
+		result.push(destination);
+		result.push(origin);
+		return result.size();
+	}
+	while (!positions.empty())
+	{
+		position_t parent = positions.front();
+		positions.pop();
+		visited.emplace(parent);
+		cout << "Processing parent node:" << parent << endl;
+		for (size_t k = 0; k < _steps.size() - 1; k++)
+		{
+			int r = parent.row + _steps[k], c = parent.col + _steps[k + 1];
+			if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size())
+			{
+				position_t current(r, c);
+				if (current == destination)
+				{ // Reach destination. The first reach is the shortest path
+					cout << "Reached destination!" << endl;
+					result.push(current);
+					result.push(parent);
+					cout << "Routes: " << endl;
+					for (map<position_t, position_t>::const_iterator it = routes.begin(); it != routes.end(); it++)
+						cout << it->second << " -> " << it->first << endl;
+					cout << "Visited: " << endl;
+					for (set<position_t>::const_iterator it = visited.begin(); it != visited.end(); it++)
+						cout << *it << endl;
+					cout << current << " <- ";
+					for (position_t pos = parent; pos != origin && routes.count(pos); pos = routes[pos])
+					{
+						// cout << pos << " <- ";
+						result.push(pos);
+					}
+					return result.size();
+				}
+				else if (grid[r][c] != obstacle && !visited.count(current))
+				{ // Obstacle. Cancel this route
+					// Prevent loop
+					cout << "current node:" << current << endl;
+					positions.push(current);
+					routes.emplace(current, parent);
+					visited.emplace(current);
+					for (map<position_t, position_t>::const_iterator it = routes.begin(); it != routes.end(); it++)
+						cout << it->second << " -> " << it->first << endl;
+					cout << "Visited: " << endl;
+					for (set<position_t>::const_iterator it = visited.begin(); it != visited.end(); it++)
+						cout << *it << endl;
+				}
+			}
+		}
+	}
+	return 0;
+}
 /*
  * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
  * 100%
@@ -1088,7 +1222,6 @@ size_t Matrix<T>::LargestGridCluster_BFS()
 	size_t result = 0;
 	set<set<string>> clusters; // This is useful to check matching grids
 	ostringstream location;
-	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
 	for (size_t i = 0; i < _grid.size(); i++)
 		for (size_t j = 0; j < _grid[0].size(); j++)
 			if (_grid[i][j] == _active)
@@ -1105,9 +1238,9 @@ size_t Matrix<T>::LargestGridCluster_BFS()
 				{
 					pair<size_t, size_t> cell = todo.front();
 					todo.pop();
-					for (size_t k = 0; k < steps.size() - 1; k++)
+					for (size_t k = 0; k < _steps.size() - 1; k++)
 					{
-						int r = cell.first + steps[k], c = cell.second + steps[k + 1];
+						int r = cell.first + _steps[k], c = cell.second + _steps[k + 1];
 						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 						{
 							location.str("");
@@ -1118,9 +1251,9 @@ size_t Matrix<T>::LargestGridCluster_BFS()
 							todo.emplace(r, c);
 						}
 					}
-					for (size_t k = 0; k < diagonals.size() - 1; k++)
+					for (size_t k = 0; k < _diagonals.size() - 1; k++)
 					{
-						int r = cell.first + diagonals[k], c = cell.second + diagonals[k + 1];
+						int r = cell.first + _diagonals[k], c = cell.second + _diagonals[k + 1];
 						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 						{
 							location.str("");
@@ -1160,7 +1293,6 @@ size_t Matrix<T>::LargestGridCluster_DFS()
 	size_t result = 0;
 	set<set<string>> clusters; // This is useful to check matching grids
 	ostringstream location;
-	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
 	for (size_t i = 0; i < _grid.size(); i++)
 		for (size_t j = 0; j < _grid[0].size(); j++)
 			if (_grid[i][j] == _active)
@@ -1195,7 +1327,6 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_BFS()
 	size_t result = 0;
 	ostringstream location;
 	set<shared_ptr<LinkedList<string>>> clusters;
-	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
 	for (size_t i = 0; i < _grid.size(); i++)
 		for (size_t j = 0; j < _grid[0].size(); j++)
 			if (_grid[i][j] == _active)
@@ -1211,9 +1342,9 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_BFS()
 				{
 					pair<size_t, size_t> cell = todo.front();
 					todo.pop();
-					for (size_t k = 0; k < steps.size() - 1; k++)
+					for (size_t k = 0; k < _steps.size() - 1; k++)
 					{
-						int r = cell.first + steps[k], c = cell.second + steps[k + 1];
+						int r = cell.first + _steps[k], c = cell.second + _steps[k + 1];
 						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 						{
 							location.str("");
@@ -1226,9 +1357,9 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_BFS()
 							todo.emplace(r, c);
 						}
 					}
-					for (size_t k = 0; k < diagonals.size() - 1; k++)
+					for (size_t k = 0; k < _diagonals.size() - 1; k++)
 					{
-						int r = cell.first + diagonals[k], c = cell.second + diagonals[k + 1];
+						int r = cell.first + _diagonals[k], c = cell.second + _diagonals[k + 1];
 						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 						{
 							location.str("");
@@ -1277,7 +1408,6 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_BFS()
 	size_t width = _grid[0].size();
 	map<T, size_t> counts;
 	size_t result = 0, largest = 0;
-	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
 	for (size_t i = 0; i < _grid.size(); i++)
 		for (size_t j = 0; j < _grid[0].size(); j++)
 			if (_grid[i][j] == _active)
@@ -1293,9 +1423,9 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_BFS()
 				{
 					pair<size_t, size_t> cell = todo.front();
 					todo.pop();
-					for (size_t k = 0; k < steps.size() - 1; k++)
+					for (size_t k = 0; k < _steps.size() - 1; k++)
 					{
-						int r = cell.first + steps[k], c = cell.second + steps[k + 1];
+						int r = cell.first + _steps[k], c = cell.second + _steps[k + 1];
 						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 						{
 							count++;
@@ -1319,9 +1449,9 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_BFS()
 							todo.emplace(r, c);
 						}
 					}
-					for (size_t k = 0; k < diagonals.size() - 1; k++)
+					for (size_t k = 0; k < _diagonals.size() - 1; k++)
 					{
-						int r = cell.first + diagonals[k], c = cell.second + diagonals[k + 1];
+						int r = cell.first + _diagonals[k], c = cell.second + _diagonals[k + 1];
 						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 						{
 							count++;
@@ -1377,7 +1507,6 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_DFS()
 	size_t result = 0;
 	ostringstream location;
 	set<shared_ptr<LinkedList<string>>> clusters;
-	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
 	for (size_t i = 0; i < _grid.size(); i++)
 		for (size_t j = 0; j < _grid[0].size(); j++)
 			if (_grid[i][j] == _active)
@@ -1421,7 +1550,6 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_DFS()
 	size_t width = _grid[0].size();
 	map<T, size_t> counts;
 	size_t result = 0, largest = 0;
-	vector<int> steps = {0, 1, 0, -1, 0}, diagonals = {-1, -1, 1, 1, -1};
 	for (size_t i = 0; i < _grid.size(); i++)
 		for (size_t j = 0; j < _grid[0].size(); j++)
 			if (_grid[i][j] == _active)
@@ -1472,9 +1600,9 @@ size_t Matrix<T>::GridClusterCountBFS()
 				{
 					pair<size_t, size_t> cell = todo.front();
 					todo.pop();
-					for (size_t k = 0; k < steps.size() - 1; k++)
+					for (size_t k = 0; k < _steps.size() - 1; k++)
 					{
-						int r = cell.first + steps[k], c = cell.second + steps[k + 1];
+						int r = cell.first + _steps[k], c = cell.second + _steps[k + 1];
 						if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 						{
 							_grid[r][c] = _inactive;

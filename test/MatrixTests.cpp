@@ -1,27 +1,5 @@
 #include "pch.h"
 using namespace std;
-TEST(MatrixTests, FindShortestPathTests)
-{
-	vector<vector<char>> maze = {{'1', '1', '1', '1', '1'}, {'S', '1', 'X', '1', '1'}, {'1', '1', '1', '1', '1'}, {'X', '1', '1', 'E', '1'}, {'1', '1', '1', '1', 'X'}};
-	cout << "maze (" << maze.size() << "): " << endl;
-	for (size_t i = 0; i < 5; i++)
-	{
-		for (size_t j = 0; j < 5; j++)
-			cout << maze[i][j] << " ";
-		cout << endl;
-	}
-	queue<string> mazeResult;
-	ASSERT_TRUE(FindShortestPath(maze, 1, 0, mazeResult, 'E', 'X'));
-	ASSERT_FALSE(mazeResult.empty());
-	cout << "Shortest path: ";
-	while (!mazeResult.empty())
-	{
-		string line = mazeResult.front();
-		mazeResult.pop();
-		cout << line << " ";
-	}
-	cout << endl;
-}
 TEST(MatrixTests, MatrixSortTest)
 {
 	Matrix<long> matrix;
@@ -79,6 +57,96 @@ INSTANTIATE_TEST_SUITE_P(
 	MatrixMaxPathTests,
 	MatrixMaxPathTestFixture,
 	::testing::Values(make_tuple(27, vector<vector<size_t>>{{1, 3, 5}, {2, 4, 6}, {7, 8, 9}})));
+class MatrixPathExistsTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<char>>, size_t, size_t, size_t, size_t, char>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_start_r = get<2>(GetParam());
+		_start_c = get<3>(GetParam());
+		_end_r = get<4>(GetParam());
+		_end_c = get<5>(GetParam());
+		_obstacle = get<6>(GetParam());
+	}
+	size_t MatrixPathExistsTest()
+	{
+		stack<position_t> mazeResult;
+		size_t result = _matrix.PathExists(_data, _start_r, _start_c, _end_r, _end_c, mazeResult, _obstacle);
+		cout << "MatrixPathExistsTests Shortest path: ";
+		while (!mazeResult.empty())
+		{
+			position_t pos = mazeResult.top();
+			mazeResult.pop();
+			cout << pos;
+			if (!mazeResult.empty())
+				cout << " -> ";
+		}
+		cout << endl;
+		return result;
+	}
+
+protected:
+	Matrix<size_t> _matrix;
+	vector<vector<char>> _data;
+	size_t _start_r, _start_c, _end_r, _end_c, _expected;
+	char _obstacle;
+};
+TEST_P(MatrixPathExistsTestFixture, MatrixPathExistsTests)
+{
+	ASSERT_EQ(this->_expected, this->MatrixPathExistsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MatrixPathExistsTests,
+	MatrixPathExistsTestFixture,
+	::testing::Values(make_tuple(11, vector<vector<char>>{{0, 0, 1, 0, 1}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 1}, {0, 0, 1, 0, 0}, {0, 1, 0, 0, 0}}, 4, 0, 4, 4, 1),
+					  make_tuple(9, vector<vector<char>>{{0, 0, 1, 0, 1}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 1}, {0, 0, 1, 0, 0}, {0, 1, 0, 0, 0}}, 0, 0, 4, 4, 1),
+					  make_tuple(0, vector<vector<char>>{{0, 0, 1, 1, 1}, {0, 1, 0, 0, 0}, {1, 1, 1, 1, 1}, {0, 0, 0, 0, 1}}, 0, 0, 1, 3, 1)));
+class MatrixFindShortestPathTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<char>>, size_t, size_t, char, char>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_start_r = get<2>(GetParam());
+		_start_c = get<3>(GetParam());
+		_dest = get<4>(GetParam());
+		_obstacle = get<5>(GetParam());
+	}
+	size_t MatrixFindShortestPathTest()
+	{
+		stack<position_t> mazeResult;
+		size_t result = _matrix.FindShortestPath(_data, _start_r, _start_c, mazeResult, _dest, _obstacle);
+		cout << "MatrixFindShortestPathTests Shortest path: ";
+		while (!mazeResult.empty())
+		{
+			position_t pos = mazeResult.top();
+			mazeResult.pop();
+			cout << pos;
+			if (!mazeResult.empty())
+				cout << " -> ";
+		}
+		cout << endl;
+		return result;
+	}
+
+protected:
+	Matrix<size_t> _matrix;
+	vector<vector<char>> _data;
+	size_t _start_r, _start_c, _expected;
+	char _dest, _obstacle;
+};
+TEST_P(MatrixFindShortestPathTestFixture, MatrixFindShortestPathTests)
+{
+	ASSERT_EQ(this->_expected, this->MatrixFindShortestPathTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MatrixFindShortestPathTests,
+	MatrixFindShortestPathTestFixture,
+	::testing::Values(make_tuple(6, vector<vector<char>>{{'1', '1', '1', '1', '1'}, {'S', '1', 'X', '1', '1'}, {'1', '1', '1', '1', '1'}, {'X', '1', '1', 'E', '1'}, {'1', '1', '1', '1', 'X'}}, 1, 0, 'E', 'X'),
+					  make_tuple(5, vector<vector<char>>{{'1', '1', '1', '1', '1'}, {'1', '1', '1', '1', '1'}, {'1', '1', 'S', '1', '1'}, {'1', 'X', '1', '1', '1'}, {'E', '1', '1', '1', '1'}}, 2, 2, 'E', 'X')));
 
 class MatrixPatternCountTestFixture : public testing::TestWithParam<tuple<long, vector<vector<long>>>>
 {
@@ -171,25 +239,6 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(0, vector<string>{"..", "xx"}), make_tuple(0, vector<string>{"xx", ".."}), make_tuple(4, vector<string>{"..", ".."}), make_tuple(0, vector<string>{"xx", "xx"}), make_tuple(0, vector<string>{"....", "xxx."}),
 					  make_tuple(0, vector<string>{".x", ".x", ".x", ".."}), make_tuple(0, vector<string>{"x.", "x.", "x.", ".."}), make_tuple(0, vector<string>{"..x..", ".x.x.", "..x.."}), make_tuple(8, vector<string>{"...x...", ".x...x.", "...x..."}), make_tuple(8, vector<string>{"...x...", ".x.x.x.", "...x..."}),
 					  make_tuple(14, vector<string>{".....", ".x.x.", ".....", "....."}), make_tuple(6, vector<string>{"..x...", "..x..."}), make_tuple(6, vector<string>{"..xx...", "..xx..."}), make_tuple(6, vector<string>{"..x.x...", "..x.x..."}), make_tuple(20, vector<string>{"......", ".xxxx.", ".x..x.", ".x..x.", ".xxxx.", "......"})));
-TEST(MatrixTests, PathExistsTest)
-{
-	vector<vector<char>> maze = {{0, 0, 1, 0, 1}, {0, 0, 0, 0, 0}, {0, 1, 1, 1, 1}, {0, 1, 1, 0, 0}};
-	queue<string> puzzleResult;
-	ASSERT_TRUE(PathExists(maze, 1, 4, 0, 3, puzzleResult, 1));
-	ASSERT_FALSE(puzzleResult.empty());
-	cout << "Puzzle path: ";
-	while (!puzzleResult.empty())
-	{
-		string line = puzzleResult.front();
-		puzzleResult.pop();
-		cout << line << " ";
-	}
-	cout << endl;
-	maze = {{0, 0, 1, 1, 1}, {0, 1, 0, 0, 0}, {1, 1, 1, 1, 1}, {0, 0, 0, 0, 1}};
-	queue<string> puzzleResult1;
-	ASSERT_FALSE(PathExists(maze, 0, 0, 1, 2, puzzleResult1, 1));
-	ASSERT_TRUE(puzzleResult.empty());
-}
 TEST(MatrixTests, WordExistsInGridTest)
 {
 	vector<vector<char>> maze;

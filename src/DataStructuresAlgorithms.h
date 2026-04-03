@@ -44,6 +44,7 @@
 #include "VariantVisitor.h"
 #include "GameTheory.h"
 #include "Permutation.h"
+#include "Position.h"
 /*
  * https://stackoverflow.com/questions/1452721/whats-the-problem-with-using-namespace-std
  * https://stackoverflow.com/questions/495021/why-can-templates-only-be-implemented-in-the-header-file
@@ -102,13 +103,6 @@ typedef struct ZeroFactorsFiveCount
 			return count > other.count;
 	}
 } zerofactorsfivecount_t;
-typedef struct Position
-{
-	Position() : row(0), col(0) {}
-	Position(size_t r, size_t c) : row(r), col(c) {}
-	size_t row;
-	size_t col;
-} position_t;
 typedef struct ZigZagEscape
 {
 	size_t index;
@@ -253,8 +247,6 @@ vector<vector<long>> MergeIntervals(vector<vector<long>> &);
 bool IsSparseNumber(long);
 long NextSparseNumber(long);
 long KthNumberWith357PrimeFactors(long);
-bool PathExists(vector<vector<char>> &, size_t, size_t, size_t, size_t, queue<string> &, char);
-bool FindShortestPath(vector<vector<char>> &, size_t, size_t, queue<string> &, char, char);
 bool WordExistsInGrid(vector<vector<char>> &, string const &);
 bool WordExistsInGrid(vector<vector<char>> &, string const &, long, long, size_t);
 void EqualAverageDivide(vector<long> &, vector<long> &);

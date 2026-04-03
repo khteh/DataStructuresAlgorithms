@@ -2359,8 +2359,7 @@ int main(int argc, char *argv[])
 	str = arithmetic.Add2Binary("100", "110010");
 	assert("110110" == arithmetic.Add2Binary("100", "110010"));
 	/***** The End *****/
-	cout
-		<< "Press ENTER to exit";
+	cout << "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }
