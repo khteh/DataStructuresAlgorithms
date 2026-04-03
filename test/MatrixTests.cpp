@@ -102,6 +102,8 @@ INSTANTIATE_TEST_SUITE_P(
 	MatrixPathExistsTestFixture,
 	::testing::Values(make_tuple(11, vector<vector<char>>{{0, 0, 1, 0, 1}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 1}, {0, 0, 1, 0, 0}, {0, 1, 0, 0, 0}}, 4, 0, 4, 4, 1),
 					  make_tuple(9, vector<vector<char>>{{0, 0, 1, 0, 1}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 1}, {0, 0, 1, 0, 0}, {0, 1, 0, 0, 0}}, 0, 0, 4, 4, 1),
+					  make_tuple(1, vector<vector<char>>{{0, 0, 1, 0, 1}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 1}, {0, 0, 1, 0, 0}, {0, 1, 0, 0, 0}}, 4, 0, 4, 0, 1), // start == destination
+					  make_tuple(2, vector<vector<char>>{{0, 0, 1, 0, 1}, {0, 0, 0, 0, 0}, {0, 1, 0, 0, 1}, {0, 0, 1, 0, 0}, {0, 1, 0, 0, 0}}, 0, 0, 0, 1, 1),
 					  make_tuple(0, vector<vector<char>>{{0, 0, 1, 1, 1}, {0, 1, 0, 0, 0}, {1, 1, 1, 1, 1}, {0, 0, 0, 0, 1}}, 0, 0, 1, 3, 1)));
 class MatrixFindShortestPathTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<char>>, size_t, size_t, char, char>>
 {
@@ -146,6 +148,7 @@ INSTANTIATE_TEST_SUITE_P(
 	MatrixFindShortestPathTests,
 	MatrixFindShortestPathTestFixture,
 	::testing::Values(make_tuple(6, vector<vector<char>>{{'1', '1', '1', '1', '1'}, {'S', '1', 'X', '1', '1'}, {'1', '1', '1', '1', '1'}, {'X', '1', '1', 'E', '1'}, {'1', '1', '1', '1', 'X'}}, 1, 0, 'E', 'X'),
+					  make_tuple(1, vector<vector<char>>{{'1', '1', '1', '1', '1'}, {'S', '1', 'X', '1', '1'}, {'1', '1', '1', '1', '1'}, {'X', '1', '1', 'E', '1'}, {'1', '1', '1', '1', 'X'}}, 3, 3, 'E', 'X'), // start == destination
 					  make_tuple(5, vector<vector<char>>{{'1', '1', '1', '1', '1'}, {'1', '1', '1', '1', '1'}, {'1', '1', 'S', '1', '1'}, {'1', 'X', '1', '1', '1'}, {'E', '1', '1', '1', '1'}}, 2, 2, 'E', 'X')));
 
 class MatrixPatternCountTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<char>>>>
