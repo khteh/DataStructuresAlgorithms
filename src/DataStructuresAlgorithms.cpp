@@ -1729,31 +1729,6 @@ multimap<B, A, Cmp> flip_map(const map<A, B> &src, Cmp cmp)
 	// using multimap's std::from_range constructor overload
 	return {from_range, src | views::transform(flip_pair<A, B>), cmp};
 }
-/* https://leetcode.com/problems/word-search/
- * 100%
- */
-bool WordExistsInGrid(vector<vector<char>> &board, string const &word)
-{
-	for (size_t i = 0; i < board.size(); i++)
-		for (size_t j = 0; j < board[i].size(); j++)
-			if (WordExistsInGrid(board, word, i, j, 0))
-				return true;
-	return false;
-}
-bool WordExistsInGrid(vector<vector<char>> &board, string const &word, long row, long col, size_t offset)
-{
-	if (row < 0 || col < 0 || row >= (long)board.size() || col >= (long)board[row].size() || offset >= word.size() || word[offset] != board[row][col])
-		return false;
-	if (offset == word.size() - 1)
-		return true;
-	board[row][col] ^= 0x80; // "visited" mark
-	bool flag = WordExistsInGrid(board, word, row, col + 1, offset + 1) ||
-				WordExistsInGrid(board, word, row + 1, col, offset + 1) ||
-				WordExistsInGrid(board, word, row, col - 1, offset + 1) ||
-				WordExistsInGrid(board, word, row - 1, col, offset + 1);
-	board[row][col] ^= 0x80; //
-	return flag;
-}
 /* Divide the array(+ve and -ve numbers) into two parts such that the average of both the parts is equal.
  *
  * Assume that such splitting exists.

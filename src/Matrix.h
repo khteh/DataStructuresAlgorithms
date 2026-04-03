@@ -19,6 +19,7 @@ private:
 	T _active, _inactive;
 	vector<vector<T>> _grid;
 	vector<int> _steps = {0, 1, 0, -1, 0}, _diagonals = {-1, -1, 1, 1, -1};
+	bool WordExistsInGrid(vector<vector<char>> &, string const &, long, long, size_t);
 	size_t DisconnectCell(size_t, size_t);
 	size_t DisconnectCellAllDirections(size_t, size_t, set<string> &);
 	size_t DisconnectCellAllDirections_LinkedList(size_t, size_t, shared_ptr<Node<string>> &);
@@ -30,10 +31,11 @@ public:
 	Matrix(vector<vector<T>> &);
 	void MatrixDistance(vector<vector<T>> &, size_t, size_t);
 	void MatrixSort(vector<vector<T>> &);
-	T MatrixPatternCount(vector<vector<T>> const &);
+	size_t MatrixPatternCount(vector<vector<char>> const &);
 	void MatrixSortWithHeap(vector<vector<T>> &);
 	T Sum(vector<vector<size_t>> &);
 	T LargestSumSubmatrix(vector<vector<size_t>> &);
+	bool WordExistsInGrid(vector<vector<char>> &, string const &);
 	bool SearchMatrix(T, vector<vector<T>> const &) const;
 	bool SearchMatrix1(T, vector<vector<T>> const &) const;
 	bool SearchMatrixRow(vector<vector<T>> const &, T, size_t, T, T) const;
@@ -41,10 +43,10 @@ public:
 	void RotateMatrix90DegressClockwise(vector<vector<T>> &);
 	void RotateMatrixRTimesAntiClockwise(vector<vector<T>> &, size_t);
 	vector<T> MatrixSprialOrder(vector<vector<T>> const &);
-	T ChessQueensMoveCount(T, T /*[1,rows]*/, T /*[1,cols]*/, vector<vector<size_t>> const &);
+	size_t ChessQueensMoveCount(size_t, size_t /*[1,rows]*/, size_t /*[1,cols]*/, vector<vector<size_t>> const &);
 	void ChessQueensPlacements(vector<string> &, size_t, vector<vector<string>> &);
-	T GridlandMetro(T, T, vector<vector<T>> const &);
-	T SurfaceArea3D(vector<vector<T>> const &);
+	size_t GridlandMetro(size_t, size_t, vector<vector<size_t>> const &);
+	size_t SurfaceArea3D(vector<vector<size_t>> const &);
 	size_t TwoCrosses(vector<string> const &);
 	size_t LargestPerimeter(vector<string> const &);
 	vector<string> BomberMan(size_t, vector<string> const &);

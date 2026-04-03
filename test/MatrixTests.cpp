@@ -148,7 +148,7 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(6, vector<vector<char>>{{'1', '1', '1', '1', '1'}, {'S', '1', 'X', '1', '1'}, {'1', '1', '1', '1', '1'}, {'X', '1', '1', 'E', '1'}, {'1', '1', '1', '1', 'X'}}, 1, 0, 'E', 'X'),
 					  make_tuple(5, vector<vector<char>>{{'1', '1', '1', '1', '1'}, {'1', '1', '1', '1', '1'}, {'1', '1', 'S', '1', '1'}, {'1', 'X', '1', '1', '1'}, {'E', '1', '1', '1', '1'}}, 2, 2, 'E', 'X')));
 
-class MatrixPatternCountTestFixture : public testing::TestWithParam<tuple<long, vector<vector<long>>>>
+class MatrixPatternCountTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<char>>>>
 {
 public:
 	void SetUp() override
@@ -156,15 +156,15 @@ public:
 		_expected = get<0>(GetParam());
 		_data = get<1>(GetParam());
 	}
-	long MatrixPatternCountTest()
+	size_t MatrixPatternCountTest()
 	{
 		return _matrix.MatrixPatternCount(_data);
 	}
 
 protected:
-	Matrix<long> _matrix;
-	vector<vector<long>> _data;
-	long _expected;
+	Matrix<char> _matrix;
+	vector<vector<char>> _data;
+	size_t _expected;
 };
 TEST_P(MatrixPatternCountTestFixture, MatrixPatternCountTests)
 {
@@ -173,9 +173,9 @@ TEST_P(MatrixPatternCountTestFixture, MatrixPatternCountTests)
 INSTANTIATE_TEST_SUITE_P(
 	MatrixPatternCountTests,
 	MatrixPatternCountTestFixture,
-	::testing::Values(make_tuple(3l, vector<vector<long>>{{0, 0, 1}, {0, 1, 1}, {1, 1, 1}}),
-					  make_tuple(4l, vector<vector<long>>{{0, 0, 1}, {0, 0, 1}, {1, 1, 1}}),
-					  make_tuple(6l, vector<vector<long>>{{0, 0, 0, 1}, {0, 0, 1, 1}, {0, 1, 1, 1}, {1, 1, 1, 1}})));
+	::testing::Values(make_tuple(3l, vector<vector<char>>{{0, 0, 1}, {0, 1, 1}, {1, 1, 1}}),
+					  make_tuple(4l, vector<vector<char>>{{0, 0, 1}, {0, 0, 1}, {1, 1, 1}}),
+					  make_tuple(6l, vector<vector<char>>{{0, 0, 0, 1}, {0, 0, 1, 1}, {0, 1, 1, 1}, {1, 1, 1, 1}})));
 class TwoCrossesChallengeTestFixture : public testing::TestWithParam<tuple<size_t, vector<string>>>
 {
 public:
@@ -239,13 +239,35 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(0, vector<string>{"..", "xx"}), make_tuple(0, vector<string>{"xx", ".."}), make_tuple(4, vector<string>{"..", ".."}), make_tuple(0, vector<string>{"xx", "xx"}), make_tuple(0, vector<string>{"....", "xxx."}),
 					  make_tuple(0, vector<string>{".x", ".x", ".x", ".."}), make_tuple(0, vector<string>{"x.", "x.", "x.", ".."}), make_tuple(0, vector<string>{"..x..", ".x.x.", "..x.."}), make_tuple(8, vector<string>{"...x...", ".x...x.", "...x..."}), make_tuple(8, vector<string>{"...x...", ".x.x.x.", "...x..."}),
 					  make_tuple(14, vector<string>{".....", ".x.x.", ".....", "....."}), make_tuple(6, vector<string>{"..x...", "..x..."}), make_tuple(6, vector<string>{"..xx...", "..xx..."}), make_tuple(6, vector<string>{"..x.x...", "..x.x..."}), make_tuple(20, vector<string>{"......", ".xxxx.", ".x..x.", ".x..x.", ".xxxx.", "......"})));
-TEST(MatrixTests, WordExistsInGridTest)
+class WordExistsInGridTestFixture : public testing::TestWithParam<tuple<bool, vector<vector<char>>, string>>
 {
-	vector<vector<char>> maze;
-	maze = {{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}};
-	ASSERT_TRUE(WordExistsInGrid(maze, string("ABCCED")));
-	ASSERT_FALSE(WordExistsInGrid(maze, string("ABCB")));
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_search = get<2>(GetParam());
+	}
+	bool WordExistsInGridTest()
+	{
+		return _matrix.WordExistsInGrid(_data, _search);
+	}
+
+protected:
+	Matrix<size_t> _matrix;
+	vector<vector<char>> _data;
+	string _search;
+	bool _expected;
+};
+TEST_P(WordExistsInGridTestFixture, WordExistsInGridTests)
+{
+	ASSERT_EQ(this->_expected, this->WordExistsInGridTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	WordExistsInGridTests,
+	WordExistsInGridTestFixture,
+	::testing::Values(make_tuple(true, vector<vector<char>>{{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}}, "ABCCED"),
+					  make_tuple(false, vector<vector<char>>{{'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'}}, "ABCB")));
 class MergeIntervalsTestFixture : public testing::TestWithParam<tuple<vector<vector<long>>, vector<vector<long>>>>
 {
 public:
@@ -711,7 +733,7 @@ TEST(MatrixTests, LargestSumSubmatrixTest)
 	ugrid1 = {{1, 1}, {2, 2}};
 	ASSERT_EQ(ugrid1, ugrid);
 }
-class ChessQueensMoveCountTestFixture : public testing::TestWithParam<tuple<long, long, long, long, vector<vector<size_t>>>>
+class ChessQueensMoveCountTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t, size_t, vector<vector<size_t>>>>
 {
 public:
 	void SetUp() override
@@ -722,14 +744,14 @@ public:
 		_c_q = get<3>(GetParam());
 		_obstacles = get<4>(GetParam());
 	}
-	long ChessQueensMoveCountTest()
+	size_t ChessQueensMoveCountTest()
 	{
 		return _matrix.ChessQueensMoveCount(_dimension, _r_q, _c_q, _obstacles);
 	}
 
 protected:
-	Matrix<long> _matrix;
-	long _dimension, _r_q, _c_q;
+	Matrix<size_t> _matrix;
+	size_t _dimension, _r_q, _c_q;
 	vector<vector<size_t>> _obstacles;
 	size_t _expected;
 };

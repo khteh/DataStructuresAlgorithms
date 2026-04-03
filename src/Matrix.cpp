@@ -93,10 +93,9 @@ void Matrix<T>::MatrixSortWithHeap(vector<vector<T>> &data)
 // You are given a matrix. Elements in matrix can be either 0 or 1. Each row and column of matrix is sorted in ascending order.
 // Find number of '0's in the given matrix. Expected complexity is O(log(N)).
 template <typename T>
-T Matrix<T>::MatrixPatternCount(vector<vector<T>> const &data)
+size_t Matrix<T>::MatrixPatternCount(vector<vector<char>> const &data)
 {
-	T i = data.size() - 1, j = data[0].size() - 1;
-	T count = T();
+	long i = data.size() - 1, j = data[0].size() - 1, count = 0;
 	for (; i >= 0 && j >= 0; i--, j--)
 		if (!data[i][j])
 		{
@@ -425,14 +424,14 @@ bool Matrix<T>::SearchMatrix1(T target, vector<vector<T>> const &matrix) const
  * 100%
  */
 template <typename T>
-T Matrix<T>::ChessQueensMoveCount(T dimension, T r_q /*[1,dimension]*/, T c_q /*[1,dimension]*/, vector<vector<size_t>> const &obstacles)
+size_t Matrix<T>::ChessQueensMoveCount(size_t dimension, size_t r_q /*[1,dimension]*/, size_t c_q /*[1,dimension]*/, vector<vector<size_t>> const &obstacles)
 {
 	r_q--;
 	c_q--;
-	T count = 0, bottom = -1, left = -1, top = dimension, right = dimension, top_left = min<T>(dimension - r_q - 1l, c_q), top_right = min<T>(dimension - r_q - 1l, dimension - c_q - 1l), bottom_left = min<T>(r_q, c_q), bottom_right = min<T>(r_q, dimension - c_q - 1l);
+	long count = 0, bottom = -1, left = -1, top = dimension, right = dimension, top_left = min<long>(dimension - r_q - 1l, c_q), top_right = min<long>(dimension - r_q - 1l, dimension - c_q - 1l), bottom_left = min<long>(r_q, c_q), bottom_right = min<long>(r_q, dimension - c_q - 1l);
 	for (vector<vector<size_t>>::const_iterator it = obstacles.begin(); it != obstacles.end(); it++)
 	{
-		T r /*y*/ = (*it)[0] - 1, c /*x*/ = (*it)[1] - 1;
+		long r /*y*/ = (*it)[0] - 1, c /*x*/ = (*it)[1] - 1;
 		if (c == c_q && r > r_q && r < top) // TOP
 			top = r;
 		else if (c == c_q && r < r_q && r > bottom) // Bottom
@@ -495,8 +494,8 @@ void Matrix<T>::ChessQueensPlacements(vector<string> &board, size_t r, vector<ve
 		if (isSafe)
 		{
 			board[r][c] = 'Q';
-			ChessQueensPlacements(board, r + 1, result);
-			board[r][c] = '.'; // Reset the column for the following iterations
+			ChessQueensPlacements(board, r + 1, result); // This will recurse until the bottom of a board and return it with proper queen placements.
+			board[r][c] = '.';							 // Reset the column for the new board
 		}
 	}
 }
@@ -505,11 +504,11 @@ void Matrix<T>::ChessQueensPlacements(vector<string> &board, size_t r, vector<ve
  * 100%
  */
 template <typename T>
-T Matrix<T>::GridlandMetro(T rows, T cols, vector<vector<T>> const &tracks)
+size_t Matrix<T>::GridlandMetro(size_t rows, size_t cols, vector<vector<size_t>> const &tracks)
 {
-	T count = 0;
-	map<T, vector<pair<T, T>>> occupied;
-	for (typename vector<vector<T>>::const_iterator it = tracks.begin(); it != tracks.end(); it++)
+	size_t count = 0;
+	map<size_t, vector<pair<size_t, size_t>>> occupied;
+	for (typename vector<vector<size_t>>::const_iterator it = tracks.begin(); it != tracks.end(); it++)
 	{
 		if (!occupied.count((*it)[0] - 1))
 			occupied[(*it)[0] - 1].push_back(pair<T, T>((*it)[1] - 1, (*it)[2] - 1));
@@ -517,7 +516,7 @@ T Matrix<T>::GridlandMetro(T rows, T cols, vector<vector<T>> const &tracks)
 		{
 			bool found = false;
 			T start = (*it)[1] - 1, finish = (*it)[2] - 1;
-			for (typename vector<pair<T, T>>::iterator it1 = occupied[(*it)[0] - 1].begin(); !found && it1 != occupied[(*it)[0] - 1].end(); it1++)
+			for (typename vector<pair<size_t, size_t>>::iterator it1 = occupied[(*it)[0] - 1].begin(); !found && it1 != occupied[(*it)[0] - 1].end(); it1++)
 			{
 				if (start >= it1->first && finish <= it1->second) // subset
 					found = true;
@@ -539,13 +538,13 @@ T Matrix<T>::GridlandMetro(T rows, T cols, vector<vector<T>> const &tracks)
 				}
 			}
 			if (!found)
-				occupied[(*it)[0] - 1].push_back(pair<T, T>((*it)[1] - 1, (*it)[2] - 1));
+				occupied[(*it)[0] - 1].push_back(pair<size_t, size_t>((*it)[1] - 1, (*it)[2] - 1));
 		}
 	}
-	for (typename map<T, vector<pair<T, T>>>::const_iterator it = occupied.begin(); it != occupied.end(); it++)
+	for (typename map<size_t, vector<pair<size_t, size_t>>>::const_iterator it = occupied.begin(); it != occupied.end(); it++)
 	{
 		size_t tracklength = 0;
-		for (typename vector<pair<T, T>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
+		for (typename vector<pair<size_t, size_t>>::const_iterator it1 = it->second.begin(); it1 != it->second.end(); it1++)
 			tracklength += it1->second - it1->first + 1;
 		count += cols - tracklength;
 	}
@@ -557,9 +556,9 @@ T Matrix<T>::GridlandMetro(T rows, T cols, vector<vector<T>> const &tracks)
  * 100%
  */
 template <typename T>
-T Matrix<T>::SurfaceArea3D(vector<vector<T>> const &data)
+size_t Matrix<T>::SurfaceArea3D(vector<vector<size_t>> const &data)
 {
-	T zArea = 0, xArea = 0, yArea = 0;
+	size_t zArea = 0, xArea = 0, yArea = 0;
 	for (size_t i = 0; i < data.size(); i++)
 		for (size_t j = 0; j < data[i].size(); j++)
 		{
@@ -1077,6 +1076,33 @@ pathResult_t Matrix<T>::FindMaxPath(vector<vector<T>> &grid, size_t r, size_t c)
 		result.path = oss.str();
 	}
 	return result;
+}
+/* https://leetcode.com/problems/word-search/
+ * 100%
+ */
+template <typename T>
+bool Matrix<T>::WordExistsInGrid(vector<vector<char>> &board, string const &word)
+{
+	for (size_t i = 0; i < board.size(); i++)
+		for (size_t j = 0; j < board[i].size(); j++)
+			if (WordExistsInGrid(board, word, i, j, 0))
+				return true;
+	return false;
+}
+template <typename T>
+bool Matrix<T>::WordExistsInGrid(vector<vector<char>> &board, string const &word, long row, long col, size_t offset)
+{
+	if (row < 0 || col < 0 || row >= (long)board.size() || col >= (long)board[row].size() || offset >= word.size() || word[offset] != board[row][col])
+		return false;
+	if (offset == word.size() - 1)
+		return true;
+	board[row][col] ^= 0x80; // "visited" mark
+	bool flag = WordExistsInGrid(board, word, row, col + 1, offset + 1) ||
+				WordExistsInGrid(board, word, row + 1, col, offset + 1) ||
+				WordExistsInGrid(board, word, row, col - 1, offset + 1) ||
+				WordExistsInGrid(board, word, row - 1, col, offset + 1);
+	board[row][col] ^= 0x80; //
+	return flag;
 }
 /* S: Start; X: Obstacle E: Destination
  * 1 1 1 1 1
