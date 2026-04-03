@@ -160,7 +160,7 @@ void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex) const
 		cout << endl;
 	shared_ptr<Vertex<TTag, TItem>> previous = vertex;
 	bool space = false;
-	for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); *it++, space = true)
+	for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = neighbours.begin(); it != neighbours.end(); it++, space = true)
 	{
 		if (space)
 			cout << setw(oss.str().size()) << " " << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << " " << (*it)->GetTag() << "(" << (*it)->GetItem() << ") "

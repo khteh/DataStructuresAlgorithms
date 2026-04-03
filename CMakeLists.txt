@@ -20,7 +20,7 @@ if(MSVC)
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     message("-- Setting GNU options from CMakeLists.txt")
     set(CMAKE_CXX_FLAGS "-std=gnu++26 -fdiagnostics-color=always" CACHE STRING "CXX build flags" FORCE)
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb3 -Og -g" CACHE STRING "Debug build flags" FORCE)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb3 -Og -g3" CACHE STRING "Debug build flags" FORCE)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG" CACHE STRING "Release build flags" FORCE)
 endif()
 
