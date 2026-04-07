@@ -48,18 +48,15 @@ Create a Google Test project, manage nuget packages and uninstall the package Mi
 ## Ubuntu
 
 - Visual Studio Code with the following extensions:
-
   - C/C++
   - CMake Tools extension for VS Code (https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/how-to.md)
   - https://marketplace.visualstudio.com/items?itemName=matepek.vscode-catch2-test-adapter
 
 - To convert Visual Studio solution `.sln` and included `.vcxproj` to `CMakeLists.txt`:
-
   - https://github.com/pavelliavonau/cmakeconverter
   - `cmake-converter -s DataStructuresAlgorithms.sln`
 
 - Install the following packages on Ubuntu:
-
   - build-essential
   - gdb
   - g++-latest (https://code.visualstudio.com/docs/cpp/cmake-linux)
@@ -77,6 +74,7 @@ Create a Google Test project, manage nuget packages and uninstall the package Mi
 
 ### Build
 
+- Press `CTRL + SHFT + P`, type `CMAKE: Configure`
 - Press `CTRL + SHFT + P`, type `CMAKE: Select Variant` to choose the target build type. For example, "Debug" or "Release".
 - Press `CTRL + SHFT + B` and select one of the options
 
