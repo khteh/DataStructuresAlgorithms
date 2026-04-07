@@ -5,6 +5,58 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "C++ Launch (Console)",
+            "type": "cppdbg",
+            "request": "launch",
+            "preLaunchTask": "CMake: build all",
+            "postDebugTask": "",
+            "program": "${workspaceFolder}/Debug/Console",
+            "cwd": "${workspaceFolder}/build",
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "targetArchitecture": "x64",
+            "launchCompleteCommand": "exec-run",
+            "linux": {
+              "MIMode": "gdb",
+              "miDebuggerPath": "/usr/bin/gdb"
+            },
+            "osx": {
+              "MIMode": "lldb"
+            },
+            "windows": {
+              "MIMode": "gdb",
+              "miDebuggerPath": "C:\\MinGw\\bin\\gdb.exe"
+            },
+            "args": [],
+            "setupCommands": [
+                {
+                    "description": "Disable MI-async",
+                    "text": "set mi-async off",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Enable auto-load for all paths. Considered a security risk. See link for details: https://sourceware.org/gdb/current/onlinedocs/gdb.html/Auto_002dloading-safe-path.html",
+                    "text": "set auto-load safe-path /",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                },                
+                {
+                    "description": "Do not display function arguments when printing a stack frame",
+                    "text": "set print frame-arguments none",
+                    "ignoreFailures": true
+                }
+            ]
+        },          
+        {
             "name": "C/C++: (gdb-oneapi) oneAPI CPU Launch & Break (Console)",
             "miDebuggerPath": "gdb-oneapi",
             "MIMode": "gdb",
