@@ -14,7 +14,6 @@
             "cwd": "${workspaceFolder}/build",
             "stopAtEntry": false,
             "externalConsole": false,
-            "targetArchitecture": "x64",
             "launchCompleteCommand": "exec-run",
             "linux": {
               "MIMode": "gdb",
