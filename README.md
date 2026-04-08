@@ -74,8 +74,8 @@ Create a Google Test project, manage nuget packages and uninstall the package Mi
 
 ### Build
 
-- Press `CTRL + SHFT + P`, type `CMAKE: Configure`
-- Press `CTRL + SHFT + P`, type `CMAKE: Select Variant` to choose the target build type. For example, "Debug" or "Release".
+- Press `CTRL + SHFT + P` + `CMAKE: Configure` - This needs to be done after `rm -rf build/` folder.
+- Press `CTRL + SHFT + P` + `CMAKE: Select Variant` to choose the target build type. For example, "Debug" or "Release".
 - Press `CTRL + SHFT + B` and select one of the options
 
 ### Run Without Debug
