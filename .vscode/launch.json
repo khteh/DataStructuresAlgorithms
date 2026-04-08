@@ -15,6 +15,7 @@
             "stopAtEntry": false,
             "externalConsole": false,
             "launchCompleteCommand": "exec-run",
+            "logging": { "engineLogging": true, "trace": true, "traceResponse": true },
             "linux": {
               "MIMode": "gdb",
               "miDebuggerPath": "/usr/bin/gdb"
