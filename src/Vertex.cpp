@@ -169,12 +169,12 @@ TItem Vertex<TTag, TItem>::MinSubGraphsDifference(TTag parent, TItem sum) const
 {
 	TItem minDiff = numeric_limits<TItem>::max();
 	if (_neighbours.empty())
-		return sum;
+		return sum; // Sum of subgraph of parent vertex.
 	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = _neighbours.begin(); it != _neighbours.end(); it++)
 		if (it->first->GetTag() != parent) // Undirected graph
 		{
-			TItem sum1 = it->first->GetSubGraphSum(GetTag());
-			TItem sum2 = sum - sum1;
+			TItem sum1 = it->first->GetSubGraphSum(GetTag()); // Sum excluding this vertex
+			TItem sum2 = sum - sum1;						  // Sum of the complement subgraph
 			TItem diff1 = it->first->MinSubGraphsDifference(GetTag(), sum);
 			TItem diff2 = abs((long)sum1 - (long)sum2);
 			minDiff = min(minDiff, min(diff1, diff2));
