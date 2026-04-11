@@ -978,7 +978,7 @@ shared_ptr<Node<T>> Tree<T>::ToLinkedList()
 /* https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
  * Given the root of a binary tree, flatten the tree into a "linked list":
  * The "linked list" should use the same TreeNode class where the right child pointer points to the next node in the list and the left child pointer is always null.
- * The "linked list" should be in the same order as a pre-order traversal of the binary tree.
+ * The "linked list" should be in a pre-order traversal of the binary tree.
  * Pre-Order traversal: root -> Left -> Right. So if the current node has right child, move it to the left.
  * 100%
  */
@@ -1071,8 +1071,8 @@ void Tree<T>::split(string const &s, char delim, vector<string> &elems)
 	while (getline(ss, item, delim))
 		elems.push_back(item);
 }
-
 /* https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/
+ * Root -> Left -> Right
  * If we treat null's as leaves, then the binary tree will always be full. A full binary tree has a good property that # of leaves = # of nonleaves + 1.
  * Since we are given a pre-order serialization, we just need to find the shortest prefix of the serialization sequence satisfying the property above.
  * If such prefix does not exist, then the serialization is definitely invalid; otherwise, the serialization is valid if and only if the prefix is the entire sequence.
@@ -1093,21 +1093,3 @@ bool Tree<T>::IsValidPreOrderTreeSerialization(string const &preorder)
 	}
 	return leaves == nonLeaves + 1 && i == tokens.size();
 }
-#if 0
-template<typename T>
-void Tree<T>::PrintNodeIterative(shared_ptr<Node<T>>node)
-{
-	if (node) {
-		stack<shared_ptr<Node<T>>> nodes;
-		stack<shared_ptr<Node<T>>> toVisit;
-		toVisit.push(node);
-		while (!toVisit.empty())
-		{
-			shared_ptr<Node<T>>n = toVisit.top();
-			nodes.push(n);
-			toVisit.pop();
-			
-		}
-	}
-}
-#endif
