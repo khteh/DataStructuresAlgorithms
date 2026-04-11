@@ -49,7 +49,7 @@ protected:
 	shared_ptr<Node<T>> Copy(const shared_ptr<Node<T>> &, map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> &);
 	shared_ptr<Node<T>> LeftMostChild(shared_ptr<Node<T>> &);
 	bool covers(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
-	void FindSum(const shared_ptr<Node<T>> &, T, long, vector<T>, vector<string> &)
+	void FindSum(const shared_ptr<Node<T>> &, const T, long, vector<T>, vector<string> &)
 		requires arithmetic_type<T>;
 	vector<string> GetRoot2LeafNumbers(const shared_ptr<Node<T>> &);
 	size_t Count(const shared_ptr<Node<T>> &) const;
@@ -93,7 +93,7 @@ public:
 	shared_ptr<Node<T>> InOrderSuccessor(shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> CommonAncestor1(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
-	void FindSum(const shared_ptr<Node<T>> &, T, vector<string> &)
+	void FindSum(const shared_ptr<Node<T>> &, const T, vector<string> &)
 		requires arithmetic_type<T>;
 	T SumRoot2LeafNumbers();
 	bool SubTree(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);

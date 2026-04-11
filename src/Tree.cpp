@@ -552,7 +552,7 @@ bool Tree<T>::MatchTree(const shared_ptr<Node<T>> &p, const shared_ptr<Node<T>> 
 }
 
 template <typename T>
-void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, vector<string> &result)
+void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, const T sum, vector<string> &result)
 	requires arithmetic_type<T>
 {
 	vector<T> values;
@@ -561,15 +561,15 @@ void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, vector<string> &re
 }
 
 template <typename T>
-void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, long level, vector<T> values, vector<string> &result)
+void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, const T sum, long level, vector<T> values, vector<string> &result)
 	requires arithmetic_type<T>
 {
 	/*
 	Binary Search Tree (tree1) content:
-	Level 0:                                50
-	Level 1:                        0(50)   100(50)
-	Level 2:                -50(0)  10(0)   75(100)         150(100)
-	Level 3:        -100(-50)       60(75)
+	Level 0:                                   50
+	Level 1:                        0(50)                 100(50)
+	Level 2:                -50(0)        10(0)    75(100)        150(100)
+	Level 3:        -100(-50)                   60(75)
 	*/
 	ostringstream oss;
 	if (!node)
@@ -577,12 +577,12 @@ void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, T sum, long level, vector
 	T tmp = sum;
 	values.push_back(node->Item());
 	for (long i = level; i >= 0; i--)
-	{ // From leaf to root
+	{ // From leaf(level) to root(0)
 		tmp -= values[i];
-		if (!tmp)
+		if (!tmp) // Nodes [i, level] adds up to sum
 		{
 			for (long j = i; j <= level; j++)
-			{ // From root to leaf
+			{ // From root(i) to leaf(level)
 				oss << values[j];
 				if (j != level)
 					oss << " ";

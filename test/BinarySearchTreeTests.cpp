@@ -124,11 +124,11 @@ public:
 		_tree.LoadData(_data, TreeType::BinarySearch);
 	}
 	/*
-Binary Search Tree (tree1) content:
-Level 0:                              50
-Level 1:                        0(50)            100(50)
-Level 2:                -50(0)     10(0)   75(100)       150(100)
-Level 3:        -100(-50)               60(75)
+	Binary Search Tree (tree1) content:
+	Level 0:                                   50
+	Level 1:                        0(50)                 100(50)
+	Level 2:                -50(0)        10(0)    75(100)        150(100)
+	Level 3:        -100(-50)                   60(75)
 	*/
 	vector<string> BinarySearchTreeFindSumTest()
 	{
