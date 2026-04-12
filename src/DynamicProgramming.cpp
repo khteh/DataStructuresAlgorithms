@@ -593,3 +593,41 @@ size_t DynamicProgramming<T>::UniquePaths(size_t rows, size_t cols)
             dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
     return dp[rows - 1][cols - 1];
 }
+/*
+ * https://leetcode.com/problems/edit-distance/
+    rep_cost:1
+
+      0 r  o s
+    0 0 1  2 3
+    h 1 1  2 3
+    o 2 2 [1] 2 ho-> ro : h->r 1 edits
+    r 3[2] 2 2
+    s 4 3  3 [2] hors -> ros : Remove h 1 del,
+    e 5 4 [4] 3 horse -> ro: Remove "ho": + Remove 'e': 3 dels, s->o 1 edits | horse -> ros: Remove "ho" 2 dels, "se"->"os" 2 edits
+
+    rep_cost:2
+    j  0 1  2 3
+  i      r  o s
+  0    0 1  2 3
+  1  h 1 2  3 4
+  2  o 2 3 [2] 3 ho-> ro : h->r 2 edits
+  3  r 3 [2] 3 4 hor -> r : Remove "ho" 2 dels
+  4  s 4 3  4 [3]  hors -> ros : Remove h: 1 del, "or" -> "ro"
+  5  e 5 4  5 4 horse -> ros: Remove "ho": + Remove 'e': 3 dels, s->o 2 edits
+*/
+template <typename T>
+size_t DynamicProgramming<T>::MinimumEditDistance(string const &word1, string const &word2, size_t ins_cost, size_t del_cost, size_t rep_cost)
+{
+    vector<vector<size_t>> distances(word1.size() + 1, vector<size_t>(word2.size() + 1, 0)); // word index is 1-based
+    for (size_t i = 1; i <= word1.size(); i++)
+        distances[i][0] = distances[i - 1][0] + del_cost;
+    for (size_t i = 1; i <= word2.size(); i++)
+        distances[0][i] = distances[0][i - 1] + ins_cost;
+    for (size_t i = 1; i <= word1.size(); i++)
+        for (size_t j = 1; j <= word2.size(); j++)
+        {
+            size_t replace_cost = word1[i - 1] == word2[j - 1] ? 0 : rep_cost; // Comparing the current chracter since it is 1-based
+            distances[i][j] = min(distances[i - 1][j] + del_cost, min(distances[i][j - 1] + ins_cost, distances[i - 1][j - 1] + replace_cost));
+        }
+    return distances[word1.size()][word2.size()];
+}

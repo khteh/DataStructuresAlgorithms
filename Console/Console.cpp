@@ -1509,14 +1509,6 @@ int main(int argc, char *argv[])
 	b.clear();
 	assert(median(a, b) == 0);
 	a.clear();
-	a = {1, 2, 3, 4};
-	a = productExceptSelf(a);
-	b.clear();
-	b = {24, 12, 8, 6};
-	assert(!a.empty());
-	assert(a.size() == 4);
-	assert(b == a);
-	a.clear();
 	a = diffWaysToCompute("2-1-1");
 	assert(!a.empty());
 	assert(a.size() == 2);
@@ -2359,7 +2351,8 @@ int main(int argc, char *argv[])
 	str = arithmetic.Add2Binary("100", "110010");
 	assert("110110" == arithmetic.Add2Binary("100", "110010"));
 	/***** The End *****/
-	cout << "Press ENTER to exit";
+	cout
+		<< "Press ENTER to exit";
 	getline(cin, str);
 	return 0;
 }

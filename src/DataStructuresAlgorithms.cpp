@@ -4146,30 +4146,6 @@ long BasicCalculator(string const &s)
 			;
 	return num;
 }
-/* https://leetcode.com/problems/product-of-array-except-self/
- * 100%
- */
-vector<long> productExceptSelf(vector<long> &nums)
-{
-	vector<long> result(nums.size(), 1);
-	/*
-		1 2 3 4
-		1 1 2 6 <- Accumulate forward
-	*/
-	for (size_t i = 0; i < nums.size() - 1; i++)
-		result[i + 1] = result[i] * nums[i];
-	/*
-	   1   2  3 4
-	   24 24 12 4 <- Accumulate backward
-	*/
-	long productSum = 1;
-	for (long i = nums.size() - 1; i >= 0; i--)
-	{
-		result[i] *= productSum;
-		productSum *= nums[i];
-	}
-	return result;
-}
 /* https://leetcode.com/problems/h-index/
  * 100%
  */

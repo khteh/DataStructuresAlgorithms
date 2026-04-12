@@ -478,6 +478,36 @@ void Range::SumPairs(size_t sum, vector<size_t> const &data, vector<size_t> &res
 			pairs.emplace(data[i], i);
 	}
 }
+/* https://leetcode.com/problems/product-of-array-except-self/
+ * 100%
+ */
+vector<long> Range::ProductExceptSelf(vector<long> const &nums)
+{
+	vector<long> result(nums.size(), 1);
+	/*
+		1 2 3 4
+		1 1 2 6 <- Accumulate forward
+	*/
+	for (size_t i = 0; i < nums.size() - 1; i++)
+		result[i + 1] = result[i] * nums[i];
+	/*
+	   1  2   3 4
+	   1  1   2 6 <- Accumulate forward
+	   24 12  8 6 <- Accumulate backward
+	   i:3 productSum:1  result[3]: 6  productSum:4
+	   i:2 productSum:4  result[2]: 8  productSum:12
+	   i:1 productSum:12 result[1]: 12 productSum:24
+	   i:0 prodcutSum:24 result[0]: 24 productSum:24
+	*/
+	long productSum = 1;
+	for (long i = nums.size() - 1; i >= 0; i--)
+	{
+		result[i] *= productSum;
+		productSum *= nums[i];
+	}
+	return result;
+}
+
 /*
  * https://www.geeksforgeeks.org/maximum-value-pair-array/
  * Start from MSB, add the bit to the result if there are 2 elements having the same prefix value when ANDed
@@ -1365,6 +1395,43 @@ size_t Range::LiveMedianCalculation(size_t d, vector<size_t> const &data)
 	}
 	return count;
 }
+/*
+ * https://leetcode.com/problems/sliding-window-maximum/
+ * 100%
+ * [1,3,-1,-3,5,3,6,7], k:3
+ * i:0 [1]
+ * i:1 [3]
+ * i:2 [3 -1] result: [3]
+ * i:3 [3 -1 -3] result: [3 3]
+ * i:4 [-1 -3] => [-1 5] => [5] result: [3 3 5]
+ * i:5 [5 3] => result: [3 3 5 5]
+ * i:6 [6] => result: [3 3 5 5 6]
+ * i:7 [7] => result: [3 3 5 5 6 7]
+ *
+ * [7,2,4], k:2
+ * i:0 [7]
+ * i:1 [7 2] => result: [7]
+ * i:2 [4] => result: [7 4]
+ *
+ * [1 -1], k:1
+ * i:0 [1] => result: [1]
+ * i:1 [-1] => reulst: [1 -1]
+ */
+void Range::MaxSlidingWindow(vector<long> const &data, size_t k, vector<long> &result)
+{
+	deque<long> window;
+	for (long i = 0; i < data.size(); i++)
+	{
+		if (window.front() == (i - k))
+			window.pop_front();
+		for (; !window.empty() && data[window.back()] < data[i]; window.pop_back())
+			;
+		window.push_back(i);
+		if (i >= (k - 1))
+			result.push_back(data[window.front()]);
+	}
+}
+
 /* https://www.hackerrank.com/challenges/xor-quadruples/problem
  * https://www.hackerrank.com/challenges/xor-quadruples/editorial
  * Time out using conventional 4 for loops due to O(N^3)

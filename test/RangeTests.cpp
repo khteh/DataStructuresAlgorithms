@@ -57,6 +57,32 @@ INSTANTIATE_TEST_SUITE_P(
 					  // make_tuple(4, 10, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>())
 					  make_tuple(4, 10, []() -> generator<size_t>
 													{ co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>())));
+class ProductExceptSelfTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	vector<long> ProductExceptSelfTest()
+	{
+		return _rangeObj.ProductExceptSelf(_data);
+	}
+
+protected:
+	Range _rangeObj;
+	vector<long> _data, _expected;
+};
+TEST_P(ProductExceptSelfTestFixture, ProductExceptSelfTests)
+{
+	ASSERT_EQ(this->_expected, this->ProductExceptSelfTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	ProductExceptSelfTests,
+	ProductExceptSelfTestFixture,
+	::testing::Values(make_tuple(vector<long>{24, 12, 8, 6}, vector<long>{1, 2, 3, 4}),
+					  make_tuple(vector<long>{0, 0, 9, 0, 0}, vector<long>{-1, 1, 0, -3, 3})));
 class RemoveDuplicatesTestFixture : public RangeTestFixture1<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<long>>>
 {
 public:
@@ -1084,6 +1110,40 @@ INSTANTIATE_TEST_SUITE_P(
 	LiveMedianCalculationTests,
 	LiveMedianCalculationTestFixture,
 	::testing::Values(make_tuple(1, 3, vector<size_t>{10, 20, 30, 40, 50}), make_tuple(2, 5, vector<size_t>{2, 3, 4, 2, 3, 6, 8, 4, 5}), make_tuple(0, 4, ranges::iota_view(1, 5) | ranges::to<vector<size_t>>())));
+class MaxSlidingWindowTestFixture : public testing::TestWithParam<tuple<vector<long>, size_t, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+		_data = get<2>(GetParam());
+	}
+	vector<long> MaxSlidingWindowTest()
+	{
+		vector<long> result;
+		_rangeObj.MaxSlidingWindow(_data, _n, result);
+		return result;
+	}
+
+protected:
+	Range _rangeObj;
+	vector<long> _expected, _data;
+	size_t _n;
+};
+TEST_P(MaxSlidingWindowTestFixture, MaxSlidingWindowTests)
+{
+	ASSERT_EQ(this->_expected, this->MaxSlidingWindowTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MaxSlidingWindowTests,
+	MaxSlidingWindowTestFixture,
+	::testing::Values(make_tuple(vector<long>{3, 3, 5, 5, 6, 7}, 3, vector<long>{1, 3, -1, -3, 5, 3, 6, 7}),
+					  make_tuple(vector<long>{3, 3}, 3, vector<long>{3, 1, 1, 3}),
+					  // make_tuple(vector<long>{-3, -2, -1, 0, 1, 2}, 1, ranges::iota_view(-3, 3) | ranges::to<vector<long>>()) // [-3,3)]
+					  make_tuple(vector<long>{-3, -2, -1, 0, 1, 2}, 1, []() -> generator<long>
+																				   { co_yield ranges::elements_of(ranges::iota_view(-3, 3)); }() | ranges::to<vector>())));
+
 class BeautifulQuadruplesTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t, size_t, size_t>>
 {
 public:

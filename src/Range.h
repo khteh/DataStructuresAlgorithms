@@ -18,6 +18,7 @@ public:
 	long LongestNonNegativeSumSlice(vector<long> const &);
 	size_t SumPairs(size_t, vector<size_t> const &);
 	void SumPairs(size_t, vector<size_t> const &, vector<size_t> &);
+	vector<long> ProductExceptSelf(vector<long> const &);
 	unsigned long long MaxAndPair(vector<unsigned long long> const &);
 	unsigned long long MaxXorPair(vector<unsigned long long> const &);
 	unsigned long long BeautifulQuadruples(size_t, size_t, size_t, size_t);
@@ -50,6 +51,7 @@ public:
 	size_t ChiefHopper(vector<size_t> const &);
 	size_t MaxClosestDistance(size_t, vector<size_t> &);
 	size_t LiveMedianCalculation(size_t, vector<size_t> const &);
+	void MaxSlidingWindow(vector<long> const &, size_t, vector<long> &);
 	size_t TrapRainWater(vector<size_t> const &);
 	size_t FirstMissingPositive(vector<long> &);
 };

@@ -493,3 +493,33 @@ INSTANTIATE_TEST_SUITE_P(
 	UniquePathsTests,
 	UniquePathsTestFixture,
 	::testing::Values(make_tuple(28, 3, 7), make_tuple(3, 3, 2)));
+class MinimumEditDistanceTestFixture : public testing::TestWithParam<tuple<size_t, string, string, size_t, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_word1 = get<1>(GetParam());
+		_word2 = get<2>(GetParam());
+		_inst_cost = get<3>(GetParam());
+		_del_cost = get<3>(GetParam());
+		_rep_cost = get<3>(GetParam());
+	}
+	size_t MinimumEditDistanceTest()
+	{
+		return _dp.MinimumEditDistance(_word1, _word2, _inst_cost, _del_cost, _rep_cost);
+	}
+
+protected:
+	DynamicProgramming<long> _dp;
+	size_t _expected, _inst_cost, _del_cost, _rep_cost;
+	string _word1, _word2;
+};
+TEST_P(MinimumEditDistanceTestFixture, MinimumEditDistanceTests)
+{
+	ASSERT_EQ(this->_expected, this->MinimumEditDistanceTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MinimumEditDistanceTests,
+	MinimumEditDistanceTestFixture,
+	::testing::Values(make_tuple(3, "horse", "ros", 1, 1, 1), make_tuple(5, "intention", "execution", 1, 1, 1)));

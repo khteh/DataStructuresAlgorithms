@@ -303,7 +303,6 @@ string NumberToRoman(size_t);
 size_t RomanToNumber(string const &);
 double median(vector<long> &, vector<long> &);
 long BasicCalculator(string const &);
-vector<long> productExceptSelf(vector<long> &);
 size_t hIndex(vector<size_t> &);
 void PhoneKeyLetters(string const &, vector<string> &);
 vector<string> WordBreakDFS(string const &, set<string> const &);

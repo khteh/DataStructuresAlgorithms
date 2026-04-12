@@ -29,4 +29,5 @@ public:
     T VectorSlicesSum(vector<T> const &)
         requires arithmetic_type<T>;
     size_t UniquePaths(size_t, size_t);
+    size_t MinimumEditDistance(string const &, string const &, size_t, size_t, size_t);
 };
