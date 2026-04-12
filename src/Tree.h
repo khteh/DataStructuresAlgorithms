@@ -34,9 +34,9 @@ template <typename T>
 class Tree
 {
 protected:
-	vector<size_t> levelNodeCount;
+	vector<size_t> _levelNodeCount;
 	shared_ptr<Node<T>> _root;
-	stack<shared_ptr<Node<T>>> minStack, maxStack;
+	stack<shared_ptr<Node<T>>> _minStack, _maxStack;
 	void Swap(Tree &);
 	void Clear(shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T> &, long, long);

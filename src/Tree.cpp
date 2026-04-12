@@ -46,14 +46,23 @@ Tree<T>::Tree(T item)
 	: _root(make_shared<Node<T>>(item))
 {
 }
+/*
+			Binary Search Tree:
+					50
+				0			100
+			-50	   10	75		150
+		-100			60
+_minStack: [-100, -50, 0, 50]
+_maxStack: [150, 100, 50]
+*/
 template <typename T>
 Tree<T>::Tree(shared_ptr<Node<T>> &node)
 {
 	map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> copied;
 	_root = Copy(node, copied);
-	for (shared_ptr<Node<T>> n = _root; n; minStack.push(n), n = n->Left())
+	for (shared_ptr<Node<T>> n = _root; n; _minStack.push(n), n = n->Left())
 		;
-	for (shared_ptr<Node<T>> n = _root; n; maxStack.push(n), n = n->Right())
+	for (shared_ptr<Node<T>> n = _root; n; _maxStack.push(n), n = n->Right())
 		;
 }
 template <typename T>
@@ -61,9 +70,9 @@ Tree<T>::Tree(Tree<T> const &tree)
 {
 	map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> copied;
 	_root = Copy(tree.Root(), copied);
-	for (shared_ptr<Node<T>> n = _root; n; minStack.push(n), n = n->Left())
+	for (shared_ptr<Node<T>> n = _root; n; _minStack.push(n), n = n->Left())
 		;
-	for (shared_ptr<Node<T>> n = _root; n; maxStack.push(n), n = n->Right())
+	for (shared_ptr<Node<T>> n = _root; n; _maxStack.push(n), n = n->Right())
 		;
 }
 template <typename T>
@@ -100,9 +109,9 @@ void Tree<T>::LoadData(vector<T> &data, TreeType type)
 		default:
 			throw invalid_argument("Invalid Tree type!");
 		}
-		for (shared_ptr<Node<T>> n = _root; n; minStack.push(n), n = n->Left())
+		for (shared_ptr<Node<T>> n = _root; n; _minStack.push(n), n = n->Left())
 			;
-		for (shared_ptr<Node<T>> n = _root; n; maxStack.push(n), n = n->Right())
+		for (shared_ptr<Node<T>> n = _root; n; _maxStack.push(n), n = n->Right())
 			;
 	}
 }
@@ -142,6 +151,7 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePreOrder(vector<T> &inorder, vector<T> &pr
 	else if (prestart < (long)preorder.size() && inend >= 0 && instart < inend)
 	{
 		/*
+		 * Property: Preorder always has root at index 0
 		 *             0   1   2  3  4   5  6
 		 * preorder = [{3},<9>,5,10,<20>,15,7]
 		 * inorder  = [5,  9, 10,{3},15,20, 7]
@@ -153,7 +163,7 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePreOrder(vector<T> &inorder, vector<T> &pr
 		if (inOrderRoot == (inorder.begin() + instart + (inend - instart) + 1))
 			throw invalid_argument("Invalid tree input parameters! No root found!");
 		root = make_shared<Node<T>>(preorder[prestart]);
-		size_t middle = distance(inorder.begin(), inOrderRoot);
+		size_t middle = distance(inorder.begin(), inOrderRoot); // #steps from begin() to inOrderRoot. Ex: 0 if inOrderRoot == begin()
 		shared_ptr<Node<T>> left = BuildTreePreOrder(inorder, preorder, prestart + 1 /*Root of pre-order left tree*/, instart, middle - 1 /*In-order left tree*/);
 		shared_ptr<Node<T>> right = BuildTreePreOrder(inorder, preorder, prestart + middle - instart + 1 /*Root of pre-order right tree*/, middle + 1 /*In-order right tree*/, inend);
 		root->SetLeft(left);
@@ -177,6 +187,7 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePostOrder(vector<T> &inorder, vector<T> &p
 	else if (pstart >= 0 && inend >= 0 && instart < inend)
 	{
 		/*
+		 * Property: Postorder always has root at the last index
 		 *              0   1    2  3    4
 		 * postorder = [<9>,15,  7,<20>,{3}] => left offset: 4 - 4 = 0
 		 * inorder   = [9,  {3},15,20,   7]	=> right tree size: 4 - 1 + 1 = 4
@@ -202,11 +213,11 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePostOrder(vector<T> &inorder, vector<T> &p
 		if (inOrderRoot == inorder.begin() + instart + (inend - instart) + 1)
 			throw invalid_argument("Invalid tree input parameters! No root found!");
 		root = make_shared<Node<T>>(postorder[pstart]);
-		size_t middle = distance(inorder.begin(), inOrderRoot);
-		size_t rightSize = inend - middle + 1; // Include the root node itself
+		size_t middle = distance(inorder.begin(), inOrderRoot); // #steps from begin() to inOrderRoot. Ex: 0 if inOrderRoot == begin()
+		size_t rightSize = inend - middle + 1;					// Include the root node itself
 		size_t leftOffset = pstart - rightSize;
-		shared_ptr<Node<T>> left = BuildTreePostOrder(inorder, postorder, leftOffset, instart, middle - 1 /*In-order left tree*/);
-		shared_ptr<Node<T>> right = BuildTreePostOrder(inorder, postorder, pstart - 1, middle + 1 /*In-order right tree*/, inend);
+		shared_ptr<Node<T>> left = BuildTreePostOrder(inorder, postorder, leftOffset /*Root of post-order left tree*/, instart, middle - 1 /*In-order left tree*/);
+		shared_ptr<Node<T>> right = BuildTreePostOrder(inorder, postorder, pstart - 1 /*Root of post-order right tree*/, middle + 1 /*In-order right tree*/, inend);
 		root->SetLeft(left);
 		root->SetRight(right);
 		if (left)
@@ -285,25 +296,6 @@ shared_ptr<Node<T>> Tree<T>::AddToTree(vector<T> &v)
 	}
 	return !v.empty() ? nodes[0] : nullptr;
 }
-#if 0
-template <typename T>
-Tree<T> &Tree<T>::operator=(Tree<T> const &tree)
-{
-	if (this != &tree)
-	{
-		map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> copied;
-		_root = Copy(tree.Root(), copied);
-	}
-	return *this;
-}
-template <typename T>
-Tree<T> &Tree<T>::operator=(Tree<T> &&rhs) // Move assignment operator
-{
-	Tree<T> tmp(move(rhs));
-	tmp.Swap(*this);
-	return *this;
-}
-#endif
 /*
 https://stackoverflow.com/questions/64378721/what-is-the-difference-between-the-copy-constructor-and-move-constructor-in-c
 The above 2 operators can be implemented as 1 operator, like below.
@@ -346,9 +338,9 @@ shared_ptr<Node<T>> Tree<T>::Root() const
 template <typename T>
 void Tree<T>::Clear()
 {
-	for (; !minStack.empty(); minStack.pop())
+	for (; !_minStack.empty(); _minStack.pop())
 		;
-	for (; !maxStack.empty(); maxStack.pop())
+	for (; !_maxStack.empty(); _maxStack.pop())
 		;
 	if (_root)
 	{
@@ -500,27 +492,6 @@ bool Tree<T>::covers(const shared_ptr<Node<T>> &node, const shared_ptr<Node<T>> 
 		return true;
 	return covers(node->Left(), p) || covers(node->Right(), p);
 }
-
-#if 0
-template<typename T>
-shared_ptr<Node<T>> Tree<T>::CommonAncestor1(shared_ptr<Node<T>> node, shared_ptr<Node<T>> p, shared_ptr<Node<T>> q)
-{
-	bool flags[4];
-	flags[0] = covers(node->Left(), p);
-	flags[1] = covers(node->Left(), q);
-	if (flags[0] & flags[1])
-		CommonAncestor1(node->Left(), p, q);
-
-	flags[2] = covers(node->Right(), p);
-	flags[3] = covers(node->Right(), q);
-	if (flags[2] & flags[3])
-		CommonAncestor1(node->Right(), p, q);
-	if (!(flags[0] | flags[1] | flags[2] | flags[3]))
-		return nullptr;
-	return node;
-}
-#endif
-
 template <typename T>
 bool Tree<T>::SubTree(const shared_ptr<Node<T>> &parent, const shared_ptr<Node<T>> &child)
 {
@@ -614,6 +585,9 @@ T Tree<T>::SumRoot2LeafNumbers()
 	}
 	return T();
 }
+/*
+ * Every node represents a digit. Every path from root to leaf represents a number with root as MSB and leaf as LSB.
+ */
 template <typename T>
 vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 {
@@ -701,7 +675,6 @@ Level 2:            0(-100)         100(60)
 Level 3:       -50(0)     10(0)  75(100)   150(100)
 	*/
 	if (node)
-	{
 		if (node->Right())
 		{ // If node as right child, the in-order successor must be on the right side of the node
 			shared_ptr<Node<T>> tmp(node->Right());
@@ -713,10 +686,8 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 				if (n->Left() == node) // If node is the left child of n, then n must be the in-order successor of node.
 					return n;
 		}
-	}
 	return nullptr;
 }
-
 template <typename T>
 shared_ptr<Node<T>> Tree<T>::LeftMostChild(shared_ptr<Node<T>> &node)
 {
@@ -724,25 +695,21 @@ shared_ptr<Node<T>> Tree<T>::LeftMostChild(shared_ptr<Node<T>> &node)
 		node = node->Left();
 	return node;
 }
-
 template <typename T>
 size_t Tree<T>::MinDepth(const shared_ptr<Node<T>> &node) const
 {
 	return node ? 1 + min(MinDepth(node->Left()), MinDepth(node->Right())) : 0;
 }
-
 template <typename T>
 size_t Tree<T>::MaxDepth(const shared_ptr<Node<T>> &node) const
 {
 	return node ? 1 + max(MaxDepth(node->Left()), MaxDepth(node->Right())) : 0;
 }
-
 template <typename T>
 bool Tree<T>::IsBalancedTree() const
 {
 	return MaxDepth(_root) - MinDepth(_root) <= 1;
 }
-
 template <typename T>
 T Tree<T>::MinDiffInBST() const
 	requires arithmetic_type<T>
@@ -760,13 +727,9 @@ T Tree<T>::MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> curren
 		minimum = MinDiffInBST(current, current->Left());
 		if (previous)
 			if constexpr (is_integral<T>::value)
-			{
 				minimum = min<T>(minimum, abs((long)(current->Item() - previous->Item())));
-			}
 			else if constexpr (is_floating_point<T>::value)
-			{
 				minimum = min<T>(minimum, abs((double)(current->Item() - previous->Item())));
-			}
 		minimum = min(minimum, MinDiffInBST(current, current->Right()));
 	}
 	return minimum;
@@ -889,38 +852,64 @@ vector<size_t> Tree<T>::GetLevelNodeCount(const shared_ptr<Node<T>> &n, size_t l
 {
 	if (n)
 	{
-		if (levelNodeCount.empty() || levelNodeCount.size() - 1 < level)
-			levelNodeCount.push_back(1);
+		if (_levelNodeCount.empty() || _levelNodeCount.size() - 1 < level)
+			_levelNodeCount.push_back(1);
 		else
-			levelNodeCount[level]++;
+			_levelNodeCount[level]++;
 		GetLevelNodeCount(n->Left(), level + 1);
 		GetLevelNodeCount(n->Right(), level + 1);
 	}
-	return levelNodeCount;
+	return _levelNodeCount;
 }
+/*
+			Binary Search Tree:
+					50
+				0			  100
+			-50	   10	  75		150
+		-100	-40		60
+			 -45
+_minStack: [-100, -50, 0, 50]
+_maxStack: [150, 100, 50]
+*/
 template <typename T>
 T Tree<T>::NextMin()
 {
-	shared_ptr<Node<T>> n = minStack.top();
+	shared_ptr<Node<T>> n = _minStack.top();
 	if (n)
 	{
-		minStack.pop();
-		T item = n->Item();
-		for (n = n->Right(); n; minStack.push(n), n = n->Left())
+		_minStack.pop();
+		T item = n->Item(); // -100, -50
+		/*
+		 * _minStack: [-45, -40, 0, 50]
+		 */
+		for (n = n->Right(); n; _minStack.push(n), n = n->Left())
 			;
 		return item;
 	}
 	return numeric_limits<T>::max();
 }
+/*
+			Binary Search Tree:
+					50
+				0			  100
+			-50	   10	  75		150
+		-100	-40		60  80
+			 -45
+_minStack: [-100, -50, 0, 50]
+_maxStack: [150, 100, 50]
+*/
 template <typename T>
 T Tree<T>::NextMax()
 {
-	shared_ptr<Node<T>> n = maxStack.top();
+	shared_ptr<Node<T>> n = _maxStack.top();
 	if (n)
 	{
-		maxStack.pop();
-		T item = n->Item();
-		for (n = n->Left(); n; maxStack.push(n), n = n->Right())
+		_maxStack.pop();
+		T item = n->Item(); // 150, 100
+		/*
+		 * _maxStack: [80, 75, 50]
+		 */
+		for (n = n->Left(); n; _maxStack.push(n), n = n->Right())
 			;
 		return item;
 	}
@@ -932,12 +921,12 @@ T Tree<T>::kthSmallest(size_t k)
 	T result = numeric_limits<T>::max();
 	for (size_t i = 0; i < k; i++)
 	{
-		shared_ptr<Node<T>> n = minStack.top();
-		minStack.pop();
+		shared_ptr<Node<T>> n = _minStack.top();
+		_minStack.pop();
 		if (n)
 		{
 			result = n->Item();
-			for (n = n->Right(); n; minStack.push(n), n = n->Left())
+			for (n = n->Right(); n; _minStack.push(n), n = n->Left())
 				;
 		}
 	}
@@ -949,12 +938,12 @@ T Tree<T>::kthLargest(size_t k)
 	T result = numeric_limits<T>::min();
 	for (size_t i = 0; i < k; i++)
 	{
-		shared_ptr<Node<T>> n = maxStack.top();
-		maxStack.pop();
+		shared_ptr<Node<T>> n = _maxStack.top();
+		_maxStack.pop();
 		if (n)
 		{
 			result = n->Item();
-			for (n = n->Left(); n; maxStack.push(n), n = n->Right())
+			for (n = n->Left(); n; _maxStack.push(n), n = n->Right())
 				;
 		}
 	}
@@ -963,12 +952,12 @@ T Tree<T>::kthLargest(size_t k)
 template <typename T>
 bool Tree<T>::HasNextMin() const
 {
-	return !minStack.empty();
+	return !_minStack.empty();
 }
 template <typename T>
 bool Tree<T>::HasNextMax() const
 {
-	return !maxStack.empty();
+	return !_maxStack.empty();
 }
 template <typename T>
 shared_ptr<Node<T>> Tree<T>::ToLinkedList()
