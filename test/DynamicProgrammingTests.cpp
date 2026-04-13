@@ -523,3 +523,29 @@ INSTANTIATE_TEST_SUITE_P(
 	MinimumEditDistanceTests,
 	MinimumEditDistanceTestFixture,
 	::testing::Values(make_tuple(3, "horse", "ros", 1, 1, 1), make_tuple(5, "intention", "execution", 1, 1, 1)));
+class NonAdjacentMaxSumTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	long NonAdjacentMaxSumTest()
+	{
+		return _dp.NonAdjacentMaxSum(_data);
+	}
+
+protected:
+	DynamicProgramming<long> _dp;
+	long _expected;
+	vector<long> _data;
+};
+TEST_P(NonAdjacentMaxSumTestFixture, NonAdjacentMaxSumTests)
+{
+	ASSERT_EQ(this->_expected, this->NonAdjacentMaxSumTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	NonAdjacentMaxSumTests,
+	NonAdjacentMaxSumTestFixture,
+	::testing::Values(make_tuple(4, vector<long>{1, 2, 3, 1}), make_tuple(12, vector<long>{2, 7, 9, 3, 1})));

@@ -454,14 +454,14 @@ size_t Sort<T>::SortSwapCount(vector<T> &data)
 /* https://en.wikipedia.org/wiki/Dutch_national_flag_problem
 * https://leetcode.com/problems/sort-colors/
 * 100%
-* Entries from 0 up to (but NOT including) i are values less than mid,
-* entries from i up to (but NOT including) j are values equal to mid,
-* entries from j up to (and including) k are values not yet sorted, and
-* entries from k + 1 to the end of the array are values greater than mid.
+* [0, i) are values less than mid
+* [i, j) are values equal to mid
+* [j, k] are values not yet sorted
+* [k + 1, end] are values greater than mid.
 0  i   j   k  n-1
 <mid mid ??? >mid
 
-2 1 0 1 2 0 1 2
+2 1 0 1 2 0 1 2 mid:1
 i,j           k (>mid)
 
 2 1 0 1 2 0 1 2
@@ -483,13 +483,10 @@ i   j     k    (<mid)
   i     j k    (>mid)
 
 0 1 1 1 0 2 2 2
-  i     j,k    (>mid)
-
-0 1 1 1 0 2 2 2
   i     j,k    (<mid)
 
 0 0 1 1 1 2 2 2
-	i   k j		<= j > k base case
+	i   k j    <= j > k base case
 */
 template <typename T>
 void Sort<T>::DutchPartitioning(vector<T> &data, T mid)

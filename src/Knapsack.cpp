@@ -355,7 +355,7 @@ set<vector<size_t>> Knapsack::BoundedKnapsackCombinationSum(size_t size, size_t 
 			it++;
 	return combinations;
 }
-/* The Recursive Staircase - Top Down Dynamic Programming
+/* Recursive + memo (top-down)
  *			   6(13)
  *       4(5)        5(8)
  *    2(2)     3(3)
@@ -377,7 +377,8 @@ size_t Knapsack::StairsClimbingDynamicProgramming(long destination, vector<size_
 	}
 	return combinations;
 }
-/* The Recursive Staircase - Bottom Up Dynamic Programming
+/* Iterative + N variables (bottom-up)
+ *
  * Steps: {1,2} Destination: 6
  *  0 1 2 3 4 5 6
  * {1,1,2,3,5,8,13} <= [i] = [i-1] + [i-2]

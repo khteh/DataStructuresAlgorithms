@@ -632,3 +632,20 @@ size_t DynamicProgramming<T>::MinimumEditDistance(string const &word1, string co
         }
     return distances[word1.size()][word2.size()];
 }
+/*
+ * https://leetcode.com/problems/house-robber
+ * 100%
+ */
+template <typename T>
+T DynamicProgramming<T>::NonAdjacentMaxSum(vector<T> &data)
+    requires arithmetic_type<T>
+{
+    vector<T> result(data.size() + 1, 0);
+    if (data.empty())
+        return 0;
+    result[1] = data[0];
+    for (size_t i = 1; i < data.size(); i++)
+        // max(previous + next, current)
+        result[i + 1] = max<T>(result[i - 1] + data[i], result[i]);
+    return result[data.size()];
+}
