@@ -651,17 +651,25 @@ size_t DynamicProgramming<T>::MinimumEditDistance(string const &word1, string co
  * i:3 max(11, 7)=11 [0 2 7 11]        | [7 11]
  * i:4 max(10, 11)=11 [0 2 7 11 11]    | [11 11]
  * i:5 max(12, 11)=12 [0 2 7 11 11 12] | [11 12]
+ *
+ * [5 1 3 2 4]: 12
+ * [0 5 1 3 2 4]
+ * [0 5]
+ * i:2 max(5, 1)=5 [0 5 5]      | [5 5]
+ * i:3 max(8, 5)=8 [0 5 5 8]    | [5 8]
+ * i:4 max(7, 8)=8 [0 5 5 8 8]  | [8 8]
+ * i:5 max(12,8)=12 [0 5 5 8 8 12] | [8 12]
  */
 template <typename T>
 T DynamicProgramming<T>::NonAdjacentMaxSum(vector<T> &data)
     requires arithmetic_type<T>
 {
-    vector<T> result(data.size() + 1, 0);
+    vector<T> result(2, 0);
     if (data.empty())
         return 0;
     result[1] = data[0];
-    for (size_t i = 1; i < data.size(); i++)
-        // max(previous + next, current)
-        result[i + 1] = max<T>(result[i - 1] + data[i], result[i]);
-    return result[data.size()];
+    data.insert(data.begin(), 0);
+    for (size_t i = 2; i < data.size(); i++)
+        result[i % 2] = max<T>(result[(i - 2) % 2] + data[i], result[(i - 1) % 2]);
+    return result[(data.size() - 1) % 2];
 }

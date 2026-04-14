@@ -548,4 +548,4 @@ TEST_P(NonAdjacentMaxSumTestFixture, NonAdjacentMaxSumTests)
 INSTANTIATE_TEST_SUITE_P(
 	NonAdjacentMaxSumTests,
 	NonAdjacentMaxSumTestFixture,
-	::testing::Values(make_tuple(4, vector<long>{1, 2, 3, 1}), make_tuple(12, vector<long>{2, 7, 9, 3, 1})));
+	::testing::Values(make_tuple(4, vector<long>{1, 2, 3, 1}), make_tuple(12, vector<long>{2, 7, 9, 3, 1}), make_tuple(12, vector<long>{5, 1, 3, 2, 4})));
