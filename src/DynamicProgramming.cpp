@@ -635,8 +635,8 @@ size_t DynamicProgramming<T>::MinimumEditDistance(string const &word1, string co
 /*
  * https://leetcode.com/problems/house-robber
  * 100%
- * (1) Rob current house + previous 2 proceed
- * (2) Skip current house, take proceed from previous house
+ * (1) Rob current house(i) + previous 2 proceed(i-2)
+ * (2) Skip current house, take proceed from previous house(i-1)
  * [1 2 3 1]: 4
  * [0 1 2 3 1]
  * [0 1]
