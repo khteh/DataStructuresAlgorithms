@@ -635,6 +635,22 @@ size_t DynamicProgramming<T>::MinimumEditDistance(string const &word1, string co
 /*
  * https://leetcode.com/problems/house-robber
  * 100%
+ * (1) Rob current house + previous 2 proceed
+ * (2) Skip current house, take proceed from previous house
+ * [1 2 3 1]: 4
+ * [0 1 2 3 1]
+ * [0 1]
+ * i:2 max(2, 1)=2 [0 1 2]
+ * i:3 max(4, 2)=4 [0 1 2 4]
+ * i:4 max(3, 4)=4
+ *
+ * [2,7,9,3,1]: 12
+ * [0 2 7 9 3 1]
+ * [0 2]
+ * i:2 max(7, 2)=7 [0 2 7]
+ * i:3 max(11, 7)=11 [0 2 7 11]
+ * i:4 max(10, 11)=11 [0 2 7 11 11]
+ * i:5 max(12, 11)=12 [0 2 7 11 11 12]
  */
 template <typename T>
 T DynamicProgramming<T>::NonAdjacentMaxSum(vector<T> &data)
