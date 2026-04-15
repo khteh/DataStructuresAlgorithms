@@ -11,6 +11,24 @@ Matrix<T>::Matrix(vector<vector<T>> &grid, T active, T inactive) : _grid(grid), 
 
 /*
 * Matrix area sum using bottom-up dynamic programming
+*   0	1	2	3
+0	1   1   1   1
+1	1   1   1   1
+2	1   1   1   1
+3	1   1   1   1
+
+*   0	1	2	3
+0	1   2   3   4
+1	2   4   6   8
+2	3   6   9   12
+3	4   8   12  16
+
+[1,1] - [1,1] : 4 - 2 - 2 + 1 = 1
+[1,1] - [2,2] : 9 - 3 - 3 + 1 = 4
+[1,1] - [3,2] : 12 - 4 - 3 + 1 = 6
+[1,1] - [2,3] : 12 - 3 - 4 + 1 = 6
+[1,1] - [3,3] : 16 - 4 - 4 + 1 = 9
+
 * 	0	1	2	3
 0	2	0	-3	4
 1	6	3	2	-1
@@ -23,8 +41,11 @@ Matrix<T>::Matrix(vector<vector<T>> &grid, T active, T inactive) : _grid(grid), 
 2	13	20	26	32
 3	15	16	30	37
 
-[1,1] - [3,2]			30 - 15 - (-1) + 2 = 18
-[0,2] - [3,3]			37 - 16 = 21
+[1,1] - [1,1] : 11 - 8 - 2 + 2 = 3
+[1,1] - [2,2] : 26 - 13 - (-1) + 2 = 16
+[1,1] - [3,2] : 30 - 15 - (-1) + 2 = 18
+[1,1] - [2,3] : 32 - 13 - 3 + 2 = 18
+[1,1] - [3,3] : 37 - 15 - 3 + 2 = 21
 
 https://leetcode.com/problems/range-sum-query-2d-immutable/
 https://www.youtube.com/watch?v=PwDqpOMwg6U
