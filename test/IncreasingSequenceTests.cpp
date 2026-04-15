@@ -82,6 +82,33 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(1, vector<size_t>{0}), make_tuple(1, vector<size_t>{10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0}), make_tuple(6, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
 					  make_tuple(3, vector<size_t>{3, 2, 4, 1, 5}),
 					  make_tuple(1, vector<size_t>{1, 1, 1, 1, 1})));
+class RussianDollEnvelopesNlogNTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<size_t>>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	size_t RussianDollEnvelopesNlogNTest()
+	{
+		return RussianDollEnvelopes(_data);
+	}
+
+protected:
+	size_t _expected;
+	vector<vector<size_t>> _data;
+};
+TEST_P(RussianDollEnvelopesNlogNTestFixture, RussianDollEnvelopesNlogNTests)
+{
+	ASSERT_EQ(this->_expected, this->RussianDollEnvelopesNlogNTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	RussianDollEnvelopesNlogNTests,
+	RussianDollEnvelopesNlogNTestFixture,
+	::testing::Values(make_tuple(3, vector<vector<size_t>>{{5, 4}, {6, 4}, {6, 7}, {2, 3}}), make_tuple(3, vector<vector<size_t>>{{30, 50}, {12, 2}, {3, 4}, {12, 15}}), make_tuple(3, vector<vector<size_t>>{{1, 15}, {7, 18}, {7, 6}, {7, 100}, {2, 200}, {17, 30}, {17, 45}, {3, 5}, {7, 8}, {3, 6}, {3, 10}, {7, 20}, {17, 3}, {17, 45}}),
+					  make_tuple(5, vector<vector<size_t>>{{2, 100}, {3, 200}, {4, 300}, {5, 500}, {5, 400}, {5, 250}, {6, 370}, {6, 360}, {7, 380}})));
+
 class LongestDecreasingSubsequenceNlogNTestFixture : public LongestSubsequenceFixture<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
 {
 public:

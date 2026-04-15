@@ -3140,6 +3140,41 @@ size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &data)
 	}
 	return tails.size();
 }
+/*
+ * https://leetcode.com/problems/russian-doll-envelopes
+ * Strategy: Sort the dolls with element-0 ascending, then element-1 descending. Then only use element-1 to construct the longest increasing subsequence.
+ * 100%
+[2 3]
+[5 4]
+[6 4]
+[6 7]
+
+[3,4]
+[12,2]
+[12,15]
+[30,50]
+ */
+size_t RussianDollEnvelopes(vector<vector<size_t>> &envelopes)
+{
+	vector<size_t> tails; // Note: This records the tails of the subsequences. Not the actual longest increasing subsequence!
+	if (!envelopes.empty())
+	{
+		ranges::sort(envelopes, [](vector<size_t> a, vector<size_t> b) -> bool
+					 {
+						 return (a[0] < b[0]) || (a[0] == b[0] && a[1] >= b[1]); // Sort the first element ascending. Tie breaker with the second element descending.
+					 });
+		tails.push_back(envelopes[0][1]);
+		for (vector<vector<size_t>>::const_iterator it = envelopes.begin(); it != envelopes.end(); it++)
+		{
+			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), (*it)[1]); // Ignore width. Only use the height now. Look for element >= envelopes[i][1]
+			if (it1 != tails.end())
+				*it1 = (*it)[1]; // This will overwrite the first-element tie-breaker with a smaller value of the second element since it was sorted with descending order.
+			else
+				tails.push_back((*it)[1]);
+		}
+	}
+	return tails.size();
+}
 /* https://leetcode.com/problems/longest-substring-without-repeating-characters/
  * 100%
  * "aabaab!bb"
