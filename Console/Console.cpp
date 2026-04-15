@@ -2002,24 +2002,6 @@ int main(int argc, char *argv[])
 			 {192, 174, 272},
 			 {153, 50, 348}};
 	// assert("100001110110101101000110111011110000000000001100010011111101010011010111100110011001001000101100001000110111110011111010001111101000101011100001110110101001011011111111011110101000100100011010000001110110001000110000100010011001101001100011101100100101001101111000001110000000100111000010001111110111100010111010011111111011111101111111110011111101111" == RoadsInHackerland(300, edges));
-	udata.clear();
-	udata = {1, 3, 2};
-	cout << "{1, 3, 2}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
-	udata.clear();
-	udata = {5, 3, 2, 1, 4};
-	cout << "{5, 3, 2, 1, 4}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
-	udata.clear();
-	udata = {4, 2, 5, 6};
-	cout << "{4, 2, 5, 6}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
-	udata.clear();
-	udata = {9, 7, 5, 6};
-	cout << "{9, 7, 5, 6}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
-	udata.clear();
-	udata = {6, 4, 2, 1, 3, 5, 7};
-	cout << "{6, 4, 2, 1, 3, 5, 7}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
-	udata.clear();
-	udata = {6, 4, 2, 3, 5, 7, 9};
-	cout << "{6, 4, 2, 3, 5, 7, 9}: " << LongestIncreasingSubsequenceNlogN(udata) << ", " << LongestDecreasingSubsequenceNlogN(udata) << endl;
 	multimap<int, string> mmap = {{123, "123"}, {456, "456"}, {123, "789"}};
 	for (multimap<int, string>::iterator it = mmap.begin(); it != mmap.end(); it++)
 		cout << it->first << ": " << it->second << endl;
