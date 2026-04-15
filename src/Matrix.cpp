@@ -45,9 +45,14 @@ Matrix<T>::Matrix(vector<vector<T>> &matrix)
 				_grid[i][j] -= _grid[i - 1][j - 1];
 		}
 }
-// -1  0 -1
-// -1 -1 -1
-// -1 -1 -1
+/* -1  0 -1
+ * -1 -1 -1
+ * -1 -1 -1 x:0, y:1
+ *
+ * 1 0 1
+ * 2 1 2
+ * 3 2 3
+ */
 template <typename T>
 void Matrix<T>::MatrixDistance(vector<vector<T>> &data, size_t x, size_t y)
 {

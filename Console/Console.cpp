@@ -425,14 +425,12 @@ int main(int argc, char *argv[])
 	matrix.MatrixDistance(grid1, 0, 1);
 	cout << "grid1 (" << grid1.size() << "): " << endl;
 	for (size_t i = 0; i < 3; i++)
-	{
 		for (size_t j = 0; j < 3; j++)
 		{
 			cout << grid1[i][j] << " ";
 			assert(grid1[i][j] == grid2[i][j]);
 		}
-		cout << endl;
-	}
+	cout << endl;
 	str = "ab2c3";
 	assert(uncompress(str) == "ababcababcababc");
 	cout << "uncompress(" << quoted(str) << "): " << uncompress(str) << endl;
