@@ -66,8 +66,8 @@ protected:
 	void split(string const &s, char delim, vector<string> &elems);
 	T MaxPathSum(const shared_ptr<Node<T>> &, T &)
 		requires arithmetic_type<T>;
-	// void RecoverBinarySearchTree(const shared_ptr<Node<T>> &)
-	//		requires arithmetic_type<T>;
+	void RecoverBinarySearchTree(const shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &)
+		requires arithmetic_type<T>;
 
 public:
 	Tree();
@@ -130,6 +130,6 @@ public:
 	bool IsValidPreOrderTreeSerialization(string const &);
 	T MaxPathSum()
 		requires arithmetic_type<T>;
-	// void RecoverBinarySearchTree()
-	// requires arithmetic_type<T>;
+	void RecoverBinarySearchTree()
+		requires arithmetic_type<T>;
 };

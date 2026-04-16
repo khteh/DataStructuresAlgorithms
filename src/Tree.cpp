@@ -1109,18 +1109,50 @@ T Tree<T>::MaxPathSum()
 	T maxPathSum = numeric_limits<T>::min(); // Record maximum sum of any unidirectional (DFS) path in a tree without stack back-tracking / rewind.
 	return max(maxPathSum, MaxPathSum(_root, maxPathSum));
 }
-#if 0
+/*
+ * https://leetcode.com/problems/recover-binary-search-tree/
+ * There are only 2 misplaced nodes. Find and swap them.
+ *             5
+		3             2
+	6        4
+6: prev = 6
+3: first = 6, second = 3, prev = 3
+4: prev = 4
+5: prev = 5
+2: second = 2, prev = 2
+
+swap(first, second)
+				5
+		3             6
+	2        4
+ */
 template <typename T>
-void Tree<T>::RecoverBinarySearchTree(const shared_ptr<Node<T>> &n)
+void Tree<T>::RecoverBinarySearchTree(const shared_ptr<Node<T>> &n, shared_ptr<Node<T>> &first, shared_ptr<Node<T>> &second, shared_ptr<Node<T>> &prev)
 	requires arithmetic_type<T>
 {
 	if (n)
 	{
+		RecoverBinarySearchTree(n->Left(), first, second, prev);
+		if (prev && prev->Item() > n->Item())
+		{
+			if (!first)
+				first = prev;
+			second = n;
+		}
+		prev = n;
+		RecoverBinarySearchTree(n->Right(), first, second, prev);
 	}
 }
 template <typename T>
 void Tree<T>::RecoverBinarySearchTree()
 	requires arithmetic_type<T>
 {
+	shared_ptr<Node<T>> first = nullptr, second = nullptr, prev = nullptr;
+	RecoverBinarySearchTree(_root, first, second, prev);
+	if (first && second)
+	{
+		T tmp = first->Item();
+		first->SetItem(second->Item());
+		second->SetItem(tmp);
+	}
 }
-#endif

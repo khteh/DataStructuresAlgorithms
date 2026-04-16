@@ -1,5 +1,24 @@
 #include "pch.h"
 using namespace std;
+template <typename T1, typename T2>
+class TreeTestFixture1
+{
+public:
+	void SetUp(T1 expected, vector<T2> data, TreeType type)
+	{
+		_expected = expected;
+		_data = data;
+		_type = type;
+		_tree = Tree(_data, _type);
+	}
+
+protected:
+	TreeType _type;
+	Tree<T2> _tree;
+	vector<T2> _data;
+	T1 _expected;
+};
+
 TEST(TreeTests, TreeArithmeticTotalDoubleTest)
 {
 	Tree<double> tree;
@@ -95,25 +114,18 @@ INSTANTIATE_TEST_SUITE_P(
 	InsertionSortShiftCountTestFixture,
 	::testing::Values(make_tuple(0, vector<long>{1, 1, 1, 2, 2}), make_tuple(4, vector<long>{2, 1, 3, 1, 2}), make_tuple(6, vector<long>{4, 3, 2, 1}), make_tuple(4, vector<long>{9492052, 241944, 5743396, 5758608, 6053545})));
 
-class TreeMaxPathSumTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+class TreeMaxPathSumTestFixture : public TreeTestFixture1<long, long>, public testing::TestWithParam<tuple<long, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_data = get<1>(GetParam());
-		_tree = Tree(_data, TreeType::Binary);
+		TreeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()), TreeType::Binary);
 	}
 	long TreeMaxPathSumTest()
 	{
 		_tree.PrintTree();
 		return _tree.MaxPathSum();
 	}
-
-protected:
-	Tree<long> _tree;
-	long _expected;
-	vector<long> _data;
 };
 TEST_P(TreeMaxPathSumTestFixture, TreeMaxPathSumTests)
 {
@@ -125,3 +137,27 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(-10, vector<long>{-10}), make_tuple(6, vector<long>{1, 2, 3}), make_tuple(42, vector<long>{-10, 9, 20, numeric_limits<long>::min(), numeric_limits<long>::min(), 15, 7}),
 					  make_tuple(2, vector<long>{2, -1, -2}), make_tuple(48, vector<long>{5, 4, 8, 11, numeric_limits<long>::min(), 13, 4, 7, 2, numeric_limits<long>::min(), numeric_limits<long>::min(), numeric_limits<long>::min(), numeric_limits<long>::min(), 1}),
 					  make_tuple(3, vector<long>{1, -2, -3, 1, 3, -2, numeric_limits<long>::min(), -1})));
+
+class RecoverBinarySearchTreeTestFixture : public TreeTestFixture1<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		TreeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()), TreeType::Binary);
+	}
+	bool RecoverBinarySearchTreeTest()
+	{
+		_tree.PrintTree();
+		_tree.RecoverBinarySearchTree();
+		return _tree.isValidBST();
+	}
+};
+TEST_P(RecoverBinarySearchTreeTestFixture, RecoverBinarySearchTreeTests)
+{
+	ASSERT_EQ(this->_expected, this->RecoverBinarySearchTreeTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	RecoverBinarySearchTreeTests,
+	RecoverBinarySearchTreeTestFixture,
+	::testing::Values(make_tuple(true, vector<long>{1, 3, numeric_limits<long>::min(), numeric_limits<long>::min(), 2}), make_tuple(true, vector<long>{3, 1, 4, numeric_limits<long>::min(), numeric_limits<long>::min(), 2}),
+					  make_tuple(true, vector<long>{5, 3, 2, 10, 4, numeric_limits<long>::min(), numeric_limits<long>::min()})));
