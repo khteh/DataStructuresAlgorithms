@@ -3156,7 +3156,7 @@ Result: 3 tails: [3 4 7]
 [30,50]
 Result: 3 tais: [2 15 50]
  */
-size_t RussianDollEnvelopes(vector<vector<size_t>> &envelopes)
+size_t LargestRussianDollStack(vector<vector<size_t>> &envelopes)
 {
 	vector<size_t> tails; // Note: This records the tails of the subsequences. Not the actual longest increasing subsequence!
 	if (!envelopes.empty())
