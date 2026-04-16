@@ -38,12 +38,12 @@ template class Tree<float>;
 template class Tree<string>;
 template <typename T>
 Tree<T>::Tree()
-	: _root(nullptr)
+	: _root(nullptr), _maxPathSum(numeric_limits<T>::min())
 {
 }
 template <typename T>
 Tree<T>::Tree(T item)
-	: _root(make_shared<Node<T>>(item))
+	: _root(make_shared<Node<T>>(item)), _maxPathSum(numeric_limits<T>::min())
 {
 }
 /*
@@ -56,7 +56,7 @@ _minStack: [-100, -50, 0, 50]
 _maxStack: [150, 100, 50]
 */
 template <typename T>
-Tree<T>::Tree(shared_ptr<Node<T>> &node)
+Tree<T>::Tree(shared_ptr<Node<T>> &node) : _root(nullptr), _maxPathSum(numeric_limits<T>::min())
 {
 	map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> copied;
 	_root = Copy(node, copied);
@@ -66,7 +66,7 @@ Tree<T>::Tree(shared_ptr<Node<T>> &node)
 		;
 }
 template <typename T>
-Tree<T>::Tree(Tree<T> const &tree)
+Tree<T>::Tree(Tree<T> const &tree) : _root(nullptr), _maxPathSum(numeric_limits<T>::min())
 {
 	map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> copied;
 	_root = Copy(tree.Root(), copied);
@@ -76,7 +76,7 @@ Tree<T>::Tree(Tree<T> const &tree)
 		;
 }
 template <typename T>
-Tree<T>::Tree(Tree<T> &&tree) // Move constructor
+Tree<T>::Tree(Tree<T> &&tree) : _root(nullptr), _maxPathSum(numeric_limits<T>::min()) // Move constructor
 {
 	tree.Swap(*this);
 }
@@ -87,7 +87,7 @@ void Tree<T>::Swap(Tree<T> &other)
 }
 
 template <typename T>
-Tree<T>::Tree(vector<T> &data, TreeType type)
+Tree<T>::Tree(vector<T> &data, TreeType type) : _maxPathSum(numeric_limits<T>::min())
 {
 	LoadData(data, type);
 }
@@ -261,40 +261,40 @@ shared_ptr<Node<T>> Tree<T>::AddToTree(shared_ptr<Node<T>> parent, vector<T> &v,
 /*
  * Use this to construct a Binary Tree where left child = 2i + 1 and right child = 2i + 2 (0-based index)
  * Use numeric_limit<T>::min() to indicate null child.
+ * [5,4,8,11,null,13,4,7,2,null,null,null,null,1]
+			  5
+		  4                  8
+	  11    <nul>          13       4
+  7      2  <nul><nul>  <nul><nul>  1
  */
 template <typename T>
-shared_ptr<Node<T>> Tree<T>::AddToTree(vector<T> &v)
+shared_ptr<Node<T>> Tree<T>::AddToTree(vector<T> &data)
 {
 	map<long, shared_ptr<Node<T>>> nodes;
-	long maxIndex = (v.size() - 2) / 2;
+	long maxIndex = (long)(data.size() - 2l) / 2l;
 	for (long i = 0; i <= maxIndex; i++)
-	{
-		if (v[i] != numeric_limits<T>::min())
+		if (data[i] != numeric_limits<T>::min())
 		{
 			if (!nodes.count(i))
-				nodes.emplace(i, make_shared<Node<T>>(v[i]));
+				nodes.emplace(i, make_shared<Node<T>>(data[i]));
 			long left = 2 * i + 1;
-			if (v[left] != numeric_limits<T>::min())
+			if (left < (long)data.size() && data[left] != numeric_limits<T>::min())
 			{
 				if (!nodes.count(left))
-					nodes.emplace(left, make_shared<Node<T>>(v[left]));
+					nodes.emplace(left, make_shared<Node<T>>(data[left]));
 				nodes[i]->SetLeft(nodes[left]);
 				nodes[left]->SetNext(nodes[i]);
 			}
 			long right = 2 * i + 2;
-			if (right < (long)v.size())
+			if (right < (long)data.size() && data[right] != numeric_limits<T>::min())
 			{
-				if (v[right] != numeric_limits<T>::min())
-				{
-					if (!nodes.count(right))
-						nodes.emplace(right, make_shared<Node<T>>(v[right]));
-					nodes[i]->SetRight(nodes[right]);
-					nodes[right]->SetNext(nodes[i]);
-				}
+				if (!nodes.count(right))
+					nodes.emplace(right, make_shared<Node<T>>(data[right]));
+				nodes[i]->SetRight(nodes[right]);
+				nodes[right]->SetNext(nodes[i]);
 			}
 		}
-	}
-	return !v.empty() ? nodes[0] : nullptr;
+	return !data.empty() ? nodes[0] : nullptr;
 }
 /*
 https://stackoverflow.com/questions/64378721/what-is-the-difference-between-the-copy-constructor-and-move-constructor-in-c
@@ -1081,4 +1081,31 @@ bool Tree<T>::IsValidPreOrderTreeSerialization(string const &preorder)
 			nonLeaves++;
 	}
 	return leaves == nonLeaves + 1 && i == tokens.size();
+}
+/*
+ * https://leetcode.com/problems/binary-tree-maximum-path-sum/
+ * 100%
+ * Using a private member variable _maxPathSum to record maximum sum of any unidirectional (DFS) path in a tree without stack back-tracking / rewind.
+ */
+template <typename T>
+T Tree<T>::MaxPathSum(const shared_ptr<Node<T>> &n)
+	requires arithmetic_type<T>
+{
+	T result = 0;
+	if (n)
+	{
+		T leftSum = max<T>(0, MaxPathSum(n->Left())), rightSum = max<T>(0, MaxPathSum(n->Right())); // Ignore negative values
+		T subTreeSum = n->Item() + leftSum + rightSum;												// n->val could still be < 0
+		result = n->Item() + max(leftSum, rightSum);												// This will return to the parent to be included in the path for potential maxSum.
+		_maxPathSum = max(_maxPathSum, subTreeSum);													// if choose both left + right + root, this is an isolated subtree with a potential maxSum. If this subtree is included by the parent node, then it will violate the requirement that a node can only appear in the path ONLY ONCE.
+	}
+	return result;
+}
+
+template <typename T>
+T Tree<T>::MaxPathSum()
+	requires arithmetic_type<T>
+{
+	assert(numeric_limits<T>::min() == _maxPathSum);
+	return max(_maxPathSum, MaxPathSum(_root));
 }

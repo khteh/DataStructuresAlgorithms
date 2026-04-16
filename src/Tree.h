@@ -33,10 +33,13 @@ enum class TraversalType
 template <typename T>
 class Tree
 {
-protected:
+private:
 	vector<size_t> _levelNodeCount;
-	shared_ptr<Node<T>> _root;
 	stack<shared_ptr<Node<T>>> _minStack, _maxStack;
+	T _maxPathSum; // A unidirectional (DFS) path in a tree without stack back-tracking / rewind.
+
+protected:
+	shared_ptr<Node<T>> _root;
 	void Swap(Tree &);
 	void Clear(shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T> &, long, long);
@@ -62,6 +65,8 @@ protected:
 	shared_ptr<Node<T>> BuildTreePostOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	void split(string const &s, char delim, vector<string> &elems);
+	T MaxPathSum(const shared_ptr<Node<T>> &)
+		requires arithmetic_type<T>;
 
 public:
 	Tree();
@@ -122,4 +127,6 @@ public:
 	T TreeArithmeticTotal(shared_ptr<Node<string>>)
 		requires arithmetic_type<T>;
 	bool IsValidPreOrderTreeSerialization(string const &);
+	T MaxPathSum()
+		requires arithmetic_type<T>;
 };

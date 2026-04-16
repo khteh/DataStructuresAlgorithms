@@ -2330,6 +2330,14 @@ int main(int argc, char *argv[])
 	assert("110" == arithmetic.Add2Binary("100", "10"));
 	str = arithmetic.Add2Binary("100", "110010");
 	assert("110110" == arithmetic.Add2Binary("100", "110010"));
+	a.clear();
+	a = {-10};
+	Tree<long> tree(a, TreeType::Binary);
+	assert(-10 == tree.MaxPathSum());
+	a.clear();
+	a = {5, 4, 8, 11, numeric_limits<long>::min(), 13, 4, 7, 2, numeric_limits<long>::min(), numeric_limits<long>::min(), numeric_limits<long>::min(), numeric_limits<long>::min(), 1};
+	tree = Tree(a, TreeType::Binary);
+	tree.PrintTree();
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
