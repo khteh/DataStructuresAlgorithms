@@ -691,8 +691,32 @@ TEST_P(LongestCommonPrefixTestFixture, LongestCommonPrefixTests)
 {
     ASSERT_EQ(this->_expected, this->LongestCommonPrefixTest());
 }
-
 INSTANTIATE_TEST_SUITE_P(
     LongestCommonPrefixTests,
     LongestCommonPrefixTestFixture,
     ::testing::Values(make_tuple("fl", vector<string>{"flower", "flow", "flight"}), make_tuple("", vector<string>{"dog", "racecar", "car"}), make_tuple("c", vector<string>{"cir", "car"})));
+class BuildLargestNumberTestFixture : public testing::TestWithParam<tuple<string, vector<size_t>>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _data = get<1>(GetParam());
+    }
+    string BuildLargestNumberTest()
+    {
+        return BuildLargestNumber(_data);
+    }
+
+protected:
+    string _expected;
+    vector<size_t> _data;
+};
+TEST_P(BuildLargestNumberTestFixture, BuildLargestNumberTests)
+{
+    ASSERT_EQ(this->_expected, this->BuildLargestNumberTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    BuildLargestNumberTests,
+    BuildLargestNumberTestFixture,
+    ::testing::Values(make_tuple("210", vector<size_t>{10, 2}), make_tuple("9534330", vector<size_t>{3, 30, 34, 5, 9}), make_tuple("3232012812", vector<size_t>{128, 12, 320, 32}), make_tuple("0", vector<size_t>{0, 0}), make_tuple("0", vector<size_t>())));

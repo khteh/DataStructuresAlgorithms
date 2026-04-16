@@ -117,7 +117,7 @@ typedef struct ZigZagEscape
 		return value < other.value;
 	}
 } zigzag_t;
-typedef struct buildmax_comparator
+typedef struct BuildLargestNumber_comparator
 {
 	bool operator()(string lhs, string rhs) const
 	{
@@ -129,7 +129,7 @@ typedef struct buildmax_comparator
 		// lhsrhs > rhslhs : lhs goes before rhs
 		return oss1.str() > oss2.str();
 	}
-} buildmax_comparator_t;
+} BuildLargestNumber_comparator_t;
 class VariantException
 {
 public:
@@ -262,7 +262,7 @@ void *alignedMalloc(size_t bytes, size_t alignment);
 void alignedFree(void **p);
 vector<string> numbersegments(vector<long> &);
 long concat(vector<long> &);
-string buildmax(vector<size_t> &);
+string BuildLargestNumber(vector<size_t> &);
 bool JSONValidation(string);
 vector<char> AddVectors(vector<char> &, vector<char> &);
 long MaxLengths(vector<string> &);

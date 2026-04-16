@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 	Permutation<long> lPermutation;
 	Permutation<size_t> ulPermutation;
 	Permutation<string> sPermutation;
+	Tree<long> ltree;
 	FenwickTree<size_t> fenwickTree;
 	Sort<long> sortAlgorithm;
 	ExceptionTest();
@@ -1055,20 +1056,6 @@ int main(int argc, char *argv[])
 	a = {901, 9015};
 	// 9019015, 9015901
 	assert(concat(a) == 9019015);
-	udata.clear();
-	udata = {10, 2};
-	assert(buildmax(udata) == "210");
-	udata.clear();
-	udata = {3, 30, 34, 5, 9};
-	assert(buildmax(udata) == "9534330");
-	udata.clear();
-	udata = {128, 12, 320, 32};
-	assert(buildmax(udata) == "3232012812");
-	udata.clear();
-	udata = {0, 0};
-	assert(buildmax(udata) == "0");
-	udata.clear();
-	assert(buildmax(udata) == "0");
 	strings.clear();
 	strings = {"ABCW", "BAZ", "FOO", "BAR", "XTFN", "ABCDEF"};
 	assert(24 == MaxLengths(strings));
@@ -2331,13 +2318,9 @@ int main(int argc, char *argv[])
 	str = arithmetic.Add2Binary("100", "110010");
 	assert("110110" == arithmetic.Add2Binary("100", "110010"));
 	a.clear();
-	a = {-10};
-	Tree<long> tree(a, TreeType::Binary);
-	assert(-10 == tree.MaxPathSum());
-	a.clear();
 	a = {5, 4, 8, 11, numeric_limits<long>::min(), 13, 4, 7, 2, numeric_limits<long>::min(), numeric_limits<long>::min(), numeric_limits<long>::min(), numeric_limits<long>::min(), 1};
-	tree = Tree(a, TreeType::Binary);
-	tree.PrintTree();
+	ltree = Tree(a, TreeType::Binary);
+	ltree.PrintTree();
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

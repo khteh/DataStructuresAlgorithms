@@ -2130,10 +2130,10 @@ long concat(vector<long> &data)
  *
  * 100%
  */
-string buildmax(vector<size_t> &a)
+string BuildLargestNumber(vector<size_t> &a)
 {
 	bool nonZero = false;
-	multiset<string, buildmax_comparator_t> data;
+	multiset<string, BuildLargestNumber_comparator_t> data;
 	for (vector<size_t>::iterator it = a.begin(); it != a.end(); it++)
 	{
 		if (*it > 0)
@@ -2141,7 +2141,7 @@ string buildmax(vector<size_t> &a)
 		data.insert(to_string(*it));
 	}
 	ostringstream oss;
-	for (multiset<string, buildmax_comparator_t>::iterator it = data.begin(); it != data.end(); it++)
+	for (multiset<string, BuildLargestNumber_comparator_t>::iterator it = data.begin(); it != data.end(); it++)
 		oss << *it;
 	return oss.str().empty() || !nonZero ? "0" : oss.str();
 }
