@@ -1144,7 +1144,7 @@ void Tree<T>::RecoverBinarySearchTree(const shared_ptr<Node<T>> &n, shared_ptr<N
 	}
 }
 template <typename T>
-void Tree<T>::RecoverBinarySearchTree()
+bool Tree<T>::RecoverBinarySearchTree()
 	requires arithmetic_type<T>
 {
 	shared_ptr<Node<T>> first = nullptr, second = nullptr, prev = nullptr;
@@ -1155,4 +1155,5 @@ void Tree<T>::RecoverBinarySearchTree()
 		first->SetItem(second->Item());
 		second->SetItem(tmp);
 	}
+	return isValidBST();
 }

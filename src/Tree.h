@@ -130,6 +130,6 @@ public:
 	bool IsValidPreOrderTreeSerialization(string const &);
 	T MaxPathSum()
 		requires arithmetic_type<T>;
-	void RecoverBinarySearchTree()
+	bool RecoverBinarySearchTree()
 		requires arithmetic_type<T>;
 };

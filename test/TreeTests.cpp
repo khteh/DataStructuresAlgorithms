@@ -148,8 +148,7 @@ public:
 	bool RecoverBinarySearchTreeTest()
 	{
 		_tree.PrintTree();
-		_tree.RecoverBinarySearchTree();
-		return _tree.isValidBST();
+		return _tree.RecoverBinarySearchTree();
 	}
 };
 TEST_P(RecoverBinarySearchTreeTestFixture, RecoverBinarySearchTreeTests)
