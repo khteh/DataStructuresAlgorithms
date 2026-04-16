@@ -72,6 +72,25 @@ string DynamicProgramming<T>::FibonacciModified(T t1, T t2, size_t n)
 
 /* https://leetcode.com/problems/integer-break/
  * 100%
+ * Given an integer n, break it into the sum of k positive integers, where k >= 2, and maximize the product of those integers.
+ * Return the maximum product you can get.
+ * n:10
+ * 0 1 2 3 4 5 6 7 8 9 10
+ * [0 1]
+ * i:2 j:1 dp[i]=0 dp[j]=1 i-j=1 dp[i-j]=1 => dp[i]=1
+ * [0 1 1]
+ * i:3 j:1 dp[i]=0 dp[j]=1 i-j=2 dp[i-j]=1 => dp[i]=2
+ *     j:2 dp[i]=2 dp[j]=1 i-j=1 dp[i-j]=1 => dp[i]=2
+ * [0 1 1 2]
+ * i:4 j:1 dp[i]=0 dp[j]=1 i-j=3 dp[i-j]=2 => dp[i]=3
+ *     j:2 dp[i]=3 dp[j]=1 i-j=2 dp[i-j]=1 => dp[i]=4
+ *     j:3 dp[i]=4 dp[j]=2 i-j=1 dp[i-j]=1 => dp[i]=4
+ * [0 1 1 2 4]
+ * i:5 j:1 dp[i]=0 dp[j]=1 i-j=4 dp[i-j]=4 => dp[i]=4
+ *     j:2 dp[i]=4 dp[j]=1 i-j=3 dp[i-j]=2 => dp[i]=6
+ *     j:3 dp[i]=6 dp[j]=2 i-j=2 dp[i-j]=1 => dp[i]=6
+ *     j:4 dp[i]=6 dp[j]=4 i-j=1 dp[i-j]=1 => dp[i]=6
+ * [0 1 1 2 4 6]
  */
 template <typename T>
 T DynamicProgramming<T>::LargestNumberCompositionProduct(T n)
