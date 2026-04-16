@@ -3146,13 +3146,15 @@ size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &data)
  * 100%
 [2 3]
 [5 4]
-[6 4]
 [6 7]
+[6 4]
+Result: 3 tails: [3 4 7]
 
 [3,4]
-[12,2]
 [12,15]
+[12,2]
 [30,50]
+Result: 3 tais: [2 15 50]
  */
 size_t RussianDollEnvelopes(vector<vector<size_t>> &envelopes)
 {
