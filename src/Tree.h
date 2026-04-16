@@ -36,7 +36,6 @@ class Tree
 private:
 	vector<size_t> _levelNodeCount;
 	stack<shared_ptr<Node<T>>> _minStack, _maxStack;
-	T _maxPathSum; // A unidirectional (DFS) path in a tree without stack back-tracking / rewind.
 
 protected:
 	shared_ptr<Node<T>> _root;
@@ -65,8 +64,10 @@ protected:
 	shared_ptr<Node<T>> BuildTreePostOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	void split(string const &s, char delim, vector<string> &elems);
-	T MaxPathSum(const shared_ptr<Node<T>> &)
+	T MaxPathSum(const shared_ptr<Node<T>> &, T &)
 		requires arithmetic_type<T>;
+	// void RecoverBinarySearchTree(const shared_ptr<Node<T>> &)
+	//		requires arithmetic_type<T>;
 
 public:
 	Tree();
@@ -129,4 +130,6 @@ public:
 	bool IsValidPreOrderTreeSerialization(string const &);
 	T MaxPathSum()
 		requires arithmetic_type<T>;
+	// void RecoverBinarySearchTree()
+	// requires arithmetic_type<T>;
 };
