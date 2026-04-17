@@ -201,6 +201,7 @@ int main(int argc, char *argv[])
 	assert(1e9 + 7 == pow(10, 9) + 7);
 	cout << "1e9: " << 1e9 << ", 10e9: " << 10e9 << endl;
 	cout << "1e5: " << 1e5 << ", pow(10, 5): " << pow(10, 5) << ", " << pow(2, pow(10, 5)) << endl;
+	cout << "-1e18: " << -1e18 << ", numeric_limits<long long>::min(): " << numeric_limits<long long>::min() << endl;
 	/*
 	 * https://stackoverflow.com/questions/42963913/what-actually-is-the-modulo-of-a-negative-number
 	 * (a/b)*b + a%b == a

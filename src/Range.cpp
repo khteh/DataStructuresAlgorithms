@@ -404,7 +404,6 @@ size_t Range::LongestUpDownAlternatingSubSequence(vector<long> const &data, vect
 	direction_t direction = Direction::NoChange, flag = Direction::NoChange;
 	size_t count = 0, start = 0, index = 0;
 	if (data.size() > 1)
-	{
 		for (vector<long>::const_iterator it = data.begin() + 1; it != data.end(); it++, index++)
 		{
 			flag = *it > *(it - 1) ? Direction::Up : *it < *(it - 1) ? Direction::Down
@@ -425,7 +424,6 @@ size_t Range::LongestUpDownAlternatingSubSequence(vector<long> const &data, vect
 				start = index;
 			}
 		}
-	}
 	if (!sequences.empty())
 		result = sequences.rbegin()->second;
 	return result.size();
@@ -1398,15 +1396,24 @@ size_t Range::LiveMedianCalculation(size_t d, vector<size_t> const &data)
 /*
  * https://leetcode.com/problems/sliding-window-maximum/
  * 100%
+ * Window position                Max
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+
  * [1,3,-1,-3,5,3,6,7], k:3
- * i:0 [1]
- * i:1 [3]
- * i:2 [3 -1] result: [3]
- * i:3 [3 -1 -3] result: [3 3]
- * i:4 [-1 -3] => [-1 5] => [5] result: [3 3 5]
- * i:5 [5 3] => result: [3 3 5 5]
- * i:6 [6] => result: [3 3 5 5 6]
- * i:7 [7] => result: [3 3 5 5 6 7]
+ * i:0 [1] window: [0]
+ * i:1 [3] window: [1]
+ * i:2 [3 -1] window: [1 2], result: [3]
+ * i:3 [3 -1 -3] window: [1 2 3], result: [3 3]
+ * i:4 [-1 -3] window: [2 3] => window: [2] => [5] window: [4] result: [3 3 5]
+ * i:5 [5 3] => window: [4 5], result: [3 3 5 5]
+ * i:6 [6] => window: [6], result: [3 3 5 5 6]
+ * i:7 [7] => window: [7], result: [3 3 5 5 6 7]
  *
  * [7,2,4], k:2
  * i:0 [7]
@@ -1422,12 +1429,12 @@ void Range::MaxSlidingWindow(vector<long> const &data, size_t k, vector<long> &r
 	deque<long> window;
 	for (long i = 0; i < data.size(); i++)
 	{
-		if (window.front() == (i - k))
+		if (!window.empty() && window.front() == (i - k))
 			window.pop_front();
 		for (; !window.empty() && data[window.back()] < data[i]; window.pop_back())
 			;
 		window.push_back(i);
-		if (i >= (k - 1))
+		if (i >= (k - 1) && !window.empty())
 			result.push_back(data[window.front()]);
 	}
 }
@@ -1623,4 +1630,106 @@ size_t Range::FirstMissingPositive(vector<long> &data)
 		if (data[i] != i + 1)
 			return i + 1;
 	return data.size() + 1;
+}
+/*
+ * https://leetcode.com/problems/trionic-array-i/
+ * 100%
+ * An array is trionic if there exist indices 0 < p < q < n − 1 such that:
+	nums[0...p] is strictly increasing,
+	nums[p...q] is strictly decreasing,
+	nums[q...n − 1] is strictly increasing.
+ */
+bool Range::IsTrionic(vector<long> const &data)
+{
+	size_t p = 0, q = 0, direction = 0;
+	bool result = true;
+	for (size_t i = 1; i < data.size(); i++)
+		if (data[i] > data[i - 1])
+		{
+			if (!q)
+			{
+				if (!p)
+				{
+					result &= direction == 0;
+					direction++; // 1: first increasing
+				}
+				p = i; // p = peak of first increasing sequence.
+			}
+			else if (direction == 2)
+				direction++; // 3: second increasing.
+		}
+		else if (data[i] < data[i - 1])
+		{
+			if (!q)
+			{
+				result &= direction == 1;
+				direction++; // 2: First decreasing
+			}
+			else
+				result &= direction == 2;
+			q = i;
+		}
+		else
+			result = false;
+	return result && p > 0 && q > p && q < data.size() - 1;
+}
+/*
+ * https://leetcode.com/problems/trionic-array-ii/
+ * 100%
+ * A trionic subarray is a contiguous subarray data[l...r] (with 0 <= l < r < n) for which there exist indices l < p < q < r such that:
+	data[l...p] is strictly increasing,
+	data[p...q] is strictly decreasing,
+	data[q...r] is strictly increasing.
+ * Return MAX SUM. Not sum of max sequence.
+ *
+[0,-2,-1,-3,0,2,-1] : [-2,-1,-3,0,2] = -4
+i:1 prev=0,  b=min, a=min, c=min
+i:2 prev=-2, a=-2-1=-3, c=min, b=min
+i:3 prev=-1, b=-3-3=-6, a=min, c=min
+i:4 prev=-3, a=-3+0=-3, c=-6+0=-6, b=min, result=-6
+i:5 prev=0,  a=0+2=2, c=-6+2=-4, b=min,   result=-4
+i:6 prev=2,  b=2-1=1, a=min, c=min        result:-4
+
+[1,4,2,7] : 14
+i:1 prev=1 a=1+4=5, c=min, b=min
+i:2 prev=4 b=5+2=7, a=min, c=min
+i:3 prev=2 a=2+7=9, c=7+7=14, b=min result=14
+
+[-533,224,-324,251,231,479] : [-324,251,231,479] = 637
+i:1 prev=-533 a=-533+224=-309, c=min, b=min
+i:2 prev=224  b=-309-324=-633, a=min, c=min
+i:3 prev=-324 a=-324+251=-73, c=-633+251=-382, b=min result=-382
+i:4 prev=251  b=-73+231=158, a=min, c=min 			 result=-382
+i:5 prev=231  a=231+479=710, c=158+479=637, b=min	 result=637
+
+[2,993,-791,-635,-569] : [2,993,-791,-635] = -431
+i:1 prev=2    a=995, c=min, b=min
+i:2 prev=993  b=995-791=204, a=min c=min
+i:3 prev=-791 a=-791-635=-1426, c=204-635=-431, b=min result=-431
+i:4 prev=-635 a=-635-569=-1204, c=-431-569=-1000 b=min result=-431
+ */
+long long Range::MaxSumTrionic(vector<long> const &data)
+{
+	// numeric_limits<long long>::min(): -9223372036854775808
+	const long long INF = -1e18; // XXX: Using numeric_limits<long long>::min() here will result in overflow and result will be very large number due to min() + -ve overflowing to large positive numbers. Need a number between lower range of data[i] and numeric_limits<long long>::min()
+	long long result = INF, a = INF, b = INF, c = INF;
+	for (long i = 1; i < data.size(); i++)
+	{
+		long long a1 = INF, b1 = INF, c1 = INF;
+		if (data[i] > data[i - 1])
+		{
+			// First ascending - either start a new climb using the prev element or add curr to the existing A.
+			a1 = max<long long>(a, data[i - 1]) + data[i];
+			// Second ascending - must come after a descent. It either starts climbing from the valley of B or continues the final climb C.
+			c1 = max(b, c) + data[i];
+		}
+		else if (data[i] < data[i - 1])
+			// Descent -  must come after an ascent. It either starts descending from the peak of A or continues an existing descent B.
+			b1 = max(a, b) + data[i];
+		a = a1;
+		b = b1;
+		c = c1;
+		result = max(result, c);
+	}
+	return result;
 }

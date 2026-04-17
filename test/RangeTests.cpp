@@ -1173,3 +1173,47 @@ INSTANTIATE_TEST_SUITE_P(
 	BeautifulQuadruplesTests,
 	BeautifulQuadruplesTestFixture,
 	::testing::Values(make_tuple(0, 1, 1, 1, 1), make_tuple(11, 1, 2, 3, 4), make_tuple(287736, 50, 50, 50, 50), make_tuple(280465, 48, 46, 50, 34), make_tuple(234686, 41, 43, 44, 48), make_tuple(16965, 34, 35, 1, 50), make_tuple(9621, 20, 13, 18, 21), make_tuple(185, 10, 3, 4, 5)));
+class IsTrionicTestFixture : public RangeTestFixture1<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	bool IsTrionicTest()
+	{
+		return _rangeObj.IsTrionic(_data);
+	}
+};
+TEST_P(IsTrionicTestFixture, IsTrionicTests)
+{
+	ASSERT_EQ(this->_expected, this->IsTrionicTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	IsTrionicTests,
+	IsTrionicTestFixture,
+	::testing::Values(make_tuple(true, vector<long>{1, 3, 5, 4, 2, 6}),
+					  make_tuple(false, vector<long>{2, 1, 3}),
+					  make_tuple(false, vector<long>{2, 3, 1}), make_tuple(false, vector<long>{2, 4, 3, 3})));
+class MaxSumTrionicTestFixture : public RangeTestFixture1<long long, long>, public testing::TestWithParam<tuple<long long, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	long long MaxSumTrionicTest()
+	{
+		return _rangeObj.MaxSumTrionic(_data);
+	}
+};
+TEST_P(MaxSumTrionicTestFixture, MaxSumTrionicTests)
+{
+	ASSERT_EQ(this->_expected, this->MaxSumTrionicTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MaxSumTrionicTests,
+	MaxSumTrionicTestFixture,
+	::testing::Values(make_tuple(-4, vector<long>{0, -2, -1, -3, 0, 2, -1}),
+					  make_tuple(14, vector<long>{1, 4, 2, 7}),
+					  make_tuple(-431, vector<long>{2, 993, -791, -635, -569}), make_tuple(637, vector<long>{-533, 224, -324, 251, 231, 479})));

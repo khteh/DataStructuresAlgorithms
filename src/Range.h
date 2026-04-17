@@ -54,4 +54,6 @@ public:
 	void MaxSlidingWindow(vector<long> const &, size_t, vector<long> &);
 	size_t TrapRainWater(vector<size_t> const &);
 	size_t FirstMissingPositive(vector<long> &);
+	bool IsTrionic(vector<long> const &);
+	long long MaxSumTrionic(vector<long> const &);
 };
