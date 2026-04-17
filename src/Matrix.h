@@ -18,7 +18,7 @@ class Matrix
 private:
 	T _active, _inactive;
 	vector<vector<T>> _grid;
-	vector<int> _steps = {0, 1, 0, -1, 0}, _diagonals = {-1, -1, 1, 1, -1};
+	vector<int> _steps = {0, 1, 0, -1, 0} /*four cardinal directions (left, right, up, and down).*/, _diagonals = {-1, -1, 1, 1, -1};
 	bool WordExistsInGrid(vector<vector<char>> &, string const &, long, long, size_t);
 	size_t DisconnectCell(size_t, size_t);
 	size_t DisconnectCellAllDirections(size_t, size_t, set<string> &);
