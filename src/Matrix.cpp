@@ -1307,6 +1307,31 @@ bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const &grid, size_t c, T o
 /*
  * https://leetcode.com/problems/last-day-where-you-can-still-cross/
  * Time limit exceeded!
+ * [[1,2],[2,1],[3,3],[2,2],[1,1],[1,3],[2,3],[3,2],[3,1]]
+0:
+0 0 0
+0 0 0
+0 0 0
+
+1: [1,2]->[0,1]
+0 1 0
+0 0 0
+0 0 0
+
+2: [2,1]->[1,0]
+0 1 0
+1 0 0
+0 0 0
+
+3: [3,3]->[2,2]
+0 1 0
+1 0 0
+0 0 1 <= last day
+
+4: [2,2]->[1,1]
+0 1 0
+1 1 0
+0 0 1
  */
 template <typename T>
 size_t Matrix<T>::LatestDayToCross(size_t row, size_t col, vector<vector<T>> const &cells)
