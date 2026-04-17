@@ -282,6 +282,8 @@ vector<string> Permutation<T>::LetterCombinations(string const &digits)
  * https://leetcode.com/problems/permutation-sequence/description/
  * 100%
  * Return Kth permutation of N natural numbers without using std::next_permutation
+ * https://www.geeksforgeeks.org/dsa/find-the-k-th-permutation-sequence-of-first-n-natural-numbers/
+ * The first position of an n length sequence is occupied by each of the numbers from 1 to n exactly n! / n that is (n-1)! number of times and in ascending order.
  * Example:
  * N:3, K:4 [1 2 3]
  * K / (N-1)! = 4 / 2 = 2
