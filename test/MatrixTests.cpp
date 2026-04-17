@@ -88,7 +88,7 @@ public:
 	}
 
 protected:
-	Matrix<size_t> _matrix;
+	Matrix<char> _matrix;
 	vector<vector<char>> _data;
 	size_t _start_r, _start_c, _end_r, _end_c, _expected;
 	char _obstacle;
@@ -135,7 +135,7 @@ public:
 	}
 
 protected:
-	Matrix<size_t> _matrix;
+	Matrix<char> _matrix;
 	vector<vector<char>> _data;
 	size_t _start_r, _start_c, _expected;
 	char _dest, _obstacle;

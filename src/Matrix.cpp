@@ -66,6 +66,15 @@ Matrix<T>::Matrix(vector<vector<T>> &matrix)
 				_grid[i][j] -= _grid[i - 1][j - 1];
 		}
 }
+template <typename T>
+void Matrix<T>::Print(vector<vector<T>> const &grid) const
+{
+	for (size_t i = 0; i < grid.size(); i++)
+	{
+		ranges::copy(grid[i], ostream_iterator<T>(cout, " "));
+		cout << endl;
+	}
+}
 /* -1  0 -1
  * -1 -1 -1
  * -1 -1 -1 x:0, y:1
@@ -1140,7 +1149,7 @@ bool Matrix<T>::WordExistsInGrid(vector<vector<char>> &board, string const &word
  * Returns min #steps from [r,c] to dest
  */
 template <typename T>
-size_t Matrix<T>::FindShortestPath(vector<vector<char>> &grid, size_t r, size_t c, stack<position_t> &result, char dest, char obstacle)
+size_t Matrix<T>::FindShortestPath(vector<vector<T>> &grid, size_t r, size_t c, stack<position_t> &result, T dest, T obstacle)
 {
 	position_t origin(r, c);
 	set<position_t> visited;
@@ -1204,7 +1213,7 @@ size_t Matrix<T>::FindShortestPath(vector<vector<char>> &grid, size_t r, size_t 
 * Returns min #steps from [r,c] to dest, 0 if no path exists
 */
 template <typename T>
-size_t Matrix<T>::PathExists(vector<vector<char>> &grid, size_t r, size_t c, size_t y, size_t x, stack<position_t> &result, char obstacle)
+size_t Matrix<T>::PathExists(vector<vector<T>> const &grid, size_t r, size_t c, size_t y, size_t x, stack<position_t> &result, T obstacle)
 {
 	position_t origin(r, c), destination(y, x);
 	set<position_t> visited;
@@ -1250,6 +1259,79 @@ size_t Matrix<T>::PathExists(vector<vector<char>> &grid, size_t r, size_t c, siz
 	}
 	return 0;
 }
+template <typename T>
+bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const &grid, size_t c, T obstacle)
+{
+	position_t origin(0, c);
+	set<position_t> visited;
+	map<position_t, position_t> routes; // Key: current Value: parent
+	queue<position_t> positions;
+	positions.push(origin);
+	if (grid.empty())
+		return false;
+	if (c >= grid[0].size())
+		return false;
+	while (!positions.empty())
+	{
+		position_t parent = positions.front();
+		positions.pop();
+		for (size_t k = 0; k < _steps.size() - 1; k++)
+		{
+			int r = parent.row + _steps[k], c = parent.col + _steps[k + 1];
+			if (r >= 0 && c >= 0 && r < grid.size() && c < grid[r].size())
+			{
+				position_t current(r, c);
+				if (r == grid.size() - 1 && grid[r][c] != obstacle)
+				{ // Reach destination. The first reach is the shortest path
+#if 0
+                        result.push(current);
+                        result.push(parent);
+                        for (position_t pos = parent; pos != origin && routes.count(pos); result.push(pos), pos = routes[pos])
+                            ;
+                        return result.size();
+#endif
+					return true;
+				}
+				else if (grid[r][c] != obstacle && !visited.count(current))
+				{ // Obstacle. Cancel this route
+					// Prevent loop
+					positions.push(current);
+					// routes.emplace(current, parent);
+					visited.emplace(current);
+				}
+			}
+		}
+	}
+	return false;
+}
+/*
+ * https://leetcode.com/problems/last-day-where-you-can-still-cross/
+ * Time limit exceeded!
+ */
+template <typename T>
+size_t Matrix<T>::LatestDayToCross(size_t row, size_t col, vector<vector<T>> const &cells)
+{
+	vector<vector<T>> matrix(row, vector<T>(col, '0'));
+	size_t days = 0;
+	for (; days <= cells.size(); days++)
+	{
+		if (days)
+			matrix[cells[days - 1][0] - 1][cells[days - 1][1] - 1] = '1';
+		bool pathExists = false;
+		for (size_t i = 0; i < col && !pathExists; i++)
+		{
+			if (matrix[0][i] != '1')
+				pathExists = TopBottomPathExists(matrix, i, '1');
+		}
+		if (!pathExists)
+		{
+			Print(matrix);
+			return days - 1;
+		}
+	}
+	return days;
+}
+
 /*
  * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
  * 100%

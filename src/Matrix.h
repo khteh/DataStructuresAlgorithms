@@ -19,11 +19,13 @@ private:
 	T _active, _inactive;
 	vector<vector<T>> _grid;
 	vector<int> _steps = {0, 1, 0, -1, 0} /*four cardinal directions (left, right, up, and down).*/, _diagonals = {-1, -1, 1, 1, -1};
+	void Print(vector<vector<T>> const &) const;
 	bool WordExistsInGrid(vector<vector<char>> &, string const &, long, long, size_t);
 	size_t DisconnectCell(size_t, size_t);
 	size_t DisconnectCellAllDirections(size_t, size_t, set<string> &);
 	size_t DisconnectCellAllDirections_LinkedList(size_t, size_t, shared_ptr<Node<string>> &);
 	size_t DisconnectCellAllDirections_DisjointSet(T, size_t, size_t, DisJointSet<T> &, map<T, size_t> &);
+	bool TopBottomPathExists(vector<vector<T>> const &, size_t, T);
 
 public:
 	Matrix();
@@ -54,8 +56,9 @@ public:
 	bool ContainersBallsSwap(vector<vector<T>> const &);
 	pathResult_t FindMaxPath(vector<vector<T>> &, size_t, size_t)
 		requires integral_type<T>;
-	size_t PathExists(vector<vector<char>> &, size_t, size_t, size_t, size_t, stack<position_t> &, char);
-	size_t FindShortestPath(vector<vector<char>> &, size_t, size_t, stack<position_t> &, char, char);
+	size_t PathExists(vector<vector<T>> const &, size_t, size_t, size_t, size_t, stack<position_t> &, T);
+	size_t LatestDayToCross(size_t, size_t, vector<vector<T>> const &);
+	size_t FindShortestPath(vector<vector<T>> &, size_t, size_t, stack<position_t> &, T, T);
 	size_t LargestGridCluster_BFS();
 	size_t LargestGridCluster_DFS();
 	size_t LargestGridCluster_DisjointSet_BFS();
