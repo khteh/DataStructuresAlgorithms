@@ -225,3 +225,34 @@ INSTANTIATE_TEST_SUITE_P(
     LetterCombinationsTests,
     LetterCombinationsTestFixture,
     ::testing::Values(make_tuple(vector<string>{"ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"}, "23"), make_tuple(vector<string>{"a", "b", "c"}, "2")));
+class NextKthPermnutationTestFixture : public testing::TestWithParam<tuple<string, size_t, size_t>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _n = get<1>(GetParam());
+        _k = get<2>(GetParam());
+    }
+    string NextKthPermnutationTest()
+    {
+        return _permutation.NextKthPermnutation(_n, _k);
+    }
+
+protected:
+    Permutation<string> _permutation;
+    string _expected;
+    size_t _n, _k;
+};
+TEST_P(NextKthPermnutationTestFixture, NextKthPermnutationTests)
+{
+    ASSERT_EQ(this->_expected, this->NextKthPermnutationTest());
+}
+/*
+ * K / (N-1)! = 4 / 2 = 2
+123, 132, 213, 231, 312, 321 <- first position is occupied by each of the numbers [1, n] 2 times and in increasing order.
+*/
+INSTANTIATE_TEST_SUITE_P(
+    NextKthPermnutationTests,
+    NextKthPermnutationTestFixture,
+    ::testing::Values(make_tuple("231", 3, 4), make_tuple("213", 3, 3), make_tuple("2314", 4, 9), make_tuple("123", 3, 1), make_tuple("132", 3, 2)));

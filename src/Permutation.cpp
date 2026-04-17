@@ -278,3 +278,100 @@ vector<string> Permutation<T>::LetterCombinations(string const &digits)
     }
     return result;
 }
+/*
+ * https://leetcode.com/problems/permutation-sequence/description/
+ * 100%
+ * Return Kth permutation of N natural numbers without using std::next_permutation
+ * Example:
+ * N:3, K:4 [1 2 3]
+ * K / (N-1)! = 4 / 2 = 2
+123, 132, 213, 231, 312, 321 <- first position is occupied by each of the numbers [1, n] 2 times and in increasing order.
+Therefore, first position of kth sequence is occupied by number at index k / (n-1)! using 1-based indexing OR (k-1)/(n-1)! using 0-based indexing.
+
+N:3->2 K:3 (N-1)! = 2! partial_fact = 2
+K:3, first position = 3 / 2 = 1 -> {1, [2], 3} <- 0-based indexing
+result := 2
+K %= 2 3%2 = 1
+
+{1, 3}
+N:2->1 K:1 partial_fact = 1
+first position = 1 / 1 = 1 -> {1, [3]} <- 0-based indexing
+result := 23
+K %= 1 1%1 = 0
+
+{1}
+N:1
+first position = 0 -> {1} <- 0-based indexing
+result := 231
+---
+ * N:3, K:3 [1 2 3]
+ * K / (N-1)! = 3 / 2 = 1
+123, 132, 213, 231, 312, 321 <- first position is occupied by each of the numbers [1, n] 1 times and in increasing order.
+Therefore, first position of kth sequence is occupied by number at index k / (n-1)! using 1-based indexing OR (k-1)/(n-1)! using 0-based indexing.
+
+N:3->2 K:2 (N-1)! = 2! partial_fact = 2
+K:2, first position = 2 / 2 = 1 -> {1, [2], 3} <- 0-based indexing
+result := 2
+K %= 2 2%2 = 0
+
+{1, 3}
+N:2->1 K:0 partial_fact = 1
+first position = 0 / 1 = 0 -> {[1], 3} <- 0-based indexing
+result := 21
+K %= 1 0%1 = 0
+
+{3}
+N:1
+first position = 0 -> {1} <- 0-based indexing
+result := 213
+---
+ * N:3, K:2 [1 2 3]
+ * K / (N-1)! = 2 / 2 = 1
+123, 132, 213, 231, 312, 321 <- first position is occupied by each of the numbers [1, n] 1 times and in increasing order.
+Therefore, first position of kth sequence is occupied by number at index k / (n-1)! using 1-based indexing OR (k-1)/(n-1)! using 0-based indexing.
+
+N:3->2 K:1 (N-1)! = 2! partial_fact = 2
+K:1, first position = 1 / 2 = 0 -> {[1], 2, 3} <- 0-based indexing
+result := 1
+K %= 2 1%2 = 1
+
+{2, 3}
+N:2->1 K:1 partial_fact = 1
+first position = 1 / 1 = 1 -> {2, [3]} <- 0-based indexing
+result := 13
+K %= 1 1%1 = 0
+
+{2}
+N:1
+first position = 0 -> {1} <- 0-based indexing
+result := 132
+ */
+template <typename T>
+string Permutation<T>::NextKthPermnutation(size_t n, size_t k)
+{
+    ostringstream oss;
+    vector<size_t> data(n, 0);
+    ranges::generate(data, [n = 1] mutable
+                     { return n++; });
+    k--; // For 0-based indexing
+    for (size_t partial_fact = 0; n >= 1; n--)
+    {
+        size_t index = 0;
+        // size_t index = NextKthPermnutationIndex(k, n - i);
+        if (n == 1)
+            index = 0; // Because there is only 1 element left
+        else
+        {
+            partial_fact = n - 1;
+            // Calculate (N-1)! until it is >= K
+            for (size_t j = n - 2; k >= partial_fact && j > 1; partial_fact *= j, j--)
+                ;
+            index = k / partial_fact;
+        }
+        oss << data[index];
+        data.erase(data.begin() + index);
+        if (partial_fact)
+            k %= partial_fact;
+    }
+    return oss.str();
+}

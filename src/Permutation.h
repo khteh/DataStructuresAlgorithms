@@ -24,4 +24,5 @@ public:
     bool PermutationGame(const vector<T>)
         requires integral_type<T>;
     vector<string> LetterCombinations(string const &);
+    string NextKthPermnutation(size_t, size_t);
 };
