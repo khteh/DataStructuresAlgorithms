@@ -3082,6 +3082,28 @@ size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &data)
 	}
 	return tails.size();
 }
+size_t LongestNonDecreasingSubsequenceNlogN(vector<size_t> &data)
+{
+	vector<size_t> tails; // Note: This records the tails of the subsequences. Not the actual longest increasing subsequence!
+	if (!data.empty())
+	{
+		for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
+		{
+			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), *it); // Look for element >= data[i]
+			if (it1 != tails.end())														 // *it1 >= data[i]
+			{
+				if (*it1 == *it) // *it1 == data[i]
+					tails.push_back(*it);
+				else			// *it1 > data[i]
+					*it1 = *it; // *it1 = data[i]
+			}
+			else
+				tails.push_back(*it);
+		}
+	}
+	return tails.size();
+}
+
 /*
 [1 2 5 3]
 [1]

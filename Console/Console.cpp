@@ -2451,6 +2451,8 @@ int main(int argc, char *argv[])
 			  {5, 4},
 			  {12, 3}};
 	assert(35 == cmatrix.LatestDayToCross(13, 9, cgrid1));
+	[]() -> generator<size_t>
+	{ co_yield ranges::elements_of(ranges::reverse_view(ranges::iota_view(0, 11))); }() | ranges::to<vector>();
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

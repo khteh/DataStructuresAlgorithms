@@ -278,6 +278,7 @@ vector<string> ZigZagEscape(vector<long> &, vector<long> &, size_t lIndex, size_
 size_t LengthOfLongestSubstring(string const &);
 size_t IncreasingSequences(vector<long> &, vector<long> &);
 size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &);
+size_t LongestNonDecreasingSubsequenceNlogN(vector<size_t> &);
 size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &);
 size_t LargestRussianDollStack(vector<vector<size_t>> &);
 bool IncreasingTriplet(vector<size_t> &);

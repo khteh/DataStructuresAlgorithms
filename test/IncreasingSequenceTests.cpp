@@ -79,9 +79,38 @@ TEST_P(LongestIncreasingSubsequenceNlogNTestFixture, LongestIncreasingSubsequenc
 INSTANTIATE_TEST_SUITE_P(
 	LongestIncreasingSubsequenceNlogNTests,
 	LongestIncreasingSubsequenceNlogNTestFixture,
-	::testing::Values(make_tuple(1, vector<size_t>{0}), make_tuple(1, vector<size_t>{10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0}), make_tuple(6, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
+	::testing::Values(make_tuple(1, vector<size_t>{0}),
+					  make_tuple(1, []() -> generator<size_t>
+												{ co_yield ranges::elements_of(ranges::reverse_view(ranges::iota_view(0, 11))); }() | ranges::to<vector>()),
+					  make_tuple(6, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
 					  make_tuple(3, vector<size_t>{3, 2, 4, 1, 5}),
 					  make_tuple(1, vector<size_t>{1, 1, 1, 1, 1})));
+class LongestNonDecreasingSubsequenceNlogNTestFixture : public LongestSubsequenceFixture<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		LongestSubsequenceFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	size_t LongestNonDecreasingSubsequenceNlogNTest()
+	{
+		return LongestNonDecreasingSubsequenceNlogN(_data);
+	}
+};
+TEST_P(LongestNonDecreasingSubsequenceNlogNTestFixture, LongestNonDecreasingSubsequenceNlogNTests)
+{
+	ASSERT_EQ(this->_expected, this->LongestNonDecreasingSubsequenceNlogNTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LongestNonDecreasingSubsequenceNlogNTests,
+	LongestNonDecreasingSubsequenceNlogNTestFixture,
+	::testing::Values(make_tuple(1, vector<size_t>{0}),
+					  make_tuple(1, []() -> generator<size_t>
+												{ co_yield ranges::elements_of(ranges::reverse_view(ranges::iota_view(0, 11))); }() | ranges::to<vector>()),
+					  make_tuple(6, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
+					  make_tuple(3, vector<size_t>{3, 2, 4, 1, 5}), make_tuple(5, vector<size_t>{1, 2, 3, 1, 2}),
+					  make_tuple(5, vector<size_t>{1, 1, 1, 1, 1})));
+
 class LargestRussianDollStackNlogNTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<size_t>>>>
 {
 public:

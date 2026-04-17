@@ -1,6 +1,7 @@
 #include "pch.h"
 using namespace std;
-TEST(TweeterAPITests, TweeterAPITest) {
+TEST(TweeterAPITests, TweeterAPITest)
+{
 	vector<size_t> feeds, feeds1;
 	Twitter<size_t, size_t> twitter;
 	twitter.PostTweet(1, 5);
@@ -62,7 +63,7 @@ TEST(TweeterAPITests, TweeterAPITest) {
 	feeds = twitter.GetNewsFeed(2);
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(5, feeds.size());
-	feeds1 = { 505, 94, 10, 13, 5 };
+	feeds1 = {505, 94, 10, 13, 5};
 	ASSERT_EQ(feeds1, feeds);
 	twitter.Follow(2, 1); // 2: {5, 13, 10, 94, 505, 3, 101, 2, 133, 22}
 	/* [22,333,505,94,2,10,13,101,3,5]
@@ -72,7 +73,7 @@ TEST(TweeterAPITests, TweeterAPITest) {
 	feeds = twitter.GetNewsFeed(2);
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(10, feeds.size());
-	feeds1 = { 22, 333, 505, 94, 2, 10, 13, 101, 3, 5 };
+	feeds1 = {22, 333, 505, 94, 2, 10, 13, 101, 3, 5};
 	ASSERT_EQ(feeds1, feeds);
 	twitter.Clear();
 	twitter.PostTweet(1, 6765); // 1: {6765}
@@ -90,23 +91,23 @@ TEST(TweeterAPITests, TweeterAPITest) {
 	twitter.PostTweet(3, 5917); // 3: {2868, 6673, 7946, 1445, 5917}
 	twitter.PostTweet(2, 8847); // 2: {8847}
 	feeds = twitter.GetNewsFeed(1);
-	feeds1 = { 9643, 3781, 6765 };
+	feeds1 = {9643, 3781, 6765};
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(feeds1, feeds);
 	feeds = twitter.GetNewsFeed(2);
-	feeds1 = { 8847 };
+	feeds1 = {8847};
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(feeds1, feeds);
 	feeds = twitter.GetNewsFeed(3);
-	feeds1 = { 5917, 1445, 7946, 6673, 2868 };
+	feeds1 = {5917, 1445, 7946, 6673, 2868};
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(feeds1, feeds);
 	feeds = twitter.GetNewsFeed(4);
-	feeds1 = { 9038, 4822, 386, 8148 };
+	feeds1 = {9038, 4822, 386, 8148};
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(feeds1, feeds);
 	feeds = twitter.GetNewsFeed(5);
-	feeds1 = { 671 };
+	feeds1 = {671};
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(feeds1, feeds);
 
@@ -121,7 +122,7 @@ TEST(TweeterAPITests, TweeterAPITest) {
 	feeds = twitter.GetNewsFeed(1, 20);
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(12, feeds.size()); // Limit to 10 items. Actual result is 12.
-	twitter.Follow(4, 2);		// 4: {8148, 386, 4822, 9038} 2: {8847}
+	twitter.Follow(4, 2);		 // 4: {8148, 386, 4822, 9038} 2: {8847}
 	feeds = twitter.GetNewsFeed(4);
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(5, feeds.size());
@@ -163,23 +164,23 @@ TEST(TweeterAPITests, TweeterAPITest) {
 	ASSERT_EQ(5, feeds.size());
 
 	feeds = twitter.GetNewsFeed(1);
-	feeds1 = { 5917, 9643, 9038, 3781, 4822, 1445, 7946, 6673, 386, 8148 };
+	feeds1 = {5917, 9643, 9038, 3781, 4822, 1445, 7946, 6673, 386, 8148};
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(feeds1, feeds);
 	feeds = twitter.GetNewsFeed(2);
-	feeds1 = { 8847, 5917, 9643, 3781, 1445, 7946, 6673, 2868, 671, 6765 };
+	feeds1 = {8847, 5917, 9643, 3781, 1445, 7946, 6673, 2868, 671, 6765};
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(feeds1, feeds);
 	feeds = twitter.GetNewsFeed(3);
-	feeds1 = { 8847, 5917, 9643, 3781, 1445, 7946, 6673, 2868, 671, 6765 };
+	feeds1 = {8847, 5917, 9643, 3781, 1445, 7946, 6673, 2868, 671, 6765};
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(feeds1, feeds);
 	feeds = twitter.GetNewsFeed(4);
-	feeds1 = { 8847, 9643, 9038, 3781, 4822, 386, 8148, 6765 };
+	feeds1 = {8847, 9643, 9038, 3781, 4822, 386, 8148, 6765};
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(feeds1, feeds);
 	feeds = twitter.GetNewsFeed(5);
-	feeds1 = { 8847, 9643, 3781, 671, 6765 };
+	feeds1 = {8847, 9643, 3781, 671, 6765};
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(feeds1, feeds);
 
@@ -197,17 +198,17 @@ TEST(TweeterAPITests, TweeterAPITest) {
 	feeds = twitter.GetNewsFeed(1);
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(10, feeds.size());
-	feeds1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+	feeds1 = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
 	ASSERT_EQ(feeds1, feeds);
 	feeds = twitter.GetFromLastNewsFeed(1, 5);
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(5, feeds.size());
-	feeds1 = { 10, 9, 8, 7, 6 };
+	feeds1 = {10, 9, 8, 7, 6};
 	ASSERT_EQ(feeds1, feeds);
 	feeds = twitter.GetFromLastNewsFeed(1, 5, 3);
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(3, feeds.size());
-	feeds1 = { 8, 7, 6 };
+	feeds1 = {8, 7, 6};
 	ASSERT_EQ(feeds1, feeds);
 	feeds = twitter.GetFromLastNewsFeed(1, 10);
 	ASSERT_TRUE(feeds.empty());
