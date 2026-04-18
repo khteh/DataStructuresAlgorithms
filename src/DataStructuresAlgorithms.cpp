@@ -1927,9 +1927,13 @@ void split(string const &s, char delim, vector<string> &elems)
 	while (getline(ss, item, delim))
 		elems.push_back(item);
 }
-// file: "This is a dog"
-// 0: This is a
-// 1: is a dog
+/*
+ * This is a dog
+ * n:2 i:[0,2]
+ * i:0 j:[0,1] s: "This is", ngrams: ["This is"]
+ * i:1 j:[1,2] s: "is a", ngrams: ["This is", "is a"]
+ * i:2 j:[2,3] s: "a dog" ngrams: ["This is", "is a", "a dog"]
+ */
 set<string> process(string const &str, int n)
 {
 	vector<string> words;

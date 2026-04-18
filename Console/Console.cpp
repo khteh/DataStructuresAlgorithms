@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
 	unsigned int ui;
 	unsigned long long mask = 0;
 	long double ld, ld1;
+	set<char> cset;
 	set<size_t> uset1, uset2;
 	set<string> stringset, stringset1;
 	set<long> lset;
@@ -2455,6 +2456,11 @@ int main(int argc, char *argv[])
 	//{ co_yield ranges::elements_of(ranges::reverse_view(ranges::iota_view(0, 11))); }() | ranges::to<vector>();
 	// udata = []() -> generator<size_t>
 	//{ co_yield ranges::elements_of(ranges::iota_view(0, 11)); }() | ranges::reverse_view() | ranges::to<vector>();
+	str = "acckzz";
+	str1 = "ccbazz";
+	set_intersection(str.begin(), str.end(), str1.begin(), str1.end(), inserter(cset, cset.begin()));
+	ranges::copy(cset, ostream_iterator<char>(cout, ", "));
+	cout << endl;
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
