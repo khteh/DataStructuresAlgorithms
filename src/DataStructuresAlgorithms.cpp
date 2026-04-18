@@ -3065,7 +3065,7 @@ size_t IncreasingSequences(vector<long> &a, vector<long> &b)
 [0 1 3 7 11]
 [0 1 3 7 11 15]
 */
-size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &data)
+size_t LongestIncreasingSubsequenceNlogN(vector<size_t> const &data)
 {
 	vector<size_t> tails; // Note: This records the tails of the subsequences. Not the actual longest increasing subsequence!
 	if (!data.empty())
@@ -3082,26 +3082,90 @@ size_t LongestIncreasingSubsequenceNlogN(vector<size_t> &data)
 	}
 	return tails.size();
 }
-size_t LongestNonDecreasingSubsequenceNlogN(vector<size_t> &data)
+size_t LongestNonDecreasingSubsequenceNlogN(vector<size_t> const &data)
 {
 	vector<size_t> tails; // Note: This records the tails of the subsequences. Not the actual longest increasing subsequence!
 	if (!data.empty())
-	{
 		for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
 		{
 			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), *it); // Look for element >= data[i]
 			if (it1 != tails.end())														 // *it1 >= data[i]
 			{
 				if (*it1 == *it) // *it1 == data[i]
-					tails.push_back(*it);
+					tails.insert(it1, *it);
 				else			// *it1 > data[i]
 					*it1 = *it; // *it1 = data[i]
 			}
 			else
 				tails.push_back(*it);
 		}
-	}
 	return tails.size();
+}
+/*
+* https://leetcode.com/problems/longest-non-decreasing-subarray-after-replacing-at-most-one-element/
+* 100%
+1,2,3,1,2
+1 2 3 1 2 left
+3 2 1 2 1 right
+3 2 3 4 4 result
+
+2 2 2 2 2
+1 2 3 4 5 left
+5 4 3 2 1 right
+5 5 5 5 5 result
+
+1,2,3,3 2
+1 2 3 4 1 left
+4 3 2 1 1 right
+4 4 4 4 5 result
+
+7 1 -8
+1 1 1 left
+1 1 1 right
+2 2 2 result
+
+0 4 2 0 2
+1 2 1 1 2 left
+1 3 2 1 1 right
+4 4 4 4 4 result
+
+1 -1
+1 1 left
+1 1 right
+2 2 result
+
+1,5,-10,5
+1 2  1  2 left
+1 2  1  1 right
+3 3  4  4 result
+*/
+size_t LongestNonDecreasingSubsequenceOneReplacement(vector<long> const &data)
+{
+	if (data.empty())
+		return 0;
+	else if (data.size() == 1)
+		return 1;
+	vector<size_t> left(data.size(), 1), right(data.size(), 1);
+	for (size_t i = 1; i < data.size(); i++)
+		if (data[i] >= data[i - 1])
+			left[i] = left[i - 1] + 1;
+	for (int i = data.size() - 2; i >= 0; i--)
+		if (data[i] <= data[i + 1])
+			right[i] = right[i + 1] + 1;
+	size_t result = 0;
+	for (size_t i = 0; i < data.size(); i++)
+	{
+		// +1 because of the single-correction.
+		if (!i)
+			result = right[i + 1] + 1;
+		else if (i == data.size() - 1)
+			result = max(result, left[i - 1] + 1);
+		else if (data[i - 1] <= data[i + 1])
+			result = max(result, left[i - 1] + right[i + 1] + 1);
+		else
+			result = max(result, max(left[i - 1], right[i + 1]) + 1);
+	}
+	return result;
 }
 
 /*

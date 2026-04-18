@@ -110,6 +110,30 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(6, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
 					  make_tuple(3, vector<size_t>{3, 2, 4, 1, 5}), make_tuple(5, vector<size_t>{1, 2, 3, 1, 2}),
 					  make_tuple(5, vector<size_t>{1, 1, 1, 1, 1})));
+class LongestNonDecreasingSubsequenceOneReplacementTestFixture : public LongestSubsequenceFixture<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		LongestSubsequenceFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	size_t LongestNonDecreasingSubsequenceOneReplacementTest()
+	{
+		return LongestNonDecreasingSubsequenceOneReplacement(_data);
+	}
+};
+TEST_P(LongestNonDecreasingSubsequenceOneReplacementTestFixture, LongestNonDecreasingSubsequenceOneReplacementTests)
+{
+	ASSERT_EQ(this->_expected, this->LongestNonDecreasingSubsequenceOneReplacementTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LongestNonDecreasingSubsequenceOneReplacementTests,
+	LongestNonDecreasingSubsequenceOneReplacementTestFixture,
+	::testing::Values(make_tuple(4, vector<long>{1, 2, 3, 1, 2}),
+					  make_tuple(2, vector<long>{7, 1, -8}),
+					  make_tuple(5, vector<long>{2, 2, 2, 2, 2}),
+					  make_tuple(2, vector<long>{1, -1}), make_tuple(3, vector<long>{0, 4, 2, 0, 2}),
+					  make_tuple(4, vector<long>{1, 5, -10, 5})));
 
 class LargestRussianDollStackNlogNTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<size_t>>>>
 {
