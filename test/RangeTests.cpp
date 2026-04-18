@@ -272,18 +272,6 @@ INSTANTIATE_TEST_SUITE_P(
 	MinSumSubSequenceTests,
 	MinSumSubSequenceTestFixture,
 	::testing::Values(make_tuple(2, 7, vector<size_t>{2, 3, 1, 2, 4, 3}), make_tuple(-1, 1, vector<size_t>{}), make_tuple(2, 5, vector<size_t>{1, 4, 4}), make_tuple(1, 4, vector<size_t>{1, 4, 4})));
-class StockMaxTestFixture : public RangeTestFixture1<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<long>>>
-{
-public:
-	void SetUp() override
-	{
-		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-	}
-	size_t StockMaxTest()
-	{
-		return _rangeObj.StockMax(_data);
-	}
-};
 class GreaterThanSumPairsTestFixture : public RangeTestFixture2<size_t, size_t, size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
 public:
@@ -296,48 +284,6 @@ public:
 		return _rangeObj.GreaterThanSumPairs(_param, _data);
 	}
 };
-class StockMaxProfitTestFixture : public RangeTestFixture1<long, long>, public testing::TestWithParam<tuple<long, vector<long>>>
-{
-public:
-	void SetUp() override
-	{
-		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-	}
-	long StockMaxProfitTest()
-	{
-		return _rangeObj.StockMaxProfit(_data);
-	}
-};
-TEST_P(StockMaxProfitTestFixture, StockMaxProfitTests)
-{
-	ASSERT_EQ(this->_expected, this->StockMaxProfitTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	StockMaxProfitTests,
-	StockMaxProfitTestFixture,
-	::testing::Values(make_tuple(6, vector<long>{1, 2, 3, 0, 2, 5}), make_tuple(6, vector<long>{1, 2, 3, 0, 1, 5}), make_tuple(9, vector<long>{1, 2, 6, 0, 1, 5})));
-class StockMaxProfit1TestFixture : public RangeTestFixture1<long, long>, public testing::TestWithParam<tuple<long, vector<long>>>
-{
-public:
-	void SetUp() override
-	{
-		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-	}
-	long StockMaxProfit1Test()
-	{
-		return _rangeObj.StockMaxProfit1(_data);
-	}
-};
-TEST_P(StockMaxProfit1TestFixture, StockMaxProfit1Tests)
-{
-	ASSERT_EQ(this->_expected, this->StockMaxProfit1Test());
-}
-INSTANTIATE_TEST_SUITE_P(
-	StockMaxProfit1Tests,
-	StockMaxProfit1TestFixture,
-	::testing::Values(make_tuple(7, vector<long>{7, 1, 5, 3, 6, 4}), make_tuple(4, ranges::iota_view(1, 6) | ranges::to<vector<long>>()), make_tuple(0, vector<long>{5, 4, 3, 2, 1}),
-					  make_tuple(1, vector<long>{1, 2}), make_tuple(0, vector<long>{1, 1})));
-
 class SherlockAndCostTestFixture : public RangeTestFixture1<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
 {
 public:
@@ -805,23 +751,6 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(5, 2, set<long>{1, 3, 5, 8, 6, 4, 2}),
 					  make_tuple(3, 2, set<long>{1, 5, 3, 4, 2}),
 					  make_tuple(5, 2, set<long>{1, 3, 5, 8, 6, 4, 2})));
-TEST_P(StockMaxTestFixture, StockMaxTests)
-{
-	ASSERT_EQ(this->_expected, this->StockMaxTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	StockMaxTests,
-	StockMaxTestFixture,
-	::testing::Values(make_tuple(0, vector<long>{5, 3, 2}),
-					  make_tuple(197, vector<long>{1, 2, 100}), // (100 - 1 = 99) + (100 - 2 = 98) = 197
-					  make_tuple(3, vector<long>{1, 3, 1, 2})));
-
-TEST(RangeTests, MaxProfitTest)
-{
-	Range range;
-	vector<long> a = {23171, 21011, 21123, 21366, 21013, 21367};
-	ASSERT_EQ(356, range.MaxProfit(a));
-}
 TEST_P(SherlockAndCostTestFixture, SherlockAndCostTests)
 {
 	ASSERT_EQ(this->_expected, this->SherlockAndCostTest());

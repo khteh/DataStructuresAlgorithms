@@ -1,5 +1,4 @@
 #pragma once
-#include "DataStructuresAlgorithms.h"
 using namespace std;
 typedef enum class Direction
 {
@@ -28,15 +27,11 @@ public:
 	size_t LongestUpDownAlternatingSubSequence(vector<long> const &, vector<long> &);
 	size_t NumberDiffPairs(long, vector<long> const &);
 	size_t NumberDiffPairs(long, set<long> const &);
-	size_t StockMax(vector<long> const &);
-	long MaxProfit(vector<long> const &);
 	size_t MinSumSubSequence(size_t, vector<size_t> const &);
 	size_t MinimumLoss(vector<size_t> const &);
 	long MinimumBribes(size_t, vector<long> const &);
 	size_t MinimumCandies(vector<size_t> const &);
 	long MinEnergyInstallations(vector<size_t> &, long);
-	long StockMaxProfit(vector<long> const &);
-	long StockMaxProfit1(vector<long> const &);
 	size_t SherlockAndCost(vector<size_t> const &);
 	vector<size_t> WiggleMaxLength(vector<size_t> const &);
 	bool ContainsNearbyAlmostDuplicate(vector<long> const &, long, long);

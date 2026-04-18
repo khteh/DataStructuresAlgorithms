@@ -36,6 +36,7 @@
 #include "Matrix.h"
 #include "ListRangeSum.h"
 #include "LongestCommonSubsequence.h"
+#include "MaximizeStockProfits.h"
 #include "Knapsack.h"
 #include "Palindrome.h"
 #include "Range.h"

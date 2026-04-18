@@ -79,6 +79,9 @@
     <ClCompile Include="Matrix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MaximizeStockProfits.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="MyQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -238,6 +241,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MaximizeStockProfits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MyQueue.h">

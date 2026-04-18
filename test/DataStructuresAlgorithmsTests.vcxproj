@@ -75,6 +75,7 @@
     <ClCompile Include="LongestCommonSubsequenceTests.cpp" />
     <ClCompile Include="LRUCacheTests.cpp" />
     <ClCompile Include="MatrixTests.cpp" />
+    <ClCompile Include="MaximizeStockProfitsTests.cpp"/>
     <ClCompile Include="MaxZeroProductTests.cpp" />
     <ClCompile Include="NumbersTests.cpp" />
     <ClCompile Include="PalindromeTests.cpp" />

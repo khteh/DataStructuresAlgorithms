@@ -28,6 +28,7 @@ set(Sources
     "LongestCommonSubsequenceTests.cpp"
     "LRUCacheTests.cpp"
     "MatrixTests.cpp"
+    "MaximizeStockProfitsTests.cpp"
     "MaxZeroProductTests.cpp"
     "NumbersTests.cpp"
     "PalindromeTests.cpp"
