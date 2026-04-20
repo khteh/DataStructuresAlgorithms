@@ -91,16 +91,16 @@ size_t Sort<T>::Partition(vector<T> &data, size_t left, size_t right, size_t piv
 		swap(data[newPivot], data[right]);
 	return newPivot;
 }
-// Find the smallest element using a linear scan and move it to the front.
-// Then, find the second smallest and move it, again doing a linear scan.
-// Continue doing this until all the elements are in place. O(n^2).
+/* Find the smallest element using a linear scan and move it to the front.
+ * Then, find the second smallest and move it, again doing a linear scan.
+ * Continue doing this until all the elements are in place. O(n^2).
+ */
 template <typename T>
 void Sort<T>::SelectionSort(vector<T> &data)
 {
-	size_t min = 0;
 	for (size_t i = 0; i < data.size(); i++)
 	{
-		min = i;
+		size_t min = i;
 		for (size_t j = i + 1; j < data.size(); j++)
 		{ // Find the min from lower bound to end
 			if (data[j] <= data[min])
