@@ -363,7 +363,7 @@ TEST(SortTests, Merge2SortedListsTest)
 		if (it != a.begin())
 			ASSERT_LT(*(it - 1), *it);
 }
-class TopDownMergeSortCountConversionsTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, vector<size_t>, size_t, size_t>>
+class TopDownMergeSortCountInversionsTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, vector<size_t>, size_t, size_t>>
 {
 public:
 	void SetUp() override
@@ -374,9 +374,9 @@ public:
 		_start = get<3>(GetParam());
 		_end = get<4>(GetParam());
 	}
-	size_t TopDownMergeSortCountConversionsTest()
+	size_t TopDownMergeSortCountInversionsTest()
 	{
-		return _sort.TopDownMergeSortCountConversions(_data, _data1, _start, _end);
+		return _sort.TopDownMergeSortCountInversions(_data, _data1, _start, _end);
 	}
 
 protected:
@@ -384,14 +384,14 @@ protected:
 	size_t _expected, _start, _end;
 	vector<size_t> _data, _data1;
 };
-TEST_P(TopDownMergeSortCountConversionsTestFixture, TopDownMergeSortCountConversionsTests)
+TEST_P(TopDownMergeSortCountInversionsTestFixture, TopDownMergeSortCountInversionsTests)
 {
-	ASSERT_EQ(this->_expected, this->TopDownMergeSortCountConversionsTest());
+	ASSERT_EQ(this->_expected, this->TopDownMergeSortCountInversionsTest());
 	ASSERT_TRUE(ranges::is_sorted(this->_data1));
 }
 INSTANTIATE_TEST_SUITE_P(
-	TopDownMergeSortCountConversionsTests,
-	TopDownMergeSortCountConversionsTestFixture,
+	TopDownMergeSortCountInversionsTests,
+	TopDownMergeSortCountInversionsTestFixture,
 	::testing::Values(make_tuple(1, vector<size_t>{1, 5, 3, 7}, vector<size_t>{1, 5, 3, 7}, 0, 4),
 					  make_tuple(6, vector<size_t>{7, 5, 3, 1}, vector<size_t>{7, 5, 3, 1}, 0, 4),
 					  make_tuple(4, vector<size_t>{2, 1, 3, 1, 2}, vector<size_t>{2, 1, 3, 1, 2}, 0, 5)));

@@ -28,7 +28,7 @@ public:
 	size_t SortSwapCount(vector<T> &);
 	void DutchPartitioning(vector<T> &, T);
 	bool CanFinishCourseTopologicalSort(size_t, vector<vector<T>> &, vector<T> &);
-	size_t TopDownMergeSortCountConversions(vector<T> &, vector<T> &, size_t, size_t);
+	size_t TopDownMergeSortCountInversions(vector<T> &, vector<T> &, size_t, size_t);
 	static bool LexicographicSort(string, string);
 	size_t InsertionSortShifts(vector<T> &);
 };

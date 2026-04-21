@@ -12,17 +12,13 @@ void Sort<T>::BubbleSort(vector<T> &data)
 {
 	T tmp = T();
 	for (size_t lastIndex = data.size() - 1; lastIndex >= 1; lastIndex--)
-	{
 		for (size_t i = 0; i < lastIndex; i++)
-		{
 			if (data[i] > data[i + 1])
 			{
 				tmp = data[i];
 				data[i] = data[i + 1];
 				data[i + 1] = tmp;
 			}
-		}
-	}
 }
 /* Quick Sort (http://en.wikipedia.org/wiki/Quicksort)
  * C=2, L=lg(N), Other: N
@@ -80,7 +76,7 @@ size_t Sort<T>::Partition(vector<T> &data, size_t left, size_t right, size_t piv
 	T pivotValue = data[pivot];
 	if (pivot != right)
 		swap(data[pivot], data[right]);
-	for (size_t i = left; i < right; i++)
+	for (size_t i = left; i < right; i++) // O(N)
 		if (data[i] < pivotValue)
 		{
 			if (i != newPivot)
@@ -137,25 +133,25 @@ void Sort<T>::HeapSort(vector<T> &data)
 /* https://en.wikipedia.org/wiki/Counting_sort
  * sorting a collection of objects according to keys that are small positive integers.
  * In the most general case, the input to counting sort consists of a collection of n items, each of which has a non-negative integer key whose maximum value is at most k
+ * [5, 0, 3, 1]: min: 0 max: 5
+ * counts: [1, 1, 0, 1, 0, 1]
+ * 		   [1, 2, 2, 3, 3, 4]
+ * *it: 1 counts[1] - 1 = 2-1 = 1 data[1] = 1
+ * *it: 3 counts[3] - 1 = 3-1 = 2 data[2] = 3
+ * *it: 0 counts[0] - 1 = 1-1 = 0 data[0] = 0
+ * *it: 5 counts[5] - 1 = 4-1 = 3 data[3] = 5 => [0 1 3 5]
  */
 template <typename T>
 void Sort<T>::CountingSort(vector<T> &data)
 	requires unsigned_integral<T>
 {
 	vector<T> input(data);
-	T min = numeric_limits<T>::max(), max = 0;
-	for (typename vector<T>::iterator it = input.begin(); it != input.end(); it++)
-	{
-		if (*it < min)
-			min = *it;
-		if (*it > max)
-			max = *it;
-	}
+	T smallest = *ranges::min_element(data), largest = *ranges::max_element(data);
 	// Do NOT use map / multimap to keep the counts. map / multimap auto-sort on keys. This defeats the purpose of CountingSort
-	vector<T> counts(max + 1, 0);
+	vector<T> counts(largest + 1, 0); // 0-based index
 	for (typename vector<T>::iterator it = input.begin(); it != input.end(); it++)
 		counts[*it]++;
-	for (long i = min > 0 ? min : 1; i <= max; i++)
+	for (long i = max<long>(1L, smallest); i <= largest; i++)
 		counts[i] += counts[i - 1];
 	// Use reverse_iterator for a stable sort
 	for (typename vector<T>::reverse_iterator it = input.rbegin(); it != input.rend(); it++)
@@ -168,25 +164,25 @@ template <typename T>
 string Sort<T>::StringCountingSort(vector<vector<string>> &data)
 {
 	vector<string> result;
-	long min = numeric_limits<size_t>::max(), max = 0;
+	long smallest = numeric_limits<size_t>::max(), largest = 0;
 	for (vector<vector<string>>::iterator it = data.begin(); it != data.end(); it++)
 	{
 		long key;
 		istringstream((*it)[0]) >> key;
-		if (key < min)
-			min = key;
-		if (key > max)
-			max = key;
+		if (key < smallest)
+			smallest = key;
+		if (key > largest)
+			largest = key;
 	}
 	// Do NOT use map / multimap to keep the counts. map / multimap auto-sort on keys. This defeats the purpose of CountingSort
-	vector<size_t> counts(max + 1, 0);
+	vector<size_t> counts(largest + 1, 0); // 0-based index
 	for (vector<vector<string>>::iterator it = data.begin(); it != data.end(); it++)
 	{
 		size_t key;
 		istringstream((*it)[0]) >> key;
 		counts[key]++;
 	}
-	for (long i = min > 0 ? min : 1; i <= max; i++)
+	for (long i = max<long>(1L, smallest); i <= largest; i++)
 		counts[i] += counts[i - 1];
 	result.resize(counts.back());
 	// Use reverse_iterator for a stable sort
@@ -363,10 +359,11 @@ void Sort<T>::WiggleSort(vector<T> &data)
 		result.push_back(data[j]);
 	data = result;
 }
-// https://www.hackerrank.com/challenges/ctci-merge-sort/problem
-// 100%
+/* https://www.hackerrank.com/challenges/ctci-merge-sort/problem
+ * 100%
+ */
 template <typename T>
-size_t Sort<T>::TopDownMergeSortCountConversions(vector<T> &B, vector<T> &A, size_t start, size_t end)
+size_t Sort<T>::TopDownMergeSortCountInversions(vector<T> &B, vector<T> &A, size_t start, size_t end)
 {
 	size_t inversions = 0;
 	if (end - start > 1)
@@ -374,8 +371,8 @@ size_t Sort<T>::TopDownMergeSortCountConversions(vector<T> &B, vector<T> &A, siz
 		// recursively split runs into two halves until run size == 1,
 		// then merge them and return back up the call chain
 		size_t middle = start + (end - start) / 2 + (end - start) % 2;
-		inversions += TopDownMergeSortCountConversions(A, B, start, middle);
-		inversions += TopDownMergeSortCountConversions(A, B, middle, end);
+		inversions += TopDownMergeSortCountInversions(A, B, start, middle);
+		inversions += TopDownMergeSortCountInversions(A, B, middle, end);
 		inversions += MergeCountInversions(B, A, start, middle, end);
 	}
 	return inversions;
