@@ -12,7 +12,9 @@ template class MaximizeStockProfits<long>;
  *
  * Recurrence relations:
  * T[i][k][0] = max(T[i-1][k][0], T[i-1][k][1] + prices[i])   Sell
- * T[i][k][1] = max(T[i-1][k][1], T[i-1][k-1][0] - prices[i]) Buy
+ * T[i][k][1] = max(T[i-1][k][1], T[i-1][k-1][0] - prices[i]) Buy: [k-1] <- The maximum number of allowable transactions decreases by one, since buying on the i-th day will use one transaction,
+ *
+ * Number of available stocks = length of the prices array.
  */
 /* https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
  * 100%
@@ -183,8 +185,44 @@ T MaximizeStockProfits<T>::MaxProfitKInfinityWithFee(vector<T> const &prices, T 
     return T_ik0;
 }
 /* https://www.hackerrank.com/challenges/stockmax/problem
+ * Each day, you can either buy one share, sell any number of shares that you own, or not make any transaction at all.
  * 100%
- * { 1, 2, 100 } : (100 - 1 = 99) + (100 - 2 = 98) = 197
+ * Max #buys = prices.size() - 1. Max #sells = prices.size() / 2
+ * {1, 2, 100} : (100 - 1 = 99) + (100 - 2 = 98) = 197
+ *
+ * T[i][k][0] = max(T[i-1][k][0], T[i-1][k][1] + prices[i])
+ * T[i][k][1] = max(T[i-1][k][1], T[i-1][k-1][0] - prices[i]) = max(T[i-1][k][1], T[i-1][k][0] - prices[i])
+ *
+ * day:0 T_ik0[0] = 0, T_ik1[0] = min(), k:3
+ * day:1 *it: 1
+ * T_ik0: [0, 0, 0, 0]
+ * T_ik1: [min, -1, -1, -1]
+ *
+ * day:2 *it: 2
+ * T_ik0: [0,    1, 1, 1]
+ * T_ik1: [min, -2, -1, -1]
+ *
+ * day:3 *it: 100
+ * T_ik0: [0,     98, 99, 99] <- result = 99
+ * T_ik1: [min, -100, -2, -1]
+ *
+ * {1, 3, 1, 2}: (3 - 1 = 2) + (2 - 1 = 1) = 3, k:4
+ * day:0 T_ik0[0] = 0, T_ik1[0] = min()
+ * day:1 *it: 1
+ * T_ik0: [0, 0, 0, 0, 0]
+ * T_ik1: [min, -1, -1, -1, -1]
+ *
+ * day:2 *it: 3
+ * T_ik0: [0, 2, 2, 2, 2]
+ * T_ik1: [min, -3, -1, -1, -1]
+ *
+ * day:3 *it: 1
+ * T_ik0: [0, 2, 2, 2, 2]
+ * T_ik1: [min, -1, 1, 1, 1]
+ *
+ * day:4 *it: 2
+ * T_ik0: [0, 2, 3, 3, 3] <- result = 3
+ * T_ik1: [min, -1, 1, 1, 1]
  */
 template <typename T>
 T MaximizeStockProfits<T>::MaxProfit(vector<T> const &prices)
@@ -207,4 +245,24 @@ T MaximizeStockProfits<T>::MaxProfit(vector<T> const &prices)
         }
     }
     return profit;
+#if 0
+    T T_ik0 = 0, T_ik1 = numeric_limits<T>::min();
+    for (typename vector<T>::const_iterator it = prices.begin(); it != prices.end(); it++)
+    {
+        T prev_T_ik0 = T_ik0;
+        // T_ik0 = max(T_ik0, T_ik1 + *it);      // Sell
+        T_ik0 += max(T_ik0, T_ik1 + *it);     // Sell
+        T_ik1 = max(T_ik1, prev_T_ik0 - *it); // Buy
+    }
+    return T_ik0;
+    size_t k = prices.size();
+    vector<T> T_ik0(k + 1, 0), T_ik1(k + 1, numeric_limits<T>::min());
+    for (typename vector<T>::const_iterator it = prices.begin(); it != prices.end(); it++)
+        for (size_t i = 1; i <= k; i++)
+        {
+            T_ik0[i] = max(T_ik0[i], T_ik1[i] + *it);
+            T_ik1[i] = max(T_ik1[i], T_ik0[i - 1] - *it); // Buy: [k-1] <- The maximum number of allowable transactions decreases by one, since buying on the i-th day will use one transaction,
+        }
+    return T_ik0[k];
+#endif
 }
