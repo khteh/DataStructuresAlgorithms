@@ -361,7 +361,7 @@ size_t Range::MinimumCandies(vector<size_t> const &data)
 		if (data[i - 1] > data[i] && result[i - 1] <= result[i])
 			result[i - 1] = result[i] + 1;
 	size_t sum = parallel_reduce(
-		blocked_range<size_t>(0, result.size()), (size_t)0,
+		blocked_range<size_t>(0, result.size()), 0uz,
 		[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 		{
 			for (size_t i = r.begin(); i < r.end(); i++)

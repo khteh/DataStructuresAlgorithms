@@ -2607,7 +2607,7 @@ long MinAbsSum(vector<long> &data)
 {
 	long sum = 0;
 	long min = numeric_limits<long>::max();
-	for (size_t i = 0; i < ((size_t)1 << data.size()); i++)
+	for (size_t i = 0; i < (1uz << data.size()); i++)
 	{
 		vector<bool> binary;
 		decimal_to_binary(i, binary, data.size()); // Permutations of {-1,1} for all the bit patterns

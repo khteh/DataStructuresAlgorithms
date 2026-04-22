@@ -214,7 +214,7 @@ size_t Knapsack::UnboundedKnapsack(long k, vector<size_t> &arr)
 	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
 	{
 		size_t sum = parallel_reduce(
-			blocked_range<size_t>(0, it->size()), (size_t)0,
+			blocked_range<size_t>(0, it->size()), 0uz,
 			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 			{
 				for (size_t i = r.begin(); i < r.end(); i++)
@@ -284,7 +284,7 @@ vector<vector<size_t>> Knapsack::BoundedKnapsack(long amount, vector<size_t> &nu
 	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
 	{
 		size_t sum = parallel_reduce(
-			blocked_range<size_t>(0, it->size()), (size_t)0,
+			blocked_range<size_t>(0, it->size()), 0uz,
 			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 			{
 				for (size_t i = r.begin(); i < r.end(); i++)
@@ -323,7 +323,7 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t size, size_t
 						vector<size_t> change(*it);
 						change.push_back(i);
 						size_t total = parallel_reduce(
-							blocked_range<size_t>(0, change.size()), (size_t)0,
+							blocked_range<size_t>(0, change.size()), 0uz,
 							[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 							{
 								for (size_t i = r.begin(); i < r.end(); i++)
@@ -400,7 +400,7 @@ size_t Knapsack::StairsClimbingDynamicProgrammingBottomUp(long destination, vect
 	for (size_t i = 1; i <= (size_t)destination; i++)
 	{
 		combinations[i % combinations.size()] = parallel_reduce(
-			blocked_range<size_t>(0, combinations.size()), (size_t)0, // Sum of half-open [0, steps.size()) elements
+			blocked_range<size_t>(0, combinations.size()), 0uz, // Sum of half-open [0, steps.size()) elements
 			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 			{
 				for (size_t i = r.begin(); i < r.end(); i++)
