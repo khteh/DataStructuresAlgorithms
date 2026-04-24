@@ -338,10 +338,10 @@ INSTANTIATE_TEST_SUITE_P(
 	SansaXorTests,
 	SansaXorTestFixture,
 	::testing::Values(make_tuple(6, vector<size_t>{3, 4, 5}), make_tuple(2, vector<size_t>{1, 2, 3}),
-					  // make_tuple(0, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>()),
-					  make_tuple(0, []() -> generator<size_t>
-												{ co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>())));
-
+					  make_tuple(0, std::views::iota(0uz, 10uz) | ranges::to<vector>())
+					  /*make_tuple(0, []() -> generator<size_t>
+												{ co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>())*/
+					  ));
 class IsAdditiveNumberTestFixture : public testing::TestWithParam<tuple<bool, string>>
 {
 public:
