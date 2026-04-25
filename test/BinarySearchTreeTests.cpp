@@ -20,8 +20,8 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest)
 	a.clear();
 	b.clear();
 	a = views::iota(0, 9) | ranges::to<vector<long>>();
-	Tree<long>
-		tree0(a, TreeType::BinarySearch);
+	Tree<long> tree0(a, TreeType::BinarySearch);
+	tree0.PrintTree();
 	ASSERT_TRUE(tree0.isValidBST());
 	ASSERT_EQ(9, tree0.Count());
 	ASSERT_EQ(0, tree0.Min());
