@@ -54,9 +54,9 @@ INSTANTIATE_TEST_SUITE_P(
 	SumPairsTestFixture,
 	::testing::Values(make_tuple(2, 8, vector<size_t>{1, 2, 3, 4, 5, 6, 5}),
 					  make_tuple(3, 12, vector<size_t>{5, 7, 9, 13, 11, 6, 6, 3, 3}),
-					  make_tuple(4, 10, std::views::iota(0uz, 10uz) | ranges::to<vector>())
+					  make_tuple(4, 10, views::iota(0uz, 10uz) | ranges::to<vector<size_t>>())
 					  /*make_tuple(4, 10, []() -> generator<size_t>
-													{ co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>())*/
+													{ co_yield ranges::elements_of(views::iota(0, 10)); }() | ranges::to<vector>())*/
 					  ));
 class ProductExceptSelfTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
 {
@@ -175,9 +175,9 @@ INSTANTIATE_TEST_SUITE_P(
 	MaxAndPairTestFixture,
 	::testing::Values(make_tuple(8, vector<unsigned long long>{16, 12, 8, 4}),
 					  make_tuple(0, vector<unsigned long long>{4, 8, 16, 2}),
-					  make_tuple(8ull, std::views::iota(0ull, 10ull) | ranges::to<vector>())
+					  make_tuple(8ull, views::iota(0ull, 10ull) | ranges::to<vector<unsigned long long>>())
 					  /*make_tuple(8, []() -> generator<unsigned long long>
-												{ co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>())*/
+												{ co_yield ranges::elements_of(views::iota(0, 10)); }() | ranges::to<vector>())*/
 					  ));
 class MaxXorPairTestFixture : public RangeTestFixture1<unsigned long long, unsigned long long>, public testing::TestWithParam<tuple<unsigned long long, vector<unsigned long long>>>
 {
@@ -201,12 +201,12 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(7, vector<unsigned long long>{1, 2, 3, 4, 5, 6, 7}),
 					  make_tuple(7, vector<unsigned long long>{1, 2, 3, 4}),
 					  make_tuple(28, vector<unsigned long long>{25, 10, 2, 8, 5, 3}),
-					  make_tuple(15ull, std::views::iota(0ull, 10ull) | ranges::to<vector>()),
-					  make_tuple(4095ull, std::views::iota(1ull, 3001ull) | ranges::to<vector>())
+					  make_tuple(15ull, views::iota(0ull, 10ull) | ranges::to<vector<unsigned long long>>()),
+					  make_tuple(4095ull, views::iota(1ull, 3001ull) | ranges::to<vector<unsigned long long>>())
 					  /*make_tuple(15, []() -> generator<unsigned long long>
-												 { co_yield ranges::elements_of(ranges::iota_view(0, 10)); }() | ranges::to<vector>()),
+												 { co_yield ranges::elements_of(views::iota(0, 10)); }() | ranges::to<vector>()),
 					  make_tuple(4095, []() -> generator<unsigned long long>
-												   { co_yield ranges::elements_of(ranges::iota_view(1, 3001)); }() | ranges::to<vector>())*/
+												   { co_yield ranges::elements_of(views::iota(1, 3001)); }() | ranges::to<vector>())*/
 					  ));
 
 class SumPairsIndicesTestFixture : public RangeTestFixture2<vector<size_t>, size_t, size_t>, public testing::TestWithParam<tuple<vector<size_t>, size_t, vector<size_t>>>
@@ -425,7 +425,7 @@ TEST_P(MaxNonDivisableSubsetTestFixture, MaxNonDivisableSubsetTests)
 INSTANTIATE_TEST_SUITE_P(
 	MaxNonDivisableSubsetTests,
 	MaxNonDivisableSubsetTestFixture,
-	::testing::Values(make_tuple(3, 3, ranges::iota_view(1, 7) | ranges::to<vector<size_t>>()),
+	::testing::Values(make_tuple(3, 3, views::iota(1, 7) | ranges::to<vector<size_t>>()),
 					  make_tuple(8, 6, vector<size_t>{12, 6, 1, 9, 13, 15, 10, 21, 14, 32, 5, 8, 23, 19}),
 					  make_tuple(3, 3, vector<size_t>{1, 7, 2, 4})));
 class HackerlandRadioTransmittersTestFixture : public RangeTestFixture2<size_t, long, size_t>, public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
@@ -448,7 +448,7 @@ INSTANTIATE_TEST_SUITE_P(
 	HackerlandRadioTransmittersTests,
 	HackerlandRadioTransmittersTestFixture,
 	::testing::Values(make_tuple(3, 1, vector<size_t>{1, 2, 3, 5, 9}),
-					  make_tuple(2, 1, ranges::iota_view(1, 6) | ranges::to<vector<size_t>>()),
+					  make_tuple(2, 1, views::iota(1, 6) | ranges::to<vector<size_t>>()),
 					  make_tuple(3, 2, vector<size_t>{7, 2, 4, 6, 5, 9, 12, 11}),
 					  make_tuple(4, 2, vector<size_t>{9, 5, 4, 2, 6, 15, 12})));
 class MinEnergyInstallationsTestFixture : public RangeTestFixture2<long, long, size_t>, public testing::TestWithParam<tuple<long, long, vector<size_t>>>
@@ -663,8 +663,8 @@ TEST_P(GreaterThanSumPairsTestFixture, GreaterThanSumPairsTests)
 INSTANTIATE_TEST_SUITE_P(
 	GreaterThanSumPairsTests,
 	GreaterThanSumPairsTestFixture,
-	::testing::Values(make_tuple(35, 8, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>()),
-					  make_tuple(45, 8, ranges::iota_view(0, 11) | ranges::to<vector<size_t>>())));
+	::testing::Values(make_tuple(35, 8, views::iota(0, 10) | ranges::to<vector<size_t>>()),
+					  make_tuple(45, 8, views::iota(0, 11) | ranges::to<vector<size_t>>())));
 
 class TripletsZeroSumTestFixture : public testing::TestWithParam<tuple<vector<vector<long>>, vector<long>>>
 {
@@ -1042,7 +1042,7 @@ TEST_P(LiveMedianCalculationTestFixture, LiveMedianCalculationTests)
 INSTANTIATE_TEST_SUITE_P(
 	LiveMedianCalculationTests,
 	LiveMedianCalculationTestFixture,
-	::testing::Values(make_tuple(1, 3, vector<size_t>{10, 20, 30, 40, 50}), make_tuple(2, 5, vector<size_t>{2, 3, 4, 2, 3, 6, 8, 4, 5}), make_tuple(0, 4, ranges::iota_view(1, 5) | ranges::to<vector<size_t>>())));
+	::testing::Values(make_tuple(1, 3, vector<size_t>{10, 20, 30, 40, 50}), make_tuple(2, 5, vector<size_t>{2, 3, 4, 2, 3, 6, 8, 4, 5}), make_tuple(0, 4, views::iota(1, 5) | ranges::to<vector<size_t>>())));
 class MaxSlidingWindowTestFixture : public testing::TestWithParam<tuple<vector<long>, size_t, vector<long>>>
 {
 public:
@@ -1073,8 +1073,8 @@ INSTANTIATE_TEST_SUITE_P(
 	MaxSlidingWindowTestFixture,
 	::testing::Values(make_tuple(vector<long>{3, 3, 5, 5, 6, 7}, 3, vector<long>{1, 3, -1, -3, 5, 3, 6, 7}),
 					  make_tuple(vector<long>{3, 3}, 3, vector<long>{3, 1, 1, 3}),
-					  make_tuple(vector<long>{-3, -2, -1, 0, 1, 2}, 1uz, std::views::iota(-3l, 3l) | ranges::to<vector>())
-					  /*make_tuple(vector<long>{-3, -2, -1, 0, 1, 2}, 1, []() -> generator<long> { co_yield ranges::elements_of(ranges::iota_view(-3, 3)); }() | ranges::to<vector>())*/
+					  make_tuple(vector<long>{-3, -2, -1, 0, 1, 2}, 1uz, views::iota(-3l, 3l) | ranges::to<vector<long>>())
+					  /*make_tuple(vector<long>{-3, -2, -1, 0, 1, 2}, 1, []() -> generator<long> { co_yield ranges::elements_of(views::iota(-3, 3)); }() | ranges::to<vector>())*/
 					  ));
 
 class BeautifulQuadruplesTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t, size_t, size_t>>

@@ -80,9 +80,9 @@ INSTANTIATE_TEST_SUITE_P(
 	LongestIncreasingSubsequenceNlogNTests,
 	LongestIncreasingSubsequenceNlogNTestFixture,
 	::testing::Values(make_tuple(1, vector<size_t>{0}),
-					  make_tuple(1, std::views::iota(0uz, 11uz) | std::views::reverse | ranges::to<vector>()),
+					  make_tuple(1, views::iota(0uz, 11uz) | std::views::reverse | ranges::to<vector<size_t>>()),
 					  /*make_tuple(1, []() -> generator<size_t>
-												{ co_yield ranges::elements_of(ranges::reverse_view(ranges::iota_view(0, 11))); }() | ranges::to<vector>()),*/
+												{ co_yield ranges::elements_of(ranges::reverse_view(views::iota(0, 11))); }() | ranges::to<vector<size_t>>()),*/
 					  make_tuple(6, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
 					  make_tuple(3, vector<size_t>{3, 2, 4, 1, 5}),
 					  make_tuple(1, vector<size_t>{1, 1, 1, 1, 1})));
@@ -106,9 +106,9 @@ INSTANTIATE_TEST_SUITE_P(
 	LongestNonDecreasingSubsequenceNlogNTests,
 	LongestNonDecreasingSubsequenceNlogNTestFixture,
 	::testing::Values(make_tuple(1, vector<size_t>{0}),
-					  make_tuple(1, std::views::iota(0uz, 11uz) | std::views::reverse | ranges::to<vector>()),
+					  make_tuple(1, views::iota(0uz, 11uz) | std::views::reverse | ranges::to<vector<size_t>>()),
 					  /*make_tuple(1, []() -> generator<size_t>
-												{ co_yield ranges::elements_of(ranges::reverse_view(ranges::iota_view(0, 11))); }() | ranges::to<vector>()),*/
+												{ co_yield ranges::elements_of(ranges::reverse_view(views::iota(0, 11))); }() | ranges::to<vector<size_t>>()),*/
 					  make_tuple(6, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
 					  make_tuple(3, vector<size_t>{3, 2, 4, 1, 5}), make_tuple(5, vector<size_t>{1, 2, 3, 1, 2}),
 					  make_tuple(5, vector<size_t>{1, 1, 1, 1, 1})));
@@ -183,6 +183,6 @@ TEST_P(LongestDecreasingSubsequenceNlogNTestFixture, LongestDecreasingSubsequenc
 INSTANTIATE_TEST_SUITE_P(
 	LongestDecreasingSubsequenceNlogNTests,
 	LongestDecreasingSubsequenceNlogNTestFixture,
-	::testing::Values(make_tuple(1, vector<size_t>{0}), make_tuple(1, ranges::iota_view(0, 11) | ranges::to<vector<size_t>>()), make_tuple(5, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
+	::testing::Values(make_tuple(1, vector<size_t>{0}), make_tuple(1, views::iota(0, 11) | ranges::to<vector<size_t>>()), make_tuple(5, vector<size_t>{0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15}),
 					  make_tuple(3, vector<size_t>{3, 2, 4, 1, 5}),
 					  make_tuple(1, vector<size_t>{1, 1, 1, 1, 1})));

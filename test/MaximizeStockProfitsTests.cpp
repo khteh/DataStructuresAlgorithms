@@ -74,7 +74,7 @@ TEST_P(MaxProfitKInfinityTestFixture, MaxProfitKInfinityTests)
 INSTANTIATE_TEST_SUITE_P(
     MaxProfitKInfinityTests,
     MaxProfitKInfinityTestFixture,
-    ::testing::Values(make_tuple(7, vector<long>{7, 1, 5, 3, 6, 4}), make_tuple(4, ranges::iota_view(1, 6) | ranges::to<vector<long>>()), make_tuple(0, vector<long>{5, 4, 3, 2, 1}),
+    ::testing::Values(make_tuple(7, vector<long>{7, 1, 5, 3, 6, 4}), make_tuple(4, views::iota(1, 6) | ranges::to<vector<long>>()), make_tuple(0, vector<long>{5, 4, 3, 2, 1}),
                       make_tuple(1, vector<long>{1, 2}), make_tuple(0, vector<long>{1, 1})));
 
 template <typename T1, typename T2, typename T3>

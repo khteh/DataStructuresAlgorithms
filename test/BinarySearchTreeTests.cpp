@@ -19,14 +19,14 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest)
 
 	a.clear();
 	b.clear();
-	a = ranges::iota_view(0, 9) | ranges::to<vector<long>>();
+	a = views::iota(0, 9) | ranges::to<vector<long>>();
 	Tree<long>
 		tree0(a, TreeType::BinarySearch);
 	ASSERT_TRUE(tree0.isValidBST());
 	ASSERT_EQ(9, tree0.Count());
 	ASSERT_EQ(0, tree0.Min());
 	ASSERT_EQ(8, tree0.Max());
-	for (size_t i = tree0.Min(); i <= tree0.Max(); i++)
+	for (long i = tree0.Min(); i <= tree0.Max(); i++)
 		ASSERT_EQ(i, tree0.NextMin());
 	ASSERT_FALSE(tree0.HasNextMin());
 	for (long i = tree0.Max(); i >= tree0.Min(); i--)

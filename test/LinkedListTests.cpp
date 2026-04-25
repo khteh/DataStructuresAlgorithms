@@ -90,7 +90,7 @@ TEST_P(LinkedListNthElementFromBackTestFixture, LinkedListNthElementFromBackTest
 INSTANTIATE_TEST_SUITE_P(
 	LinkedListNthElementFromBackTests,
 	LinkedListNthElementFromBackTestFixture,
-	::testing::Values(make_tuple(0, 10, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>()), make_tuple(7, 3, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>()), make_tuple(0, 11, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>())));
+	::testing::Values(make_tuple(0, 10, views::iota(0, 10) | ranges::to<vector<size_t>>()), make_tuple(7, 3, views::iota(0, 10) | ranges::to<vector<size_t>>()), make_tuple(0, 11, views::iota(0, 10) | ranges::to<vector<size_t>>())));
 class LinkedListIndexSubscriptOperatorTestFixture : public LinkedListTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
 public:
@@ -112,7 +112,7 @@ TEST_P(LinkedListIndexSubscriptOperatorTestFixture, LinkedListIndexSubscriptOper
 INSTANTIATE_TEST_SUITE_P(
 	LinkedListIndexSubscriptOperatorTests,
 	LinkedListIndexSubscriptOperatorTestFixture,
-	::testing::Values(make_tuple(3, 3, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>()), make_tuple(5, 5, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>()), make_tuple(0, 10, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>())));
+	::testing::Values(make_tuple(3, 3, views::iota(0, 10) | ranges::to<vector<size_t>>()), make_tuple(5, 5, views::iota(0, 10) | ranges::to<vector<size_t>>()), make_tuple(0, 10, views::iota(0, 10) | ranges::to<vector<size_t>>())));
 class LinkedListRemoveNthElementFromBackTestFixture : public LinkedListTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
 {
 public:
@@ -135,7 +135,7 @@ TEST_P(LinkedListRemoveNthElementFromBackTestFixture, LinkedListRemoveNthElement
 INSTANTIATE_TEST_SUITE_P(
 	LinkedListRemoveNthElementFromBackTests,
 	LinkedListRemoveNthElementFromBackTestFixture,
-	::testing::Values(make_tuple(5, 4, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>()), make_tuple(2, 7, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>()), make_tuple(1, 8, ranges::iota_view(0, 10) | ranges::to<vector<size_t>>())));
+	::testing::Values(make_tuple(5, 4, views::iota(0, 10) | ranges::to<vector<size_t>>()), make_tuple(2, 7, views::iota(0, 10) | ranges::to<vector<size_t>>()), make_tuple(1, 8, views::iota(0, 10) | ranges::to<vector<size_t>>())));
 class LinkedListArithmeticTestFixture : public testing::TestWithParam<tuple<vector<size_t>, vector<size_t>, vector<size_t>>>
 {
 public:
@@ -201,7 +201,7 @@ TEST_P(LinkedListReversalTestFixture, LinkedListReversalTests)
 INSTANTIATE_TEST_SUITE_P(
 	LinkedListReversalTests,
 	LinkedListReversalTestFixture,
-	::testing::Values(make_tuple(vector<size_t>{1, 4, 3, 2, 5}, 1, 3, ranges::iota_view(1, 6) | ranges::to<vector<size_t>>()), make_tuple(vector<size_t>{5, 4, 3, 2, 1}, 0, 4, ranges::iota_view(1, 6) | ranges::to<vector<size_t>>()), make_tuple(vector<size_t>{4, 3, 2, 1, 5}, 0, 3, ranges::iota_view(1, 6) | ranges::to<vector<size_t>>()), make_tuple(vector<size_t>{1, 5, 4, 3, 2}, 1, 4, ranges::iota_view(1, 6) | ranges::to<vector<size_t>>()), make_tuple(ranges::iota_view(1, 6) | ranges::to<vector<size_t>>(), 1, 1, ranges::iota_view(1, 6) | ranges::to<vector<size_t>>()), make_tuple(vector<size_t>{2, 1}, 0, 1, vector<size_t>{1, 2})));
+	::testing::Values(make_tuple(vector<size_t>{1, 4, 3, 2, 5}, 1, 3, views::iota(1, 6) | ranges::to<vector<size_t>>()), make_tuple(vector<size_t>{5, 4, 3, 2, 1}, 0, 4, views::iota(1, 6) | ranges::to<vector<size_t>>()), make_tuple(vector<size_t>{4, 3, 2, 1, 5}, 0, 3, views::iota(1, 6) | ranges::to<vector<size_t>>()), make_tuple(vector<size_t>{1, 5, 4, 3, 2}, 1, 4, views::iota(1, 6) | ranges::to<vector<size_t>>()), make_tuple(views::iota(1, 6) | ranges::to<vector<size_t>>(), 1, 1, views::iota(1, 6) | ranges::to<vector<size_t>>()), make_tuple(vector<size_t>{2, 1}, 0, 1, vector<size_t>{1, 2})));
 class LinkedListRemoveDuplicatesTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
 {
 public:
@@ -231,7 +231,7 @@ TEST_P(LinkedListRemoveDuplicatesTestFixture, LinkedListRemoveDuplicatesTests)
 INSTANTIATE_TEST_SUITE_P(
 	LinkedListRemoveDuplicatesTests,
 	LinkedListRemoveDuplicatesTestFixture,
-	::testing::Values(make_tuple(ranges::iota_view(1, 6) | ranges::to<vector<long>>(), vector<long>{1, 2, 3, 3, 4, 4, 5}), make_tuple(ranges::iota_view(1, 6) | ranges::to<vector<long>>(), vector<long>{1, 1, 2, 3, 3, 4, 4, 5}), make_tuple(vector<long>{1}, vector<long>{1}), make_tuple(vector<long>{1}, vector<long>{1, 1}), make_tuple(vector<long>{1, 2}, vector<long>{1, 1, 2, 2}), make_tuple(vector<long>{1, 2, 3}, vector<long>{1, 1, 1, 2, 3}), make_tuple(vector<long>{-1, 0, 3}, vector<long>{-1, 0, 0, 0, 0, 3, 3})));
+	::testing::Values(make_tuple(views::iota(1, 6) | ranges::to<vector<long>>(), vector<long>{1, 2, 3, 3, 4, 4, 5}), make_tuple(views::iota(1, 6) | ranges::to<vector<long>>(), vector<long>{1, 1, 2, 3, 3, 4, 4, 5}), make_tuple(vector<long>{1}, vector<long>{1}), make_tuple(vector<long>{1}, vector<long>{1, 1}), make_tuple(vector<long>{1, 2}, vector<long>{1, 1, 2, 2}), make_tuple(vector<long>{1, 2, 3}, vector<long>{1, 1, 1, 2, 3}), make_tuple(vector<long>{-1, 0, 3}, vector<long>{-1, 0, 0, 0, 0, 3, 3})));
 class LinkedListRemoveAllDuplicatesTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
 {
 public:
@@ -292,7 +292,7 @@ TEST_P(LinkedListSortTestFixture, LinkedListSortTests)
 INSTANTIATE_TEST_SUITE_P(
 	LinkedListSortTests,
 	LinkedListSortTestFixture,
-	::testing::Values(make_tuple(vector<long>{1, 2}, vector<long>{2, 1}), make_tuple(ranges::iota_view(1, 5) | ranges::to<vector<long>>(), vector<long>{4, 2, 1, 3}), make_tuple(vector<long>{-1, 0, 3, 4, 5}, vector<long>{-1, 5, 3, 4, 0})));
+	::testing::Values(make_tuple(vector<long>{1, 2}, vector<long>{2, 1}), make_tuple(views::iota(1, 5) | ranges::to<vector<long>>(), vector<long>{4, 2, 1, 3}), make_tuple(vector<long>{-1, 0, 3, 4, 5}, vector<long>{-1, 5, 3, 4, 0})));
 class LinkedListRotateRightTestFixture : public testing::TestWithParam<tuple<vector<long>, size_t, vector<long>>>
 {
 public:
@@ -330,4 +330,4 @@ TEST_P(LinkedListRotateRightTestFixture, LinkedListRotateRightTests)
 INSTANTIATE_TEST_SUITE_P(
 	LinkedListRotateRightTests,
 	LinkedListRotateRightTestFixture,
-	::testing::Values(make_tuple(vector<long>{4, 5, 1, 2, 3}, 2, ranges::iota_view(1, 6) | ranges::to<vector<long>>()), make_tuple(vector<long>{2, 3, 1}, 2000000000, vector<long>{1, 2, 3}), make_tuple(vector<long>{3, 4, 0, -1, 5}, 3, vector<long>{-1, 5, 3, 4, 0}), make_tuple(vector<long>{1}, 10, vector<long>{1})));
+	::testing::Values(make_tuple(vector<long>{4, 5, 1, 2, 3}, 2, views::iota(1, 6) | ranges::to<vector<long>>()), make_tuple(vector<long>{2, 3, 1}, 2000000000, vector<long>{1, 2, 3}), make_tuple(vector<long>{3, 4, 0, -1, 5}, 3, vector<long>{-1, 5, 3, 4, 0}), make_tuple(vector<long>{1}, 10, vector<long>{1})));

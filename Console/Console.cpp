@@ -282,7 +282,7 @@ int main(int argc, char *argv[])
 	i = 0x80000000;
 	cout << "INT_MIN: " << INT_MIN << ", 0x" << hex << INT_MIN << dec << endl;
 	j = -INT_MIN; // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-2-c4146?view=msvc-160
-	assert(INT_MIN == -INT_MIN);
+	// assert(INT_MIN == -INT_MIN); runtime error: negation of -2147483648 cannot be represented in type 'int'; cast to an unsigned type to negate this value to itself
 	assert(i == j);
 	assert(i < 0);
 	assert(j < 0);
@@ -2453,9 +2453,9 @@ int main(int argc, char *argv[])
 			  {12, 3}};
 	assert(35 == cmatrix.LatestDayToCross(13, 9, cgrid1));
 	// udata = []() -> generator<size_t>
-	//{ co_yield ranges::elements_of(ranges::reverse_view(ranges::iota_view(0, 11))); }() | ranges::to<vector>();
+	//{ co_yield ranges::elements_of(ranges::reverse_view(views::iota(0, 11))); }() | ranges::to<vector<size_t>>();
 	// udata = []() -> generator<size_t>
-	//{ co_yield ranges::elements_of(ranges::iota_view(0, 11)); }() | ranges::reverse_view() | ranges::to<vector>();
+	//{ co_yield ranges::elements_of(views::iota(0, 11)); }() | ranges::reverse_view() | ranges::to<vector<size_t>>();
 	str = "acckzz";
 	str1 = "ccbazz";
 	set_intersection(str.begin(), str.end(), str1.begin(), str1.end(), inserter(cset, cset.begin()));

@@ -69,7 +69,7 @@ TEST_P(AbsolutePermutationTestFixture, AbsolutePermutationTests)
 INSTANTIATE_TEST_SUITE_P(
     AbsolutePermutationTests,
     AbsolutePermutationTestFixture,
-    ::testing::Values(make_tuple(ranges::iota_view(1, 11) | ranges::to<vector<long>>(), 10, 0), make_tuple(vector<long>{2, 1, 4, 3, 6, 5, 8, 7, 10, 9}, 10, 1)));
+    ::testing::Values(make_tuple(views::iota(1, 11) | ranges::to<vector<long>>(), 10, 0), make_tuple(vector<long>{2, 1, 4, 3, 6, 5, 8, 7, 10, 9}, 10, 1)));
 
 class ListPermutationTestFixture : public testing::TestWithParam<tuple<size_t, vector<long>>>
 {
@@ -105,7 +105,7 @@ TEST_P(ListPermutationTestFixture, ListPermutationTests)
 INSTANTIATE_TEST_SUITE_P(
     ListPermutationTests,
     ListPermutationTestFixture,
-    ::testing::Values(make_tuple(6, ranges::iota_view(1, 4) | ranges::to<vector<long>>()), make_tuple(120, ranges::iota_view(1, 6) | ranges::to<vector<long>>())));
+    ::testing::Values(make_tuple(6, views::iota(1, 4) | ranges::to<vector<long>>()), make_tuple(120, views::iota(1, 6) | ranges::to<vector<long>>())));
 template <typename T>
 class RangePermutationsTestFixtureBase
 {
