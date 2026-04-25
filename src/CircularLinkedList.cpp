@@ -18,12 +18,19 @@ CircularLinkedList<T>::CircularLinkedList(vector<T> &data)
 		else
 		{
 			Node<T> node(*it);
-			shared_ptr<Node<T>> n = Find(node);
-			if (!n)
-				n = make_shared<Node<T>>(*it);
-			tail->SetNext(n); // Point the existing tail to this new node
-			// n->SetPrevious(tail); Not applicable as the loop start will have 2 parents
-			tail = n;
+			weak_ptr<Node<T>> n = Find(node);
+			if (n.expired())
+			{
+				shared_ptr<Node<T>> n1 = make_shared<Node<T>>(*it);
+				tail->SetNext(n1); // Point the existing tail to this new node
+				// n->SetPrevious(tail); Not applicable as the loop start will have 2 parents
+				tail = n1; // a = { -1, 0, 1, 2, 3, 4, 5, 0 }; // Loop starts at '0'
+			}
+			else
+			{
+				tail->SetNext(n.lock());
+				tail = n.lock();
+			}
 		}
 	}
 }
@@ -48,10 +55,10 @@ template <typename T>
 void CircularLinkedList<T>::Print(shared_ptr<Node<T>> node)
 {
 	set<shared_ptr<Node<T>>> visited;
-	for (shared_ptr<Node<T>> n = node ? node : _head; n && !visited.count(node); n = n->Next())
+	for (shared_ptr<Node<T>> n = node ? node : _head; n && !visited.count(n); n = n->Next())
 	{
 		cout << n->Item() << " ";
-		visited.insert(node);
+		visited.insert(n);
 	}
 	cout << endl;
 }
@@ -73,18 +80,8 @@ shared_ptr<Node<T>> CircularLinkedList<T>::Find(Node<T> &n)
 {
 	set<shared_ptr<Node<T>>> visited;
 	shared_ptr<Node<T>> node = nullptr;
-	for (node = _head; node; node = node->Next())
-	{
-		if (!visited.count(node))
-		{
-			if (*node == n)
-				break;
-			else
-				visited.insert(node);
-		}
-		else
-			break;
-	}
+	for (node = _head; node && !visited.count(node) && *node != n; node = node->Next())
+		visited.insert(node);
 	return node;
 }
 /*
@@ -112,11 +109,11 @@ shared_ptr<Node<T>> CircularLinkedList<T>::Find(Node<T> &n)
  * (2) p1 and p2 meet at k node before the loop start
  */
 template <typename T>
-shared_ptr<Node<T>> CircularLinkedList<T>::LoopStart(shared_ptr<Node<T>> &n)
+T CircularLinkedList<T>::LoopStart(shared_ptr<Node<T>> &n)
 {
-	shared_ptr<Node<T>> p1 = n, p2 = n;
 	if (n)
 	{
+		shared_ptr<Node<T>> p1 = n, p2 = n;
 		for (; p2 && p2->Next();)
 		{ // p2 will be null if the list only has 2 items and it is not a loop
 			p1 = p1->Next();
@@ -125,10 +122,10 @@ shared_ptr<Node<T>> CircularLinkedList<T>::LoopStart(shared_ptr<Node<T>> &n)
 				break;
 		}
 		if (!p2 || !p2->Next())
-			return nullptr;
+			return numeric_limits<T>::max(); // Don't use min() as unsigned could have 0 as loop start
 		for (p1 = n; p1 != p2; p1 = p1->Next(), p2 = p2->Next())
 			;
-		return p2;
+		return p2->Item();
 	}
-	return nullptr;
+	return numeric_limits<T>::max(); // Don't use min() as unsigned could have 0 as loop start
 }

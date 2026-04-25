@@ -14,5 +14,5 @@ public:
 	shared_ptr<Node<T>> Find(Node<T> &);
 	void Print(shared_ptr<Node<T>> n = nullptr);
 	void Clear();
-	shared_ptr<Node<T>> LoopStart(shared_ptr<Node<T>> &);
+	T LoopStart(shared_ptr<Node<T>> &);
 };
