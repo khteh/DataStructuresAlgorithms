@@ -8,7 +8,8 @@ private:
 	using LinkedList<T>::_head;
 
 public:
-	CircularLinkedList(vector<T> &);
+	CircularLinkedList(); // Needed by GoogleTest TEST_P
+	CircularLinkedList(vector<T> const &);
 	~CircularLinkedList();
 	size_t Length() const;
 	shared_ptr<Node<T>> Find(Node<T> &);

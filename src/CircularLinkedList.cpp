@@ -4,12 +4,16 @@ template class CircularLinkedList<int>;
 template class CircularLinkedList<long>;
 template class CircularLinkedList<string>;
 template <typename T>
-CircularLinkedList<T>::CircularLinkedList(vector<T> &data)
+CircularLinkedList<T>::CircularLinkedList()
+{ // Needed by GoogleTest TEST_P: https://github.com/google/googletest/issues/4965
+	_head.reset();
+}
+template <typename T>
+CircularLinkedList<T>::CircularLinkedList(vector<T> const &data)
 {
 	_head.reset();
 	shared_ptr<Node<T>> tail = nullptr;
 	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
-	{
 		if (!_head)
 		{
 			_head = make_shared<Node<T>>(*it);
@@ -18,21 +22,13 @@ CircularLinkedList<T>::CircularLinkedList(vector<T> &data)
 		else
 		{
 			Node<T> node(*it);
-			weak_ptr<Node<T>> n = Find(node);
-			if (n.expired())
-			{
-				shared_ptr<Node<T>> n1 = make_shared<Node<T>>(*it);
-				tail->SetNext(n1); // Point the existing tail to this new node
-				// n->SetPrevious(tail); Not applicable as the loop start will have 2 parents
-				tail = n1; // a = { -1, 0, 1, 2, 3, 4, 5, 0 }; // Loop starts at '0'
-			}
-			else
-			{
-				tail->SetNext(n.lock());
-				tail = n.lock();
-			}
+			shared_ptr<Node<T>> n = Find(node);
+			if (!n)
+				n = make_shared<Node<T>>(*it);
+			tail->SetNext(n);
+			// n->SetPrevious(tail); Not applicable as the loop start will have 2 parents
+			tail = n;
 		}
-	}
 }
 template <typename T>
 CircularLinkedList<T>::~CircularLinkedList()
