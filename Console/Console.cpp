@@ -1191,6 +1191,7 @@ int main(int argc, char *argv[])
 	shared_ptr<Node<string>> nodeF = make_shared<Node<string>>("f");
 	shared_ptr<Node<string>> nodeG = make_shared<Node<string>>("g");
 	shared_ptr<Node<string>> nodeH = make_shared<Node<string>>("h");
+	// XXX: As long as there is a loop, there is memory leak using smart pointer because of circular references.
 	nodeA->SetNext(nodeB); // Indirect leak of 48 byte(s) in 1 object(s)
 	nodeB->SetNext(nodeC); // Indirect leak of 48 byte(s) in 1 object(s)
 	nodeC->SetNext(nodeE); // Indirect leak of 48 byte(s) in 1 object(s)
@@ -2461,41 +2462,6 @@ int main(int argc, char *argv[])
 	set_intersection(str.begin(), str.end(), str1.begin(), str1.end(), inserter(cset, cset.begin()));
 	ranges::copy(cset, ostream_iterator<char>(cout, ", "));
 	cout << endl;
-	map<long, shared_ptr<Node<long>>> nodes;
-	if (!nodes.count(1))
-		nodes.emplace(1, make_shared<Node<long>>(1));
-	if (!nodes.count(1))
-		nodes.emplace(1, make_shared<Node<long>>(1));
-	shared_ptr<Node<long>> lNode1 = make_shared<Node<long>>(1); // Indirect leak of 160 byte(s) in 1 object(s)
-	shared_ptr<Node<long>> lNode2 = make_shared<Node<long>>(2); // Indirect leak of 160 byte(s) in 1 object(s)
-	/*
-Indirect leak of 48 byte(s) in 1 object(s) allocated from:
-	#0 0x763631d2319b in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:86
-	#1 0x585b74cff80d in std::__new_allocator<std::_Rb_tree_node<std::shared_ptr<Node<long> > > >::allocate(unsigned long, void const*) /usr/include/c++/15/bits/new_allocator.h:151
-	#2 0x585b74cfd1ba in std::allocator<std::_Rb_tree_node<std::shared_ptr<Node<long> > > >::allocate(unsigned long) /usr/include/c++/15/bits/allocator.h:203
-	#3 0x585b74cfd1ba in std::allocator_traits<std::allocator<std::_Rb_tree_node<std::shared_ptr<Node<long> > > > >::allocate(std::allocator<std::_Rb_tree_node<std::shared_ptr<Node<long> > > >&, unsigned long) /usr/include/c++/15/bits/alloc_traits.h:614
-	#4 0x585b74cfd1ba in std::_Rb_tree<std::shared_ptr<Node<long> >, std::shared_ptr<Node<long> >, std::_Identity<std::shared_ptr<Node<long> > >, std::less<std::shared_ptr<Node<long> > >, std::allocator<std::shared_ptr<Node<long> > > >::_M_get_node() /usr/include/c++/15/bits/stl_tree.h:1170
-	#5 0x585b74cfa80b in std::_Rb_tree_node<std::shared_ptr<Node<long> > >* std::_Rb_tree<std::shared_ptr<Node<long> >, std::shared_ptr<Node<long> >, std::_Identity<std::shared_ptr<Node<long> > >, std::less<std::shared_ptr<Node<long> > >, std::allocator<std::shared_ptr<Node<long> > > >::_M_create_node<std::shared_ptr<Node<long> > const&>(std::shared_ptr<Node<long> > const&) /usr/include/c++/15/bits/stl_tree.h:1253
-	#6 0x585b74cf68ca in std::_Rb_tree_node<std::shared_ptr<Node<long> > >* std::_Rb_tree<std::shared_ptr<Node<long> >, std::shared_ptr<Node<long> >, std::_Identity<std::shared_ptr<Node<long> > >, std::less<std::shared_ptr<Node<long> > >, std::allocator<std::shared_ptr<Node<long> > > >::_Alloc_node::operator()<std::shared_ptr<Node<long> > const&>(std::shared_ptr<Node<long> > const&) const /usr/include/c++/15/bits/stl_tree.h:1136
-	#7 0x585b74ceda5f in std::_Rb_tree_iterator<std::shared_ptr<Node<long> > > std::_Rb_tree<std::shared_ptr<Node<long> >, std::shared_ptr<Node<long> >, std::_Identity<std::shared_ptr<Node<long> > >, std::less<std::shared_ptr<Node<long> > >, std::allocator<std::shared_ptr<Node<long> > > >::_M_insert_<std::shared_ptr<Node<long> > const&, std::_Rb_tree<std::shared_ptr<Node<long> >, std::shared_ptr<Node<long> >, std::_Identity<std::shared_ptr<Node<long> > >, std::less<std::shared_ptr<Node<long> > >, std::allocator<std::shared_ptr<Node<long> > > >::_Alloc_node>(std::_Rb_tree_node_base*, std::_Rb_tree_node_base*, std::shared_ptr<Node<long> > const&, std::_Rb_tree<std::shared_ptr<Node<long> >, std::shared_ptr<Node<long> >, std::_Identity<std::shared_ptr<Node<long> > >, std::less<std::shared_ptr<Node<long> > >, std::allocator<std::shared_ptr<Node<long> > > >::_Alloc_node&) /usr/include/c++/15/bits/stl_tree.h:2481
-	#8 0x585b74ce507e in std::pair<std::_Rb_tree_iterator<std::shared_ptr<Node<long> > >, bool> std::_Rb_tree<std::shared_ptr<Node<long> >, std::shared_ptr<Node<long> >, std::_Identity<std::shared_ptr<Node<long> > >, std::less<std::shared_ptr<Node<long> > >, std::allocator<std::shared_ptr<Node<long> > > >::_M_insert_unique<std::shared_ptr<Node<long> > const&>(std::shared_ptr<Node<long> > const&) /usr/include/c++/15/bits/stl_tree.h:2798
-	#9 0x585b74cdf52f in std::set<std::shared_ptr<Node<long> >, std::less<std::shared_ptr<Node<long> > >, std::allocator<std::shared_ptr<Node<long> > > >::insert(std::shared_ptr<Node<long> > const&) /usr/include/c++/15/bits/stl_set.h:536
-	#10 0x585b74cbdd9c in Node<long>::SetNext(std::shared_ptr<Node<long> >) /usr/src/DataStructuresAlgorithms/src/Node.cpp:143
-	#11 0x585b74263432 in main /usr/src/DataStructuresAlgorithms/Console/Console.cpp:2472
-	#12 0x76363082a574 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-	#13 0x76363082a627 in __libc_start_main_impl ../csu/libc-start.c:360
-	#14 0x585b741e3af4 in _start (/usr/src/DataStructuresAlgorithms/Debug/Console+0x2397af4) (BuildId: df3e78025f5f3ed0f42fb03b1fa817c21aa8f3b6)
-	*/
-	lNode1->SetNext(lNode2);	 // Indirect leak of 48 byte(s) in 1 object(s)
-	lNode2->SetPrevious(lNode1); // Indirect leak of 48 byte(s) in 1 object(s)
-	shared_ptr<Node<long>> lNode3 = make_shared<Node<long>>(3);
-	shared_ptr<Node<long>> lNode4 = make_shared<Node<long>>(4);
-	shared_ptr<Node<long>> lNode5 = make_shared<Node<long>>(5);
-	// std::set<std::shared_ptr<Node<long>>> nodeSet{lNode3};
-	// nodeSet.insert(lNode4);
-	lNode3->SetNext(lNode4);
-	// lNode3->SetNext(lNode3);
-	lNode4->SetNext(lNode5);
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";
