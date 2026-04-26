@@ -15,23 +15,23 @@ template class Dijkstra<string>;
  */
 ////////////////////////////////// DVertex<T> //////////////////////////////////////////////////
 template <typename T>
-DVertex<T>::DVertex(T value) : _value(value), _cost(numeric_limits<long>::max()), _previous(nullptr)
+DVertex<T>::DVertex(T value) : _value(value), _previous(nullptr), _cost(numeric_limits<long>::max())
 {
 }
 template <typename T>
-DVertex<T>::DVertex(T value, long cost) : _cost(cost), _previous(nullptr), _value(value)
+DVertex<T>::DVertex(T value, long cost) : _value(value), _previous(nullptr), _cost(cost)
 {
 }
 
 template <typename T>
-DVertex<T>::DVertex(shared_ptr<DVertex<T>> previous, long cost) : _cost(cost), _previous(previous)
+DVertex<T>::DVertex(shared_ptr<DVertex<T>> previous, long cost) : _previous(previous), _cost(cost)
 {
 }
 template <typename T>
 void DVertex<T>::AddEdge(shared_ptr<DVertex<T>> vertex, long cost)
 {
     DEdge<T> edge(vertex, cost);
-    typename set<DEdge<T>>::const_iterator it = _edges.find(edge);
+    IteratorType it = _edges.find(edge);
     if (it == _edges.end())
         _edges.emplace(edge);
     else if (it->Cost() > cost)
@@ -65,13 +65,14 @@ bool DVertex<T>::operator>(DVertex<T> &rhs)
 {
     return _value > rhs._value;
 }
+// typedef typename set<DEdge<T>>::const_iterator IteratorType;
 template <typename T>
-typename set<DEdge<T>>::const_iterator DVertex<T>::EdgeStart() const
+DVertex<T>::IteratorType DVertex<T>::EdgeStart() const
 {
     return _edges.cbegin();
 }
 template <typename T>
-typename set<DEdge<T>>::const_iterator DVertex<T>::EdgeEnd() const
+DVertex<T>::IteratorType DVertex<T>::EdgeEnd() const
 {
     return _edges.cend();
 }
