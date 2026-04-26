@@ -5,12 +5,12 @@ template class Vertex<long, long>;
 template class Vertex<size_t, size_t>;
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex()
-	: _tag(TTag()), _item(TItem()), _cost(numeric_limits<long>::max()), _sum(TItem())
+	: _tag(TTag()), _item(TItem()), _sum(TItem()), _cost(numeric_limits<long>::max())
 {
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag)
-	: _tag(tag), _item(TItem()), _cost(numeric_limits<long>::max()), _sum(TItem())
+	: _tag(tag), _item(TItem()), _sum(TItem()), _cost(numeric_limits<long>::max())
 {
 }
 template <typename TTag, typename TItem>
@@ -20,7 +20,7 @@ Vertex<TTag, TItem>::Vertex(TTag tag, TItem item)
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag, TItem item, map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours)
-	: _tag(tag), _item(item), _cost(numeric_limits<long>::max()), _neighbours(neighbours), _sum(TItem())
+	: _tag(tag), _item(item), _sum(TItem()), _cost(numeric_limits<long>::max()), _neighbours(neighbours)
 {
 }
 template <typename TTag, typename TItem>

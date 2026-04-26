@@ -4160,7 +4160,7 @@ double median(vector<long> &a, vector<long> &b)
 	double result = 0;
 	size_t minIndex = 0, maxIndex = min(a.size(), b.size());
 	size_t count = a.size() + b.size();
-	long i, j;
+	long i = 0, j = 0;
 	if (a.empty() && b.empty())
 		return result;
 	else if (a.empty() && !b.empty())
@@ -4290,7 +4290,6 @@ size_t hIndex(vector<size_t> &citations)
 	 * [3,3,2] => value: 3, count: 2
 	 */
 	for (vector<size_t>::reverse_iterator it = citations.rbegin(); it != citations.rend(); it++)
-	{
 		if (*it != previous)
 		{
 			size_t value = *it;
@@ -4302,7 +4301,6 @@ size_t hIndex(vector<size_t> &citations)
 				result = min(count, value);
 			previous = *it;
 		}
-	}
 	return result;
 }
 /* https://leetcode.com/problems/letter-combinations-of-a-phone-number/
@@ -4321,7 +4319,6 @@ void PhoneKeyLetters(string const &digits, vector<string> &result)
 		{'8', "tuv"},
 		{'9', "wxyz"}};
 	if (!digits.empty())
-	{
 		for (size_t i = 0; i < digits.size();)
 		{
 			vector<string> tmp;
@@ -4359,7 +4356,6 @@ void PhoneKeyLetters(string const &digits, vector<string> &result)
 			}
 			result = tmp;
 		}
-	}
 }
 vector<string> WordBreakDFS(string const &s, set<string> const &words, map<string, vector<string>> &strings)
 {
@@ -4398,7 +4394,6 @@ vector<long> diffWaysToCompute(string input)
 {
 	vector<long> result;
 	for (size_t i = 0; i < input.size(); i++)
-	{
 		if (input[i] == '+' || input[i] == '-' || input[i] == '*')
 		{
 			vector<long> left = diffWaysToCompute(input.substr(0, i));
@@ -4418,7 +4413,6 @@ vector<long> diffWaysToCompute(string input)
 						break;
 					}
 		}
-	}
 	if (result.empty())
 	{
 		long i;
@@ -4446,7 +4440,6 @@ string GetHint(string const &secret, string const &guess)
 	for (size_t i = 0; i < secret.size(); i++)
 		counts[secret[i]]++;
 	for (size_t i = 0; i < secret.size(); i++)
-	{
 		if (secret[i] == guess[i])
 		{
 			bulls++;
@@ -4458,7 +4451,6 @@ string GetHint(string const &secret, string const &guess)
 			counts[guess[i]]--;
 			cows++;
 		}
-	}
 	ostringstream oss;
 	oss << bulls << "A" << cows << "B";
 	return oss.str();
