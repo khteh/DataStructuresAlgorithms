@@ -167,7 +167,7 @@ void Node<T>::SetNext(shared_ptr<Node<T>> node)
 {
 	_next = node;
 	// if (node)
-	//	node->SetPrevious(this->shared_from_this());
+	//	node->SetPrevious(this->shared_from_this()); Let application code decide on this.
 	_adjacents.insert(node);
 }
 

@@ -1224,6 +1224,15 @@ int main(int argc, char *argv[])
 	for (vector<shared_ptr<Node<string>>>::iterator it = path.begin(); it != path.end(); it++)
 		cout << (*it)->Item() << " ";
 	cout << endl;
+	path.clear();
+	nodeA.reset();
+	nodeB.reset();
+	nodeC.reset();
+	nodeD.reset();
+	nodeE.reset();
+	nodeF.reset();
+	nodeG.reset();
+	nodeH.reset();
 	data.clear();
 	data = {1, 0, 1, 1, 0, 0, 0};
 	assert(findMinFlip(data) == 1);
@@ -1993,6 +2002,7 @@ int main(int argc, char *argv[])
 			 {192, 174, 272},
 			 {153, 50, 348}};
 	// assert("100001110110101101000110111011110000000000001100010011111101010011010111100110011001001000101100001000110111110011111010001111101000101011100001110110101001011011111111011110101000100100011010000001110110001000110000100010011001101001100011101100100101001101111000001110000000100111000010001111110111100010111010011111111011111101111111110011111101111" == RoadsInHackerland(300, edges));
+	edges.clear();
 	multimap<int, string> mmap = {{123, "123"}, {456, "456"}, {123, "789"}};
 	for (multimap<int, string>::iterator it = mmap.begin(); it != mmap.end(); it++)
 		cout << it->first << ": " << it->second << endl;
