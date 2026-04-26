@@ -2490,10 +2490,12 @@ Indirect leak of 48 byte(s) in 1 object(s) allocated from:
 	lNode2->SetPrevious(lNode1); // Indirect leak of 48 byte(s) in 1 object(s)
 	shared_ptr<Node<long>> lNode3 = make_shared<Node<long>>(3);
 	shared_ptr<Node<long>> lNode4 = make_shared<Node<long>>(4);
-	std::set<std::shared_ptr<Node<long>>> nodeSet{lNode3};
-	nodeSet.insert(lNode4);
+	shared_ptr<Node<long>> lNode5 = make_shared<Node<long>>(5);
+	// std::set<std::shared_ptr<Node<long>>> nodeSet{lNode3};
+	// nodeSet.insert(lNode4);
 	lNode3->SetNext(lNode4);
 	// lNode3->SetNext(lNode3);
+	lNode4->SetNext(lNode5);
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

@@ -11,7 +11,7 @@ class DVertex
 public:
     DVertex(T);
     DVertex(T, long);
-    DVertex(shared_ptr<DVertex<T>>, long);
+    DVertex(weak_ptr<DVertex<T>>, long);
     void AddEdge(shared_ptr<DVertex<T>>, long);
     void UpdatePreviousVertex(shared_ptr<DVertex<T>>, long);
     void UpdateCost(long);
@@ -30,7 +30,7 @@ public:
 private:
     T _value;
     set<DEdge<T>> _edges;
-    shared_ptr<DVertex<T>> _previous;
+    weak_ptr<DVertex<T>> _previous;
     long _cost; // Accumulated cost up to this vertex
 };
 template <typename T>

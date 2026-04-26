@@ -15,16 +15,16 @@ template class Dijkstra<string>;
  */
 ////////////////////////////////// DVertex<T> //////////////////////////////////////////////////
 template <typename T>
-DVertex<T>::DVertex(T value) : _value(value), _previous(nullptr), _cost(numeric_limits<long>::max())
+DVertex<T>::DVertex(T value) : _value(value), _previous({}), _cost(numeric_limits<long>::max())
 {
 }
 template <typename T>
-DVertex<T>::DVertex(T value, long cost) : _value(value), _previous(nullptr), _cost(cost)
+DVertex<T>::DVertex(T value, long cost) : _value(value), _previous({}), _cost(cost)
 {
 }
 
 template <typename T>
-DVertex<T>::DVertex(shared_ptr<DVertex<T>> previous, long cost) : _previous(previous), _cost(cost)
+DVertex<T>::DVertex(weak_ptr<DVertex<T>> previous, long cost) : _previous(previous), _cost(cost)
 {
 }
 template <typename T>
@@ -90,7 +90,7 @@ void DVertex<T>::UpdateCost(long cost)
 template <typename T>
 shared_ptr<DVertex<T>> DVertex<T>::PreviousVertex() const
 {
-    return _previous;
+    return _previous.lock();
 }
 template <typename T>
 long DVertex<T>::Cost() const
