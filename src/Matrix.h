@@ -11,7 +11,25 @@ typedef struct PathResult
 	long sum;
 	string path;
 } pathResult_t;
+class Cluster
+{
+private:
+	size_t _size;
+	shared_ptr<Node<string>> _head, _tail;
 
+public:
+	Cluster();
+	~Cluster();
+	void AddNode(string);
+	void Clear();
+	size_t Size() const;
+	shared_ptr<Node<string>> Head() const;
+	shared_ptr<Node<string>> Tail() const;
+	// Implement += first for efficiency
+	Cluster &operator+=(const Cluster &);
+	// Friend function allows symmetry (LHS + RHS)
+	friend Cluster operator+(Cluster, const Cluster &);
+};
 template <typename T>
 class Matrix
 {
@@ -21,10 +39,10 @@ private:
 	vector<int> _steps = {0, 1, 0, -1, 0} /*four cardinal directions (left, right, up, and down).*/, _diagonals = {-1, -1, 1, 1, -1};
 	void Print(vector<vector<T>> const &) const;
 	bool WordExistsInGrid(vector<vector<char>> &, string const &, long, long, size_t);
-	size_t DisconnectCell(size_t, size_t);
-	size_t DisconnectCellAllDirections(size_t, size_t, set<string> &);
-	size_t DisconnectCellAllDirections_LinkedList(size_t, size_t, shared_ptr<Node<string>> &);
-	size_t DisconnectCellAllDirections_DisjointSet(T, size_t, size_t, DisJointSet<T> &, map<T, size_t> &);
+	size_t DisconnectCell(long, long);
+	size_t DisconnectCellAllDirections(long, long, set<string> &);
+	Cluster DisconnectCellAllDirections_LinkedList(long, long);
+	size_t DisconnectCellAllDirections_DisjointSet(T, long, long, DisJointSet<T> &, map<T, size_t> &);
 	bool TopBottomPathExists(vector<vector<T>> const &, size_t, T);
 
 public:

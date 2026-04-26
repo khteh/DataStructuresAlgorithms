@@ -2681,20 +2681,18 @@ vector<shared_ptr<Node<string>>> shortest_cycle_path(shared_ptr<Node<string>> no
 	{
 		shared_ptr<Node<string>> n = q.front();
 		q.pop_front();
-		for (set<shared_ptr<Node<string>>>::iterator i = n->m_adjacents.begin(); i != n->m_adjacents.end(); i++)
-		{
-			if (!parents.count(*i))
+		for (set<shared_ptr<Node<string>>>::const_iterator it = n->AdjacentsStart(); it != n->AdjacentsEnd(); it++)
+			if (!parents.count(*it))
 			{
-				parents.emplace(*i, n);
-				if (*i == node)
+				parents.emplace(*it, n);
+				if (*it == node)
 				{
 					q.clear();
 					break;
 				}
 				else
-					q.push_back(*i);
+					q.push_back(*it);
 			}
-		}
 	}
 	// Build path
 	vector<shared_ptr<Node<string>>> path;
@@ -5648,7 +5646,7 @@ size_t MatrixPerimeter(vector<vector<size_t>> &area, vector<string> &grid)
 {
 	if (grid.empty() || area.empty() || area.size() < 2 || area[0].size() < 2)
 		return 0;
-	size_t r1 = area[0][0], c1 = area[0][1], r2 = area[1][0], c2 = area[1][1];
+	long r1 = area[0][0], c1 = area[0][1], r2 = area[1][0], c2 = area[1][1];
 	if (r1 < 0 || c1 < 0 || r2 < 0 || c2 < 0 || r2 < r1 || c2 < c1 || r2 >= grid.size() || c2 >= grid[0].size())
 		return 0;
 	size_t width = c2 - c1 + 1;

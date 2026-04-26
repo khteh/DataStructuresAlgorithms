@@ -51,7 +51,7 @@ void Vertex<TTag, TItem>::RemoveNeighbour(shared_ptr<Vertex<TTag, TItem>> to)
 {
 	if (to && _neighbours.count(to))
 	{
-		// to->RemoveNeighbour(this->shared_from_this()); // This will result in circular call tree
+		// to->RemoveNeighbour(this->shared_from_this()); This will result in circular call tree
 		_neighbours.erase(to);
 	}
 }

@@ -4,7 +4,13 @@ TEST(BinaryTreeTests, BinaryTreeTest)
 {
 	vector<string> result;
 	Tree<long> tree(50);
+	shared_ptr<Node<long>> n = tree.Root();
+	assert(n);
+	tree.PrintTree();
 	tree.InsertItem(-100);
+	shared_ptr<Node<long>> left = n->Left();
+	assert(n->Left());
+	tree.PrintTree();
 	tree.InsertItem(0);
 	tree.InsertItem(10);
 	tree.InsertItem(-50);
@@ -12,6 +18,7 @@ TEST(BinaryTreeTests, BinaryTreeTest)
 	tree.InsertItem(100);
 	tree.InsertItem(75);
 	tree.InsertItem(150);
+	tree.PrintTree();
 	ASSERT_EQ(9, tree.Count());
 	Tree<long> subtree((long)0);
 	subtree.InsertItem(-50);

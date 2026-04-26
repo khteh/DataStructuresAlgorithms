@@ -44,7 +44,7 @@ void LinkedList<T>::LoadData(vector<T> const &data)
 		{
 			shared_ptr<Node<T>> n = make_shared<Node<T>>(*it);
 			tail->SetNext(n);	  // Point the existing tail to this new node
-			n->SetPrevious(tail); // Point the new node to to existing tail as parent.
+			n->SetPrevious(tail); // Point the new node to to existing tail as parent. This is done in SetNext
 			tail = n;
 		}
 	}
@@ -109,7 +109,7 @@ void LinkedList<T>::SplitList(shared_ptr<Node<T>> &even, shared_ptr<Node<T>> &od
 			else
 			{
 				evenTail->SetNext(node);
-				node->SetPrevious(evenTail);
+				node->SetPrevious(evenTail); // This is done in SetNext
 			}
 			evenTail = node;
 		}
@@ -120,7 +120,7 @@ void LinkedList<T>::SplitList(shared_ptr<Node<T>> &even, shared_ptr<Node<T>> &od
 			else
 			{
 				oddTail->SetNext(node);
-				node->SetPrevious(oddTail);
+				node->SetPrevious(oddTail); // This is done in SetNext
 			}
 			oddTail = node;
 		}
@@ -202,7 +202,7 @@ void LinkedList<T>::MoveHead2Tail()
 		if (newHead && tail)
 		{
 			tail->SetNext(_head);
-			_head->SetPrevious(tail);
+			_head->SetPrevious(tail); // This is done in SetNext
 			_head->SetNext(nullptr);
 			_head = newHead;
 		}
@@ -219,7 +219,7 @@ void LinkedList<T>::MoveItem2Tail(T item)
 		shared_ptr<Node<T>> next = n->Next();
 		n->SetNext(nullptr);
 		tail->SetNext(n);
-		n->SetPrevious(tail);
+		n->SetPrevious(tail); // This is done in SetNext
 		if (parent)
 			parent->SetNext(next);
 		if (next)
@@ -238,7 +238,7 @@ shared_ptr<Node<T>> LinkedList<T>::AddItem(T item)
 	{
 		shared_ptr<Node<T>> tail = Tail();
 		tail->SetNext(n);
-		n->SetPrevious(tail);
+		n->SetPrevious(tail); // This is done in SetNext
 	}
 	return n;
 }
@@ -281,7 +281,7 @@ void LinkedList<T>::Reverse(size_t start, size_t end)
 				shared_ptr<Node<T>> tmp = head;
 				head = make_shared<Node<T>>(it->Item());
 				head->SetNext(tmp);
-				tmp->SetPrevious(head);
+				tmp->SetPrevious(head); // This is done in SetNext
 			}
 		}
 		if (i == end)

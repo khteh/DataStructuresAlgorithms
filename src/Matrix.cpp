@@ -3,11 +3,72 @@
 template class Matrix<char>;
 template class Matrix<long>;
 template class Matrix<size_t>;
+Cluster::Cluster() : _size(0)
+{
+	Clear();
+}
+Cluster::~Cluster()
+{
+	Clear();
+}
+void Cluster::Clear()
+{
+	_size = 0;
+	_head.reset();
+	_tail.reset();
+}
+size_t Cluster::Size() const { return _size; }
+shared_ptr<Node<string>> Cluster::Head() const { return _head; }
+shared_ptr<Node<string>> Cluster::Tail() const { return _tail; }
+
+void Cluster::AddNode(string item)
+{
+	shared_ptr<Node<string>> n(make_shared<Node<string>>(item));
+	if (!_head)
+	{
+		_head = n;
+		_tail = _head;
+	}
+	else
+	{
+		_tail->SetNext(n);
+		n->SetPrevious(_tail);
+		_tail = n;
+	}
+	_size++;
+}
+// Implement += first for efficiency
+Cluster &Cluster::operator+=(const Cluster &rhs)
+{
+	this->_size += rhs._size;
+	if (rhs._head)
+	{
+		if (!this->_head)
+		{
+			this->_head = rhs._head;
+			this->_tail = rhs._tail;
+		}
+		else
+		{
+			this->_tail->SetNext(rhs._head);
+			rhs._head->SetPrevious(this->_tail);
+			this->_tail = rhs._tail;
+		}
+	}
+	return *this;
+}
+// Friend function allows symmetry (LHS + RHS)
+Cluster operator+(Cluster lhs, const Cluster &rhs)
+{
+	lhs += rhs; // Reuse += logic
+	return lhs; // Return by value
+}
+
 template <typename T>
 Matrix<T>::Matrix() {}
 
 template <typename T>
-Matrix<T>::Matrix(vector<vector<T>> &grid, T active, T inactive) : _grid(grid), _active(active), _inactive(inactive) {}
+Matrix<T>::Matrix(vector<vector<T>> &grid, T active, T inactive) : _active(active), _inactive(inactive), _grid(grid) {}
 
 /*
 * Matrix area sum using bottom-up dynamic programming
@@ -1651,21 +1712,18 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_DFS()
 {
 	size_t result = 0;
 	ostringstream location;
-	set<shared_ptr<LinkedList<string>>> clusters;
+	set<unique_ptr<LinkedList<string>>> clusters;
 	for (size_t i = 0; i < _grid.size(); i++)
 		for (size_t j = 0; j < _grid[0].size(); j++)
 			if (_grid[i][j] == _active)
 			{
-				shared_ptr<Node<string>> node(nullptr);
-				result = max(result, DisconnectCellAllDirections_LinkedList(i, j, node));
-				shared_ptr<Node<string>> n = node;
-				for (; n && n->Previous(); n = n->Previous())
-					;
-				clusters.emplace(make_shared<LinkedList<string>>(n));
+				Cluster cluster = DisconnectCellAllDirections_LinkedList(i, j);
+				result = max(result, cluster.Size());
+				clusters.emplace(make_unique<LinkedList<string>>(cluster.Head()));
 			}
 	cout << clusters.size() << " clusters" << endl;
 	size_t max1 = 0;
-	for (set<shared_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end(); it++)
+	for (set<unique_ptr<LinkedList<string>>>::iterator it = clusters.begin(); it != clusters.end(); it++)
 	{
 		vector<string> d;
 		(*it)->ToVector(d); // This is useful to find matching grids
@@ -1777,7 +1835,7 @@ size_t Matrix<T>::GridClusterCountDFS()
 	return clusters;
 }
 template <typename T>
-size_t Matrix<T>::DisconnectCell(size_t r, size_t c)
+size_t Matrix<T>::DisconnectCell(long r, long c)
 {
 	size_t count = 0;
 	if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
@@ -1792,7 +1850,7 @@ size_t Matrix<T>::DisconnectCell(size_t r, size_t c)
 	return count;
 }
 template <typename T>
-size_t Matrix<T>::DisconnectCellAllDirections(size_t r, size_t c, set<string> &cluster)
+size_t Matrix<T>::DisconnectCellAllDirections(long r, long c, set<string> &cluster)
 {
 	size_t count = 0;
 	ostringstream location;
@@ -1814,38 +1872,30 @@ size_t Matrix<T>::DisconnectCellAllDirections(size_t r, size_t c, set<string> &c
 	}
 	return count;
 }
-
 template <typename T>
-size_t Matrix<T>::DisconnectCellAllDirections_LinkedList(size_t r, size_t c, shared_ptr<Node<string>> &node)
+Cluster Matrix<T>::DisconnectCellAllDirections_LinkedList(long r, long c)
 {
-	size_t count = 0;
+	Cluster cluster;
 	ostringstream location;
 	if (r >= 0 && c >= 0 && r < _grid.size() && c < _grid[r].size() && _grid[r][c] == _active)
 	{
-		count++;
 		_grid[r][c] = _inactive;
 		location.str("");
 		location << r << "," << c;
-		shared_ptr<Node<string>> n(make_shared<Node<string>>(location.str()));
-		if (node)
-		{
-			node->SetNext(n);
-			n->SetPrevious(node);
-		}
-		node = n;
-		count += DisconnectCellAllDirections_LinkedList(r - 1, c, node);
-		count += DisconnectCellAllDirections_LinkedList(r + 1, c, node);
-		count += DisconnectCellAllDirections_LinkedList(r, c - 1, node);
-		count += DisconnectCellAllDirections_LinkedList(r, c + 1, node);
-		count += DisconnectCellAllDirections_LinkedList(r - 1, c - 1, node);
-		count += DisconnectCellAllDirections_LinkedList(r - 1, c + 1, node);
-		count += DisconnectCellAllDirections_LinkedList(r + 1, c - 1, node);
-		count += DisconnectCellAllDirections_LinkedList(r + -1, c + 1, node);
+		cluster.AddNode(location.str());
+		cluster += DisconnectCellAllDirections_LinkedList(r - 1, c);
+		cluster += DisconnectCellAllDirections_LinkedList(r + 1, c);
+		cluster += DisconnectCellAllDirections_LinkedList(r, c - 1);
+		cluster += DisconnectCellAllDirections_LinkedList(r, c + 1);
+		cluster += DisconnectCellAllDirections_LinkedList(r - 1, c - 1);
+		cluster += DisconnectCellAllDirections_LinkedList(r - 1, c + 1);
+		cluster += DisconnectCellAllDirections_LinkedList(r + 1, c - 1);
+		cluster += DisconnectCellAllDirections_LinkedList(r + -1, c + 1);
 	}
-	return count;
+	return cluster;
 }
 template <typename T>
-size_t Matrix<T>::DisconnectCellAllDirections_DisjointSet(T neighbour, size_t r, size_t c, DisJointSet<T> &disjointSet, map<T, size_t> &counts)
+size_t Matrix<T>::DisconnectCellAllDirections_DisjointSet(T neighbour, long r, long c, DisJointSet<T> &disjointSet, map<T, size_t> &counts)
 {
 	size_t count = 0;
 	size_t width = _grid[0].size();

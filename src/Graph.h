@@ -1,7 +1,6 @@
 #pragma once
 #include "Vertex.h"
 using namespace std;
-namespace ranges = std::ranges;
 template <typename TTag, typename TItem>
 class FurthestNode
 {

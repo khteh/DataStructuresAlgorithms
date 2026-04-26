@@ -11,17 +11,17 @@ template class Node<float>;
 template class Node<double>;
 template <typename T>
 Node<T>::Node()
-	: _item(T()), _previous(nullptr), _next(nullptr), _left(nullptr), _right(nullptr)
+	: _item(T()), _left(nullptr), _right(nullptr), _next(nullptr), _previous({}), _parent({})
 {
 }
 template <typename T>
 Node<T>::Node(T item)
-	: _item(item), _previous(nullptr), _next(nullptr), _left(nullptr), _right(nullptr)
+	: _item(item), _left(nullptr), _right(nullptr), _next(nullptr), _previous({}), _parent({})
 {
 }
 template <typename T>
 Node<T>::Node(const Node &node) // Shallow Copy !!! It will have runtime error with create/delete of objects
-	: _item(node._item), _previous(node._previous), _next(node._next), _left(node._left), _right(node._right)
+	: enable_shared_from_this<Node<T>>(), _item(node._item), _left(node._left), _right(node._right), _next(node._next), _previous(node._previous), _parent(node._parent)
 {
 }
 template <typename T>
@@ -32,7 +32,7 @@ Node<T>::Node(Node &&node) // Move constructor
 
 template <typename T>
 Node<T>::Node(const shared_ptr<Node> node) // Shallow Copy !!! It will have runtime error with create/delete of objects
-	: _item(node->_item), _previous(node->_previous), _next(node->_next), _left(node->_left), _right(node->_right)
+	: _item(node->_item), _left(node->_left), _right(node->_right), _next(node->_next), _previous(node->_previous), _parent(node->_parent)
 {
 }
 
@@ -40,11 +40,19 @@ template <typename T>
 Node<T>::~Node()
 {
 	// _item = default(T);
+	_item = T();
+	_left.reset();
+	_right.reset();
+	_parent.reset();
+	_previous.reset();
+	_next.reset();
+	_adjacents.clear();
 }
 template <typename T>
 void Node<T>::Swap(Node<T> &other)
 {
 	swap(_item, other._item);
+	swap(_parent, other._parent);
 	swap(_previous, other._previous);
 	swap(_next, other._next);
 	swap(_left, other._left);
@@ -56,27 +64,41 @@ T Node<T>::Item() const
 	return _item;
 }
 template <typename T>
+shared_ptr<Node<T>> Node<T>::Parent() const
+{
+	return _parent.lock();
+}
+template <typename T>
 shared_ptr<Node<T>> Node<T>::Previous() const
 {
-	return _previous;
+	return _previous.lock();
 }
 template <typename T>
 shared_ptr<Node<T>> Node<T>::Next() const
 {
 	return _next;
 }
-
 template <typename T>
 shared_ptr<Node<T>> Node<T>::Left() const
 {
 	return _left;
 }
-
 template <typename T>
 shared_ptr<Node<T>> Node<T>::Right() const
 {
 	return _right;
 }
+template <typename T>
+Node<T>::IteratorType Node<T>::AdjacentsStart() const
+{
+	return _adjacents.cbegin();
+}
+template <typename T>
+Node<T>::IteratorType Node<T>::AdjacentsEnd() const
+{
+	return _adjacents.cend();
+}
+
 template <typename T>
 T Node<T>::MinSubTreesDifference(shared_ptr<Node<T>> n, T sum, T subtreeSum)
 	requires arithmetic_type<T>
@@ -131,6 +153,11 @@ T Node<T>::Sum() const
 	return sum;
 }
 template <typename T>
+void Node<T>::SetParent(shared_ptr<Node<T>> node)
+{
+	_parent = node;
+}
+template <typename T>
 void Node<T>::SetPrevious(shared_ptr<Node<T>> node)
 {
 	_previous = node;
@@ -139,9 +166,9 @@ template <typename T>
 void Node<T>::SetNext(shared_ptr<Node<T>> node)
 {
 	_next = node;
-	if (node)
-		node->SetPrevious(this->shared_from_this());
-	m_adjacents.insert(node);
+	// if (node)
+	//	node->SetPrevious(this->shared_from_this());
+	_adjacents.insert(node);
 }
 
 template <typename T>
@@ -206,7 +233,8 @@ bool Node<T>::operator==(Node<T> rhs) const
 template <typename T>
 bool Node<T>::operator!=(Node<T> &rhs) const
 {
-	return !(*this == rhs);
+	// return !(*this == rhs);
+	return _item != rhs.Item();
 }
 
 template <typename T>
