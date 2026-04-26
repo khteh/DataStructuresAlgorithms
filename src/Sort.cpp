@@ -589,9 +589,7 @@ void Sort<T>::AlternateSignSortNumbers1(vector<T> &data)
 	bool negative = data[0] < 0;
 	long nextValue;
 	for (size_t outOfOrderPos = 1, i = 1; i < data.size(); i++)
-	{
 		if ((negative && data[i] > 0) || (!negative && data[i] < 0))
-		{
 			if (outOfOrderPos == i)
 			{
 				negative = !negative;
@@ -600,14 +598,15 @@ void Sort<T>::AlternateSignSortNumbers1(vector<T> &data)
 			else
 			{
 				nextValue = data[i];
-				memcpy(&data[outOfOrderPos + 1], /* destination */
-					   &data[outOfOrderPos],	 /* source */
-					   (i - outOfOrderPos) * sizeof(T));
+				/* AddressSanitizer: memcpy-param-overlap
+				 * memmove is designed to handle overlapping regions by copying data to a temporary buffer or choosing a safe copy direction.
+				 */
+				memmove(&data[outOfOrderPos + 1], /* destination */
+						&data[outOfOrderPos],	  /* source */
+						(i - outOfOrderPos) * sizeof(T));
 				data[outOfOrderPos] = nextValue;
 				outOfOrderPos += 2;
 			}
-		}
-	}
 }
 template <typename T>
 bool Sort<T>::LexicographicSort(string s1, string s2)
