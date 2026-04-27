@@ -32,8 +32,8 @@ template <typename T>
 void LinkedList<T>::LoadData(vector<T> const &data)
 {
 	_head.reset();
+	_tail.reset();
 	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
-	{
 		if (!_head)
 		{
 			_head = make_shared<Node<T>>(*it);
@@ -46,7 +46,6 @@ void LinkedList<T>::LoadData(vector<T> const &data)
 			n->SetPrevious(_tail); // Point the new node to to existing tail as parent. This is done in SetNext
 			_tail = n;
 		}
-	}
 }
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::Head()
@@ -162,14 +161,15 @@ bool LinkedList<T>::operator!=(LinkedList<T> &other)
 	return !(*this == other);
 }
 template <typename T>
-bool LinkedList<T>::operator<(LinkedList<T> &other)
+bool LinkedList<T>::operator<=(LinkedList<T> &other)
 {
-	return Length() < other.Length();
+	return Length() <= other.Length();
+	// if constexpr (is_integral_v<T>)
 }
 template <typename T>
-bool LinkedList<T>::operator>(LinkedList<T> &other)
+bool LinkedList<T>::operator>=(LinkedList<T> &other)
 {
-	return Length() > other.Length();
+	return Length() >= other.Length();
 }
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::operator[](size_t index) const
@@ -190,6 +190,7 @@ void LinkedList<T>::Clear()
 		tmp.reset();
 	}
 	_head.reset();
+	_tail.reset();
 }
 template <typename T>
 void LinkedList<T>::MoveHead2Tail()
@@ -574,6 +575,7 @@ template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::SubtractNumbers(shared_ptr<Node<T>> p1, shared_ptr<Node<T>> p2, T carry)
 	requires integral_type<T>
 {
+	// WIP!
 	if (p1 || p2 || carry > T())
 	{
 		shared_ptr<Node<T>> result = make_shared<Node<T>>(carry);
@@ -592,5 +594,6 @@ template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::SubtractNumbers(LinkedList<T> &ll)
 	requires integral_type<T>
 {
+	// WIP!
 	return SubtractNumbers(_head, ll.Head(), T());
 }

@@ -41,8 +41,8 @@ public:
 	void MoveItem2Tail(T);
 	bool operator==(LinkedList<T> &);
 	bool operator!=(LinkedList<T> &);
-	bool operator<(LinkedList<T> &);
-	bool operator>(LinkedList<T> &);
+	bool operator<=(LinkedList<T> &);
+	bool operator>=(LinkedList<T> &);
 	shared_ptr<Node<T>> operator[](size_t) const;
 	// Implement an algorithm to find the nth to last element of a singly linked list.
 	shared_ptr<Node<T>> NthElementFromBack(long);
