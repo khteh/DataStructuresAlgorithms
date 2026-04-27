@@ -6,18 +6,17 @@ template class CircularLinkedList<string>;
 template <typename T>
 CircularLinkedList<T>::CircularLinkedList()
 { // Needed by GoogleTest TEST_P: https://github.com/google/googletest/issues/4965
-	_head.reset();
 }
 template <typename T>
 CircularLinkedList<T>::CircularLinkedList(vector<T> const &data)
 {
 	_head.reset();
-	shared_ptr<Node<T>> tail = nullptr;
+	_tail.reset();
 	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
 		if (!_head)
 		{
 			_head = make_shared<Node<T>>(*it);
-			tail = _head;
+			_tail = _head;
 		}
 		else
 		{
@@ -25,9 +24,9 @@ CircularLinkedList<T>::CircularLinkedList(vector<T> const &data)
 			shared_ptr<Node<T>> n = Find(node);
 			if (!n)
 				n = make_shared<Node<T>>(*it);
-			tail->SetNext(n);
+			_tail->SetNext(n);
 			// n->SetPrevious(tail); Not applicable as the loop start will have 2 parents
-			tail = n;
+			_tail = n;
 		}
 }
 template <typename T>
@@ -69,7 +68,9 @@ void CircularLinkedList<T>::Clear()
 		n = n->Next();
 		tmp.reset();
 	}
+	// XXX: These must be done to prevent base LinkedList destructor from infinite circular loop
 	_head.reset();
+	_tail.reset();
 }
 template <typename T>
 shared_ptr<Node<T>> CircularLinkedList<T>::Find(Node<T> &n)

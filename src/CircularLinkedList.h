@@ -6,6 +6,7 @@ class CircularLinkedList : public LinkedList<T>
 {
 private:
 	using LinkedList<T>::_head;
+	using LinkedList<T>::_tail;
 
 public:
 	CircularLinkedList(); // Needed by GoogleTest TEST_P
