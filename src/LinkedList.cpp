@@ -535,13 +535,43 @@ shared_ptr<Node<T>> LinkedList<T>::RemoveNthElementFromBack(long n) // n starts 
 	prev->SetNext(p1->Next());
 	return prev;
 }
-/* Input:
+/* Input: LSB -> ... -> MSB
  *   p1:   3 -> 1 -> 5
  *   p2:   5 -> 9 -> 2
  * Output: 8 -> 0 -> 8
  */
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::AddNumbers(shared_ptr<Node<T>> p1, shared_ptr<Node<T>> p2, T carry)
+	requires integral_type<T>
+{
+	if (p1 || p2 || carry > T())
+	{
+		unique_ptr<Node<T>> result = make_unique<Node<T>>(carry);
+		if (p1)
+			result->SetItem(result->Item() + p1->Item());
+		if (p2)
+			result->SetItem(result->Item() + p2->Item());
+		carry = result->Item() / 10;
+		result->SetItem(fmod(result->Item(), 10));
+		result->SetNext(AddNumbers(p1 ? p1->Next() : nullptr, p2 ? p2->Next() : nullptr, carry));
+		return result;
+	}
+	return nullptr;
+}
+template <typename T>
+shared_ptr<Node<T>> LinkedList<T>::AddNumbers(LinkedList<T> &ll)
+	requires integral_type<T>
+{
+	return AddNumbers(_head, ll.Head(), T());
+}
+/* Input: LSB -> ... -> MSB
+ * 2 - 9
+ *   p1:   3 -> 1 -> 5
+ *   p2:   5 -> 9 -> 2
+ * Output: 8 -> 0 -> 8
+ */
+template <typename T>
+shared_ptr<Node<T>> LinkedList<T>::SubtractNumbers(shared_ptr<Node<T>> p1, shared_ptr<Node<T>> p2, T carry)
 	requires integral_type<T>
 {
 	if (p1 || p2 || carry > T())
@@ -559,8 +589,8 @@ shared_ptr<Node<T>> LinkedList<T>::AddNumbers(shared_ptr<Node<T>> p1, shared_ptr
 	return nullptr;
 }
 template <typename T>
-shared_ptr<Node<T>> LinkedList<T>::AddNumbers(LinkedList<T> &ll)
+shared_ptr<Node<T>> LinkedList<T>::SubtractNumbers(LinkedList<T> &ll)
 	requires integral_type<T>
 {
-	return AddNumbers(_head, ll.Head(), T());
+	return SubtractNumbers(_head, ll.Head(), T());
 }
