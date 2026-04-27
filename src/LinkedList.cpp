@@ -446,7 +446,6 @@ void LinkedList<T>::RemoveAllDuplicates()
 	// 1,0,0,3,4
 	// 1,0,0,3,3
 	for (shared_ptr<Node<T>> it = _head; it; it = it->Next())
-	{
 		if (it->Next() && it->Item() != it->Next()->Item())
 		{
 			if (foundDuplicate)
@@ -482,7 +481,6 @@ void LinkedList<T>::RemoveAllDuplicates()
 			else
 				previous->SetNext(it);
 		}
-	}
 	if (!head && foundDuplicate)
 		_head = nullptr;
 }
@@ -564,36 +562,4 @@ shared_ptr<Node<T>> LinkedList<T>::AddNumbers(LinkedList<T> &ll)
 	requires integral_type<T>
 {
 	return AddNumbers(_head, ll.Head(), T());
-}
-/* Input: LSB -> ... -> MSB
- * 2 - 9
- *   p1:   3 -> 1 -> 5
- *   p2:   5 -> 9 -> 2
- * Output: 8 -> 0 -> 8
- */
-template <typename T>
-shared_ptr<Node<T>> LinkedList<T>::SubtractNumbers(shared_ptr<Node<T>> p1, shared_ptr<Node<T>> p2, T carry)
-	requires integral_type<T>
-{
-	// WIP!
-	if (p1 || p2 || carry > T())
-	{
-		shared_ptr<Node<T>> result = make_shared<Node<T>>(carry);
-		if (p1)
-			result->SetItem(result->Item() + p1->Item());
-		if (p2)
-			result->SetItem(result->Item() + p2->Item());
-		carry = result->Item() / 10;
-		result->SetItem(fmod(result->Item(), 10));
-		result->SetNext(AddNumbers(p1 ? p1->Next() : nullptr, p2 ? p2->Next() : nullptr, carry));
-		return result;
-	}
-	return nullptr;
-}
-template <typename T>
-shared_ptr<Node<T>> LinkedList<T>::SubtractNumbers(LinkedList<T> &ll)
-	requires integral_type<T>
-{
-	// WIP!
-	return SubtractNumbers(_head, ll.Head(), T());
 }

@@ -12,8 +12,6 @@ protected:
 	void Merge(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> AddNumbers(shared_ptr<Node<T>>, shared_ptr<Node<T>>, T)
 		requires integral_type<T>;
-	shared_ptr<Node<T>> SubtractNumbers(shared_ptr<Node<T>>, shared_ptr<Node<T>>, T)
-		requires integral_type<T>;
 
 public:
 	LinkedList();
@@ -48,7 +46,5 @@ public:
 	shared_ptr<Node<T>> NthElementFromBack(long);
 	shared_ptr<Node<T>> RemoveNthElementFromBack(long);
 	shared_ptr<Node<T>> AddNumbers(LinkedList<T> &)
-		requires integral_type<T>;
-	shared_ptr<Node<T>> SubtractNumbers(LinkedList<T> &)
 		requires integral_type<T>;
 };
