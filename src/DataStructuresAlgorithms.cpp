@@ -4111,51 +4111,53 @@ size_t RomanToNumber(string const &s)
 /*
 * Calculate the median of 2 sorted lists of numbers in O(log (m+n))
 * https://www.geeksforgeeks.org/median-two-sorted-arrays-different-sizes-ologminn-m/
+Objective: a[i+1] >= b[j] && b[j+1] >= a[i]
 Example (Even number of elements):
 1 3 5 7 9
-2 4 6 8 10
+2 4 6 8 10 => 1 2 3 4 [5 6] 7 8 9 10
 
-i: 5 / 2 = 2
-j: (10 + 1) / 2 - 2 = 11 / 2 - 2 = 5 - 2 = 3
+a: 5 / 2 = 2 (i:1)
+b: (10 + 1) / 2 - 2 = 11 / 2 - 2 = 5 - 2 = 3 (j:2)
 left: 5
 right: 5
 
-1 3		5 7 9
-2 4 6	8 10
+1 3		5 7 9 a[i+1] = a[2] = 5
+2 4 6	8 10  b[j] = b[2] = 6  => i++
 	 <-5 (Increase i)
 	 6-> (Decrease j)
-i++: 3
+a++: 3 (i++: 2)
+b: 11/2 - 3 = 5 - 3 = 2 (j:1)
 j: 11 / 2 - 3 = 5 - 3 = 2
-1 3 5   7 9
-2 4     6 8 10
+1 3 5   7 9    a[i+1] = a[3] = 7; a[i] = a[2] = 5
+2 4     6 8 10 b[j] = b[1] = 4; b[j+1] = b[2] = 6
 
-median: (5+6) / 2 = 5.5
+median: average(max(a[i], b[j]) + min(a[i+1], b[j+1])) = average(max(5,4), min(7, 6)) = average(5, 6) = (5+6) / 2 = 5.5
 =================================
 Example (Odd number of elements):
 1 3 5 7 9
 2 4 6 8 10 11
 
-i: 5 / 2 = 2
-j: (11 + 1) / 2 - 2 = 12 / 2 - 2 = 6 - 2 = 4
+a: 5 / 2 = 2 (i:1)
+b: (11 + 1) / 2 - 2 = 12 / 2 - 2 = 6 - 2 = 4 (j:3)
 left: 6
 right: 5
 	left: 5
 	right: 6
 
-1 3		  5  7  9
-2 4 6 8	  10 11
+1 3		  5  7  9 a[i+1] = a[2] = 5
+2 4 6 8	  10 11   b[j] = b[3] = 8 => i++
 		<-5
 		8->
-i++: 3
-j: 12/2 - 3 = 6 - 3 = 3
-1 3 5	7 9
-2 4 6	8 10 11
+a++: 3 (i:2)
+b: 12/2 - 3 = 6 - 3 = 3 (j:2)
+1 3 5	7 9	    a[i+1] = a[3] = 7; a[i] = a[2] = 5
+2 4 6	8 10 11 b[j] = 6; b[j+1] = b[3] = 8
 left: 6
 right: 5
 
-median: Max element in the LEFT (more counts compared to RIGHT): max(5,6) = 6
+median: Max element in the LEFT (more counts compared to RIGHT): max(a[i], b[j]) = max(a[2], b[2]) = max(5,6) = 6
 */
-double median(vector<long> &a, vector<long> &b)
+double SortedListsMedian(vector<long> &a, vector<long> &b)
 {
 	double result = 0;
 	size_t minIndex = 0, maxIndex = min(a.size(), b.size());

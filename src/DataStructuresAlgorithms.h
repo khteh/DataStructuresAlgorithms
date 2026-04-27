@@ -305,7 +305,7 @@ size_t LengthOfLongestUniqueSubstring(string const &);
 string ZigZagConvert(string const &, size_t);
 string NumberToRoman(size_t);
 size_t RomanToNumber(string const &);
-double median(vector<long> &, vector<long> &);
+double SortedListsMedian(vector<long> &, vector<long> &);
 long BasicCalculator(string const &);
 size_t hIndex(vector<size_t> &);
 void PhoneKeyLetters(string const &, vector<string> &);
