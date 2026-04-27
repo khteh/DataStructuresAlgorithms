@@ -479,55 +479,41 @@ INSTANTIATE_TEST_SUITE_P(
 					  b = {2, 4, 6, 8, 10};
 					  assert(median(a, b) == 11 / (double)2);
 					  */
-					  make_tuple(5.5, views::iota(0l, 10l) | std::views::filter([](int n)
-																				{ return (n % 2); }) |
-										  ranges::to<vector<long>>(),
-								 views::iota(1l, 11l) | std::views::filter([](int n)
-																		   { return !(n % 2); }) |
-									 ranges::to<vector<long>>()),
+					  make_tuple(5.5, views::iota(1l, 10l) | views::stride(2) | ranges::to<vector<long>>(),
+								 views::iota(2l, 11l) | views::stride(2) | ranges::to<vector<long>>()),
 					  /*
 						  a = {1, 3, 5, 7, 9};
 						  b = {2, 4, 6, 8, 10, 11};
 						  assert(median(a, b) == 6);
 					  */
-					  make_tuple(6, views::iota(0l, 10l) | std::views::filter([](int n)
-																			  { return (n % 2); }) |
-										ranges::to<vector<long>>(),
+					  make_tuple(6, views::iota(1l, 10l) | views::stride(2) | ranges::to<vector<long>>(),
 								 vector<long>{2, 4, 6, 8, 10, 11}),
 					  /*
 						  a = {1, 3, 5};
 						  b = {2, 4, 6, 8, 10, 11};
 						  assert(median(a, b) == 5);
 					  */
-					  make_tuple(5, vector<long>{1, 3, 5}, vector<long>{2, 4, 6, 8, 10, 11}),
+					  make_tuple(5, views::iota(1l, 6l) | views::stride(2) | ranges::to<vector<long>>(), vector<long>{2, 4, 6, 8, 10, 11}),
 					  /*
 						  a = {1, 3, 5};
 						  b = {2, 4, 6, 8, 10, 11, 13};
 						  assert(median(a, b) == 11 / (double)2);
 					  */
-					  make_tuple(5.5, vector<long>{1, 3, 5}, vector<long>{2, 4, 6, 8, 10, 11, 13}),
+					  make_tuple(5.5, views::iota(1l, 6l) | views::stride(2) | ranges::to<vector<long>>(), vector<long>{2, 4, 6, 8, 10, 11, 13}),
 					  /*
 							a = {1, 3, 5, 7, 9, 11, 13};
 							b = {2, 4, 6, 8};
 							assert(median(a, b) == 6);
 					  */
-					  make_tuple(6, views::iota(0l, 14l) | std::views::filter([](int n)
-																			  { return (n % 2); }) |
-										ranges::to<vector<long>>(),
-								 views::iota(1l, 10l) | std::views::filter([](int n)
-																		   { return !(n % 2); }) |
-									 ranges::to<vector<long>>()),
+					  make_tuple(6, views::iota(1l, 14l) | views::stride(2) | ranges::to<vector<long>>(),
+								 views::iota(2l, 9l) | views::stride(2) | ranges::to<vector<long>>()),
 					  /*
 							a = {1, 3, 5, 7, 9, 11, 13, 15};
 							b = {2, 4, 6, 8};
 							assert(median(a, b) == (6 + 7) / (double)2);
 					   */
-					  make_tuple(6.5, views::iota(0l, 16l) | std::views::filter([](int n)
-																				{ return (n % 2); }) |
-										  ranges::to<vector<long>>(),
-								 views::iota(1l, 9l) | std::views::filter([](int n)
-																		  { return !(n % 2); }) |
-									 ranges::to<vector<long>>()),
+					  make_tuple(6.5, views::iota(1l, 16l) | views::stride(2) | ranges::to<vector<long>>(),
+								 views::iota(2l, 9l) | views::stride(2) | ranges::to<vector<long>>()),
 					  /*
 							b = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 							assert(median(a, b) == 5);
