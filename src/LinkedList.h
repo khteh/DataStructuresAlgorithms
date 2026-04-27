@@ -6,11 +6,11 @@ template <typename T>
 class LinkedList
 {
 protected:
-	shared_ptr<Node<T>> _head;
+	shared_ptr<Node<T>> _head, _tail;
 	void SetHead(shared_ptr<Node<T>>);
 	shared_ptr<Node<T>> Split(shared_ptr<Node<T>>, size_t);
 	void Merge(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
-	shared_ptr<Node<T>> AddNumbers(shared_ptr<Node<T>>, shared_ptr<Node<T>>, T carry = 0)
+	shared_ptr<Node<T>> AddNumbers(shared_ptr<Node<T>>, shared_ptr<Node<T>>, T)
 		requires integral_type<T>;
 
 public:

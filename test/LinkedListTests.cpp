@@ -136,7 +136,7 @@ INSTANTIATE_TEST_SUITE_P(
 	LinkedListRemoveNthElementFromBackTests,
 	LinkedListRemoveNthElementFromBackTestFixture,
 	::testing::Values(make_tuple(5, 4, views::iota(0, 10) | ranges::to<vector<size_t>>()), make_tuple(2, 7, views::iota(0, 10) | ranges::to<vector<size_t>>()), make_tuple(1, 8, views::iota(0, 10) | ranges::to<vector<size_t>>())));
-class LinkedListArithmeticTestFixture : public testing::TestWithParam<tuple<vector<size_t>, vector<size_t>, vector<size_t>>>
+class LinkedListArithmeticTestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>, vector<long>>>
 {
 public:
 	void SetUp() override
@@ -147,19 +147,19 @@ public:
 		_ll1.LoadData(_data1);
 		_ll2.LoadData(_data2);
 	}
-	vector<size_t> LinkedListArithmeticTest()
+	vector<long> LinkedListArithmeticTest()
 	{
 		// 0->1->2->3->4->5->6->7->8->9
-		LinkedList<size_t> listAdditionResult(_ll1.AddNumbers(_ll2));
+		LinkedList<long> listAdditionResult(_ll1.AddNumbers(_ll2));
 		_data1.clear();
 		listAdditionResult.ToVector(_data1);
 		return _data1;
 	}
 
 protected:
-	LinkedList<size_t> _ll1, _ll2;
-	vector<size_t> _expected;
-	vector<size_t> _data1, _data2;
+	LinkedList<long> _ll1, _ll2;
+	vector<long> _expected;
+	vector<long> _data1, _data2;
 };
 TEST_P(LinkedListArithmeticTestFixture, LinkedListArithmeticTests)
 {
@@ -168,7 +168,11 @@ TEST_P(LinkedListArithmeticTestFixture, LinkedListArithmeticTests)
 INSTANTIATE_TEST_SUITE_P(
 	LinkedListArithmeticTests,
 	LinkedListArithmeticTestFixture,
-	::testing::Values(make_tuple(vector<size_t>{8 /*LSB*/, 0, 3, 1 /*MSB*/}, vector<size_t>{1 /*LSB*/, 2, 3 /*MSB*/}, vector<size_t>{7 /*LSB*/, 8, 9 /*MSB*/})));
+	::testing::Values(make_tuple(vector<long>{8 /*LSB*/, 0, 3, 1 /*MSB*/}, vector<long>{1 /*LSB*/, 2, 3 /*MSB*/}, vector<long>{7 /*LSB*/, 8, 9 /*MSB*/})
+					  // make_tuple(vector<long>{6 /*LSB*/, 6, 6 /*MSB*/}, vector<long>{1 /*LSB*/, 2, -3 /*MSB*/}, vector<long>{7 /*LSB*/, 8, 9 /*MSB*/}),
+					  // make_tuple(vector<long>{7 /*LSB*/ /*MSB*/}, vector<long>{9 /*LSB*/, 1 /*MSB*/}, vector<long>{2 /*LSB*/, -1 /*MSB*/}),	 // 19 - 12
+					  // make_tuple(vector<long>{-7 /*LSB*/ /*MSB*/}, vector<long>{9 /*LSB*/, -1 /*MSB*/}, vector<long>{2 /*LSB*/, 1 /*MSB*/}) // 12 - 19
+					  ));
 class LinkedListReversalTestFixture : public testing::TestWithParam<tuple<vector<size_t>, size_t, size_t, vector<size_t>>>
 {
 public:

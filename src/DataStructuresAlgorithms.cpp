@@ -3306,16 +3306,14 @@ bool IncreasingTriplet(vector<size_t> &data)
 {
 	vector<size_t> tails;
 	if (!data.empty())
-	{
 		for (vector<size_t>::iterator it = data.begin(); it != data.end(); it++)
 		{
 			vector<size_t>::iterator it1 = lower_bound(tails.begin(), tails.end(), *it); // Look for element >= data[i]
-			if (it1 != tails.end())														 // *it1 > data[i]
+			if (it1 != tails.end())														 // *it1 >= data[i]
 				*it1 = *it;																 // *it1 = data[i]
 			else
 				tails.push_back(*it);
 		}
-	}
 	return tails.size() >= 3;
 }
 // https://stackoverflow.com/questions/6877249/find-the-number-of-occurrences-of-a-subsequence-in-a-string

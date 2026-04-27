@@ -9,12 +9,12 @@ template class LinkedList<float>;
 template class LinkedList<double>;
 template <typename T>
 LinkedList<T>::LinkedList()
-	: _head(nullptr)
+	: _head(nullptr), _tail(nullptr)
 {
 }
 template <typename T>
 LinkedList<T>::LinkedList(shared_ptr<Node<T>> n)
-	: _head(n)
+	: _head(n), _tail(n)
 {
 }
 
@@ -32,20 +32,19 @@ template <typename T>
 void LinkedList<T>::LoadData(vector<T> const &data)
 {
 	_head.reset();
-	shared_ptr<Node<T>> tail = nullptr;
 	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
 		if (!_head)
 		{
 			_head = make_shared<Node<T>>(*it);
-			tail = _head;
+			_tail = _head;
 		}
 		else
 		{
 			shared_ptr<Node<T>> n = make_shared<Node<T>>(*it);
-			tail->SetNext(n);	  // Point the existing tail to this new node
-			n->SetPrevious(tail); // Point the new node to to existing tail as parent. This is done in SetNext
-			tail = n;
+			_tail->SetNext(n);	   // Point the existing tail to this new node
+			n->SetPrevious(_tail); // Point the new node to to existing tail as parent. This is done in SetNext
+			_tail = n;
 		}
 	}
 }
