@@ -538,6 +538,12 @@ shared_ptr<Node<T>> LinkedList<T>::RemoveNthElementFromBack(long n) // n starts 
  *   p1:   3 -> 1 -> 5
  *   p2:   5 -> 9 -> 2
  * Output: 8 -> 0 -> 8
+ *
+ * 32 -> 54
+ * 76 -> 98
+ * 	      1
+ * ---------
+ * 08    153 <= XXX: 08 will be mistakenly interpreted as octal number in integral type.
  */
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::AddNumbers(shared_ptr<Node<T>> p1, shared_ptr<Node<T>> p2, T carry)
