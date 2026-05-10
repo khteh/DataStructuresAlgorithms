@@ -1,22 +1,8 @@
 #include "pch.h"
 using namespace std;
-TEST(StringPermutationTests, StringPermutationTest)
+TEST(StringPermutationTests, OrderedMergedCombinationsTest)
 {
-    Permutation<string> permutation;
     set<string> permutations;
-    permutations = permutation.Permute("abc");
-    ASSERT_EQ(6, permutations.size());
-    ASSERT_EQ(1, permutations.count("abc"));
-    ASSERT_EQ(1, permutations.count("bac"));
-    ASSERT_EQ(1, permutations.count("bca"));
-    ASSERT_EQ(1, permutations.count("acb"));
-    ASSERT_EQ(1, permutations.count("cba"));
-    ASSERT_EQ(1, permutations.count("cab"));
-    cout << "permutations of \"abc\" are: ";
-    ranges::copy(permutations, ostream_iterator<string>(cout, " "));
-    cout << endl;
-    permutations.clear();
-
     OrderedMergedCombinations(permutations, string("Hey"), string("Bob"), string(""));
     cout << "Ordered permutations of \"HeyBob\" are: ";
     ranges::copy(permutations, ostream_iterator<string>(cout, " "));
@@ -43,6 +29,32 @@ TEST(StringPermutationTests, StringPermutationTest)
     ASSERT_EQ(1, permutations.count("BHeoyb"));
     ASSERT_EQ(1, permutations.count("BHeyob"));
 }
+class StringPermutationTestFixture : public testing::TestWithParam<tuple<set<string>, string>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _str = get<1>(GetParam());
+    }
+    set<string> StringPermutationTest()
+    {
+        return _permutation.Permute(_str);
+    }
+
+protected:
+    Permutation<string> _permutation;
+    set<string> _expected;
+    string _str;
+};
+TEST_P(StringPermutationTestFixture, StringPermutationTests)
+{
+    ASSERT_EQ(this->_expected, this->StringPermutationTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    StringPermutationTests,
+    StringPermutationTestFixture,
+    ::testing::Values(make_tuple(set<string>{"abc", "bac", "bca", "acb", "cba", "cab"}, "abc")));
 class AbsolutePermutationTestFixture : public testing::TestWithParam<tuple<vector<long>, size_t, size_t>>
 {
 public:
