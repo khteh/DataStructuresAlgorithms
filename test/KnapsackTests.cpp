@@ -150,53 +150,54 @@ INSTANTIATE_TEST_SUITE_P(
 	CoinsChangeFewestCoinsDynamicProgrammingTests,
 	CoinsChangeFewestCoinsDynamicProgrammingTestFixture,
 	::testing::Values(make_tuple(3, 11, vector<size_t>{1, 2, 5}), make_tuple(2, 10, vector<size_t>{1, 2, 5}), make_tuple(-1, 3, vector<size_t>{2}), make_tuple(0, 0, vector<size_t>{1}), make_tuple(1, 1, vector<size_t>{1}), make_tuple(2, 2, vector<size_t>{1})));
-class StairsClimbingDynamicProgrammingTestFixture : public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
+class StairsClimbingDynamicProgrammingTestFixture
 {
 public:
-	void SetUp() override
+	void SetUp(size_t expected, long amount, vector<size_t> data)
 	{
-		_expected = get<0>(GetParam());
-		_amount = get<1>(GetParam());
-		_coins = get<2>(GetParam());
-	}
-	size_t StairsClimbingDynamicProgrammingTest()
-	{
-		return _knapsack.StairsClimbingDynamicProgramming(_amount, _coins);
+		_expected = expected;
+		_amount = amount;
+		_data = data;
 	}
 
 protected:
 	Knapsack _knapsack;
 	size_t _expected;
 	long _amount;
-	vector<size_t> _coins;
+	vector<size_t> _data;
 };
-TEST_P(StairsClimbingDynamicProgrammingTestFixture, StairsClimbingDynamicProgrammingTests)
-{
-	ASSERT_EQ(this->_expected, this->StairsClimbingDynamicProgrammingTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	StairsClimbingDynamicProgrammingTests,
-	StairsClimbingDynamicProgrammingTestFixture,
-	::testing::Values(make_tuple(13, 6, vector<size_t>{1, 2}), make_tuple(24, 6, vector<size_t>{1, 2, 3})));
-class StairsClimbingDynamicProgrammingBottomUpTestFixture : public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
+
+class StairsClimbingDynamicProgrammingTopDownTestFixture : public StairsClimbingDynamicProgrammingTestFixture, public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
 {
 public:
 	void SetUp() override
 	{
-		_expected = get<0>(GetParam());
-		_amount = get<1>(GetParam());
-		_coins = get<2>(GetParam());
+		StairsClimbingDynamicProgrammingTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+	size_t StairsClimbingDynamicProgrammingTopDownTest()
+	{
+		return _knapsack.StairsClimbingDynamicProgramming(_amount, _data);
+	}
+};
+TEST_P(StairsClimbingDynamicProgrammingTopDownTestFixture, StairsClimbingDynamicProgrammingTopDownTestTests)
+{
+	ASSERT_EQ(this->_expected, this->StairsClimbingDynamicProgrammingTopDownTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	StairsClimbingDynamicProgrammingTopDownTestTests,
+	StairsClimbingDynamicProgrammingTopDownTestFixture,
+	::testing::Values(make_tuple(13, 6, vector<size_t>{1, 2}), make_tuple(24, 6, vector<size_t>{1, 2, 3})));
+class StairsClimbingDynamicProgrammingBottomUpTestFixture : public StairsClimbingDynamicProgrammingTestFixture, public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		StairsClimbingDynamicProgrammingTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
 	size_t StairsClimbingDynamicProgrammingBottomUpTest()
 	{
-		return _knapsack.StairsClimbingDynamicProgrammingBottomUp(_amount, _coins);
+		return _knapsack.StairsClimbingDynamicProgrammingBottomUp(_amount, _data);
 	}
-
-protected:
-	Knapsack _knapsack;
-	size_t _expected;
-	long _amount;
-	vector<size_t> _coins;
 };
 TEST_P(StairsClimbingDynamicProgrammingBottomUpTestFixture, StairsClimbingDynamicProgrammingBottomUpTests)
 {
