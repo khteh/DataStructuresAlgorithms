@@ -15,7 +15,7 @@ i:3	L	0	0	1	1	1	1
 i:4	L	0	0	1	1	1	1
 i:5	Y	0	0	1	1	1	2
 */
-template<typename T>
+template <typename T>
 size_t LongestCommonSubsequence<T>::LCSLength(string &s1, string &s2)
 {
 	s1.insert(0, 1, 0);
@@ -26,8 +26,8 @@ size_t LongestCommonSubsequence<T>::LCSLength(string &s1, string &s2)
 			table[i][j] = s1[i] == s2[j] ? table[i - 1][j - 1] + 1 : max(table[i - 1][j], table[i][j - 1]);
 	return table[s1.size() - 1][s2.size() - 1];
 }
-template<typename T>
-size_t LongestCommonSubsequence<T>::LCSLength(vector<vector<size_t>>& table, string& s1, string& s2)
+template <typename T>
+size_t LongestCommonSubsequence<T>::LCSLength(vector<vector<size_t>> &table, string &s1, string &s2)
 {
 	for (size_t i = 1; i < s1.size(); i++)
 		for (size_t j = 1; j < s2.size(); j++)
@@ -35,7 +35,18 @@ size_t LongestCommonSubsequence<T>::LCSLength(vector<vector<size_t>>& table, str
 	return table[s1.size() - 1][s2.size() - 1];
 }
 template <typename T>
-size_t LongestCommonSubsequence<T>::LCSLength(vector<T>& n1, vector<T>& n2)
+tuple<size_t, string> LongestCommonSubsequence<T>::LCSLengthWithBackTrack(string &s1, string &s2)
+{
+	s1.insert(0, 1, 0);
+	s2.insert(0, 1, 0);
+	vector<vector<size_t>> table(s1.size(), vector<size_t>(s2.size())); // Defaults to zero initial value
+	size_t length = LCSLength(table, s1, s2);
+	string common = LCSBackTrack(table, s1, s2, s1.size() - 1, s2.size() - 1);
+	assert(length == common.size());
+	return make_tuple(length, common);
+}
+template <typename T>
+size_t LongestCommonSubsequence<T>::LCSLength(vector<T> &n1, vector<T> &n2)
 {
 	n1.insert(n1.begin(), 0);
 	n2.insert(n2.begin(), 0);
@@ -46,7 +57,7 @@ size_t LongestCommonSubsequence<T>::LCSLength(vector<T>& n1, vector<T>& n2)
 	return table[n1.size() - 1][n2.size() - 1];
 }
 template <typename T>
-size_t LongestCommonSubsequence<T>::LCSLength(vector<vector<size_t>>& table, vector<T>& n1, vector<T>& n2)
+size_t LongestCommonSubsequence<T>::LCSLength(vector<vector<size_t>> &table, vector<T> &n1, vector<T> &n2)
 {
 	for (size_t i = 1; i < n1.size(); i++)
 		for (size_t j = 1; j < n2.size(); j++)
@@ -54,7 +65,18 @@ size_t LongestCommonSubsequence<T>::LCSLength(vector<vector<size_t>>& table, vec
 	return table[n1.size() - 1][n2.size() - 1];
 }
 template <typename T>
-string LongestCommonSubsequence<T>::LCSBackTrack(vector<vector<size_t>>& table, string& s1, string& s2, size_t i, size_t j)
+tuple<size_t, vector<T>> LongestCommonSubsequence<T>::LCSLengthWithBackTrack(vector<T> &n1, vector<T> &n2)
+{
+	n1.insert(n1.begin(), 0);
+	n2.insert(n2.begin(), 0);
+	vector<vector<size_t>> table(n1.size(), vector<size_t>(n2.size())); // Defaults to zero initial value
+	size_t length = LCSLength(table, n1, n2);
+	vector<T> common = LCSBackTrack(table, n1, n2, n1.size() - 1, n2.size() - 1);
+	assert(length == common.size());
+	return make_tuple(length, common);
+}
+template <typename T>
+string LongestCommonSubsequence<T>::LCSBackTrack(vector<vector<size_t>> &table, string &s1, string &s2, size_t i, size_t j)
 {
 	if (!i || !j)
 		return "";
@@ -63,7 +85,7 @@ string LongestCommonSubsequence<T>::LCSBackTrack(vector<vector<size_t>>& table, 
 	return table[i][j - 1] > table[i - 1][j] ? LCSBackTrack(table, s1, s2, i, j - 1) : LCSBackTrack(table, s1, s2, i - 1, j);
 }
 template <typename T>
-vector<T> LongestCommonSubsequence<T>::LCSBackTrack(vector<vector<size_t>>& table, vector<T>& n1, vector<T>& n2, size_t i, size_t j)
+vector<T> LongestCommonSubsequence<T>::LCSBackTrack(vector<vector<size_t>> &table, vector<T> &n1, vector<T> &n2, size_t i, size_t j)
 {
 	vector<T> result;
 	if (!i || !j)
@@ -77,7 +99,7 @@ vector<T> LongestCommonSubsequence<T>::LCSBackTrack(vector<vector<size_t>>& tabl
 	return table[i][j - 1] > table[i - 1][j] ? LCSBackTrack(table, n1, n2, i, j - 1) : LCSBackTrack(table, n1, n2, i - 1, j);
 }
 template <typename T>
-void LongestCommonSubsequence<T>::LCSPrintDiff(vector<vector<size_t>>& table, string& s1, string& s2, long i, long j)
+void LongestCommonSubsequence<T>::LCSPrintDiff(vector<vector<size_t>> &table, string &s1, string &s2, long i, long j)
 {
 	if (i > 0 && j > 0 && s1[i] == s2[j])
 	{
@@ -96,7 +118,7 @@ void LongestCommonSubsequence<T>::LCSPrintDiff(vector<vector<size_t>>& table, st
 	}
 }
 template <typename T>
-void LongestCommonSubsequence<T>::LCSPrintDiff(vector<vector<size_t>>& table, vector<T>& n1, vector<T>& n2, long i, long j)
+void LongestCommonSubsequence<T>::LCSPrintDiff(vector<vector<size_t>> &table, vector<T> &n1, vector<T> &n2, long i, long j)
 {
 	if (i > 0 && j > 0 && n1[i] == n2[j])
 	{
