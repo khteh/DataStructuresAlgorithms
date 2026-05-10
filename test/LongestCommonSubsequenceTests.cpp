@@ -1,111 +1,119 @@
 #include "pch.h"
 using namespace std;
-TEST(LongestCommonSubsequenceTests, LongestCommonSubStringsTests)
+class LongestCommonSubsequenceTestFixture : public testing::TestWithParam<tuple<size_t, string, string>>
 {
-	LongestCommonSubsequence<char> lcs;
-	string s1, s2;
-	s1 = "HARRY";
-	s2 = "SALLY";
-	ASSERT_EQ(2, lcs.LCSLength(s1, s2));
-	s1 = "SHINCHAN";
-	s2 = "NOHARAAA";
-	ASSERT_EQ(3, lcs.LCSLength(s1, s2));
-	s1 = "ABCDEF";
-	s2 = "FBDAMN";
-	ASSERT_EQ(2, lcs.LCSLength(s1, s2));
-	s1 = "WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS";
-	s2 = "FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC";
-	ASSERT_EQ(15, lcs.LCSLength(s1, s2));
-	s1 = "HARRY";
-	s2 = "SALLY";
-	s1.insert(0, 1, 0);
-	s2.insert(0, 1, 0);
-	vector<vector<size_t>> table(s1.size(), vector<size_t>(s2.size())); // Defaults to zero initial value
-	ASSERT_EQ(2, lcs.LCSLength(table, s1, s2));
-	ASSERT_EQ("AY", lcs.LCSBackTrack(table, s1, s2, s1.size() - 1, s2.size() - 1));
-	lcs.LCSPrintDiff(table, s1, s2, s1.size() - 1, s2.size() - 1);
-	cout << endl;
-	s1 = "SHINCHAN";
-	s2 = "NOHARAAA";
-	s1.insert(0, 1, 0);
-	s2.insert(0, 1, 0);
-	vector<vector<size_t>> table1(s1.size(), vector<size_t>(s2.size())); // Defaults to zero initial value
-	ASSERT_EQ(3, lcs.LCSLength(table1, s1, s2));
-	ASSERT_EQ("NHA", lcs.LCSBackTrack(table1, s1, s2, s1.size() - 1, s2.size() - 1));
-	s1 = "ABCDEF";
-	s2 = "FBDAMN";
-	s1.insert(0, 1, 0);
-	s2.insert(0, 1, 0);
-	vector<vector<size_t>> table2(s1.size(), vector<size_t>(s2.size())); // Defaults to zero initial value
-	ASSERT_EQ(2, lcs.LCSLength(table2, s1, s2));
-	ASSERT_EQ("BD", lcs.LCSBackTrack(table2, s1, s2, s1.size() - 1, s2.size() - 1));
-	s1 = "aa";
-	s2 = "baaa";
-	s1.insert(0, 1, 0);
-	s2.insert(0, 1, 0);
-	vector<vector<size_t>> table3(s1.size(), vector<size_t>(s2.size())); // Defaults to zero initial value
-	ASSERT_EQ(2, lcs.LCSLength(table3, s1, s2));
-	ASSERT_EQ("aa", lcs.LCSBackTrack(table3, s1, s2, s1.size() - 1, s2.size() - 1));
-	lcs.LCSPrintDiff(table3, s1, s2, s1.size() - 1, s2.size() - 1);
-	cout << endl;
-	s1 = "WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS";
-	s2 = "FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC";
-	s1.insert(0, 1, 0);
-	s2.insert(0, 1, 0);
-	vector<vector<size_t>> table4(s1.size(), vector<size_t>(s2.size())); // Defaults to zero initial value
-	ASSERT_EQ(15, lcs.LCSLength(table4, s1, s2));
-	ASSERT_EQ("DGCGTRMZJRBAJJV", lcs.LCSBackTrack(table4, s1, s2, s1.size() - 1, s2.size() - 1));
-	s1 = "abacba";
-	s2 = "abcaba";
-	s1.insert(0, 1, 0);
-	s2.insert(0, 1, 0);
-	vector<vector<size_t>> table6(s1.size(), vector<size_t>(s2.size())); // Defaults to zero initial value
-	ASSERT_EQ(5, lcs.LCSLength(table6, s1, s2));
-	ASSERT_EQ("ababa", lcs.LCSBackTrack(table6, s1, s2, s1.size() - 1, s2.size() - 1));
-	lcs.LCSPrintDiff(table6, s1, s2, s1.size() - 1, s2.size() - 1);
-	cout << endl;
-}
-TEST(LongestCommonSubsequenceTests, LongestCommonSubSequenceTests)
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data1 = get<1>(GetParam());
+		_data2 = get<2>(GetParam());
+	}
+	size_t LongestCommonSubsequenceTest()
+	{
+		return _lcs.LCSLength(_data1, _data2);
+	}
+
+protected:
+	LongestCommonSubsequence<char> _lcs;
+	size_t _expected;
+	string _data1, _data2;
+};
+TEST_P(LongestCommonSubsequenceTestFixture, LongestCommonSubsequenceTests)
 {
-	LongestCommonSubsequence<char> lcs;
-	LongestCommonSubsequence<size_t> lcs1;
-	vector<char> chars1, chars2;
-	vector<size_t> num1, num2, result;
-	string s1 = "HARRY";
-	string s2 = "SALLY";
-	chars1.insert(chars1.end(), s1.begin(), s1.end());
-	chars2.insert(chars2.end(), s2.begin(), s2.end());
-	ASSERT_EQ(2, lcs.LCSLength(chars1, chars2));
-
-	s1 = "WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS";
-	s2 = "FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC";
-	s1.insert(0, 1, 0);
-	s2.insert(0, 1, 0);
-	chars1.clear();
-	chars2.clear();
-	chars1.insert(chars1.end(), s1.begin(), s1.end());
-	chars2.insert(chars2.end(), s2.begin(), s2.end());
-	vector<vector<size_t>> table1(chars1.size(), vector<size_t>(chars2.size())); // Defaults to zero initial value
-	ASSERT_EQ(15, lcs.LCSLength(table1, chars1, chars2));
-	chars1 = lcs.LCSBackTrack(table1, chars1, chars2, chars1.size() - 1, chars2.size() - 1);
-	s1.clear();
-	s1.insert(s1.end(), chars1.begin(), chars1.end());
-	ASSERT_EQ(s1, "DGCGTRMZJRBAJJV");
-
-	num1 = { 1, 2, 3, 4, 1 };
-	num2 = { 3, 4, 1, 2, 1, 3 };
-	ASSERT_EQ(3, lcs1.LCSLength(num1, num2)); // "1 2 3", "1 2 1", "3 4 1" are all correct answers
-	num1 = { 1, 2, 3, 4, 1 };
-	num2 = { 3, 4, 1, 2, 1, 3 };
-	num1.insert(num1.begin(), 0);
-	num2.insert(num2.begin(), 0);
-	vector<vector<size_t>> table2(num1.size(), vector<size_t>(num2.size())); // Defaults to zero initial value
-	ASSERT_EQ(3, lcs1.LCSLength(table2, num1, num2));						 // "1 2 3", "1 2 1", "3 4 1" are all correct answers
-	result = lcs1.LCSBackTrack(table2, num1, num2, num1.size() - 1, num2.size() - 1);
-	ASSERT_EQ(3, result.size());
-	ASSERT_EQ(1, result[0]);
-	ASSERT_EQ(2, result[1]);
-	ASSERT_EQ(3, result[2]);
-	lcs1.LCSPrintDiff(table2, num1, num2, num1.size() - 1, num2.size() - 1);
-	cout << endl;
+	ASSERT_EQ(this->_expected, this->LongestCommonSubsequenceTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	LongestCommonSubsequenceTests,
+	LongestCommonSubsequenceTestFixture,
+	::testing::Values(make_tuple(2, "HARRY", "SALLY"), make_tuple(3, "SHINCHAN", "NOHARAAA"), make_tuple(2, "ABCDEF", "FBDAMN"), make_tuple(2, "aa", "baaa"), make_tuple(5, "abacba", "abcaba"),
+					  make_tuple(15, "WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS", "FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC")));
+class LongestCommonSubsequenceBackTrackTestFixture : public testing::TestWithParam<tuple<string, string, string>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data1 = get<1>(GetParam());
+		_data2 = get<2>(GetParam());
+		_data1.insert(0, 1, 0);
+		_data2.insert(0, 1, 0);
+	}
+	string LongestCommonSubsequenceBackTrackTest()
+	{
+		vector<vector<size_t>> table(_data1.size(), vector<size_t>(_data2.size())); // Defaults to zero initial value
+		return _lcs.LCSBackTrack(table, _data1, _data2, _data1.size() - 1, _data2.size() - 1);
+	}
+
+protected:
+	LongestCommonSubsequence<char> _lcs;
+	string _expected;
+	string _data1, _data2;
+};
+TEST_P(LongestCommonSubsequenceBackTrackTestFixture, LongestCommonSubsequenceBackTrackTests)
+{
+	ASSERT_EQ(this->_expected, this->LongestCommonSubsequenceBackTrackTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LongestCommonSubsequenceBackTrackTests,
+	LongestCommonSubsequenceBackTrackTestFixture,
+	::testing::Values(make_tuple("AY", "HARRY", "SALLY"), make_tuple("NHA", "SHINCHAN", "NOHARAAA"), make_tuple("BD", "ABCDEF", "FBDAMN"), make_tuple("aa", "aa", "baaa"), make_tuple("ababa", "abacba", "abcaba"),
+					  make_tuple("DGCGTRMZJRBAJJV", "WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS", "FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC")));
+
+class LongestCommonSubsequenceCollectionTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data1 = get<1>(GetParam());
+		_data2 = get<2>(GetParam());
+	}
+	size_t LongestCommonSubsequenceCollectionTest()
+	{
+		return _lcs.LCSLength(_data1, _data2);
+	}
+
+protected:
+	LongestCommonSubsequence<size_t> _lcs;
+	size_t _expected;
+	vector<size_t> _data1, _data2;
+};
+TEST_P(LongestCommonSubsequenceCollectionTestFixture, LongestCommonSubsequenceCollectionTests)
+{
+	ASSERT_EQ(this->_expected, this->LongestCommonSubsequenceCollectionTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LongestCommonSubsequenceCollectionTests,
+	LongestCommonSubsequenceCollectionTestFixture,
+	::testing::Values(make_tuple(3 /*"1 2 3", "1 2 1", "3 4 1" are all correct answers*/, vector<size_t>{1, 2, 3, 4, 1}, vector<size_t>{3, 4, 1, 2, 1, 3})));
+class LongestCommonSubsequenceCollectionBackTrackTestFixture : public testing::TestWithParam<tuple<vector<size_t>, vector<size_t>, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data1 = get<1>(GetParam());
+		_data2 = get<2>(GetParam());
+		_data1.insert(_data1.begin(), 0);
+		_data2.insert(_data2.begin(), 0);
+	}
+	vector<size_t> LongestCommonSubsequenceCollectionBackTrackTest()
+	{
+		vector<vector<size_t>> table(_data1.size(), vector<size_t>(_data2.size())); // Defaults to zero initial value
+		return _lcs.LCSBackTrack(table, _data1, _data2, _data1.size() - 1, _data2.size() - 1);
+	}
+
+protected:
+	LongestCommonSubsequence<size_t> _lcs;
+	vector<size_t> _expected;
+	vector<size_t> _data1, _data2;
+};
+TEST_P(LongestCommonSubsequenceCollectionBackTrackTestFixture, LongestCommonSubsequenceCollectionBackTrackTests)
+{
+	ASSERT_EQ(this->_expected, this->LongestCommonSubsequenceCollectionBackTrackTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LongestCommonSubsequenceCollectionBackTrackTests,
+	LongestCommonSubsequenceCollectionBackTrackTestFixture,
+	::testing::Values(make_tuple(vector<size_t>{1, 2, 3} /*"1 2 3", "1 2 1", "3 4 1" are all correct answers*/, vector<size_t>{1, 2, 3, 4, 1}, vector<size_t>{3, 4, 1, 2, 1, 3})));
