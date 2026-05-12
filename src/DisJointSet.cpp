@@ -55,19 +55,19 @@ T DisJointSet<T>::Union(T x, T y)
 	 */
 	T rootX = Find(x);
 	T rootY = Find(y);
-	if (rootX == numeric_limits<T>::min())
+	if (rootX == numeric_limits<T>::max())
 	{
 		ostringstream oss;
 		oss << x << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << x << ");";
 		throw invalid_argument(oss.str());
 	}
-	if (rootY == numeric_limits<T>::min())
+	if (rootY == numeric_limits<T>::max())
 	{
 		ostringstream oss;
 		oss << y << " is not a disjoint tree! It can be made a disjoint tree by calling DisJointSet.MakeSet(" << y << ");";
 		throw invalid_argument(oss.str());
 	}
-	T root = T();
+	T root = numeric_limits<T>::max(); // Already joined
 	if (rootX != rootY)
 	{
 		// Put smaller ranked item under bigger ranked item if ranks are different. Copying of smaller ranked item saves time!
@@ -89,8 +89,6 @@ T DisJointSet<T>::Union(T x, T y)
 			_rank[rootY]++;
 		}
 	}
-	else
-		root = numeric_limits<T>::min(); // Already joined
 	return root;
 }
 template <typename T>

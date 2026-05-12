@@ -33,7 +33,7 @@ TEST(DisJointSetTests, DisJointSetTest)
 	disjointSet.Print(a);
 	// Put smaller ranked item under bigger ranked item if ranks are different
 	ASSERT_EQ(7, disjointSet.Union(1, 3));							 // 1, 3, 7 root: 7
-	ASSERT_EQ(numeric_limits<long>::min(), disjointSet.Union(1, 7)); // Already joined!
+	ASSERT_EQ(numeric_limits<long>::max(), disjointSet.Union(1, 7)); // Already joined!
 	ASSERT_EQ(1, disjointSet.Rank(1));
 	ASSERT_EQ(1, disjointSet.Rank(3));
 	ASSERT_EQ(1, disjointSet.Rank(7));
