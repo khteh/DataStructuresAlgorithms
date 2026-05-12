@@ -639,7 +639,6 @@ long MaxZeroProductBruteForce(vector<int> const &data)
 	map<int, ZeroFactors>::const_iterator it;
 	vector<ZeroFactors> factors;
 	for (size_t i = 0; i < data.size(); i++)
-	{
 		if (!(data[i] % 10 && data[i] % 2 && data[i] % 5))
 		{
 			it = multipleMap.find(data[i]);
@@ -661,17 +660,13 @@ long MaxZeroProductBruteForce(vector<int> const &data)
 				factors.push_back(factor);
 			}
 		}
-	}
 	if (factors.size() == 1)
 		result = min(factors[0].two, factors[0].five);
 	else if (factors.size() == 2)
 		result = min(factors[0].two + factors[1].two, factors[0].five + factors[1].five);
 	else if (factors.size() > 2)
-	{
 		for (size_t i = 0; i < factors.size() - 2; i++)
-		{
 			for (size_t j = i + 1; j < factors.size() - 1; j++)
-			{
 				for (size_t k = j + 1; k < factors.size(); k++)
 				{
 					long twofactor = factors[i].two + factors[j].two + factors[k].two;
@@ -679,9 +674,6 @@ long MaxZeroProductBruteForce(vector<int> const &data)
 					if (min(twofactor, fivefactor) > result)
 						result = min(twofactor, fivefactor);
 				}
-			}
-		}
-	}
 	return result;
 }
 // XXX: WIP
