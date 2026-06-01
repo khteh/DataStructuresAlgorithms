@@ -205,7 +205,7 @@ size_t GameTheory<T>::NormalPlayNim(vector<T> const &data)
  * 100%
  */
 template <typename T>
-size_t GameTheory<T>::MisèrePlayNim(vector<T> const &data)
+size_t GameTheory<T>::MiserePlayNim(vector<T> const& data)
 {
     // https://docs.microsoft.com/en-us/cpp/parallel/concrt/how-to-perform-map-and-reduce-operations-in-parallel?view=msvc-170
     // https://en.wikipedia.org/wiki/Identity_element

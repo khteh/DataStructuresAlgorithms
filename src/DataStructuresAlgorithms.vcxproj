@@ -30,7 +30,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseInteloneTBB>true</UseInteloneTBB>
     <PreferredToolArchitecture>x64</PreferredToolArchitecture>
@@ -38,7 +38,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseInteloneTBB>true</UseInteloneTBB>
@@ -139,7 +139,7 @@
     <ClInclude Include="LongestCommonSubsequence.h" />
     <ClInclude Include="LRUCache.h" />
     <ClInclude Include="Matrix.h" />
-    <ClInclude Include="MaximizeStockProfits.h"/>
+    <ClInclude Include="MaximizeStockProfits.h" />
     <ClInclude Include="MyQueue.h" />
     <ClInclude Include="MyStack.h" />
     <ClInclude Include="NameHidingExample.h" />
@@ -191,7 +191,7 @@
     <ClCompile Include="ListRangeSum.cpp" />
     <ClCompile Include="LongestCommonSubsequence.cpp" />
     <ClCompile Include="LRUCache.cpp" />
-    <ClCompile Include="MaximizeStockProfits.cpp"/>
+    <ClCompile Include="MaximizeStockProfits.cpp" />
     <ClCompile Include="Palindrome.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

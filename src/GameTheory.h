@@ -8,7 +8,7 @@ public:
     size_t SnakesAndLaddersGame(vector<vector<T>> const &, vector<vector<T>> const &);
     size_t SnakesAndLaddersGameFast(vector<vector<T>> const &, vector<vector<T>> const &);
     size_t NormalPlayNim(vector<T> const &);
-    size_t MisèrePlayNim(vector<T> const &);
+    size_t MiserePlayNim(vector<T> const &);
     size_t NimbleGame(vector<T> const &);
     bool CounterGame(T n); // long
     string GameOfStones(T);

@@ -110,25 +110,25 @@ INSTANTIATE_TEST_SUITE_P(
                       make_tuple(3, vector<size_t>{1, 1, 1}), // Take 1 from any of the 3 heaps
                       make_tuple(1, vector<size_t>{1, 2, 1}), // Remove 2 from the heap with 2 elements
                       make_tuple(1, vector<size_t>{2, 3})));
-class MisèrePlayNimTestFixture : public NimGameFixture<size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+class MiserePlayNimTestFixture : public NimGameFixture<size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
 {
 public:
     void SetUp() override
     {
         NimGameFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
-    size_t MisèrePlayNimTest()
+    size_t MiserePlayNimTest()
     {
-        return _game.MisèrePlayNim(_data);
+        return _game.MiserePlayNim(_data);
     }
 };
-TEST_P(MisèrePlayNimTestFixture, MisèrePlayNimTests)
+TEST_P(MiserePlayNimTestFixture, MiserePlayNimTests)
 {
-    ASSERT_EQ(this->_expected, this->MisèrePlayNimTest());
+    ASSERT_EQ(this->_expected, this->MiserePlayNimTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-    MisèrePlayNimTests,
-    MisèrePlayNimTestFixture,
+    MiserePlayNimTests,
+    MiserePlayNimTestFixture,
     ::testing::Values(make_tuple(0, vector<size_t>{}),
                       make_tuple(1, vector<size_t>{1}),
                       make_tuple(0, vector<size_t>{1, 1}),
