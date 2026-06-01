@@ -1,0 +1,5 @@
+<Solution>
+	<Project Path="src\DataStructuresAlgorithms.vcxproj" Id="153df1ce-50a7-419e-b21c-4e1865e779b2" />
+	<Project Path="Console\Console.vcxproj" Id="fa011325-c23b-4af6-b3b0-13ee0fcbb942" />
+	<Project Path="test\DataStructuresAlgorithmsTests.vcxproj" Id="0b7f15c4-7c48-47c8-bd81-dd270ab13d44" />
+</Solution>
