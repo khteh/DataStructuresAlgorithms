@@ -1,5 +1,5 @@
 #pragma once
-#include "DisjointSet.h"
+#include "DisJointSet.h"
 #include "Position.h"
 #include "Sort.h"
 #include "LinkedList.h"
