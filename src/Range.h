@@ -1,5 +1,7 @@
 #pragma once
+#include "DisjointSet.h"
 using namespace std;
+extern size_t BitCount(size_t n);
 typedef enum class Direction
 {
 	Up,
