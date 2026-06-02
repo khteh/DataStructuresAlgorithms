@@ -65,7 +65,9 @@ Create a Google Test project, manage nuget packages and uninstall the package Mi
   - libtbb-dev (Intel® Threading Building Blocks)
   - libgtest-dev
   - ninja-build
-  - Intel oneAPI toolkits: https://www.intel.com/content/www/us/en/docs/oneapi/installation-guide-linux
+  - Intel oneAPI toolkits:
+    - https://www.intel.com/content/www/us/en/docs/oneapi/installation-guide-linux
+    - https://www.intel.com/content/www/us/en/docs/oneapi-toolkit/installation-guide-linux/latest/install-oneapi-toolkit-with-apt.html
   - Intel oneAPI TBB: https://www.intel.com/content/www/us/en/developer/tools/oneapi/onetbb-download.html
   - Add the following to `/etc/profile`:
 
