@@ -54,9 +54,9 @@ Create a Google Test project, manage nuget packages and uninstall the package Mi
   - CMake Tools extension for VS Code (https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/how-to.md)
   - https://marketplace.visualstudio.com/items?itemName=matepek.vscode-catch2-test-adapter
 
-- To convert Visual Studio solution `.sln` and included `.vcxproj` to `CMakeLists.txt`:
+- To convert Visual Studio solution `.slnx` and included `.vcxproj` to `CMakeLists.txt`:
   - https://github.com/pavelliavonau/cmakeconverter
-  - `cmake-converter -s DataStructuresAlgorithms.sln`
+  - `cmake-converter -s DataStructuresAlgorithms.slnx`
 
 - Install the following packages on Ubuntu:
   - build-essential
