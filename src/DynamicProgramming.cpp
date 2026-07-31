@@ -41,14 +41,27 @@ T DynamicProgramming<T>::Fibonacci(long n)
     /* 0 1 2 3
      * {0 1 1 2 3 5 8}
      * {0, 1}, {1, 1}, {1, 2}, {3, 2}, {3, 5}
+     * [a,b] = [0,1] => a=0, b=1
+     * [a,b] = [1,1] => a=b=1, b=a+b=0+1=1
+     * [a,b] = [1,2] => a=b=1, b=a+b=1+1=2
      */
     // https://stackoverflow.com/questions/79421066/c-long-double-128-bit-precision
     vector<T> result = {0, 1};
     if (n <= 1)
         return n;
+    /*
+for (size_t i = 2; i <= (size_t)n; i++)
+    result[i % 2] = result[(i - 2) % 2] + result[(i - 1) % 2];
+return result[n % 2];
+    */
+    T a = 0, b = 1;
     for (size_t i = 2; i <= (size_t)n; i++)
-        result[i % 2] = result[(i - 2) % 2] + result[(i - 1) % 2];
-    return result[n % 2];
+    {
+        T temp = a + b;
+        a = b;
+        b = temp;
+    }
+    return b;
 }
 /*
  * This is slightly better. It fails 2 tests due to timeout!
