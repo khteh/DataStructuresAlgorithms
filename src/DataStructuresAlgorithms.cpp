@@ -600,7 +600,7 @@ T BinomialCoefficientsMultiplicative(size_t n, size_t k)
 		return n * (n - 1) / 2;
 	T result = 1;
 	for (size_t i = 1; i <= k; i++)
-		result = result * (n - i + 1) / i;
+		result = result * (n - i + 1) / i; // XXX: Using result *= syntax will yield smaller results. Use result = result * (n - i + 1) / i instead to multiply all the factors first before division.
 	return result;
 }
 /*
