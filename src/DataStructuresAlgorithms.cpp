@@ -4,16 +4,20 @@
 template __int128 Fibonacci(long);
 template __int128 Factorial(long);
 template __int128 BinomialCoefficients(size_t, size_t);
+template __int128 BinomialCoefficientsMultiplicative(size_t, size_t);
 template __int128 MultinomialCoefficients(size_t, vector<size_t> const &, __int128);
 template unsigned __int128 Fibonacci(long);
 template unsigned __int128 Factorial(long);
 template unsigned __int128 BinomialCoefficients(size_t, size_t);
+template unsigned __int128 BinomialCoefficientsMultiplicative(size_t, size_t);
 template unsigned __int128 MultinomialCoefficients(size_t, vector<size_t> const &, unsigned __int128);
 #endif
 template long long Fibonacci(long);
 template long long Factorial(long);
 template long long BinomialCoefficients(size_t, size_t);
 template unsigned long long BinomialCoefficients(size_t, size_t);
+template long long BinomialCoefficientsMultiplicative(size_t, size_t);
+template unsigned long long BinomialCoefficientsMultiplicative(size_t, size_t);
 template long long MultinomialCoefficients(size_t, vector<size_t> const &, long long);
 template multimap<size_t, string, less<size_t>> flip_map(const map<string, size_t> &, less<size_t>);
 namespace ranges = std::ranges;
@@ -551,7 +555,7 @@ T Factorial(long n)
 					= (n^2 - n) / 2
 					= n(n - 1) / 2
 
-pairs #:
+#pairs:
 a b c
 2 1  => 2 + 1 => (n - 1) + 1
 
@@ -580,6 +584,24 @@ T BinomialCoefficients(size_t n, size_t k)
 	else if (k == 2)
 		return n * (n - 1) / 2;
 	return Factorial<T>(n) / (Factorial<T>((long)k) * Factorial<T>((long)(n - k)));
+}
+/*
+https://en.wikipedia.org/wiki/Binomial_coefficient#Multiplicative_formula
+https://stackoverflow.com/questions/15301885/best-way-of-calculating-n-choose-k
+*/
+template <typename T>
+T BinomialCoefficientsMultiplicative(size_t n, size_t k)
+{
+	if (n == k)
+		return 1;
+	else if (n < k)
+		return 0;
+	else if (k == 2)
+		return n * (n - 1) / 2;
+	T result = 1;
+	for (size_t i = 1; i <= k; i++)
+		result = result * (n - i + 1) / i;
+	return result;
 }
 /*
  * https://en.wikipedia.org/wiki/Multinomial_theorem

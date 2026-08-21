@@ -274,6 +274,10 @@ public:
 	{
 		return BinomialCoefficients<T>(_n, _k);
 	}
+	T BinomialCoefficientsMultiplicativeTest()
+	{
+		return BinomialCoefficientsMultiplicative<T>(_n, _k);
+	}
 
 protected:
 	T _expected;
@@ -307,6 +311,17 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(6, 4, 2),
 					  make_tuple(252, 10, 5),
 					  make_tuple(184756, 20, 10)));
+TEST_P(BinomialCoefficientsTestFixture, BinomialCoefficientsMultiplicativeTests)
+{
+	ASSERT_EQ(this->_expected, this->BinomialCoefficientsMultiplicativeTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	BinomialCoefficientsMultiplicativeTests,
+	BinomialCoefficientsTestFixture,
+	::testing::Values(make_tuple(6, 4, 2),
+					  make_tuple(252, 10, 5),
+					  make_tuple(184756, 20, 10)));
+
 template <typename T>
 class MultinomialCoefficientsFixtureBase
 {

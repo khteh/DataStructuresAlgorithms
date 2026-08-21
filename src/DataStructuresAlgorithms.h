@@ -167,6 +167,8 @@ long SequenceSum(long);
 template <typename T>
 T BinomialCoefficients(size_t, size_t);
 template <typename T>
+T BinomialCoefficientsMultiplicative(size_t, size_t);
+template <typename T>
 T MultinomialCoefficients(size_t, vector<size_t> const &, T modulo = 0);
 void MultiplesCount(int, long &, long &);
 long MaxZeroProductBruteForce(vector<int> const &);
