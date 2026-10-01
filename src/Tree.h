@@ -71,8 +71,8 @@ protected:
 
 public:
 	Tree();
-	Tree(Tree<T> const &); // Copy constructor
-	Tree(Tree<T> &&);	   // Move constructor
+	Tree(Tree<T> const &);	   // Copy constructor
+	Tree(Tree<T> &&) noexcept; // Move constructor
 	explicit Tree(T);
 	Tree(vector<T> &, TreeType);
 	Tree(TraversalType, vector<T> &preorder, vector<T> &inorder);

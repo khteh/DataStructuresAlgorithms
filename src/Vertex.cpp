@@ -10,24 +10,50 @@ Vertex<TTag, TItem>::Vertex()
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag)
-	: _tag(tag), _item(TItem()), _sum(TItem()), _cost(numeric_limits<long>::max())
+	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(tag), _item(TItem()), _sum(TItem()), _cost(numeric_limits<long>::max())
 {
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag, TItem item)
-	: _tag(tag), _item(item), _cost(numeric_limits<long>::max()), _sum(TItem())
+	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(tag), _item(item), _cost(numeric_limits<long>::max()), _sum(TItem())
 {
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag, TItem item, map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours)
-	: _tag(tag), _item(item), _sum(TItem()), _cost(numeric_limits<long>::max()), _neighbours(neighbours)
+	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(tag), _item(item), _sum(TItem()), _cost(numeric_limits<long>::max()), _neighbours(neighbours)
 {
 }
+template <typename TTag, typename TItem>
+Vertex<TTag, TItem>::Vertex(const Vertex<TTag, TItem> &vertex)
+	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(vertex._tag), _item(vertex._item), _sum(vertex._sum), _cost(vertex._cost), _neighbours(vertex._neighbours)
+{
+}
+template <typename TTag, typename TItem>
+Vertex<TTag, TItem>::Vertex(Vertex<TTag, TItem> &&vertex) noexcept // Move constructor
+{
+	vertex.Swap(*this);
+}
+template <typename TTag, typename TItem>
+Vertex<TTag, TItem>::Vertex(const shared_ptr<Vertex<TTag, TItem>> vertex)
+	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(vertex->_tag), _item(vertex->_item), _sum(vertex->_sum), _cost(vertex->_cost), _neighbours(vertex->_neighbours)
+{
+}
+
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::~Vertex()
 {
 	_neighbours.clear();
 }
+template <typename TTag, typename TItem>
+void Vertex<TTag, TItem>::Swap(Vertex<TTag, TItem> &other)
+{
+	swap(_item, other._item);
+	swap(_tag, other._tag);
+	swap(_sum, other._sum);
+	swap(_cost, other._cost);
+	swap(_neighbours, other._neighbours);
+}
+
 template <typename TTag, typename TItem>
 TTag Vertex<TTag, TItem>::GetTag() const
 {

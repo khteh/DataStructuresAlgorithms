@@ -17,7 +17,7 @@ MyStack<T>::MyStack(const MyStack &stack) : _size(stack._size), _top(stack._top)
 {
 }
 template <typename T>
-MyStack<T>::MyStack(MyStack &&stack)
+MyStack<T>::MyStack(MyStack &&stack) noexcept
 {
 	stack.Swap(*this);
 }

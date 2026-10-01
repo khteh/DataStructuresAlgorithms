@@ -76,7 +76,7 @@ Tree<T>::Tree(Tree<T> const &tree) : _root(nullptr)
 		;
 }
 template <typename T>
-Tree<T>::Tree(Tree<T> &&tree) : _root(nullptr)
+Tree<T>::Tree(Tree<T> &&tree) noexcept : _root(nullptr)
 { // Move constructor
 	tree.Swap(*this);
 }

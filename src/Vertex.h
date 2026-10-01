@@ -3,6 +3,7 @@ template <typename TTag, typename TItem> // TTag is used as a unique ID. Graph v
 class Vertex : public enable_shared_from_this<Vertex<TTag, TItem>>
 {
 private:
+	void Swap(Vertex<TTag, TItem> &);
 	void ResetTotalCost();
 	bool HasNeighbour(TTag, TItem) const;
 
@@ -10,8 +11,12 @@ public:
 	Vertex();
 	explicit Vertex(TTag);
 	explicit Vertex(TTag, TItem);
-	Vertex(TTag, TItem, map<shared_ptr<Vertex<TTag, TItem>>, long>);
+	Vertex(const Vertex<TTag, TItem> &);	 // Copy constructor
+	Vertex(Vertex<TTag, TItem> &&) noexcept; // Move constructor
+	Vertex(const shared_ptr<Vertex<TTag, TItem>>);
 	virtual ~Vertex();
+
+	Vertex(TTag, TItem, map<shared_ptr<Vertex<TTag, TItem>>, long>);
 	TTag GetTag() const;
 	TItem GetItem() const;
 	size_t NeighbourCount() const;

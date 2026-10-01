@@ -25,7 +25,7 @@ Node<T>::Node(const Node &node) // Shallow Copy !!! It will have runtime error w
 {
 }
 template <typename T>
-Node<T>::Node(Node &&node) // Move constructor
+Node<T>::Node(Node &&node) noexcept // Move constructor
 {
 	node.Swap(*this);
 }

@@ -16,8 +16,8 @@ private:
 
 public:
 	MyStack();
-	MyStack(const MyStack &); // Copy constructor
-	MyStack(MyStack &&);	  // Move constructor
+	MyStack(const MyStack &);	  // Copy constructor
+	MyStack(MyStack &&) noexcept; // Move constructor
 	virtual ~MyStack();
 	bool isEmpty() const;
 	T pop();

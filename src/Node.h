@@ -16,7 +16,7 @@ public:
 	Node();
 	explicit Node(T);
 	Node(const Node &); // Copy constructor
-	Node(Node &&);		// Move constructor
+	Node(Node &&) noexcept; // Move constructor
 	Node(const shared_ptr<Node>);
 	virtual ~Node();
 	T Item() const;
