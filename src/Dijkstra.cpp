@@ -22,11 +22,30 @@ template <typename T>
 DVertex<T>::DVertex(T value, long cost) : _value(value), _previous({}), _cost(cost)
 {
 }
+template <typename T>
+DVertex<T>::DVertex(const DVertex &node) // Shallow Copy !!! It will have runtime error with create/delete of objects
+    : _value(node._value), _cost(node._cost), _previous(node._previous), _edges(node._edges)
+{
+}
+template <typename T>
+DVertex<T>::DVertex(DVertex &&node) noexcept // Move constructor
+{
+    node.Swap(*this);
+}
 
 template <typename T>
 DVertex<T>::DVertex(weak_ptr<DVertex<T>> previous, long cost) : _previous(previous), _cost(cost)
 {
 }
+template <typename T>
+void DVertex<T>::Swap(DVertex<T> &other)
+{
+    swap(_value, other._value);
+    swap(_cost, other._cost);
+    swap(_previous, other._previous);
+    swap(_edges, other._edges);
+}
+
 template <typename T>
 void DVertex<T>::AddEdge(shared_ptr<DVertex<T>> vertex, long cost)
 {
@@ -109,6 +128,22 @@ DEdge<T>::DEdge(shared_ptr<DVertex<T>> v, long cost) : _cost(cost), _vertex(v)
 {
 }
 template <typename T>
+DEdge<T>::DEdge(const DEdge &edge) // Shallow Copy !!! It will have runtime error with create/delete of objects
+    : _cost(edge._cost), _vertex(edge._vertex)
+{
+}
+template <typename T>
+DEdge<T>::DEdge(DEdge &&edge) noexcept // Move constructor
+{
+    edge.Swap(*this);
+}
+template <typename T>
+void DEdge<T>::Swap(DEdge<T> &other)
+{
+    swap(_cost, other._cost);
+    swap(_vertex, other._vertex);
+}
+template <typename T>
 long DEdge<T>::Cost() const
 {
     return _cost;
@@ -159,14 +194,14 @@ Dijkstra<T>::Dijkstra()
 {
 }
 template <typename T>
-Dijkstra<T>::Dijkstra(vector<T> &data)
+Dijkstra<T>::Dijkstra(const vector<T> &data)
 {
     AddVertices(data);
 }
 template <typename T>
-void Dijkstra<T>::AddVertices(vector<T> &data)
+void Dijkstra<T>::AddVertices(const vector<T> &data)
 {
-    for (typename vector<T>::iterator it = data.begin(); it != data.end(); it++)
+    for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
         AddVertex(*it); // tag = item
 }
 template <typename T>

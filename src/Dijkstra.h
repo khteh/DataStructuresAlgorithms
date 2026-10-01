@@ -8,8 +8,17 @@ class DEdge;
 template <typename T>
 class DVertex
 {
+private:
+    T _value;
+    set<DEdge<T>> _edges;
+    weak_ptr<DVertex<T>> _previous;
+    long _cost; // Accumulated cost up to this vertex
+    void Swap(DVertex<T> &);
+
 public:
-    DVertex(T);
+    explicit DVertex(T);
+    DVertex(const DVertex &);     // Copy constructor
+    DVertex(DVertex &&) noexcept; // Move constructor
     DVertex(T, long);
     DVertex(weak_ptr<DVertex<T>>, long);
     void AddEdge(shared_ptr<DVertex<T>>, long);
@@ -26,17 +35,18 @@ public:
     long Cost() const;
     IteratorType EdgeStart() const;
     IteratorType EdgeEnd() const;
-
-private:
-    T _value;
-    set<DEdge<T>> _edges;
-    weak_ptr<DVertex<T>> _previous;
-    long _cost; // Accumulated cost up to this vertex
 };
 template <typename T>
 class DEdge
 {
+private:
+    shared_ptr<DVertex<T>> _vertex;
+    long _cost;
+    void Swap(DEdge<T> &);
+
 public:
+    DEdge(const DEdge &);     // Copy constructor
+    DEdge(DEdge &&) noexcept; // Move constructor
     DEdge(shared_ptr<DVertex<T>>, long);
     shared_ptr<DVertex<T>> NextVertex() const;
     long Cost() const;
@@ -46,22 +56,18 @@ public:
     bool operator!=(DEdge<T> &);
     bool operator<(DEdge<T> &);
     bool operator>(DEdge<T> &);
-
-private:
-    shared_ptr<DVertex<T>> _vertex;
-    long _cost;
 };
 template <typename T>
 class Dijkstra
 {
 public:
     Dijkstra();
-    Dijkstra(vector<T> &);
+    Dijkstra(const vector<T> &);
     virtual ~Dijkstra();
     size_t Count() const;
     void Clear();
     void InitVertices();
-    void AddVertices(vector<T> &);
+    void AddVertices(const vector<T> &);
     void AddVertex(T);
     void AddUndirectedEdge(T, T, long);
     long ShortestPath(T, T, vector<shared_ptr<DVertex<T>>> &);
