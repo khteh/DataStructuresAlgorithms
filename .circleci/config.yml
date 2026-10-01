@@ -26,7 +26,7 @@ jobs:
     steps:
       - checkout:
           method: full
-      - run: cmake -S .-B build --config Release --target all --
+      - run: cmake -S . -B build --config Release --target all --
       # • CircleCI automatically monitors the exit status of every line in a command block. When it intercepts the 42 code, it immediately halts the build and marks the step as failed.
       - run: valgrind --leak-check=full --error-exitcode=42 --log-file=console.log Release/Console
       - run: valgrind --leak-check=full --error-exitcode=42 --log-file=tests.log Release/DataStructuresAlgorithms.Tests
