@@ -101,13 +101,28 @@ TrieNode<T>::TrieNode(T value)
 {
 	_children.clear();
 }
+template <typename T>
+TrieNode<T>::TrieNode(const TrieNode &node) // Shallow Copy !!! It will have runtime error with create/delete of objects
+	: enable_shared_from_this<TrieNode<T>>(), _key(node._key), _children(node._children)
+{
+}
+template <typename T>
+TrieNode<T>::TrieNode(TrieNode &&node) noexcept // Move constructor
+{
+	node.Swap(*this);
+}
 
 template <typename T>
 TrieNode<T>::~TrieNode()
 {
 	_children.clear();
 }
-
+template <typename T>
+void TrieNode<T>::Swap(TrieNode<T> &other)
+{
+	swap(_key, other._key);
+	swap(_children, other._children);
+}
 template <typename T>
 void TrieNode<T>::InsertString(string const &str, T value)
 {

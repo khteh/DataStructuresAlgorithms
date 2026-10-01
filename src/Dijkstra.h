@@ -62,12 +62,12 @@ class Dijkstra
 {
 public:
     Dijkstra();
-    Dijkstra(const vector<T> &);
+    Dijkstra(vector<T> const &);
     virtual ~Dijkstra();
     size_t Count() const;
     void Clear();
     void InitVertices();
-    void AddVertices(const vector<T> &);
+    void AddVertices(vector<T> const &);
     void AddVertex(T);
     void AddUndirectedEdge(T, T, long);
     long ShortestPath(T, T, vector<shared_ptr<DVertex<T>>> &);

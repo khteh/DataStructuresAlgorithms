@@ -29,11 +29,14 @@ class TrieNode : enable_shared_from_this<TrieNode<T>>
 private:
 	T _key;
 	map<char, shared_ptr<TrieNode<T>>> _children;
+	void Swap(TrieNode &);
 
 public:
 	typedef typename map<char, shared_ptr<TrieNode<T>>>::const_iterator IteratorType;
 	TrieNode();
-	TrieNode(T);
+	explicit TrieNode(T);
+	TrieNode(const TrieNode &);		// Copy constructor
+	TrieNode(TrieNode &&) noexcept; // Move constructor
 	~TrieNode();
 	T Key() const;
 	void SetKey(T);

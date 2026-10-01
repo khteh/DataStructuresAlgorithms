@@ -194,12 +194,12 @@ Dijkstra<T>::Dijkstra()
 {
 }
 template <typename T>
-Dijkstra<T>::Dijkstra(const vector<T> &data)
+Dijkstra<T>::Dijkstra(vector<T> const &data)
 {
     AddVertices(data);
 }
 template <typename T>
-void Dijkstra<T>::AddVertices(const vector<T> &data)
+void Dijkstra<T>::AddVertices(vector<T> const &data)
 {
     for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
         AddVertex(*it); // tag = item
