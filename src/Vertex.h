@@ -32,6 +32,7 @@ public:
 	void AddNeighbour(shared_ptr<Vertex<TTag, TItem>>, long);
 	map<shared_ptr<Vertex<TTag, TItem>>, long> GetNeighboursWithCost();
 	void RemoveNeighbour(shared_ptr<Vertex<TTag, TItem>>);
+	void ClearNeighbours(); // Break shared_ptr cycles between neighbouring vertices
 	size_t EvenForestDescendentsCount(TTag, set<string> &) const;
 	// Vertex<TTag, TItem> &operator=(const Vertex<TTag, TItem> &); // Copy assignment operator https://stackoverflow.com/questions/72345198/c20-unable-to-satisfy-constraint-for-rangesremove-if
 	// Vertex<TTag, TItem> &operator=(Vertex<TTag, TItem> &&) noexcept; // Move assignment operator

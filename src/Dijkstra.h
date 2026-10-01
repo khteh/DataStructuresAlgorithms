@@ -22,6 +22,7 @@ public:
     DVertex(T, long);
     DVertex(weak_ptr<DVertex<T>>, long);
     void AddEdge(shared_ptr<DVertex<T>>, long);
+    void ClearEdges(); // Break shared_ptr cycles between connected vertices
     void UpdatePreviousVertex(shared_ptr<DVertex<T>>, long);
     void UpdateCost(long);
     bool operator<(const DVertex<T> &) const;

@@ -17,6 +17,15 @@ public:
 	LinkedList();
 	LinkedList(shared_ptr<Node<T>>);
 	LinkedList(vector<T> const &);
+	/*
+	 * A member-wise (shallow) copy would make two lists share the same nodes, so that Reverse(), Sort(), AddItem(), etc.
+	 * on one silently change the other and leave its _tail stale. Copying is therefore disabled; ownership of the nodes
+	 * can only be transferred (moved). The moved-from list is left empty.
+	 */
+	LinkedList(const LinkedList &) = delete;
+	LinkedList &operator=(const LinkedList &) = delete;
+	LinkedList(LinkedList &&) noexcept;
+	LinkedList &operator=(LinkedList &&) noexcept;
 	virtual ~LinkedList();
 	void LoadData(vector<T> const &);
 	shared_ptr<Node<T>> Head();

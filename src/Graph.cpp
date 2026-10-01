@@ -38,6 +38,11 @@ template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::Clear()
 {
 	_totalCost = 0;
+	// Vertices hold shared_ptrs to each other (every undirected edge is a 2-cycle). Break those cycles first,
+	// otherwise clearing the map only drops the graph's references and the vertices keep each other alive.
+	for (auto &[tag, vertex] : _vertices)
+		if (vertex)
+			vertex->ClearNeighbours();
 	_vertices.clear();
 }
 template <typename TTag, typename TItem>

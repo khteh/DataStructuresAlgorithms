@@ -41,12 +41,9 @@ Node<T>::~Node()
 {
 	// _item = default(T);
 	_item = T();
-	_left.reset();
-	_right.reset();
 	_parent.reset();
 	_previous.reset();
-	_next.reset();
-	_adjacents.clear();
+	ClearLinks();
 }
 template <typename T>
 void Node<T>::Swap(Node<T> &other)
@@ -162,13 +159,37 @@ void Node<T>::SetPrevious(shared_ptr<Node<T>> node)
 {
 	_previous = node;
 }
+/*
+ * Drops every owning (shared_ptr) link held by this node.
+ * ~Node() calls this too, but a destructor only runs once the reference count reaches zero, which never happens
+ * for a node that is part of a shared_ptr cycle (A->B->A, or A->A). Whoever owns a possibly-cyclic set of nodes must
+ * call this on each of them to break the cycles; after that the normal destructors free everything.
+ */
+template <typename T>
+void Node<T>::ClearLinks()
+{
+	_next.reset();
+	_left.reset();
+	_right.reset();
+	_adjacents.clear();
+}
 template <typename T>
 void Node<T>::SetNext(shared_ptr<Node<T>> node)
 {
 	_next = node;
 	// if (node)
 	//	node->SetPrevious(this->shared_from_this()); Let application code decide on this.
-	_adjacents.insert(node);
+	/*
+	 * Do not also record node in _adjacents here. SetNext() is called over and over while a list is relinked (Sort(),
+	 * RotateRight(), Reverse(), ...), and the old successors would pile up in _adjacents as stale owning references back
+	 * to earlier nodes, forming shared_ptr cycles that leak the whole list. Graph edges use AddAdjacent() instead.
+	 */
+}
+template <typename T>
+void Node<T>::AddAdjacent(shared_ptr<Node<T>> node)
+{
+	if (node)
+		_adjacents.insert(node);
 }
 
 template <typename T>

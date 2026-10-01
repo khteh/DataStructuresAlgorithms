@@ -24,6 +24,21 @@ LinkedList<T>::LinkedList(vector<T> const &data)
 	LoadData(data);
 }
 template <typename T>
+LinkedList<T>::LinkedList(LinkedList &&other) noexcept : _head(std::move(other._head)), _tail(std::move(other._tail))
+{
+}
+template <typename T>
+LinkedList<T> &LinkedList<T>::operator=(LinkedList &&other) noexcept
+{
+	if (this != &other)
+	{
+		Clear(); // Virtual: a CircularLinkedList breaks its ring here before taking over other's nodes
+		_head = std::move(other._head);
+		_tail = std::move(other._tail);
+	}
+	return *this;
+}
+template <typename T>
 LinkedList<T>::~LinkedList()
 {
 	Clear();
@@ -64,7 +79,7 @@ template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::Tail()
 {
 	shared_ptr<Node<T>> node = nullptr;
-	for (node = _head; node->Next(); node = node->Next())
+	for (node = _head; node && node->Next(); node = node->Next()) // node is null for an empty (e.g. moved-from) list
 		;
 	return node;
 }
@@ -204,6 +219,7 @@ void LinkedList<T>::MoveHead2Tail()
 			tail->SetNext(_head);
 			_head->SetPrevious(tail); // This is done in SetNext
 			_head->SetNext(nullptr);
+			newHead->SetPrevious(nullptr); // It is the new head. Leaving the old head as its parent corrupts later relinking.
 			_head = newHead;
 		}
 	}
@@ -211,22 +227,24 @@ void LinkedList<T>::MoveHead2Tail()
 template <typename T>
 void LinkedList<T>::MoveItem2Tail(T item)
 {
-	shared_ptr<Node<T>> n = Find(Node<T>{item});
-	shared_ptr<Node<T>> tail = Tail();
-	if (tail && n != tail)
-	{
-		shared_ptr<Node<T>> parent = n->Previous();
-		shared_ptr<Node<T>> next = n->Next();
-		n->SetNext(nullptr);
-		tail->SetNext(n);
-		n->SetPrevious(tail); // This is done in SetNext
-		if (parent)
-			parent->SetNext(next);
-		if (next)
-			next->SetPrevious(parent);
-		if (_head == n)
-			_head = next;
-	}
+	/*
+	 * Find the node and its parent by walking the list. Do not rely on Previous(): Sort(), Reverse(), RotateRight(), etc.
+	 * do not maintain the _previous links, and relinking from a stale parent turns the list into a loop.
+	 */
+	shared_ptr<Node<T>> parent = nullptr, n = _head;
+	for (; n && !(*n == Node<T>{item}); parent = n, n = n->Next())
+		;
+	if (!n || !n->Next()) // Item not found, or it is already the tail
+		return;
+	shared_ptr<Node<T>> next = n->Next(), tail = Tail();
+	if (parent)
+		parent->SetNext(next);
+	else
+		_head = next;
+	next->SetPrevious(parent);
+	n->SetNext(nullptr);
+	tail->SetNext(n);
+	n->SetPrevious(tail); // This is done in SetNext
 }
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::AddItem(T item)

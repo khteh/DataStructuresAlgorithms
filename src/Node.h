@@ -30,7 +30,9 @@ public:
 		requires arithmetic_type<T>;
 	void SetParent(shared_ptr<Node<T>>);
 	void SetPrevious(shared_ptr<Node<T>>);
-	void SetNext(shared_ptr<Node<T>>);
+	void SetNext(shared_ptr<Node<T>>); // Linked-list successor only. Does not touch the adjacency set.
+	void AddAdjacent(shared_ptr<Node<T>>); // Graph edge. A node can have many adjacent nodes.
+	void ClearLinks(); // Drop all owning (shared_ptr) links so that cyclic node graphs can be freed
 	void SetLeft(shared_ptr<Node<T>>);
 	void SetRight(shared_ptr<Node<T>>);
 	void SetItem(T);

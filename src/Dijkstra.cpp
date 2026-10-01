@@ -47,6 +47,11 @@ void DVertex<T>::Swap(DVertex<T> &other)
 }
 
 template <typename T>
+void DVertex<T>::ClearEdges()
+{
+    _edges.clear();
+}
+template <typename T>
 void DVertex<T>::AddEdge(shared_ptr<DVertex<T>> vertex, long cost)
 {
     DEdge<T> edge(vertex, cost);
@@ -227,7 +232,12 @@ Dijkstra<T>::~Dijkstra()
 template <typename T>
 void Dijkstra<T>::Clear()
 {
+    // DEdge holds a shared_ptr to its target vertex, so every undirected edge is a 2-cycle. Break them first.
+    for (auto &[value, vertex] : _vertices)
+        if (vertex)
+            vertex->ClearEdges();
     _vertices.clear();
+    _result.clear();
     // hops.clear();
 }
 template <typename T>

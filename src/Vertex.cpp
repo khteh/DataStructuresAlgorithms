@@ -73,6 +73,11 @@ void Vertex<TTag, TItem>::AddNeighbour(shared_ptr<Vertex<TTag, TItem>> to, long 
 		_neighbours[to] = cost;
 }
 template <typename TTag, typename TItem>
+void Vertex<TTag, TItem>::ClearNeighbours()
+{
+	_neighbours.clear();
+}
+template <typename TTag, typename TItem>
 void Vertex<TTag, TItem>::RemoveNeighbour(shared_ptr<Vertex<TTag, TItem>> to)
 {
 	if (to && _neighbours.count(to))

@@ -1191,19 +1191,19 @@ int main(int argc, char *argv[])
 	shared_ptr<Node<string>> nodeF = make_shared<Node<string>>("f");
 	shared_ptr<Node<string>> nodeG = make_shared<Node<string>>("g");
 	shared_ptr<Node<string>> nodeH = make_shared<Node<string>>("h");
-	// XXX: As long as there is a loop, there is memory leak using smart pointer because of circular references.
-	nodeA->SetNext(nodeB); // Indirect leak of 48 byte(s) in 1 object(s)
-	nodeB->SetNext(nodeC); // Indirect leak of 48 byte(s) in 1 object(s)
-	nodeC->SetNext(nodeE); // Indirect leak of 48 byte(s) in 1 object(s)
-	nodeC->SetNext(nodeD); // Indirect leak of 48 byte(s) in 1 object(s)
-	nodeD->SetNext(nodeE); // Indirect leak of 48 byte(s) in 1 object(s)
-	nodeE->SetNext(nodeF); // Indirect leak of 48 byte(s) in 1 object(s)
-	nodeE->SetNext(nodeE); // Self-referencing. Indirect leak of 48 byte(s) in 1 object(s)
-	nodeF->SetNext(nodeB); // Indirect leak of 48 byte(s) in 1 object(s)
-	nodeF->SetNext(nodeA); // Indirect leak of 48 byte(s) in 1 object(s)
-	nodeD->SetNext(nodeG); // Indirect leak of 48 byte(s) in 1 object(s)
-	nodeD->SetNext(nodeH); // Indirect leak of 48 byte(s) in 1 object(s)
-	nodeG->SetNext(nodeH); // Indirect leak of 48 byte(s) in 1 object(s)
+	// The edges form shared_ptr cycles (A->B->C->E->F->A, E->E). They are broken with ClearLinks() after use below.
+	nodeA->AddAdjacent(nodeB);
+	nodeB->AddAdjacent(nodeC);
+	nodeC->AddAdjacent(nodeE);
+	nodeC->AddAdjacent(nodeD);
+	nodeD->AddAdjacent(nodeE);
+	nodeE->AddAdjacent(nodeF);
+	nodeE->AddAdjacent(nodeE); // Self-referencing
+	nodeF->AddAdjacent(nodeB);
+	nodeF->AddAdjacent(nodeA);
+	nodeD->AddAdjacent(nodeG);
+	nodeD->AddAdjacent(nodeH);
+	nodeG->AddAdjacent(nodeH);
 	vector<shared_ptr<Node<string>>> path = shortest_cycle_path(nodeA);
 	cout << "Shortest Cycle Path of node A: " << nodeA->Item() << " ";
 	for (vector<shared_ptr<Node<string>>>::iterator it = path.begin(); it != path.end(); it++)
@@ -1225,6 +1225,15 @@ int main(int argc, char *argv[])
 		cout << (*it)->Item() << " ";
 	cout << endl;
 	path.clear();
+	// Break the edge cycles first. reset() alone only drops these local references.
+	nodeA->ClearLinks();
+	nodeB->ClearLinks();
+	nodeC->ClearLinks();
+	nodeD->ClearLinks();
+	nodeE->ClearLinks();
+	nodeF->ClearLinks();
+	nodeG->ClearLinks();
+	nodeH->ClearLinks();
 	nodeA.reset();
 	nodeB.reset();
 	nodeC.reset();
