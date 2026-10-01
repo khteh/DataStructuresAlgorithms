@@ -28,7 +28,7 @@ jobs:
           method: full
       - run:
           name: Configure CMake
-          command: cmake -S . -B build
+          command: cmake -S . -B build -G Ninja
       - run:
           name: Build ALL
           command: cmake --build  build --config Release --target all --
