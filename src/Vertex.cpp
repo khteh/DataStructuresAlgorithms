@@ -224,11 +224,35 @@ void Vertex<TTag, TItem>::ResetTotalCost()
 {
 	_cost = numeric_limits<long>::max();
 }
-template <typename TTag, typename TItem>
-Vertex<TTag, TItem> &Vertex<TTag, TItem>::operator=(Vertex<TTag, TItem> &rhs)
+#if 0
+template <typename T>
+Vertex<TTag, TItem> &Vertex<TTag, TItem>::operator=(const Vertex<TTag, TItem> &rhs) // Copy assignment operator
 {
+	_item = rhs.item;
 	_tag = rhs._tag;
-	_item = rhs._item;
+	return *this;
+}
+template <typename T>
+Vertex<TTag, TItem> &Vertex<TTag, TItem>::operator=(Vertex<TTag, TItem> &&rhs) noexcept// Move assignment operator
+{
+	// 1. Self-assignment check
+	if (this != &rhs) {	
+		Vertex<TTag, TItem> tmp(move(rhs));
+		tmp.Swap(*this);
+	}
+	return *this;
+}
+#endif
+/*
+https://stackoverflow.com/questions/64378721/what-is-the-difference-between-the-copy-constructor-and-move-constructor-in-c
+The above 2 operators can be implemented as 1 operator, like below.
+This allows the caller to decide whether to construct the rhs parameter
+using its copy constructor or move constructor...
+*/
+template <typename TTag, typename TItem>
+Vertex<TTag, TItem> &Vertex<TTag, TItem>::operator=(Vertex<TTag, TItem> rhs)
+{
+	rhs.Swap(*this);
 	return *this;
 }
 template <typename TTag, typename TItem>

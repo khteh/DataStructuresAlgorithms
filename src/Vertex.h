@@ -33,7 +33,15 @@ public:
 	map<shared_ptr<Vertex<TTag, TItem>>, long> GetNeighboursWithCost();
 	void RemoveNeighbour(shared_ptr<Vertex<TTag, TItem>>);
 	size_t EvenForestDescendentsCount(TTag, set<string> &) const;
-	Vertex<TTag, TItem> &operator=(Vertex<TTag, TItem> &);
+	// Vertex<TTag, TItem> &operator=(const Vertex<TTag, TItem> &); // Copy assignment operator https://stackoverflow.com/questions/72345198/c20-unable-to-satisfy-constraint-for-rangesremove-if
+	// Vertex<TTag, TItem> &operator=(Vertex<TTag, TItem> &&) noexcept; // Move assignment operator
+	/*
+	https://stackoverflow.com/questions/64378721/what-is-the-difference-between-the-copy-constructor-and-move-constructor-in-c
+	The above 2 operators can be implemented as 1 operator, like below.
+	This allows the caller to decide whether to construct the rhs parameter
+	using its copy constructor or move constructor...
+	*/
+	Vertex<TTag, TItem> &operator=(Vertex<TTag, TItem>);
 	bool operator<(const Vertex<TTag, TItem> &) const;
 	bool operator==(Vertex<TTag, TItem> &);
 	bool operator!=(Vertex<TTag, TItem> &);

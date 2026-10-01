@@ -36,7 +36,7 @@ public:
 	void SetItem(T);
 	Node<T> &operator=(T);
 	// Node<T> &operator=(const Node<T> &); // Copy assignment operator https://stackoverflow.com/questions/72345198/c20-unable-to-satisfy-constraint-for-rangesremove-if
-	// Node<T> &operator=(Node<T> &&); // Move assignment operator
+	// Node<T> &operator=(Node<T> &&) noexcept; // Move assignment operator
 	/*
 	https://stackoverflow.com/questions/64378721/what-is-the-difference-between-the-copy-constructor-and-move-constructor-in-c
 	The above 2 operators can be implemented as 1 operator, like below.

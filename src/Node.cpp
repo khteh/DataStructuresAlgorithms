@@ -206,10 +206,14 @@ Node<T> &Node<T>::operator=(const Node<T> &rhs) // Copy assignment operator
 	return *this;
 }
 template <typename T>
-Node<T> &Node<T>::operator=(Node<T> &&rhs) // Move assignment operator
+Node<T> &Node<T>::operator=(Node<T> &&rhs) noexcept// Move assignment operator
 {
-	Node<T> tmp(move(rhs));
-	tmp.Swap(*this);
+
+	// 1. Self-assignment check
+	if (this != &rhs) {
+		Node<T> tmp(move(rhs));
+		tmp.Swap(*this);
+	}
 	return *this;
 }
 #endif
