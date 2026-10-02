@@ -28,7 +28,9 @@ jobs:
           method: full
       - run:
           name: Configure CMake
-          command: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE:STRING=Release
+          command: |
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE:STRING=Release
+            grep "CMAKE_BUILD_TYPE:" build/CMakeCache.txt
       - run:
           name: Build ALL
           command: |
