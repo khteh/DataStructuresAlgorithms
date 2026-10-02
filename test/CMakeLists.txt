@@ -63,6 +63,13 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE
     "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/pch.h>"
 )
 
+# LTO together with ASan is what caused the false global-buffer-overflow, so I'd keep the check.
+if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64" AND NOT "${CMAKE_CXX_FLAGS}" MATCHES "-fsanitize")
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
+    )
+endif()
+
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE DataStructuresAlgorithms.Tests)
 set_target_properties(${PROJECT_NAME} PROPERTIES

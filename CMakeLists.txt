@@ -105,6 +105,11 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # ###############################################################################
 # Sub-projects
 # ###############################################################################
+if(NOT "${CMAKE_CXX_FLAGS}" MATCHES "-fsanitize")
+    # LTO together with ASan is what caused the false global-buffer-overflow, so I'd keep the check.
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
+endif()
+
 add_subdirectory(Console)
 add_subdirectory(src)
 add_subdirectory(test)

@@ -149,7 +149,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
 
-if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+# Do not combine LTO with the sanitizers. LTO constant propagation can split one string literal into two copies in
+# different partitions. ASan keeps the copies apart (no string merging), so p and p + strlen(p) end up in different
+# objects and std::regex("literal") scans past its buffer: a false global-buffer-overflow in _Scanner::_M_advance().
+if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64" AND NOT "${CMAKE_CXX_FLAGS}" MATCHES "-fsanitize")
     set_target_properties(${PROJECT_NAME} PROPERTIES
         INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
     )
