@@ -94,3 +94,7 @@ Create a Google Test project, manage nuget packages and uninstall the package Mi
 ### Debug
 
 - Press `SHIFT + F5`
+
+## Continuous Integration:
+
+- Integrated with CircleCI

@@ -29,7 +29,8 @@ jobs:
       - run:
           name: Configure CMake
           command: |
-            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE:STRING=Release
+            # 2. Configure once using Multi-Config (CMAKE_BUILD_TYPE is ignored here)
+            cmake -S . -B build -G "Ninja Multi-Config"
             grep "CMAKE_BUILD_TYPE:" build/CMakeCache.txt
       - run:
           name: Build ALL
