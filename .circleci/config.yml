@@ -28,11 +28,11 @@ jobs:
           method: full
       - run:
           name: Configure CMake
-          command: cmake -S . -B build -G Ninja
+          command: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
       - run:
           name: Build ALL
           command: |
-            cmake --build  build --config Release --target all --
+            cmake --build build --config Release --target all --
             ls -l
             ls -l build
       # • CircleCI automatically monitors the exit status of every line in a command block. When it intercepts the 42 code, it immediately halts the build and marks the step as failed.
