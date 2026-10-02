@@ -75,7 +75,11 @@ Create a Google Test project, manage nuget packages and uninstall the package Mi
   [ -f "/opt/intel/oneapi/setvars.sh" ] && . /opt/intel/oneapi/setvars.sh
   ```
 
-- Download googletest from https://github.com/google/googletest/releases and extract to /usr/src/googletest
+- Optional: Download googletest from https://github.com/google/googletest/releases and extract to /usr/src/googletest
+- To check the `libgtest-dev` installed:
+  ```
+  $ dpkg -s libgtest-dev | grep Version
+  ```
 
 ### Build
 
