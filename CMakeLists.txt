@@ -5,7 +5,7 @@ project(DataStructuresAlgorithms CXX)
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Configuration" FORCE)
 
 # ###############################################################################
 # Global compiler options
@@ -21,7 +21,8 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     message("-- Setting GNU options from CMakeLists.txt")
 
     # This uses ASan:
-    set(CMAKE_CXX_FLAGS "-std=gnu++26 -fdiagnostics-color=always -fsanitize=address,undefined,leak -static-libasan -Wall -Wextra -Wfatal-errors" CACHE STRING "CXX build flags" FORCE)
+    # set(CMAKE_CXX_FLAGS "-std=gnu++26 -fdiagnostics-color=always -fsanitize=address,undefined,leak -static-libasan -Wall -Wextra -Wfatal-errors" CACHE STRING "CXX build flags" FORCE)
+    set(CMAKE_CXX_FLAGS "-std=gnu++26 -fdiagnostics-color=always -fsanitize=address,undefined,leak -Wall -Wextra -Wfatal-errors" CACHE STRING "CXX build flags" FORCE)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb3 -O0 -g3" CACHE STRING "Debug build flags" FORCE)
 
     # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb3 -O0 -g3" CACHE STRING "Debug build flags" FORCE)

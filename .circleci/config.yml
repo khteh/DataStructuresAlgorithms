@@ -28,7 +28,7 @@ jobs:
           method: full
       - run:
           name: Configure CMake
-          command: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          command: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE:STRING=Release
       - run:
           name: Build ALL
           command: |
@@ -39,7 +39,7 @@ jobs:
       - run:
           name: Run Console
           command: |
-            ./Release/Console
+            LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.8 ./Release/Console
             STATUS_CODE=$?
 
             # Example: 0 is success
@@ -50,7 +50,7 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            ./Release/DataStructuresAlgorithms.Tests
+            LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.8 ./Release/DataStructuresAlgorithms.Tests
             STATUS_CODE=$?
 
             # Example: 0 is success
