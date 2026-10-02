@@ -1225,7 +1225,7 @@ int main(int argc, char *argv[])
 		cout << (*it)->Item() << " ";
 	cout << endl;
 	path.clear();
-	// Break the edge cycles first. reset() alone only drops these local references.
+	// Break the edge cycles first. reset() alone only drops these local references. Cycles must be broken with ClearLinks() before the nodes go out of scope.
 	nodeA->ClearLinks();
 	nodeB->ClearLinks();
 	nodeC->ClearLinks();
