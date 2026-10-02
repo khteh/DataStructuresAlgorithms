@@ -5,7 +5,10 @@ project(DataStructuresAlgorithms CXX)
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Configuration" FORCE)
+# Only set a default for single-config generators, leaving multi-config alone
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build." FORCE)
+endif()
 
 # ###############################################################################
 # Global compiler options
