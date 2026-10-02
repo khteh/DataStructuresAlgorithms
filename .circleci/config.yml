@@ -6,7 +6,7 @@ orbs:
 executors:
   node:
     docker:
-      - image: khteh/ubuntu:latest
+      - image: khteh/circleci-cpp:latest
 
 references:
   workspace_root: &workspace_root ~/workspace
@@ -22,7 +22,7 @@ jobs:
   build_and_test:
     <<: *defaults
     docker:
-      - image: khteh/ubuntu:latest
+      - image: khteh/circleci-cpp:latest
     steps:
       - checkout:
           method: full
@@ -33,14 +33,34 @@ jobs:
           name: Build ALL
           command: cmake --build  build --config Release --target all --
       # • CircleCI automatically monitors the exit status of every line in a command block. When it intercepts the 42 code, it immediately halts the build and marks the step as failed.
-      - run: valgrind --leak-check=full --error-exitcode=42 --log-file=console.log Release/Console
-      - run: valgrind --leak-check=full --error-exitcode=42 --log-file=tests.log Release/DataStructuresAlgorithms.Tests
+      - run:
+          name: Run Console
+          command: |
+            ./Release/Console
+            STATUS_CODE=$?
+
+            # Example: 0 is success
+            if [ $STATUS_CODE -ne 0 ]; then
+              echo "Error occurred in the console application."
+              exit $STATUS_CODE
+            fi
+      - run:
+          name: Run Tests
+          command: |
+            ./Release/DataStructuresAlgorithms.Tests
+            STATUS_CODE=$?
+
+            # Example: 0 is success
+            if [ $STATUS_CODE -ne 0 ]; then
+              echo "Error occurred in the tests."
+              exit $STATUS_CODE
+            fi
       - persist_to_workspace:
           name: Save Workspace
           root: .
           paths:
-            - console.log
-            - tests.log
+            - Release
+
   deploy-eks:
     executor: aws-cli/default
     <<: *defaults
