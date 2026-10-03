@@ -57,5 +57,44 @@
 			"problemMatcher": ["$gcc"],
 			"detail": "CMake build Tests"
 		},
+		{
+			"type": "shell",
+			"label": "Presets: build linux-asan-debug",
+			"command": "cmake --preset linux-asan && cmake --build --preset linux-asan-debug",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": ["$gcc"],
+			"detail": "Configure and build Debug with sanitizers"
+		},
+		{
+			"type": "shell",
+			"label": "Presets: build linux-release",
+			"command": "cmake --preset linux-release && cmake --build --preset linux-release",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": ["$gcc"],
+			"detail": "Configure and build Release without sanitizers (LTO)"
+		},
+		{
+			// Removes every build tree and all binaries so that the next build configures and compiles from scratch.
+			"type": "shell",
+			"label": "Presets: clean all",
+			"command": "cmake -E rm -rf build Debug Release",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"detail": "Delete build/, Debug/ and Release/ for a fresh start"
+		},
 	]
 }

@@ -29,12 +29,11 @@ jobs:
       - run:
           name: Configure CMake
           command: |
-            # 2. Configure once using Multi-Config (CMAKE_BUILD_TYPE is ignored here)
-            cmake -S . -B build -G "Ninja Multi-Config"
-            #grep "CMAKE_BUILD_TYPE:" build/CMakeCache.txt
+            # Configure once using the Ninja Multi-Config preset with the sanitizers enabled (see CMakePresets.json)
+            cmake --preset linux-asan
       - run:
           name: Build ALL
-          command: cmake --build build --config Release --target all --
+          command: cmake --build --preset linux-asan-release
       # • CircleCI automatically monitors the exit status of every line in a command block. When it intercepts the 42 code, it immediately halts the build and marks the step as failed.
       - run:
           name: Run Console

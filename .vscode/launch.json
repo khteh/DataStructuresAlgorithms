@@ -8,13 +8,20 @@
             "name": "C++ Launch (Console)",
             "type": "cppdbg",
             "request": "launch",
-            "preLaunchTask": "CMake: build all",
+            "preLaunchTask": "Presets: build linux-asan-debug",
             "postDebugTask": "",
             "program": "${workspaceFolder}/Debug/Console",
             "cwd": "${workspaceFolder}/build",
             "stopAtEntry": false,
             "externalConsole": false,
             "launchCompleteCommand": "exec-run",
+            "environment": [
+                {
+                    // Both GDB and LeakSanitizer rely on ptrace, so the leak check has to be off while debugging.
+                    "name": "ASAN_OPTIONS",
+                    "value": "detect_leaks=0"
+                }
+            ],
             "logging": { "engineLogging": true, "trace": true, "traceResponse": true },
             "linux": {
               "MIMode": "gdb",
@@ -62,7 +69,7 @@
             "MIMode": "gdb",
             "type": "cppdbg",
             "request": "launch",
-            "preLaunchTask": "CMake: build all",
+            "preLaunchTask": "Presets: build linux-asan-debug",
             "postDebugTask": "",
             "stopAtEntry": false,
             "program": "${workspaceFolder}/Debug/Console",
@@ -122,7 +129,7 @@
             "MIMode": "gdb",
             "type": "cppdbg",
             "request": "launch",
-            "preLaunchTask": "CMake: build all",
+            "preLaunchTask": "Presets: build linux-asan-debug",
             "postDebugTask": "",
             "stopAtEntry": false,
             "program": "${workspaceFolder}/Debug/DataStructuresAlgorithms.Tests",
@@ -175,6 +182,77 @@
                     "ignoreFailures": true
                 }
             ]
+        },
+        {
+            // Builds the linux-release preset (no sanitizers, so Release is linked with LTO) and runs it.
+            "name": "Preset linux-release: Release + LTO, no sanitizers (Console)",
+            "type": "cppdbg",
+            "request": "launch",
+            "preLaunchTask": "Presets: build linux-release",
+            "program": "${workspaceFolder}/build/linux-release/bin/Release/Console",
+            "cwd": "${workspaceFolder}/build/linux-release",
+            "args": [],
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Disable MI-async",
+                    "text": "set mi-async off",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            // Builds the linux-release preset (no sanitizers, so Release is linked with LTO) and runs it.
+            "name": "Preset linux-release: Release + LTO, no sanitizers (Tests)",
+            "type": "cppdbg",
+            "request": "launch",
+            "preLaunchTask": "Presets: build linux-release",
+            "program": "${workspaceFolder}/build/linux-release/bin/Release/DataStructuresAlgorithms.Tests",
+            "cwd": "${workspaceFolder}/build/linux-release",
+            "args": [],
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Disable MI-async",
+                    "text": "set mi-async off",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            // Not a debug session: after the linux-asan-debug build, runs every test through CTest in a terminal.
+            "name": "Preset linux-asan-debug: run all tests with CTest",
+            "type": "node-terminal",
+            "request": "launch",
+            "preLaunchTask": "Presets: build linux-asan-debug",
+            "cwd": "${workspaceFolder}",
+            "command": "ctest --preset linux-asan-debug"
         }
     ]
 }

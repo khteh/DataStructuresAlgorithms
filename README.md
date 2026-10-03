@@ -83,17 +83,45 @@ Create a Google Test project, manage nuget packages and uninstall the package Mi
 
 ### Build
 
+The build configurations are defined in `CMakePresets.json`:
+
+| Configure preset | Build / test presets                         | Sanitizers | Binaries                          |
+| ---------------- | -------------------------------------------- | ---------- | --------------------------------- |
+| `linux-asan`     | `linux-asan-debug`, `linux-asan-release`     | On         | `./Debug`, `./Release`            |
+| `linux-release`  | `linux-release`                              | Off (LTO)  | `build/linux-release/bin/Release` |
+| `linux-valgrind` | `linux-valgrind`                             | Off        | `build/linux-valgrind/bin/Debug`  |
+| `windows-msvc`   | `windows-msvc-debug`, `windows-msvc-release` | n/a        | `.\Debug`, `.\Release`            |
+
+Put machine-specific presets in `CMakeUserPresets.json` (git-ignored).
+
+#### Command line
+
+```
+$ cmake --list-presets
+$ cmake --preset linux-asan
+$ cmake --build --preset linux-asan-debug
+$ ctest --preset linux-asan-debug
+```
+
+- `./valgrind.sh` configures and builds the `linux-valgrind` preset and runs Valgrind on it.
+
+#### Visual Studio Code
+
+- Press `CTRL + SHFT + P` + `CMAKE: Select Configure Preset` and choose a preset. For example, "Linux GCC + sanitizers". This replaces `CMAKE: Select Variant`.
+- Press `CTRL + SHFT + P` + `CMAKE: Select Build Preset` to choose the target build type. For example, "Debug + sanitizers".
 - Press `CTRL + SHFT + P` + `CMAKE: Configure` - This needs to be done after `rm -rf build/` folder.
-- Press `CTRL + SHFT + P` + `CMAKE: Select Variant` to choose the target build type. For example, "Debug" or "Release".
 - Press `CTRL + SHFT + B` and select one of the options
+- The launch configurations in `.vscode/launch.json` debug the binaries in `./Debug`, i.e. the `linux-asan-debug` build preset.
 
-### Run Without Debug
+### Debug / Run
 
-- Press `CTRL + F5`
+| Key       | What it runs                                               | Under gdb? |
+| --------- | ---------------------------------------------------------- | ---------- |
+| F5        | The selected launch.json entry                             | Yes        |
+| CTRL + F5 | "CMake: Debug" on the pane's debug target                  | Yes        |
+| SHFT + F5 | "CMake: Run Without Debugging" on the pane's launch target | No         |
 
-### Debug
-
-- Press `SHIFT + F5`
+- The entries in launch.json only run with F5, using whichever one is selected in the Run and Debug dropdown.
 
 ## Continuous Integration:
 

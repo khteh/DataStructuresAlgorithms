@@ -92,7 +92,14 @@
     "generator": "cpp",
     "text_encoding": "cpp"
   },
+  "cmake.useCMakePresets": "always",
   "cmake.generator":"Ninja Multi-Config",
+  // Used by "CMake: Debug" (CTRL + F5), which does not read launch.json. LeakSanitizer cannot run under GDB.
+  "cmake.debugConfig": {
+    "environment": [
+      { "name": "ASAN_OPTIONS", "value": "detect_leaks=0" }
+    ]
+  },
   "cmake.configureSettings": {
     "gtest_build_samples": "ON"
   },

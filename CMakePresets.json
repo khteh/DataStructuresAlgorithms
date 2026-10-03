@@ -1,0 +1,215 @@
+{
+  "version": 10,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 31,
+    "patch": 6
+  },
+  "$comment": "Machine-specific presets (compiler paths, toolchain files) belong in CMakeUserPresets.json, which is git-ignored.",
+  "configurePresets": [
+    {
+      "name": "linux-base",
+      "hidden": true,
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-asan",
+      "displayName": "Linux GCC + sanitizers",
+      "description": "ASan, UBSan and LSan in Debug and Release. Binaries go to ./Debug and ./Release. Used for development and CI.",
+      "inherits": "linux-base",
+      "cacheVariables": {
+        "ENABLE_SANITIZERS": "ON"
+      }
+    },
+    {
+      "name": "linux-release",
+      "displayName": "Linux GCC optimized",
+      "description": "No sanitizers, so the Release configuration is built with -O3 and LTO. Binaries go to build/linux-release/bin/<Config>.",
+      "inherits": "linux-base",
+      "cacheVariables": {
+        "ENABLE_SANITIZERS": "OFF",
+        "DSA_OUTPUT_DIR": "${sourceDir}/build/${presetName}/bin"
+      }
+    },
+    {
+      "name": "linux-valgrind",
+      "displayName": "Linux GCC for Valgrind",
+      "description": "No sanitizers (Valgrind cannot run ASan binaries). Binaries go to build/linux-valgrind/bin/<Config>. See valgrind.sh.",
+      "inherits": "linux-base",
+      "cacheVariables": {
+        "ENABLE_SANITIZERS": "OFF",
+        "DSA_OUTPUT_DIR": "${sourceDir}/build/${presetName}/bin"
+      }
+    },
+    {
+      "name": "windows-msvc",
+      "displayName": "Windows MSVC x64",
+      "description": "Default Visual Studio generator, x64. Binaries go to .\\Debug and .\\Release.",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "architecture": "x64",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux-asan-debug",
+      "displayName": "Debug + sanitizers",
+      "configurePreset": "linux-asan",
+      "configuration": "Debug",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-asan-release",
+      "displayName": "Release + sanitizers",
+      "configurePreset": "linux-asan",
+      "configuration": "Release",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-release",
+      "displayName": "Release (optimized, LTO)",
+      "configurePreset": "linux-release",
+      "configuration": "Release",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-valgrind",
+      "displayName": "Debug for Valgrind",
+      "configurePreset": "linux-valgrind",
+      "configuration": "Debug",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "windows-msvc-debug",
+      "displayName": "Debug",
+      "configurePreset": "windows-msvc",
+      "configuration": "Debug",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "windows-msvc-release",
+      "displayName": "Release",
+      "configurePreset": "windows-msvc",
+      "configuration": "Release",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "test-base",
+      "hidden": true,
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      }
+    },
+    {
+      "name": "linux-asan-debug",
+      "displayName": "Debug + sanitizers",
+      "inherits": "test-base",
+      "configurePreset": "linux-asan",
+      "configuration": "Debug",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-asan-release",
+      "displayName": "Release + sanitizers",
+      "inherits": "test-base",
+      "configurePreset": "linux-asan",
+      "configuration": "Release",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-release",
+      "displayName": "Release (optimized, LTO)",
+      "inherits": "test-base",
+      "configurePreset": "linux-release",
+      "configuration": "Release",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-valgrind",
+      "displayName": "Debug for Valgrind",
+      "inherits": "test-base",
+      "configurePreset": "linux-valgrind",
+      "configuration": "Debug",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "windows-msvc-debug",
+      "displayName": "Debug",
+      "inherits": "test-base",
+      "configurePreset": "windows-msvc",
+      "configuration": "Debug",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "windows-msvc-release",
+      "displayName": "Release",
+      "inherits": "test-base",
+      "configurePreset": "windows-msvc",
+      "configuration": "Release",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ]
+}

@@ -5,6 +5,13 @@ project(DataStructuresAlgorithms CXX)
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# ###############################################################################
+# Build options. CMakePresets.json sets these per preset; the defaults keep the
+# behaviour of a plain `cmake -S . -B build`.
+# ###############################################################################
+option(ENABLE_SANITIZERS "GCC: build with AddressSanitizer, UndefinedBehaviorSanitizer and LeakSanitizer" ON)
+set(DSA_OUTPUT_DIR "${CMAKE_SOURCE_DIR}" CACHE PATH "Binaries are written to <DSA_OUTPUT_DIR>/<Config>")
+
 # Only set a default for single-config generators, leaving multi-config alone
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build." FORCE)
@@ -21,11 +28,17 @@ if(MSVC)
     set(CMAKE_CXX_FLAGS_DEBUG "")
     set(CMAKE_CXX_FLAGS_RELEASE "")
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
-    message("-- Setting GNU options from CMakeLists.txt")
+    message("-- Setting GNU options from CMakeLists.txt (ENABLE_SANITIZERS=${ENABLE_SANITIZERS})")
 
-    # This uses ASan:
-    # set(CMAKE_CXX_FLAGS "-std=gnu++26 -fdiagnostics-color=always -fsanitize=address,undefined,leak -static-libasan -Wall -Wextra -Wfatal-errors" CACHE STRING "CXX build flags" FORCE)
-    set(CMAKE_CXX_FLAGS "-std=gnu++26 -fdiagnostics-color=always -fsanitize=address,undefined,leak -Wall -Wextra -Wfatal-errors" CACHE STRING "CXX build flags" FORCE)
+    # The sanitizers are a choice made by the presets (see CMakePresets.json) or with -DENABLE_SANITIZERS=ON|OFF.
+    # Add -static-libasan to SANITIZER_FLAGS to link the ASan runtime statically.
+    set(SANITIZER_FLAGS "")
+
+    if(ENABLE_SANITIZERS)
+        set(SANITIZER_FLAGS " -fsanitize=address,undefined,leak")
+    endif()
+
+    set(CMAKE_CXX_FLAGS "-std=gnu++26 -fdiagnostics-color=always${SANITIZER_FLAGS} -Wall -Wextra -Wfatal-errors" CACHE STRING "CXX build flags" FORCE)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb3 -O0 -g3" CACHE STRING "Debug build flags" FORCE)
 
     # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -ggdb3 -O0 -g3" CACHE STRING "Debug build flags" FORCE)
