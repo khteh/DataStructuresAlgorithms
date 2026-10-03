@@ -2432,21 +2432,21 @@ int main(int argc, char *argv[])
 	str = "acckzz";
 	str1 = "ccbazz";
 	/* MSVC enables a feature called Iterator Debugging(_ITERATOR_DEBUG_LEVEL = 2).
-	 * Inside MSVC's implementation of std::set_intersection, it loops through your elements and explicitly checks if \(element_{n} \le element_{n+1}\). 
+	 * Inside MSVC's implementation of std::set_intersection, it loops through your elements and explicitly checks if \(element_{n} \le element_{n+1}\).
 	 * If it catches a violation, it triggers a deliberate runtime assertion (sequence not ordered) to prevent silent data corruption.
-	 * 
-	 * GCC / g++ (Linux): By default, even when you compile with the -g flag (for debugging symbols), g++ does not add runtime data-validation checks. 
-	 * It assumes your data is already perfectly sorted. Instead of crashing, it invokes Undefined Behaviour (UB), meaning it silently finishes running 
+	 *
+	 * GCC / g++ (Linux): By default, even when you compile with the -g flag (for debugging symbols), g++ does not add runtime data-validation checks.
+	 * It assumes your data is already perfectly sorted. Instead of crashing, it invokes Undefined Behaviour (UB), meaning it silently finishes running
 	 * but yields an incomplete or entirely garbage intersection output.
-	 * 
-	 * 1. Structural RequirementsStrict Sorting: Both input ranges must already be sorted in ascending order according to the comparison criteria being used (either operator< or a custom predicate/comparator). 
+	 *
+	 * 1. Structural RequirementsStrict Sorting: Both input ranges must already be sorted in ascending order according to the comparison criteria being used (either operator< or a custom predicate/comparator).
 	 *    Passing unsorted ranges results in undefined behavior.
 	 * 2. Handling Duplicates: The input ranges do not need to contain entirely unique elements. If an equivalent element appears M times in the first range and N times in the second range, the algorithm will copy exactly the first \(\min(M, N)\) elements from the first range into the destination.
 	 * 3. No Memory Overlap: The output destination range cannot overlap with either of the input ranges. 
-	*/
+	 */
 	// std::stable_sort is fully constexpr in C++26
-	stable_sort(str.begin(), str.end());
-	stable_sort(str1.begin(), str1.end());
+	ranges::sort(str);
+	ranges::sort(str1);
 	set_intersection(str.begin(), str.end(), str1.begin(), str1.end(), inserter(cset, cset.begin()));
 	ranges::copy(cset, ostream_iterator<char>(cout, ", "));
 	assert(cset.size() == 3);

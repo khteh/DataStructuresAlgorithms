@@ -80,6 +80,11 @@
                 {
                     "name": "ONEAPI_DEVICE_SELECTOR",
                     "value": "*:cpu"
+                },
+                {
+                    // Both GDB and LeakSanitizer rely on ptrace to monitor the process. Because Linux only allows a single process to attach via ptrace at one time, GDB blocks LeakSanitizer, causing it to crash immediately with a fatal error.
+                    "name": "ASAN_OPTIONS",
+                    "value": "detect_leaks=0"
                 }
             ],
             "externalConsole": false,
@@ -135,6 +140,11 @@
                 {
                     "name": "ONEAPI_DEVICE_SELECTOR",
                     "value": "*:cpu"
+                },
+                {
+                    // Both GDB and LeakSanitizer rely on ptrace to monitor the process. Because Linux only allows a single process to attach via ptrace at one time, GDB blocks LeakSanitizer, causing it to crash immediately with a fatal error.
+                    "name": "ASAN_OPTIONS",
+                    "value": "detect_leaks=0"
                 }
             ],
             "externalConsole": false,
