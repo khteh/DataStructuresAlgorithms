@@ -121,7 +121,7 @@ $ ctest --preset linux-asan-debug
 | CTRL + F5 | "CMake: Debug" on the pane's debug target                  | Yes        |
 | SHFT + F5 | "CMake: Run Without Debugging" on the pane's launch target | No         |
 
-- The entries in `launch.json` only run with `F5`, using whichever one is selected in the Run and Debug dropdown.
+- The entries in `launch.json` only run with `F5`, using whichever one is selected in the "Run and Debug" dropdown.
 
 ## Continuous Integration:
 
