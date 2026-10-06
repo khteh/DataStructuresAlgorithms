@@ -23,9 +23,19 @@ C++-latest data structures and algorithms using only standard libraries. This an
 #### Build the latest GTest and GMock libraries from source
 
 1. Download GoogleTest source code from https://github.com/google/googletest/releases
-2. Open the project folder using VS and generate CMake cache, click “Build All” and it will generate lib files.
-3. Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn
-4. Set the property page
+2. To build dynamically-link library, add the following build configuration to `CMakeSettings.json` in the downloaded source of google test:
+   ```
+		  "variables": [
+			{
+			  "name": "BUILD_SHARED_LIBS",
+			  "value": "True",
+			  "type": "BOOL"
+			}
+		  ]
+   ```
+3. Open the project folder using VS and generate CMake cache, click “Build All” and it will generate lib files.
+4. Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn
+5. Set the property page
 
 C/C++ > General > Additional Include Directories: adds the googletest/include and googlemock/include paths.
 Linker > General > Additional Library Directories: point to the path of the compiled .lib file (e.g. googletest-1.17.0\out\build\x64-debug\lib).
@@ -46,6 +56,17 @@ vcpkg.exe install gtest:x64-windows
 Use ‘vcpkg list’ to view installed Google Test versions
 Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn and then build it.
 ```
+
+## Address Sanitizer
+
+### Google Test
+
+- Add the following to `CMakeSettings.json` in the downloaded source of google test:
+  ```
+	"addressSanitizerEnabled": true,
+  ```
+
+- Add the path of `clang_rt.asan_dynamic-x86_64.dll` to User and System environment variables. At the time of this writing and for Visual Studio 2026, the path is `C:\Program Files\Microsoft Visual Studio\18\Insiders\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64`
 
 ## Ubuntu
 
