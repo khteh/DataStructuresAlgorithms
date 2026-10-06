@@ -25,23 +25,23 @@ C++-latest data structures and algorithms using only standard libraries. This an
 1. Download GoogleTest source code from https://github.com/google/googletest/releases
 2. To build dynamically-link library, add the following build configuration to `CMakeSettings.json` in the downloaded source of google test:
    ```
-		  "variables": [
-			{
-			  "name": "BUILD_SHARED_LIBS",
-			  "value": "True",
-			  "type": "BOOL"
-			}
-		  ]
+   	  "variables": [
+   		{
+   		  "name": "BUILD_SHARED_LIBS",
+   		  "value": "True",
+   		  "type": "BOOL"
+   		}
+   	  ]
    ```
 3. Open the project folder using VS and generate CMake cache, click “Build All” and it will generate lib files.
 4. Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn
 5. Set the property page
-
-C/C++ > General > Additional Include Directories: adds the googletest/include and googlemock/include paths.
-Linker > General > Additional Library Directories: point to the path of the compiled .lib file (e.g. googletest-1.17.0\out\build\x64-debug\lib).
-Linker > Input > Additional Dependencies: adds gtest.lib and gtest_main.lib.
-C/C++ > Code Generation > Run Library: match the compilation configuration of the Googletest libraries (e.g. MTd for Debug mode)
-(5) Then the Google Test project can be built successfully.
+   ```
+   C/C++ > General > Additional Include Directories: adds the googletest/include and googlemock/include paths.
+   Linker > General > Additional Library Directories: point to the path of the compiled .lib file (e.g. googletest-1.18.0\out\build\x64-debug\lib).
+   Linker > Input > Additional Dependencies: adds gtest.lib and gtest_main.lib.
+   C/C++ > Code Generation > Run Library: match the compilation configuration of the Googletest libraries (e.g. MultiThreadedDebugDLL for Debug mode, MultiThreadedDLL for Release mode)
+   ```
 
 #### Use vcpkg
 
@@ -62,8 +62,9 @@ Create a Google Test project, manage nuget packages and uninstall the package Mi
 ### Google Test
 
 - Add the following to `CMakeSettings.json` in the downloaded source of google test:
+
   ```
-	"addressSanitizerEnabled": true,
+  "addressSanitizerEnabled": true,
   ```
 
 - Add the path of `clang_rt.asan_dynamic-x86_64.dll` to User and System environment variables. At the time of this writing and for Visual Studio 2026, the path is `C:\Program Files\Microsoft Visual Studio\18\Insiders\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64`
