@@ -23,25 +23,31 @@ C++-latest data structures and algorithms using only standard libraries. This an
 #### Build the latest GTest and GMock libraries from source
 
 1. Download GoogleTest source code from https://github.com/google/googletest/releases
-2. To build dynamically-link library, add the following build configuration to `CMakeSettings.json` in the downloaded source of google test:
+2. To build dynamically-link library with address sanitizer, open Developer Command Prompt in Visual Studio and run the following commands in sequence:
+   i. `rmdir /s /q build`
+   ii.```
+		cmake -S . -B build -G "Visual Studio 18 2026" -A x64 ^
+		More?   -DBUILD_SHARED_LIBS=ON ^
+		More?   -Dgtest_force_shared_crt=ON ^
+		More?   -Dgtest_build_tests=OFF ^
+		More?   -Dgmock_build_tests=OFF ^
+		More?   -DCMAKE_CXX_FLAGS="/fsanitize=address" ^
+		More?   -DCMAKE_C_FLAGS="/fsanitize=address"
+	  ```
+	iii. `cmake --build build --config Debug --target gtest`. Copy `build/bin/Debug/gtest.dll` to `test/x64/Debug`.
+	iv. `cmake --build build --config Release --target gtest`. Copy `build/bin/Release/gtest.dll` to `test/x64/Release`.
+   Note: `gtest_main.dll` is not required for the application to link against the library.
+		 The `gtest_main` target simply provides a tiny boilerplate main function that initializes GoogleTest and runs the tests automatically. 
+		 Because we skipped building it to bypass the MSVC C2491 compiler error, use `main.cpp` to provide own entry point.
+3. Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn
+4. Set the property page
    ```
-		  "variables": [
-			{
-			  "name": "BUILD_SHARED_LIBS",
-			  "value": "True",
-			  "type": "BOOL"
-			}
-		  ]
+	C/C++ > General > Additional Include Directories: adds the googletest/include and googlemock/include paths.
+	Linker > General > Additional Library Directories: point to the path of the compiled .lib file (e.g. googletest\build\lib\Debug OR googletest\build\lib\Release).
+	Linker > Input > Additional Dependencies: adds gtest.lib.
+	C/C++ > Code Generation > Run Library: match the compilation configuration of the Googletest libraries (e.g. MTd for Debug mode)
    ```
-3. Open the project folder using VS and generate CMake cache, click “Build All” and it will generate lib files.
-4. Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn
-5. Set the property page
-
-C/C++ > General > Additional Include Directories: adds the googletest/include and googlemock/include paths.
-Linker > General > Additional Library Directories: point to the path of the compiled .lib file (e.g. googletest-1.17.0\out\build\x64-debug\lib).
-Linker > Input > Additional Dependencies: adds gtest.lib and gtest_main.lib.
-C/C++ > Code Generation > Run Library: match the compilation configuration of the Googletest libraries (e.g. MTd for Debug mode)
-(5) Then the Google Test project can be built successfully.
+5. Then the Google Test project can be built successfully.
 
 #### Use vcpkg
 
