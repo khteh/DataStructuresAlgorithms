@@ -66,12 +66,6 @@ C++-latest data structures and algorithms using only standard libraries. This an
 
 ### Google Test
 
-- Add the following to `CMakeSettings.json` in the downloaded source of google test:
-
-  ```
-  "addressSanitizerEnabled": true,
-  ```
-
 - Add the path of `clang_rt.asan_dynamic-x86_64.dll` to User and System environment variables. At the time of this writing and for Visual Studio 2026, the path is `C:\Program Files\Microsoft Visual Studio\18\Insiders\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64`
 
 ## Ubuntu
