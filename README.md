@@ -27,7 +27,8 @@ C++-latest data structures and algorithms using only standard libraries. This an
 
    i.  `rmdir /s /q build`
    
-   ii. ```
+   ii. 
+       ```
        cmake -S . -B build -G "Visual Studio 18 2026" -A x64 -DBUILD_SHARED_LIBS=ON -Dgtest_force_shared_crt=ON -Dgtest_build_tests=OFF -Dgmock_build_tests=OFF -DCMAKE_CXX_FLAGS="/fsanitize=address" -DCMAKE_C_FLAGS="/fsanitize=address"
 	   ```
    
