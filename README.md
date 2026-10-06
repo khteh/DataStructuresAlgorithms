@@ -26,8 +26,11 @@ C++-latest data structures and algorithms using only standard libraries. This an
 2. To build dynamically-link library with address sanitizer, open Developer Command Prompt in Visual Studio and run the following commands in sequence:
 
    i.  `rmdir /s /q build`
+   
    ii. `cmake -S . -B build -G "Visual Studio 18 2026" -A x64 -DBUILD_SHARED_LIBS=ON -Dgtest_force_shared_crt=ON -Dgtest_build_tests=OFF -Dgmock_build_tests=OFF -DCMAKE_CXX_FLAGS="/fsanitize=address" -DCMAKE_C_FLAGS="/fsanitize=address"`
+   
    iii.`cmake --build build --config Debug --target gtest`. Copy `build/bin/Debug/gtest.dll` to `test/x64/Debug`.
+   
    iv. `cmake --build build --config Release --target gtest`. Copy `build/bin/Release/gtest.dll` to `test/x64/Release`.
 	
    Note: `gtest_main.dll` is not required for the application to link against the library.
