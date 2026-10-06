@@ -2000,25 +2000,33 @@ int main(int argc, char *argv[])
 	// a = UnbeatenPaths(110857, ugrid, 47678);
 	grid1.clear();
 	a.clear();
-	const long modulo = 1e9 + 7L;
+	/*
+	* modular multiplication overflows when long is 32 bits, which it is under MSVC on Windows, even in x64 builds.
+	* Why it overflows. ((x % modulo) * (y % modulo)) % modulo multiplies two values that can each be close to 1e9+7. 
+	* That product needs up to about 60 bits, so in a 32-bit long it overflows before the final % modulo is applied. 
+	* The true product of 3..14 is 43,589,145,600, which is already past 2^31.
+    * Why it is intermittent. Once overflow happens, the result depends on how the multiplications are grouped. 
+	* fold_left always goes left to right, but parallel_reduce splits the range into chunks differently from run to run, depending on thread availability.
+	*/
+	const int64_t modulo = 1e9 + 7L;
 	a = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 	l = 1e9 + 7L;
-	l1 = ranges::fold_left(a, 1l, [&modulo](long x, long y) -> long
+	l1 = ranges::fold_left(a, 1l, [&modulo](int64_t x, int64_t y) -> int64_t
 						   { return ((x % modulo) * (y % modulo)) % modulo; });
 	l2 = parallel_reduce(
-		blocked_range<long>(0, a.size()), 1l /* Identity for Multiplication */,
-		[&](tbb::blocked_range<long> const &r, long running_total)
+		blocked_range<int64_t>(0, a.size()), 1l /* Identity for Multiplication */,
+		[&](tbb::blocked_range<int64_t> const &r, int64_t running_total)
 		{
 			for (size_t i = r.begin(); i < r.end(); i++)
 				running_total = ((running_total % modulo) * (a[i] % modulo)) % modulo;
 			return running_total;
 		},
-		[&modulo](long x, long y) -> long
+		[&modulo](int64_t x, int64_t y) -> int64_t
 		{
 			return ((x % modulo) * (y % modulo)) % modulo;
 		});
 	assert(l2 == l1);
-	l2 = accumulate(a.begin(), a.end(), 1l, [&modulo](long x, long y) -> long
+	l2 = accumulate(a.begin(), a.end(), 1l, [&modulo](int64_t x, int64_t y) -> int64_t
 					{ return ((x % modulo) * (y % modulo) % modulo); });
 	assert(l2 == l1);
 	// assert(MinimumSteps2HitTarget(1, 2, 1, 60) == 4);
