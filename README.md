@@ -137,6 +137,8 @@ $ ctest --preset linux-asan-debug
 
 ### Debug / Run
 
+- `CTRL + K + S` to check keyboard shortcuts. Filter for `cmake`.
+
 | Key              | What it runs                                               | Under gdb? |
 | ---------------- | ---------------------------------------------------------- | ---------- |
 | F5               | The selected launch.json entry                             | Yes        |
