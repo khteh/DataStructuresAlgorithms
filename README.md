@@ -52,24 +52,24 @@ C++-latest data structures and algorithms using only standard libraries. This an
 #### Use vcpkg
 
 - Use vcpkg to download (Note: Currently in vcpkg, gtest version is 1.14.0)
-
-```
-git clone https://github.com/Microsoft/vcpkg.git
-cd vcpkg
-bootstrap-vcpkg.bat
-vcpkg integrate install
-vcpkg.exe install gtest:x64-windows
-Use ‘vcpkg list’ to view installed Google Test versions
-Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn and then build it.
-```
+  ```
+  git clone https://github.com/Microsoft/vcpkg.git
+  cd vcpkg
+  bootstrap-vcpkg.bat
+  vcpkg integrate install
+  vcpkg.exe install gtest:x64-windows
+  Use ‘vcpkg list’ to view installed Google Test versions
+  Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn and then build it.
+  ```
 
 ## Address Sanitizer
 
 ### Google Test
 
 - Add the following to `CMakeSettings.json` in the downloaded source of google test:
+
   ```
-	"addressSanitizerEnabled": true,
+  "addressSanitizerEnabled": true,
   ```
 
 - Add the path of `clang_rt.asan_dynamic-x86_64.dll` to User and System environment variables. At the time of this writing and for Visual Studio 2026, the path is `C:\Program Files\Microsoft Visual Studio\18\Insiders\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64`
@@ -97,10 +97,9 @@ Create a Google Test project, manage nuget packages and uninstall the package Mi
     - https://www.intel.com/content/www/us/en/docs/oneapi-toolkit/installation-guide-linux/latest/install-oneapi-toolkit-with-apt.html
   - Intel oneAPI TBB: https://www.intel.com/content/www/us/en/developer/tools/oneapi/onetbb-download.html
   - Add the following to `/etc/profile`:
-
-  ```
-  [ -f "/opt/intel/oneapi/setvars.sh" ] && . /opt/intel/oneapi/setvars.sh
-  ```
+    ```
+    [ -f "/opt/intel/oneapi/setvars.sh" ] && . /opt/intel/oneapi/setvars.sh
+    ```
 
 - Optional: Download googletest from https://github.com/google/googletest/releases and extract to /usr/src/googletest
 - To check the `libgtest-dev` installed:
