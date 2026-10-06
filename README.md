@@ -25,20 +25,22 @@ C++-latest data structures and algorithms using only standard libraries. This an
 1. Download GoogleTest source code from https://github.com/google/googletest/releases
 2. To build dynamically-link library with address sanitizer, open Developer Command Prompt in Visual Studio and run the following commands in sequence:
 
-   i.  `rmdir /s /q build`
-   
+   i. `rmdir /s /q build`
+
    ii.
+
    ```
    cmake -S . -B build -G "Visual Studio 18 2026" -A x64 -DBUILD_SHARED_LIBS=ON -Dgtest_force_shared_crt=ON -Dgtest_build_tests=OFF -Dgmock_build_tests=OFF -DCMAKE_CXX_FLAGS="/fsanitize=address" -DCMAKE_C_FLAGS="/fsanitize=address"
    ```
-   
+
    iii.`cmake --build build --config Debug --target gtest`. Copy `build/bin/Debug/gtest.dll` to `test/x64/Debug`.
-   
+
    iv. `cmake --build build --config Release --target gtest`. Copy `build/bin/Release/gtest.dll` to `test/x64/Release`.
-	
+
    Note: `gtest_main.dll` is not required for the application to link against the library.
-		 The `gtest_main` target simply provides a tiny boilerplate main function that initializes GoogleTest and runs the tests automatically. 
-		 Because we skipped building it to bypass the MSVC `C2491` compiler error, use `main.cpp` to provide own entry point.
+   The `gtest_main` target simply provides a tiny boilerplate main function that initializes GoogleTest and runs the tests automatically.
+   Because we skipped building it to bypass the MSVC `C2491` compiler error, use `main.cpp` to provide own entry point.
+
 3. Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn
 4. Set the property page
    ```
@@ -135,11 +137,12 @@ $ ctest --preset linux-asan-debug
 
 ### Debug / Run
 
-| Key       | What it runs                                               | Under gdb? |
-| --------- | ---------------------------------------------------------- | ---------- |
-| F5        | The selected launch.json entry                             | Yes        |
-| CTRL + F5 | "CMake: Debug" on the pane's debug target                  | Yes        |
-| SHFT + F5 | "CMake: Run Without Debugging" on the pane's launch target | No         |
+| Key              | What it runs                                               | Under gdb? |
+| ---------------- | ---------------------------------------------------------- | ---------- |
+| F5               | The selected launch.json entry                             | Yes        |
+| SHFT + F5        | "CMake: Debug" on the pane's debug target                  | Yes        |
+| CTRL + SHFT + F5 | "CMake: Run Without Debugging" on the pane's launch target | No         |
+| CTRL + F5        | "Start Without Debugging" on the pane's launch target      | No         |
 
 - The entries in `launch.json` only run with `F5`, using whichever one is selected in the "Run and Debug" dropdown.
 
