@@ -38,7 +38,7 @@ C++-latest data structures and algorithms using only standard libraries. This an
 	
    Note: `gtest_main.dll` is not required for the application to link against the library.
 		 The `gtest_main` target simply provides a tiny boilerplate main function that initializes GoogleTest and runs the tests automatically. 
-		 Because we skipped building it to bypass the MSVC C2491 compiler error, use `main.cpp` to provide own entry point.
+		 Because we skipped building it to bypass the MSVC `C2491` compiler error, use `main.cpp` to provide own entry point.
 3. Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn
 4. Set the property page
    ```
