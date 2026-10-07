@@ -432,7 +432,7 @@ INSTANTIATE_TEST_SUITE_P(
 								 vector<vector<size_t>>{{1, 2},
 														{3, 1},
 														{1, 4}})));
-class VectorSlicesSumTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+class VectorSlicesSumTestFixture : public testing::TestWithParam<tuple<int64_t, vector<int64_t>>>
 {
 public:
 	void SetUp() override
@@ -440,15 +440,15 @@ public:
 		_expected = get<0>(GetParam());
 		_data = get<1>(GetParam());
 	}
-	long VectorSlicesSumTest()
+	int64_t VectorSlicesSumTest()
 	{
 		return _dp.VectorSlicesSum(_data);
 	}
 
 protected:
-	DynamicProgramming<long> _dp;
-	vector<long> _data;
-	long _expected;
+	DynamicProgramming<int64_t> _dp;
+	vector<int64_t> _data;
+	int64_t _expected;
 };
 TEST_P(VectorSlicesSumTestFixture, VectorSlicesSumTests)
 {
@@ -458,9 +458,9 @@ TEST_P(VectorSlicesSumTestFixture, VectorSlicesSumTests)
 INSTANTIATE_TEST_SUITE_P(
 	VectorSlicesSumTests,
 	VectorSlicesSumTestFixture,
-	::testing::Values(make_tuple(44, vector<long>{1, 2, 3}), make_tuple(73, vector<long>{1, 3, 6}), make_tuple(282, vector<long>{1, 3, 6, 7}), make_tuple(971, vector<long>{4, 2, 9, 10, 1}),
-					  make_tuple(868784194l, vector<long>{477, 392, 161, 421, 245, 50, 530, 889, 750, 16, 545, 303, 898, 785, 162, 279, 677, 664, 126, 149, 814, 360, 334, 681, 473, 293, 267, 120, 825, 21, 267, 301, 413, 779, 73, 657, 181, 602, 897, 930, 969, 441, 232, 218, 577, 745, 848, 253}),
-					  make_tuple(818555228l, vector<long>{695, 14, 706, 200, 379, 690, 991, 128, 60, 998, 730, 381, 301, 559, 192, 686, 608, 907, 256, 584, 177, 319, 843, 87, 446, 37, 520, 464, 483, 685, 894, 177, 50, 952, 376, 781, 641, 718, 908, 700, 715, 989, 432, 367, 547, 624, 52, 507, 530, 659, 90, 58, 978, 932, 497, 423, 321, 16, 238, 803, 52, 484, 979, 101, 435, 706, 881, 427, 423, 141, 126, 489, 129, 909, 207, 28, 884, 610, 534})));
+	::testing::Values(make_tuple(44, vector<int64_t>{1, 2, 3}), make_tuple(73, vector<int64_t>{1, 3, 6}), make_tuple(282, vector<int64_t>{1, 3, 6, 7}), make_tuple(971, vector<int64_t>{4, 2, 9, 10, 1}),
+					  make_tuple(868784194l, vector<int64_t>{477, 392, 161, 421, 245, 50, 530, 889, 750, 16, 545, 303, 898, 785, 162, 279, 677, 664, 126, 149, 814, 360, 334, 681, 473, 293, 267, 120, 825, 21, 267, 301, 413, 779, 73, 657, 181, 602, 897, 930, 969, 441, 232, 218, 577, 745, 848, 253}),
+					  make_tuple(818555228l, vector<int64_t>{695, 14, 706, 200, 379, 690, 991, 128, 60, 998, 730, 381, 301, 559, 192, 686, 608, 907, 256, 584, 177, 319, 843, 87, 446, 37, 520, 464, 483, 685, 894, 177, 50, 952, 376, 781, 641, 718, 908, 700, 715, 989, 432, 367, 547, 624, 52, 507, 530, 659, 90, 58, 978, 932, 497, 423, 321, 16, 238, 803, 52, 484, 979, 101, 435, 706, 881, 427, 423, 141, 126, 489, 129, 909, 207, 28, 884, 610, 534})));
 #else
 INSTANTIATE_TEST_SUITE_P(
 	VectorSlicesSumTests,

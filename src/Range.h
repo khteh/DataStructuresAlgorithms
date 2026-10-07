@@ -36,7 +36,7 @@ public:
 	long MinEnergyInstallations(vector<size_t> &, long);
 	size_t SherlockAndCost(vector<size_t> const &);
 	vector<size_t> WiggleMaxLength(vector<size_t> const &);
-	bool ContainsNearbyAlmostDuplicate(vector<long> const &, long, long);
+	bool ContainsNearbyAlmostDuplicate(vector<int64_t> const &, long, long);
 	size_t VectorEqualSplit(vector<int> const &); // Only tested working with int type.
 	size_t MaxProductOfNonOverlappingWordLengths(vector<string> const &);
 	string AlmostSorted(vector<long> const &);

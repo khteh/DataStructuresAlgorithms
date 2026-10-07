@@ -820,16 +820,16 @@ t: 10
 k: 1
 t: 1
 */
-bool Range::ContainsNearbyAlmostDuplicate(vector<long> const &nums, long k, long t)
+bool Range::ContainsNearbyAlmostDuplicate(vector<int64_t> const &nums, long k, long t)
 {
-	multiset<long> buckets;
+	multiset<int64_t> buckets;
 	if (k > 0 && t >= 0)
 	{ // Absolute diff. t >= 0. k = 0 means diff is 0.
 		for (size_t i = 0; i < nums.size(); i++)
 		{
 			if (i > k)
 				buckets.erase(nums[i - k - 1]);
-			multiset<long>::iterator it = buckets.lower_bound(nums[i] - t); // >= nums[i] - t
+			multiset<int64_t>::iterator it = buckets.lower_bound(nums[i] - t); // >= nums[i] - t
 			if (it != buckets.end() && *it <= (nums[i] + t))
 				return true;
 			buckets.emplace(nums[i]);

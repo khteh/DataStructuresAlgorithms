@@ -386,10 +386,10 @@ size_t Palindrome::ShortPalindrome(const string &s)
  * https://chalkdustmagazine.com/features/counting-palindromes/
  * 100%
  */
-long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
+int64_t Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
 {
-    const long modulo = 1e9 + 7L;
-    vector<long> factorials;
+    const int64_t modulo = 1e9 + 7L;
+    vector<int64_t> factorials;
     string str = s.substr(l, r - l + 1);
     set<char> unique(str.begin(), str.end());
     map<char, size_t> chars;
@@ -400,9 +400,9 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
     factorials.push_back(1);
     for (size_t i = 1; i <= s.size() / 2; i++)
     {
-        if (factorials.back() > 0 && (factorials.back() * i) > std::numeric_limits<long>::max())
+        if (factorials.back() > 0 && (factorials.back() * i) > std::numeric_limits<int64_t>::max())
             throw range_error("overflow!");
-        if (factorials.back() < 0 && (factorials.back() * i) < std::numeric_limits<long>::min())
+        if (factorials.back() < 0 && (factorials.back() * i) < std::numeric_limits<int64_t>::min())
             throw range_error("overflow!");
         factorials.push_back((factorials.back() * i) % modulo);
     }
@@ -413,7 +413,7 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
             chars[*it]++;
     }
     size_t n = 0;
-    long sum = 0, singulars = 0, divisor = 1;
+    int64_t sum = 0, singulars = 0, divisor = 1;
     for (typename map<char, size_t>::const_iterator it = chars.begin(); it != chars.end(); it++)
         if (it->second == 1)
             singulars++;
@@ -427,7 +427,7 @@ long Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
             singulars += it->second % 2;
         }
     sum = factorials[n];
-    Arithmetic<long> arithmetic;
+    Arithmetic<int64_t> arithmetic;
     // ( a * b) % c = ( ( a % c ) * ( b % c ) ) % c
     return arithmetic.Divide(singulars ? ((sum % modulo) * (singulars % modulo)) % modulo : sum, divisor, modulo);
 }

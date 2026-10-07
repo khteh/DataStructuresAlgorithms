@@ -804,7 +804,7 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(vector<size_t>{1, 17, 5, 15, 5, 16, 8}, vector<size_t>{1, 17, 5, 15, 5, 16, 8}),
 					  make_tuple(vector<size_t>{1, 17, 5, 15, 5, 16, 8}, vector<size_t>{1, 17, 5, 10, 13, 15, 12, 5, 16, 8}),
 					  make_tuple(vector<size_t>{1, 17, 5, 13, 11, 12, 5, 16, 8}, vector<size_t>{1, 17, 5, 10, 13, 11, 12, 5, 16, 8})));
-class ContainsNearbyAlmostDuplicateTestFixture : public testing::TestWithParam<tuple<bool, vector<long>, long, long>>
+class ContainsNearbyAlmostDuplicateTestFixture : public testing::TestWithParam<tuple<bool, vector<int64_t>, long, long>>
 {
 public:
 	void SetUp() override
@@ -823,7 +823,7 @@ protected:
 	Range _rangeObj;
 	long _param, _t;
 	bool _expected;
-	vector<long> _data;
+	vector<int64_t> _data;
 };
 TEST_P(ContainsNearbyAlmostDuplicateTestFixture, ContainsNearbyAlmostDuplicateTests)
 {
@@ -833,24 +833,24 @@ TEST_P(ContainsNearbyAlmostDuplicateTestFixture, ContainsNearbyAlmostDuplicateTe
 INSTANTIATE_TEST_SUITE_P(
 	ContainsNearbyAlmostDuplicateTests,
 	ContainsNearbyAlmostDuplicateTestFixture,
-	::testing::Values(make_tuple(true, vector<long>{1, 2, 3, 1}, 3, 0),
-					  make_tuple(true, vector<long>{1, 0, 1, 1}, 1, 2),
-					  make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 2, 3),
-					  make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 0, 0),
-					  make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 0, 1),
-					  make_tuple(true, vector<long>{1, 5, 9, 1, 5, 9}, 3, 0),
-					  make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, 2, 0),
-					  make_tuple(false, vector<long>{1, 5, 9, 1, 5, 9}, -1, -1),
-					  make_tuple(true, vector<long>{1, 2, 1}, 2, 0),
-					  make_tuple(false, vector<long>{2147483647, -1, 2147483647}, 1, 2147483647),
-					  make_tuple(true, vector<long>{2147483647, -1, 2147483647}, 1, 2147483648), // long is 64-bit on Linux and 32-bit on Windows
-					  make_tuple(false, vector<long>{2147483647, -1, 2147483647}, 1, -2147483647L),
-					  make_tuple(false, vector<long>{-2147483648L, 2147483647}, 1, 1),
-					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 1),
-					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 2),
-					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 3),
-					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 4),
-					  make_tuple(true, vector<long>{4, 1, -1, 6, 5}, 3, 5)));
+	::testing::Values(make_tuple(true, vector<int64_t>{1, 2, 3, 1}, 3, 0),
+					  make_tuple(true, vector<int64_t>{1, 0, 1, 1}, 1, 2),
+					  make_tuple(false, vector<int64_t>{1, 5, 9, 1, 5, 9}, 2, 3),
+					  make_tuple(false, vector<int64_t>{1, 5, 9, 1, 5, 9}, 0, 0),
+					  make_tuple(false, vector<int64_t>{1, 5, 9, 1, 5, 9}, 0, 1),
+					  make_tuple(true, vector<int64_t>{1, 5, 9, 1, 5, 9}, 3, 0),
+					  make_tuple(false, vector<int64_t>{1, 5, 9, 1, 5, 9}, 2, 0),
+					  make_tuple(false, vector<int64_t>{1, 5, 9, 1, 5, 9}, -1, -1),
+					  make_tuple(true, vector<int64_t>{1, 2, 1}, 2, 0),
+					  make_tuple(false, vector<int64_t>{2147483647, -1, 2147483647}, 1, 2147483647),
+					  make_tuple(true, vector<int64_t>{2147483647, -1, 2147483647}, 1, 2147483648), // long is 64-bit on Linux and 32-bit on Windows
+					  make_tuple(false, vector<int64_t>{2147483647, -1, 2147483647}, 1, -2147483647L),
+					  make_tuple(false, vector<int64_t>{-2147483648L, 2147483647}, 1, 1),
+					  make_tuple(true, vector<int64_t>{4, 1, -1, 6, 5}, 3, 1),
+					  make_tuple(true, vector<int64_t>{4, 1, -1, 6, 5}, 3, 2),
+					  make_tuple(true, vector<int64_t>{4, 1, -1, 6, 5}, 3, 3),
+					  make_tuple(true, vector<int64_t>{4, 1, -1, 6, 5}, 3, 4),
+					  make_tuple(true, vector<int64_t>{4, 1, -1, 6, 5}, 3, 5)));
 #else
 INSTANTIATE_TEST_SUITE_P(
 	ContainsNearbyAlmostDuplicateTests,

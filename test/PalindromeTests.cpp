@@ -271,7 +271,7 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(4, "abbaab"),
 					  make_tuple(2, "akakak"),
 					  make_tuple(242745, "cbbdcacccdaddbaabbaacbacacaaddaaacdbccccccbbadbbcdddddddaccbdbddcbacaaadbbdcbcbcdabdddbbcdccaacdccab")));
-class MaxSizePalindromeCountTestFixture : public testing::TestWithParam<tuple<long, string, size_t, size_t>>
+class MaxSizePalindromeCountTestFixture : public testing::TestWithParam<tuple<int64_t, string, size_t, size_t>>
 {
 public:
 	void SetUp() override
@@ -281,7 +281,7 @@ public:
 		_l = get<2>(GetParam());
 		_r = get<3>(GetParam());
 	}
-	long MaxSizePalindromeCountTest()
+	int64_t MaxSizePalindromeCountTest()
 	{
 		return _palindrome.MaxSizePalindromeCount(_data, _l, _r);
 	}
@@ -289,7 +289,7 @@ public:
 protected:
 	Palindrome _palindrome;
 	string _data;
-	long _expected;
+	int64_t _expected;
 	size_t _l, _r;
 };
 TEST_P(MaxSizePalindromeCountTestFixture, MaxSizePalindromeCountTests)
