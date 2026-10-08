@@ -2559,9 +2559,9 @@ string decimal_to_binary(long decimal)
 	}
 	return "0";
 }
-long binary_to_decimal(string const &binary)
+int64_t binary_to_decimal(string const &binary)
 {
-	long result = 0;
+	int64_t result = 0;
 	size_t shift = 0;
 	for (long i = binary.size() - 1; i >= 0; i--)
 	{
@@ -2572,7 +2572,7 @@ long binary_to_decimal(string const &binary)
 	}
 	return result;
 }
-void decimal_to_binary(long decimal, vector<bool> &binary, size_t width)
+void decimal_to_binary(int64_t decimal, vector<bool> &binary, size_t width)
 {
 	binary.resize(width, false);
 	for (long i = width - 1; i >= 0 && decimal; i--)
