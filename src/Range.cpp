@@ -820,7 +820,7 @@ t: 10
 k: 1
 t: 1
 */
-bool Range::ContainsNearbyAlmostDuplicate(vector<int64_t> const &nums, long k, long t)
+bool Range::ContainsNearbyAlmostDuplicate(vector<int64_t> const &nums, int64_t k, int64_t t)
 {
 	multiset<int64_t> buckets;
 	if (k > 0 && t >= 0)

@@ -296,7 +296,6 @@ TEST_P(MaxSizePalindromeCountTestFixture, MaxSizePalindromeCountTests)
 {
 	ASSERT_EQ(this->_expected, this->MaxSizePalindromeCountTest());
 }
-#if defined(__GNUC__) || defined(__GNUG__)
 INSTANTIATE_TEST_SUITE_P(
 	MaxSizePalindromeCountTests,
 	MaxSizePalindromeCountTestFixture,
@@ -317,15 +316,3 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 0),
 					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 1),
 					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 2)));
-#else
-INSTANTIATE_TEST_SUITE_P(
-	MaxSizePalindromeCountTests,
-	MaxSizePalindromeCountTestFixture,
-	::testing::Values(make_tuple(2, "week", 0, 3),
-					  make_tuple(1, "week", 1, 2),
-					  make_tuple(2, "abab", 0, 3),
-					  make_tuple(1, "wuhmbspjnfviogqzldrcxtaeyk", 20, 20),
-					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 0),
-					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 1),
-					  make_tuple(1, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 0, 2)));
-#endif
