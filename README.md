@@ -33,9 +33,11 @@ C++-latest data structures and algorithms using only standard libraries. This an
    cmake -S . -B build -G "Visual Studio 18 2026" -A x64 -DBUILD_SHARED_LIBS=ON -Dgtest_force_shared_crt=ON -Dgtest_build_tests=OFF -Dgmock_build_tests=OFF -DCMAKE_CXX_FLAGS="/fsanitize=address" -DCMAKE_C_FLAGS="/fsanitize=address"
    ```
 
-   iii.`cmake --build build --config Debug --target gtest`. Copy `build/bin/Debug/gtest.dll` to `test/x64/Debug`.
+   iii.`cmake --build build --config Debug --target gtest` 
 
-   iv. `cmake --build build --config Release --target gtest`. Copy `build/bin/Release/gtest.dll` to `test/x64/Release`.
+   iv. `cmake --build build --config Release --target gtest`
+   
+   v. Add `build/bin/Debug` to `%PATH%` environment variable.
 
    Note: `gtest_main.dll` is not required for the application to link against the library.
    The `gtest_main` target simply provides a tiny boilerplate main function that initializes GoogleTest and runs the tests automatically.
@@ -68,7 +70,8 @@ C++-latest data structures and algorithms using only standard libraries. This an
 
 ### Google Test
 
-- Add the path of `clang_rt.asan_dynamic-x86_64.dll` to User and System environment variables. At the time of this writing and for Visual Studio 2026, the path is `C:\Program Files\Microsoft Visual Studio\18\Insiders\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64`
+- Add the path of `clang_rt.asan_dynamic-x86_64.dll` to User and System environment variables. At the time of this writing and for Visual Studio 2026, the path is `C:\Program Files\Microsoft Visual Studio\18\Insiders\VC\Tools\MSVC\14.52.37025\bin\Hostx64\x64`. 
+*Note* that the path changes every time Visual Studio is upgraded, especially the `14.52.37025` string in the path.
 
 ## Ubuntu
 
