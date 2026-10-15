@@ -64,17 +64,19 @@
             ]
         },          
         {
-            "name": "C/C++: (gdb-oneapi) oneAPI CPU Launch & Break (Console)",
-            "miDebuggerPath": "gdb-oneapi",
-            "MIMode": "gdb",
+            "name": "C/C++: (gdb-oneapi) Console (Debug)",
             "type": "cppdbg",
             "request": "launch",
             "preLaunchTask": "Presets: build linux-asan-debug",
+            "miDebuggerPath": "gdb-oneapi",
+            "MIMode": "gdb",
             "postDebugTask": "",
             "stopAtEntry": false,
+            "externalConsole": false,
             "program": "${workspaceFolder}/Debug/Console",
             "cwd": "${workspaceFolder}/build",
             "args": [],
+            "logging": { "engineLogging": true, "trace": true, "traceResponse": true },
             "environment": [
                 {
                     "name": "ZET_ENABLE_PROGRAM_DEBUGGING",
@@ -94,7 +96,6 @@
                     "value": "detect_leaks=0"
                 }
             ],
-            "externalConsole": false,
             "setupCommands": [
                 {
                     "description": "Disable MI-async",
@@ -124,17 +125,19 @@
             ]
         },
         {
-            "name": "C/C++: (gdb-oneapi) oneAPI CPU Launch & Break (Tests)",
-            "miDebuggerPath": "gdb-oneapi",
-            "MIMode": "gdb",
+            "name": "C/C++: (gdb-oneapi) Tests (Debug)",
             "type": "cppdbg",
             "request": "launch",
             "preLaunchTask": "Presets: build linux-asan-debug",
+            "miDebuggerPath": "gdb-oneapi",
+            "MIMode": "gdb",
             "postDebugTask": "",
             "stopAtEntry": false,
+            "externalConsole": false,
             "program": "${workspaceFolder}/Debug/DataStructuresAlgorithms.Tests",
             "cwd": "${workspaceFolder}/build",
             "args": [],
+            "logging": { "engineLogging": true, "trace": true, "traceResponse": true },
             "environment": [
                 {
                     "name": "ZET_ENABLE_PROGRAM_DEBUGGING",
@@ -154,7 +157,6 @@
                     "value": "detect_leaks=0"
                 }
             ],
-            "externalConsole": false,
             "setupCommands": [
                 {
                     "description": "Disable MI-async",
