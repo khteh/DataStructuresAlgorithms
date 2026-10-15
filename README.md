@@ -71,6 +71,7 @@ C++-latest data structures and algorithms using only standard libraries. This an
 ### Google Test
 
 - Add the path of `clang_rt.asan_dynamic-x86_64.dll` to User and System environment variables. At the time of this writing and for Visual Studio 2026, the path is `C:\Program Files\Microsoft Visual Studio\18\Insiders\VC\Tools\MSVC\14.52.37025\bin\Hostx64\x64`. 
+
 *Note* that the path changes every time Visual Studio is upgraded, especially the `14.52.37025` string in the path.
 
 ## Ubuntu
