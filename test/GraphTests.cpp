@@ -146,6 +146,50 @@ TEST(GraphTest, PruneMinCostTest)
 	root = graph.GetVertex(0);
 	ASSERT_TRUE(root);
 	ASSERT_EQ(1, graph.PruneMinCost(root));
+	graph.Clear();
+	data.resize(5);
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });								  // Item values
+	graph.AddVertices(data);										  // Tag values are indices
+	graph.AddDirectedEdge(graph.GetVertex(0), graph.GetVertex(1), 5); // 1->2 (5)
+	graph.AddDirectedEdge(graph.GetVertex(1), graph.GetVertex(2), 1); // 2->3 (1)
+	graph.AddDirectedEdge(graph.GetVertex(1), graph.GetVertex(3), 2); // 2->4 (2)
+	graph.AddDirectedEdge(graph.GetVertex(2), graph.GetVertex(4), 4); // 3->5 (4)
+	graph.AddDirectedEdge(graph.GetVertex(3), graph.GetVertex(4), 5); // 4->5 (5)
+	/*
+	Value inside bracket denotes cost.
+
+			0
+	  1(5)
+  2(1)      3(2)
+	   4(4,5)		<- Node(4) is connected to both Node(2) and Node(3)
+	*/
+	graph.Print();
+	root = graph.GetVertex(0);
+	ASSERT_TRUE(root);
+	ASSERT_EQ(3, graph.PruneMinCost(root));
+	graph.Clear();
+	data.resize(5);
+	ranges::generate(data, [n = 1]() mutable
+					 { return n++; });								   // Item values
+	graph.AddVertices(data);										   // Tag values are indices
+	graph.AddDirectedEdge(graph.GetVertex(0), graph.GetVertex(1), 10); // 1->2 (10)
+	graph.AddDirectedEdge(graph.GetVertex(1), graph.GetVertex(2), 6);  // 2->3 (6)
+	graph.AddDirectedEdge(graph.GetVertex(1), graph.GetVertex(3), 7);  // 2->4 (7)
+	graph.AddDirectedEdge(graph.GetVertex(2), graph.GetVertex(4), 4);  // 3->5 (4)
+	graph.AddDirectedEdge(graph.GetVertex(3), graph.GetVertex(4), 5);  // 4->5 (5)
+	/*
+	Value inside bracket denotes cost.
+
+			0
+	  1(10)
+  2(6)      3(7)
+	   4(4,5)		<- Node(4) is connected to both Node(2) and Node(3)
+	*/
+	graph.Print();
+	root = graph.GetVertex(0);
+	ASSERT_TRUE(root);
+	ASSERT_EQ(9, graph.PruneMinCost(root));
 }
 class BFSShortestPathsTestFixture : public testing::TestWithParam<tuple<vector<long>, size_t, vector<vector<size_t>>, size_t>>
 {
