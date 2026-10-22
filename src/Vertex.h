@@ -22,6 +22,7 @@ public:
 	size_t NeighbourCount() const;
 	TItem GetSubGraphSum(TTag);
 	long GetCost(shared_ptr<Vertex<TTag, TItem>>);
+	long GetMinPruneCost() const;
 	long GetTotalCost() const;
 	void SetTotalCost(long);
 	TItem MinSubGraphsDifference(TTag, TItem) const;

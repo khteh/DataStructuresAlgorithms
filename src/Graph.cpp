@@ -8,7 +8,7 @@ template class Graph<long, long>;
 template class Graph<size_t, size_t>;
 template class FurthestNode<long, long>;
 template class FurthestNode<size_t, size_t>;
-
+using namespace oneapi::tbb;
 template <typename TTag, typename TItem>
 FurthestNode<TTag, TItem>::FurthestNode() : distance(0), vertex(nullptr) {}
 template <typename TTag, typename TItem>
@@ -668,4 +668,32 @@ long Graph<TTag, TItem>::Prune(set<TTag> const &nodes, set<TTag> &removed)
 	for (typename set<TTag>::const_iterator it = removed.begin(); it != removed.end(); it++)
 		_vertices.erase(*it);
 	return cost;
+}
+/*
+ * Given a binary tree with edge weights, remove all leaf nodes from the root. A cut can be made anywhere in the tree, removing the corresponding leaf/subtree.
+ * The cost of removing all the leaf nodes is the sum of the weights of the edges being cut. Find the minimum total cost.
+ *
+	Value inside bracket denotes cost.
+ *
+ *			5
+		  3(1)
+		1(2) 4(3) -> Cut node 3: cost = 1
+	 6(4)   7(5)
+
+*			 5
+		   3(3)
+		1(1) 4(1) -> Cut nodes 1 and 2: cost = 2
+	 6(2)
+
+
+			0
+	  1(1)
+  2(2)      3(3)
+	   4(4,5)		<- Node(4) is connected to both Node(2) and Node(3)
+
+*/
+template <typename TTag, typename TItem>
+long Graph<TTag, TItem>::PruneMinCost(shared_ptr<Vertex<TTag, TItem>> node) const
+{
+	return node->GetMinPruneCost();
 }

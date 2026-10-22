@@ -162,6 +162,22 @@ long Vertex<TTag, TItem>::GetCost(shared_ptr<Vertex<TTag, TItem>> v)
 	return _neighbours.count(v) ? _neighbours[v] : -1;
 }
 template <typename TTag, typename TItem>
+long Vertex<TTag, TItem>::GetMinPruneCost() const
+{
+	/*
+	Value inside bracket denotes cost.
+
+			0
+	  1(1)
+  2(2)      3(3)
+	   4(4,5)		<- Node(4) is connected to both Node(2) and Node(3)
+	*/
+	long cost = _neighbours.empty() ? numeric_limits<long>::max() : 0;
+	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = _neighbours.begin(); it != _neighbours.end(); it++)
+		cost += min(it->first->GetMinPruneCost(), it->second);
+	return cost;
+}
+template <typename TTag, typename TItem>
 TItem Vertex<TTag, TItem>::GetSubGraphSum(TTag parent)
 {
 	if (_sum == TItem())

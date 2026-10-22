@@ -19,8 +19,6 @@ private:
 	TItem GetSubGraphSum(TTag);
 	void AddVertex(shared_ptr<Vertex<TTag, TItem>>);
 	shared_ptr<Vertex<TTag, TItem>> AddVertex(TTag, TItem);
-	void AddDirectedEdge(shared_ptr<Vertex<TTag, TItem>>, shared_ptr<Vertex<TTag, TItem>>, long);
-	void AddDirectedEdge(TTag from, TTag to, long cost);
 	long GetPathsCosts(shared_ptr<Vertex<TTag, TItem>>, shared_ptr<Vertex<TTag, TItem>>);
 
 public:
@@ -32,6 +30,8 @@ public:
 	void Clear();
 	void AddVertices(vector<TItem> &);
 	shared_ptr<Vertex<TTag, TItem>> AddVertex(TTag);
+	void AddDirectedEdge(shared_ptr<Vertex<TTag, TItem>>, shared_ptr<Vertex<TTag, TItem>>, long);
+	void AddDirectedEdge(TTag from, TTag to, long cost);
 	void AddUndirectedEdge(shared_ptr<Vertex<TTag, TItem>>, shared_ptr<Vertex<TTag, TItem>>, long);
 	void AddUndirectedEdge(TTag from, TTag to, long cost);
 	bool HasVertex(TTag) const;
@@ -50,6 +50,7 @@ public:
 	TItem MinSubGraphsDifference(TTag);
 	long EvenForest(TTag);
 	long Prune(set<TTag> const &, set<TTag> &);
+	long PruneMinCost(shared_ptr<Vertex<TTag, TItem>>) const;
 	void Print() const;
 	void Print(TTag);
 	void Print(shared_ptr<Vertex<TTag, TItem>>) const;
