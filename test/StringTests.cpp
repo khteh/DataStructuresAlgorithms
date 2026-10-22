@@ -505,7 +505,33 @@ TEST_P(LongestStringWithCharacterReplacementTestFixture, LongestStringWithCharac
 INSTANTIATE_TEST_SUITE_P(
     LongestStringWithCharacterReplacementTests,
     LongestStringWithCharacterReplacementTestFixture,
-    ::testing::Values(make_tuple(4, "ABAB", 2), make_tuple(4, "AABABBA", 1), make_tuple(4, "ACTGAAAG", 1), make_tuple(7, "GAAATAAA", 1)));
+    ::testing::Values(make_tuple(4, "ABAB", 2), make_tuple(4, "AABABBA", 1), make_tuple(4, "ACTGAAAG", 1), make_tuple(7, "GAAATAAA", 1)));  
+class LongestMatchingWordWithDeletionTestFixture : public testing::TestWithParam<tuple<string, string, set<string>>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _string = get<1>(GetParam());
+        _dictionary = get<2>(GetParam());
+    }
+    string LongestMatchingWordWithDeletionTest()
+    {
+        return LongestMatchingWordWithDeletion(_string, _dictionary);
+    }
+
+protected:
+    set<string> _dictionary;
+    string _string, _expected;
+};
+TEST_P(LongestMatchingWordWithDeletionTestFixture, LongestMatchingWordWithDeletionTests)
+{
+    ASSERT_EQ(this->_expected, this->LongestMatchingWordWithDeletionTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    LongestMatchingWordWithDeletionTests,
+    LongestMatchingWordWithDeletionTestFixture,
+    ::testing::Values(make_tuple("apple", "abppplee", set<string>{"able", "ale", "apple", "bale", "kangaroo"})));
 
 class WordsLadderTestFixture : public testing::TestWithParam<tuple<vector<string>, string, string, set<string>>>
 {

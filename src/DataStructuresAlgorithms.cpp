@@ -5500,7 +5500,84 @@ size_t LongestStringWithCharacterReplacement(string const &s, size_t k)
 	}
 	return maxLength;
 }
+/*
+Given a string S and a set of words D, find the longest word in D that is a subsequence of S.
 
+Word W is a subsequence of S if some number of characters, possibly zero, can be deleted from S to form W, without reordering the remaining characters.
+
+Note: D can appear in any format (list, hash table, prefix tree, etc.
+
+For example, given the input of S = "abppplee" and D = {"able", "ale", "apple", "bale", "kangaroo"} the correct output would be "apple"
+
+The words "able" and "ale" are both subsequences of S, but they are shorter than "apple".
+The word "bale" is not a subsequence of S because even though S has all the right letters, they are not in the right order.
+The word "kangaroo" is the longest word in D, but it isn't a subsequence of S.
+
+'a':
+a -> [("able", 1), ("ale", 1), ("apple", 1)]; transfer ("able", 1) to map['b'], ("ale", 1) to map['l'], ("apple", 1) to map['p']
+b -> [("bale", 0)]
+k -> [("kangaroo", 0)]
+
+b -> [("bale", 0), ("able", 1)]
+k -> [("kangaroo", 0)]
+l -> [("ale", 1)]
+p -> [("apple", 1)]
+
+'b':
+b -> [("bale", 1), ("able", 2)]; transfer ("bale", 1) to map['a'], ("able", 2) to map['l']
+k -> [("kangaroo", 0)]
+l -> [("ale", 1)]
+p -> [("apple", 1)]
+
+a -> [("bale", 1)]
+k -> [("kangaroo", 0)]
+l -> [("ale", 1), ("able", 2)]
+p -> [("apple", 1)]
+
+'p':
+a -> [("bale", 1)]
+k -> [("kangaroo", 0)]
+l -> [("ale", 1), ("able", 2)]
+p -> [("apple", 2)]: transfer ("apple", 2) to map['p']
+
+*/
+string LongestMatchingWordWithDeletion(string const &s, set<string> const &words)
+{
+	vector<longestmatchingwordwithdeletion_state_t> tuples; // index: The number refers to the number of characters in w that have already been found in S.
+	map<char, vector<longestmatchingwordwithdeletion_state_t>> groups;
+	set<string, greater<string>> result;
+	for (set<string>::const_iterator it = words.begin(); it != words.end(); it++)
+		tuples.push_back(longestmatchingwordwithdeletion_state_t(0, *it));
+	for (vector<longestmatchingwordwithdeletion_state_t>::iterator it = tuples.begin(); it != tuples.end(); it++)
+	{
+		/* group words by their first character
+			a -> [("able", 0), ("ale", 0), ("apple", 0)]
+			b -> [("bale", 0)]
+			k -> [("kangaroo", 0)]
+		*/
+		groups[it->word[0]].push_back(*it);
+	}
+	for (char c : s)
+	{
+		/*
+		Scan S one character (c) at a time. For each tuple t in map[c], increment t.i by 1 and transfer t to map[t.w[t.i]].
+		*/
+		if (groups.count(c))
+		{
+			vector<longestmatchingwordwithdeletion_state_t> group = groups[c];
+			groups.erase(c);
+			for (vector<longestmatchingwordwithdeletion_state_t>::iterator it = group.begin(); it != group.end(); it++)
+			{
+				it->index++;
+				if (it->index < it->word.size())
+					groups[it->word[it->index]].push_back(*it);
+				else
+					result.insert(it->word);
+			}
+		}
+	}
+	return *result.begin();
+}
 /*
  * https://www.hackerrank.com/challenges/time-conversion/problem
  * 100%

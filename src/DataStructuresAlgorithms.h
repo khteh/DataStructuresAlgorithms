@@ -350,3 +350,18 @@ size_t FindConnectedComponents(vector<long> &);
 string LongestCommonPrefix(vector<string> const &);
 string DecodeString(string const &);
 size_t LongestStringWithCharacterReplacement(string const &, size_t);
+typedef struct LongestMatchingWordWithDeletionState
+{
+	size_t index; // The number refers to the number of characters in w that have already been found in input string.
+	string word;
+	LongestMatchingWordWithDeletionState(size_t i, string const &w) : index(i), word(w) {}
+	bool operator<(const LongestMatchingWordWithDeletionState &other) const
+	{
+		return word.length() < other.word.length() && word < other.word;
+	}
+	bool operator>(const LongestMatchingWordWithDeletionState &other) const
+	{
+		return word.length() > other.word.length() && word > other.word;
+	}
+} longestmatchingwordwithdeletion_state_t;
+string LongestMatchingWordWithDeletion(string const &, set<string> const &);
