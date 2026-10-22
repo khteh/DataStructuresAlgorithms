@@ -5560,6 +5560,40 @@ k -> [("kangaroo", 0)]
 l -> [("ale", 1), ("able", 2)]
 p -> [("apple", 2)]: transfer ("apple", 2) to map['p']
 
+'p':
+a -> [("bale", 1)]
+k -> [("kangaroo", 0)]
+l -> [("ale", 1), ("able", 2)]
+p -> [("apple", 3)]: transfer ("apple", 3) to map['l']
+
+a -> [("bale", 1)]
+k -> [("kangaroo", 0)]
+l -> [("ale", 1), ("able", 2), ("apple", 3)]
+
+'p':
+a -> [("bale", 1)]
+k -> [("kangaroo", 0)]
+l -> [("ale", 1), ("able", 2), ("apple", 3)]
+
+'l':
+a -> [("bale", 1)]
+k -> [("kangaroo", 0)]
+l -> [("ale", 2), ("able", 3), ("apple", 4)]: transfer ("ale", 2) to map['e'], ("able", 3) to map['e'], ("apple", 4) to map['e']
+
+a -> [("bale", 1)]
+k -> [("kangaroo", 0)]
+e -> [("ale", 2), ("able", 3), ("apple", 4)]: transfer ("ale", 2) to map['e'], ("able", 3) to map['e'], ("apple", 4) to map['e']
+
+'e':
+a -> [("bale", 1)]
+k -> [("kangaroo", 0)]
+e -> [("ale", 3), ("able", 4), ("apple", 5)]
+result: ["apple", "able", "ale"]
+
+'e':
+a -> [("bale", 1)]
+k -> [("kangaroo", 0)]
+result: ["apple", "able", "ale"]
 */
 string LongestMatchingWordWithDeletion(string const &s, set<string> const &words)
 {
