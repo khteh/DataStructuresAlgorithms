@@ -5474,17 +5474,17 @@ long SteadyGene(string const &gene)
  * https://leetcode.com/problems/longest-repeating-character-replacement/
  * 100%
  * Sliding window implementation
- * [A]BAB k=1: maxFreq:1
- * [AB]AB : maxFreq:1
- * [ABA]B : maxFreq:2
- * [ABAB] : maxFreq:2, diff:2
+ * [A]BAB k=1: maxFreq:1, maxLength:1
+ * [AB]AB : maxFreq:1, maxLength:2
+ * [ABA]B : maxFreq:2, maxLength:3
+ * [ABAB] : maxFreq:2, diff:2, maxLength:3
  * A[BAB] : maxFreq:2, diff:1, maxLength:3
  *
- * [A]CBA k=1, maxFreq:1
- * [AC]BA : maxFreq:1
- * [ACB]A : maxFreq:1, diff:2
+ * [A]CBA k=1, maxFreq:1, maxLength:1
+ * [AC]BA : maxFreq:1, maxLength:2
+ * [ACB]A : maxFreq:1, diff:2, maxLength:3
  * A[CB]A : maxFreq:1, diff:1, maxLength:2
- * A[CBA] : maxFreq:1, diff:2
+ * A[CBA] : maxFreq:1, diff:2, maxLength:2
  * AC[BA] : maxFreq:1, diff:1, maxLength:2
  */
 size_t LongestStringWithCharacterReplacement(string const &s, size_t k)
