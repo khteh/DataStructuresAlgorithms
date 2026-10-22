@@ -3123,7 +3123,7 @@ size_t LongestNonDecreasingSubsequenceNlogN(vector<size_t> const &data)
 1,2,3,1,2
 1 2 3 1 2 left
 3 2 1 2 1 right
-3 2 3 4 4 result
+3 3 4 4 4 result
 
 2 2 2 2 2
 1 2 3 4 5 left
@@ -3812,6 +3812,26 @@ string DecodeStringRegex(string const &str)
  * https://leetcode.com/problems/decode-string/
  * All the integers in s are in the range [1, 300].
  * To prevent N^2 behaviour, never build intermediate strings. Write into a single buffer, remember where each [ started, and on ] append that segment k − 1 more times:
+ *
+ * 3[a]2[bc]
+result: ""
+stack: [(0, 3)]
+result: "a" -> "aaa"
+
+result: "aaa"
+stack: [(3, 2)]
+result: "aaabc" -> "aaabcbc"
+
+3[a2[c]]
+result: ""
+stack: [(0, 3)]
+
+result: "a"
+stack: [(0, 3), (1, 2)]
+result: "ac" -> "acc"
+stack: [(0, 3)]
+result: "acc" -> "accaccacc"
+
  * 100%
  */
 string DecodeString(string const &str)
