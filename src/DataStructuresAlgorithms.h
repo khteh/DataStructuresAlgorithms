@@ -357,11 +357,11 @@ typedef struct LongestMatchingWordWithDeletionState
 	LongestMatchingWordWithDeletionState(size_t i, string const &w) : index(i), word(w) {}
 	bool operator<(const LongestMatchingWordWithDeletionState &other) const
 	{
-		return word.length() < other.word.length() && word < other.word;
+		return word < other.word;
 	}
 	bool operator>(const LongestMatchingWordWithDeletionState &other) const
 	{
-		return word.length() > other.word.length() && word > other.word;
+		return word > other.word;
 	}
 } longestmatchingwordwithdeletion_state_t;
 string LongestMatchingWordWithDeletion(string const &, set<string> const &);

@@ -128,9 +128,13 @@
 				}
 			],    
   }, 
+  // Up to 18 TestMate tasks at once (test runs, discovery, reloads), matching cmake.ctest.parallelJobs.
+  "testMate.cpp.test.parallelExecutionLimit": 18,
   "testMate.cpp.test.advancedExecutables": [
     {
       "pattern": "{Debug,Release}/*{test,Test,TEST}*",
+      // Splits the tests of one executable across up to 18 processes. Needs parallelExecutionLimit above too.
+      "parallelizationLimit": 18,
       "gtest": {
         "debug.enableOutputColouring": true
       }

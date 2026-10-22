@@ -49,14 +49,12 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.8 ./Release/DataStructuresAlgorithms.Tests
-            STATUS_CODE=$?
-
-            # Example: 0 is success
-            if [ $STATUS_CODE -ne 0 ]; then
-              echo "Error occurred in the tests."
-              exit $STATUS_CODE
-            fi
+            # CTest runs each Google Test case as its own test (gtest_discover_tests) and fails this step if any fails.
+            # -j is set explicitly because nproc in a Docker executor can report the host's cores, not this job's CPUs.
+            # The JUnit path must be absolute; a relative one is written inside the build tree.
+            ctest --preset linux-asan-release -j 2 --output-junit "$PWD/test-results/ctest/results.xml"
+      - store_test_results:
+          path: test-results
       - persist_to_workspace:
           name: Save Workspace
           root: .

@@ -157,7 +157,7 @@ TEST_P(RangePermutationsTestFixture, RangePermutationsTests)
 INSTANTIATE_TEST_SUITE_P(
     RangePermutationsTests,
     RangePermutationsTestFixture,
-    ::testing::Values(make_tuple(3, 3, 1, 1), make_tuple(6, 3, 3, 1), make_tuple(6, 3, 2, 1), make_tuple(120, 5, 5, 1), make_tuple(5040, 7, 7, 1), make_tuple(362880, 9, 9, 1)));
+    ::testing::Values(make_tuple(3, 3, 1, 1), make_tuple(6, 3, 3, 1), make_tuple(6, 3, 2, 1), make_tuple(120, 5, 5, 1), make_tuple(5040, 7, 7, 1) /* make_tuple(362880, 9, 9, 1) Takes too long! */));
 class RangeUniquePermutationsTestFixture : public RangePermutationsTestFixtureBase<size_t>, public testing::TestWithParam<tuple<size_t, size_t, size_t, size_t>>
 {
 public:

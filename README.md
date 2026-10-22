@@ -129,6 +129,8 @@ $ cmake --build --preset linux-asan-debug
 $ ctest --preset linux-asan-debug
 ```
 
+- The test presets run one test per CPU core. Override it with `ctest --preset linux-asan-debug -j 4`.
+
 - `./valgrind.sh` configures and builds the `linux-valgrind` preset and runs Valgrind on it.
 
 #### Visual Studio Code

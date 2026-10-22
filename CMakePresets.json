@@ -132,6 +132,10 @@
     {
       "name": "test-base",
       "hidden": true,
+      "$comment": "An empty CTEST_PARALLEL_LEVEL runs one test per CPU core. \"jobs\": 0 is avoided because it runs every test at once.",
+      "environment": {
+        "CTEST_PARALLEL_LEVEL": ""
+      },
       "output": {
         "outputOnFailure": true
       },

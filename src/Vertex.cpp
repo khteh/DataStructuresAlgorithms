@@ -15,7 +15,7 @@ Vertex<TTag, TItem>::Vertex(TTag tag)
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag, TItem item)
-	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(tag), _item(item), _cost(numeric_limits<long>::max()), _sum(TItem())
+	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(tag), _item(item), _sum(TItem()), _cost(numeric_limits<long>::max())
 {
 }
 template <typename TTag, typename TItem>
@@ -30,6 +30,7 @@ Vertex<TTag, TItem>::Vertex(const Vertex<TTag, TItem> &vertex)
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(Vertex<TTag, TItem> &&vertex) noexcept // Move constructor
+	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(vertex._tag), _item(vertex._item), _sum(vertex._sum), _cost(vertex._cost), _neighbours(vertex._neighbours)
 {
 	vertex.Swap(*this);
 }
