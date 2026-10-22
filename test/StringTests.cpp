@@ -331,7 +331,7 @@ TEST_P(DecodeStringTestFixture, DecodeStringTests)
 INSTANTIATE_TEST_SUITE_P(
     DecodeStringTests,
     DecodeStringTestFixture,
-    ::testing::Values(make_tuple("aaabcbc", "3[a]2[bc]"), make_tuple("accaccacc", "3[a2[c]]"), make_tuple("abcabccdcdcdef", "2[abc]3[cd]ef"), make_tuple("abccdcdcdxyz", "abc3[cd]xyz")));
+    ::testing::Values(make_tuple("aaabcbc", "3[a]2[bc]"), make_tuple("accaccacc", "3[a2[c]]"), make_tuple("abcabccdcdcdef", "2[abc]3[cd]ef"), make_tuple("abccdcdcdxyz", "abc3[cd]xyz"), make_tuple("", ""), make_tuple("ab", "a[]b")));
 
 class LengthOfLongestUniqueSubstringTestFixture : public StringTestFixture<size_t, string>, public testing::TestWithParam<tuple<size_t, string>>
 {

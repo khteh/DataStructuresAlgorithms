@@ -3810,82 +3810,43 @@ string DecodeStringRegex(string const &str)
 }
 /*
  * https://leetcode.com/problems/decode-string/
+ * All the integers in s are in the range [1, 300].
+ * To prevent N^2 behaviour, never build intermediate strings. Write into a single buffer, remember where each [ started, and on ] append that segment k − 1 more times:
  * 100%
  */
 string DecodeString(string const &str)
 {
-	stack<string> stk;
-	ostringstream oss;
-	for (string::const_reverse_iterator it = str.crbegin(); it != str.crend();)
+	string result;						// Single output buffer
+	vector<pair<size_t, size_t>> stack; // (start index in result, k)
+	size_t k = 0;
+	for (char c : str)
 	{
-		if (*it == ']')
+		if (c >= '0' && c <= '9')
+			k = k * 10 + (c - '0'); // Build the multiplier k
+		else if (c == '[')
 		{
-			/*
-			2[3[ab]cd]
-			2[ab3[cd]]
-			*/
-			if (!oss.str().empty())
-			{
-				string s = oss.str();
-				ranges::reverse(s);
-				stk.push(s);
-				oss.str("");
-			}
-			stk.push(string(1, *it));
-			it++;
+			stack.emplace_back(result.size(), k); // Remember where this segment starts and its multiplier
+			k = 0;								  // Reset k for the next number
 		}
-		else if (*it == '[')
+		else if (c == ']')
 		{
-			/*
-			 * 3[abc]
-			 */
-			if (!oss.str().empty())
-			{
-				string s = oss.str();
-				ranges::reverse(s);
-				stk.push(s);
-				oss.str("");
+			auto [start, repeat] = stack.back();
+			stack.pop_back();
+			if (repeat > 1)
+			{										   // k == 1: nothing to do, no copy
+				string segment = result.substr(start); // Get the segment to repeat. costs |seg| <= what we append next
+				if (!segment.empty())
+				{
+					result.reserve(result.size() + segment.size() * (repeat - 1)); // Reserve enough space to avoid multiple reallocations
+					for (size_t i = 1; i < repeat; i++)
+						result += segment; // Append the segment k-1 more times
+				}
 			}
-			it++;
 		}
-		else if (isalpha(*it))
-			oss << *it++;
-		else if (isdigit(*it))
-		{
-			size_t num;
-			for (; it != str.crend() && isdigit(*it); it++)
-				oss << *it;
-			string s = oss.str();
-			ranges::reverse(s);
-			istringstream(s) >> num;
-			oss.str("");
-			ostringstream repeat;
-			for (; !stk.empty() && stk.top() != "]"; stk.pop())
-				repeat << stk.top();
-			if (stk.top() == "]")
-				stk.pop();
-			if (!repeat.str().empty())
-			{
-				for (size_t i = 0; i < num; i++)
-					oss << repeat.str();
-				stk.push(oss.str());
-			}
-			oss.str("");
-		}
+		else
+			result += c; // Regular character, just append to result
 	}
-	if (!oss.str().empty())
-	{
-		string s = oss.str();
-		ranges::reverse(s);
-		stk.push(s);
-	}
-	oss.str("");
-	for (; !stk.empty();)
-	{
-		oss << stk.top();
-		stk.pop();
-	}
-	return oss.str();
+	return result;
 }
 /* https://www.hackerrank.com/challenges/sam-and-substrings/problem
  * 100%
