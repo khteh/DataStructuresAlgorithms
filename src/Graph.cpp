@@ -693,7 +693,14 @@ long Graph<TTag, TItem>::Prune(set<TTag> const &nodes, set<TTag> &removed)
 
 */
 template <typename TTag, typename TItem>
-long Graph<TTag, TItem>::PruneMinCost(shared_ptr<Vertex<TTag, TItem>> node) const
+long Graph<TTag, TItem>::PruneMinCost(size_t root, vector<TTag> &from, vector<TTag> &to, vector<long> &weight)
 {
-	return node->GetMinPruneCost();
+	if (from.size() != to.size() || from.size() != weight.size())
+		throw invalid_argument("from, to and weight data point counts must match!");
+	for (size_t i = 0; i < from.size(); i++)
+		AddDirectedEdge(from[i], to[i], weight[i]);
+	shared_ptr<Vertex<TTag, TItem>> node = GetVertex(root);
+	if (!node)
+		throw invalid_argument("Root node not found in graph!");
+	return PruneMinCost(node);
 }

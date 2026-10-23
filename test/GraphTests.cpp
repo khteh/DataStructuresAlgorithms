@@ -159,28 +159,52 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(85, 5, vector<size_t>{1, 2, 3, 4, 1, 3}, vector<size_t>{2, 3, 4, 5, 3, 5}, vector<long>{30, 50, 70, 90, 70, 85}),
 					  make_tuple(-1, 4, vector<size_t>{1, 3}, vector<size_t>{2, 4}, vector<long>{10, 20}),
 					  make_tuple(1196, 10, vector<size_t>{1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9}, vector<size_t>{2, 3, 4, 5, 6, 7, 8, 9, 10, 3, 4, 5, 6, 7, 8, 9, 10, 4, 5, 6, 7, 8, 9, 10, 5, 6, 7, 8, 9, 10, 6, 7, 8, 9, 10, 7, 8, 9, 10, 8, 9, 10, 9, 10, 10}, vector<long>{6337, 1594, 3766, 3645, 75, 5877, 8561, 242, 6386, 3331, 4194, 8069, 3934, 101, 8536, 6963, 9303, 7639, 8512, 1330, 6458, 1180, 3913, 1565, 9488, 1369, 8066, 9439, 7510, 6833, 4215, 194, 4774, 4328, 187, 1196, 200, 8743, 1433, 2933, 2069, 1974, 7349, 2351, 8423})));
-class PruneMinCostTestFixture : public testing::TestWithParam<tuple<long, size_t, vector<vector<size_t>>>>
+class PruneMinCostTestFixture : public testing::TestWithParam<tuple<long, size_t, vector<size_t>, vector<size_t>, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
 		_expected = get<0>(GetParam());
 		_root = get<1>(GetParam());
-		_paths = get<2>(GetParam());
-		_graph.Clear();
-		for (vector<vector<size_t>>::const_iterator it = _paths.begin(); it != _paths.end(); it++)
-			_graph.AddDirectedEdge((*it)[0], (*it)[1], (*it)[2]);
+		_from = get<2>(GetParam());
+		_to = get<3>(GetParam());
+		_weights = get<4>(GetParam());
 	}
 	long PruneMinCostTest()
 	{
-		return _graph.PruneMinCost(_graph.GetVertex(_root));
+		/*
+		Value inside bracket denotes cost.
+			  1
+		  2(1)
+
+			  1
+		  2(1)
+	 3(2)      4(3)
+
+			  1
+		 2(1)
+	 3(2)      4(3)
+		  5(4,5)               <- Node(5) is connected to both Node(3) and Node(4)
+
+			   1
+		  2(5)
+	  3(1)      4(2)
+		  5(4,5)               <- Node(5) is connected to both Node(3) and Node(4)
+
+			   1
+		 2(10)
+	  3(6)      4(7)
+		  5(4,5)               <- Node(5) is connected to both Node(3) and Node(4)
+		*/
+		return _graph.PruneMinCost(_root, _from, _to, _weights);
 	}
 
 protected:
 	Graph<size_t, size_t> _graph;
 	long _expected;
 	size_t _root;
-	vector<vector<size_t>> _paths;
+	vector<size_t> _from, _to;
+	vector<long> _weights;
 };
 TEST_P(PruneMinCostTestFixture, PruneMinCostTests)
 {
@@ -189,11 +213,11 @@ TEST_P(PruneMinCostTestFixture, PruneMinCostTests)
 INSTANTIATE_TEST_SUITE_P(
 	PruneMinCostTests,
 	PruneMinCostTestFixture,
-	::testing::Values(make_tuple(1, 1, vector<vector<size_t>>{{1, 2, 1}}),
-					  make_tuple(1, 1, vector<vector<size_t>>{{1, 2, 1}, vector<size_t>{2, 3, 2}, vector<size_t>{2, 4, 3}}),
-					  make_tuple(1, 1, vector<vector<size_t>>{{1, 2, 1}, vector<size_t>{2, 3, 2}, vector<size_t>{2, 4, 3}, vector<size_t>{3, 5, 4}, vector<size_t>{4, 5, 5}}),
-					  make_tuple(3, 1, vector<vector<size_t>>{{1, 2, 5}, vector<size_t>{2, 3, 1}, vector<size_t>{2, 4, 2}, vector<size_t>{3, 5, 4}, vector<size_t>{4, 5, 5}}),
-					  make_tuple(9, 1, vector<vector<size_t>>{{1, 2, 10}, vector<size_t>{2, 3, 6}, vector<size_t>{2, 4, 7}, vector<size_t>{3, 5, 4}, vector<size_t>{4, 5, 5}})));
+	::testing::Values(make_tuple(1, 1, vector<size_t>{1}, vector<size_t>{2}, vector<long>{1}),
+					  make_tuple(1, 1, vector<size_t>{1, 2, 2}, vector<size_t>{2, 3, 4}, vector<long>{1, 2, 3}),
+					  make_tuple(1, 1, vector<size_t>{1, 2, 2, 3, 4}, vector<size_t>{2, 3, 4, 5, 5}, vector<long>{1, 2, 3, 4, 5}),
+					  make_tuple(3, 1, vector<size_t>{1, 2, 2, 3, 4}, vector<size_t>{2, 3, 4, 5, 5}, vector<long>{5, 1, 2, 4, 5}),
+					  make_tuple(9, 1, vector<size_t>{1, 2, 2, 3, 4}, vector<size_t>{2, 3, 4, 5, 5}, vector<long>{10, 6, 7, 4, 5})));
 
 TEST(GraphTests, DijkstraTest)
 {

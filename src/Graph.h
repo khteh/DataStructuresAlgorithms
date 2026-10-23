@@ -50,7 +50,7 @@ public:
 	TItem MinSubGraphsDifference(TTag);
 	long EvenForest(TTag);
 	long Prune(set<TTag> const &, set<TTag> &);
-	long PruneMinCost(shared_ptr<Vertex<TTag, TItem>>) const;
+	long PruneMinCost(size_t, vector<TTag> &, vector<TTag> &, vector<long> &);
 	void Print() const;
 	void Print(TTag);
 	void Print(shared_ptr<Vertex<TTag, TItem>>) const;
