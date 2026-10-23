@@ -5377,12 +5377,12 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 /*
  * https://www.hackerrank.com/challenges/bear-and-steady-gene/problem
  * 100%
- * find the length of the smallest possible substring that he can replace to make  a steady gene
+ * find the length of the smallest possible substring that can be replaced to make a steady gene
  * Sliding window implementation
  */
-long SteadyGene(string const &gene)
+size_t SteadyGene(string const &gene)
 {
-	long count = numeric_limits<long>::max();
+	size_t count = numeric_limits<size_t>::max();
 	if (gene.size() % 4) // gene.size() should be divisable by 4
 		return count;
 	size_t balancedCount = gene.size() / 4;
@@ -5480,7 +5480,7 @@ long SteadyGene(string const &gene)
 	 * 'C': 3
 	 * 'T': 1, j:8, i:6
 	 */
-	for (long i = 0, j = 0; i < gene.size() && j < gene.size();)
+	for (size_t i = 0, j = 0; i < gene.size() && j < gene.size();)
 		if (genes['A'] <= balancedCount && genes['C'] <= balancedCount && genes['G'] <= balancedCount && genes['T'] <= balancedCount)
 		{
 			count = min(count, j - i);

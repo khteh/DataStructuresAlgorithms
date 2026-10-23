@@ -460,14 +460,14 @@ INSTANTIATE_TEST_SUITE_P(
     GetHintChallengeTests,
     GetHintChallengeTestFixture,
     ::testing::Values(make_tuple("2A2B", "6244988279", "3819888600"), make_tuple("1A3B", "1807", "7810"), make_tuple("1A1B", "1123", "0111")));
-class SteadyGeneChallengeTestFixture : public StringTestFixture<long, string>, public testing::TestWithParam<tuple<long, string>>
+class SteadyGeneChallengeTestFixture : public StringTestFixture<size_t, string>, public testing::TestWithParam<tuple<size_t, string>>
 {
 public:
     void SetUp() override
     {
         StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
-    long SteadyGeneChallengeTest()
+    size_t SteadyGeneChallengeTest()
     {
         return SteadyGene(_var1);
     }
@@ -505,7 +505,7 @@ TEST_P(LongestStringWithCharacterReplacementTestFixture, LongestStringWithCharac
 INSTANTIATE_TEST_SUITE_P(
     LongestStringWithCharacterReplacementTests,
     LongestStringWithCharacterReplacementTestFixture,
-    ::testing::Values(make_tuple(4, "ABAB", 2), make_tuple(4, "AABABBA", 1), make_tuple(4, "ACTGAAAG", 1), make_tuple(7, "GAAATAAA", 1)));  
+    ::testing::Values(make_tuple(4, "ABAB", 2), make_tuple(4, "AABABBA", 1), make_tuple(4, "ACTGAAAG", 1), make_tuple(7, "GAAATAAA", 1)));
 class LongestMatchingWordWithDeletionTestFixture : public testing::TestWithParam<tuple<string, string, set<string>>>
 {
 public:

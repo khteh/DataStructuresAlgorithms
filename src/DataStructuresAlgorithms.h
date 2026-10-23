@@ -329,7 +329,7 @@ typedef struct TowerOfHanoiState
 	size_t moves;
 } towerofhanoi_state_t;
 int ResetTowerOfHanoi(size_t, vector<size_t> const &);
-long SteadyGene(string const &);
+size_t SteadyGene(string const &);
 size_t IntervalSelection(vector<vector<size_t>> &);
 string TwentyFourHourTimeConversion(string const &);
 vector<long> KaprekarNumbers(long, long);
