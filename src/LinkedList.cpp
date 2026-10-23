@@ -269,6 +269,22 @@ shared_ptr<Node<T>> LinkedList<T>::RemoveHead()
 		_head->SetPrevious(nullptr);
 	return n;
 }
+/*
+https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/
+100%
+*/
+template <typename T>
+shared_ptr<Node<T>> LinkedList<T>::RemoveMiddle()
+{
+	shared_ptr<Node<T>> prev = _head, n = _head->Next();
+	for (size_t middle = Length() / 2, i = 1; i < middle; i++, prev = n, n = n->Next())
+		;
+	if (n)
+		prev->SetNext(n->Next());
+	else
+		_head.reset();
+	return _head;
+}
 /* Reverse a linked list from position start to end. Do it in one-pass.
  * Input:  1->2->3->4->5->NULL, start = 1, end = 3
  * Output: 1->4->3->2->5->NULL

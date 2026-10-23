@@ -136,6 +136,28 @@ INSTANTIATE_TEST_SUITE_P(
 	LinkedListRemoveNthElementFromBackTests,
 	LinkedListRemoveNthElementFromBackTestFixture,
 	::testing::Values(make_tuple(5, 4, views::iota(0, 10) | ranges::to<vector<size_t>>()), make_tuple(2, 7, views::iota(0, 10) | ranges::to<vector<size_t>>()), make_tuple(1, 8, views::iota(0, 10) | ranges::to<vector<size_t>>())));
+class LinkedListRemoveMiddleElementTestFixture : public LinkedListTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		LinkedListTestFixture::SetUp(get<0>(GetParam()), 0, get<1>(GetParam()));
+	}
+	size_t LinkedListRemoveMiddleElementTest()
+	{
+		_ll.RemoveMiddle();
+		return _ll.Length();
+	}
+};
+TEST_P(LinkedListRemoveMiddleElementTestFixture, LinkedListRemoveMiddleElementTests)
+{
+	ASSERT_EQ(this->_expected, this->LinkedListRemoveMiddleElementTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LinkedListRemoveMiddleElementTests,
+	LinkedListRemoveMiddleElementTestFixture,
+	::testing::Values(make_tuple(9, views::iota(0, 10) | ranges::to<vector<size_t>>()), make_tuple(0, views::iota(0, 1) | ranges::to<vector<size_t>>()), make_tuple(1, views::iota(0, 2) | ranges::to<vector<size_t>>())));
+
 class LinkedListArithmeticTestFixture : public testing::TestWithParam<tuple<vector<size_t>, vector<size_t>, vector<size_t>>>
 {
 public:

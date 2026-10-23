@@ -118,6 +118,8 @@ T MaximizeStockProfits<T>::MaxProfitKArbitrary(vector<T> const &prices, size_t k
 /* https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
  * Find the maximum profit you can achieve. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times) with the following restrictions:
  * After you sell your stock, you cannot buy stock on the next day (i.e., cooldown one day).
+ * Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
+ *
  * T[i][k][0] = max(T[i-1][k][0], T[i-1][k][1] + prices[i])
  * T[i][k][1] = max(T[i-1][k][1], T[i-2][k][0] - prices[i])
  * 100%
@@ -127,6 +129,10 @@ T MaximizeStockProfits<T>::MaxProfitKArbitrary(vector<T> const &prices, size_t k
  * stay -> stay
  * bought -> bought
  * sold -> stay
+ *
+ * buy[i] means before day i what is the maxProfit for any sequence end with buy.
+ * sell[i] means before day i what is the maxProfit for any sequence end with sell.
+ * rest[i] means before day i what is the maxProfit for any sequence end with rest.
  *
  * stay[i] = max(stay[i - 1], sold[i - 1]); // Stay put, or rest from sold state
  * bought[i] = max(bought[i - 1], stay[i - 1] - prices[i]); // Stay put（bought[i - 1], or buy again (stay[i - 1] - prices[i]) - Cannot buy immediately after sell.
@@ -147,7 +153,6 @@ T MaximizeStockProfits<T>::MaxProfitKInfinityCoolDown(vector<T> const &prices)
 {
     if (prices.size() < 2)
         return 0;
-    T profit = 0;
     vector<T> stay, bought, sold;
     stay.push_back(0);
     bought.push_back(-prices[0]);

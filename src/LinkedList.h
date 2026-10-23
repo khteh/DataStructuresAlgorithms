@@ -45,6 +45,7 @@ public:
 	void MoveHead2Tail();
 	shared_ptr<Node<T>> AddItem(T);
 	shared_ptr<Node<T>> RemoveHead();
+	shared_ptr<Node<T>> RemoveMiddle();
 	void MoveItem2Tail(T);
 	bool operator==(LinkedList<T> &);
 	bool operator!=(LinkedList<T> &);
