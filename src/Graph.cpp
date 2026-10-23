@@ -702,5 +702,5 @@ long Graph<TTag, TItem>::PruneMinCost(size_t root, vector<TTag> &from, vector<TT
 	shared_ptr<Vertex<TTag, TItem>> node = GetVertex(root);
 	if (!node)
 		throw invalid_argument("Root node not found in graph!");
-	return node->PruneMinCost();
+	return node->GetMinPruneCost();
 }
