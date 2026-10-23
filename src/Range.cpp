@@ -1595,7 +1595,7 @@ long long Range::MaxSumTrionic(vector<long> const &data)
 	// numeric_limits<long long>::min(): -9223372036854775808
 	const long long INF = -1e18; // XXX: Using numeric_limits<long long>::min() here will result in overflow and result will be very large number due to min() + -ve overflowing to large positive numbers. Need a number between lower range of data[i] and numeric_limits<long long>::min()
 	long long result = INF, a = INF, b = INF, c = INF;
-	for (long i = 1; i < data.size(); i++)
+	for (size_t i = 1; i < data.size(); i++)
 	{
 		long long a1 = INF, b1 = INF, c1 = INF;
 		if (data[i] > data[i - 1])
@@ -1612,6 +1612,81 @@ long long Range::MaxSumTrionic(vector<long> const &data)
 		b = b1;
 		c = c1;
 		result = max(result, c);
+	}
+	return result;
+}
+/*
+ * https://leetcode.com/problems/fruit-into-baskets/description/
+ * 100%
+ * [1] 2 1
+ * basket[1]: 1
+ *
+ * 1 [2] 1
+ * basket[1]: 1
+ * basket[2]: 1
+ *
+ * 1 2 [1]
+ * basket[1]: 2
+ * basket[2]: 1
+ *
+ * ================================
+ * [0] 1 2 2
+ * basket[0]: 1
+ *
+ * 0 [1] 2 2
+ * basket[0]: 1
+ * basket[1]: 1
+ *
+ * 0 1 [2] 2
+ * basket[0]: 0 i:1
+ * basket[1]: 1
+ * basket[2]: 1
+ *
+ * 0 1 2 [2]
+ * basket[0]: 0 i:1
+ * basket[1]: 1
+ * basket[2]: 2 j:3 result: j - i + 1 = 3
+ *
+ * =====================================
+ * [1] 2 3 2 2
+ * basket[1]: 1
+ *
+ * 1 [2] 3 2 2
+ * basket[1]: 1
+ * basket[2]: 1
+ *
+ * 1 2 [3] 2 2
+ * basket[1]: 0 i:1
+ * basket[2]: 1
+ * basket[3]: 1
+ *
+ * 1 2 3 [2] 2
+ * basket[1]: 0 i:1
+ * basket[2]: 2 j:3
+ * basket[3]: 1
+ *
+ * 1 2 3 2 [2]
+ * basket[1]: 0 i:1
+ * basket[2]: 3 j:4 result: j - i + 1 = 4
+ * basket[3]: 1
+ *
+ * ====================================
+ * 1 1 0 2 2 2
+ * basket[1]: 0 i:2
+ * basket[0]: 1
+ * basket[2]: 3 j:5 result: j - i + 1 = 4
+ */
+size_t Range::MaxHarvest(vector<size_t> const &fruits)
+{
+	map<size_t, size_t> count;
+	size_t result = 0;
+	for (size_t i = 0, j = 0; i < fruits.size() && j < fruits.size(); j++)
+	{
+		count[fruits[j]]++;
+		for (; count.size() > 2 && i < j; i++)
+			if (!--count[fruits[i]])
+				count.erase(fruits[i]);
+		result = max(result, j - i + 1);
 	}
 	return result;
 }

@@ -1127,3 +1127,27 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(-4, vector<long>{0, -2, -1, -3, 0, 2, -1}),
 					  make_tuple(14, vector<long>{1, 4, 2, 7}),
 					  make_tuple(-431, vector<long>{2, 993, -791, -635, -569}), make_tuple(637, vector<long>{-533, 224, -324, 251, 231, 479})));
+
+class MaxHarvestTestFixture : public RangeTestFixture1<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
+{
+public:
+	void SetUp() override
+	{
+		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	long long MaxHarvestTest()
+	{
+		return _rangeObj.MaxHarvest(_data);
+	}
+};
+TEST_P(MaxHarvestTestFixture, MaxHarvestTests)
+{
+	ASSERT_EQ(this->_expected, this->MaxHarvestTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MaxHarvestTests,
+	MaxHarvestTestFixture,
+	::testing::Values(make_tuple(3, vector<size_t>{1, 2, 1}),
+					  make_tuple(3, vector<size_t>{0, 1, 2, 2}),
+					  make_tuple(4, vector<size_t>{1, 2, 3, 2, 2}),
+					  make_tuple(4, vector<size_t>{1, 1, 0, 2, 2, 2})));
