@@ -88,109 +88,6 @@ TEST(GraphTests, BreadthFirstSearchTest)
 		cout << endl;
 	}
 }
-TEST(GraphTest, PruneMinCostTest)
-{
-	vector<size_t> data(2);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });								  // Item values
-	Graph<size_t, size_t> graph(data);								  // Tag values are indices
-	graph.AddDirectedEdge(graph.GetVertex(0), graph.GetVertex(1), 1); // 1->2 (1)
-	/*
-	Value inside bracket denotes cost.
-
-			0
-	  1(1)
-	*/
-	graph.Print();
-	shared_ptr<Vertex<size_t, size_t>> root = graph.GetVertex(0);
-	ASSERT_TRUE(root);
-	ASSERT_EQ(1, graph.PruneMinCost(root));
-	graph.Clear();
-	data.resize(4);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });								  // Item values
-	graph.AddVertices(data);										  // Tag values are indices
-	graph.AddDirectedEdge(graph.GetVertex(0), graph.GetVertex(1), 1); // 1->2 (1)
-	graph.AddDirectedEdge(graph.GetVertex(1), graph.GetVertex(2), 2); // 2->3 (2)
-	graph.AddDirectedEdge(graph.GetVertex(1), graph.GetVertex(3), 3); // 2->4 (3)
-	/*
-	Value inside bracket denotes cost.
-
-			0
-	  1(1)
-  2(2)      3(3)
-	*/
-	graph.Print();
-	root = graph.GetVertex(0);
-	ASSERT_TRUE(root);
-	ASSERT_EQ(1, graph.PruneMinCost(root));
-	graph.Clear();
-	data.resize(5);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });								  // Item values
-	graph.AddVertices(data);										  // Tag values are indices
-	graph.AddDirectedEdge(graph.GetVertex(0), graph.GetVertex(1), 1); // 1->2 (1)
-	graph.AddDirectedEdge(graph.GetVertex(1), graph.GetVertex(2), 2); // 2->3 (2)
-	graph.AddDirectedEdge(graph.GetVertex(1), graph.GetVertex(3), 3); // 2->4 (3)
-	graph.AddDirectedEdge(graph.GetVertex(2), graph.GetVertex(4), 4); // 3->5 (4)
-	graph.AddDirectedEdge(graph.GetVertex(3), graph.GetVertex(4), 5); // 4->5 (5)
-	/*
-	Value inside bracket denotes cost.
-
-			0
-	  1(1)
-  2(2)      3(3)
-	   4(4,5)		<- Node(4) is connected to both Node(2) and Node(3)
-	*/
-	graph.Print();
-	root = graph.GetVertex(0);
-	ASSERT_TRUE(root);
-	ASSERT_EQ(1, graph.PruneMinCost(root));
-	graph.Clear();
-	data.resize(5);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });								  // Item values
-	graph.AddVertices(data);										  // Tag values are indices
-	graph.AddDirectedEdge(graph.GetVertex(0), graph.GetVertex(1), 5); // 1->2 (5)
-	graph.AddDirectedEdge(graph.GetVertex(1), graph.GetVertex(2), 1); // 2->3 (1)
-	graph.AddDirectedEdge(graph.GetVertex(1), graph.GetVertex(3), 2); // 2->4 (2)
-	graph.AddDirectedEdge(graph.GetVertex(2), graph.GetVertex(4), 4); // 3->5 (4)
-	graph.AddDirectedEdge(graph.GetVertex(3), graph.GetVertex(4), 5); // 4->5 (5)
-	/*
-	Value inside bracket denotes cost.
-
-			0
-	  1(5)
-  2(1)      3(2)
-	   4(4,5)		<- Node(4) is connected to both Node(2) and Node(3)
-	*/
-	graph.Print();
-	root = graph.GetVertex(0);
-	ASSERT_TRUE(root);
-	ASSERT_EQ(3, graph.PruneMinCost(root));
-	graph.Clear();
-	data.resize(5);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });								   // Item values
-	graph.AddVertices(data);										   // Tag values are indices
-	graph.AddDirectedEdge(graph.GetVertex(0), graph.GetVertex(1), 10); // 1->2 (10)
-	graph.AddDirectedEdge(graph.GetVertex(1), graph.GetVertex(2), 6);  // 2->3 (6)
-	graph.AddDirectedEdge(graph.GetVertex(1), graph.GetVertex(3), 7);  // 2->4 (7)
-	graph.AddDirectedEdge(graph.GetVertex(2), graph.GetVertex(4), 4);  // 3->5 (4)
-	graph.AddDirectedEdge(graph.GetVertex(3), graph.GetVertex(4), 5);  // 4->5 (5)
-	/*
-	Value inside bracket denotes cost.
-
-			0
-	  1(10)
-  2(6)      3(7)
-	   4(4,5)		<- Node(4) is connected to both Node(2) and Node(3)
-	*/
-	graph.Print();
-	root = graph.GetVertex(0);
-	ASSERT_TRUE(root);
-	ASSERT_EQ(9, graph.PruneMinCost(root));
-}
 class BFSShortestPathsTestFixture : public testing::TestWithParam<tuple<vector<long>, size_t, vector<vector<size_t>>, size_t>>
 {
 public:
@@ -222,8 +119,7 @@ INSTANTIATE_TEST_SUITE_P(
 	BFSShortestPathsTestFixture,
 	::testing::Values(make_tuple(vector<long>{6, 6, 12, -1}, 5, vector<vector<size_t>>{{1, 2}, {1, 3}, {3, 4}}, 1),
 					  make_tuple(vector<long>{6, 6, 6, -1}, 5, vector<vector<size_t>>{{1, 2}, {1, 3}, {3, 4}, {1, 4}}, 1),
-					  make_tuple(
-						  vector<long>{6, 6, -1}, 4, vector<vector<size_t>>{{1, 2}, {1, 3}}, 1),
+					  make_tuple(vector<long>{6, 6, -1}, 4, vector<vector<size_t>>{{1, 2}, {1, 3}}, 1),
 					  make_tuple(vector<long>{-1, 6}, 3, vector<vector<size_t>>{{2, 3}}, 2),
 					  make_tuple(vector<long>{6, -1, -1, -1, -1, -1, 12, -1, 12}, 10, vector<vector<size_t>>{{3, 1}, {10, 1}, {10, 1}, {3, 1}, {1, 8}, {5, 2}}, 3)));
 
@@ -263,6 +159,41 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(85, 5, vector<size_t>{1, 2, 3, 4, 1, 3}, vector<size_t>{2, 3, 4, 5, 3, 5}, vector<long>{30, 50, 70, 90, 70, 85}),
 					  make_tuple(-1, 4, vector<size_t>{1, 3}, vector<size_t>{2, 4}, vector<long>{10, 20}),
 					  make_tuple(1196, 10, vector<size_t>{1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9}, vector<size_t>{2, 3, 4, 5, 6, 7, 8, 9, 10, 3, 4, 5, 6, 7, 8, 9, 10, 4, 5, 6, 7, 8, 9, 10, 5, 6, 7, 8, 9, 10, 6, 7, 8, 9, 10, 7, 8, 9, 10, 8, 9, 10, 9, 10, 10}, vector<long>{6337, 1594, 3766, 3645, 75, 5877, 8561, 242, 6386, 3331, 4194, 8069, 3934, 101, 8536, 6963, 9303, 7639, 8512, 1330, 6458, 1180, 3913, 1565, 9488, 1369, 8066, 9439, 7510, 6833, 4215, 194, 4774, 4328, 187, 1196, 200, 8743, 1433, 2933, 2069, 1974, 7349, 2351, 8423})));
+class PruneMinCostTestFixture : public testing::TestWithParam<tuple<long, size_t, vector<vector<size_t>>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_root = get<1>(GetParam());
+		_paths = get<2>(GetParam());
+		_graph.Clear();
+		for (vector<vector<size_t>>::const_iterator it = _paths.begin(); it != _paths.end(); it++)
+			_graph.AddDirectedEdge((*it)[0], (*it)[1], (*it)[2]);
+	}
+	long PruneMinCostTest()
+	{
+		return _graph.PruneMinCost(_graph.GetVertex(_root));
+	}
+
+protected:
+	Graph<size_t, size_t> _graph;
+	long _expected;
+	size_t _root;
+	vector<vector<size_t>> _paths;
+};
+TEST_P(PruneMinCostTestFixture, PruneMinCostTests)
+{
+	ASSERT_EQ(this->_expected, this->PruneMinCostTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	PruneMinCostTests,
+	PruneMinCostTestFixture,
+	::testing::Values(make_tuple(1, 1, vector<vector<size_t>>{{1, 2, 1}}),
+					  make_tuple(1, 1, vector<vector<size_t>>{{1, 2, 1}, vector<size_t>{2, 3, 2}, vector<size_t>{2, 4, 3}}),
+					  make_tuple(1, 1, vector<vector<size_t>>{{1, 2, 1}, vector<size_t>{2, 3, 2}, vector<size_t>{2, 4, 3}, vector<size_t>{3, 5, 4}, vector<size_t>{4, 5, 5}}),
+					  make_tuple(3, 1, vector<vector<size_t>>{{1, 2, 5}, vector<size_t>{2, 3, 1}, vector<size_t>{2, 4, 2}, vector<size_t>{3, 5, 4}, vector<size_t>{4, 5, 5}}),
+					  make_tuple(9, 1, vector<vector<size_t>>{{1, 2, 10}, vector<size_t>{2, 3, 6}, vector<size_t>{2, 4, 7}, vector<size_t>{3, 5, 4}, vector<size_t>{4, 5, 5}})));
 
 TEST(GraphTests, DijkstraTest)
 {
