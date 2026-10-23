@@ -44,7 +44,7 @@ public:
 	void UnbeatenPathsDijkstra(TTag, vector<long> &);
 	FurthestNode<TTag, TItem> Diameter(TTag);
 	long Diameter();
-	vector<long> BFSShortestPaths(size_t nodecount, vector<vector<TTag>> &, TTag);
+	vector<long> BFSShortestPaths(size_t, vector<vector<TTag>> &, TTag);
 	void GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>> &, shared_ptr<Vertex<TTag, TItem>> &);
 	long GetLowestPathCost(size_t, vector<TTag> &, vector<TTag> &, vector<long> &);
 	TItem MinSubGraphsDifference(TTag);
