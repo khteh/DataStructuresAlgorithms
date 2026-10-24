@@ -1618,6 +1618,9 @@ long long Range::MaxSumTrionic(vector<long> const &data)
 /*
  * https://leetcode.com/problems/fruit-into-baskets/description/
  * 100%
+ *
+ * Sliding Window approach.
+ *
  * [1] 2 1
  * basket[1]: 1
  *
@@ -1676,14 +1679,14 @@ long long Range::MaxSumTrionic(vector<long> const &data)
  * basket[0]: 1
  * basket[2]: 3 j:5 result: j - i + 1 = 4
  */
-size_t Range::MaxHarvest(vector<size_t> const &fruits)
+size_t Range::MaxHarvest(vector<size_t> const &fruits, size_t n)
 {
 	map<size_t, size_t> count;
 	size_t result = 0;
 	for (size_t i = 0, j = 0; i < fruits.size() && j < fruits.size(); j++)
 	{
 		count[fruits[j]]++;
-		for (; count.size() > 2 && i < j; i++)
+		for (; count.size() > n && i < j; i++)
 			if (!--count[fruits[i]])
 				count.erase(fruits[i]);
 		result = max(result, j - i + 1);

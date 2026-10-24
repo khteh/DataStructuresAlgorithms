@@ -53,5 +53,5 @@ public:
 	size_t FirstMissingPositive(vector<long> &);
 	bool IsTrionic(vector<long> const &);
 	long long MaxSumTrionic(vector<long> const &);
-	size_t MaxHarvest(vector<size_t> const &);
+	size_t MaxHarvest(vector<size_t> const &, size_t);
 };
