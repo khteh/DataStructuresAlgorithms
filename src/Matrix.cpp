@@ -460,6 +460,7 @@ void Matrix<T>::RotateMatrixRTimesAntiClockwise(vector<vector<T>> &matrix, size_
 {
 	if (!matrix.empty())
 	{
+		assert(!(min(matrix.size(), matrix[0].size()) % 2));
 		long bottom = matrix.size() - 1, right = matrix[0].size() - 1, top = 0, left = 0;
 		vector<T> items;
 		for (; left < right && top < bottom; top++, left++, bottom--, right--)
@@ -482,7 +483,7 @@ void Matrix<T>::RotateMatrixRTimesAntiClockwise(vector<vector<T>> &matrix, size_
 			// Copy left column in reverse order
 			for (long y = bottom - 1; y > top; y--)
 				items.push_back(matrix[y][left]);
-			ranges::rotate(items, items.begin() + rotation % count);
+			ranges::rotate(items, items.begin() + r);
 			// Copy back top row
 			ranges::copy(items.begin(), items.begin() + rowItemsCount, matrix[top].begin() + left);
 			// Copy back right column

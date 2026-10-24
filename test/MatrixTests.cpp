@@ -337,91 +337,47 @@ TEST(MatrixTests, RotateMatrix90DegressClockwiseTests)
 	matrix.RotateMatrix90DegressClockwise(grid1);
 	ASSERT_EQ(grid1, grid2);
 }
-TEST(MatrixTests, RotateMatrixRTimesAntiClockwiseTests)
+class RotateMatrixRTimesAntiClockwiseTestFixture : public testing::TestWithParam<tuple<vector<vector<size_t>>, size_t, vector<vector<size_t>>>>
 {
-	Matrix<long> matrix;
-	vector<vector<long>> grid1, grid2;
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 1);
-	ASSERT_EQ(grid1, grid2);
-	grid1 = {{1}};
-	grid2 = {{1}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 1);
-	ASSERT_EQ(grid1, grid2);
-	grid1.clear();
-	grid2.clear();
-	grid1 = {{}};
-	grid2 = {{}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 1);
-	ASSERT_EQ(grid1, grid2);
-	grid1.clear();
-	grid2.clear();
-	grid1 = {{1, 2}, {3, 4}};
-	grid2 = {{2, 4}, {1, 3}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 1);
-	ASSERT_EQ(grid1, grid2);
-	grid1.clear();
-	grid2.clear();
-	grid1 = {{1, 2}, {3, 4}};
-	grid2 = {{4, 3}, {2, 1}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 2);
-	ASSERT_EQ(grid1, grid2);
-	grid1.clear();
-	grid2.clear();
-	grid1 = {{1, 2}, {3, 4}};
-	grid2 = {{3, 1}, {4, 2}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 3);
-	ASSERT_EQ(grid1, grid2);
-	grid1.clear();
-	grid2.clear();
-	grid1 = {{1, 2}, {3, 4}};
-	grid2 = {{1, 2}, {3, 4}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 0);
-	ASSERT_EQ(grid1, grid2);
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 4);
-	ASSERT_EQ(grid1, grid2);
-	grid1.clear();
-	grid2.clear();
-	grid1 = {{1, 2}, {3, 4}};
-	grid2 = {{2, 4}, {1, 3}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 5);
-	ASSERT_EQ(grid1, grid2);
-	grid1.clear();
-	grid2.clear();
-	grid1 = {{1, 2}, {3, 4}};
-	grid2 = {{4, 3}, {2, 1}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 6);
-	ASSERT_EQ(grid1, grid2);
-	grid1.clear();
-	grid2.clear();
-	grid1 = {{1, 2}, {3, 4}};
-	grid2 = {{3, 1}, {4, 2}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 7);
-	ASSERT_EQ(grid1, grid2);
-	grid1.clear();
-	grid2.clear();
-	grid1 = {{1, 2, 3, 4}, {12, 1, 2, 5}, {11, 4, 3, 6}, {10, 9, 8, 7}};
-	grid2 = {{3, 4, 5, 6}, {2, 3, 4, 7}, {1, 2, 1, 8}, {12, 11, 10, 9}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 2);
-	ASSERT_EQ(grid1, grid2);
-	grid1.clear();
-	grid2.clear();
-	grid1 = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
-	grid2 = {{3, 4, 8, 12}, {2, 11, 10, 16}, {1, 7, 6, 15}, {5, 9, 13, 14}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 2);
-	ASSERT_EQ(grid1, grid2);
-	grid1.clear();
-	grid2.clear();
-	grid1 = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
-	grid2 = {{2, 3, 4, 8}, {1, 7, 11, 12}, {5, 6, 10, 16}, {9, 13, 14, 15}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 1);
-	ASSERT_EQ(grid1, grid2);
-	grid1.clear();
-	grid2.clear();
-	grid1 = {{1, 2, 3, 4}, {7, 8, 9, 10}, {13, 14, 15, 16}, {19, 20, 21, 22}, {25, 26, 27, 28}};
-	grid2 = {{28, 27, 26, 25}, {22, 9, 15, 19}, {16, 8, 21, 13}, {10, 14, 20, 7}, {4, 3, 2, 1}};
-	matrix.RotateMatrixRTimesAntiClockwise(grid1, 7);
-	ASSERT_EQ(grid1, grid2);
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_rotation = get<1>(GetParam());
+		_grid = get<2>(GetParam());
+	}
+	vector<vector<size_t>> RotateMatrixRTimesAntiClockwiseTest()
+	{
+		_matrix.RotateMatrixRTimesAntiClockwise(_grid, _rotation);
+		return _grid;
+	}
+
+protected:
+	Matrix<size_t> _matrix;
+	size_t _rotation;
+	vector<vector<size_t>> _expected, _grid;
+};
+TEST_P(RotateMatrixRTimesAntiClockwiseTestFixture, RotateMatrixRTimesAntiClockwiseTests)
+{
+	ASSERT_EQ(this->_expected, this->RotateMatrixRTimesAntiClockwiseTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	RotateMatrixRTimesAntiClockwiseTests,
+	RotateMatrixRTimesAntiClockwiseTestFixture,
+	::testing::Values(make_tuple(vector<vector<size_t>>{{}}, 1, vector<vector<size_t>>{{}}),
+					  make_tuple(vector<vector<size_t>>{{2, 4}, {1, 3}}, 1, vector<vector<size_t>>{{1, 2}, {3, 4}}),
+					  make_tuple(vector<vector<size_t>>{{4, 3}, {2, 1}}, 2, vector<vector<size_t>>{{1, 2}, {3, 4}}),
+					  make_tuple(vector<vector<size_t>>{{3, 1}, {4, 2}}, 3, vector<vector<size_t>>{{1, 2}, {3, 4}}),
+					  make_tuple(vector<vector<size_t>>{{1, 2}, {3, 4}}, 0, vector<vector<size_t>>{{1, 2}, {3, 4}}),
+					  make_tuple(vector<vector<size_t>>{{1, 2}, {3, 4}}, 4, vector<vector<size_t>>{{1, 2}, {3, 4}}),
+					  make_tuple(vector<vector<size_t>>{{2, 4}, {1, 3}}, 5, vector<vector<size_t>>{{1, 2}, {3, 4}}),
+					  make_tuple(vector<vector<size_t>>{{4, 3}, {2, 1}}, 6, vector<vector<size_t>>{{1, 2}, {3, 4}}),
+					  make_tuple(vector<vector<size_t>>{{3, 1}, {4, 2}}, 7, vector<vector<size_t>>{{1, 2}, {3, 4}}),
+					  make_tuple(vector<vector<size_t>>{{3, 4, 5, 6}, {2, 3, 4, 7}, {1, 2, 1, 8}, {12, 11, 10, 9}}, 2, vector<vector<size_t>>{{1, 2, 3, 4}, {12, 1, 2, 5}, {11, 4, 3, 6}, {10, 9, 8, 7}}),
+					  make_tuple(vector<vector<size_t>>{{3, 4, 8, 12}, {2, 11, 10, 16}, {1, 7, 6, 15}, {5, 9, 13, 14}}, 2, vector<vector<size_t>>{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}}),
+					  make_tuple(vector<vector<size_t>>{{2, 3, 4, 8}, {1, 7, 11, 12}, {5, 6, 10, 16}, {9, 13, 14, 15}}, 1, vector<vector<size_t>>{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}}),
+					  make_tuple(vector<vector<size_t>>{{28, 27, 26, 25}, {22, 9, 15, 19}, {16, 8, 21, 13}, {10, 14, 20, 7}, {4, 3, 2, 1}}, 7, vector<vector<size_t>>{{1, 2, 3, 4}, {7, 8, 9, 10}, {13, 14, 15, 16}, {19, 20, 21, 22}, {25, 26, 27, 28}})));
+
 class SurfaceArea3DTestFixture : public testing::TestWithParam<tuple<size_t, vector<vector<size_t>>>>
 {
 public:
