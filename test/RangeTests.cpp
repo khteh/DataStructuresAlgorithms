@@ -1150,4 +1150,8 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(3, 2, vector<size_t>{1, 2, 1}),
 					  make_tuple(3, 2, vector<size_t>{0, 1, 2, 2}),
 					  make_tuple(4, 2, vector<size_t>{1, 2, 3, 2, 2}),
-					  make_tuple(4, 2, vector<size_t>{1, 1, 0, 2, 2, 2})));
+					  make_tuple(4, 2, vector<size_t>{1, 1, 0, 2, 2, 2}),
+					  make_tuple(6, 3, vector<size_t>{1, 1, 0, 3, 2, 2, 3, 3}),
+					  make_tuple(6, 3, vector<size_t>{1, 1, 0, 3, 2, 3, 2, 3}),
+					  make_tuple(6, 3, vector<size_t>{1, 1, 0, 2, 2, 2, 3, 3}),
+					  make_tuple(7, 3, vector<size_t>{0, 1, 1, 3, 2, 2, 3, 3})));
