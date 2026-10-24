@@ -435,6 +435,7 @@ void Matrix<T>::RotateMatrix90DegressClockwise(vector<vector<T>> &matrix)
 /*
  * https://www.hackerrank.com/challenges/matrix-rotation-algo/problem
  * 100%
+ * Strategy: Copy the content of the matrix ring into vector and rotate the vector, then copy back the vector into the matrix.
  * 1 2  r: 3
  * 3 4
 
@@ -461,8 +462,8 @@ void Matrix<T>::RotateMatrixRTimesAntiClockwise(vector<vector<T>> &matrix, size_
 		vector<T> items;
 		for (; left < right && top < bottom; top++, left++, bottom--, right--)
 		{
-			size_t rowCount = right - left + 1, colCount = bottom - top - 1;
-			size_t count = 2 * rowCount + 2 * (bottom - top - 1);
+			size_t rowItemsCount = right - left + 1, colItemsCount = bottom - top - 1;
+			size_t count = 2 * rowItemsCount + 2 * colItemsCount; // #items  of the current matrix ring copied to the vector.
 			if (!count)
 				return;
 			items.clear();
@@ -470,25 +471,25 @@ void Matrix<T>::RotateMatrixRTimesAntiClockwise(vector<vector<T>> &matrix, size_
 			if (!r)
 				continue;
 			// Copy top row
-			items.insert(items.end(), matrix[top].begin() + left, matrix[top].begin() + left + rowCount);
+			items.insert(items.end(), matrix[top].begin() + left, matrix[top].begin() + left + rowItemsCount);
 			// Copy right column
 			for (size_t y = top + 1; y < bottom; y++)
 				items.push_back(matrix[y][right]);
 			// Copy bottom row in reverse order
-			items.insert(items.end(), matrix[bottom].rbegin() + left, matrix[bottom].rbegin() + left + rowCount); // left here is offset from the right which is the same both left and right
+			items.insert(items.end(), matrix[bottom].rbegin() + left, matrix[bottom].rbegin() + left + rowItemsCount); // left here is offset from the right which is the same both left and right
 			// Copy left column in reverse order
 			for (long y = bottom - 1; y > top; y--)
 				items.push_back(matrix[y][left]);
 			ranges::rotate(items, items.begin() + rotation % count);
 			// Copy back top row
-			ranges::copy(items.begin(), items.begin() + rowCount, matrix[top].begin() + left);
+			ranges::copy(items.begin(), items.begin() + rowItemsCount, matrix[top].begin() + left);
 			// Copy back right column
-			for (size_t y = top + 1, i = rowCount; y < bottom && i < rowCount + colCount; y++, i++)
+			for (size_t y = top + 1, i = rowItemsCount; y < bottom && i < rowItemsCount + colItemsCount; y++, i++)
 				matrix[y][right] = items[i];
 			// Copy back bottom row in reverse order
-			ranges::copy(items.begin() + rowCount + colCount, items.begin() + 2 * rowCount + colCount, matrix[bottom].rbegin() + left);
+			ranges::copy(items.begin() + rowItemsCount + colItemsCount, items.begin() + 2 * rowItemsCount + colItemsCount, matrix[bottom].rbegin() + left);
 			// Copy back left column
-			for (long y = bottom - 1, i = 2 * rowCount + colCount; y > top && i < 2 * rowCount + 2 * colCount; y--, i++)
+			for (long y = bottom - 1, i = 2 * rowItemsCount + colItemsCount; y > top && i < 2 * rowItemsCount + 2 * colItemsCount; y--, i++)
 				matrix[y][left] = items[i];
 		}
 	}
