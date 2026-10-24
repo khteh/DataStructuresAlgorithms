@@ -1,5 +1,8 @@
 #pragma once
 #include "Vertex.h"
+/*
+https://en.wikipedia.org/wiki/Greedy_algorithm
+*/
 template <typename T>
 class Greedy
 {
