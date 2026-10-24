@@ -488,6 +488,7 @@ i   j     k    (<mid)
 template <typename T>
 void Sort<T>::DutchPartitioning(vector<T> &data, T mid)
 {
+	// j is the pointer to the current element of the data being worked on, i.e., compared to and possibly swapped with elements pointed to by i (< mid) or k (> mid).
 	for (int i = 0, j = 0, k = data.size() - 1; !data.empty() && j <= k;)
 	{
 		if (data[j] < mid)
