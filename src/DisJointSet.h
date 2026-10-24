@@ -4,8 +4,8 @@ template <typename T>
 class DisJointSet
 {
 private:
-	unordered_map<T, T> _sets;
-	unordered_map<T, size_t> _rank;
+	map<T, T> _sets;
+	map<T, size_t> _rank;
 
 public:
 	DisJointSet(vector<T> const &);

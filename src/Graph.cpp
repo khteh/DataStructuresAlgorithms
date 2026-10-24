@@ -628,7 +628,7 @@ TItem Graph<TTag, TItem>::MinSubGraphsDifference(TTag root)
 	return GetVertex(root)->MinSubGraphsDifference(root, GetSubGraphSum(root));
 }
 /*
-Prune tree of leave nodes which are in nodes input parameter.
+Prune tree of leaf nodes which are in nodes input parameter.
 Return the total path costs pruned.
 */
 template <typename TTag, typename TItem>
@@ -638,30 +638,30 @@ long Graph<TTag, TItem>::Prune(set<TTag> const &nodes, set<TTag> &removed)
 	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = _vertices.begin(); it != _vertices.end(); it++)
 		if (!removed.count(it->first) && it->second->NeighbourCount() == 1 && nodes.count(it->second->GetTag()))
 		{
-			vector<shared_ptr<Vertex<TTag, TItem>>> leaves{it->second};
-			size_t size = leaves.size();
+			vector<shared_ptr<Vertex<TTag, TItem>>> leafs{it->second};
+			size_t size = leafs.size();
 			for (size_t i = 0; i < size; i++)
 			{
-				removed.emplace(leaves[i]->GetTag());
-				vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = leaves[i]->GetNeighbours();
+				removed.emplace(leafs[i]->GetTag());
+				vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = leafs[i]->GetNeighbours();
 				for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator neighbour = neighbours.begin(); neighbour != neighbours.end(); neighbour++)
-					if ((*neighbour)->HasNeighbour(leaves[i]->GetTag()))
+					if ((*neighbour)->HasNeighbour(leafs[i]->GetTag()))
 					{
 						// Undirected graph
-						cost += (*neighbour)->GetCost(leaves[i]) * 2;
-						_totalCost -= (*neighbour)->GetCost(leaves[i]) * 2;
-						(*neighbour)->RemoveNeighbour(leaves[i]);
+						cost += (*neighbour)->GetCost(leafs[i]) * 2;
+						_totalCost -= (*neighbour)->GetCost(leafs[i]) * 2;
+						(*neighbour)->RemoveNeighbour(leafs[i]);
 						if ((*neighbour)->NeighbourCount() == 1 && nodes.count((*neighbour)->GetTag()))
 						{
-							leaves.push_back(*neighbour);
+							leafs.push_back(*neighbour);
 							size++;
 						}
 					}
 					else
 					{
 						// Directed graph
-						cost += (*neighbour)->GetCost(leaves[i]);
-						_totalCost -= (*neighbour)->GetCost(leaves[i]);
+						cost += (*neighbour)->GetCost(leafs[i]);
+						_totalCost -= (*neighbour)->GetCost(leafs[i]);
 					}
 			}
 		}
