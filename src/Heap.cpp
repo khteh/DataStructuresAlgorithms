@@ -299,8 +299,8 @@ void Heap<T>::HeapifyDown(shared_ptr<Node<T>> &node)
 template <typename T>
 shared_ptr<Node<T>> Heap<T>::FindEmptyLeafParent() // Use Breath-First-Search to find empty leaf
 {
-	unsigned long level = 0;
-	map<unsigned long, vector<shared_ptr<Node<T>>>> levelNodes;
+	size_t level = 0;
+	map<size_t, vector<shared_ptr<Node<T>>>> levelNodes;
 	if (!_root)
 		return _root;
 	levelNodes.emplace(0, vector<shared_ptr<Node<T>>>{_root});
@@ -332,8 +332,8 @@ template <typename T>
 shared_ptr<Node<T>> Heap<T>::FindLastLeaf() // Use Breadth-First-Search to find empty leaf
 {
 	shared_ptr<Node<T>> result(nullptr);
-	unsigned long level = 0;
-	map<unsigned long, vector<shared_ptr<Node<T>>>> levelNodes;
+	size_t level = 0;
+	map<size_t, vector<shared_ptr<Node<T>>>> levelNodes;
 	if (!_root)
 		return _root;
 	levelNodes.emplace(0, vector<shared_ptr<Node<T>>>{_root});
@@ -342,6 +342,7 @@ shared_ptr<Node<T>> Heap<T>::FindLastLeaf() // Use Breadth-First-Search to find 
 		vector<shared_ptr<Node<T>>> nodes;
 		for (typename vector<shared_ptr<Node<T>>>::iterator it = levelNodes[level].begin(); it != levelNodes[level].end(); it++)
 		{
+			assert(*it);
 			if (*it)
 			{
 				if ((*it)->Left())

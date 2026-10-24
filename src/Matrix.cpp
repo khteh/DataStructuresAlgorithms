@@ -427,9 +427,9 @@ void Matrix<T>::RotateMatrix90DegressClockwise(vector<vector<T>> &matrix)
 	for (long i = 0, j = matrix.size() - 1; i < j; i++, j--)
 		for (size_t k = 0; k < (size_t)(j - i); k++)
 		{
-			swap(matrix[i][i + k], matrix[i + k][j]);
-			swap(matrix[i][i + k], matrix[j][j - k]);
-			swap(matrix[i][i + k], matrix[j - k][i]);
+			swap(matrix[i][i + k], matrix[i + k][j]); // {【0】【0】 - [0][2], 【0】【1】 - [1][2]
+			swap(matrix[i][i + k], matrix[j][j - k]); // {【0】【0】 - [2][2], 【0】【1】 - [2][1]
+			swap(matrix[i][i + k], matrix[j - k][i]); // {【0】【0】 - [2][0], 【0】【1】 - [1][0]
 		}
 }
 /*
