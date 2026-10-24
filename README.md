@@ -137,8 +137,17 @@ $ ctest --preset linux-asan-debug
 
 - Press `CTRL + SHFT + P` + `CMAKE: Select Configure Preset` and choose a preset. For example, "Linux GCC + sanitizers". This replaces `CMAKE: Select Variant`.
 - Press `CTRL + SHFT + P` + `CMAKE: Select Build Preset` to choose the target build type. For example, "Debug + sanitizers".
-- Press `CTRL + SHFT + P` + `CMAKE: Configure` - This needs to be done after `rm -rf build/` folder.
-- Press `CTRL + SHFT + B` and select one of the options
+- Press `CTRL + SHFT + P` + `CMAKE: Configure` - This needs to be done after `rm -rf build/` folder or the `Presets: clean all` task.
+- Press `CTRL + SHFT + B` to run the default build task, `CMake: build all`. It builds the `all` target straight away, without a list to choose from, using the configure and build presets selected in the CMake pane (see "Project Status" > "Configure" and "Build").
+- Press `CTRL + SHFT + P` + `Tasks: Run Task` to run any other task in `.vscode/tasks.json`:
+
+| Task                              | What it does                                                                         |
+| --------------------------------- | ------------------------------------------------------------------------------------ |
+| `CMake: build Console` / `Core` / `Tests` | Builds one target with the presets selected in the CMake pane                |
+| `Presets: build linux-asan-debug` | Configures and builds Debug with sanitizers, whatever is selected in the CMake pane |
+| `Presets: build linux-release`    | Configures and builds Release without sanitizers (LTO), whatever is selected in the CMake pane |
+| `Presets: clean all`              | Deletes `build/`, `Debug/` and `Release/` so that the next build starts from scratch  |
+
 - The launch configurations in `.vscode/launch.json` debug the binaries in `./Debug`, i.e. the `linux-asan-debug` build preset.
 
 ### Debug / Run
