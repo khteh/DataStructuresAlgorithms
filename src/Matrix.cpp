@@ -434,7 +434,7 @@ void Matrix<T>::RotateMatrix90DegressClockwise(vector<vector<T>> &matrix)
 }
 /*
  * https://www.hackerrank.com/challenges/matrix-rotation-algo/problem
- * It is guaranteed that the minimum of m and n will be even. So, there will always be valid circular ring, the minimum of which is a single-item ring.
+ * It is guaranteed that the minimum of m and n will be even. So, there will always be valid circular ring.
  *
  * 100%
  * Strategy: Copy the content of the matrix ring into vector and rotate the vector, then copy back the vector into the matrix.
