@@ -38,7 +38,7 @@ T DisJointSet<T>::Find(T item)
 		 * This updating is an important part of the disjoint-set forest's amortized performance guarantee.
 		 */
 		T root = Find(_sets[item]);
-		_sets[item] = root;
+		_sets[item] = root; // This moves item directly under root node.
 		return root;
 	}
 }
@@ -71,22 +71,18 @@ T DisJointSet<T>::Union(T x, T y)
 	if (rootX != rootY)
 	{
 		// Put smaller ranked item under bigger ranked item if ranks are different. Copying of smaller ranked item saves time!
-		if (_rank[rootX] < _rank[rootY])
+		if (_rank[rootX] <= _rank[rootY])
 		{
 			_sets[rootX] = rootY;
 			root = rootY;
+			// If ranks are same, increment the rank
+			if (_rank[rootX] == _rank[rootY])
+				_rank[rootY]++;
 		}
 		else if (_rank[rootY] < _rank[rootX])
 		{
 			_sets[rootY] = rootX;
 			root = rootX;
-		}
-		else
-		{
-			// If ranks are same, increment the rank
-			_sets[rootX] = rootY;
-			root = rootY;
-			_rank[rootY]++;
 		}
 	}
 	return root;
