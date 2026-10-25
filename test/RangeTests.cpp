@@ -556,6 +556,36 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(1, vector<long>{0, 0, 1}, vector<long>{0, -1, 0, 0, 1, 0, -1, -1}),
 					  make_tuple(2, vector<long>{1, 1}, vector<long>{-1, -1, -1, -1, -1, -1, 1, 1}),
 					  make_tuple(7, vector<long>{4, -1, -2, 1, 5}, vector<long>{-2, -3, 4, -1, -2, 1, 5, -3})));
+class ConsecutiveMaximumSumCircularTestFixture : public testing::TestWithParam<tuple<long, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+	}
+	long ConsecutiveMaximumSumCircularTest()
+	{
+		return _rangeObj.ConsecutiveMaximumSumCircular(_data);
+	}
+
+protected:
+	Range _rangeObj;
+	long _expected;
+	vector<long> _data;
+};
+TEST_P(ConsecutiveMaximumSumCircularTestFixture, ConsecutiveMaximumSumCircularTests)
+{
+	ASSERT_EQ(this->_expected, this->ConsecutiveMaximumSumCircularTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	ConsecutiveMaximumSumCircularTests,
+	ConsecutiveMaximumSumCircularTestFixture,
+	::testing::Values(make_tuple(3, vector<long>{1, -2, 3, -2}),
+					  make_tuple(10, vector<long>{5, -3, 5}),
+					  make_tuple(-2, vector<long>{-3, -2, -3}),
+					  make_tuple(15, vector<long>{-2, 4, -5, 4, -5, 9, 4}),
+					  make_tuple(20, vector<long>{-1, 3, -3, 9, -6, 8, -5, -5, -6, 10})));
 class ConsecutiveMaximumSumModuloTestFixture : public testing::TestWithParam<tuple<size_t, size_t, vector<long>>>
 {
 public:

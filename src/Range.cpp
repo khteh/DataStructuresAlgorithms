@@ -36,6 +36,30 @@ long Range::ConsecutiveMaximumSum(vector<long> const &data, vector<long> &result
 	return largest;
 }
 /*
+ * https://leetcode.com/problems/maximum-sum-circular-subarray/description/
+ * Kadane's algorithm will give min and max.
+ * If all elements < 0: total = minSum => Return kadane's maxSum
+ * Return max(maxSum or (total - minSum))
+ * 100%
+ */
+long Range::ConsecutiveMaximumSumCircular(vector<long> const &data)
+{
+	long sum1 = 0, sum2 = 0, total = 0, minSum = numeric_limits<long>::max(), maxSum = numeric_limits<long>::min();
+	for (vector<long>::const_iterator it = data.begin(); it != data.end(); it++)
+	{
+		total += *it;
+		sum1 += *it;
+		sum2 += *it;
+		maxSum = max(maxSum, sum1);
+		if (sum1 < 0)
+			sum1 = 0;
+		minSum = min(minSum, sum2);
+		if (sum2 > 0)
+			sum2 = 0;
+	}
+	return total == minSum ? maxSum : max(maxSum, total - minSum);
+}
+/*
  * https://www.hackerrank.com/challenges/maximum-subarray-sum/problem
  * https://www.youtube.com/watch?v=u_ft5jCDZXk&t=577s
  * (1) Use (Kadane's algorithm) % m

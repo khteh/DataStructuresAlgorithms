@@ -14,6 +14,7 @@ class Range
 {
 public:
 	long ConsecutiveMaximumSum(vector<long> const &, vector<long> &);
+	long ConsecutiveMaximumSumCircular(vector<long> const &);
 	size_t ConsecutiveMaximumSumModulo(vector<long> const &, size_t);
 	long ConsecutiveLargestProduct(vector<long> const &);
 	long LongestNonNegativeSumSlice(vector<long> const &);
