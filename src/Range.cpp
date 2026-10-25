@@ -1426,7 +1426,7 @@ size_t Range::TrapRainWater(vector<size_t> const &walls)
 		if (walls[i] > 0)
 		{
 			// Cannot use lower_bound as the range is not sorted or properly partitioned.
-			vector<size_t>::const_iterator it = ranges::find_if(walls.begin() + i + 1, walls.end(), [&](const auto &value)
+			vector<size_t>::const_iterator it = ranges::find_if(walls | views::drop(i + 1), [i, &walls](const auto &value)
 																{ return value >= walls[i]; }); // Look for element >= walls[i]
 			if (it != walls.end())
 			{
@@ -1442,7 +1442,7 @@ size_t Range::TrapRainWater(vector<size_t> const &walls)
 				for (size_t h = walls[i] - 1; h > 0 && !found; h--)
 				{
 					cout << "i: " << i << " Searching for height: " << h << endl;
-					vector<size_t>::const_iterator it = ranges::find_if(walls.begin() + i + 1, walls.end(), [h](const auto &value)
+					vector<size_t>::const_iterator it = ranges::find_if(walls | views::drop(i + 1), [h](const auto &value)
 																		{ return value >= h; }); // Look for element >= h
 					if (it != walls.end())
 					{
@@ -1690,6 +1690,23 @@ size_t Range::MaxHarvest(vector<size_t> const &fruits, size_t n)
 			if (!--count[fruits[i]])
 				count.erase(fruits[i]);
 		result = max(result, j - i + 1);
+	}
+	return result;
+}
+/*
+ * https://leetcode.com/problems/next-greater-element-ii/
+ * 100%
+ * The next greater number of a number x is the first greater number to its traversing-order next in the array, which means you could search circularly to find its next greater number. If it doesn't exist, return -1 for this number.
+ */
+vector<long> Range::NextGreaterElements(vector<long> &nums)
+{
+	vector<long> result;
+	for (size_t i = 0; i < nums.size(); i++)
+	{
+		vector<long>::iterator it = ranges::find_if(nums | views::drop(1), [&nums](const auto &value)
+													{ return value > nums[0]; }); // cannot use upper_bound as nums is not sorted
+		result.push_back(it != nums.end() ? *it : -1);
+		ranges::rotate(nums, nums.begin() + 1);
 	}
 	return result;
 }

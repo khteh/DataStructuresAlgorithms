@@ -106,6 +106,29 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(2, vector<long>{1, 1, 2}),
 					  make_tuple(5, vector<long>{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}),
 					  make_tuple(5, vector<long>{-1, -1, -1, 2, 3, 3, 3, 4, 4, 5})));
+class NextGreaterElementsTestFixture : public RangeTestFixture1<vector<long>, long>, public testing::TestWithParam<tuple<vector<long>, vector<long>>>
+{
+public:
+	void SetUp() override
+	{
+		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+	vector<long> NextGreaterElementsTest()
+	{
+		return _rangeObj.NextGreaterElements(_data);
+	}
+};
+TEST_P(NextGreaterElementsTestFixture, NextGreaterElementsTests)
+{
+	ASSERT_EQ(this->_expected, this->NextGreaterElementsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	NextGreaterElementsTests,
+	NextGreaterElementsTestFixture,
+	::testing::Values(make_tuple(vector<long>{2, -1, 2}, vector<long>{1, 2, 1}),
+					  make_tuple(vector<long>{2, 4, -1, 4, 2}, vector<long>{1, 2, 4, 3, 1}),
+					  make_tuple(vector<long>{4, 4, -1, 3, 4}, vector<long>{0, -1, 4, 2, 3})));
+
 class FirstMissingPositiveTestFixture : public RangeTestFixture1<size_t, long>, public testing::TestWithParam<tuple<size_t, vector<long>>>
 {
 public:
