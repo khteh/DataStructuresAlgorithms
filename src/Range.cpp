@@ -1470,7 +1470,10 @@ size_t Range::TrapRainWater(vector<size_t> const &walls)
 /*
  * https://leetcode.com/problems/first-missing-positive/
  * 100%
- * Put each number in its right place => A[i] = i+1 => A[A[i]] - 1  = A[i]
+ * Put each number in its right place => A[i] = i+1
+ * A[A[i]] = A[i + 1]
+ * A[A[i] - 1] = A[i + 1 - 1] = A[i]
+ *
 	1 2 0
 	1: A[0]=1 A[A[i] - 1] = A[1-1] = A[0] = 1
 	2: A[1]=2 A[A[i] - 1] = A[2-1] = A[1] = 2
