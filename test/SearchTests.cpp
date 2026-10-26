@@ -273,6 +273,39 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(55, vector<size_t>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 1),
 					  make_tuple(6, vector<size_t>{3, 2, 2, 4, 1, 4}, 3),
 					  make_tuple(3, vector<size_t>{1, 2, 3, 1, 1}, 4)));
+class MinimumLargestSumTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_k = get<2>(GetParam());
+	}
+	size_t MinimumLargestSumTest()
+	{
+		return _search.MinimumLargestSum(_data, _k);
+	}
+
+protected:
+	Search _search;
+	size_t _expected, _k;
+	vector<size_t> _data;
+};
+TEST_P(MinimumLargestSumTestFixture, MinimumLargestSumTests)
+{
+	ASSERT_EQ(this->_expected, this->MinimumLargestSumTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MinimumLargestSumTests,
+	MinimumLargestSumTestFixture,
+	::testing::Values(make_tuple(18, vector<size_t>{7, 2, 5, 10, 8}, 2),
+					  make_tuple(9, vector<size_t>{1, 2, 3, 4, 5}, 2),
+					  make_tuple(6, vector<size_t>{3, 2, 2, 4, 1, 4}, 3),
+					  make_tuple(0, vector<size_t>{0, 0}, 1),
+					  make_tuple(4, vector<size_t>{1, 4, 4}, 3),
+					  make_tuple(3, vector<size_t>{1, 2, 3, 1, 1}, 4)));
+
 TEST(SearchTests, BinarySearchCountTest)
 {
 	Search search;

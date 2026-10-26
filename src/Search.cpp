@@ -594,29 +594,49 @@ bool Search::CanEatAllBananasInTime(vector<size_t> const &piles, size_t rate, si
  */
 size_t Search::MinCapacityToShipWithinDays(vector<size_t> const &weights, size_t days)
 {
+    /* Start with the weight of the single largest item. If start with min_element, other items with weights larger than it cannot fit into the capacity */
     size_t start = *ranges::max_element(weights), end = ranges::fold_left(weights, 0, std::plus<size_t>());
-    for (; start < end;)
+    for (; start <= end;)
     {
         int mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid -1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
-        if (CanShipWithinDays(weights, mid, days))
+        if (IsValidSubSequence(weights, mid, days))
             end = mid - 1; // Return the least weight capacity of the ship. So, we decrease our capacity as long as it fits within days. Use mid instead of (mid - 1) because it needs to load the complete weight of the item
         else
             start = mid + 1; // If cannot ship within days, increase capacity.
     }
     return start;
 }
-bool Search::CanShipWithinDays(vector<size_t> const &weights, size_t weight, size_t days)
+bool Search::IsValidSubSequence(vector<size_t> const &data, size_t check, size_t k)
 {
     size_t count = 1, sum = 0;
-    for (vector<size_t>::const_iterator it = weights.begin(); it != weights.end(); it++)
+    for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
     {
         sum += *it;
-        if (sum > weight)
+        if (sum > check)
         {
             sum = *it;
-            if (++count > days) // Too heavy. Ship the next day.
+            if (++count > k) // Too heavy. Ship the next day.
                 return false;
         }
     }
     return true;
+}
+/*
+ * https://leetcode.com/problems/split-array-largest-sum/description/
+ * Return the minimized largest sum of the k-split subsequences.
+ * Use binary search
+ * 100%
+ */
+size_t Search::MinimumLargestSum(vector<size_t> const &data, size_t k)
+{
+    long start = *ranges::max_element(data), end = ranges::fold_left(data, 0, std::plus<long>());
+    for (; start <= end;)
+    {
+        int mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid -1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        if (IsValidSubSequence(data, mid, k))
+            end = mid - 1; // Return the least weight capacity of the ship. So, we decrease our capacity as long as it fits within days. Use mid instead of (mid - 1) because it needs to load the complete weight of the item
+        else
+            start = mid + 1; // If cannot ship within days, increase capacity.
+    }
+    return start;
 }
