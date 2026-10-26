@@ -556,6 +556,7 @@ vector<string> Search::FindShortestPath(int n, int i_start, int j_start, int i_e
  * https://leetcode.com/problems/koko-eating-bananas/
  * Find the minimum speed needed to consume all piles in the given hours.
  * Use binary search
+ * 100%
  */
 size_t Search::MinEatingSpeed(vector<size_t> const &piles, size_t hours)
 {
@@ -587,6 +588,8 @@ bool Search::CanEatAllBananasInTime(vector<size_t> const &piles, size_t rate, si
 }
 /*
  * https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/
+ * Return the least weight capacity of the ship that will result in all the packages on the conveyor belt being shipped within days days.
+ * Use binary search
  * 100%
  */
 size_t Search::MinCapacityToShipWithinDays(vector<size_t> const &weights, size_t days)
