@@ -640,3 +640,49 @@ size_t Search::MinimumLargestSum(vector<size_t> const &data, size_t k)
     }
     return start;
 }
+bool Search::CanMakeBouquets(vector<size_t> const &bloomDay, size_t m, size_t k, size_t day)
+{
+    string flowers = "";
+    for (size_t i = 0; i < bloomDay.size(); i++)
+        flowers.append(1, bloomDay[i] <= day ? 'f' : '-');
+    size_t bouquets = 0, count = 0 /* count of consequtive flowers */;
+    for (size_t i = 0; i < flowers.size(); i++)
+    {
+        if (flowers[i] == 'f')
+            count++;
+        else
+            count = 0;
+        if (count == k)
+        {
+            bouquets++;
+            count = 0;
+        }
+        if (bouquets >= m)
+            return true;
+    }
+    return false;
+}
+/*
+ * https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/description/
+You are given an integer array bloomDay, an integer m and an integer k.
+You want to make m bouquets. To make a bouquet, you need to use k adjacent flowers from the garden.
+The garden consists of n flowers, the ith flower will bloom in the bloomDay[i] and then can be used in exactly one bouquet.
+Return the minimum number of days you need to wait to be able to make m bouquets from the garden. If it is impossible to make m bouquets return -1.
+ * Use binary search
+ * 100%
+ */
+long Search::MinDaysToMakeBouquets(vector<size_t> const &bloomDays, size_t m, size_t k)
+{
+    if (bloomDays.size() < (uint64_t)((uint64_t)m * (uint64_t)k))
+        return -1;
+    size_t start = *ranges::min_element(bloomDays), end = *ranges::max_element(bloomDays);
+    for (; start <= end;)
+    {
+        size_t mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid -1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        if (CanMakeBouquets(bloomDays, m, k, mid))
+            end = mid - 1;
+        else
+            start = mid + 1;
+    }
+    return start;
+}

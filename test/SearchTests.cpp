@@ -77,6 +77,26 @@ TEST(SearchTests, BinarySearchTest)
 	pos = search.BinarySearch(0, source);
 	ASSERT_LT(pos, 0);
 }
+TEST(SearchTests, BinarySearchCountTest)
+{
+	Search search;
+	vector<long> ages(50, 20);
+	ages.resize(100);
+	// 0:49 20, 50: 79 30, 80: 99 50
+	ranges::generate(ages.begin() + 50, ages.begin() + 80, [i = 30]() mutable
+					 { return i; });
+	ranges::generate(ages.begin() + 80, ages.end(), [i = 50]() mutable
+					 { return i; });
+	int count = search.BinarySearchCountUpper(ages, 18, 0, ages.size() - 1) - search.BinarySearchCountLower(ages, 18, 0, ages.size() - 1);
+	ASSERT_EQ(0, count);
+	count = search.BinarySearchCountUpper(ages, 20, 0, ages.size() - 1) - search.BinarySearchCountLower(ages, 20, 0, ages.size() - 1) + 1;
+	ASSERT_EQ(50, count);
+	count = search.BinarySearchCountUpper(ages, 30, 0, ages.size() - 1) - search.BinarySearchCountLower(ages, 30, 0, ages.size() - 1) + 1;
+	ASSERT_EQ(30, count);
+	count = search.BinarySearchCountUpper(ages, 50, 0, ages.size() - 1) - search.BinarySearchCountLower(ages, 50, 0, ages.size() - 1) + 1;
+	ASSERT_EQ(20, count);
+}
+
 template <typename T>
 class MatrixBinarySearchFixture
 {
@@ -305,26 +325,38 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(0, vector<size_t>{0, 0}, 1),
 					  make_tuple(4, vector<size_t>{1, 4, 4}, 3),
 					  make_tuple(3, vector<size_t>{1, 2, 3, 1, 1}, 4)));
-
-TEST(SearchTests, BinarySearchCountTest)
+class MinDaysToMakeBouquetsTestFixture : public testing::TestWithParam<tuple<long, vector<size_t>, size_t, size_t>>
 {
-	Search search;
-	vector<long> ages(50, 20);
-	ages.resize(100);
-	// 0:49 20, 50: 79 30, 80: 99 50
-	ranges::generate(ages.begin() + 50, ages.begin() + 80, [i = 30]() mutable
-					 { return i; });
-	ranges::generate(ages.begin() + 80, ages.end(), [i = 50]() mutable
-					 { return i; });
-	int count = search.BinarySearchCountUpper(ages, 18, 0, ages.size() - 1) - search.BinarySearchCountLower(ages, 18, 0, ages.size() - 1);
-	ASSERT_EQ(0, count);
-	count = search.BinarySearchCountUpper(ages, 20, 0, ages.size() - 1) - search.BinarySearchCountLower(ages, 20, 0, ages.size() - 1) + 1;
-	ASSERT_EQ(50, count);
-	count = search.BinarySearchCountUpper(ages, 30, 0, ages.size() - 1) - search.BinarySearchCountLower(ages, 30, 0, ages.size() - 1) + 1;
-	ASSERT_EQ(30, count);
-	count = search.BinarySearchCountUpper(ages, 50, 0, ages.size() - 1) - search.BinarySearchCountLower(ages, 50, 0, ages.size() - 1) + 1;
-	ASSERT_EQ(20, count);
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_m = get<2>(GetParam());
+		_k = get<3>(GetParam());
+	}
+	long MinDaysToMakeBouquetsTest()
+	{
+		return _search.MinDaysToMakeBouquets(_data, _m, _k);
+	}
+
+protected:
+	Search _search;
+	long _expected;
+	size_t _m, _k;
+	vector<size_t> _data;
+};
+TEST_P(MinDaysToMakeBouquetsTestFixture, MinDaysToMakeBouquetsTests)
+{
+	ASSERT_EQ(this->_expected, this->MinDaysToMakeBouquetsTest());
 }
+INSTANTIATE_TEST_SUITE_P(
+	MinDaysToMakeBouquetsTests,
+	MinDaysToMakeBouquetsTestFixture,
+	::testing::Values(make_tuple(3, vector<size_t>{1, 10, 3, 10, 2}, 3, 1),
+					  make_tuple(-1, vector<size_t>{1, 10, 3, 10, 2}, 3, 2),
+					  make_tuple(12, vector<size_t>{7, 7, 7, 7, 12, 7, 7}, 2, 3)));
+
 class StringGridPatternSearchTestFixture : public testing::TestWithParam<tuple<bool, vector<string>, vector<string>>>
 {
 public:
