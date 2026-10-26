@@ -7,6 +7,7 @@ private:
     bool CanEatAllBananasInTime(vector<size_t> const &, size_t, size_t);
     bool IsValidSubSequence(vector<size_t> const &, size_t, size_t);
     bool CanMakeBouquets(vector<size_t> const &, size_t, size_t, size_t);
+    bool isKthSmallest(size_t, size_t, size_t, size_t);
 
 public:
     void KMPSearch(string const &, string const &, vector<size_t> &);
@@ -22,4 +23,5 @@ public:
     size_t MinCapacityToShipWithinDays(vector<size_t> const &, size_t);
     size_t MinimumLargestSum(vector<size_t> const &, size_t);
     long MinDaysToMakeBouquets(vector<size_t> const &, size_t, size_t);
+    size_t MultiplicationTableKthSmallestNumber(size_t, size_t, size_t);
 };

@@ -686,3 +686,53 @@ long Search::MinDaysToMakeBouquets(vector<size_t> const &bloomDays, size_t m, si
     }
     return start;
 }
+bool Search::isKthSmallest(size_t m, size_t n, size_t k, size_t current)
+{
+    size_t count = 0;
+    for (size_t i = 1; i <= m; i++)
+    {
+        /* Every number in a row is a multiple of the row#
+         * Ex: row 3: [3	6	9	12	15]
+         * To calculate the offset of current in a row, row * offset <= current,
+         * offset = min(current / row, n)
+         */
+        size_t offset = min(current / i, n);
+        if (!offset)
+            break;
+        count += offset;
+    }
+    return count >= k;
+}
+/*
+ * https://leetcode.com/problems/kth-smallest-number-in-multiplication-table/
+ * Use binary search
+ * 100%
+1	2	3	4	5
+2	4	6	8	10
+3	6	9	12	15
+4	8	12	16	20
+5	10	15	20	25
+
+1 2 2 3 3 4 4 4 5 5 6 6 8 8 9 10 10 12 12 15 15 16 20 20 25
+
+mid:25//2 = 13
+      add: min(get the count of multiples of row#, max in the row=col)
+row:1 add: min(13, 5)=5 count=5
+row:2 add: min(13//2, 5)=min(6,5)=5 count=10
+row:3 add: min(13//3, 5)=min(4,5)=4 count=14
+row:4 add: min(13//4, 5)=min(3,5)=3 count=17
+row:5 add: min(13//5, 5)=min(2,5)=2 count=19
+ */
+size_t Search::MultiplicationTableKthSmallestNumber(size_t m, size_t n, size_t k)
+{
+    size_t start = 1, end = m * n;
+    for (; start <= end;)
+    {
+        size_t mid = start + (end - start) / 2 + (end - start) % 2;
+        if (isKthSmallest(m, n, k, mid))
+            end = mid - 1;
+        else
+            start = mid + 1;
+    }
+    return start;
+}
