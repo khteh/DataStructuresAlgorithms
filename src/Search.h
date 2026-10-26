@@ -5,6 +5,7 @@ class Search
 private:
     void KMPTable(string const &, vector<long> &);
     bool CanEatAllBananasInTime(vector<size_t> const &, size_t, size_t);
+    bool CanShipWithinDays(vector<size_t> const &, size_t, size_t);
 
 public:
     void KMPSearch(string const &, string const &, vector<size_t> &);
@@ -17,4 +18,5 @@ public:
     bool GridSearch(vector<string> const &, vector<string> const &);
     vector<string> FindShortestPath(int, int, int, int, int);
     size_t MinEatingSpeed(vector<size_t> const &, size_t);
+    size_t MinCapacityToShipWithinDays(vector<size_t> const &, size_t);
 };

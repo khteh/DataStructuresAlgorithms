@@ -243,7 +243,36 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(4, vector<size_t>{3, 6, 7, 11}, 8),
 					  make_tuple(30, vector<size_t>{30, 11, 23, 4, 20}, 5),
 					  make_tuple(23, vector<size_t>{30, 11, 23, 4, 20}, 6)));
+class MinCapacityToShipWithinDaysTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_weights = get<1>(GetParam());
+		_days = get<2>(GetParam());
+	}
+	size_t MinCapacityToShipWithinDaysTest()
+	{
+		return _search.MinCapacityToShipWithinDays(_weights, _days);
+	}
 
+protected:
+	Search _search;
+	size_t _expected, _days;
+	vector<size_t> _weights;
+};
+TEST_P(MinCapacityToShipWithinDaysTestFixture, MinCapacityToShipWithinDaysTests)
+{
+	ASSERT_EQ(this->_expected, this->MinCapacityToShipWithinDaysTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MinCapacityToShipWithinDaysTests,
+	MinCapacityToShipWithinDaysTestFixture,
+	::testing::Values(make_tuple(15, vector<size_t>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 5),
+					  make_tuple(55, vector<size_t>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 1),
+					  make_tuple(6, vector<size_t>{3, 2, 2, 4, 1, 4}, 3),
+					  make_tuple(3, vector<size_t>{1, 2, 3, 1, 1}, 4)));
 TEST(SearchTests, BinarySearchCountTest)
 {
 	Search search;

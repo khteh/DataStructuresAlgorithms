@@ -566,7 +566,7 @@ size_t Search::MinEatingSpeed(vector<size_t> const &piles, size_t hours)
     size_t start = 1, mid = 0, end = *ranges::max_element(piles); // These are the rates of #bananas / hour. start = 0 will hit division-by-zero
     for (; start <= end;)
     {
-        mid = start + (end - start) / 2 + (end - start) % 2;
+        mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid -1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
         if (CanEatAllBananasInTime(piles, mid, hours))
             end = mid - 1;
         else
@@ -584,4 +584,36 @@ bool Search::CanEatAllBananasInTime(vector<size_t> const &piles, size_t rate, si
             return running_total; },
         std::plus<size_t>());
     return duration <= hours;
+}
+/*
+ * https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/
+ * 100%
+ */
+size_t Search::MinCapacityToShipWithinDays(vector<size_t> const &weights, size_t days)
+{
+    size_t start = *ranges::max_element(weights), end = ranges::fold_left(weights, 0, std::plus<size_t>());
+    for (; start < end;)
+    {
+        int mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid -1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        if (CanShipWithinDays(weights, mid, days))
+            end = mid - 1; // Return the least weight capacity of the ship. So, we decrease our capacity as long as it fits within days. Use mid instead of (mid - 1) because it needs to load the complete weight of the item
+        else
+            start = mid + 1; // If cannot ship within days, increase capacity.
+    }
+    return start;
+}
+bool Search::CanShipWithinDays(vector<size_t> const &weights, size_t weight, size_t days)
+{
+    size_t count = 1, sum = 0;
+    for (vector<size_t>::const_iterator it = weights.begin(); it != weights.end(); it++)
+    {
+        sum += *it;
+        if (sum > weight)
+        {
+            sum = *it;
+            if (++count > days) // Too heavy. Ship the next day.
+                return false;
+        }
+    }
+    return true;
 }
