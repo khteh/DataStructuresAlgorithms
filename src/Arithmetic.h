@@ -54,6 +54,8 @@ public:
 		requires arithmetic_type<T>;
 	T AddWithoutArithmetic(T, T)
 		requires arithmetic_type<T>;
+	T Sqrt(T)
+		requires unsigned_integral<T>;
 	string Add2Binary(string const &, string const &);
 	bool IsAdditiveNumber(string const &);
 	void NumberToVector(T, vector<T> &)

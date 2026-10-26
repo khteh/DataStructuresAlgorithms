@@ -192,6 +192,32 @@ INSTANTIATE_TEST_SUITE_P(
 	ArithmerticOperationsTests,
 	AddWithoutArithmeticTestFixture,
 	::testing::Values(make_tuple(0, 0, 0), make_tuple(0, -1, 1), make_tuple(0x1dd9b7dde, 0xdeadbeef, 0xfeedbeef), make_tuple(0xdeadbeef, 0xdeadbeef, 0), make_tuple(0xfeedbeef, 0, 0xfeedbeef)));
+class SqrtTestFixture : public testing::TestWithParam<tuple<size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_var1 = get<1>(GetParam());
+	}
+	uint64_t SqrtTest()
+	{
+		return _arithmetic.Sqrt(_var1);
+	}
+
+protected:
+	Arithmetic<size_t> _arithmetic;
+	size_t _var1, _expected;
+};
+TEST_P(SqrtTestFixture, SqrtTests)
+{
+	ASSERT_EQ(this->_expected, this->SqrtTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	SqrtTests,
+	SqrtTestFixture,
+	::testing::Values(make_tuple(2, 4), make_tuple(10, 100), make_tuple(61122, 0xdeadbeef), make_tuple(65398, 0xfeedbeef)));
+
 class NumberStringSumTestFixture : public ArithmerticOperationsTestFixture<string>, public testing::TestWithParam<tuple<string, string, string>>
 {
 public:

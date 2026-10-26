@@ -294,6 +294,25 @@ T Arithmetic<T>::AddWithoutArithmetic(T sum, T carry)
 {
 	return !carry ? sum : AddWithoutArithmetic(sum ^ carry, (unsigned long long)(sum & carry) << 1);
 }
+/*
+ * https://leetcode.com/problems/sqrtx/description/
+ * 100%
+ */
+template <typename T>
+T Arithmetic<T>::Sqrt(T x)
+	requires unsigned_integral<T>
+{
+	T start = 2, end = x;
+	for (; start <= end;)
+	{
+		uint64_t mid = start + (end - start) / 2 + (end - start) % 2;
+		if ((mid * mid) <= x)
+			start = mid + 1;
+		else
+			end = mid - 1;
+	}
+	return end;
+}
 template <typename T>
 char Arithmetic<T>::Add2BinaryDigits(string &result, char a, char b, char carry)
 {
