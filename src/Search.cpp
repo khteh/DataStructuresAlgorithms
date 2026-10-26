@@ -563,7 +563,7 @@ size_t Search::MinEatingSpeed(vector<size_t> const &piles, size_t hours)
     rate = n / duration
     duration = n / rate
     */
-    size_t start = 1, mid = 0, end = pow(10, 9); // h <= 10^9 start=0 will hit division-by-zero
+    size_t start = 1, mid = 0, end = *ranges::max_element(piles); // These are the rates of #bananas / hour. start = 0 will hit division-by-zero
     for (; start <= end;)
     {
         mid = start + (end - start) / 2 + (end - start) % 2;
@@ -576,8 +576,12 @@ size_t Search::MinEatingSpeed(vector<size_t> const &piles, size_t hours)
 }
 bool Search::CanEatAllBananasInTime(vector<size_t> const &piles, size_t rate, size_t hours)
 {
-    size_t duration = 0;
-    for (vector<size_t>::const_iterator it = piles.begin(); it != piles.end(); it++)
-        duration += (size_t)(*it / rate) + ((*it % rate) ? 1 : 0);
+    size_t duration = parallel_reduce(
+        blocked_range<size_t>(0, piles.size()), 0, [rate, &piles](tbb::blocked_range<size_t> const &r, size_t running_total)
+        {
+            for (size_t i = r.begin(); i < r.end(); i++)
+                running_total += (size_t)(piles[i] / rate) + ((piles[i] % rate) ? 1 : 0); 
+            return running_total; },
+        std::plus<size_t>());
     return duration <= hours;
 }
