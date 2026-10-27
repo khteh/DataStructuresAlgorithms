@@ -757,6 +757,7 @@ size_t Search::MultiplicationTableKthSmallestNumber(size_t m, size_t n, size_t k
 bool Search::HasKthSmallestPairs(vector<size_t> &data, size_t k, size_t distance)
 {
     size_t pairs = 0;
+    // The entire for loop is actually calculating Binomial Coefficients.
     for (size_t i = 0, j = 1; i < data.size() || j < data.size(); i++)
     {
         // If the current pair pointed at has a distance less than or equal to distance, all pairs between these pointers are valid (since the array is already sorted),
