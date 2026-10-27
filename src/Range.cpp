@@ -800,7 +800,7 @@ vector<size_t> Range::WiggleMaxLength(vector<size_t> const &nums)
 	bool direction = false; // false: down. true: up
 	if (nums.empty())
 		return result;
-	result.push_back(*nums.begin());
+	result.push_back(nums.front());
 	for (vector<size_t>::const_iterator it = nums.begin(); it != nums.end(); it++)
 	{
 		if (*it < result.back())
