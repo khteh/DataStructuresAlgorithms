@@ -220,7 +220,7 @@ void reverse(string &str)
  * 1: "Hello World!!!" -> "!!!dlroW olleH"
  * 2: "!!!dlroW olleH" -> "World!!! Hello"
  */
-void reverseWords(string &str)
+void ReverseWords(string &str)
 {
 	reverse(str);
 	for (size_t i = 0, j = 0; i != string::npos; j = i + 1)
@@ -244,7 +244,7 @@ void reverseWords(string &str)
  * 1: "Hello World!!!" -> "!!!dlroW olleH"
  * 2: "!!!dlroW olleH" -> World!!! Hello"
  */
-void reverseWordsTrimmed(string &str)
+void ReverseWordsTrimmed(string &str)
 {
 	reverse(str);
 	for (size_t i = 0, j = 0; i != string::npos && j < str.size();)
@@ -283,7 +283,7 @@ void reverseWordsTrimmed(string &str)
  * numeric_limits<int32_t>::min(): -2147483648 (0x80000000), numeric_limits<int32_t>::max(): 2147483647 (0x7fffffff)
  * 																							  964632435
  */
-int32_t reverseInt32(int32_t x)
+int32_t ReverseInt32(int32_t x)
 {
 	bool positive = x >= 0;
 	int32_t y = 0;
@@ -424,8 +424,9 @@ size_t FindAnagrams(vector<string> const &s, vector<vector<string>> &result)
 	}
 	return count;
 }
-// https://www.hackerrank.com/challenges/sherlock-and-anagrams/problem
-// 100%
+/* https://www.hackerrank.com/challenges/sherlock-and-anagrams/problem
+ * 100%
+ */
 size_t SherlockAndAnagrams(string const &s)
 {
 	vector<string> strings;
@@ -533,9 +534,10 @@ string FibonacciModified(size_t t1, size_t t2, size_t n)
 	}
 	return arithmetic.DigitsVectorToNumberString(result[n % 2]);
 }
-// http://web2.0calc.com/
-// 64-bit max is 18446744073709551615
-// Overflow happens at 21!
+/* http://web2.0calc.com/
+ * 64-bit max is 18446744073709551615
+ * Overflow happens at 21!
+ */
 template <typename T>
 T Factorial(long n)
 {
@@ -560,7 +562,7 @@ a b c
 2 1  => 2 + 1 => (n - 1) + 1
 
 a b c d
-3 2 1 0 => 3 + 2 + 1 => (n - 1) + 2 + 1
+3 2 1 0 => 3 + 2 + 1 => (n - 1) + 2 + 1 = (n - 1) + 3 = (n - 1) +
 		= n(n+1) / 2 - n
 		= (n^2 + n)/2 - n
 		= (n^2 + n - 2n) / 2
@@ -581,7 +583,7 @@ T BinomialCoefficients(size_t n, size_t k)
 		return 1;
 	else if (n < k)
 		return 0;
-	else if (k == 2)
+	else if (k == 2) // pairs
 		return n * (n - 1) / 2;
 	return Factorial<T>(n) / (Factorial<T>((long)k) * Factorial<T>((long)(n - k)));
 }

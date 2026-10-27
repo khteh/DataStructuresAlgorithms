@@ -95,7 +95,7 @@ public:
 	}
 	int32_t ReverseInt32Test()
 	{
-		return reverseInt32(_x);
+		return ReverseInt32(_x);
 	}
 
 protected:

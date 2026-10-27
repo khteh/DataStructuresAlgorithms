@@ -474,10 +474,10 @@ int main(int argc, char *argv[])
 	reverse(str);
 	assert(str == "!!!dlroW olleH");
 	str = "The house is blue";
-	reverseWords(str);
+	ReverseWords(str);
 	assert(str == "blue is house The");
 	str = "  The   house is    blue  ";
-	reverseWordsTrimmed(str);
+	ReverseWordsTrimmed(str);
 	assert(str == "blue is house The");
 
 	str = "abcdefcdbacd";
@@ -1997,13 +1997,13 @@ int main(int argc, char *argv[])
 	grid1.clear();
 	a.clear();
 	/*
-	* modular multiplication overflows when long is 32 bits, which it is under MSVC on Windows, even in x64 builds.
-	* Why it overflows. ((x % modulo) * (y % modulo)) % modulo multiplies two values that can each be close to 1e9+7. 
-	* That product needs up to about 60 bits, so in a 32-bit long it overflows before the final % modulo is applied. 
-	* The true product of 3..14 is 43,589,145,600, which is already past 2^31.
-    * Why it is intermittent. Once overflow happens, the result depends on how the multiplications are grouped. 
-	* fold_left always goes left to right, but parallel_reduce splits the range into chunks differently from run to run, depending on thread availability.
-	*/
+	 * modular multiplication overflows when long is 32 bits, which it is under MSVC on Windows, even in x64 builds.
+	 * Why it overflows. ((x % modulo) * (y % modulo)) % modulo multiplies two values that can each be close to 1e9+7.
+	 * That product needs up to about 60 bits, so in a 32-bit long it overflows before the final % modulo is applied.
+	 * The true product of 3..14 is 43,589,145,600, which is already past 2^31.
+	 * Why it is intermittent. Once overflow happens, the result depends on how the multiplications are grouped.
+	 * fold_left always goes left to right, but parallel_reduce splits the range into chunks differently from run to run, depending on thread availability.
+	 */
 	const int64_t modulo = 1e9 + 7L;
 	a = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 	l = 1e9 + 7L;
