@@ -1,5 +1,8 @@
 #pragma once
 #include "pch.h"
+template <typename T>
+T BinomialCoefficients(size_t, size_t);
+
 class Search
 {
 private:
@@ -8,6 +11,7 @@ private:
     bool IsValidSubSequence(vector<size_t> const &, size_t, size_t);
     bool CanMakeBouquets(vector<size_t> const &, size_t, size_t, size_t);
     bool HasKthSmallest(size_t, size_t, size_t, size_t);
+    bool HasKthSmallestPairs(vector<size_t> &, size_t, size_t);
 
 public:
     void KMPSearch(string const &, string const &, vector<size_t> &);
@@ -24,4 +28,5 @@ public:
     size_t MinimumLargestSum(vector<size_t> const &, size_t);
     long MinDaysToMakeBouquets(vector<size_t> const &, size_t, size_t);
     size_t MultiplicationTableKthSmallestNumber(size_t, size_t, size_t);
+    int SmallestDistancePair(vector<size_t> &, size_t);
 };

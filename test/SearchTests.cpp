@@ -374,7 +374,6 @@ public:
 protected:
 	Search _search;
 	size_t _expected, _m, _n, _k;
-	vector<size_t> _data;
 };
 TEST_P(MultiplicationTableKthSmallestNumberTestFixture, MultiplicationTableKthSmallestNumberTests)
 {
@@ -386,6 +385,37 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(3, 3, 3, 5),
 					  make_tuple(6, 2, 3, 6),
 					  make_tuple(9, 5, 5, 15)));
+class SmallestDistancePairTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_k = get<2>(GetParam());
+	}
+	size_t SmallestDistancePairTest()
+	{
+		return _search.SmallestDistancePair(_data, _k);
+	}
+
+protected:
+	Search _search;
+	size_t _expected, _k;
+	vector<size_t> _data;
+};
+TEST_P(SmallestDistancePairTestFixture, SmallestDistancePairTests)
+{
+	ASSERT_EQ(this->_expected, this->SmallestDistancePairTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	SmallestDistancePairTests,
+	SmallestDistancePairTestFixture,
+	::testing::Values(make_tuple(0, vector<size_t>{1, 3, 3}, 1),
+					  make_tuple(0, vector<size_t>{1, 1, 1}, 2),
+					  make_tuple(5, vector<size_t>{1, 6, 1}, 3),
+					  make_tuple(58, vector<size_t>{62, 100, 4}, 2),
+					  make_tuple(2, vector<size_t>{9, 10, 7, 10, 6, 1, 5, 4, 9, 8}, 18)));
 
 class StringGridPatternSearchTestFixture : public testing::TestWithParam<tuple<bool, vector<string>, vector<string>>>
 {

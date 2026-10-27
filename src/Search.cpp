@@ -567,7 +567,7 @@ size_t Search::MinEatingSpeed(vector<size_t> const &piles, size_t hours)
     size_t start = 1, mid = 0, end = *ranges::max_element(piles); // These are the rates of #bananas / hour. start = 0 will hit division-by-zero
     for (; start <= end;)
     {
-        mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid -1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
         if (CanEatAllBananasInTime(piles, mid, hours))
             end = mid - 1;
         else
@@ -585,6 +585,21 @@ bool Search::CanEatAllBananasInTime(vector<size_t> const &piles, size_t rate, si
             return running_total; },
         std::plus<size_t>());
     return duration <= hours;
+}
+bool Search::IsValidSubSequence(vector<size_t> const &data, size_t check, size_t k)
+{
+    size_t count = 1, sum = 0;
+    for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
+    {
+        sum += *it;
+        if (sum > check)
+        {
+            sum = *it;
+            if (++count > k) // Too heavy. Ship the next day.
+                return false;
+        }
+    }
+    return true;
 }
 /*
  * https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/
@@ -610,21 +625,6 @@ size_t Search::MinCapacityToShipWithinDays(vector<size_t> const &weights, size_t
     }
     return start; // start is the minimal k​ satisfying the condition function.
 }
-bool Search::IsValidSubSequence(vector<size_t> const &data, size_t check, size_t k)
-{
-    size_t count = 1, sum = 0;
-    for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
-    {
-        sum += *it;
-        if (sum > check)
-        {
-            sum = *it;
-            if (++count > k) // Too heavy. Ship the next day.
-                return false;
-        }
-    }
-    return true;
-}
 /*
  * https://leetcode.com/problems/split-array-largest-sum/description/
  * Return the minimized largest sum of the k-split subsequences.
@@ -636,7 +636,7 @@ size_t Search::MinimumLargestSum(vector<size_t> const &data, size_t k)
     long start = *ranges::max_element(data), end = ranges::fold_left(data, 0, std::plus<long>());
     for (; start <= end;)
     {
-        int mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid -1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        int mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
         /*
          * The following condition shows monotonicity. If condition(mid) is True, end = mid - 1. So condition is True for all values of (mid - 1)
          * If condition(mid) is true, condition(mid + 1) is True. This is prerequisite for applying binary search as a solution to the problem.
@@ -686,7 +686,7 @@ long Search::MinDaysToMakeBouquets(vector<size_t> const &bloomDays, size_t m, si
     size_t start = *ranges::min_element(bloomDays), end = *ranges::max_element(bloomDays);
     for (; start <= end;)
     {
-        size_t mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid -1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        size_t mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
         /*
          * The following condition shows monotonicity. If condition(mid) is True, end = mid - 1. So condition is True for all values of (mid - 1)
          * If condition(mid) is true, condition(mid + 1) is True. This is prerequisite for applying binary search as a solution to the problem.
@@ -742,7 +742,7 @@ size_t Search::MultiplicationTableKthSmallestNumber(size_t m, size_t n, size_t k
     size_t start = 1, end = m * n;
     for (; start <= end;)
     {
-        size_t mid = start + (end - start) / 2 + (end - start) % 2;
+        size_t mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
         /*
          * The following condition shows monotonicity. If condition(mid) is True, end = mid - 1. So condition is True for all values of (mid - 1)
          * If condition(mid) is true, condition(mid + 1) is True. This is prerequisite for applying binary search as a solution to the problem.
@@ -753,4 +753,86 @@ size_t Search::MultiplicationTableKthSmallestNumber(size_t m, size_t n, size_t k
             start = mid + 1;
     }
     return start; // start is the minimal k​ satisfying the condition function.
+}
+bool Search::HasKthSmallestPairs(vector<size_t> &data, size_t k, size_t distance)
+{
+    size_t pairs = 0;
+    for (size_t i = 0, j = 1; i < data.size() || j < data.size(); i++)
+    {
+        // If the current pair pointed at has a distance less than or equal to distance, all pairs between these pointers are valid (since the array is already sorted),
+        for (; j < data.size() && abs((long)(data[j] - data[i])) <= (long)distance; j++)
+            ;
+        pairs += (j - i - 1);
+    }
+    return pairs >= k;
+}
+/*
+ * https://leetcode.com/problems/find-k-th-smallest-pair-distance/
+ * Use binary search
+ * 100%
+ *
+--- size_t mid = start + (end - start) / 2 + (end - start) % 2; --- doesn't work
+1 1 6 k:3 [1,1] [1,6] [1,6]
+[start: 0, end: 5 mid: 3]
+i:0, j:1, v:0 j:2
+i:0, j:2, v:5 pairs = 2 - 0 - 1 = 1
+
+i:1, j:2 v:5
+i:2, j:2 v:0 j:3 pairs += 3 - 2 - 1 = 1 condition: false
+BinomialCoefficients(2) = 2(1) / 2 = 1 condition: false
+
+[start: 4, end: 5 mid:5]
+i:0, j:1, v:0 j:2
+i:0, j:2, v:5 j:3
+pairs += 3 - 0 - 1 = 2
+
+i:1, j:3 pairs += 3 - 1 - 1 = 2 + 1 = 3
+i:2, j:3 pairs += 3 - 2 - 1 = 3 + 0 = 3 condition: true
+BinomialCoefficients(3) = 3(2) / 2 = 3 condition: true
+
+[start: 4, end: 4] => return 4
+------ size_t mid = start + (end - start) / 2; --- works
+1 1 6 k:3 [1,1] [1,6] [1,6]
+[start: 0, end: 5 mid: 2]
+i:0, j:1, v:0 j:2
+i:0, j:2, v:5 pairs = 2 - 0 - 1 = 1
+
+i:1, j:2 v:5
+i:2, j:2 v:0 j:3 pairs += 3 - 2 - 1 = 1 condition: false
+BinomialCoefficients(2) = 2(1) / 2 = 1 condition: false
+
+[start: 3, end: 5 mid:4]
+i:0, j:1, v:0 j:2
+i:0, j:2, v:5 j:2
+pairs += 2 - 0 - 1 = 1
+
+i:1, j:2, v:5 pairs += 2 - 1 - 1 = 0 + 1 = 1
+i:2, j:2, v:0, j:3 pairs += 3 - 2 - 1 = 0 + 1 = 1 condition: false
+BinomialCoefficients(2) = 2(1) / 2 = 1 condition: false
+
+[start: 4, end: 5, mid:4]
+i:0, j:1, v:0 j:2
+i:0, j:2, v:5 j:2
+pairs += 2 - 0 - 1 = 1
+
+i:1, j:2, v:5 pairs += 2 - 1 - 1 = 0 + 1 = 1
+i:2, j:2, v:0, j:3 pairs += 3 - 2 - 1 = 0 + 1 = 1 condition: false
+BinomialCoefficients(2) = 2(1) / 2 = 1 condition: false
+
+[start: 5, end: 5, mid:4] => return 5
+*/
+int Search::SmallestDistancePair(vector<size_t> &data, size_t k)
+{
+    ranges::sort(data);
+    size_t start = 0, end = data.back() - data.front();
+    for (; start < end;)
+    {
+        // size_t mid = start + (end - start) / 2 + (end - start) % 2; // XXX: Doesn't work in this case. If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        size_t mid = start + (end - start) / 2;
+        if (HasKthSmallestPairs(data, k, mid))
+            end = mid;
+        else
+            start = mid + 1;
+    }
+    return start;
 }
