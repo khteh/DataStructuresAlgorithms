@@ -6,12 +6,14 @@ T BinomialCoefficients(size_t, size_t);
 class Search
 {
 private:
+    uint64_t _lcm_ab, _lcm_bc, _lcm_ac, _lcm_abc;
     void KMPTable(string const &, vector<long> &);
     bool CanEatAllBananasInTime(vector<size_t> const &, size_t, size_t);
     bool IsValidSubSequence(vector<size_t> const &, size_t, size_t);
     bool CanMakeBouquets(vector<size_t> const &, size_t, size_t, size_t);
     bool HasKthSmallest(size_t, size_t, size_t, size_t);
     bool HasKthSmallestPairs(vector<size_t> &, size_t, size_t);
+    bool HasNUglyNumbers(size_t, uint64_t, uint64_t, uint64_t, uint64_t);
 
 public:
     void KMPSearch(string const &, string const &, vector<size_t> &);
@@ -29,4 +31,5 @@ public:
     long MinDaysToMakeBouquets(vector<size_t> const &, size_t, size_t);
     size_t MultiplicationTableKthSmallestNumber(size_t, size_t, size_t);
     int SmallestDistancePair(vector<size_t> &, size_t);
+    size_t NthUglyNumber(size_t, size_t, size_t, size_t);
 };

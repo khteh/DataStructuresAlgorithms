@@ -416,6 +416,36 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(5, vector<size_t>{1, 6, 1}, 3),
 					  make_tuple(58, vector<size_t>{62, 100, 4}, 2),
 					  make_tuple(2, vector<size_t>{9, 10, 7, 10, 6, 1, 5, 4, 9, 8}, 18)));
+class NthUglyNumberTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+		_a = get<2>(GetParam());
+		_b = get<3>(GetParam());
+		_c = get<4>(GetParam());
+	}
+	size_t NthUglyNumberTest()
+	{
+		return _search.NthUglyNumber(_n, _a, _b, _c);
+	}
+
+protected:
+	Search _search;
+	size_t _expected, _n, _a, _b, _c;
+};
+TEST_P(NthUglyNumberTestFixture, NthUglyNumberTests)
+{
+	ASSERT_EQ(this->_expected, this->NthUglyNumberTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	NthUglyNumberTests,
+	NthUglyNumberTestFixture,
+	::testing::Values(make_tuple(4, 3, 2, 3, 5),
+					  make_tuple(6, 4, 2, 3, 4),
+					  make_tuple(10, 5, 2, 11, 13)));
 
 class StringGridPatternSearchTestFixture : public testing::TestWithParam<tuple<bool, vector<string>, vector<string>>>
 {

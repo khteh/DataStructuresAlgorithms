@@ -2457,6 +2457,7 @@ int main(int argc, char *argv[])
 	cset1 = {'a', 'c', 'z'};
 	assert(cset1 == cset);
 	cout << endl;
+	cout << "pow(10, 10): " << pow(10, 10) << endl;
 	/***** The End *****/
 	cout
 		<< "Press ENTER to exit";

@@ -837,3 +837,73 @@ int Search::SmallestDistancePair(vector<size_t> &data, size_t k)
     }
     return start;
 }
+bool Search::HasNUglyNumbers(size_t n, uint64_t a, uint64_t b, uint64_t c, uint64_t check)
+{
+    return (check / a + check / b + check / c - check / _lcm_ab - check / _lcm_bc - check / _lcm_ac + check / _lcm_abc) >= n;
+}
+/*
+ * https://leetcode.com/problems/ugly-number-iii/
+ * Use binary search
+ * 100%
+ * Generating ugly numbers one at a time is too slow. Instead, ask a simpler question: how many ugly numbers are ≤ x?
+ * That count only goes up as x grows, so you binary search for the smallest x whose count is at least n. The result is guaranteed to fall in [1, 2 × 10⁹], which gives you the search range.
+ * The number of multiples of a up to x is ⌊x/a⌋. Adding ⌊x/a⌋ + ⌊x/b⌋ + ⌊x/c⌋ overcounts numbers divisible by more than one of them, so you correct with inclusion–exclusion:
+ *
+ * count(x) = x/a + x/b + x/c − x/lcm(a,b) − x/lcm(a,c) − x/lcm(b,c) + x/lcm(a,b,c)
+ *
+ * A number divisible by both a and b is a multiple of lcm(a, b), not of a·b. Those are the same only when a and b share no factors. Example 2 shows why this matters: with a = 2 and c = 4, every multiple of 4 is already a multiple of 2, so the overlap is “multiples of 4”, not “multiples of 8”. Using a·b would subtract the wrong amount and give a wrong answer.
+
+The standard way to get the LCM is through the GCD:
+
+lcm(a, b) = a / gcd(a, b) × b
+
+and lcm(a, b, c) = lcm(lcm(a, b), c). GCD itself is cheap to compute with Euclid’s algorithm in O(log min(a, b)) time.
+
+Two practical notes:
+1. Divide before multiplying (a / gcd(a,b) * b) to reduce overflow risk, and use 64-bit integers. The constraint a × b × c ≤ 10¹⁸ guarantees even the three-way LCM fits in a 64-bit integer.
+2. If an LCM exceeds 2 × 10⁹, its term is simply 0 for every x in range, which is fine.
+
+The addition term of x/lcm(a,b,c) is there because the pairwise subtractions remove numbers divisible by all three one time too many. Follow a single such number through the formula.
+
+Take a = 2, b = 3, c = 5, and look at the number 30, which is divisible by all three.
+
+Step 1: the single terms (x/a + x/b + x/c)
+30 is a multiple of 2, of 3 and of 5, so it gets counted 3 times.
+
+Step 2: subtract the pairwise overlaps (− x/lcm(a,b) − x/lcm(a,c) − x/lcm(b,c))
+30 is a multiple of lcm(2,3)=6, of lcm(2,5)=10 and of lcm(3,5)=15, so it gets subtracted 3 times.
+
+Running total for 30: 3 − 3 = 0. It has disappeared from the count, even though it’s an ugly number and should count exactly once.
+
+Step 3: add back the triple overlap (+ x/lcm(a,b,c))
+30 is a multiple of lcm(2,3,5)=30, so it’s added once. Total: 1. Correct.
+
+Compare with a number like 6, divisible by 2 and 3 but not 5: it’s counted twice in step 1, subtracted once in step 2 (only by the 6 term), and not touched in step 3. Total 2 − 1 = 1. Fine without any correction.
+
+So the rule is:
+
+Number divisible by…	Step 1	Step 2	Step 3	Total
+exactly one of a, b, c	+1	    0	    0	    1
+exactly two	            +2	    −1	    0	    1
+all three	            +3	    −3	    +1	    1
+
+If you picture the three overlapping circles of a Venn diagram, the centre region sits inside every pairwise overlap, so subtracting all three overlaps cuts it out three times after it was only added three times. The final term puts it back.
+ */
+size_t Search::NthUglyNumber(size_t n, size_t a, size_t b, size_t c)
+{
+    size_t start = 1, end = 2 * pow(10, 9);
+    _lcm_ab = (uint64_t)(a * b) / gcd(a, b);
+    _lcm_bc = (uint64_t)((uint64_t)b * (uint64_t)c) / gcd(b, c);
+    _lcm_ac = (uint64_t)(a * c) / gcd(a, c);
+    _lcm_abc = (uint64_t)(_lcm_ab * c) / gcd(_lcm_ab, c);
+    for (; start < end;)
+    {
+        // size_t mid = start + (end - start) / 2 + (end - start) % 2;
+        size_t mid = start + (end - start) / 2;
+        if (HasNUglyNumbers(n, a, b, c, mid))
+            end = mid;
+        else
+            start = mid + 1;
+    }
+    return start;
+}
