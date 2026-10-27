@@ -573,7 +573,7 @@ size_t Search::MinEatingSpeed(vector<size_t> const &piles, size_t hours)
         else
             start = mid + 1;
     }
-    return start;
+    return start; // start is the minimal k​ satisfying the condition function.
 }
 bool Search::CanEatAllBananasInTime(vector<size_t> const &piles, size_t rate, size_t hours)
 {
@@ -599,12 +599,16 @@ size_t Search::MinCapacityToShipWithinDays(vector<size_t> const &weights, size_t
     for (; start <= end;)
     {
         int mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid -1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        /*
+         * The following condition shows monotonicity. If condition(mid) is True, end = mid - 1. So condition is True for all values of (mid - 1)
+         * If condition(mid) is true, condition(mid + 1) is True. This is prerequisite for applying binary search as a solution to the problem.
+         */
         if (IsValidSubSequence(weights, mid, days))
             end = mid - 1; // Return the least weight capacity of the ship. So, we decrease our capacity as long as it fits within days. Use mid instead of (mid - 1) because it needs to load the complete weight of the item
         else
             start = mid + 1; // If cannot ship within days, increase capacity.
     }
-    return start;
+    return start; // start is the minimal k​ satisfying the condition function.
 }
 bool Search::IsValidSubSequence(vector<size_t> const &data, size_t check, size_t k)
 {
@@ -633,12 +637,16 @@ size_t Search::MinimumLargestSum(vector<size_t> const &data, size_t k)
     for (; start <= end;)
     {
         int mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid -1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        /*
+         * The following condition shows monotonicity. If condition(mid) is True, end = mid - 1. So condition is True for all values of (mid - 1)
+         * If condition(mid) is true, condition(mid + 1) is True. This is prerequisite for applying binary search as a solution to the problem.
+         */
         if (IsValidSubSequence(data, mid, k))
             end = mid - 1; // Return the least weight capacity of the ship. So, we decrease our capacity as long as it fits within days. Use mid instead of (mid - 1) because it needs to load the complete weight of the item
         else
             start = mid + 1; // If cannot ship within days, increase capacity.
     }
-    return start;
+    return start; // start is the minimal k​ satisfying the condition function.
 }
 bool Search::CanMakeBouquets(vector<size_t> const &bloomDay, size_t m, size_t k, size_t day)
 {
@@ -679,12 +687,16 @@ long Search::MinDaysToMakeBouquets(vector<size_t> const &bloomDays, size_t m, si
     for (; start <= end;)
     {
         size_t mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid -1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        /*
+         * The following condition shows monotonicity. If condition(mid) is True, end = mid - 1. So condition is True for all values of (mid - 1)
+         * If condition(mid) is true, condition(mid + 1) is True. This is prerequisite for applying binary search as a solution to the problem.
+         */
         if (CanMakeBouquets(bloomDays, m, k, mid))
             end = mid - 1;
         else
             start = mid + 1;
     }
-    return start;
+    return start; // start is the minimal k​ satisfying the condition function.
 }
 bool Search::isKthSmallest(size_t m, size_t n, size_t k, size_t current)
 {
@@ -705,6 +717,7 @@ bool Search::isKthSmallest(size_t m, size_t n, size_t k, size_t current)
 }
 /*
  * https://leetcode.com/problems/kth-smallest-number-in-multiplication-table/
+ * return the kth smallest element in the m x n multiplication table.
  * Use binary search
  * 100%
 1	2	3	4	5
@@ -729,10 +742,14 @@ size_t Search::MultiplicationTableKthSmallestNumber(size_t m, size_t n, size_t k
     for (; start <= end;)
     {
         size_t mid = start + (end - start) / 2 + (end - start) % 2;
+        /*
+         * The following condition shows monotonicity. If condition(mid) is True, end = mid - 1. So condition is True for all values of (mid - 1)
+         * If condition(mid) is true, condition(mid + 1) is True. This is prerequisite for applying binary search as a solution to the problem.
+         */
         if (isKthSmallest(m, n, k, mid))
             end = mid - 1;
         else
             start = mid + 1;
     }
-    return start;
+    return start; // start is the minimal k​ satisfying the condition function.
 }
