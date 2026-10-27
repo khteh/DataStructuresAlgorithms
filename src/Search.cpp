@@ -698,7 +698,7 @@ long Search::MinDaysToMakeBouquets(vector<size_t> const &bloomDays, size_t m, si
     }
     return start; // start is the minimal k​ satisfying the condition function.
 }
-bool Search::isKthSmallest(size_t m, size_t n, size_t k, size_t current)
+bool Search::HasKthSmallest(size_t m, size_t n, size_t k, size_t current)
 {
     size_t count = 0;
     for (size_t i = 1; i <= m; i++)
@@ -707,6 +707,7 @@ bool Search::isKthSmallest(size_t m, size_t n, size_t k, size_t current)
          * Ex: row 3: [3	6	9	12	15]
          * To calculate the offset of current in a row, row * offset <= current,
          * offset = min(current / row, n)
+         * "offset of current in a row" means if current is to be put into row i, which 1-based col does it fit into.
          */
         size_t offset = min(current / i, n);
         if (!offset)
@@ -722,7 +723,7 @@ bool Search::isKthSmallest(size_t m, size_t n, size_t k, size_t current)
  * 100%
 1	2	3	4	5
 2	4	6	8	10
-3	6	9	12	15
+3	6	9	12	15 <= In each row, the value += #row from left to right.
 4	8	12	16	20
 5	10	15	20	25
 
@@ -746,7 +747,7 @@ size_t Search::MultiplicationTableKthSmallestNumber(size_t m, size_t n, size_t k
          * The following condition shows monotonicity. If condition(mid) is True, end = mid - 1. So condition is True for all values of (mid - 1)
          * If condition(mid) is true, condition(mid + 1) is True. This is prerequisite for applying binary search as a solution to the problem.
          */
-        if (isKthSmallest(m, n, k, mid))
+        if (HasKthSmallest(m, n, k, mid))
             end = mid - 1;
         else
             start = mid + 1;
