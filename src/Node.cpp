@@ -251,25 +251,25 @@ Node<T> &Node<T>::operator=(Node<T> rhs)
 	return *this;
 }
 template <typename T>
-bool Node<T>::operator==(Node<T> rhs) const
+bool Node<T>::operator==(const Node<T> &rhs) const // const member, const param. it works for const and non-const objects alike
 {
 	return _item == rhs.Item();
 }
 template <typename T>
-bool Node<T>::operator!=(Node<T> &rhs) const
+bool Node<T>::operator!=(const Node<T> &rhs) const
 {
 	// return !(*this == rhs);
 	return _item != rhs.Item();
 }
 
 template <typename T>
-bool Node<T>::operator<(Node<T> &rhs) const
+bool Node<T>::operator<(const Node<T> &rhs) const
 {
 	return _item < rhs.Item();
 }
 
 template <typename T>
-bool Node<T>::operator>(Node<T> &rhs) const
+bool Node<T>::operator>(const Node<T> &rhs) const
 {
 	return _item > rhs.Item();
 }

@@ -15,7 +15,7 @@ protected:
 public:
 	Node();
 	explicit Node(T);
-	Node(const Node &); // Copy constructor
+	Node(const Node &);		// Copy constructor
 	Node(Node &&) noexcept; // Move constructor
 	Node(const shared_ptr<Node>);
 	virtual ~Node();
@@ -30,9 +30,9 @@ public:
 		requires arithmetic_type<T>;
 	void SetParent(shared_ptr<Node<T>>);
 	void SetPrevious(shared_ptr<Node<T>>);
-	void SetNext(shared_ptr<Node<T>>); // Linked-list successor only. Does not touch the adjacency set.
+	void SetNext(shared_ptr<Node<T>>);	   // Linked-list successor only. Does not touch the adjacency set.
 	void AddAdjacent(shared_ptr<Node<T>>); // Graph edge. A node can have many adjacent nodes.
-	void ClearLinks(); // Drop all owning (shared_ptr) links so that cyclic node graphs can be freed
+	void ClearLinks();					   // Drop all owning (shared_ptr) links so that cyclic node graphs can be freed
 	void SetLeft(shared_ptr<Node<T>>);
 	void SetRight(shared_ptr<Node<T>>);
 	void SetItem(T);
@@ -46,10 +46,10 @@ public:
 	using its copy constructor or move constructor...
 	*/
 	Node<T> &operator=(Node<T>);
-	bool operator==(Node<T>) const;
-	bool operator!=(Node<T> &) const;
-	bool operator<(Node<T> &) const;
-	bool operator>(Node<T> &) const;
+	bool operator==(const Node<T> &) const; // const member, const param. it works for const and non-const objects alike
+	bool operator!=(const Node<T> &) const;
+	bool operator<(const Node<T> &) const;
+	bool operator>(const Node<T> &) const;
 	bool isLeaf() const;
 	typedef typename set<shared_ptr<Node<T>>>::const_iterator IteratorType;
 	IteratorType AdjacentsStart() const;

@@ -449,7 +449,6 @@ template <typename T>
 void LinkedList<T>::RemoveDuplicates()
 {
 	for (shared_ptr<Node<T>> c = _head; c; c = c->Next())
-	{
 		for (shared_ptr<Node<T>> prev = c, it = c->Next(); it; it = it->Next())
 		{
 			// 1(c,prev) 1(it) 1
@@ -463,7 +462,6 @@ void LinkedList<T>::RemoveDuplicates()
 				prev = prev->Next();
 			}
 		}
-	}
 }
 /*
  * Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.
