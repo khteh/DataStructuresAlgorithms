@@ -179,14 +179,14 @@ T Arithmetic<T>::DivideWithPlusSign(T a, T b)
 	bool isNegative = (a < 0) ^ (b < 0);
 	if (b == 1 || b == -1)
 	{
-		if (a == numeric_limits<int>::min())
+		if (a == numeric_limits<make_signed_t<T>>::min())
 #if defined(__GNUC__) || defined(__GNUG__)
-			return isNegative ? numeric_limits<int>::min() : -a; // ToggleSign of 64-bit value takes very long time
+			return isNegative ? numeric_limits<make_signed_t<T>>::min() : -a; // ToggleSign of 64-bit value takes very long time
 #else
-			return numeric_limits<int>::min();
+			return numeric_limits<make_signed_t<T>>::min();
 #endif
-		else if (a == numeric_limits<int>::max())
-			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
+		else if (a == numeric_limits<make_signed_t<T>>::max())
+			return isNegative ? numeric_limits<make_signed_t<T>>::min() + 1 : numeric_limits<make_signed_t<T>>::max();
 		if (a == numeric_limits<T>::min())
 			return numeric_limits<T>::min();
 		else if (a == numeric_limits<T>::max())
@@ -215,10 +215,10 @@ T Arithmetic<T>::Divide(T dividend, T divisor)
 	bool isNegative = (dividend < 0) ^ (divisor < 0);
 	if (divisor == 1 || divisor == -1)
 	{
-		if (dividend == numeric_limits<int>::min())
-			return isNegative ? numeric_limits<int>::min() : -dividend; // ToggleSign of 64-bit value takes very long time
-		else if (dividend == numeric_limits<int>::max())
-			return isNegative ? numeric_limits<int>::min() + 1 : numeric_limits<int>::max();
+		if (dividend == numeric_limits<make_signed_t<T>>::min())
+			return isNegative ? numeric_limits<make_signed_t<T>>::min() : -dividend; // ToggleSign of 64-bit value takes very long time
+		else if (dividend == numeric_limits<make_signed_t<T>>::max())
+			return isNegative ? numeric_limits<make_signed_t<T>>::min() + 1 : numeric_limits<make_signed_t<T>>::max();
 		if (dividend == numeric_limits<T>::min())
 			return numeric_limits<T>::min();
 		else if (dividend == numeric_limits<T>::max())

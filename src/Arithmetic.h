@@ -6,7 +6,7 @@ class GCDExtendedEuclideanResult
 public:
 	GCDExtendedEuclideanResult()
 		requires arithmetic_type<T>;
-	GCDExtendedEuclideanResult(T, T, T)
+	explicit GCDExtendedEuclideanResult(T, T, T)
 		requires arithmetic_type<T>;
 	T gcd, x, y;
 	bool operator==(GCDExtendedEuclideanResult<T> const &) const

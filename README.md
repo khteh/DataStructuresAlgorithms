@@ -1,6 +1,6 @@
 # Data Structures and Algorithms
 
-C++-latest data structures and algorithms using only standard libraries. This answers many of the challenges in HackerRank, LeetCode and some in Codility. > 1400 Google Test cases and counting.
+C++-latest data structures and algorithms using only standard libraries. This answers many of the challenges in HackerRank, LeetCode and some in Codility. > 1520 Google Test cases and counting.
 
 ## Dependencies
 
@@ -33,10 +33,10 @@ C++-latest data structures and algorithms using only standard libraries. This an
    cmake -S . -B build -G "Visual Studio 18 2026" -A x64 -DBUILD_SHARED_LIBS=ON -Dgtest_force_shared_crt=ON -Dgtest_build_tests=OFF -Dgmock_build_tests=OFF -DCMAKE_CXX_FLAGS="/fsanitize=address" -DCMAKE_C_FLAGS="/fsanitize=address"
    ```
 
-   iii.`cmake --build build --config Debug --target gtest` 
+   iii.`cmake --build build --config Debug --target gtest`
 
    iv. `cmake --build build --config Release --target gtest`
-   
+
    v. Add `build/bin/Debug` to `%PATH%` environment variable.
 
    Note: `gtest_main.dll` is not required for the application to link against the library.
@@ -70,7 +70,7 @@ C++-latest data structures and algorithms using only standard libraries. This an
 
 ### Google Test
 
-- Add the path of `clang_rt.asan_dynamic-x86_64.dll` to User and System environment variables. At the time of this writing and for Visual Studio 2026, the path is `C:\Program Files\Microsoft Visual Studio\18\Insiders\VC\Tools\MSVC\14.52.37025\bin\Hostx64\x64`. 
+- Add the path of `clang_rt.asan_dynamic-x86_64.dll` to User and System environment variables. At the time of this writing and for Visual Studio 2026, the path is `C:\Program Files\Microsoft Visual Studio\18\Insiders\VC\Tools\MSVC\14.52.37025\bin\Hostx64\x64`.
 
 **Note that the path changes every time Visual Studio is upgraded, especially the `14.52.37025` string in the path.**
 
@@ -141,12 +141,12 @@ $ ctest --preset linux-asan-debug
 - Press `CTRL + SHFT + B` to run the default build task, `CMake: build all`. It builds the `all` target straight away, without a list to choose from, using the configure and build presets selected in the CMake pane (see "Project Status" > "Configure" and "Build").
 - Press `CTRL + SHFT + P` + `Tasks: Run Task` to run any other task in `.vscode/tasks.json`:
 
-| Task                              | What it does                                                                         |
-| --------------------------------- | ------------------------------------------------------------------------------------ |
-| `CMake: build Console` / `Core` / `Tests` | Builds one target with the presets selected in the CMake pane                |
-| `Presets: build linux-asan-debug` | Configures and builds Debug with sanitizers, whatever is selected in the CMake pane |
-| `Presets: build linux-release`    | Configures and builds Release without sanitizers (LTO), whatever is selected in the CMake pane |
-| `Presets: clean all`              | Deletes `build/`, `Debug/` and `Release/` so that the next build starts from scratch  |
+| Task                                      | What it does                                                                                   |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `CMake: build Console` / `Core` / `Tests` | Builds one target with the presets selected in the CMake pane                                  |
+| `Presets: build linux-asan-debug`         | Configures and builds Debug with sanitizers, whatever is selected in the CMake pane            |
+| `Presets: build linux-release`            | Configures and builds Release without sanitizers (LTO), whatever is selected in the CMake pane |
+| `Presets: clean all`                      | Deletes `build/`, `Debug/` and `Release/` so that the next build starts from scratch           |
 
 - The launch configurations in `.vscode/launch.json` debug the binaries in `./Debug`, i.e. the `linux-asan-debug` build preset.
 
