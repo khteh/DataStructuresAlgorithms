@@ -44,11 +44,10 @@ public:
 	using its copy constructor or move constructor...
 	*/
 	Vertex<TTag, TItem> &operator=(Vertex<TTag, TItem>);
+	bool operator==(const Vertex<TTag, TItem> &) const; // const member, const param. it works for const and non-const objects alike
+	bool operator!=(const Vertex<TTag, TItem> &) const;
 	bool operator<(const Vertex<TTag, TItem> &) const;
-	bool operator==(Vertex<TTag, TItem> &);
-	bool operator!=(Vertex<TTag, TItem> &);
-	bool operator<(Vertex<TTag, TItem> &);
-	bool operator>(Vertex<TTag, TItem> &);
+	bool operator>(const Vertex<TTag, TItem> &) const;
 
 protected:
 	TTag _tag;

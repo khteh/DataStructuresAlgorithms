@@ -25,11 +25,10 @@ public:
     void ClearEdges(); // Break shared_ptr cycles between connected vertices
     void UpdatePreviousVertex(shared_ptr<DVertex<T>>, long);
     void UpdateCost(long);
+    bool operator==(const DVertex<T> &) const; // const member, const param. it works for const and non-const objects alike
+    bool operator!=(const DVertex<T> &) const;
     bool operator<(const DVertex<T> &) const;
-    bool operator==(DVertex<T> &);
-    bool operator!=(DVertex<T> &);
-    bool operator<(DVertex<T> &);
-    bool operator>(DVertex<T> &);
+    bool operator>(const DVertex<T> &) const;
     typedef typename set<DEdge<T>>::const_iterator IteratorType;
     shared_ptr<DVertex<T>> PreviousVertex() const;
     T Value() const;

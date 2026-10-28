@@ -278,31 +278,22 @@ Vertex<TTag, TItem> &Vertex<TTag, TItem>::operator=(Vertex<TTag, TItem> rhs)
 	return *this;
 }
 template <typename TTag, typename TItem>
-bool Vertex<TTag, TItem>::operator<(const Vertex<TTag, TItem> &other) const
-{
-	return _item < other._item;
-}
-
-template <typename TTag, typename TItem>
-bool Vertex<TTag, TItem>::operator==(Vertex<TTag, TItem> &rhs)
+bool Vertex<TTag, TItem>::operator==(const Vertex<TTag, TItem> &rhs) const // const member, const param. it works for const and non-const objects alike
 {
 	return _item == rhs._item && _tag == rhs._tag;
 }
-
 template <typename TTag, typename TItem>
-bool Vertex<TTag, TItem>::operator!=(Vertex<TTag, TItem> &rhs)
+bool Vertex<TTag, TItem>::operator!=(const Vertex<TTag, TItem> &rhs) const
 {
 	return !(*this == rhs);
 }
-
 template <typename TTag, typename TItem>
-bool Vertex<TTag, TItem>::operator<(Vertex<TTag, TItem> &rhs)
+bool Vertex<TTag, TItem>::operator<(const Vertex<TTag, TItem> &rhs) const
 {
 	return _item < rhs._item;
 }
-
 template <typename TTag, typename TItem>
-bool Vertex<TTag, TItem>::operator>(Vertex<TTag, TItem> &rhs)
+bool Vertex<TTag, TItem>::operator>(const Vertex<TTag, TItem> &rhs) const
 {
 	return _item > rhs._item;
 }

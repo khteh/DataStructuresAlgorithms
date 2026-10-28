@@ -65,27 +65,22 @@ void DVertex<T>::AddEdge(shared_ptr<DVertex<T>> vertex, long cost)
     }
 }
 template <typename T>
-bool DVertex<T>::operator<(const DVertex<T> &other) const
-{
-    return _value < other._value;
-}
-template <typename T>
-bool DVertex<T>::operator==(DVertex<T> &rhs)
+bool DVertex<T>::operator==(const DVertex<T> &rhs) const // const member, const param. it works for const and non-const objects alike
 {
     return _value == rhs._value;
 }
 template <typename T>
-bool DVertex<T>::operator!=(DVertex<T> &rhs)
+bool DVertex<T>::operator!=(const DVertex<T> &rhs) const
 {
     return !(*this == rhs);
 }
 template <typename T>
-bool DVertex<T>::operator<(DVertex<T> &rhs)
+bool DVertex<T>::operator<(const DVertex<T> &rhs) const
 {
     return _value < rhs._value;
 }
 template <typename T>
-bool DVertex<T>::operator>(DVertex<T> &rhs)
+bool DVertex<T>::operator>(const DVertex<T> &rhs) const
 {
     return _value > rhs._value;
 }
