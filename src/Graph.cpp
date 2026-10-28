@@ -257,8 +257,13 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 				if (costs[vertex] + uCost < vCost)
 				{
 					costs[*it] = costs[vertex] + uCost;
+					/*
+					Every vertex in this graph is owned by _vertices, and neighbour lists hold the same shared_ptrs. So the entry in costsPQ and *it point to the same object, and you can compare the pointers directly:
+					This is an identity check, which is cheaper and arguably more correct for Dijkstra. You want to remove that vertex’s stale queue entry, not any vertex that happens to have an equal tag and item. The rest of the function already works this way, since spt.count(*it) and costs[*it] are keyed on the shared_ptr itself.
+					Use the value comparison only if you could have two distinct Vertex objects that should count as the same node. Note that *it1.second == **it requires Vertex::operator== to be callable on non-const operands, or better, declared as bool operator==(const Vertex&) const.
+					*/
 					erase_if(costsPQ, [it](const auto &it1)
-							 { return *(it1.second) == **it; });
+							 { return it1.second == *it; });
 					costsPQ.emplace(costs[*it], *it);
 				}
 			}
@@ -299,8 +304,13 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 				if (costs[vertex] + uCost < vCost)
 				{
 					costs[*it] = costs[vertex] + uCost;
+					/*
+					Every vertex in this graph is owned by _vertices, and neighbour lists hold the same shared_ptrs. So the entry in costsPQ and *it point to the same object, and you can compare the pointers directly:
+					This is an identity check, which is cheaper and arguably more correct for Dijkstra. You want to remove that vertex’s stale queue entry, not any vertex that happens to have an equal tag and item. The rest of the function already works this way, since spt.count(*it) and costs[*it] are keyed on the shared_ptr itself.
+					Use the value comparison only if you could have two distinct Vertex objects that should count as the same node. Note that *it1.second == **it requires Vertex::operator== to be callable on non-const operands, or better, declared as bool operator==(const Vertex&) const.
+					*/
 					erase_if(costsPQ, [it](const auto &it1)
-							 { return *(it1.second) == **it; });
+							 { return it1.second == *it; });
 					costsPQ.emplace(costs[*it], *it);
 				}
 			}
@@ -344,8 +354,13 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 				if (costs[vertex] + uCost < vCost)
 				{
 					costs[*it] = costs[vertex] + uCost;
+					/*
+					Every vertex in this graph is owned by _vertices, and neighbour lists hold the same shared_ptrs. So the entry in costsPQ and *it point to the same object, and you can compare the pointers directly:
+					This is an identity check, which is cheaper and arguably more correct for Dijkstra. You want to remove that vertex’s stale queue entry, not any vertex that happens to have an equal tag and item. The rest of the function already works this way, since spt.count(*it) and costs[*it] are keyed on the shared_ptr itself.
+					Use the value comparison only if you could have two distinct Vertex objects that should count as the same node. Note that *it1.second == **it requires Vertex::operator== to be callable on non-const operands, or better, declared as bool operator==(const Vertex&) const.
+					*/
 					erase_if(costsPQ, [it](const auto &it1)
-							 { return *(it1.second) == **it; });
+							 { return it1.second == *it; });
 					costsPQ.emplace(costs[*it], *it);
 				}
 			}
