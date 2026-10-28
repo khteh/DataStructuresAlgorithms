@@ -6,12 +6,17 @@ template __int128 Factorial(long);
 template __int128 BinomialCoefficients(size_t, size_t);
 template __int128 BinomialCoefficientsMultiplicative(size_t, size_t);
 template __int128 MultinomialCoefficients(size_t, vector<size_t> const &, __int128);
+template __int128 ceil_div(__int128, __int128);
+template unsigned __int128 ceil_div(unsigned __int128, unsigned __int128);
 template unsigned __int128 Fibonacci(long);
 template unsigned __int128 Factorial(long);
 template unsigned __int128 BinomialCoefficients(size_t, size_t);
 template unsigned __int128 BinomialCoefficientsMultiplicative(size_t, size_t);
 template unsigned __int128 MultinomialCoefficients(size_t, vector<size_t> const &, unsigned __int128);
 #endif
+template size_t ceil_div(size_t, size_t);
+template long long ceil_div(long long, long long);
+template unsigned long long ceil_div(unsigned long long, unsigned long long);
 template long long Fibonacci(long);
 template long long Factorial(long);
 template long long BinomialCoefficients(size_t, size_t);
@@ -542,6 +547,15 @@ template <typename T>
 T Factorial(long n)
 {
 	return (n <= 0) ? 1 : n * Factorial<T>(n - 1);
+}
+// Integer division rounded up (toward positive infinity), e.g. 7 / 2 == 4, -7 / 2 == -3.
+template <typename T>
+T ceil_div(T x, T y)
+{
+	T q = x / y;
+	if (x % y != 0 && ((x % y < 0) == (y < 0)))
+		++q;
+	return q;
 }
 /*
  * https://en.wikipedia.org/wiki/Binomial_coefficient

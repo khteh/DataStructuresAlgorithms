@@ -2,6 +2,8 @@
 #include "pch.h"
 template <typename T>
 T BinomialCoefficients(size_t, size_t);
+template <typename T>
+T ceil_div(T, T);
 
 class Search
 {
@@ -14,6 +16,7 @@ private:
     bool HasKthSmallest(size_t, size_t, size_t, size_t);
     bool HasKthSmallestPairs(vector<size_t> &, size_t, size_t);
     bool HasNUglyNumbers(size_t, uint64_t, uint64_t, uint64_t, uint64_t);
+    bool WithinThreshold(vector<size_t> const &, size_t, size_t);
 
 public:
     void KMPSearch(string const &, string const &, vector<size_t> &);
@@ -32,4 +35,5 @@ public:
     size_t MultiplicationTableKthSmallestNumber(size_t, size_t, size_t);
     int SmallestDistancePair(vector<size_t> &, size_t);
     size_t NthUglyNumber(size_t, size_t, size_t, size_t);
+    size_t SmallestDivisor(vector<size_t> const &, size_t);
 };

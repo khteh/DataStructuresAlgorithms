@@ -446,6 +446,34 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(4, 3, 2, 3, 5),
 					  make_tuple(6, 4, 2, 3, 4),
 					  make_tuple(10, 5, 2, 11, 13)));
+class SmallestDivisorTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_threshold = get<2>(GetParam());
+	}
+	size_t SmallestDivisorTest()
+	{
+		return _search.SmallestDivisor(_data, _threshold);
+	}
+
+protected:
+	Search _search;
+	size_t _expected, _threshold;
+	vector<size_t> _data;
+};
+TEST_P(SmallestDivisorTestFixture, SmallestDivisorTests)
+{
+	ASSERT_EQ(this->_expected, this->SmallestDivisorTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	SmallestDivisorTests,
+	SmallestDivisorTestFixture,
+	::testing::Values(make_tuple(5, vector<size_t>{1, 2, 5, 9}, 6),
+					  make_tuple(44, vector<size_t>{44, 22, 33, 11, 1}, 5)));
 
 class StringGridPatternSearchTestFixture : public testing::TestWithParam<tuple<bool, vector<string>, vector<string>>>
 {

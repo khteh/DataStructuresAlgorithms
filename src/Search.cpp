@@ -910,9 +910,43 @@ size_t Search::NthUglyNumber(size_t n, size_t a, size_t b, size_t c)
     _lcm_abc = (uint64_t)(_lcm_ab * c) / gcd(_lcm_ab, c);
     for (; start < end;)
     {
-        // size_t mid = start + (end - start) / 2 + (end - start) % 2;
+        // size_t mid = start + (end - start) / 2 + (end - start) % 2; // XXX: Doesn't work in this case. If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
         size_t mid = start + (end - start) / 2;
         if (HasNUglyNumbers(n, a, b, c, mid))
+            end = mid;
+        else
+            start = mid + 1;
+    }
+    return start;
+}
+bool Search::WithinThreshold(vector<size_t> const &data, size_t threshold, size_t check)
+{
+#if 0
+    This also works!
+    size_t result = ranges::fold_left(data | std::views::transform([&](size_t x) { return ceil_div(x, check); }), 0, std::plus<size_t>()) <= threshold;
+#endif
+    size_t result = parallel_reduce(
+        blocked_range<size_t>(0, data.size()), 0, [check, &data](tbb::blocked_range<size_t> const &r, size_t running_total)
+        {
+            for (size_t i = r.begin(); i < r.end(); i++)
+                running_total += ceil_div(data[i], check); 
+            return running_total; },
+        std::plus<size_t>());
+    return result <= threshold;
+}
+/*
+ * https://leetcode.com/problems/find-the-smallest-divisor-given-a-threshold/description/
+ * Use binary search
+ * 100%
+ */
+size_t Search::SmallestDivisor(vector<size_t> const &data, size_t threshold)
+{
+    size_t start = 1, end = *ranges::max_element(data);
+    for (; start < end;)
+    {
+        // size_t mid = start + (end - start) / 2 + (end - start) % 2; // XXX: Doesn't work in this case. If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        size_t mid = start + (end - start) / 2;
+        if (WithinThreshold(data, threshold, mid))
             end = mid;
         else
             start = mid + 1;

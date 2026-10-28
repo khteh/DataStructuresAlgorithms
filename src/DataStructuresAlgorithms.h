@@ -161,6 +161,8 @@ generator<const size_t &> GenerateSequence(size_t, size_t);
 generator<const size_t &> Generate2Sequence(size_t, size_t, size_t, size_t);
 double round(double num, int n);
 template <typename T>
+T ceil_div(T, T);
+template <typename T>
 T Factorial(long);
 long FactorialTrailingZeroesCount(long);
 long SequenceSum(long);
