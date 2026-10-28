@@ -845,13 +845,13 @@ bool Search::HasNUglyNumbers(size_t n, uint64_t a, uint64_t b, uint64_t c, uint6
  * https://leetcode.com/problems/ugly-number-iii/
  * Use binary search
  * 100%
- * Generating ugly numbers one at a time is too slow. Instead, ask a simpler question: how many ugly numbers are ≤ x?
- * That count only goes up as x grows, so you binary search for the smallest x whose count is at least n. The result is guaranteed to fall in [1, 2 × 10⁹], which gives you the search range.
- * The number of multiples of a up to x is ⌊x/a⌋. Adding ⌊x/a⌋ + ⌊x/b⌋ + ⌊x/c⌋ overcounts numbers divisible by more than one of them, so you correct with inclusion–exclusion:
- *
- * count(x) = x/a + x/b + x/c − x/lcm(a,b) − x/lcm(a,c) − x/lcm(b,c) + x/lcm(a,b,c)
- *
- * A number divisible by both a and b is a multiple of lcm(a, b), not of a·b. Those are the same only when a and b share no factors. Example 2 shows why this matters: with a = 2 and c = 4, every multiple of 4 is already a multiple of 2, so the overlap is “multiples of 4”, not “multiples of 8”. Using a·b would subtract the wrong amount and give a wrong answer.
+Generating ugly numbers one at a time is too slow. Instead, ask a simpler question: how many ugly numbers are ≤ x?
+That count only goes up as x grows, so you binary search for the smallest x whose count is at least n. The result is guaranteed to fall in [1, 2 × 10⁹], which gives you the search range.
+The number of multiples of a up to x is ⌊x/a⌋. Adding ⌊x/a⌋ + ⌊x/b⌋ + ⌊x/c⌋ overcounts numbers divisible by more than one of them, so you correct with inclusion–exclusion:
+
+count(x) = x/a + x/b + x/c − x/lcm(a,b) − x/lcm(a,c) − x/lcm(b,c) + x/lcm(a,b,c)
+
+A number divisible by both a and b is a multiple of lcm(a, b), not of a·b. Those are the same only when a and b share no factors. Example 2 shows why this matters: with a = 2 and c = 4, every multiple of 4 is already a multiple of 2, so the overlap is “multiples of 4”, not “multiples of 8”. Using a·b would subtract the wrong amount and give a wrong answer.
 
 The standard way to get the LCM is through the GCD:
 
@@ -888,6 +888,18 @@ exactly two	            +2	    −1	    0	    1
 all three	            +3	    −3	    +1	    1
 
 If you picture the three overlapping circles of a Venn diagram, the centre region sits inside every pairwise overlap, so subtracting all three overlaps cuts it out three times after it was only added three times. The final term puts it back.
+
+#multiples of a up to x = x / a
+x:10
+a:2
+b:4
+
+divisable by both a and b: 2 4 6 8 10
+
+x/a = 5
+x/b = 2
+
+x/a + x/b = 7 <- overcount by 2
  */
 size_t Search::NthUglyNumber(size_t n, size_t a, size_t b, size_t c)
 {
