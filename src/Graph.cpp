@@ -258,7 +258,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 				{
 					costs[*it] = costs[vertex] + uCost;
 					erase_if(costsPQ, [it](const auto &it1)
-							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
+							 { return *(it1.second) == **it; });
 					costsPQ.emplace(costs[*it], *it);
 				}
 			}
@@ -300,7 +300,7 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 				{
 					costs[*it] = costs[vertex] + uCost;
 					erase_if(costsPQ, [it](const auto &it1)
-							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
+							 { return *(it1.second) == **it; });
 					costsPQ.emplace(costs[*it], *it);
 				}
 			}
@@ -345,7 +345,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 				{
 					costs[*it] = costs[vertex] + uCost;
 					erase_if(costsPQ, [it](const auto &it1)
-							 { return it1.second->GetTag() == (*it)->GetTag() && it1.second->GetItem() == (*it)->GetItem(); });
+							 { return *(it1.second) == **it; });
 					costsPQ.emplace(costs[*it], *it);
 				}
 			}
