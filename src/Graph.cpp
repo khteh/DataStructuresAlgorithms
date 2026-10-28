@@ -246,7 +246,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 		{
 			/* v is (*it); u is vertex.
 			 * Update cost[v] only if it:
-			 * (1) is not in sptSet
+			 * (1) is not in spt set
 			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
 			 * (3) and total cost of path from src to v through u is smaller than current value of cost[v]
 			 */

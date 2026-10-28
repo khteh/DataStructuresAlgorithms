@@ -94,7 +94,7 @@
     <ClCompile Include="TowerOfHanoiTests.cpp" />
     <ClCompile Include="TreeTests.cpp" />
     <ClCompile Include="TrieTests.cpp" />
-    <ClCompile Include="TweeterAPITests.cpp" />
+    <ClCompile Include="TwitterAPITests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\DataStructuresAlgorithms.vcxproj">

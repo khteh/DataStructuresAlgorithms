@@ -88,18 +88,13 @@ void Vertex<TTag, TItem>::RemoveNeighbour(shared_ptr<Vertex<TTag, TItem>> to)
 	}
 }
 template <typename TTag, typename TItem>
-vector<shared_ptr<Vertex<TTag, TItem>>> Vertex<TTag, TItem>::GetNeighbours()
+vector<shared_ptr<Vertex<TTag, TItem>>> Vertex<TTag, TItem>::GetNeighbours() const
 {
-	vector<shared_ptr<Vertex<TTag, TItem>>> vertices;
-	ranges::transform(
-		_neighbours,
-		back_inserter(vertices),
-		[](const typename map<shared_ptr<Vertex<TTag, TItem>>, long>::value_type &pair)
-		{ return pair.first; });
-	return vertices;
+	auto keys = views::keys(_neighbours);
+	return vector<shared_ptr<Vertex<TTag, TItem>>>(keys.begin(), keys.end());
 }
 template <typename TTag, typename TItem>
-map<shared_ptr<Vertex<TTag, TItem>>, long> Vertex<TTag, TItem>::GetNeighboursWithCost()
+map<shared_ptr<Vertex<TTag, TItem>>, long> Vertex<TTag, TItem>::GetNeighboursWithCost() const
 {
 	return _neighbours;
 }
@@ -159,6 +154,9 @@ long Vertex<TTag, TItem>::GetCost(shared_ptr<Vertex<TTag, TItem>> v)
 {
 	if (v->GetTag() == GetTag() && v->GetItem() == GetItem())
 		return 0;
+	/*
+	std::map::operator[] has no const overload. If the key isn’t present, it inserts a default-constructed value, so it always potentially modifies the map.
+	*/
 	return _neighbours.count(v) ? _neighbours[v] : -1;
 }
 template <typename TTag, typename TItem>

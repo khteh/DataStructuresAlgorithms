@@ -7,6 +7,12 @@ private:
 	void ResetTotalCost();
 	bool HasNeighbour(TTag, TItem) const;
 
+protected:
+	TTag _tag;
+	TItem _item, _sum;
+	long _cost;
+	map<shared_ptr<Vertex<TTag, TItem>>, long> _neighbours; // neighbours and costs from this vertex to them
+
 public:
 	Vertex();
 	explicit Vertex(TTag);
@@ -29,9 +35,9 @@ public:
 	bool HasNeighbours() const;
 	bool HasNeighbour(TTag) const;
 	bool HasNeighbour(shared_ptr<Vertex<TTag, TItem>>) const;
-	vector<shared_ptr<Vertex<TTag, TItem>>> GetNeighbours();
+	vector<shared_ptr<Vertex<TTag, TItem>>> GetNeighbours() const;
 	void AddNeighbour(shared_ptr<Vertex<TTag, TItem>>, long);
-	map<shared_ptr<Vertex<TTag, TItem>>, long> GetNeighboursWithCost();
+	map<shared_ptr<Vertex<TTag, TItem>>, long> GetNeighboursWithCost() const;
 	void RemoveNeighbour(shared_ptr<Vertex<TTag, TItem>>);
 	void ClearNeighbours(); // Break shared_ptr cycles between neighbouring vertices
 	size_t EvenForestDescendentsCount(TTag, set<string> &) const;
@@ -48,10 +54,4 @@ public:
 	bool operator!=(const Vertex<TTag, TItem> &) const;
 	bool operator<(const Vertex<TTag, TItem> &) const;
 	bool operator>(const Vertex<TTag, TItem> &) const;
-
-protected:
-	TTag _tag;
-	TItem _item, _sum;
-	long _cost;
-	map<shared_ptr<Vertex<TTag, TItem>>, long> _neighbours; // neighbours and costs from this vertex to them
 };

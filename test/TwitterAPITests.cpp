@@ -1,6 +1,6 @@
 #include "pch.h"
 using namespace std;
-TEST(TweeterAPITests, TweeterAPITest)
+TEST(TwitterAPITests, TwitterAPITest)
 {
 	vector<size_t> feeds, feeds1;
 	Twitter<size_t, size_t> twitter;
