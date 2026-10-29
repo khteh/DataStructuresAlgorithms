@@ -1078,23 +1078,54 @@ vector<long> Range::LastNumbers(size_t n, long a, long b)
 }
 /*
  * https://www.hackerrank.com/challenges/non-divisible-subset/problem
+ * Return the max subsequence where (sum of any 2 numbers) % k != 0
+ * (x + y) % k != 0
+ * for any x, y=(k - x) will make the remainder 0
+ * for any y, x=(k - y) will make the remainder 0
+ * x + (k - x) = k
+ * (k - y) + y = k
+ * Any 2 numbers with remainder 0, when added will also result in remainder 0
+ *
+ * case k is even and p=k-q: Cannot have two numbers which have remainder=k/2 and k/2 at the same time.
+k:4 k/2 = 2
+x:6 6%4 = 2
+y:2 2%4 = 2 sum(remainders) = 4
+(6+2)%4 = 0
+
+k:6 6/2 = 3
+x:9 9%6 = 3
+y:3 3%6 = 3 sum(remainders) = 6
+(9+3)%6 = 0
+
+ * Ex: x:5 y:1 k:3 (No)
+5 % 3 = 2
+1 % 3 = 1 sum(remainders) = k
+
+Ex: x:5 y:7 k:3 (No)
+5 % 3 = 2
+7 % 3 = 1 sum(remainders) = k
+
+Ex: x:5 y:8 k:3 (Yes)
+13 % 3 = 1
+5 % 3 = 2
+8 % 3 = 2 sum(remainders) = 4 != k
+
+Ex: x:5 y:9 k:3 (Yes)
+14 % 3 = 2
+5 % 3 = 2
+9 % 3 = 0 sum(remainders) = 2 != k
+
  * 100%
  */
 size_t Range::MaxNonDivisableSubset(vector<size_t> const &data, size_t k)
 {
 	vector<size_t> counts(k, 0);
 	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
-		counts[(*it) % k]++; // Index is the remainder: num mod k
-	/*
-	 * Case 1: if (!((A+B) % k)), (A mod k) = 0 and (B mod k) = 0
-	 *         p = 0; q = 0: At most one number in S` from S which is perfectly divisible by k. Cannot have both 3 and 6 which are evenly divisible by k=3 in S` as 3+6 = 9 is divisible by k.
-	 * Case 2: if ((A+B) % k), p + q = k
-	 * case k is even and p=k-q: Cannot have two numbers which have remainder k/2 and k/2 be in S` at the same time. For example, [21, 63, 75], k = 6 => 21+63=84, 21+75=96, 63+75=138 all are divisible by k.
-	 */
+		counts[(*it) % k]++;				   // Index is the remainder: num mod k
 	size_t result = min<size_t>(counts[0], 1); // case p = 0; q = 0
 	bool even = !(k % 2);
-	for (size_t p = 1; p <= k / 2; p++)
-		result += (!even || p != k / 2) ? max(counts[p], counts[k - p]) : min<size_t>(counts[p], 1);
+	for (size_t i = 1; i <= k / 2; i++)
+		result += (even && i == k / 2) ? min<size_t>(counts[i], 1) : max(counts[i], counts[k - i]);
 	return result;
 }
 /*
