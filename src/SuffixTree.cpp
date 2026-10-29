@@ -206,9 +206,8 @@ void SuffixTreeNode::InsertString(string const &str, size_t index)
 	_indices.insert(index);
 	if (!str.empty())
 	{
-		if (!_children.count(str[0]))
-			_children.emplace(str[0], make_unique<SuffixTreeNode>(str[0]));
-		_children[str[0]]->InsertString(str.substr(1), index);
+		pair<typename map<char, unique_ptr<SuffixTreeNode>>::iterator, bool> result = _children.emplace(str[0], make_unique<SuffixTreeNode>(str[0]));
+		result.first->second->InsertString(str.substr(1), index);
 	}
 }
 void SuffixTreeNode::RemoveString(string const &str)
