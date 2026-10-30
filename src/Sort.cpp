@@ -7,6 +7,12 @@ template class Sort<long>;
 template class Sort<string>;
 template class Sort<float>;
 template class Sort<double>;
+/*
+Just keep squeezing the max values to the end.
+Comparison-based stable sort
+Time: O(n^2)
+Space: O(1)
+*/
 template <typename T>
 void Sort<T>::BubbleSort(vector<T> &data)
 {
@@ -21,26 +27,73 @@ void Sort<T>::BubbleSort(vector<T> &data)
 			}
 }
 /* Quick Sort (http://en.wikipedia.org/wiki/Quicksort)
- * C=2, L=lg(N), Other: N
- * #nodes = (C^L - 1) / (C - 1) = 2^lg(N) - 1
- * TC: (2^lg(N) - 1) * N = N^2
+ * Comparison-based un-stable sort
+ * C is how many recursive calls each invocation makes. Quick sort calls itself twice (left half, right half), so C = 2.
+ * L is how many levels deep the recursion goes before hitting the base case. Halving N each time until you reach size 1 takes lg(N) halvings, so L = lg(N).
+ * N is the number of elements in the array being sorted
+ * Other: O(n) per call, where n is that call's own sub-array size (Partition scans it once). Each call only scans its own sub-array, not all N elements.
+ *
+ * Picture the recursion as a tree, where every function call is a node and the calls it makes are its children.
+Level 0:            Q(8)                       1 call   = 2^0
+				   /    \
+Level 1:        Q(4)    Q(4)                   2 calls  = 2^1
+				/  \    /  \
+Level 2:     Q(2) Q(2) Q(2) Q(2)               4 calls  = 2^2
+			 / \  / \  / \  / \
+Level 3:     Q(1) ... (8 of them)              8 calls  = 2^3
+
+ * Adding up all the levels gives the total number of calls (#nodes):
+ *
+ * 1 + C + C² + … + C^(L−1) = (C^L − 1)/(C − 1)
+ *
+ * The last level alone is about C^L, and the sum is dominated by it. With C = 2, the last level is about as large as all the levels above it combined.
+ * That’s why people say “roughly C^L calls” as a shortcut.
+ *
+ * T is the running-time function. T(n) means the total time to sort (or solve) a problem of size n, including all the recursive calls it makes.
+ * That’s why recursive algorithms are described with equations like:
+ *
+ * T(n) = 2T(n/2) + n
+ *
+ * This reads: sorting n elements takes the time of two recursive calls on n/2 elements each, plus n work done in this call itself (the partition or merge scan).
+ *
+ * Average case (pivot splits roughly in half):
+ *   L = lg(N) levels
+ *   Level k has 2^k calls, each on N/2^k elements => 2^k * N/2^k = N work per level
+ *   TC = N per level * lg(N) levels = N*lg(N)
+ *   (#calls = 2^(lg(N)+1) - 1 = 2N - 1, but most of them work on small sub-arrays,
+ *    so #calls * N would overcount.)
+ *		= sums per level
+ *
+ * Worst case (pivot is always the min or max):
+ *   Each call peels off only the pivot: sub-array sizes N, N-1, N-2, ..., 1
+ *   L = N levels
+ *   TC = N + (N-1) + ... + 1 = N(N+1)/2 = N^2
+ *
+ * Without including the leafs:
+ * C=2, L=lg(N), O(n) per call
+ * #nodes = (C^L - 1) / (C - 1) = 2^lg(N) - 1 = N - 1
+ *
+ * Including the leafs:
+ * C=2, L=ln(N), O(n) per call
+ * #nodes = (C^(L+1) - 1) / (C - 1) = 2^(lg(N)+1) − 1 =  2N − 1
+ *
  * Mathematics: 2^lg(N)
  * N: 8
- * ln(N) = 3 => 2^3 = 8
+ * ln(N) = ln(2^3) = 3
  * So, 2^lg(N) = N
  */
 template <typename T>
 void Sort<T>::QuickSort(vector<T> &data, long left, long right)
 {
-	size_t pivot;
-	if (left >= 0 && right < (long)data.size() && left < right)
+	long pivot;
+	if (left >= 0 && right < (long)data.size() && left < right) // O(n*log(N))
 	{
 		pivot = left + (right - left) / 2 + (right - left) % 2; // This overcomes integer overflow which happens if data.size() is large and naive approach of (lo + hi)/2 is used to index the middle element.
 		// Worst case: N-1 calls. Each call processes the list from left to right-1 (N) => O(N^2)
 		// Average case: lg(N) calls. Each level of call tree processes half the original list. Both calls processes N items => O(N*log(N)).
-		pivot = Partition(data, left, right, pivot);
-		QuickSort(data, left, pivot - 1);  // Either this or the call below is used in worst-case scenario
-		QuickSort(data, pivot + 1, right); // Either this or the call above is used in worst-case scenario
+		pivot = Partition(data, left, right, pivot); // + n
+		QuickSort(data, left, pivot - 1);			 // T(n/2). Either this or the call below is used in worst-case scenario
+		QuickSort(data, pivot + 1, right);			 // T(n/2). Either this or the call above is used in worst-case scenario
 	}
 }
 /* Worst case: returns original list (newPivot = left || newPivot = right)
@@ -57,26 +110,27 @@ void Sort<T>::QuickSort(vector<T> &data, long left, long right)
  *		newPivot:0
  * i:2
  *		newPivot:0
- * => [0,3,2,1]
- * [0], [3,2,1] left:1, right: 3, pivot: 2
+ * => [{0},3,2,1]
+ * [0] left:0, right: -1, pivot: 0
+ * [0,3,{2},1] left:1, right: 3, pivot: 2
  * pivotValue: 2
  * newPivot = 1
- * [0,3,1,2]
+ * [0,3,1,{2}]
  * i:1
- *		newPivot: 1
+ *		newPivot:1
  * i:2
- *		[0,1,3,2]
- *		newPivot: 2
- * => [0,1,2,3]
+ *		newPivot:2
+ *		[0,1,3,{2}]
+ * => [0,1,{2},3]
  */
 template <typename T>
-size_t Sort<T>::Partition(vector<T> &data, size_t left, size_t right, size_t pivot)
+long Sort<T>::Partition(vector<T> &data, long left, long right, long pivot)
 {
-	size_t newPivot = left; // This is used to find the final location for the pivot value
+	long newPivot = left;
 	T pivotValue = data[pivot];
 	if (pivot != right)
-		swap(data[pivot], data[right]);
-	for (size_t i = left; i < right; i++) // O(N)
+		swap(data[pivot], data[right]); // Store the value at pivot at the right-most location
+	for (long i = left; i < right; i++) // O(N)
 		if (data[i] < pivotValue)
 		{
 			if (i != newPivot)
@@ -87,7 +141,11 @@ size_t Sort<T>::Partition(vector<T> &data, size_t left, size_t right, size_t piv
 		swap(data[newPivot], data[right]);
 	return newPivot;
 }
-/* Find the smallest element using a linear scan and move it to the front.
+/*
+ * Comparison-based un-stable sort.
+ * Time: O(n^2)
+ * Space: O(1)
+ * Find the smallest element using a linear scan and move it to the front.
  * Then, find the second smallest and move it, again doing a linear scan.
  * Continue doing this until all the elements are in place. O(n^2).
  */
@@ -107,6 +165,9 @@ void Sort<T>::SelectionSort(vector<T> &data)
 	}
 }
 /*
+ * Comparison-based stable sort.
+ * Time: O(n^2)
+ * Space: O(1)
 https://www.hackerrank.com/challenges/insertionsort1/problem
 https://www.hackerrank.com/challenges/insertionsort2/problem
 https://www.hackerrank.com/challenges/runningtime/problem
@@ -118,7 +179,12 @@ void Sort<T>::InsertionSort(vector<T> &data)
 		for (size_t j = i; j > 0 && data[j] < data[j - 1]; j--)
 			swap(data[j], data[j - 1]);
 }
-// https://en.wikipedia.org/wiki/Heapsort
+/*
+ * https://en.wikipedia.org/wiki/Heapsort
+ * Comparison-based un-stable sort.
+ * Time: O(n * log(N))
+ * Space: O(1)
+ */
 template <typename T>
 void Sort<T>::HeapSort(vector<T> &data)
 {
@@ -131,7 +197,11 @@ void Sort<T>::HeapSort(vector<T> &data)
 	}
 }
 /* https://en.wikipedia.org/wiki/Counting_sort
- * sorting a collection of objects according to keys that are small positive integers.
+ * Non-Comparison-Based stable sort
+ * Time: O(n + k), k represents the range of the input data (the difference between the maximum and minimum possible values, or simply the maximum value if the input starts at 0).
+ * Space: O(n + k)
+ *
+ * Sort a collection of objects according to keys that are small positive integers.
  * In the most general case, the input to counting sort consists of a collection of n items, each of which has a non-negative integer key whose maximum value is at most k
  * [5, 0, 3, 1]: min: 0 max: 5
  * counts: [1, 1, 0, 1, 0, 1]
@@ -151,7 +221,7 @@ void Sort<T>::CountingSort(vector<T> &data)
 	vector<T> counts(largest + 1, 0); // 0-based index
 	for (typename vector<T>::iterator it = input.begin(); it != input.end(); it++)
 		counts[*it]++;
-	for (long i = max<long>(1L, smallest); i <= largest; i++)
+	for (size_t i = max<long>(1L, smallest); i <= largest; i++)
 		counts[i] += counts[i - 1];
 	// Use reverse_iterator for a stable sort
 	for (typename vector<T>::reverse_iterator it = input.rbegin(); it != input.rend(); it++)
@@ -248,10 +318,13 @@ void Sort<T>::Merge(vector<T> &source, vector<T> &dest, size_t start, size_t mid
  * [2] [1] [4] [3] A,B [0,1), [1,2), [2,3), [3,4) <- Never gets into the if (end - start > 1) condition.
  * [1,2] [3,4]	   B,A <= Bottom of recurssion. Merge into A. 2 comparisons. 4 items.
  * [1,2,3,4]	   A,B <= Next higher level, merge into B. 1 comparison. 4 items.
+ *
  * Time complexity: 2 levels (log(n)), 3 comparisons, 4 items. => O(n*log(n))
  * C: 2, L: lg(N), Others: N
- * #nodes = (C^L - 1) / (C - 1) = 2^lg(N) = N
- * TC = N*lg((N)
+ * #nodes = (C^L - 1) / (C - 1) = 2^lg(N) - 1 = N - 1
+ * TC (Time Complexity) = N*lg(N)
+ *
+ * This is (N work per level) × (lg N levels). The calls on one level together cover the array once, so each level costs N in total.
  */
 template <typename T>
 void Sort<T>::TopDownMergeSort(vector<T> &A /* A */, vector<T> &B /* B */, size_t start, size_t end)
@@ -425,14 +498,12 @@ size_t Sort<T>::SortSwapCount(vector<T> &data)
 	{1, 5} => {1, 1}
 	*/
 	for (typename map<T, T>::iterator it = ascending.begin(); it != ascending.end(); it++)
-	{
 		for (T value = it->second; it->first != value; value = it->second)
 		{
 			result++;					   // value: 1, 2
 			it->second = ascending[value]; // {2, 1} => {2, 5}, {5, 2} => {5, 5}
 			ascending[value] = value;	   // {1, 5} => {1, 1}, {2, 5} => {2, 2}
 		}
-	}
 	/*
 	{1, 1}
 	{3, 2} => {3, 5} => {3, 3}
@@ -440,14 +511,12 @@ size_t Sort<T>::SortSwapCount(vector<T> &data)
 	{2, 5} => {2, 2}
 	*/
 	for (typename map<T, T, greater<T>>::iterator it = descending.begin(); it != descending.end(); it++)
-	{
 		for (T value = it->second; it->first != value; value = it->second)
 		{
 			resultDescend++;				// value: 2, 5
 			it->second = descending[value]; // {3, 2} => {3, 5}, {5, 3} => {5, 5}
 			descending[value] = value;		// {2, 5} => {2, 2}
 		}
-	}
 	return min(result, resultDescend);
 }
 /* https://en.wikipedia.org/wiki/Dutch_national_flag_problem

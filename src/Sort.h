@@ -6,7 +6,7 @@ class Sort
 {
 private:
 	void Merge(vector<T> &, vector<T> &, size_t, size_t, size_t);
-	size_t Partition(vector<T> &, size_t, size_t, size_t);
+	long Partition(vector<T> &, long, long, long);
 	size_t MergeCountInversions(vector<T> &, vector<T> &, size_t, size_t, size_t);
 
 public:
