@@ -384,9 +384,7 @@ size_t Sort<T>::TopDownMergeSortCountInversions(vector<T> &B, vector<T> &A, size
 template <typename T>
 size_t Sort<T>::MergeCountInversions(vector<T> &source, vector<T> &dest, size_t start, size_t middle, size_t end)
 {
-	size_t inversions = 0;
-	size_t left = start;
-	size_t right = middle;
+	size_t inversions = 0, left = start, right = middle;
 	// While there are elements in the left or right runs...
 	for (size_t i = start; i < end; i++)
 	{
