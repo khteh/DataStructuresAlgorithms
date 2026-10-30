@@ -161,7 +161,7 @@ INSTANTIATE_TEST_SUITE_P(
 	InsertionSortTests,
 	InsertionSortTestFixture,
 	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
-class TopDownMergeSortTestFixture : public testing::TestWithParam<tuple<bool, vector<long>, vector<long>, size_t, size_t>>
+class TopDownMergeSortTestFixture : public testing::TestWithParam<tuple<bool, vector<long>, vector<long>>>
 {
 public:
 	void SetUp() override
@@ -169,12 +169,10 @@ public:
 		_expected = get<0>(GetParam());
 		_data = get<1>(GetParam());
 		_data1 = get<2>(GetParam());
-		_start = get<3>(GetParam());
-		_end = get<4>(GetParam());
 	}
 	bool TopDownMergeSortTest()
 	{
-		_sort.TopDownMergeSort(_data, _data1, _start, _end);
+		_sort.TopDownMergeSort(_data, _data1, 0, max(_data.size(), _data1.size()));
 		return ranges::is_sorted(_data1);
 	}
 
@@ -182,7 +180,6 @@ protected:
 	Sort<long> _sort;
 	bool _expected;
 	vector<long> _data, _data1;
-	size_t _start, _end;
 };
 TEST_P(TopDownMergeSortTestFixture, TopDownMergeSortTests)
 {
@@ -191,7 +188,7 @@ TEST_P(TopDownMergeSortTestFixture, TopDownMergeSortTests)
 INSTANTIATE_TEST_SUITE_P(
 	TopDownMergeSortTests,
 	TopDownMergeSortTestFixture,
-	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}, vector<long>{1, 0, -1}, 0, 3), make_tuple(true, vector<long>{2, 1, 3, 1, 2}, vector<long>{2, 1, 3, 1, 2}, 0, 5), make_tuple(true, vector<long>{5, 9, -1, 3, -3, 0}, vector<long>{6, -5, 8, -8, 7, -10}, 0, 6)));
+	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 1, 3, 1, 2}, vector<long>{2, 1, 3, 1, 2}), make_tuple(true, vector<long>{5, 9, -1, 3, -3, 0}, vector<long>{6, -5, 8, -8, 7, -10})));
 class BottomUpMergeSortTestFixture : public testing::TestWithParam<tuple<bool, vector<long>, vector<long>>>
 {
 public:

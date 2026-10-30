@@ -195,21 +195,18 @@ string Sort<T>::StringCountingSort(vector<vector<string>> &data)
 	}
 	ostringstream oss;
 	for (size_t i = 0; i < result.size(); i++)
-	{
 		if (!result[i].empty())
 		{
 			oss << result[i];
 			if (i < result.size() - 1)
 				oss << " ";
 		}
-	}
 	return oss.str();
 }
 template <typename T>
 void Sort<T>::Merge(vector<T> &source, vector<T> &dest, size_t start, size_t middle, size_t end)
 {
-	size_t left = start;
-	size_t right = middle;
+	size_t left = start, right = middle;
 	// While there are elements in the left or right runs...
 	for (size_t i = start; i < end; i++)
 		/* If left run head exists (left < middle)
@@ -236,19 +233,19 @@ void Sort<T>::Merge(vector<T> &source, vector<T> &dest, size_t start, size_t mid
 		dest[i] = (left < middle && (right >= end || source[left] <= source[right])) ? source[left++] : source[right++];
 }
 /* http://en.wikipedia.org/wiki/Merge_sort
- * top-down merge sort algorithm that recursively splits the list (called runs in this example) into sublists
- * until sublist size is 1, then merges those sublists to produce a sorted list
- * The copy back step is avoided with alternating the direction of the merge with each level of recursion (except for an initial one time copy)
- * start: inclusive; end: exclusive
+ * Top-down merge sort algorithm that recursively splits the list (called runs in this example) into sublists until sublist size is 1,
+ * then merges those sublists to produce a sorted list. The copy back step is avoided with alternating the direction of the merge with
+ * each level of recursion (except for an initial one time copy).
+ * [start, end)
  * Example:
  * [2,1]:  A,B [0,2)
  * [2] [1] B,A [0,1), [1,2) <- Never gets into the if (end - start > 1) condition.
  * [1,2]   A,B <= Bottom of recursion. Merge into B
  * Time complexity: 1 level (log(n)), 1 comparison. 2 items. => O(n*log(n))
  *
- * [2,1,4,3]:      A,B [0:4)
- * [2,1] [4,3]	   B,A [0:2), [2:4)
- * [2] [1] [4] [3] A,B [0:1), [1,2), [2,3), [3,4) <- Never gets into the if (end - start > 1) condition.
+ * [2,1,4,3]:      A,B [0,4)
+ * [2,1] [4,3]	   B,A [0,2), [2,4)
+ * [2] [1] [4] [3] A,B [0,1), [1,2), [2,3), [3,4) <- Never gets into the if (end - start > 1) condition.
  * [1,2] [3,4]	   B,A <= Bottom of recurssion. Merge into A. 2 comparisons. 4 items.
  * [1,2,3,4]	   A,B <= Next higher level, merge into B. 1 comparison. 4 items.
  * Time complexity: 2 levels (log(n)), 3 comparisons, 4 items. => O(n*log(n))
@@ -259,7 +256,7 @@ void Sort<T>::Merge(vector<T> &source, vector<T> &dest, size_t start, size_t mid
 template <typename T>
 void Sort<T>::TopDownMergeSort(vector<T> &A /* A */, vector<T> &B /* B */, size_t start, size_t end)
 {
-	if (end - start > 1)
+	if ((end - start) > 1)
 	{ // If run size == 1, consider it sorted
 		// recursively split runs into two halves until run size == 1,
 		// then merge them and return back up the call chain
@@ -269,8 +266,8 @@ void Sort<T>::TopDownMergeSort(vector<T> &A /* A */, vector<T> &B /* B */, size_
 		Merge(A, B, start, middle, end);
 	}
 }
-/* bottom-up merge sort algorithm which treats the list consisting of n sublists (called runs in this example)
- * of size 1, and iteratively merges sub-lists back and forth between two buffers
+/* Bottom-up merge sort algorithm which treats the list consisting of n sublists (called runs in this example) of size 1,
+ * and iteratively merges sub-lists back and forth between two buffers.
  * List A[] has the items to sort; list B[] is a work buffer
  * Example:
  * [2,1] => [1,2]
@@ -296,20 +293,26 @@ template <typename T>
 void Sort<T>::BottomUpMergeSort(vector<T> &A, vector<T> &B)
 {
 	size_t n = A.size();
-	// Each 1-element run in data is already "sorted".
-	// Make successively longer sorted runs of length 2, 4, 8, 16... until whole array is sorted.
-	for (size_t width = 1; width < A.size(); width *= 2)
+	/* Each 1-element run in data is already "sorted".
+	 * Make successively longer sorted runs of length 2, 4, 8, 16... until whole array is sorted.
+	 */
+	for (size_t width = 1; width < A.size(); width <<= 1)
 	{ // O(lg(N))
-		// Array A is full of runs of length width.
-		// width: 1, i(+2): 0, 2, 4, 6, 8, 10
-		// width: 2, i(+4): 0, 4, 8, 12,16,20
 		for (size_t i = 0; i < A.size(); i += 2 * width)
+			/* Array A is full of runs of length width.
+			width:1 i: [0,2,4,6,8,10,...]
+			  (l,m,r): (0,1,2) (2,3,4) (4,5,6) (6,7,8)
+				 data: [0,2,1] -> [0,2], [2,1]
+
+			width:2 i: [0,4,8,12,16,20,...]
+			  (l,m,r): (0,2,4) (4,6,8) (8,10,12) (12,14,16)
+			*/
 			// Range of each Merge call. Total is O(N).
-			/* Merge two runs: A[i:i+width-1] and A[i+width:i+2*width-1] to B[]
+			/* Merge two runs: A[i, i + width-1] and A[i + 2*width-1] to B[]
 			 * width: 1
-			 *   i:0 Merge two runs: A[0:0] and A[1:1] to B[] [start, middle, end] : [0,1,2)
-			 *   i:2 Merge two runs: A[2:2] and A[3:3] to B[] [start, middle, end] : [2,3,4)
-			 *   i:4 Merge two runs: A[4:4] and A[5:5] to B[] [start, middle, end] : [4,5,6)
+			 *   i:0 Merge two runs: A[0,0] and A[1,1] to B[] [start, middle, end] : [0,1,2)
+			 *   i:2 Merge two runs: A[2,2] and A[3,3] to B[] [start, middle, end] : [2,3,4)
+			 *   i:4 Merge two runs: A[4,4] and A[5,5] to B[] [start, middle, end] : [4,5,6)
 			 * width: 2
 			 *   i:0 Merge two runs: A[0:1] and A[2:3] to B[] [start, middle, end] : [0,2,4)
 			 *   i:2 Merge two runs: A[2:3] and A[4:5] to B[] [start, middle, end] : [2,4,6)
@@ -317,11 +320,12 @@ void Sort<T>::BottomUpMergeSort(vector<T> &A, vector<T> &B)
 			 * or copy A[i:n-1] to B[] ( if (i+width >= n) )
 			 */
 			Merge(A, B, i, min(i + width, n), min(i + 2 * width, n)); // O(N)
-		// Now work array B is full of runs of length 2*width.
-		// Copy array B to array A for next iteration.
-		// A more efficient implementation would swap the roles of A and B.
+		/* Now work array B is full of runs (sorted) of length 2*width.
+		 * Copy array B to array A for next iteration.
+		 * A more efficient implementation would swap the roles of A and B.
+		 */
 		A = B;
-		// Now array A is full of runs of length 2*width.
+		// Now array A is full of runs (sorted) of length 2*width.
 	}
 }
 /* https://leetcode.com/problems/wiggle-sort-ii/
