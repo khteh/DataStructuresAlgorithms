@@ -279,14 +279,14 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(2, vector<size_t>{5, 10, 3}),
 					  make_tuple(2, vector<size_t>{20, 7, 8, 2, 5}),
 					  make_tuple(1, vector<size_t>{2, 3, 4, 1})));
-class MinSumSubSequenceTestFixture : public RangeTestFixture2<size_t, size_t, size_t>, public testing::TestWithParam<tuple<size_t, size_t, vector<size_t>>>
+class MinSumSubSequenceTestFixture : public RangeTestFixture2<long, size_t, size_t>, public testing::TestWithParam<tuple<long, size_t, vector<size_t>>>
 {
 public:
 	void SetUp() override
 	{
 		RangeTestFixture2::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
-	size_t MinSumSubSequenceTest()
+	long MinSumSubSequenceTest()
 	{
 		return _rangeObj.MinSumSubSequence(_param, _data);
 	}

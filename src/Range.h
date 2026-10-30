@@ -30,7 +30,7 @@ public:
 	size_t LongestUpDownAlternatingSubSequence(vector<long> const &, vector<long> &);
 	size_t NumberDiffPairs(long, vector<long> const &);
 	size_t NumberDiffPairs(long, set<long> const &);
-	size_t MinSumSubSequence(size_t, vector<size_t> const &);
+	long MinSumSubSequence(size_t, vector<size_t> const &);
 	size_t MinimumLoss(vector<size_t> const &);
 	long MinimumBribes(size_t, vector<long> const &);
 	size_t MinimumCandies(vector<size_t> const &);

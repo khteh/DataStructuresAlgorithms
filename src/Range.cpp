@@ -148,7 +148,6 @@ long Range::ConsecutiveLargestProduct(vector<long> const &data)
 	long maxproduct = numeric_limits<long>::min(), max_ending_here = 1, min_ending_here = 1;
 	bool zero = false;
 	for (vector<long>::const_iterator it = data.begin(); it != data.end(); it++)
-	{
 		if (!*it)
 		{
 			zero = true;
@@ -182,15 +181,16 @@ long Range::ConsecutiveLargestProduct(vector<long> const &data)
 			}
 			zero = false;
 		}
-	}
 	return maxproduct;
 }
 /* https://leetcode.com/problems/minimum-size-subarray-sum/
+* Given an array of positive integers nums and a positive integer target, return the minimal length of a subarray whose sum is greater than or equal to target.
+* If there is no such subarray, return 0 instead.
 *  100%
  0 1 2 3 4 5
 [2,3,1,2,4,3] target: 7
  j     i		sum: 8 count: 4
-   j   i		sum: 6
+   j   i		sum: 6 count: 3
    j     i		sum: 10 count: 4
 	 j   i		sum: 7 count: 3
 	   j i		sum: 6
@@ -201,7 +201,7 @@ long Range::ConsecutiveLargestProduct(vector<long> const &data)
    i,j   sum: 4 count: 1
 	 i,j sum: 4 count: 1
 */
-size_t Range::MinSumSubSequence(size_t target, vector<size_t> const &data)
+long Range::MinSumSubSequence(size_t target, vector<size_t> const &data)
 {
 	size_t count = numeric_limits<size_t>::max();
 	size_t sum = 0;
