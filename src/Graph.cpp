@@ -166,14 +166,12 @@ void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex) const
 	shared_ptr<Vertex<TTag, TItem>> previous = vertex;
 	bool space = false;
 	for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = neighbours.begin(); it != neighbours.end(); it++, space = true)
-	{
 		if (space)
 			cout << setw(oss.str().size()) << " " << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << " " << (*it)->GetTag() << "(" << (*it)->GetItem() << ") "
 				 << " [" << previous->GetCost(*it) << "] " << endl;
 		else
 			cout << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << " " << (*it)->GetTag() << "(" << (*it)->GetItem() << ") "
 				 << " [" << previous->GetCost(*it) << "] " << endl;
-	}
 }
 /* https://www.hackerrank.com/challenges/primsmstsub/problem
    https://en.wikipedia.org/wiki/Prim%27s_algorithm
@@ -208,7 +206,6 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 		inMST.emplace(u->GetTag()); // Include vertex in MST
 		map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours = u->GetNeighboursWithCost();
 		for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::iterator v = neighbours.begin(); v != neighbours.end(); v++)
-		{
 			//  If v is not in MST and weight of (u,v) is smaller than current cost of v
 			if (!inMST.count(v->first->GetTag()) && (!costs.count(v->first->GetTag()) || costs[v->first->GetTag()] > v->second)) // v->second is edge cost from u to v
 			{
@@ -217,7 +214,6 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 				priorityQueue.emplace(v->second, v->first);
 				parents.emplace(v->first->GetTag(), u);
 			}
-		}
 	}
 	// Print edges of MST using parent array
 	cout << __FUNCTION__ << " edges of Minimum Spanning Tree: " << endl;
@@ -243,7 +239,6 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 		// Update dist value of the adjacent vertices of the picked vertex.
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
-		{
 			/* v is (*it); u is vertex.
 			 * Update cost[v] only if it:
 			 * (1) is not in spt set
@@ -267,7 +262,6 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 					costsPQ.emplace(costs[*it], *it);
 				}
 			}
-		}
 	}
 }
 template <typename TTag, typename TItem>
@@ -290,7 +284,6 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 		// Update cost of the adjacent vertices of the picked vertex.
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
-		{
 			/* v is (*it); u is vertex.
 			 * Update cost[v] only if it:
 			 * (1) is not in sptSet
@@ -314,7 +307,6 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 					costsPQ.emplace(costs[*it], *it);
 				}
 			}
-		}
 	}
 	return vertex && vertex == destination && costs.count(vertex) ? costs[vertex] : -1;
 }
@@ -340,7 +332,6 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 		// Update cost of the adjacent vertices of the picked vertex.
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
-		{
 			/* v is (*it); u is vertex.
 			 * Update cost[v] only if it:
 			 * (1) is not in sptSet
@@ -364,7 +355,6 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 					costsPQ.emplace(costs[*it], *it);
 				}
 			}
-		}
 	}
 	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = costs.begin(); it != costs.end(); it++)
 		if (it->first->GetTag() != src)
