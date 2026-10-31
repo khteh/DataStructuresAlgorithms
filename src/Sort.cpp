@@ -141,6 +141,134 @@ long Sort<T>::Partition(vector<T> &data, long left, long right, long pivot)
 		swap(data[newPivot], data[right]);
 	return newPivot;
 }
+template <typename T>
+void Sort<T>::Merge(vector<T> &source, vector<T> &dest, size_t start, size_t middle, size_t end)
+{
+	size_t left = start, right = middle;
+	// While there are elements in the left or right runs...
+	for (size_t i = start; i < end; i++)
+		/* If left run head exists (left < middle)
+		 * AND value is <= existing right run head.
+		 * OR  Right run is empty (right >= end)
+		 * Example:
+		 * width: 1
+		 * source: [0,2(R),1] dest: [] [start, middle, end] = [0,1,2)
+		 * left:0, middle: 1, right: 1, end: 2
+		 * dest[0] = 0, Take left. left == middle == 1
+		 * dest[1] = 2 (left == middle), Take right.
+		 *
+		 * source: [0,2,1] dest: [0,2] [start, middle, end] = [2,3,3)
+		 * left:2, middle: 3, right: 3, end: 3
+		 * dest[2] = 1 (right == end), Take left. left == middle == 3
+		 *
+		 * width: 2
+		 * source: [0,2,1(R)] dest: [0,2,1] [start, middle, end] = [0,2,3)
+		 * left:0, middle: 2, right: 2, end: 3
+		 * dest[0] = 0, Take left. left = 1
+		 * dest[1] = 1, Take right (1 < 2). right = 3 == end [Inversion count = right - i = 2 - 1 = 1]
+		 * dest[2] = 2, Take left (right == end). left = 2
+		 */
+		dest[i] = (left < middle && (right >= end || source[left] <= source[right])) ? source[left++] : source[right++];
+}
+/* http://en.wikipedia.org/wiki/Merge_sort
+ * Top-down merge sort algorithm that recursively splits the list (called runs in this example) into sublists until sublist size is 1,
+ * then merges those sublists to produce a sorted list. The copy back step is avoided with alternating the direction of the merge with
+ * each level of recursion (except for an initial one time copy).
+ * [start, end)
+ * Example:
+ * [2,1]:  A,B [0,2)
+ * [2] [1] B,A [0,1), [1,2) <- Never gets into the if (end - start > 1) condition.
+ * [1,2]   A,B <= Bottom of recursion. Merge into B
+ * Time complexity: 1 level (log(n)), 1 comparison. 2 items. => O(n*log(n))
+ *
+ * [2,1,4,3]:      A,B [0,4)
+ * [2,1] [4,3]	   B,A [0,2), [2,4)
+ * [2] [1] [4] [3] A,B [0,1), [1,2), [2,3), [3,4) <- Never gets into the if (end - start > 1) condition.
+ * [1,2] [3,4]	   B,A <= Bottom of recurssion. Merge into A. 2 comparisons. 4 items.
+ * [1,2,3,4]	   A,B <= Next higher level, merge into B. 1 comparison. 4 items.
+ *
+ * Time complexity: 2 levels (log(n)), 3 comparisons, 4 items. => O(n*log(n))
+ * C: 2, L: lg(N), Others: N
+ * #nodes = (C^L - 1) / (C - 1) = 2^lg(N) - 1 = N - 1
+ * TC (Time Complexity) = N*lg(N)
+ *
+ * This is (N work per level) × (lg N levels). The calls on one level together cover the array once, so each level costs N in total.
+ */
+template <typename T>
+void Sort<T>::TopDownMergeSort(vector<T> &A /* A */, vector<T> &B /* B */, size_t start, size_t end)
+{
+	if ((end - start) > 1)
+	{ // If run size == 1, consider it sorted
+		// recursively split runs into two halves until run size == 1,
+		// then merge them and return back up the call chain
+		size_t middle = start + (end - start) / 2 + (end - start) % 2;
+		TopDownMergeSort(B, A, start, middle);
+		TopDownMergeSort(B, A, middle, end);
+		Merge(A, B, start, middle, end);
+	}
+}
+/* Bottom-up merge sort algorithm which treats the list consisting of n sublists (called runs in this example) of size 1,
+ * and iteratively merges sub-lists back and forth between two buffers.
+ * List A[] has the items to sort; list B[] is a work buffer
+ * Example:
+ * [2,1] => [1,2]
+ *
+ * [0,2,1]
+ * [0],[2],[1]
+ * => [0,2], [1] : width = 1
+ * => [0,1,2] : width = 2. 1 Inversion
+ *		[0,2], [1]: width = 1 => [0,2,1]
+ *		[0,1,2]: width = 2.
+ *			[0,1,2] Inversion between index 1 & 2
+ * [0,3,1,2]
+ * [0], [3], [1], [2]
+ * => [0,3], [1,2] : width = 1
+ * => [0,1,2,3] : width = 2. 2 Inversions: {1,2}, {2,3}
+ *		[0,3], [1,2]: width = 1 => [0,3,1,2]
+ *		[0,1,2,3]: width = 2.
+ *			[0,1,3,2] Inversion between index 1 & 2
+ *			[0,1,2,3] Inversion between index 2 & 3
+ * O(lg(N) * N) = O(N * lg(N))
+ */
+template <typename T>
+void Sort<T>::BottomUpMergeSort(vector<T> &A, vector<T> &B)
+{
+	size_t n = A.size();
+	/* Each 1-element run in data is already "sorted".
+	 * Make successively longer sorted runs of length 2, 4, 8, 16... until whole array is sorted.
+	 */
+	for (size_t width = 1; width < A.size(); width <<= 1)
+	{ // O(lg(N))
+		for (size_t i = 0; i < A.size(); i += 2 * width)
+			/* Array A is full of runs of length width.
+			width:1 i: [0,2,4,6,8,10,...]
+			  (l,m,r): (0,1,2) (2,3,4) (4,5,6) (6,7,8)
+				 data: [0,2,1] -> [0,2], [2,1]
+
+			width:2 i: [0,4,8,12,16,20,...]
+			  (l,m,r): (0,2,4) (4,6,8) (8,10,12) (12,14,16)
+			*/
+			// Range of each Merge call. Total is O(N).
+			/* Merge two runs: A[i, i + width-1] and A[i + 2*width-1] to B[]
+			 * width: 1
+			 *   i:0 Merge two runs: A[0,0] and A[1,1] to B[] [start, middle, end] : [0,1,2)
+			 *   i:2 Merge two runs: A[2,2] and A[3,3] to B[] [start, middle, end] : [2,3,4)
+			 *   i:4 Merge two runs: A[4,4] and A[5,5] to B[] [start, middle, end] : [4,5,6)
+			 * width: 2
+			 *   i:0 Merge two runs: A[0:1] and A[2:3] to B[] [start, middle, end] : [0,2,4)
+			 *   i:2 Merge two runs: A[2:3] and A[4:5] to B[] [start, middle, end] : [2,4,6)
+			 *   i:4 Merge two runs: A[4:5] and A[6:7] to B[] [start, middle, end] : [4,6,8)
+			 * or copy A[i:n-1] to B[] ( if (i+width >= n) )
+			 */
+			Merge(A, B, i, min(i + width, n), min(i + 2 * width, n)); // O(N)
+		/* Now work array B is full of runs (sorted) of length 2*width.
+		 * Copy array B to array A for next iteration.
+		 * A more efficient implementation would swap the roles of A and B.
+		 */
+		A = B;
+		// Now array A is full of runs (sorted) of length 2*width.
+	}
+}
 /*
  * Comparison-based un-stable sort.
  * Time: O(n^2)
@@ -272,134 +400,6 @@ string Sort<T>::StringCountingSort(vector<vector<string>> &data)
 				oss << " ";
 		}
 	return oss.str();
-}
-template <typename T>
-void Sort<T>::Merge(vector<T> &source, vector<T> &dest, size_t start, size_t middle, size_t end)
-{
-	size_t left = start, right = middle;
-	// While there are elements in the left or right runs...
-	for (size_t i = start; i < end; i++)
-		/* If left run head exists (left < middle)
-		 * AND value is <= existing right run head.
-		 * OR  Right run is empty (right >= end)
-		 * Example:
-		 * width: 1
-		 * source: [0,2(R),1] dest: [] [start, middle, end] = [0,1,2)
-		 * left:0, middle: 1, right: 1, end: 2
-		 * dest[0] = 0, Take left. left == middle == 1
-		 * dest[1] = 2 (left == middle), Take right.
-		 *
-		 * source: [0,2,1] dest: [0,2] [start, middle, end] = [2,3,3)
-		 * left:2, middle: 3, right: 3, end: 3
-		 * dest[2] = 1 (right == end), Take left. left == middle == 3
-		 *
-		 * width: 2
-		 * source: [0,2,1(R)] dest: [0,2,1] [start, middle, end] = [0,2,3)
-		 * left:0, middle: 2, right: 2, end: 3
-		 * dest[0] = 0, Take left. left = 1
-		 * dest[1] = 1, Take right (1 < 2). right = 3 == end [Inversion count = right - i = 2 - 1 = 1]
-		 * dest[2] = 2, Take left (right == end). left = 2
-		 */
-		dest[i] = (left < middle && (right >= end || source[left] <= source[right])) ? source[left++] : source[right++];
-}
-/* http://en.wikipedia.org/wiki/Merge_sort
- * Top-down merge sort algorithm that recursively splits the list (called runs in this example) into sublists until sublist size is 1,
- * then merges those sublists to produce a sorted list. The copy back step is avoided with alternating the direction of the merge with
- * each level of recursion (except for an initial one time copy).
- * [start, end)
- * Example:
- * [2,1]:  A,B [0,2)
- * [2] [1] B,A [0,1), [1,2) <- Never gets into the if (end - start > 1) condition.
- * [1,2]   A,B <= Bottom of recursion. Merge into B
- * Time complexity: 1 level (log(n)), 1 comparison. 2 items. => O(n*log(n))
- *
- * [2,1,4,3]:      A,B [0,4)
- * [2,1] [4,3]	   B,A [0,2), [2,4)
- * [2] [1] [4] [3] A,B [0,1), [1,2), [2,3), [3,4) <- Never gets into the if (end - start > 1) condition.
- * [1,2] [3,4]	   B,A <= Bottom of recurssion. Merge into A. 2 comparisons. 4 items.
- * [1,2,3,4]	   A,B <= Next higher level, merge into B. 1 comparison. 4 items.
- *
- * Time complexity: 2 levels (log(n)), 3 comparisons, 4 items. => O(n*log(n))
- * C: 2, L: lg(N), Others: N
- * #nodes = (C^L - 1) / (C - 1) = 2^lg(N) - 1 = N - 1
- * TC (Time Complexity) = N*lg(N)
- *
- * This is (N work per level) × (lg N levels). The calls on one level together cover the array once, so each level costs N in total.
- */
-template <typename T>
-void Sort<T>::TopDownMergeSort(vector<T> &A /* A */, vector<T> &B /* B */, size_t start, size_t end)
-{
-	if ((end - start) > 1)
-	{ // If run size == 1, consider it sorted
-		// recursively split runs into two halves until run size == 1,
-		// then merge them and return back up the call chain
-		size_t middle = start + (end - start) / 2 + (end - start) % 2;
-		TopDownMergeSort(B, A, start, middle);
-		TopDownMergeSort(B, A, middle, end);
-		Merge(A, B, start, middle, end);
-	}
-}
-/* Bottom-up merge sort algorithm which treats the list consisting of n sublists (called runs in this example) of size 1,
- * and iteratively merges sub-lists back and forth between two buffers.
- * List A[] has the items to sort; list B[] is a work buffer
- * Example:
- * [2,1] => [1,2]
- *
- * [0,2,1]
- * [0],[2],[1]
- * => [0,2], [1] : width = 1
- * => [0,1,2] : width = 2. 1 Inversion
- *		[0,2], [1]: width = 1 => [0,2,1]
- *		[0,1,2]: width = 2.
- *			[0,1,2] Inversion between index 1 & 2
- * [0,3,1,2]
- * [0], [3], [1], [2]
- * => [0,3], [1,2] : width = 1
- * => [0,1,2,3] : width = 2. 2 Inversions: {1,2}, {2,3}
- *		[0,3], [1,2]: width = 1 => [0,3,1,2]
- *		[0,1,2,3]: width = 2.
- *			[0,1,3,2] Inversion between index 1 & 2
- *			[0,1,2,3] Inversion between index 2 & 3
- * O(lg(N) * N) = O(N * lg(N))
- */
-template <typename T>
-void Sort<T>::BottomUpMergeSort(vector<T> &A, vector<T> &B)
-{
-	size_t n = A.size();
-	/* Each 1-element run in data is already "sorted".
-	 * Make successively longer sorted runs of length 2, 4, 8, 16... until whole array is sorted.
-	 */
-	for (size_t width = 1; width < A.size(); width <<= 1)
-	{ // O(lg(N))
-		for (size_t i = 0; i < A.size(); i += 2 * width)
-			/* Array A is full of runs of length width.
-			width:1 i: [0,2,4,6,8,10,...]
-			  (l,m,r): (0,1,2) (2,3,4) (4,5,6) (6,7,8)
-				 data: [0,2,1] -> [0,2], [2,1]
-
-			width:2 i: [0,4,8,12,16,20,...]
-			  (l,m,r): (0,2,4) (4,6,8) (8,10,12) (12,14,16)
-			*/
-			// Range of each Merge call. Total is O(N).
-			/* Merge two runs: A[i, i + width-1] and A[i + 2*width-1] to B[]
-			 * width: 1
-			 *   i:0 Merge two runs: A[0,0] and A[1,1] to B[] [start, middle, end] : [0,1,2)
-			 *   i:2 Merge two runs: A[2,2] and A[3,3] to B[] [start, middle, end] : [2,3,4)
-			 *   i:4 Merge two runs: A[4,4] and A[5,5] to B[] [start, middle, end] : [4,5,6)
-			 * width: 2
-			 *   i:0 Merge two runs: A[0:1] and A[2:3] to B[] [start, middle, end] : [0,2,4)
-			 *   i:2 Merge two runs: A[2:3] and A[4:5] to B[] [start, middle, end] : [2,4,6)
-			 *   i:4 Merge two runs: A[4:5] and A[6:7] to B[] [start, middle, end] : [4,6,8)
-			 * or copy A[i:n-1] to B[] ( if (i+width >= n) )
-			 */
-			Merge(A, B, i, min(i + width, n), min(i + 2 * width, n)); // O(N)
-		/* Now work array B is full of runs (sorted) of length 2*width.
-		 * Copy array B to array A for next iteration.
-		 * A more efficient implementation would swap the roles of A and B.
-		 */
-		A = B;
-		// Now array A is full of runs (sorted) of length 2*width.
-	}
 }
 /* https://leetcode.com/problems/wiggle-sort-ii/
  * 100%
