@@ -104,6 +104,7 @@ size_t Knapsack::CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<siz
 {
 	if (amount <= 0 || coins.empty())
 		return 0;
+	ranges::sort(coins);
 	vector<size_t> dp(amount + 1, 0); // Index: amount. Value: #ways or #posibilities
 	dp[0] = 1;						  // $0 is one possibility
 	for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end(); coin++)
