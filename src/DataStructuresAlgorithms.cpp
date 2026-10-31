@@ -670,9 +670,10 @@ void MultiplesCount(int dividend, long &twos, long &fives)
 			twos++;
 	}
 }
-// given an array of N positive integers, returns the maximum number of trailing zeros of the number obtained by multiplying three different elements from the array.
-// Numbers are considered different if they are at different positions in the array
-// 100% correctness However, performance is bad with O(N**3).
+/* Given an array of N positive integers, returns the maximum number of trailing zeros of the number obtained by multiplying three different elements from the array.
+ * Numbers are considered different if they are at different positions in the array
+ * 100% correctness However, performance is bad with O(N**3).
+ */
 long MaxZeroProductBruteForce(vector<int> const &data)
 {
 	long result = 0;

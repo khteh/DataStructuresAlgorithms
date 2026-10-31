@@ -843,6 +843,8 @@ bool Search::HasNUglyNumbers(size_t n, uint64_t a, uint64_t b, uint64_t c, uint6
 }
 /*
  * https://leetcode.com/problems/ugly-number-iii/
+ * An ugly number is a positive integer that is divisible by a, b, or c. Given four integers n, a, b, and c, return the nth ugly number.
+ *
  * Use binary search
  * 100%
 Generating ugly numbers one at a time is too slow. Instead, ask a simpler question: how many ugly numbers are ≤ x?
