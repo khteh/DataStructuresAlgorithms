@@ -87,6 +87,14 @@ set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<
 /* https://www.hackerrank.com/challenges/coin-change/problem
  * https://leetcode.com/problems/coin-change-ii
  * 100%
+ * Use coins as outer loop. This counts combinations: {2,3} and {3,2} are the same way.
+ * Coins are processed one at a time, in a fixed order. While the outer loop is on coin 3, dp[] only contains ways built from coins 2 and 3; coin 5 hasn’t been seen yet.
+ * So every way is effectively built in the same order: all the 2s first, then the 3s, then the 5s.
+ * A sequence like 3-then-2 can never be built, because by the time coin 3 is added, coin 2 is finished and never comes back. Each multiset of coins is counted once.
+ * You never ask “which coin came last?” over all coins at once. Coin 3 is only added after coin 2 is completely finished,
+ * so a sequence can only be built as 2s first, then 3s. {3, 2} never gets built, and {2, 3} is counted once as the combination of a 2 and a 3.
+ * Use this when: Order doesn’t matter (making change, choosing a set of items, “how many combinations”): put items in the outer loop.
+ *
  * coins: {2,3,5} amount: 10
  * coin = 2; i = starts from 2
  * ways: 1 0 1 0 1 0 1 0 1 0 1
@@ -114,6 +122,11 @@ size_t Knapsack::CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<siz
 }
 /* https://leetcode.com/problems/combination-sum-iv/
  * 100%
+ * Use amounts as outer loop. this counts permutations: {2,3} and {3,2} are different.
+ * For each amount i, you try every coin as the last coin added, and dp[i - coin] already includes ways using all coins in any order.
+ * {3,2} and {2,3} differ by which coin was last, so they’re counted separately.
+ * Use this when: Order matters (sequences, steps, “how many ways to climb stairs taking 1 or 2 steps”): put the target or amount in the outer loop.
+ *
  * coins: {2,3,5} amount: 10
  * ways: 1 0 1 1 1 3 2 5 6 8 14
  * i:    0 1 2 3 4 5 6 7 8 9 10
@@ -126,8 +139,8 @@ size_t Knapsack::CoinsChangeDuplicateWaysDynamicProgramming(long amount, vector<
 	vector<size_t> dp(amount + 1, 0); // Index: amount. Value: #ways or #posibilities
 	dp[0] = 1;						  // $0 is one possibility
 	for (size_t i = coins[0]; i <= (size_t)amount; i++)
-		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end() && i >= *coin; coin++)
-			dp[i] += dp[i - *coin];
+		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end() && i >= *coin; coin++) // try each coin as the LAST coin
+			dp[i] += dp[i - *coin];																	   // ways to make the rest × append this coin
 	return dp[amount];
 }
 /* https://leetcode.com/problems/coin-change/
