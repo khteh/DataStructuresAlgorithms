@@ -122,7 +122,7 @@ size_t Knapsack::CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<siz
 }
 /* https://leetcode.com/problems/combination-sum-iv/
  * 100%
- * Use amounts as outer loop. this counts permutations: {2,3} and {3,2} are different.
+ * Use amounts as outer loop. This counts permutations: {2,3} and {3,2} are different.
  * For each amount i, you try every coin as the last coin added, and dp[i - coin] already includes ways using all coins in any order.
  * {3,2} and {2,3} differ by which coin was last, so they’re counted separately.
  * Use this when: Order matters (sequences, steps, “how many ways to climb stairs taking 1 or 2 steps”): put the target or amount in the outer loop.
@@ -145,6 +145,8 @@ size_t Knapsack::CoinsChangeDuplicateWaysDynamicProgramming(long amount, vector<
 }
 /* https://leetcode.com/problems/coin-change/
  * 100%
+ * Loop order does not matter. Both amounts-outer or coins-outer loops gives the same result as the sequence of coins is the the problem.
+ *
  * coins: {1,2,5}, amount: 10
  * i(amount): 0 1 2     3     4     5        6       7      8       9       10
  *      ways: 0 1 {2,1} {2,2} {3,2} {3,3,1} {2,3,2} {3,2,2} {3,3,3} {4,3,3} {4,4,2}
@@ -154,18 +156,20 @@ long Knapsack::CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size
 	if (amount <= 0 || coins.empty())
 		return 0;
 	ranges::sort(coins);
-	vector<size_t> dp(amount + 1, numeric_limits<size_t>::max()); // Index: amount. Value: #coins
+	vector<size_t> dp(amount + 1, numeric_limits<size_t>::max()); // Index: amount. Value: #coins. max() = Amounts that can’t be made (Impossible).
 	dp[0] = 0;													  // $0 = 0 coins
 	for (size_t i = coins[0]; i <= amount; i++)
 		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end() && i >= *coin; coin++)
 			if (dp[i - *coin] != numeric_limits<size_t>::max())
-				dp[i] = min(dp[i], dp[i - *coin] + 1); // +1 because there is a coin value of 1. Otherwise, there would not be amount of $3 and others which need $1 coin.
+				dp[i] = min(dp[i], dp[i - *coin] + 1); // fewest coins for the rest (i - coin), +1 for this coin as the last one
 	return dp[amount] == numeric_limits<size_t>::max() ? -1 : dp[amount];
 }
 /* https://www.hackerrank.com/challenges/unbounded-knapsack/problem
+ * Given an array of integers and a target sum, determine the sum nearest to but not exceeding the target that can be created.
+ * To create the sum, use any element of your array zero or more times.
  * 100%
  */
-set<vector<size_t>> Knapsack::KnapsackCombinations(long amount, vector<size_t> &numbers)
+set<vector<size_t>> Knapsack::_KnapsackCombinations(long amount, vector<size_t> const &numbers)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0 && !numbers.empty())
@@ -175,15 +179,13 @@ set<vector<size_t>> Knapsack::KnapsackCombinations(long amount, vector<size_t> &
 		else if (ranges::find(numbers, 1) != numbers.end())
 			combinations.insert(vector<size_t>{(size_t)amount});
 		else
-		{
-			for (vector<size_t>::iterator number = numbers.begin(); number != numbers.end(); number++)
-			{
+			for (vector<size_t>::const_iterator number = numbers.begin(); number != numbers.end(); number++)
 				if (amount >= (long)*number)
 				{
 					set<vector<size_t>> tmp;
 					if (!knapsackCache.count(amount - *number))
 					{
-						tmp = KnapsackCombinations(amount - *number, numbers);
+						tmp = _KnapsackCombinations(amount - *number, numbers);
 						if (!tmp.empty())
 							knapsackCache[amount - *number] = tmp;
 					}
@@ -194,16 +196,15 @@ set<vector<size_t>> Knapsack::KnapsackCombinations(long amount, vector<size_t> &
 						{
 							vector<size_t> change(*it);
 							size_t sum = parallel_reduce(
-											 blocked_range<size_t>(0, change.size()), 0,
-											 [&](tbb::blocked_range<size_t> const &r, long running_total)
-											 {
-												 for (size_t i = r.begin(); i < r.end(); i++)
-													 running_total += change[i];
-												 return running_total;
-											 },
-											 std::plus<long>()) +
-										 *number;
-							if (sum <= (size_t)amount)
+								blocked_range<size_t>(0, change.size()), 0,
+								[&](tbb::blocked_range<size_t> const &r, long running_total)
+								{
+									for (size_t i = r.begin(); i < r.end(); i++)
+										running_total += change[i];
+									return running_total;
+								},
+								std::plus<long>());
+							if ((sum + *number) <= (size_t)amount)
 							{
 								change.push_back(*number);
 								ranges::sort(change);
@@ -213,21 +214,18 @@ set<vector<size_t>> Knapsack::KnapsackCombinations(long amount, vector<size_t> &
 					else
 						combinations.insert(vector<size_t>{*number});
 				} // if (amount >= (long)numbers[i]) {
-			}
-		}
 	}
 	return combinations;
 }
 // Bounded places an upper bound on the number of copies of each kind of item included in the knapsack
 // Unbounded places no upper bound on the number of copies of each kind of item included in the knapsack
-size_t Knapsack::UnboundedKnapsack(long k, vector<size_t> &arr)
+size_t Knapsack::UnboundedKnapsack(long k, vector<size_t> const &arr)
 {
 	knapsackCache.clear();
-	set<vector<size_t>> combinations = KnapsackCombinations(k, arr);
+	set<vector<size_t>> combinations = _KnapsackCombinations(k, arr);
 	set<size_t> sums;
 	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
-	{
-		size_t sum = parallel_reduce(
+		sums.insert(parallel_reduce(
 			blocked_range<size_t>(0, it->size()), 0uz,
 			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
 			{
@@ -235,18 +233,14 @@ size_t Knapsack::UnboundedKnapsack(long k, vector<size_t> &arr)
 					running_total += (*it)[i];
 				return running_total;
 			},
-			std::plus<size_t>());
-		sums.insert(sum);
-	}
+			std::plus<size_t>()));
 	return sums.empty() ? 0 : *sums.rbegin();
 }
-set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> &numbers)
+set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> const &numbers)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0 && !numbers.empty())
-	{
-		for (vector<size_t>::iterator number = numbers.begin(); number != numbers.end(); number++)
-		{
+		for (vector<size_t>::const_iterator number = numbers.begin(); number != numbers.end(); number++)
 			if (amount >= (long)*number)
 			{
 				set<vector<size_t>> tmp;
@@ -286,11 +280,9 @@ set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> &numb
 				else
 					combinations.insert(vector<size_t>{*number});
 			}
-		}
-	}
 	return combinations;
 }
-vector<vector<size_t>> Knapsack::BoundedKnapsack(long amount, vector<size_t> &numbers)
+vector<vector<size_t>> Knapsack::BoundedKnapsack(long amount, vector<size_t> const &numbers)
 {
 	vector<vector<size_t>> result;
 	knapsackCache.clear();
@@ -312,13 +304,17 @@ vector<vector<size_t>> Knapsack::BoundedKnapsack(long amount, vector<size_t> &nu
 	return result;
 }
 /* https://leetcode.com/problems/combination-sum-iii/
+Find all valid combinations of k numbers that sum up to n such that the following conditions are true:
+
+Only numbers 1 through 9 are used.
+Each number is used at most once.
+Return a list of all possible valid combinations. The list must not contain the same combination twice, and the combinations may be returned in any order.
  * 100%
  */
-set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t size, size_t sum, size_t max)
+set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t size, size_t sum, size_t max /* Max value of element */)
 {
 	set<vector<size_t>> combinations;
 	for (size_t i = 1; i < max; i++)
-	{
 		if (sum >= i)
 		{
 			set<vector<size_t>> tmp;
@@ -332,7 +328,7 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t size, size_t
 			if (!tmp.empty())
 				for (set<vector<size_t>>::iterator it = tmp.begin(); it != tmp.end(); it++)
 				{
-					if (it->size() < size && ranges::find(*it, i) == it->end())
+					if (it->size() < size && ranges::find(*it, i) == it->end()) // Each number is used at most once.
 					{
 						vector<size_t> change(*it);
 						change.push_back(i);
@@ -355,7 +351,6 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t size, size_t
 			else if (i == sum)
 				combinations.insert(vector<size_t>{i});
 		}
-	} // for
 	return combinations;
 }
 set<vector<size_t>> Knapsack::BoundedKnapsackCombinationSum(size_t size, size_t sum, size_t max)
@@ -376,14 +371,14 @@ set<vector<size_t>> Knapsack::BoundedKnapsackCombinationSum(size_t size, size_t 
  *  0(1)	1(1)
  *     -1(0) 0(1)
  */
-size_t Knapsack::StairsClimbingDynamicProgramming(long destination, vector<size_t> &steps)
+size_t Knapsack::StairsClimbingDynamicProgramming(long destination, vector<size_t> const &steps)
 {
 	if (!destination) // 0 step = stays. So it is one possibility.
 		return 1;
 	else if (destination < 0) // Impossible
 		return 0;
 	size_t combinations = 0;
-	for (vector<size_t>::iterator it = steps.begin(); it != steps.end(); it++)
+	for (vector<size_t>::const_iterator it = steps.begin(); it != steps.end(); it++)
 	{
 		if (!dpMemoization.count(destination - *it))
 			dpMemoization[destination - *it] = StairsClimbingDynamicProgramming(destination - *it, steps);
@@ -391,7 +386,12 @@ size_t Knapsack::StairsClimbingDynamicProgramming(long destination, vector<size_
 	}
 	return combinations;
 }
-/* Iterative + N variables (bottom-up)
+/*
+ * https://leetcode.com/problems/climbing-stairs/
+ * Distinct ways to reach destination.
+ * 100%
+ *
+ * Iterative + N variables (bottom-up)
  *
  * Steps: {1,2} Destination: 6
  *  0 1 2 3 4 5 6
@@ -403,10 +403,8 @@ size_t Knapsack::StairsClimbingDynamicProgramming(long destination, vector<size_
  * {1,1,2,4,7,13,24} <= [i] = [i-1] + [i-2] + [i-3]
  * {1,0,0}, {1,1,0}, {1,1,2}, {4,1,2}, {4,7,2}, {4,7,13}, {24,7,13} => [n % 3] = 24
  *
- * https://leetcode.com/problems/climbing-stairs/
- * 100%
  */
-size_t Knapsack::StairsClimbingDynamicProgrammingBottomUp(long destination, vector<size_t> &steps)
+size_t Knapsack::StairsClimbingDynamicProgrammingBottomUp(long destination, vector<size_t> const &steps)
 {
 	/* Limitation: The steps are 1 apart: [1,2,3,...] <- diff=1. What happens if the steps are varying sizes: [1,3,6,8...] <- diffs are different */
 	vector<size_t> combinations(steps.size(), 0);
