@@ -61,7 +61,7 @@ set<vector<size_t>> Knapsack::CoinsChange(long amount, vector<size_t> &coins)
 }
 set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<size_t> &coins)
 {
-	map<size_t, set<vector<size_t>>> dp;
+	map<size_t, set<vector<size_t>>> dp; // key: amount, value: the coins which make up the amount.
 	ranges::sort(coins);
 	if (amount >= 0)
 		for (size_t i = coins[0]; i <= (size_t)amount; i++) // Bottom-Up
@@ -70,13 +70,13 @@ set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<
 				if (i == *coin)
 					dp[i].insert(vector<size_t>{i});
 				else if (i > *coin)
-				{ // i:5 coins[j]:2 delta:3 dp[3] = {3}
+				{ // i:5 coin:2 delta:3 dp[3] = [{3}, {1,2}]
 					size_t delta = i - *coin;
 					if (dp.count(delta))
 						for (set<vector<size_t>>::iterator it = dp[delta].begin(); it != dp[delta].end(); it++)
 						{
-							vector<size_t> tmp = *it;
-							tmp.push_back(*coin);
+							vector<size_t> tmp = *it; // {3}, {1,2}
+							tmp.push_back(*coin);	  // {2,3}, {1,2,2}
 							ranges::sort(tmp);
 							dp[i].insert(tmp);
 						}
@@ -85,7 +85,7 @@ set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<
 	return dp[amount];
 }
 /* https://www.hackerrank.com/challenges/coin-change/problem
- * https://leetcode.com/problems/coin-change-2/
+ * https://leetcode.com/problems/coin-change-ii
  * 100%
  * coins: {2,3,5} amount: 10
  * coin = 2; i = starts from 2
