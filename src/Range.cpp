@@ -143,8 +143,6 @@ size_t Range::ConsecutiveMaximumSumModulo(vector<long> const &data, size_t modul
  */
 long Range::ConsecutiveLargestProduct(vector<long> const &data)
 {
-	vector<long> tmp;
-	map<long, vector<long>> results;
 	long maxproduct = numeric_limits<long>::min(), max_ending_here = 1, min_ending_here = 1;
 	bool zero = false;
 	for (vector<long>::const_iterator it = data.begin(); it != data.end(); it++)
@@ -162,9 +160,9 @@ long Range::ConsecutiveLargestProduct(vector<long> const &data)
 		}
 		else
 		{ // < 0
-			long tmp = max_ending_here;
 			if (!zero)
 			{
+				long tmp = max_ending_here;
 				if (min_ending_here * *it > 0)
 				{
 					max_ending_here = min_ending_here * *it;
@@ -172,7 +170,7 @@ long Range::ConsecutiveLargestProduct(vector<long> const &data)
 				}
 				else
 					max_ending_here = 1;
-				min_ending_here = tmp ? min(1L, tmp * *it) : *it; // +ve * -ve
+				min_ending_here = min(1L, tmp * *it); // +ve * -ve
 			}
 			else
 			{
