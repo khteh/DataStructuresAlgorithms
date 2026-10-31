@@ -324,40 +324,59 @@ void Sort<T>::InsertionSort(vector<T> &data)
 template <typename T>
 void Sort<T>::HeapSort(vector<T> &data)
 {
-	/* start is initialized to the first leaf node.
-	 * last element in a 0-based array is at index count-1; find the parent of that element.
-	 * start = iParent(count-1) + 1
-	 */
-	size_t start = (data.size() - 1 / 2) + 1;
-	for (size_t end = data.size() - 1; end > 0;) // Repeat until the remaining array is a single element.
+	if (data.size() > 1)
 	{
-		/*
-		 * [0, start]: unsorted; [end + 1, data.size() - 1]: sorted
-		 * Heap construction decreases start until it is zero, after which heap extraction decreases end until it is 0 and the array is entirely sorted.
+		/* start is initialized to the first leaf node.
+		 * last element in a 0-based array is at index count-1; find the parent of that element.
+		 * start = iParent(count-1) + 1
+		 * index:   0   1   2   3   4   5
+								└ leaves ┘
+		 * Last element is at 5, so iParent(5) = (5 − 1) / 2 = 2. Index 2 is the last node with a child.
+		 * start = 2 + 1 = 3, which is the first leaf.
+		 * The loop sifts indices 2, 1, 0, then switches to extraction.
+		 * iParent(count − 1) + 1 is the index of the first leaf. Every index from there to the end is a leaf, and a single node is trivially a valid heap.
+		 * So before any work is done, [start, end] is already heap-ordered.
 		 */
-		if (start > 0)
-			start--; // Heap construction. Go to the last non-heap node.
-		else
-			/*
-			 * Heap extraction. Swap the first element of the array (the largest element in the heap) with the final element of the heap.
-			 * Decrease the considered range of the heap by one.
-			 */
-			swap(data[end--], data[0]);
-		/* Repair the heap whose root element is at index 'start', assuming the heaps rooted at its children are valid
-		 * root = the greatest element remaining in the heap
-		 */
-		for (size_t root = start, child = 2 * root + 1; 2 * root + 1 <= end;)
+		size_t start = ((data.size() - 1 - 1) / 2) + 1;
+		for (size_t end = data.size() - 1; end > 0;) // Repeat until the remaining array is a single element.
 		{
-			if ((child + 1) <= end && data[child + 1] > data[child]) // If there is a right child and that child is greater
-				child++;
-			if (data[root] < data[child])
-			{
-				// Repair the heap so that the greatest element is again at the root.
-				swap(data[root], data[child]);
-				root = child; // Repeat to consitnue sifting down the child now.
-			}
+			/*
+			 * [0, start):              not yet heapified (construction phase only; empty once start == 0)
+			 * [start, end]:            heap-ordered — a forest of max-heaps during construction,
+			 *                          a single max-heap during extraction (start == 0)
+			 * [end + 1, size - 1]:     sorted, holding the largest values in their final positions
+			 * Heap construction decreases start until it is zero, after which heap extraction decreases end until it is 0 and the array is entirely sorted.
+			 */
+			if (start > 0)
+				start--; // Heap construction. Go to the last non-heap node.
 			else
-				break;
+				/*
+				 * Heap extraction. Swap the first element of the array (the largest element in the heap) with the final element of the heap.
+				 * Decrease the considered range of the heap by one.
+				 */
+				swap(data[end--], data[0]);
+			/* Repair the heap whose root element is at index 'start', assuming the heaps rooted at its children are valid
+			 * root = the greatest element remaining in the heap
+			 */
+			for (size_t root = start; 2 * root + 1 <= end;)
+			{
+				size_t child = 2 * root + 1;
+				/*
+				 * Pick the larger between left and right child to swap with the root. This preserves the heap property.
+				 * (child + 1) <= end checks that a right child exists within the heap.
+				 * A node can have only a left child, and anything after end is the already-sorted part of the array, not the heap, so it must not be compared or swapped.
+				 */
+				if ((child + 1) <= end && data[child + 1] > data[child]) // If there is a right child and that child is greater
+					child++;
+				if (data[root] < data[child])
+				{
+					// Repair the heap so that the greatest element is again at the root.
+					swap(data[root], data[child]);
+					root = child; // Repeat to consitnue sifting down the child now.
+				}
+				else
+					break;
+			}
 		}
 	}
 }
