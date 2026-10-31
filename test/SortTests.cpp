@@ -238,7 +238,7 @@ TEST_P(HeapSortTestFixture, HeapSortTests)
 INSTANTIATE_TEST_SUITE_P(
 	HeapSortTests,
 	HeapSortTestFixture,
-	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
+	::testing::Values(make_tuple(true, vector<long>{0}), make_tuple(true, vector<long>{1, 0, 2}), make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
 class CountingSortTestFixture : public SortTestFixture<bool, size_t>, public testing::TestWithParam<tuple<bool, vector<size_t>>>
 {
 public:

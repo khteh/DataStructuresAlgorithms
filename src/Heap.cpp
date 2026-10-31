@@ -33,7 +33,7 @@ Heap<T>::Heap(vector<T> &data, HeapType type)
 	: _type(type)
 {
 	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
-		InsertItem(*it);
+		InsertItem(*it); // This will produce a Binary Search Tree
 }
 template <typename T>
 void Heap<T>::InsertNode(shared_ptr<Node<T>> &root, shared_ptr<Node<T>> &node)

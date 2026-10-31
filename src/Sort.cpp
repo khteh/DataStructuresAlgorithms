@@ -312,16 +312,53 @@ void Sort<T>::InsertionSort(vector<T> &data)
  * Comparison-based un-stable sort.
  * Time: O(n * log(N))
  * Space: O(1)
+ *
+ * The heapsort algorithm can be divided into two phases: heap construction, and heap extraction.
+ * The heap is an implicit data structure which takes no space beyond the array of objects to be sorted;
+ * the array is interpreted as a complete binary tree where each array element is a node and each node's parent and child links are defined by simple arithmetic on the array indexes.
+ * For a zero-based array, the root node is stored at index 0, and the nodes linked to node i are
+  iLeftChild(i)  = 2 * i + 1
+  iRightChild(i) = 2 * i + 2
+  iParent(i)     = floor((i−1) / 2)
  */
 template <typename T>
 void Sort<T>::HeapSort(vector<T> &data)
 {
-	Heap<T> heap(data, HeapType::MaxHeap);
-	assert(heap.Count() == data.size());
-	for (long end = data.size() - 1; end >= 0; end--)
+	/* start is initialized to the first leaf node.
+	 * last element in a 0-based array is at index count-1; find the parent of that element.
+	 * start = iParent(count-1) + 1
+	 */
+	size_t start = (data.size() - 1 / 2) + 1;
+	for (size_t end = data.size() - 1; end > 0;) // Repeat until the remaining array is a single element.
 	{
-		T item = heap.pop()->Item();
-		swap(data[end], item);
+		/*
+		 * [0, start]: unsorted; [end + 1, data.size() - 1]: sorted
+		 * Heap construction decreases start until it is zero, after which heap extraction decreases end until it is 0 and the array is entirely sorted.
+		 */
+		if (start > 0)
+			start--; // Heap construction. Go to the last non-heap node.
+		else
+			/*
+			 * Heap extraction. Swap the first element of the array (the largest element in the heap) with the final element of the heap.
+			 * Decrease the considered range of the heap by one.
+			 */
+			swap(data[end--], data[0]);
+		/* Repair the heap whose root element is at index 'start', assuming the heaps rooted at its children are valid
+		 * root = the greatest element remaining in the heap
+		 */
+		for (size_t root = start, child = 2 * root + 1; 2 * root + 1 <= end;)
+		{
+			if ((child + 1) <= end && data[child + 1] > data[child]) // If there is a right child and that child is greater
+				child++;
+			if (data[root] < data[child])
+			{
+				// Repair the heap so that the greatest element is again at the root.
+				swap(data[root], data[child]);
+				root = child; // Repeat to consitnue sifting down the child now.
+			}
+			else
+				break;
+		}
 	}
 }
 /* https://en.wikipedia.org/wiki/Counting_sort
