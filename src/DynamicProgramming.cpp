@@ -380,8 +380,38 @@ void DynamicProgramming<T>::WordBreak2(string const &s, set<string> const &words
 /*
  * https://www.hackerrank.com/challenges/abbr/problem
  * 100%
- * (1) Capitalize a
- * (2) Delete remaining lowercase letters
+ * Can s1 be turned into s2 by:
+ *   (1) capitalising zero or more of its lowercase letters, and
+ *   (2) deleting all the remaining lowercase letters?
+ * Uppercase letters in s1 can never be deleted or changed: each one must match s2.
+ *
+ * State:
+ *   table[i][j] = true iff the first i chars of s1, s1[0, i), can become the first j chars of s2, s2[0, j)
+ *
+ * Base cases:
+ *   table[0][0] = true                               <- empty s1 becomes empty s2
+ *   table[i][0] = table[i-1][0] && islower(s1[i-1])  <- s1[0, i) becomes "" only if every char is lowercase (all deleted)
+ *   table[0][j] = false for j > 0                    <- empty s1 can't produce any letters
+ *
+ * Transition: look at the last char of s1[0, i), c = s1[i-1]. Two choices:
+ *   (a) Keep c as s2's j-th char: c, capitalised if lowercase, must equal s2[j-1],
+ *       and the rest, s1[0, i-1), must become s2[0, j-1)          -> table[i-1][j-1]  (diagonal ↘)
+ *   (b) Delete c: only allowed if c is lowercase,
+ *       and s1[0, i-1) must already become all of s2[0, j)       -> table[i-1][j]    (straight down ↓)
+ *   table[i][j] = (table[i-1][j-1] && toupper(c) == s2[j-1]) || (table[i-1][j] && islower(c))
+ *
+ * Example: s1 = "daBcd", s2 = "ABC" -> YES ("dAbcd" -> capitalise a, c; delete d, d)
+ *
+ *          j:0  A  B  C
+ *   i:0     1   0  0  0
+ *   d       1   0  0  0    <- [1][0]: delete d, "" -> "" ([0][0]). [1][1]: D != A, and "" can't become "A" ([0][1] = 0)
+ *   a       1   1  0  0    <- [2][0]: delete a ([1][0]). [2][1]: capitalise a -> A, "d" -> "" ([1][0])
+ *   B       0   0  1  0    <- B can't be deleted: [3][0], [3][1] = 0. [3][2]: B == B, "da" -> "A" ([2][1])
+ *   c       0   0  1  1    <- [4][2]: delete c ([3][2]). [4][3]: capitalise c -> C, "daB" -> "AB" ([3][2])
+ *   d       0   0  1  1    <- [5][2]: delete d ([4][2]). [5][3]: delete d, "daBc" -> "ABC" ([4][3])
+ *                     ↑ table[5][3] = 1 -> YES *
+ *
+ * TC: O(|s1| * |s2|), Space: O(|s1| * |s2|)
 * AbcDE
 * AB DE <- Yes 'b' -> B; delete 'c'
  j: A B D E
