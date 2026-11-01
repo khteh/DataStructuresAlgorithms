@@ -211,6 +211,7 @@ vector<size_t> grayCode(size_t);
 void OrderedMergedCombinations(set<string> &, string const &, string const &, string);
 void numberCombinations1(size_t, size_t, size_t, vector<size_t> &, vector<vector<size_t>> &);
 void numberCombinations(size_t, size_t, vector<vector<size_t>> &);
+size_t LargestNumberCompositionProduct(size_t);
 void findDistinct(vector<long> &, vector<long> &);
 void findPrimes(unsigned long, vector<long> &);
 bool isPrime(unsigned long);

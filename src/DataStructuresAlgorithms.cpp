@@ -1195,6 +1195,55 @@ size_t LongestConsecutive(vector<size_t> &nums)
 	return max(cnt, longest);
 }
 /*
+ * https://leetcode.com/problems/integer-break/description/
+ * 100%
+ * f = x * (N-x)
+N: Any single factor in the product,
+
+max product: x = N/2 -> N/2 * N/2 (even n); (N-1)/2 * (N+1)/2 (odd n)
+
+Test whether that factor should be split further:
+
+N^2 / 4 >= N
+N^2 >= 4N
+N >= 4
+
+(N-1)/2 *(N+1)/2 >= N
+(N-1)(N+1) >= 4N
+N^2 -1 >= 4N
+N^2 / 4N >= 1
+N/4 >= 1
+N >= 5
+
+n:5 result: 2+3=5; 2*3=6
+n3: 5/3 = 1, remainder=2
+3^1 * 2 = 6
+
+n:7 result: 3+3+1=7; 3*3=9, 2+2+3=7; 2*2*3=12
+n3: 7/3=2, remainder=1 -> n3:1, remainder=4
+3^1 * 4 = 12
+
+n:8 result: 3+3+2=8; 3*3*2=18, 2+2+2+2 2*2*2*2=16
+n3: 8/3=2, reaminder=2
+3^2 * 2 = 9*2 = 18
+
+n:10 result: 3+3+3+1=10; 3*3*3=27, 3+3+4=10, 3*3*4=36
+n3: 10/3 = 3, remainder=1 -> n3:2, reaminder=4
+3^2 * 4 = 9*4 = 36
+ */
+size_t LargestNumberCompositionProduct(size_t n)
+{
+	if (n <= 3)
+		return n - 1;
+	size_t n3 = n / 3, remainder = n % 3;
+	if (remainder == 1)
+	{
+		n3--;
+		remainder = 4;
+	}
+	return pow(3, n3) * (remainder ? remainder : 1);
+}
+/*
  * dest:  {1,3,5,7,9,11,13,15}
  * source:{6,8,10,12,14}
  * dest:  {1,3,5,[6],7,8,9,10,11 ,12 ,13 ,14 ,15 }

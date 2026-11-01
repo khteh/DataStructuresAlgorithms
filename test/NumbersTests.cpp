@@ -233,6 +233,34 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(91, 2),   /* [0,100) */
 					  make_tuple(739, 3),  /* [0,1000) */
 					  make_tuple(0, 11))); /* Out of range */
+class LargestNumberCompositionProductMathematicalTestFixture : public testing::TestWithParam<tuple<size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+	}
+	size_t LargestNumberCompositionProductTest()
+	{
+		return LargestNumberCompositionProduct(_n);
+	}
+
+protected:
+	size_t _expected, _n;
+};
+TEST_P(LargestNumberCompositionProductMathematicalTestFixture, LargestNumberCompositionProductTests)
+{
+	ASSERT_EQ(this->_expected, this->LargestNumberCompositionProductTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	LargestNumberCompositionProductTests,
+	LargestNumberCompositionProductMathematicalTestFixture,
+	::testing::Values(make_tuple(6, 5),
+					  make_tuple(12, 7),
+					  make_tuple(18, 8),
+					  make_tuple(36, 10)));
+
 class KaprekarNumbersTestFixture : public testing::TestWithParam<tuple<vector<long>, long, long>>
 {
 public:

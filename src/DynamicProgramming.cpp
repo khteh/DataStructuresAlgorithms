@@ -1,18 +1,15 @@
 #include "pch.h"
 #include "DynamicProgramming.h"
 template class DynamicProgramming<int>;
-template class DynamicProgramming<size_t>;
-template class DynamicProgramming<long>;
 template class DynamicProgramming<long long>;
 template class DynamicProgramming<unsigned long long>;
 template class DynamicProgramming<string>;
 #if defined(__GNUC__) || defined(__GNUG__)
 template class DynamicProgramming<__int128>;
 template class DynamicProgramming<unsigned __int128>;
-#else
+#endif
 template class DynamicProgramming<int64_t>;
 template class DynamicProgramming<uint64_t>;
-#endif
 template <typename T>
 T DynamicProgramming<T>::Factorial(size_t n, T modulo)
     requires arithmetic_type<T>
@@ -90,23 +87,52 @@ string DynamicProgramming<T>::FibonacciModified(T t1, T t2, size_t n)
  * 100%
  * Given an integer n, break it into the sum of k positive integers, where k >= 2, and maximize the product of those integers.
  * Return the maximum product you can get.
+ *
+ * Sum of k positive integers = n.
+ * Refer to the LargestNumberCompositionProduct() in DataStructuresAlgorithms.cpp for mathematical implementation and better understanding.
+
  * n:10
  * 0 1 2 3 4 5 6 7 8 9 10
  * [0 1]
- * i:2 j:1 dp[i]=0 dp[j]=1 i-j=1 dp[i-j]=1 => dp[i]=1
+ * i:2 j:1 dp[2]=0 dp[j]=1
+ *         i-j=1 dp[i-j]=1 => dp[2]=1
+ * dp: [0, 1, 1] -> n:2 result:1 <- 1 + 1 = 2; 1 * 1 = 1
+ *
  * [0 1 1]
- * i:3 j:1 dp[i]=0 dp[j]=1 i-j=2 dp[i-j]=1 => dp[i]=2
- *     j:2 dp[i]=2 dp[j]=1 i-j=1 dp[i-j]=1 => dp[i]=2
+ * i:3 j:1 dp[3]=0 dp[j]=1
+ *         i-j=2 dp[i-j]=1 => dp[3]=2
+ *
+ *     j:2 dp[3]=2 dp[j]=1
+ *         i-j=1 dp[i-j]=1 => dp[3]=2
+ * dp: [0, 1, 1, 2] -> n:3 result:2 <- 2 + 1 = 3; 2 * 1 = 2
+ *
  * [0 1 1 2]
- * i:4 j:1 dp[i]=0 dp[j]=1 i-j=3 dp[i-j]=2 => dp[i]=3
- *     j:2 dp[i]=3 dp[j]=1 i-j=2 dp[i-j]=1 => dp[i]=4
- *     j:3 dp[i]=4 dp[j]=2 i-j=1 dp[i-j]=1 => dp[i]=4
- * [0 1 1 2 4]
- * i:5 j:1 dp[i]=0 dp[j]=1 i-j=4 dp[i-j]=4 => dp[i]=4
- *     j:2 dp[i]=4 dp[j]=1 i-j=3 dp[i-j]=2 => dp[i]=6
- *     j:3 dp[i]=6 dp[j]=2 i-j=2 dp[i-j]=1 => dp[i]=6
- *     j:4 dp[i]=6 dp[j]=4 i-j=1 dp[i-j]=1 => dp[i]=6
- * [0 1 1 2 4 6]
+ * i:4 j:1 dp[4]=0 dp[j]=1
+ *         i-j=3 dp[i-j]=2 => dp[4]=3
+ *
+ *     j:2 dp[4]=3 dp[j]=1
+ *         i-j=2 dp[i-j]=1 => dp[4]=4
+ *
+ *     j:3 dp[4]=4 dp[j]=2
+ *         i-j=1 dp[i-j]=1 => dp[4]=4
+ * dp: [0, 1, 1, 2, 4] -> n:4 result:4 -> n:4 result: 4 <- 4 + 1 = 5; 4 * 1 = 4
+ *                                                      <- 2 + 2 = 4; 2 * 2 = 4
+ *
+ * [0 1 1 2 3]
+ * i:5 j:1 dp[5]=0 dp[j]=1
+ *         i-j=4 dp[i-j]=4 => dp[5]=4
+ *
+ *     j:2 dp[5]=4 dp[j]=1
+ *         i-j=3 dp[i-j]=2 => dp[5]=6
+ *
+ *     j:3 dp[5]=6 dp[j]=2
+ *         i-j=2 dp[i-j]=1 => dp[5]=6
+ *
+ *     j:4 dp[5]=6 dp[j]=4
+ *         i-j=1 dp[i-j]=1 => dp[5]=6
+ *
+ * dp: [0 1 1 2 4 6] -> n:5 result:6 <- 3 + 2 = 5; 3 * 2 = 6
+ *                               <- 2 + 2 + 1 = 5; 2 * 2 * 1 = 4
  */
 template <typename T>
 T DynamicProgramming<T>::LargestNumberCompositionProduct(T n)
