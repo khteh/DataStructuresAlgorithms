@@ -116,8 +116,8 @@ size_t Knapsack::CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<siz
 	vector<size_t> dp(amount + 1, 0); // Index: amount. Value: #ways or #posibilities
 	dp[0] = 1;						  // $0 is one possibility
 	for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end(); coin++)
-		for (size_t i = *coin; i <= (size_t)amount; i++)
-			dp[i] += dp[i - *coin];
+		for (size_t i = *coin; i <= (size_t)amount; i++) // Upwards. Items can be reused without limit (unbounded knapsack)
+			dp[i] += dp[i - *coin];						 // Coins can be used any number of times. Counting up lets dp[i − coin] already include this coin, so a way to make amount i can use it again.
 	return dp[amount];
 }
 /* https://leetcode.com/problems/combination-sum-iv/

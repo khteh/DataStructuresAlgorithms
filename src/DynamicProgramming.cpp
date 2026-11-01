@@ -303,24 +303,33 @@ T DynamicProgramming<T>::EggDropsImproved(T eggs, T floors)
     return moves;
 }
 /* https://leetcode.com/problems/word-break/
- * ["cats", "dog", "sand", "and", "cat"]
- * 012345678
- * catsandog
- * cats an dog
- * cat sand og
- *
- * 0123456789
- * catsanddog
- * cat sand dog
- * cats and dog
+ * 100%
+ * Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated sequence of one or more dictionary words.
+ * Note that the same word in the dictionary may be reused multiple times in the segmentation.
  *
  * Dynamic programming with tabulation (bottom-up) approach
- * if [0, end) is valid, all intermediate substrings which build up to [0, end) are also valid.
+ *
+ * valid[end]: whether prefix [0, end) can be segmented into dictionary words.
+ * [0, end) is valid iff there is a split point start < end where
+ *   [0, start) is valid (already computed) AND s[start, end) is a dictionary word.
+ * Not every prefix of a valid string is valid ("catsand" is valid, "catsa" is not);
+ * only the prefixes ending at word boundaries are.
+ *
  * 0123456
  * catsand
- * [0,0) is valid -> [0,3) is valid -> [0,7) is valid
- * [0,0) is valid -> [0,4) is valid -> [0,7) is valid
- * 100%
+ * [0,0) valid + "cat"  [0,3) -> [0,3) valid; [0,3) valid + "sand" [3,7) -> [0,7) valid
+ * [0,0) valid + "cats" [0,4) -> [0,4) valid; [0,4) valid + "and"  [4,7) -> [0,7) valid
+ *
+ * 012345678
+ * catsandog
+ * [0,0) valid + "cat"  [0,3) -> [0,3) valid; [0,3) valid + "sand" [3,7) -> [0,7) valid -> [0,7) valid + "og" [7,9) -> [0,9) invalid
+ * [0,0) valid + "cats" [0,4) -> [0,4) valid; [0,4) valid + "and"  [4,7) -> [0,7) valid -> [0,7) valid + "og" [7,9) -> [0,9) invalid
+
+ * 0123456789
+ * catsanddog
+ * [0,0) valid + "cat"  [0,3) -> [0,3) valid; [0,3) valid + "sand" [3,7) -> [0,7) valid -> [0,7) valid + "dog" [7,10) -> [0,10) valid
+ * [0,0) valid + "cats" [0,4) -> [0,4) valid; [0,4) valid + "and"  [4,7) -> [0,7) valid -> [0,7) valid + "dog" [7,10) -> [0,10) valid
+ *
  */
 template <typename T>
 bool DynamicProgramming<T>::WordBreak(string const &s, set<string> const &words)
@@ -339,6 +348,13 @@ bool DynamicProgramming<T>::WordBreak(string const &s, set<string> const &words)
 }
 /* https://leetcode.com/problems/word-break-ii/
  * 100%
+ * Given a string s and a dictionary of strings wordDict, add spaces in s to construct a sentence where each word is a valid dictionary word. Return all such possible sentences in any order.
+ * Note that the same word in the dictionary may be reused multiple times in the segmentation.
+ *
+ * 0123456
+ * catsand
+ * [0,0) valid + "cat"  [0,3) {3: ["cat"]} -> [0,3) valid; [0,3) valid + "sand" [3,7) {3: ["cat"], 7: ["cat sand"]} -> [0,7) valid
+ * [0,0) valid + "cats" [0,4) {3: ["cat"], 4: ["cats"]} -> [0,4) valid; [0,4) valid + "and" [4,7) {3: ["cat"] 4: ["cats"], 7: ["cats and", "cats and"]} -> [0,7) valid
  */
 template <typename T>
 void DynamicProgramming<T>::WordBreak2(string const &s, set<string> const &words, vector<string> &result)
@@ -349,7 +365,6 @@ void DynamicProgramming<T>::WordBreak2(string const &s, set<string> const &words
     strings.emplace(0, vector<string>{""});
     for (size_t end = 1; end <= s.size(); end++)
         for (size_t start = 0; start < end; start++)
-        {
             if (valid[start] && words.count(s.substr(start, end - start)))
             {
                 valid[end] = true;
@@ -360,9 +375,7 @@ void DynamicProgramming<T>::WordBreak2(string const &s, set<string> const &words
                     strings[end].push_back(oss.str());
                 }
             }
-        }
-    if (strings.find(s.size()) != strings.end())
-        result.insert(result.end(), strings[s.size()].begin(), strings[s.size()].end());
+    result = strings[s.size()];
 }
 /*
  * https://www.hackerrank.com/challenges/abbr/problem
