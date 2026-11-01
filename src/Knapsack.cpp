@@ -393,6 +393,23 @@ size_t Knapsack::StairsClimbingDynamicProgramming(long destination, vector<size_
  *
  * Iterative + N variables (bottom-up)
  *
+ * Despite the "distinct ways" requirement, the problem is counting permutations: {2,3} and {3,2} are different. So, put the target or amount in the outer loop.
+ *
+ * [1, 2], k:3
+ * i:1
+ * dp[0]:1 dp[1]:1 -> {1}
+
+ * i:2
+ * dp[0]:1 dp[1]:1 dp[2]:2 -> {1,1} {2}
+
+ * i:3
+ * dp[0]:1 dp[1]:1 dp[2]:2 dp[3]:3 -> {1,1,1} {1,2} {2,1}
+
+ * Steps: {1,2} Destination: 3
+ *  0 1 2 3
+ * {1,1,2,3} <= [i] = [i-1] + [i-2]
+ * {1,0}, {1,1}, {2,1}, {2,3} => [N % 2] = 3 : {1,1,1} {1,2} {2,1}
+ *
  * Steps: {1,2} Destination: 6
  *  0 1 2 3 4 5 6
  * {1,1,2,3,5,8,13} <= [i] = [i-1] + [i-2]
