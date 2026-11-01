@@ -152,13 +152,19 @@ T DynamicProgramming<T>::LargestNumberCompositionProduct(T n)
 * 1 floor: 1 attempt
 *
 * 2 possibilities:
-* Egg broken: 1 egg less, #floors = #floors - 1
-* Egg not broken: Same eggs, #floors = #floors - floors tried so far
+* Egg broken: 1 egg less, #floors = #floors - 1 (1 floor below is the potential pivot floor)
+* Egg not broken: Same #eggs, #floors = #floors - floors tried so far
 *
+* Each pair is a sub-problem written as (eggs, floors): how many eggs you have left and how many floors you still need to check.
+*
+  dp[egg][floor] = min<T>(dp[egg][floor], 1 + max<T>(dp[egg - 1][i - 1], dp[egg][floor - i]));
+                                                  // └─ (eggs−1, f−1) ─┘ └─ (eggs, floors−f) ┘
+
 *		2 Eggs, 4 floors					<= for (size_t floor = 2; floor <= floors; floor++)
 *    f=1		f=2			f=3		  f=4	<= for (size_t i = 2; i <= floor; i++)
 * (1,0)(2,3) (1,1)(2,2) (1,2)(2,1) (1,3)(2,0)
-*
+*  ↑    ↑
+* broke  didn't break
 * (2,3): f=1       f=2			f=3			<= for (size_t i = 2; i <= floor; i++)
 *       (1,0)(2,2) (1,1)(2,1)  (1,2)(2,0)
 *
@@ -172,11 +178,13 @@ T DynamicProgramming<T>::LargestNumberCompositionProduct(T n)
 *       (0,0)(1,2) (0,1)(1,1)  (0,2)(1,0)
 * https://medium.com/@parv51199/egg-drop-problem-using-dynamic-programming-e22f67a1a7c3
 Eggs\Floors	0	1	2	3	4	5	6
-        1	0	1	2	3	4	5	6
+        0	0	1	2	3	4	5	6
+        1	0	1
         2	0	1
-        3	0	1
 * https://leetcode.com/problems/super-egg-drop/
-* Time limit exceeded! :-(
+* Time limit exceeded! (eggs:6, floors: 10000)
+* TC: O(eggs × floors²)
+* SC: O(eggs × floors)
 */
 template <typename T>
 T DynamicProgramming<T>::EggDrops(T eggs, T floors)
@@ -197,8 +205,102 @@ T DynamicProgramming<T>::EggDrops(T eggs, T floors)
     for (T egg = 1; egg < eggs; egg++)
         for (T floor = 2; floor <= floors; floor++)
             for (T i = 2; i <= floor; i++)
-                dp[egg][floor] = min<T>(dp[egg][floor], 1 + max<T>(dp[egg - 1][i - 1], dp[egg][floor - i]));
+                /*
+                    max is used because you don’t know which outcome will happen, so you plan for the worse one.
+                    + 1 counts this drop.
+                    min over all f picks the floor whose worst case is the best.
+                */
+                dp[egg][floor] = min<T>(dp[egg][floor], 1 /* Current floor */ + max<T>(dp[egg - 1][i - 1], dp[egg][floor - i]));
     return dp[eggs - 1][floors];
+}
+/*
+ * https://leetcode.com/problems/super-egg-drop/
+ * 100%
+Flip the question
+
+Instead of asking “what’s the fewest drops for k eggs and n floors?”, ask:
+
+With m drops and k eggs, how many floors can I fully check?
+
+Call that dp[m][k]. Drop the first egg from some floor:
+
+It breaks. You have m − 1 drops and k − 1 eggs left, which can check dp[m−1][k−1] floors below.
+It survives. You have m − 1 drops and k eggs left, which can check dp[m−1][k] floors above.
+Plus 1 for the floor you dropped from.
+
+dp[m][k] = dp[m−1][k−1] + dp[m−1][k] + 1
+
+Increase m until dp[m][eggs] ≥ floors. That m is the answer. There’s no inner loop over drop floors, because the recurrence already places the drop at the best floor.
+
+The answer m is small. It’s at most floors, and for many eggs about log₂(floors). So this runs in O(eggs × answer).
+
+ * dp[k]: max #floors that can be fully checked with the current #moves and k eggs.
+ * Each move: drop from the floor that splits the building into
+ *   below: dp[k-1] floors (egg broke: 1 egg less, 1 move less)
+ *   above: dp[k]   floors (egg survived: same eggs, 1 move less)
+ *   +1 for the floor dropped from
+ * => dp[m][k] = dp[m-1][k-1] + dp[m-1][k] + 1
+ * Iterate k downwards so dp[k-1] still holds the previous move's value.
+ * Time: O(eggs * moves), Space: O(eggs)
+ *
+ * k counts down for the same reason as in the 0/1 knapsack 1-D trick: dp[k] is updated in place, and dp[k − 1] must still hold the previous move’s value when you read it.
+ *
+ * The 1-D version is the 2-D table with only one row kept in memory. Here it is step by step with a small example: 2 eggs, 10 floors.
+
+The 2-D table
+
+dp[m][k] is the most floors you can fully check with m drops and k eggs, using:
+
+dp[m][k] = dp[m−1][k−1] + dp[m−1][k] + 1
+
+Fill it row by row:
+
+         k=0  k=1  k=2
+m=0       0    0    0     ← no drops: check 0 floors
+m=1       0    1    1
+m=2       0    2    3
+m=3       0    3    6
+m=4       0    4   10     ← dp[4][2] = 10 ≥ 10 floors → answer: 4 drops
+
+Why one row is enough
+
+Each row only reads from the row directly above it. Once row 3 is done, rows 0, 1 and 2 are never needed again. So you keep one row, dp[k], and overwrite it in place to turn row m−1 into row m:
+
+dp[k] += dp[k - 1] + 1;
+// dp[k] (new)  =  dp[k] (old, = dp[m−1][k])  +  dp[k−1] (must still be old, = dp[m−1][k−1])  +  1
+
+Rows are m, the number of drops.
+Columns are k, the number of eggs.
+
+The 1-D array dp holds one row of the table, and its index k picks the column within that row:
+
+         k=0  k=1  k=2       ← columns = array index k
+m=2       0    2    3        ← the 1-D array dp holds this row: dp = [0, 2, 3]
+m=3       0    3    6        ← after one pass of the k-loop, dp holds this row: dp = [0, 3, 6]
+
+So one pass of for (k = eggs; k > 0; k--) turns the array from row m−1 into row m, one slot at a time.
+During that pass, the array is a mix of two rows. The slots you’ve already updated hold the new row; the ones you haven’t reached still hold the old row.
+
+k:2 dp[2] = dp[2] + dp[1] + 1 <- read dp[1] first. Both dp[2] and dp[1] are old values used to calculate new value of dp[2]
+    dp[1] = dp[1] + dp[0] + 1 <- update dp[1]. It doesn't use the updated/new dp[2] value
+
+    dp[1] = dp[1] + dp[0] + 1 <- read dp[0]
+    dp[2] = dp[2] + dp[1] + 1 <- dp[1] used in the calculation is not the *old* value but the new/updated value, which is WRONG.
+
+    So, we need to iterate k downwards so dp[k-1] still holds the previous move's value.
+
+TC: O(eggs * moves), Space: O(eggs)
+ */
+template <typename T>
+T DynamicProgramming<T>::EggDropsImproved(T eggs, T floors)
+    requires arithmetic_type<T>
+{
+    vector<T> dp(eggs + 1, 0);
+    T moves = 0;
+    for (; dp[eggs] < floors; moves++)
+        for (T k = eggs; k > 0; k--)
+            dp[k] += dp[k - 1] + 1;
+    return moves;
 }
 /* https://leetcode.com/problems/word-break/
  * ["cats", "dog", "sand", "and", "cat"]
@@ -227,13 +329,12 @@ bool DynamicProgramming<T>::WordBreak(string const &s, set<string> const &words)
     valid[0] = true;                             // empty substring is a valid string
     for (size_t end = 1; end <= s.size(); end++) // O(N)
         for (size_t start = 0; start < end; start++)
-        { // O(N) -> Time complexity: O(N^2)
+            // O(N) -> Time complexity: O(N^2)
             if (valid[start] && words.count(s.substr(start, end - start)))
             {
                 valid[end] = true;
                 break;
             }
-        }
     return valid.back();
 }
 /* https://leetcode.com/problems/word-break-ii/

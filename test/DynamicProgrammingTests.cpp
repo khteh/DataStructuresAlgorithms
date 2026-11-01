@@ -52,7 +52,35 @@ INSTANTIATE_TEST_SUITE_P(
 	EggDropsTestFixture,
 	::testing::Values(make_tuple(0, 123, 0), make_tuple(1, 123, 1),
 					  make_tuple(123, 1, 123), make_tuple(2, 2, 2),
-					  make_tuple(3, 3, 6)));
+					  make_tuple(3, 3, 6), make_tuple(4, 3, 14)));
+class EggDropsImprovedTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_eggs = get<1>(GetParam());
+		_floors = get<2>(GetParam());
+	}
+	size_t EggDropsTest()
+	{
+		return _dp.EggDropsImproved(_eggs, _floors);
+	}
+
+protected:
+	DynamicProgramming<size_t> _dp;
+	size_t _expected, _eggs, _floors;
+};
+TEST_P(EggDropsImprovedTestFixture, EggDropsImprovedTests)
+{
+	ASSERT_EQ(this->_expected, this->EggDropsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	EggDropsImprovedTests,
+	EggDropsImprovedTestFixture,
+	::testing::Values(make_tuple(0, 123, 0), make_tuple(1, 123, 1),
+					  make_tuple(123, 1, 123), make_tuple(2, 2, 2),
+					  make_tuple(3, 3, 6), make_tuple(4, 3, 14), make_tuple(16, 6, 10000), make_tuple(14, 100, 10000)));
 
 class WordBreakTestFixture : public testing::TestWithParam<tuple<bool, string, set<string>>>
 {

@@ -16,6 +16,8 @@ public:
         requires arithmetic_type<T>;
     T EggDrops(T, T)
         requires arithmetic_type<T>;
+    T EggDropsImproved(T, T)
+        requires arithmetic_type<T>;
     bool WordBreak(string const &, set<string> const &);
     void WordBreak2(string const &, set<string> const &, vector<string> &);
     bool Abbreviation(string const &, string const &);
