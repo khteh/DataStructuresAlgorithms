@@ -240,7 +240,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
 			/* v is (*it); u is vertex.
-			 * Update cost[v] only if it:
+			 * Update cost[v] iff:
 			 * (1) is not in spt set
 			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
 			 * (3) and total cost of path from src to v through u is smaller than current value of cost[v]
@@ -285,7 +285,7 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 		vector<shared_ptr<Vertex<TTag, TItem>>> neighbours = vertex->GetNeighbours();
 		for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::iterator it = neighbours.begin(); it != neighbours.end(); it++)
 			/* v is (*it); u is vertex.
-			 * Update cost[v] only if it:
+			 * Update cost[v] iff:
 			 * (1) is not in sptSet
 			 * (2) there is an edge from u to v (This is always true in this implementation since we get all the neighbours of the current vertex)
 			 * (3) and total cost of path from src to v through u is smaller than current value of cost[v]

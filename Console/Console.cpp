@@ -415,6 +415,12 @@ int main(int argc, char *argv[])
 	assert(std::chrono::system_clock::duration::max().count() == numeric_limits<long long>::max());
 	assert(signedTicks == ticks);
 	cout << "Current timestamp (ticks since Epoch): " << ticks << ", signed ticks: " << signedTicks << endl;
+#if defined(__cpp_lib_hardware_interference_size)
+	static constexpr size_t CacheLineSize = std::hardware_destructive_interference_size;
+#else
+	static constexpr size_t CacheLineSize = 64; // Default standard fallback
+#endif
+	cout << "CacheLineSize: " << CacheLineSize << endl;
 	cpp20readonlyranges();
 	cpp20ranges();
 	cpp20variants();

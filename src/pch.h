@@ -2,6 +2,7 @@
 #include "targetver.h"
 #include <algorithm>
 #include <assert.h>
+#include <atomic>
 #include <bitset>
 #include <cfenv>
 #include <charconv>
@@ -25,7 +26,9 @@
 #include <map>
 #include <math.h>
 #include <memory>
+#include <new>
 #include <numeric>
+#include <optional>
 #include <queue>
 #include <random>
 #include <ranges>

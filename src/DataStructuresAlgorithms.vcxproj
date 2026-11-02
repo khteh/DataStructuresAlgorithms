@@ -143,6 +143,7 @@
     <ClInclude Include="LRUCache.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MaximizeStockProfits.h" />
+    <ClInclude Include="MPMCCircularBuffer.h" />
     <ClInclude Include="MyQueue.h" />
     <ClInclude Include="MyStack.h" />
     <ClInclude Include="NameHidingExample.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="LongestCommonSubsequence.cpp" />
     <ClCompile Include="LRUCache.cpp" />
     <ClCompile Include="MaximizeStockProfits.cpp" />
+    <ClInclude Include="MPMCCircularBuffer.cpp" />
     <ClCompile Include="Palindrome.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

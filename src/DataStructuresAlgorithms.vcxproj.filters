@@ -82,6 +82,9 @@
     <ClCompile Include="MaximizeStockProfits.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MPMCCircularBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="MyQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -244,6 +247,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MaximizeStockProfits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MPMCCircularBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MyQueue.h">
