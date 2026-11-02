@@ -80,6 +80,7 @@
     <ClCompile Include="MatrixTests.cpp" />
     <ClCompile Include="MaximizeStockProfitsTests.cpp" />
     <ClCompile Include="MaxZeroProductTests.cpp" />
+    <ClCompile Include="MPMCCircularBufferTests.cpp" />
     <ClCompile Include="NumbersTests.cpp" />
     <ClCompile Include="PalindromeTests.cpp" />
     <ClCompile Include="PermutationTests.cpp" />

@@ -1,4 +1,7 @@
 #include "MPMCCircularBuffer.h"
+// Instantiated in this file as the definitions are not in the header. Node must stay cache-line friendly, see the static_assert in the constructor.
+template class MPMCCircularBuffer<long>;
+template class MPMCCircularBuffer<vector<long>>;
 template <typename T>
 MPMCCircularBuffer<T>::MPMCCircularBuffer(size_t capacity)
     : _capacity(capacity),
@@ -8,9 +11,18 @@ MPMCCircularBuffer<T>::MPMCCircularBuffer(size_t capacity)
     static_assert((sizeof(Node) % CacheLineSize) == 0 || (CacheLineSize % sizeof(Node)) == 0,
                   "Node layout may lead to destructive cache line sharing");
 
-    // The buffer capacity MUST be a power of 2 for fast bitwise masking
-    if ((capacity & _mask) != 0 || capacity == 0)
-        throw invalid_argument("Capacity must be a power of two.");
+    /* The buffer capacity MUST be a power of 2 for fast bitwise masking. With 1 slot, the sequence number which hands it to a consumer also hands it to the next producer.
+    The bug when capacity is 1: the second Push returns true when it should fail, and two things go wrong:
+
+    The unread 1 is overwritten by 2, so data is silently lost.
+    The next Pop never returns. I confirmed this earlier: it hung until a 5-second timeout killed it.
+
+    Why it happens: each slot’s sequence number says whose turn it is. After the first Push, the slot’s number is 1, which means “ready for a consumer”.
+    With only one slot, position 1 maps back to that same slot, so the next Push also sees 1 and reads it as “free for me”.
+    The two meanings only stay distinct with at least 2 slots, and the constructor accepts capacity 1 anyway because 1 is a power of two.
+     */
+    if (capacity < 2 || (capacity & _mask) != 0)
+        throw invalid_argument("Capacity must be a power of two and at least 2.");
 
     // Initialize every slot ticket with its linear position index
     for (size_t i = 0; i < _capacity; i++)

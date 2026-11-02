@@ -30,6 +30,7 @@ set(Sources
     "MatrixTests.cpp"
     "MaximizeStockProfitsTests.cpp"
     "MaxZeroProductTests.cpp"
+    "MPMCCircularBufferTests.cpp"
     "NumbersTests.cpp"
     "PalindromeTests.cpp"
     "pch.cpp"
