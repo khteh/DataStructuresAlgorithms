@@ -815,26 +815,48 @@ size_t DynamicProgramming<T>::UniquePaths(size_t rows, size_t cols)
 /*
  * https://leetcode.com/problems/edit-distance/
  * 100%
-    rep_cost:1
-
-      0 r  o s
-    0 0 1  2 3
-    h 1 1  2 3
-    o 2 2 [1] 2 ho-> ro : h->r 1 edits
-    r 3[2] 2 2
-    s 4 3  3 [2] hors -> ros : Remove h 1 del,
-    e 5 4 [4] 3 horse -> ro: Remove "ho": + Remove 'e': 3 dels, s->o 1 edits | horse -> ros: Remove "ho" 2 dels, "se"->"os" 2 edits
-
-    rep_cost:2
-    j  0 1  2 3
-  i      r  o s
-  0    0 1  2 3
-  1  h 1 2  3 4
-  2  o 2 3 [2] 3 ho-> ro : h->r 2 edits
-  3  r 3 [2] 3 4 hor -> r : Remove "ho" 2 dels
-  4  s 4 3  4 [3]  hors -> ros : Remove h: 1 del, "or" -> "ro"
-  5  e 5 4  5 4 horse -> ros: Remove "ho": + Remove 'e': 3 dels, s->o 2 edits
-*/
+ *
+ * i counts characters of word1, the string you start from.
+ * j counts characters of word2, the string you’re trying to produce.
+ *
+ * distances[i][j] = min cost to turn word1[0, i) into word2[0, j)
+ * Base cases:
+ *   distances[i][0] = i * del_cost   <- delete all i chars of word1[0, i) Turning i characters into the empty string. All you can do is delete them all, so i × del_cost.
+ *   distances[0][j] = j * ins_cost   <- insert all j chars of word2[0, j) Turning the empty string into j characters. All you can do is insert them all, so j × ins_cost.
+ *
+ * Transition: look at the last chars, word1[i-1] and word2[j-1]:
+ *   ↓  delete word1[i-1]:  distances[i-1][j]   + del_cost
+ *   →  insert word2[j-1]:  distances[i][j-1]   + ins_cost
+ *   ↘  replace/keep:       distances[i-1][j-1] + (word1[i-1] == word2[j-1] ? 0 : rep_cost)
+ *
+ * word1: horse, word2: ros, ins_cost: 1, del_cost: 1
+ * [x] = cells on one optimal path
+ *
+ * rep_cost: 1 -> 3
+ *   j      0   1   2   3
+ *   i          r   o   s
+ *   0     [0]  1   2   3
+ *   1  h   1  [1]  2   3    <- [1][1] = 1: h -> r, replace (↘ +1)
+ *   2  o   2   2  [1]  2    <- [2][2] = 1: o == o, keep (↘ +0). "ho" -> "ro"
+ *   3  r   3   2  [2]  2    <- [3][2] = 2: delete r (↓ +1). "hor" -> "ro"
+ *   4  s   4   3   3  [2]   <- [4][3] = 2: s == s, keep (↘ +0). "hors" -> "ros"
+ *   5  e   5   4   4  [3]   <- [5][3] = 3: delete e (↓ +1). "horse" -> "ros"
+ *   horse -> rorse (h -> r) -> rose (delete r) -> ros (delete e): 3
+ *
+ * rep_cost: 2 -> 4
+ *   j      0   1   2   3
+ *   i          r   o   s
+ *   0     [0]  1   2   3
+ *   1  h  [1]  2   3   4    <- [1][0] = 1: delete h (↓ +1). "h" -> ""
+ *   2  o  [2]  3   2   3    <- [2][0] = 2: delete o (↓ +1). "ho" -> ""
+ *   3  r   3  [2] [3]  4    <- [3][1] = 2: r == r, keep (↘ +0). "hor" -> "r"
+ *                              [3][2] = 3: insert o (→ +1). "hor" -> "ro"
+ *   4  s   4   3   4  [3]   <- [4][3] = 3: s == s, keep (↘ +0). "hors" -> "ros"
+ *   5  e   5   4   5  [4]   <- [5][3] = 4: delete e (↓ +1). "horse" -> "ros"
+ *   horse -> rse (delete h, o) -> rose (insert o) -> ros (delete e): 4
+ *   Replacing now costs 2 = delete + insert, so the rep_cost: 1 path (h -> r) ties at 4:
+ *   horse -> rorse (h -> r: 2) -> rose (delete r) -> ros (delete e) = 4
+ */
 template <typename T>
 size_t DynamicProgramming<T>::MinimumEditDistance(string const &word1, string const &word2, size_t ins_cost, size_t del_cost, size_t rep_cost)
 {
