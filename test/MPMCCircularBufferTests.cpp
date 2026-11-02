@@ -1,6 +1,30 @@
 #include "pch.h"
 #include "../src/MPMCCircularBuffer.h"
 using namespace std;
+// Declared a friend of MPMCCircularBuffer to reach its private memory layout
+class MPMCCircularBufferInspector
+{
+public:
+	template <typename T>
+	static size_t CacheLineSize(MPMCCircularBuffer<T> const &)
+	{
+		return MPMCCircularBuffer<T>::CacheLineSize;
+	}
+	template <typename T>
+	static vector<uintptr_t> SlotAddresses(MPMCCircularBuffer<T> const &buffer)
+	{
+		vector<uintptr_t> addresses;
+		for (auto const &node : buffer._buffer)
+			addresses.push_back(reinterpret_cast<uintptr_t>(&node));
+		return addresses;
+	}
+	template <typename T>
+	static size_t DistanceBetweenIndices(MPMCCircularBuffer<T> const &buffer)
+	{
+		uintptr_t const enqueue = reinterpret_cast<uintptr_t>(&buffer.enqueue_idx_), dequeue = reinterpret_cast<uintptr_t>(&buffer.dequeue_idx_);
+		return enqueue > dequeue ? enqueue - dequeue : dequeue - enqueue;
+	}
+};
 namespace
 {
 	void WaitFor(atomic<bool> const &start)
@@ -15,6 +39,49 @@ namespace
 		vector<long> expected(count);
 		ranges::iota(expected, 0L);
 		EXPECT_EQ(expected, values);
+	}
+	// An item of type T which carries id
+	template <typename T>
+	T MakeItem(long id)
+	{
+		if constexpr (is_arithmetic_v<T>)
+			return static_cast<T>(id);
+		else if constexpr (is_same_v<T, string>)
+			return string(32, 'x') + to_string(id); // Long enough to live on the heap
+		else if constexpr (is_same_v<T, shared_ptr<long>>)
+			return make_shared<long>(id);
+		else if constexpr (is_same_v<T, vector<long>>)
+			return vector<long>(static_cast<size_t>(1 + id % 8), id);
+		else
+		{
+			T item{};
+			memcpy(item.data(), &id, sizeof(id));
+			return item;
+		}
+	}
+	// The id carried by item, or -1 if it is corrupted
+	template <typename T>
+	long ItemId(T const &item)
+	{
+		if constexpr (is_arithmetic_v<T>)
+			return static_cast<long>(item);
+		else if constexpr (is_same_v<T, string>)
+			return item.size() > 32 && item.starts_with(string(32, 'x')) ? stol(item.substr(32)) : -1;
+		else if constexpr (is_same_v<T, shared_ptr<long>>)
+			return item ? *item : -1;
+		else if constexpr (is_same_v<T, vector<long>>)
+		{
+			if (item.empty())
+				return -1;
+			long const id = item.front();
+			return item.size() == static_cast<size_t>(1 + id % 8) && ranges::count(item, id) == static_cast<long>(item.size()) ? id : -1;
+		}
+		else
+		{
+			long id;
+			memcpy(&id, item.data(), sizeof(id));
+			return id;
+		}
 	}
 }
 // Construction
@@ -258,9 +325,9 @@ INSTANTIATE_TEST_SUITE_P(
 	MPMCCircularBufferTests,
 	MPMCCircularBufferConcurrencyTestFixture,
 	::testing::Values(make_tuple(1, 1, 2), make_tuple(1, 1, 1024),												// SPSC
-					  make_tuple(4, 1, 2), make_tuple(4, 1, 64),												// MPSC
-					  make_tuple(1, 4, 2), make_tuple(1, 4, 64),												// SPMC
-					  make_tuple(2, 2, 2), make_tuple(4, 4, 8), make_tuple(4, 4, 1024), make_tuple(8, 8, 64))); // MPMC
+					  make_tuple(5, 1, 2), make_tuple(5, 1, 64),												// MPSC
+					  make_tuple(1, 5, 2), make_tuple(1, 5, 64),												// SPMC
+					  make_tuple(2, 2, 2), make_tuple(5, 5, 8), make_tuple(5, 5, 1024), make_tuple(8, 8, 64))); // MPMC
 
 TEST(MPMCCircularBufferTests, RacingProducersCannotOverfill)
 {
@@ -315,7 +382,7 @@ TEST(MPMCCircularBufferTests, RacingConsumersTakeEachItemOnce)
 TEST(MPMCCircularBufferTests, ConcurrentHeapPayloadsArriveIntact)
 {
 	// A slot which is read while it is written, or is handed to two threads, tears or double frees the vector
-	static constexpr size_t THREADS = 4, ITEMS_PER_PRODUCER = 5000, TOTAL = THREADS * ITEMS_PER_PRODUCER;
+	static constexpr size_t THREADS = 5, ITEMS_PER_PRODUCER = 5000, TOTAL = THREADS * ITEMS_PER_PRODUCER;
 	MPMCCircularBuffer<vector<long>> buffer(8);
 	atomic<size_t> consumed{0}, corrupted{0};
 	atomic<bool> start{false};
@@ -351,4 +418,138 @@ TEST(MPMCCircularBufferTests, ConcurrentHeapPayloadsArriveIntact)
 	}
 	ASSERT_EQ(TOTAL, consumed.load());
 	ASSERT_EQ(0u, corrupted.load());
+}
+// Each type below must also be instantiated in MPMCCircularBuffer.cpp
+template <typename T>
+class MPMCCircularBufferTypedTests : public testing::Test
+{
+};
+using MPMCCircularBufferTypes = testing::Types<int, long, double, string, shared_ptr<long>, vector<long>, array<char, 40>, array<char, 100>>;
+TYPED_TEST_SUITE(MPMCCircularBufferTypedTests, MPMCCircularBufferTypes);
+
+TYPED_TEST(MPMCCircularBufferTypedTests, PopFromEmptyBufferLeavesOutputUntouched)
+{
+	MPMCCircularBuffer<TypeParam> buffer(4);
+	TypeParam value = MakeItem<TypeParam>(7);
+	ASSERT_FALSE(buffer.Pop(value));
+	ASSERT_EQ(7, ItemId(value));
+}
+TYPED_TEST(MPMCCircularBufferTypedTests, ItemsArePoppedInFIFOOrder)
+{
+	MPMCCircularBuffer<TypeParam> buffer(8);
+	for (long i = 0; i < 8; i++)
+		ASSERT_TRUE(buffer.Push(MakeItem<TypeParam>(i)));
+	TypeParam value;
+	for (long i = 0; i < 8; i++)
+	{
+		ASSERT_TRUE(buffer.Pop(value));
+		ASSERT_EQ(i, ItemId(value));
+	}
+	ASSERT_FALSE(buffer.Pop(value));
+}
+TYPED_TEST(MPMCCircularBufferTypedTests, PushToFullBufferFails)
+{
+	MPMCCircularBuffer<TypeParam> buffer(2);
+	ASSERT_TRUE(buffer.Push(MakeItem<TypeParam>(0)));
+	ASSERT_TRUE(buffer.Push(MakeItem<TypeParam>(1)));
+	ASSERT_FALSE(buffer.Push(MakeItem<TypeParam>(2)));
+	TypeParam value;
+	ASSERT_TRUE(buffer.Pop(value));
+	ASSERT_EQ(0, ItemId(value));
+}
+TYPED_TEST(MPMCCircularBufferTypedTests, OrderIsKeptAcrossWrapAround)
+{
+	MPMCCircularBuffer<TypeParam> buffer(4);
+	TypeParam value;
+	for (long i = 0; i < 3; i++)
+		ASSERT_TRUE(buffer.Push(MakeItem<TypeParam>(i)));
+	for (long i = 0; i < 40; i++)
+	{
+		ASSERT_TRUE(buffer.Push(MakeItem<TypeParam>(i + 3)));
+		ASSERT_TRUE(buffer.Pop(value));
+		ASSERT_EQ(i, ItemId(value));
+	}
+}
+TYPED_TEST(MPMCCircularBufferTypedTests, EveryItemIsConsumedOnceByConcurrentThreads)
+{
+	static constexpr size_t THREADS = 5, ITEMS_PER_PRODUCER = 2000, TOTAL = THREADS * ITEMS_PER_PRODUCER;
+	MPMCCircularBuffer<TypeParam> buffer(8);
+	vector<vector<long>> received(THREADS);
+	atomic<size_t> consumed{0};
+	atomic<bool> start{false};
+	{
+		vector<jthread> threads;
+		for (size_t producer = 0; producer < THREADS; producer++)
+			threads.emplace_back([&, producer]
+								 {
+				WaitFor(start);
+				for (size_t i = 0; i < ITEMS_PER_PRODUCER; i++)
+				{
+					TypeParam const item = MakeItem<TypeParam>(static_cast<long>(producer * ITEMS_PER_PRODUCER + i));
+					while (!buffer.Push(item))
+						this_thread::yield();
+				} });
+		for (size_t consumer = 0; consumer < THREADS; consumer++)
+			threads.emplace_back([&, consumer]
+								 {
+				WaitFor(start);
+				TypeParam value;
+				while (consumed.load(memory_order_relaxed) < TOTAL)
+					if (buffer.Pop(value))
+					{
+						received[consumer].push_back(ItemId(value));
+						consumed.fetch_add(1, memory_order_relaxed);
+					}
+					else
+						this_thread::yield(); });
+		start.store(true, memory_order_release);
+	}
+	vector<long> all;
+	for (vector<long> const &items : received)
+		all.insert(all.end(), items.begin(), items.end());
+	ExpectEachValueOnce(move(all), TOTAL);
+}
+// Memory layout. Whether this makes it faster depends on the machine, so timing is not asserted
+TYPED_TEST(MPMCCircularBufferTypedTests, SlotsStartOnCacheLineBoundaries)
+{
+	MPMCCircularBuffer<TypeParam> buffer(8);
+	size_t const line = MPMCCircularBufferInspector::CacheLineSize(buffer);
+	for (uintptr_t address : MPMCCircularBufferInspector::SlotAddresses(buffer))
+		ASSERT_EQ(0u, address % line);
+}
+TYPED_TEST(MPMCCircularBufferTypedTests, NeighbouringSlotsDoNotShareACacheLine)
+{
+	MPMCCircularBuffer<TypeParam> buffer(8);
+	size_t const line = MPMCCircularBufferInspector::CacheLineSize(buffer);
+	vector<uintptr_t> const addresses = MPMCCircularBufferInspector::SlotAddresses(buffer);
+	ASSERT_EQ(8u, addresses.size());
+	for (size_t i = 1; i < addresses.size(); i++)
+		ASSERT_GE(addresses[i] - addresses[i - 1], line);
+}
+TEST(MPMCCircularBufferTests, ProducerAndConsumerIndicesDoNotShareACacheLine)
+{
+	MPMCCircularBuffer<long> buffer(8);
+	ASSERT_GE(MPMCCircularBufferInspector::DistanceBetweenIndices(buffer), MPMCCircularBufferInspector::CacheLineSize(buffer));
+}
+// Reference counts show what happens to the item, also in builds without the sanitizers
+TEST(MPMCCircularBufferTests, PopMovesTheItemOutOfTheSlot)
+{
+	MPMCCircularBuffer<shared_ptr<long>> buffer(2);
+	shared_ptr<long> const item = make_shared<long>(1);
+	ASSERT_TRUE(buffer.Push(item));
+	ASSERT_EQ(2, item.use_count());
+	shared_ptr<long> value;
+	ASSERT_TRUE(buffer.Pop(value));
+	ASSERT_EQ(2, item.use_count()); // item and value. The slot does not keep a reference
+}
+TEST(MPMCCircularBufferTests, DestructorReleasesUnpoppedReferences)
+{
+	shared_ptr<long> const item = make_shared<long>(1);
+	{
+		MPMCCircularBuffer<shared_ptr<long>> buffer(4);
+		ASSERT_TRUE(buffer.Push(item));
+		ASSERT_TRUE(buffer.Push(item));
+		ASSERT_EQ(3, item.use_count());
+	}
+	ASSERT_EQ(1, item.use_count());
 }

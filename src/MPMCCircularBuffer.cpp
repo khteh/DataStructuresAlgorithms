@@ -1,16 +1,19 @@
 #include "MPMCCircularBuffer.h"
-// Instantiated in this file as the definitions are not in the header. Node must stay cache-line friendly, see the static_assert in the constructor.
+// Instantiated in this file as the definitions are not in the header
+template class MPMCCircularBuffer<int>;
 template class MPMCCircularBuffer<long>;
+template class MPMCCircularBuffer<double>;
+template class MPMCCircularBuffer<string>;
+template class MPMCCircularBuffer<shared_ptr<long>>;
 template class MPMCCircularBuffer<vector<long>>;
+template class MPMCCircularBuffer<array<char, 40>>;
+template class MPMCCircularBuffer<array<char, 100>>;
 template <typename T>
 MPMCCircularBuffer<T>::MPMCCircularBuffer(size_t capacity)
     : _capacity(capacity),
       _mask(capacity - 1),
       _buffer(capacity)
 {
-    static_assert((sizeof(Node) % CacheLineSize) == 0 || (CacheLineSize % sizeof(Node)) == 0,
-                  "Node layout may lead to destructive cache line sharing");
-
     /* The buffer capacity MUST be a power of 2 for fast bitwise masking. With 1 slot, the sequence number which hands it to a consumer also hands it to the next producer.
     The bug when capacity is 1: the second Push returns true when it should fail, and two things go wrong:
 

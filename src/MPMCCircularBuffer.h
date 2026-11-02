@@ -3,11 +3,25 @@
 #include "GenericConstraints.h"
 using namespace std;
 
+class MPMCCircularBufferInspector; // Lets the tests check the memory layout
 template <typename T>
 class MPMCCircularBuffer
 {
+    friend class MPMCCircularBufferInspector;
+
 private:
-    struct Node
+    const size_t _capacity;
+    const size_t _mask;
+
+// Eliminate false sharing by separating index variables into their own cache lines
+#if defined(__cpp_lib_hardware_interference_size)
+    static constexpr size_t CacheLineSize = hardware_destructive_interference_size;
+#else
+    static constexpr size_t CacheLineSize = 64; // Default standard fallback
+#endif
+
+    // Each slot starts on its own cache line so that threads working on neighbouring slots do not contend
+    struct alignas(CacheLineSize) Node
     {
         T data;
         /*
@@ -17,16 +31,6 @@ private:
         */
         atomic<size_t> sequence;
     };
-
-// Eliminate false sharing by separating index variables into their own cache lines
-#if defined(__cpp_lib_hardware_interference_size)
-    static constexpr size_t CacheLineSize = hardware_destructive_interference_size;
-#else
-    static constexpr size_t CacheLineSize = 64; // Default standard fallback
-#endif
-
-    const size_t _capacity;
-    const size_t _mask;
     vector<Node> _buffer;
 
     // Align pointers to prevent performance degradation caused by cache-line bouncing

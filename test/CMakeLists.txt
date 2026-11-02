@@ -161,5 +161,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 
 if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
     include(GoogleTest) # To use gtest_discover_tests
-    gtest_discover_tests(${PROJECT_NAME}) # Runs GTest with CTest
+    # Runs GTest with CTest. A bug in the lock-free MPMCCircularBuffer shows up as threads spinning forever, so its tests are stopped by a timeout.
+    gtest_discover_tests(${PROJECT_NAME} TEST_FILTER "-*MPMC*")
+    gtest_discover_tests(${PROJECT_NAME} TEST_FILTER "*MPMC*" PROPERTIES TIMEOUT 10)
 endif()
