@@ -179,7 +179,10 @@ TEST(MPMCCircularBufferTests, ReusedSlotsHoldTheNewItem)
 }
 TEST(MPMCCircularBufferTests, DestructorReleasesUnpoppedItems)
 {
-	// Fails under LeakSanitizer / AddressSanitizer if they are leaked
+	/*
+	 * Fails under LeakSanitizer / AddressSanitizer if they are leaked
+	 * Passes on correct code. A leak of the unpopped items is reported by LeakSanitizer at process exit, not by an assertion here.
+	 */
 	MPMCCircularBuffer<vector<long>> buffer(4);
 	ASSERT_TRUE(buffer.Push(vector<long>(1024, 1)));
 	ASSERT_TRUE(buffer.Push(vector<long>(1024, 2)));
@@ -254,9 +257,9 @@ TEST_P(MPMCCircularBufferConcurrencyTestFixture, EveryItemIsConsumedOnceAndInPro
 INSTANTIATE_TEST_SUITE_P(
 	MPMCCircularBufferTests,
 	MPMCCircularBufferConcurrencyTestFixture,
-	::testing::Values(make_tuple(1, 1, 2), make_tuple(1, 1, 1024),		 // SPSC
-					  make_tuple(4, 1, 2), make_tuple(4, 1, 64),		 // MPSC
-					  make_tuple(1, 4, 2), make_tuple(1, 4, 64),		 // SPMC
+	::testing::Values(make_tuple(1, 1, 2), make_tuple(1, 1, 1024),												// SPSC
+					  make_tuple(4, 1, 2), make_tuple(4, 1, 64),												// MPSC
+					  make_tuple(1, 4, 2), make_tuple(1, 4, 64),												// SPMC
 					  make_tuple(2, 2, 2), make_tuple(4, 4, 8), make_tuple(4, 4, 1024), make_tuple(8, 8, 64))); // MPMC
 
 TEST(MPMCCircularBufferTests, RacingProducersCannotOverfill)

@@ -50,6 +50,7 @@ jobs:
           name: Run Tests
           command: |
             # CTest runs each Google Test case as its own test (gtest_discover_tests) and fails this step if any fails.
+            # Ctest runs each test case in its own process, so that exit code makes the tests fail by names.
             # -j is set explicitly because nproc in a Docker executor can report the host's cores, not this job's CPUs.
             # The JUnit path must be absolute; a relative one is written inside the build tree.
             ctest --preset linux-asan-release -j 2 --output-junit "$PWD/test-results/ctest/results.xml"
