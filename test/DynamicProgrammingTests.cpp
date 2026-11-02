@@ -123,9 +123,7 @@ public:
 	}
 	vector<string> WordBreak2Test()
 	{
-		vector<string> result;
-		_dp.WordBreak2(_str1, _strs, result);
-		return result;
+		return _dp.WordBreak2(_str1, _strs);
 	}
 
 protected:

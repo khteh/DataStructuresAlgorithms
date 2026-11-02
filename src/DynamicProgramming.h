@@ -19,7 +19,7 @@ public:
     T EggDropsImproved(T, T)
         requires arithmetic_type<T>;
     bool WordBreak(string const &, set<string> const &);
-    void WordBreak2(string const &, set<string> const &, vector<string> &);
+    vector<string> WordBreak2(string const &, set<string> const &);
     bool Abbreviation(string const &, string const &);
     size_t FindSubsequence(string const &, string const &);
     T NumberSolitaire(vector<T> const &)

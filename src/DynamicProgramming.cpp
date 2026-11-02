@@ -357,7 +357,7 @@ bool DynamicProgramming<T>::WordBreak(string const &s, set<string> const &words)
  * [0,0) valid + "cats" [0,4) {3: ["cat"], 4: ["cats"]} -> [0,4) valid; [0,4) valid + "and" [4,7) {3: ["cat"] 4: ["cats"], 7: ["cats and", "cats and"]} -> [0,7) valid
  */
 template <typename T>
-void DynamicProgramming<T>::WordBreak2(string const &s, set<string> const &words, vector<string> &result)
+vector<string> DynamicProgramming<T>::WordBreak2(string const &s, set<string> const &words)
 {
     map<size_t, vector<string>> strings;
     vector<bool> valid(s.size() + 1, false); // flag to mark substring [0, end) validity
@@ -375,7 +375,7 @@ void DynamicProgramming<T>::WordBreak2(string const &s, set<string> const &words
                     strings[end].push_back(oss.str());
                 }
             }
-    result = strings[s.size()];
+    return strings[s.size()];
 }
 /*
  * https://www.hackerrank.com/challenges/abbr/problem
@@ -405,7 +405,7 @@ void DynamicProgramming<T>::WordBreak2(string const &s, set<string> const &words
  *          j:0  A  B  C
  *   i:0     1   0  0  0
  *   d       1   0  0  0    <- [1][0]: delete d, "" -> "" ([0][0]). [1][1]: D != A, and "" can't become "A" ([0][1] = 0)
- *   a       1   1  0  0    <- [2][0]: delete a ([1][0]). [2][1]: capitalise a -> A, "d" -> "" ([1][0])
+ *   a       1   1  0  0    <- [2][0]: delete a, "" -> "" ([1][0]). [2][1]: capitalise a -> A, "d" -> "" ([1][0])
  *   B       0   0  1  0    <- B can't be deleted: [3][0], [3][1] = 0. [3][2]: B == B, "da" -> "A" ([2][1])
  *   c       0   0  1  1    <- [4][2]: delete c ([3][2]). [4][3]: capitalise c -> C, "daB" -> "AB" ([3][2])
  *   d       0   0  1  1    <- [5][2]: delete d ([4][2]). [5][3]: delete d, "daBc" -> "ABC" ([4][3])
@@ -507,7 +507,7 @@ i:4(s=1221)	1	1	2			2
 * s: kkkkkk s1: kkkkk = 6 choose 5 = 6! / 5! = 6
 * s: DeadBeef s1: FeedBeef
 * 				j:0	j:1(s1=f)	j:2(s1=ef)	j:3(s1=eef)	j:4(s1=Beef) j:5(s1=dBeef)	j:6(s1=edBeef)	j:7(s1=eedBeef)	j:8(s1=FeedBeef)
-i:0				1	0			0			0			0			 0				0				0				0
+i:0(s="")		1	0			0			0			0			 0				0				0				0
 i:1(s=f)		1   1			0			0			0			 0				0				0				0
 i:2(s=ef)		1   1			1			1			0			 0				0				0				0
 i:3(s=eef)		1	1			2			2			0			 0				0				0				0
@@ -530,15 +530,17 @@ size_t DynamicProgramming<T>::FindSubsequence(string const &str, string const &t
         string s = str.substr(str.size() - i, i);
         for (size_t j = 0; j <= tomatch.size(); j++)
         {
-            string tomatch1 = tomatch.substr(tomatch.size() - j, j);
-            if (tomatch1.empty())
+            string s1 = tomatch.substr(tomatch.size() - j, j);
+            if (s1.empty())
                 counts[i][j] = 1;
             else if (s.empty())
                 counts[i][j] = 0;
             else if (i > 0 && j > 0)
             {
+                // s[0, i-1) must already become all of s1[0, j)       -> table[i-1][j]    (straight down ↓)
                 counts[i][j] = counts[i - 1][j]; // Preserve previously matched character
-                if (s[0] == tomatch1[0])
+                if (s[0] == s1[0])
+                    // the rest, s1[0, i-1), must become s1[0, j-1)          -> table[i-1][j-1]  (diagonal ↘)
                     counts[i][j] += counts[i - 1][j - 1]; // It's a match! Increment from last match count.
             }
         }
@@ -552,7 +554,7 @@ size_t DynamicProgramming<T>::FindSubsequence(string const &str, string const &t
  * data: 1 -2 0 9 -1 -2 -3 9
  * dp  : 1,-1, MAX(-1, 1) = 1, MAX(10, 8, 10) = 10, MAX(0, -2, 0, 9) = 9, MAX(-1, -3, -1, 8, 7) = 8, MAX(-2, -4, -2, 7, 6, 5) = 7, MAX(10, 8, 10, 19, 18, 17, 16) = 19
  *
- * i:1, j:[1] -> dp[1] = max(dp[1], data[1] + dp[0]) = max(-inf, -1)  = -1
+ * i:1, j:[1] -> dp[1] = max(dp[1], data[1] + dp[0]) = max(-inf, 1 - 2)  = -1
  * i:2, j:[1, 2] -> dp[2] = max(dp[2], data[2] + dp[1]) = max(-inf, -1)  = -1
  *                  dp[2] = max(dp[2], data[2] + dp[0]) = max(-1, 1)  = 1
  * i:3, j:[1, 3] -> dp[3] = max(dp[3], data[3] + dp[2]) = max(-inf, 10)  = 10
@@ -567,7 +569,7 @@ T DynamicProgramming<T>::NumberSolitaire(vector<T> const &data)
     vector<T> dp(data.size(), numeric_limits<T>::min());
     dp[0] = data[0];
     for (long i = 1; i < (long)data.size(); i++)
-        for (long j = 1; j < 7 && (i - j) >= 0; j++) // To achieve the position i, we can only come from the positions i-6, i-5, i-4, i-3, i-2, and i-1.
+        for (long j = 1; j < 7 && (i - j) >= 0; j++) // To achieve the position i, we can only come from the positions i-6, i-5, i-4, i-3, i-2, and i-1. Dice has 6 faces, so we can only jump from the last 6 positions.
             dp[i] = max<T>(dp[i], data[i] + dp[i - j]);
     return dp[data.size() - 1];
 }
