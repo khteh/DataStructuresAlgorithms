@@ -758,7 +758,6 @@ T DynamicProgramming<T>::VectorSlicesSum(vector<T> const &data)
         if (((sum > 0 && data[0] > 0) || (sum < 0 && data[0] < 0)) && tmp < 0)
             throw range_error("overflow!");
         result = tmp % modulo;
-        T prevResult = result;
         for (size_t i = 1, y = data.size() - 2L; i < data.size(); i++, y--)
         {
             /*
@@ -778,7 +777,6 @@ T DynamicProgramming<T>::VectorSlicesSum(vector<T> const &data)
                 throw range_error("overflow!");
             if (result < 0 && (tmp % modulo) < numeric_limits<T>::min() - result)
                 throw range_error("overflow!");
-            prevResult = result;
             result = (result + tmp % modulo) % modulo;
         }
     }
@@ -787,6 +785,16 @@ T DynamicProgramming<T>::VectorSlicesSum(vector<T> const &data)
 /*
  * https://leetcode.com/problems/unique-paths/description/
  * 100%
+ * There is a robot on an m x n grid. The robot is initially located at the top-left corner (i.e., grid[0][0]).
+ * The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either down or right at any point in time.
+ * Given the two integers m and n, return the number of possible unique paths that the robot can take to reach the bottom-right corner.
+ * (4,5)
+ *   j 0 1 2 3 4
+ * i
+ * 0   1 1 1 1 1
+ * 1   1 2 3 4 5
+ * 2   1 3 6 10 15
+ * 3   1 4 10 20 35
  */
 template <typename T>
 size_t DynamicProgramming<T>::UniquePaths(size_t rows, size_t cols)
@@ -797,6 +805,10 @@ size_t DynamicProgramming<T>::UniquePaths(size_t rows, size_t cols)
         dp[i][0] = 1;
     for (size_t i = 1; i < rows; i++)
         for (size_t j = 1; j < cols; j++)
+            /*
+             * [0, i-1) must already become all of [0, j)       -> table[i-1][j]    (straight down ↓)
+             * [0, j-1) must already become all of [0, i)       -> table[i][j-1]    (straight right →)
+             */
             dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
     return dp[rows - 1][cols - 1];
 }
