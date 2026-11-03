@@ -99,10 +99,10 @@ Tree<T>::Tree(TraversalType type, vector<T> &inorder, vector<T> &otherorder)
 		switch (type)
 		{
 		case TraversalType::PreOrder:
-			_root = BuildTreePreOrder(inorder, otherorder, 0, 0, inorder.size() - 1);
+			_root = _BuildTreePreOrder(inorder, otherorder, 0, 0, inorder.size() - 1);
 			break;
 		case TraversalType::PostOrder:
-			_root = BuildTreePostOrder(inorder, otherorder, otherorder.size() - 1, 0, inorder.size() - 1);
+			_root = _BuildTreePostOrder(inorder, otherorder, otherorder.size() - 1, 0, inorder.size() - 1);
 			break;
 		default:
 			throw invalid_argument("Invalid traversal type!");
@@ -143,7 +143,7 @@ void Tree<T>::LoadData(vector<T> &data, TreeType type)
  * 100%
  */
 template <typename T>
-shared_ptr<Node<T>> Tree<T>::BuildTreePreOrder(vector<T> &inorder, vector<T> &preorder, long prestart, long instart, long inend)
+shared_ptr<Node<T>> Tree<T>::_BuildTreePreOrder(vector<T> &inorder, vector<T> &preorder, long prestart, long instart, long inend)
 {
 	shared_ptr<Node<T>> root = nullptr;
 	if (instart == inend)
@@ -161,11 +161,11 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePreOrder(vector<T> &inorder, vector<T> &pr
 		 */
 		typename vector<T>::iterator inOrderRoot = ranges::find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, preorder[prestart]);
 		if (inOrderRoot == (inorder.begin() + instart + (inend - instart) + 1))
-			throw invalid_argument("Invalid tree input parameters! No root found!");
+			throw invalid_argument("_BuildTreePreOrder(): Invalid tree input parameters! No root found!");
 		root = make_shared<Node<T>>(preorder[prestart]);
 		size_t middle = distance(inorder.begin(), inOrderRoot); // #steps from begin() to inOrderRoot. Ex: 0 if inOrderRoot == begin()
-		shared_ptr<Node<T>> left = BuildTreePreOrder(inorder, preorder, prestart + 1 /*Root of pre-order left tree*/, instart, middle - 1 /*In-order left tree*/);
-		shared_ptr<Node<T>> right = BuildTreePreOrder(inorder, preorder, prestart + middle - instart + 1 /*Root of pre-order right tree*/, middle + 1 /*In-order right tree*/, inend);
+		shared_ptr<Node<T>> left = _BuildTreePreOrder(inorder, preorder, prestart + 1 /*Root of pre-order left tree*/, instart, middle - 1 /* In-order left tree is always left of middle */);
+		shared_ptr<Node<T>> right = _BuildTreePreOrder(inorder, preorder, prestart + middle - instart + 1 /*Root of pre-order right tree*/, middle + 1 /*In-order right tree is always right of middle*/, inend);
 		root->SetLeft(left);
 		root->SetRight(right);
 		if (left)
@@ -179,7 +179,7 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePreOrder(vector<T> &inorder, vector<T> &pr
  * 100%
  */
 template <typename T>
-shared_ptr<Node<T>> Tree<T>::BuildTreePostOrder(vector<T> &inorder, vector<T> &postorder, long pstart, long instart, long inend)
+shared_ptr<Node<T>> Tree<T>::_BuildTreePostOrder(vector<T> &inorder, vector<T> &postorder, long pstart, long instart, long inend)
 {
 	shared_ptr<Node<T>> root = nullptr;
 	if (instart == inend)
@@ -192,32 +192,34 @@ shared_ptr<Node<T>> Tree<T>::BuildTreePostOrder(vector<T> &inorder, vector<T> &p
 		 * postorder = [<9>,15,  7,<20>,{3}] => left offset: 4 - 4 = 0
 		 * inorder   = [9,  {3},15,20,   7]	=> right tree size: 4 - 1 + 1 = 4
 		 *       3
-		 *   <9>   <20>
+		 *   <9>   <20> <- leftOffset=0: 9, rightSize:4 [15, 7, 20, 3]
 		 *       15   7
 		 *
 		 *              0  1  2    3   4
 		 * postorder = [7,15,<9>,<20>,{3}] => left offset: 4 - 2 = 2
 		 * inorder   = [7,9, 15,  {3},20] => right tree size: 4 - 3 + 1 = 2
 		 *       3
-		 *   <9>   <20>
+		 *   <9>   <20> <- leftOffset=2: 9, rightSize:2 [20, 3]
 		 * 7    15
 		 *              0 1  2   3
-		 * portorder = [2,1,<3>,{4}] => left offset: 3 - 1 = 2
-		 * inorder   = [1,2, 3, {4}]	=> right tree size: 4 - 4 + 1 = 1
+		 * postorder = [2,1,<3>,{4}] => left offset: 3 - 1 = 2
+		 * inorder   = [1,2, 3, {4}] => right tree size: 4 - 4 + 1 = 1
+		 * postorder = [2,1,{3},4] => left offset: 2 - 2 = 0
+		 * inorder   = [1,2,{3},4] => right tree size: 3 - 2 + 1 = 2
 		 *        4
-		 *    3
-		 *  1
+		 *    3		<- leftOffset=2: 3, rightSize:1 [4]
+		 *  1		<- leftOffset=0:2, rightSize:2 [2, 1]
 		 *    2
 		 */
 		typename vector<T>::iterator inOrderRoot = ranges::find(inorder.begin() + instart, inorder.begin() + instart + (inend - instart) + 1, postorder[pstart]);
 		if (inOrderRoot == inorder.begin() + instart + (inend - instart) + 1)
-			throw invalid_argument("Invalid tree input parameters! No root found!");
+			throw invalid_argument("_BuildTreePostOrder(): Invalid tree input parameters! No root found!");
 		root = make_shared<Node<T>>(postorder[pstart]);
 		size_t middle = distance(inorder.begin(), inOrderRoot); // #steps from begin() to inOrderRoot. Ex: 0 if inOrderRoot == begin()
 		size_t rightSize = inend - middle + 1;					// Include the root node itself
 		size_t leftOffset = pstart - rightSize;
-		shared_ptr<Node<T>> left = BuildTreePostOrder(inorder, postorder, leftOffset /*Root of post-order left tree*/, instart, middle - 1 /*In-order left tree*/);
-		shared_ptr<Node<T>> right = BuildTreePostOrder(inorder, postorder, pstart - 1 /*Root of post-order right tree*/, middle + 1 /*In-order right tree*/, inend);
+		shared_ptr<Node<T>> left = _BuildTreePostOrder(inorder, postorder, leftOffset /*Root of post-order left tree*/, instart, middle - 1 /*In-order left tree*/);
+		shared_ptr<Node<T>> right = _BuildTreePostOrder(inorder, postorder, pstart - 1 /*Root of post-order right tree*/, middle + 1 /*In-order right tree*/, inend);
 		root->SetLeft(left);
 		root->SetRight(right);
 		if (left)
@@ -527,21 +529,21 @@ template <typename T>
 void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, const T sum, vector<string> &result)
 	requires arithmetic_type<T>
 {
-	vector<T> values;
+	vector<T> values; // Keep track of the nodes from root to leaf
 	if (node)
-		FindSum(node, sum, 0, values, result);
+		_FindSum(node, sum, 0, values, result);
 }
 
 template <typename T>
-void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, const T sum, long level, vector<T> values, vector<string> &result)
+void Tree<T>::_FindSum(const shared_ptr<Node<T>> &node, const T sum, long level, vector<T> values, vector<string> &result)
 	requires arithmetic_type<T>
 {
 	/*
 	Binary Search Tree (tree1) content:
-	Level 0:                                   50
-	Level 1:                        0(50)                 100(50)
-	Level 2:                -50(0)        10(0)    75(100)        150(100)
-	Level 3:        -100(-50)                   60(75)
+	Level 0 values[0]:                                   50
+	Level 1 values[1]:                        0(50)                 100(50)
+	Level 2 values[2]:                -50(0)        10(0)    75(100)        150(100)
+	Level 3 values[3]:        -100(-50)                   60(75)
 	*/
 	ostringstream oss;
 	if (!node)
@@ -563,42 +565,43 @@ void Tree<T>::FindSum(const shared_ptr<Node<T>> &node, const T sum, long level, 
 			oss.str("");
 		}
 	}
-	FindSum(node->Left(), sum, level + 1, values, result);
-	FindSum(node->Right(), sum, level + 1, values, result);
+	_FindSum(node->Left(), sum, level + 1, values, result);
+	_FindSum(node->Right(), sum, level + 1, values, result);
 }
 /* https://leetcode.com/problems/sum-root-to-leaf-numbers/
  * 100%
+ * You are given the root of a binary tree containing digits from 0 to 9 only.
+ * Each root-to-leaf path in the tree represents a number.
+ * For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123.
  */
 template <typename T>
 T Tree<T>::SumRoot2LeafNumbers()
 {
+	T sum = T();
 	if (_root)
 	{
-		vector<string> result = GetRoot2LeafNumbers(_root);
-		T sum = T();
+		vector<string> result = _GetRoot2LeafNumbers(_root);
 		for (vector<string>::iterator it = result.begin(); it != result.end(); it++)
 		{
 			T tmp = T();
 			istringstream(*it) >> tmp;
 			sum += tmp;
 		}
-		return sum;
 	}
-	return T();
+	return sum;
 }
 /*
  * Every node represents a digit. Every path from root to leaf represents a number with root as MSB and leaf as LSB.
  */
 template <typename T>
-vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
+vector<string> Tree<T>::_GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 {
 	vector<string> result;
 	if (node)
 	{
 		string str;
-		vector<string> left = GetRoot2LeafNumbers(node->Left());
+		vector<string> left = _GetRoot2LeafNumbers(node->Left());
 		if (!left.empty())
-		{
 			for (vector<string>::iterator it = left.begin(); it != left.end(); it++)
 			{
 				if constexpr (is_integral_v<T>)
@@ -607,10 +610,8 @@ vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 					str = node->Item();
 				result.push_back(str.append(*it));
 			}
-		}
-		vector<string> right = GetRoot2LeafNumbers(node->Right());
+		vector<string> right = _GetRoot2LeafNumbers(node->Right());
 		if (!right.empty())
-		{
 			for (vector<string>::iterator it = right.begin(); it != right.end(); it++)
 			{
 				if constexpr (is_integral_v<T>)
@@ -619,7 +620,6 @@ vector<string> Tree<T>::GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 					str = node->Item();
 				result.push_back(str.append(*it));
 			}
-		}
 		if (left.empty() && right.empty())
 		{
 			if constexpr (is_integral_v<T>)
@@ -964,7 +964,7 @@ bool Tree<T>::HasNextMax() const
 template <typename T>
 shared_ptr<Node<T>> Tree<T>::ToLinkedList()
 {
-	return ToLinkedList(_root);
+	return _ToLinkedList(_root);
 }
 /* https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
  * Given the root of a binary tree, flatten the tree into a "linked list":
@@ -974,12 +974,12 @@ shared_ptr<Node<T>> Tree<T>::ToLinkedList()
  * 100%
  */
 template <typename T>
-shared_ptr<Node<T>> Tree<T>::ToLinkedList(const shared_ptr<Node<T>> &n)
+shared_ptr<Node<T>> Tree<T>::_ToLinkedList(const shared_ptr<Node<T>> &n)
 {
 	if (n)
 	{
-		shared_ptr<Node<T>> left = ToLinkedList(n->Left());
-		shared_ptr<Node<T>> right = ToLinkedList(n->Right());
+		shared_ptr<Node<T>> left = _ToLinkedList(n->Left());
+		shared_ptr<Node<T>> right = _ToLinkedList(n->Right());
 		if (left && !right)
 		{
 			n->SetRight(left);
@@ -1003,6 +1003,9 @@ shared_ptr<Node<T>> Tree<T>::ToLinkedList(const shared_ptr<Node<T>> &n)
 				left->SetRight(right);
 				right->SetParent(left);
 			}
+			/*
+			Move the entire left subtree to the right of the current node and set the left child to null.
+			*/
 			n->SetRight(left);
 			left->SetParent(n);
 			n->SetLeft(nullptr);

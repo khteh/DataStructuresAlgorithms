@@ -51,17 +51,17 @@ protected:
 	shared_ptr<Node<T>> Copy(const shared_ptr<Node<T>> &, map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> &);
 	shared_ptr<Node<T>> LeftMostChild(shared_ptr<Node<T>> &);
 	bool covers(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
-	void FindSum(const shared_ptr<Node<T>> &, const T, long, vector<T>, vector<string> &)
+	void _FindSum(const shared_ptr<Node<T>> &, const T, long, vector<T>, vector<string> &)
 		requires arithmetic_type<T>;
-	vector<string> GetRoot2LeafNumbers(const shared_ptr<Node<T>> &);
+	vector<string> _GetRoot2LeafNumbers(const shared_ptr<Node<T>> &);
 	size_t Count(const shared_ptr<Node<T>> &) const;
 	T Min(const shared_ptr<Node<T>> &) const;
 	T Max(const shared_ptr<Node<T>> &) const;
 	bool isValidBST(const shared_ptr<Node<T>> &) const;
 	vector<size_t> GetLevelNodeCount(const shared_ptr<Node<T>> &, size_t);
-	shared_ptr<Node<T>> ToLinkedList(const shared_ptr<Node<T>> &);
-	shared_ptr<Node<T>> BuildTreePreOrder(vector<T> &, vector<T> &, long, long, long);
-	shared_ptr<Node<T>> BuildTreePostOrder(vector<T> &, vector<T> &, long, long, long);
+	shared_ptr<Node<T>> _ToLinkedList(const shared_ptr<Node<T>> &);
+	shared_ptr<Node<T>> _BuildTreePreOrder(vector<T> &, vector<T> &, long, long, long);
+	shared_ptr<Node<T>> _BuildTreePostOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	void split(string const &s, char delim, vector<string> &elems);
 	T MaxPathSum(const shared_ptr<Node<T>> &, T &)
