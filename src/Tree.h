@@ -46,16 +46,10 @@ protected:
 	void _Split(string const &s, char delim, vector<string> &elems);
 	void _RecoverBinarySearchTree(const shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &)
 		requires arithmetic_type<T>;
-	shared_ptr<Node<T>> _AddToTree(shared_ptr<Node<T>>, vector<T> &, long, long);
-	shared_ptr<Node<T>> _AddToTree(vector<T> &);
-	shared_ptr<Node<T>> _FindNode(const shared_ptr<Node<T>> &, T item);
-	shared_ptr<Node<T>> _Copy(const shared_ptr<Node<T>> &, map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> &);
-	shared_ptr<Node<T>> _LeftMostChild(shared_ptr<Node<T>> &);
-	bool _IsValidBST(const shared_ptr<Node<T>> &) const;
-	bool _Covers(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	void _FindSum(const shared_ptr<Node<T>> &, const T, long, vector<T>, vector<string> &)
 		requires arithmetic_type<T>;
-	vector<string> _GetRoot2LeafNumbers(const shared_ptr<Node<T>> &);
+	bool _IsValidBST(const shared_ptr<Node<T>> &) const;
+	bool _Covers(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	size_t _Count(const shared_ptr<Node<T>> &) const;
 	T _MinDiffInBST(shared_ptr<Node<T>>, shared_ptr<Node<T>>) const
 		requires arithmetic_type<T>;
@@ -63,7 +57,14 @@ protected:
 	T _Max(const shared_ptr<Node<T>> &) const;
 	T _MaxPathSum(const shared_ptr<Node<T>> &, T &)
 		requires arithmetic_type<T>;
+	vector<string> _GetRoot2LeafNumbers(const shared_ptr<Node<T>> &);
 	vector<size_t> _GetLevelNodeCount(const shared_ptr<Node<T>> &, size_t);
+	shared_ptr<Node<T>> _AddToTree(shared_ptr<Node<T>>, vector<T> &, long, long);
+	shared_ptr<Node<T>> _AddToTree(vector<T> &);
+	shared_ptr<Node<T>> _FindNode(const shared_ptr<Node<T>> &, T item);
+	shared_ptr<Node<T>> _Copy(const shared_ptr<Node<T>> &, map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> &);
+	shared_ptr<Node<T>> _LeftMostChild(shared_ptr<Node<T>> &);
+
 	shared_ptr<Node<T>> _ToLinkedList(const shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> _BuildTreePreOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> _BuildTreePostOrder(vector<T> &, vector<T> &, long, long, long);
