@@ -19,7 +19,6 @@ private:
 #else
     static constexpr size_t CacheLineSize = 64; // Default standard fallback
 #endif
-
     // Each slot starts on its own cache line so that threads working on neighbouring slots do not contend
     struct alignas(CacheLineSize) Slot
     {

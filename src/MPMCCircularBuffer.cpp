@@ -73,8 +73,12 @@ bool MPMCCircularBuffer<T>::Push(T const &data)
     {
         slot = &_buffer[pos & _mask];
         size_t seq = slot->sequence.load(memory_order_acquire);
-        intptr_t diff = static_cast<intptr_t>(seq - pos); // Subtract while unsigned, which is well defined when the counters wrap around
-
+        /*
+         * When the counters straddle 2⁶³, casting both to signed and then subtracting overflows, which is undefined behaviour.
+         * At 1 billion operations per second that’s about 292 years away, so it won’t happen in practice, but it’s still a real defect.
+         * So, Subtract while unsigned, which is well defined when the counters wrap around. Otherwise tests would log that error in every sanitizer run.
+         */
+        intptr_t diff = static_cast<intptr_t>(seq - pos);
         if (diff == 0)
         {
             /*
@@ -110,8 +114,12 @@ bool MPMCCircularBuffer<T>::Pop(T &value)
     {
         slot = &_buffer[pos & _mask];
         size_t seq = slot->sequence.load(memory_order_acquire);
-        intptr_t diff = static_cast<intptr_t>(seq - (pos + 1)); // Subtract while unsigned, which is well defined when the counters wrap around
-
+        /*
+         * When the counters straddle 2⁶³, casting both to signed and then subtracting overflows, which is undefined behaviour.
+         * At 1 billion operations per second that’s about 292 years away, so it won’t happen in practice, but it’s still a real defect.
+         * So, Subtract while unsigned, which is well defined when the counters wrap around. Otherwise tests would log that error in every sanitizer run.
+         */
+        intptr_t diff = static_cast<intptr_t>(seq - (pos + 1));
         if (diff == 0)
         {
             /*

@@ -259,7 +259,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 					*/
 					erase_if(costsPQ, [it](const auto &it1)
 							 { return it1.second == *it; });
-					costsPQ.emplace(costs[*it], *it);
+					costsPQ.emplace(costs[*it] /* + heuristic value in A-Star algorithm */, *it);
 				}
 			}
 	}
@@ -304,7 +304,7 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 					*/
 					erase_if(costsPQ, [it](const auto &it1)
 							 { return it1.second == *it; });
-					costsPQ.emplace(costs[*it], *it);
+					costsPQ.emplace(costs[*it] /* + heuristic value in A-Star algorithm */, *it);
 				}
 			}
 	}
@@ -352,7 +352,7 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 					*/
 					erase_if(costsPQ, [it](const auto &it1)
 							 { return it1.second == *it; });
-					costsPQ.emplace(costs[*it], *it);
+					costsPQ.emplace(costs[*it] /* + heuristic value in A-Star algorithm */, *it);
 				}
 			}
 	}
