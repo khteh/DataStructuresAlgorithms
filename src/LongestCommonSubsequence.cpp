@@ -9,11 +9,19 @@ template class LongestCommonSubsequence<char>;
 * 		j:0	j:1	j:2	j:3	j:4	j:5
 		\0'	H	A	R	R	Y
 i:0	\0'	0	0	0	0	0	0
-i:1	S	0	0	0	0	0	0
-i:2	A	0	0	1	1	1	1
-i:3	L	0	0	1	1	1	1
-i:4	L	0	0	1	1	1	1
-i:5	Y	0	0	1	1	1	2
+i:1	S	0	0	0	0	0	0 <- S != H, so take max of left and above. Same for the rest of the row.
+i:2	A	0	0	1	1	1	1 <- A == A, so take the diagonal + 1. The rest of the row is max of left and above.
+i:3	L	0	0	1	1	1	1 <- L != R, so take max of left and above. Same for the rest of the row.
+i:4	L	0	0	1	1	1	1 <- L != R, so take max of left and above. Same for the rest of the row.
+i:5	Y	0	0	1	1	1	2 <- Y == Y, so take the diagonal + 1. The rest of the row is max of left and above. table[5][5] = 2, which is the length of the longest common subsequence "AY".
+
+* Example: [2][3], “SA” vs “HAR”
+s1[2] = A, s2[3] = R. They differ, so:
+
+table[1][3]: drop A → "S"  vs "HAR" → 0
+table[2][2]: drop R → "SA" vs "HA"  → 1   ("A")
+table[2][3] = max(0, 1) = 1
+-> Dropping R keeps the shared A, while dropping A loses it. Taking the max picks the right choice.
 */
 template <typename T>
 size_t LongestCommonSubsequence<T>::LCSLength(string &s1, string &s2)
@@ -23,7 +31,9 @@ size_t LongestCommonSubsequence<T>::LCSLength(string &s1, string &s2)
 	vector<vector<size_t>> table(s1.size(), vector<size_t>(s2.size())); // Defaults to zero initial value
 	for (size_t i = 1; i < s1.size(); i++)
 		for (size_t j = 1; j < s2.size(); j++)
-			table[i][j] = s1[i] == s2[j] ? table[i - 1][j - 1] + 1 : max(table[i - 1][j], table[i][j - 1]);
+			table[i][j] = s1[i] == s2[j] ? table[i - 1][j - 1] + 1 // match: use this char in both strings, ↖ + 1
+										 : max(table[i - 1][j],	   // mismatch: drop s1[i], ↑
+											   table[i][j - 1]);   //           or drop s2[j], ←
 	return table[s1.size() - 1][s2.size() - 1];
 }
 template <typename T>
@@ -31,7 +41,9 @@ size_t LongestCommonSubsequence<T>::LCSLength(vector<vector<size_t>> &table, str
 {
 	for (size_t i = 1; i < s1.size(); i++)
 		for (size_t j = 1; j < s2.size(); j++)
-			table[i][j] = s1[i] == s2[j] ? table[i - 1][j - 1] + 1 : max(table[i - 1][j], table[i][j - 1]);
+			table[i][j] = s1[i] == s2[j] ? table[i - 1][j - 1] + 1 // match: use this char in both strings, ↖ + 1
+										 : max(table[i - 1][j],	   // mismatch: drop s1[i], ↑
+											   table[i][j - 1]);   //           or drop s2[j], ←
 	return table[s1.size() - 1][s2.size() - 1];
 }
 template <typename T>
@@ -53,7 +65,9 @@ size_t LongestCommonSubsequence<T>::LCSLength(vector<T> &n1, vector<T> &n2)
 	vector<vector<size_t>> table(n1.size(), vector<size_t>(n2.size())); // Defaults to zero initial value
 	for (size_t i = 1; i < n1.size(); i++)
 		for (size_t j = 1; j < n2.size(); j++)
-			table[i][j] = n1[i] == n2[j] ? table[i - 1][j - 1] + 1 : max(table[i - 1][j], table[i][j - 1]);
+			table[i][j] = n1[i] == n2[j] ? table[i - 1][j - 1] + 1 // match: use this char in both strings, ↖ + 1
+										 : max(table[i - 1][j],	   // mismatch: drop n1[i], ↑
+											   table[i][j - 1]);   //           or drop n2[j], ←
 	return table[n1.size() - 1][n2.size() - 1];
 }
 template <typename T>
