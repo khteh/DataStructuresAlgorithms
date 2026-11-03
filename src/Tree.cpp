@@ -59,7 +59,7 @@ template <typename T>
 Tree<T>::Tree(shared_ptr<Node<T>> &node) : _root(nullptr)
 {
 	map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> copied;
-	_root = Copy(node, copied);
+	_root = _Copy(node, copied);
 	for (shared_ptr<Node<T>> n = _root; n; _minStack.push(n), n = n->Left())
 		;
 	for (shared_ptr<Node<T>> n = _root; n; _maxStack.push(n), n = n->Right())
@@ -69,7 +69,7 @@ template <typename T>
 Tree<T>::Tree(Tree<T> const &tree) : _root(nullptr)
 {
 	map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> copied;
-	_root = Copy(tree.Root(), copied);
+	_root = _Copy(tree.Root(), copied);
 	for (shared_ptr<Node<T>> n = _root; n; _minStack.push(n), n = n->Left())
 		;
 	for (shared_ptr<Node<T>> n = _root; n; _maxStack.push(n), n = n->Right())
@@ -78,14 +78,8 @@ Tree<T>::Tree(Tree<T> const &tree) : _root(nullptr)
 template <typename T>
 Tree<T>::Tree(Tree<T> &&tree) noexcept : _root(nullptr)
 { // Move constructor
-	tree.Swap(*this);
+	tree._Swap(*this);
 }
-template <typename T>
-void Tree<T>::Swap(Tree<T> &other)
-{
-	swap(_root, other._root);
-}
-
 template <typename T>
 Tree<T>::Tree(vector<T> &data, TreeType type)
 {
@@ -116,6 +110,11 @@ Tree<T>::~Tree()
 	Clear();
 }
 template <typename T>
+void Tree<T>::_Swap(Tree<T> &other)
+{
+	swap(_root, other._root);
+}
+template <typename T>
 void Tree<T>::LoadData(vector<T> &data, TreeType type)
 {
 	if (!data.empty())
@@ -125,10 +124,10 @@ void Tree<T>::LoadData(vector<T> &data, TreeType type)
 		{
 		case TreeType::BinarySearch:
 			ranges::sort(data);
-			_root = AddToTree(nullptr, data, 0, data.size() - 1);
+			_root = _AddToTree(nullptr, data, 0, data.size() - 1);
 			break;
 		case TreeType::Binary:
-			_root = AddToTree(data);
+			_root = _AddToTree(data);
 			break;
 		default:
 			throw invalid_argument("Invalid Tree type!");
@@ -248,14 +247,14 @@ postorder:2 1 3 4 <= same as the tree above
 inorder:  4 1 2 3 <= Different from the tree above
  */
 template <typename T>
-shared_ptr<Node<T>> Tree<T>::AddToTree(shared_ptr<Node<T>> parent, vector<T> &v, long begin, long end)
+shared_ptr<Node<T>> Tree<T>::_AddToTree(shared_ptr<Node<T>> parent, vector<T> &v, long begin, long end)
 {
 	if (end < begin)
 		return nullptr;
 	long middle = begin + (end - begin) / 2 + (end - begin) % 2;
 	shared_ptr<Node<T>> node = make_shared<Node<T>>(v[middle]);
-	node->SetLeft(AddToTree(node, v, begin, middle - 1));
-	node->SetRight(AddToTree(node, v, middle + 1, end));
+	node->SetLeft(_AddToTree(node, v, begin, middle - 1));
+	node->SetRight(_AddToTree(node, v, middle + 1, end));
 	node->SetParent(parent);
 	return node;
 }
@@ -269,7 +268,7 @@ shared_ptr<Node<T>> Tree<T>::AddToTree(shared_ptr<Node<T>> parent, vector<T> &v,
   7      2  <nul><nul>  <nul><nul>  1
  */
 template <typename T>
-shared_ptr<Node<T>> Tree<T>::AddToTree(vector<T> &data)
+shared_ptr<Node<T>> Tree<T>::_AddToTree(vector<T> &data)
 {
 	map<long, shared_ptr<Node<T>>> nodes;
 	long maxIndex = (long)(data.size() - 2l) / 2l;
@@ -308,7 +307,7 @@ using its copy constructor or move constructor...
 template <typename T>
 Tree<T> &Tree<T>::operator=(Tree<T> rhs)
 {
-	rhs.Swap(*this);
+	rhs._Swap(*this);
 	return *this;
 }
 template <typename T>
@@ -318,7 +317,7 @@ bool Tree<T>::operator==(const Tree<T> &tree) const
 }
 
 template <typename T>
-shared_ptr<Node<T>> Tree<T>::Copy(const shared_ptr<Node<T>> &node, map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> &copied)
+shared_ptr<Node<T>> Tree<T>::_Copy(const shared_ptr<Node<T>> &node, map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> &copied)
 {
 	if (node)
 	{
@@ -326,8 +325,8 @@ shared_ptr<Node<T>> Tree<T>::Copy(const shared_ptr<Node<T>> &node, map<shared_pt
 			return copied[node];
 		shared_ptr<Node<T>> n = make_shared<Node<T>>(node);
 		copied.emplace(node, n); // Map original tree node to new tree node
-		n->SetLeft(Copy(node->Left(), copied));
-		n->SetRight(Copy(node->Right(), copied));
+		n->SetLeft(_Copy(node->Left(), copied));
+		n->SetRight(_Copy(node->Right(), copied));
 		return n;
 	}
 	else
@@ -348,21 +347,21 @@ void Tree<T>::Clear()
 	if (_root)
 	{
 		shared_ptr<Node<T>> n(_root->Left());
-		Clear(n);
+		_Clear(n);
 		n = _root->Right();
-		Clear(n);
+		_Clear(n);
 		_root.reset();
 	}
 }
 template <typename T>
-void Tree<T>::Clear(shared_ptr<Node<T>> &node)
+void Tree<T>::_Clear(shared_ptr<Node<T>> &node)
 {
 	if (node)
 	{
 		shared_ptr<Node<T>> n(node->Left());
-		Clear(n);
+		_Clear(n);
 		n = node->Right();
-		Clear(n);
+		_Clear(n);
 		node.reset();
 	}
 }
@@ -423,11 +422,11 @@ void Tree<T>::Serialize(const shared_ptr<Node<T>> &node, vector<T> &result) // I
 template <typename T>
 shared_ptr<Node<T>> Tree<T>::FindNode(T item)
 {
-	return _root ? FindNode(_root, item) : nullptr;
+	return _root ? _FindNode(_root, item) : nullptr;
 }
 
 template <typename T>
-shared_ptr<Node<T>> Tree<T>::FindNode(const shared_ptr<Node<T>> &node, T item)
+shared_ptr<Node<T>> Tree<T>::_FindNode(const shared_ptr<Node<T>> &node, T item)
 {
 	shared_ptr<Node<T>> p = nullptr;
 	if (node)
@@ -435,10 +434,10 @@ shared_ptr<Node<T>> Tree<T>::FindNode(const shared_ptr<Node<T>> &node, T item)
 		// Use Pre-Order traversal to find a match
 		if (node->Item() == item)
 			return node;
-		p = FindNode(node->Left(), item);
+		p = _FindNode(node->Left(), item);
 		if (p)
 			return p;
-		p = FindNode(node->Right(), item);
+		p = _FindNode(node->Right(), item);
 	}
 	return p;
 }
@@ -464,14 +463,14 @@ shared_ptr<Node<T>> Tree<T>::CommonAncestor(const shared_ptr<Node<T>> &p, const 
 	return CommonAncestor(p->Parent(), q->Parent());
 }
 template <typename T>
-shared_ptr<Node<T>> Tree<T>::CommonAncestor(const shared_ptr<Node<T>> &n, const shared_ptr<Node<T>> &p, const shared_ptr<Node<T>> &q)
+shared_ptr<Node<T>> Tree<T>::_CommonAncestor(const shared_ptr<Node<T>> &n, const shared_ptr<Node<T>> &p, const shared_ptr<Node<T>> &q)
 {
 	if (n == p || n == q)
 		return n;
 	if (n)
 	{
-		shared_ptr<Node<T>> left = CommonAncestor(n->Left(), p, q);
-		shared_ptr<Node<T>> right = CommonAncestor(n->Right(), p, q);
+		shared_ptr<Node<T>> left = _CommonAncestor(n->Left(), p, q);
+		shared_ptr<Node<T>> right = _CommonAncestor(n->Right(), p, q);
 		if (left && right)
 			return n;
 		else if (!left && right)
@@ -484,16 +483,16 @@ shared_ptr<Node<T>> Tree<T>::CommonAncestor(const shared_ptr<Node<T>> &n, const 
 template <typename T>
 shared_ptr<Node<T>> Tree<T>::CommonAncestor1(shared_ptr<Node<T>> &p, shared_ptr<Node<T>> &q)
 {
-	return CommonAncestor(_root, p, q);
+	return _CommonAncestor(_root, p, q);
 }
 template <typename T>
-bool Tree<T>::covers(const shared_ptr<Node<T>> &node, const shared_ptr<Node<T>> &p)
+bool Tree<T>::_Covers(const shared_ptr<Node<T>> &node, const shared_ptr<Node<T>> &p)
 {
 	if (!node || !p)
 		return false;
 	if (node == p)
 		return true;
-	return covers(node->Left(), p) || covers(node->Right(), p);
+	return _Covers(node->Left(), p) || _Covers(node->Right(), p);
 }
 template <typename T>
 bool Tree<T>::SubTree(const shared_ptr<Node<T>> &parent, const shared_ptr<Node<T>> &child)
@@ -505,9 +504,7 @@ bool Tree<T>::SubTree(const shared_ptr<Node<T>> &parent, const shared_ptr<Node<T
 	if (!child)
 		return true;
 	// if (*parent == *child && MatchTree(parent, child)) Don't compare parent/next node, i.e, "upstream" nodes
-	if (parent->Item() == child->Item() && MatchTree(parent, child))
-		return true;
-	return SubTree(parent->Left(), child) || SubTree(parent->Right(), child);
+	return (parent->Item() == child->Item() && MatchTree(parent, child)) || SubTree(parent->Left(), child) || SubTree(parent->Right(), child);
 }
 
 template <typename T>
@@ -631,14 +628,14 @@ vector<string> Tree<T>::_GetRoot2LeafNumbers(const shared_ptr<Node<T>> &node)
 	return result;
 }
 template <typename T>
-size_t Tree<T>::Count(const shared_ptr<Node<T>> &node) const
+size_t Tree<T>::_Count(const shared_ptr<Node<T>> &node) const
 {
-	return node ? 1 + Count(node->Left()) + Count(node->Right()) : 0;
+	return node ? 1 + _Count(node->Left()) + _Count(node->Right()) : 0;
 }
 template <typename T>
 size_t Tree<T>::Count() const
 {
-	return _root ? 1 + Count(_root->Left()) + Count(_root->Right()) : 0;
+	return _root ? 1 + _Count(_root->Left()) + _Count(_root->Right()) : 0;
 }
 template <typename T>
 void Tree<T>::GetNodes(map<size_t, vector<shared_ptr<Node<T>>>> &result, long lvl) const // Typical Breadth-First-Search algorithm
@@ -680,7 +677,7 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 		if (node->Right())
 		{ // If node as right child, the in-order successor must be on the right side of the node
 			shared_ptr<Node<T>> tmp(node->Right());
-			return LeftMostChild(tmp); // Then the left-most child must be the first node visisted in that subtree
+			return _LeftMostChild(tmp); // Then the left-most child must be the first node visisted in that subtree
 		}
 		else
 		{
@@ -691,7 +688,7 @@ Level 3:       -50(0)     10(0)  75(100)   150(100)
 	return nullptr;
 }
 template <typename T>
-shared_ptr<Node<T>> Tree<T>::LeftMostChild(shared_ptr<Node<T>> &node)
+shared_ptr<Node<T>> Tree<T>::_LeftMostChild(shared_ptr<Node<T>> &node)
 {
 	while (node && node->Left())
 		node = node->Left();
@@ -716,23 +713,23 @@ template <typename T>
 T Tree<T>::MinDiffInBST() const
 	requires arithmetic_type<T>
 {
-	return _root ? MinDiffInBST(nullptr, _root) : -1;
+	return _root ? _MinDiffInBST(nullptr, _root) : -1;
 }
 template <typename T>
-T Tree<T>::MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> current) const
+T Tree<T>::_MinDiffInBST(shared_ptr<Node<T>> previous, shared_ptr<Node<T>> current) const
 	requires arithmetic_type<T>
 {
 	T minimum = numeric_limits<T>::max();
 	// Use In-Order traversal to find min diff between any 2 nodes
 	if (current)
 	{
-		minimum = MinDiffInBST(current, current->Left());
+		minimum = _MinDiffInBST(current, current->Left());
 		if (previous)
 			if constexpr (is_integral<T>::value)
 				minimum = min<T>(minimum, abs((long)(current->Item() - previous->Item())));
 			else if constexpr (is_floating_point<T>::value)
 				minimum = min<T>(minimum, abs((double)(current->Item() - previous->Item())));
-		minimum = min(minimum, MinDiffInBST(current, current->Right()));
+		minimum = min(minimum, _MinDiffInBST(current, current->Right()));
 	}
 	return minimum;
 }
@@ -752,7 +749,7 @@ void Tree<T>::PrintTreeColumns()
 		vector<T> *list = new vector<T>();
 		list->push_back(_root->Item());
 		columns.emplace(0, list);
-		PrintColumns(_root, 0, columns);
+		_PrintColumns(_root, 0, columns);
 		for (typename map<long, shared_ptr<vector<T>>>::iterator it = columns.begin(); it != columns.end(); it++)
 			for (typename vector<T>::iterator it1 = it->second->begin(); it1 != it->second->end(); it1++)
 				cout << *it1 << ", ";
@@ -760,7 +757,7 @@ void Tree<T>::PrintTreeColumns()
 	}
 }
 template <typename T>
-void Tree<T>::AddToColumn(T value, long column, map<long, shared_ptr<vector<T>>> &columns)
+void Tree<T>::_AddToColumn(T value, long column, map<long, shared_ptr<vector<T>>> &columns)
 {
 	if (!columns.count(column))
 	{
@@ -772,17 +769,17 @@ void Tree<T>::AddToColumn(T value, long column, map<long, shared_ptr<vector<T>>>
 		columns[column]->push_back(value);
 }
 template <typename T>
-void Tree<T>::PrintColumns(const shared_ptr<Node<T>> &node, long column, map<long, shared_ptr<vector<T>>> &columns)
+void Tree<T>::_PrintColumns(const shared_ptr<Node<T>> &node, long column, map<long, shared_ptr<vector<T>>> &columns)
 {
 	// Use Pre-Order traversal
 	if (node)
 	{
 		if (node->Left())
-			AddToColumn(node->Left()->Item(), column - 1, columns);
+			_AddToColumn(node->Left()->Item(), column - 1, columns);
 		if (node->Right())
-			AddToColumn(node->Right()->Item(), column + 1, columns);
-		PrintColumns(node->Left(), column - 1, columns);
-		PrintColumns(node->Right(), column + 1, columns);
+			_AddToColumn(node->Right()->Item(), column + 1, columns);
+		_PrintColumns(node->Left(), column - 1, columns);
+		_PrintColumns(node->Right(), column + 1, columns);
 	}
 }
 template <typename T>
@@ -827,30 +824,30 @@ void Tree<T>::PrintTree() const
 template <typename T>
 T Tree<T>::Min() const
 {
-	return _root ? Min(_root) : numeric_limits<T>::max();
+	return _root ? _Min(_root) : numeric_limits<T>::max();
 }
 template <typename T>
 T Tree<T>::Max() const
 {
-	return _root ? Max(_root) : numeric_limits<T>::min();
+	return _root ? _Max(_root) : numeric_limits<T>::min();
 }
 template <typename T>
-T Tree<T>::Min(const shared_ptr<Node<T>> &n) const
+T Tree<T>::_Min(const shared_ptr<Node<T>> &n) const
 {
-	return n ? min(n->Item(), min(Min(n->Left()), Min(n->Right()))) : numeric_limits<T>::max();
+	return n ? min(n->Item(), min(_Min(n->Left()), _Min(n->Right()))) : numeric_limits<T>::max();
 }
 template <typename T>
-T Tree<T>::Max(const shared_ptr<Node<T>> &n) const
+T Tree<T>::_Max(const shared_ptr<Node<T>> &n) const
 {
-	return n ? max(n->Item(), max(Max(n->Left()), Max(n->Right()))) : numeric_limits<T>::min();
+	return n ? max(n->Item(), max(_Max(n->Left()), _Max(n->Right()))) : numeric_limits<T>::min();
 }
 template <typename T>
 vector<size_t> Tree<T>::GetLevelNodeCount()
 {
-	return GetLevelNodeCount(_root, 0);
+	return _GetLevelNodeCount(_root, 0);
 }
 template <typename T>
-vector<size_t> Tree<T>::GetLevelNodeCount(const shared_ptr<Node<T>> &n, size_t level)
+vector<size_t> Tree<T>::_GetLevelNodeCount(const shared_ptr<Node<T>> &n, size_t level)
 {
 	if (n)
 	{
@@ -858,8 +855,8 @@ vector<size_t> Tree<T>::GetLevelNodeCount(const shared_ptr<Node<T>> &n, size_t l
 			_levelNodeCount.push_back(1);
 		else
 			_levelNodeCount[level]++;
-		GetLevelNodeCount(n->Left(), level + 1);
-		GetLevelNodeCount(n->Right(), level + 1);
+		_GetLevelNodeCount(n->Left(), level + 1);
+		_GetLevelNodeCount(n->Right(), level + 1);
 	}
 	return _levelNodeCount;
 }
@@ -1014,24 +1011,24 @@ shared_ptr<Node<T>> Tree<T>::_ToLinkedList(const shared_ptr<Node<T>> &n)
 	return n;
 }
 template <typename T>
-bool Tree<T>::isValidBST(const shared_ptr<Node<T>> &n) const
+bool Tree<T>::_IsValidBST(const shared_ptr<Node<T>> &n) const
 {
 	bool result = true;
 	if (n)
 	{
-		result &= isValidBST(n->Left());
-		result &= isValidBST(n->Right());
+		result &= _IsValidBST(n->Left());
+		result &= _IsValidBST(n->Right());
 		if (n->Left())
-			result &= Max(n->Left()) < n->Item();
+			result &= _Max(n->Left()) < n->Item();
 		if (n->Right())
-			result &= Min(n->Right()) > n->Item();
+			result &= _Min(n->Right()) > n->Item();
 	}
 	return result;
 }
 template <typename T>
-bool Tree<T>::isValidBST() const
+bool Tree<T>::IsValidBST() const
 {
-	return isValidBST(_root);
+	return _IsValidBST(_root);
 }
 // Return the arithmetic total.
 // Tree nodes are arithmetic operators. Only leaf nodes are values (long in this case).
@@ -1058,7 +1055,7 @@ T Tree<T>::TreeArithmeticTotal(shared_ptr<Node<string>> node)
 	return result;
 }
 template <typename T>
-void Tree<T>::split(string const &s, char delim, vector<string> &elems)
+void Tree<T>::_Split(string const &s, char delim, vector<string> &elems)
 {
 	stringstream ss(s);
 	string item;
@@ -1076,7 +1073,7 @@ template <typename T>
 bool Tree<T>::IsValidPreOrderTreeSerialization(string const &preorder)
 {
 	vector<string> tokens;
-	split(preorder, ',', tokens);
+	_Split(preorder, ',', tokens);
 	size_t leaves = 0, nonLeaves = 0, i = 0;
 	for (; i < tokens.size() && leaves != nonLeaves + 1; i++)
 	{
@@ -1093,16 +1090,16 @@ bool Tree<T>::IsValidPreOrderTreeSerialization(string const &preorder)
  * Using a variable maxPathSum to record maximum sum of any unidirectional (DFS) path in a tree without stack back-tracking / rewind.
  */
 template <typename T>
-T Tree<T>::MaxPathSum(const shared_ptr<Node<T>> &n, T &maxPathSum)
+T Tree<T>::_MaxPathSum(const shared_ptr<Node<T>> &n, T &maxPathSum)
 	requires arithmetic_type<T>
 {
 	T result = 0;
 	if (n)
 	{
-		T leftSum = max<T>(0, MaxPathSum(n->Left(), maxPathSum)), rightSum = max<T>(0, MaxPathSum(n->Right(), maxPathSum)); // Ignore negative values
-		T subTreeSum = n->Item() + leftSum + rightSum;																		// n->val could still be < 0
-		result = n->Item() + max(leftSum, rightSum);																		// This will return to the parent to be included in the path for potential maxSum.
-		maxPathSum = max(maxPathSum, subTreeSum);																			// if choose both left + right + root, this is an isolated subtree with a potential maxSum. If this subtree is included by the parent node, then it will violate the requirement that a node can only appear in the path ONLY ONCE.
+		T leftSum = max<T>(0, _MaxPathSum(n->Left(), maxPathSum)), rightSum = max<T>(0, _MaxPathSum(n->Right(), maxPathSum)); // Ignore negative values
+		T subTreeSum = n->Item() + leftSum + rightSum;																		  // n->val could still be < 0
+		result = n->Item() + max(leftSum, rightSum);																		  // This will return to the parent to be included in the path for potential maxSum.
+		maxPathSum = max(maxPathSum, subTreeSum);																			  // if choose both left + right + root, this is an isolated subtree with a potential maxSum. If this subtree is included by the parent node, then it will violate the requirement that a node can only appear in the path ONLY ONCE.
 	}
 	return result;
 }
@@ -1112,7 +1109,7 @@ T Tree<T>::MaxPathSum()
 	requires arithmetic_type<T>
 {
 	T maxPathSum = numeric_limits<T>::min(); // Record maximum sum of any unidirectional (DFS) path in a tree without stack back-tracking / rewind.
-	return max(maxPathSum, MaxPathSum(_root, maxPathSum));
+	return max(maxPathSum, _MaxPathSum(_root, maxPathSum));
 }
 /*
  * https://leetcode.com/problems/recover-binary-search-tree/
@@ -1132,12 +1129,12 @@ swap(first, second)
 	2        4
  */
 template <typename T>
-void Tree<T>::RecoverBinarySearchTree(const shared_ptr<Node<T>> &n, shared_ptr<Node<T>> &first, shared_ptr<Node<T>> &second, shared_ptr<Node<T>> &prev)
+void Tree<T>::_RecoverBinarySearchTree(const shared_ptr<Node<T>> &n, shared_ptr<Node<T>> &first, shared_ptr<Node<T>> &second, shared_ptr<Node<T>> &prev)
 	requires arithmetic_type<T>
 {
 	if (n)
 	{
-		RecoverBinarySearchTree(n->Left(), first, second, prev);
+		_RecoverBinarySearchTree(n->Left(), first, second, prev);
 		if (prev && prev->Item() > n->Item())
 		{
 			if (!first)
@@ -1145,7 +1142,7 @@ void Tree<T>::RecoverBinarySearchTree(const shared_ptr<Node<T>> &n, shared_ptr<N
 			second = n;
 		}
 		prev = n;
-		RecoverBinarySearchTree(n->Right(), first, second, prev);
+		_RecoverBinarySearchTree(n->Right(), first, second, prev);
 	}
 }
 template <typename T>
@@ -1153,12 +1150,12 @@ bool Tree<T>::RecoverBinarySearchTree()
 	requires arithmetic_type<T>
 {
 	shared_ptr<Node<T>> first = nullptr, second = nullptr, prev = nullptr;
-	RecoverBinarySearchTree(_root, first, second, prev);
+	_RecoverBinarySearchTree(_root, first, second, prev);
 	if (first && second)
 	{
 		T tmp = first->Item();
 		first->SetItem(second->Item());
 		second->SetItem(tmp);
 	}
-	return isValidBST();
+	return IsValidBST();
 }

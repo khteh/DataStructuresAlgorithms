@@ -267,7 +267,7 @@ TEST(BinaryTreeTests, BinaryTreeTraversalConstructionsTest)
 	*/
 	Tree<long> tree9(TraversalType::PreOrder, a, b);
 	ASSERT_EQ(5, tree9.Count());
-	ASSERT_FALSE(tree9.isValidBST());
+	ASSERT_FALSE(tree9.IsValidBST());
 	tree9.PrintTree();
 
 	a.clear();
@@ -281,7 +281,7 @@ TEST(BinaryTreeTests, BinaryTreeTraversalConstructionsTest)
 	*/
 	Tree<long> tree10(TraversalType::PreOrder, a, b);
 	ASSERT_EQ(3, tree10.Count());
-	ASSERT_FALSE(tree10.isValidBST());
+	ASSERT_FALSE(tree10.IsValidBST());
 	tree10.PrintTree();
 
 	a.clear();
@@ -295,7 +295,7 @@ TEST(BinaryTreeTests, BinaryTreeTraversalConstructionsTest)
 	*/
 	Tree<long> tree11(TraversalType::PreOrder, a, b);
 	ASSERT_EQ(3, tree11.Count());
-	ASSERT_TRUE(tree11.isValidBST());
+	ASSERT_TRUE(tree11.IsValidBST());
 	tree11.PrintTree();
 
 	a.clear();
@@ -309,7 +309,7 @@ TEST(BinaryTreeTests, BinaryTreeTraversalConstructionsTest)
 	*/
 	Tree<long> tree12(TraversalType::PreOrder, a, b);
 	ASSERT_EQ(3, tree12.Count());
-	ASSERT_FALSE(tree12.isValidBST());
+	ASSERT_FALSE(tree12.IsValidBST());
 	tree12.PrintTree();
 
 	a.clear();
@@ -324,7 +324,7 @@ TEST(BinaryTreeTests, BinaryTreeTraversalConstructionsTest)
 	*/
 	Tree<long> tree13(TraversalType::PreOrder, a, b);
 	ASSERT_EQ(4, tree13.Count());
-	ASSERT_TRUE(tree13.isValidBST());
+	ASSERT_TRUE(tree13.IsValidBST());
 	tree13.PrintTree();
 
 	a.clear();
@@ -339,7 +339,7 @@ TEST(BinaryTreeTests, BinaryTreeTraversalConstructionsTest)
 	*/
 	Tree<long> tree14(TraversalType::PreOrder, a, b);
 	ASSERT_EQ(4, tree14.Count());
-	ASSERT_FALSE(tree14.isValidBST());
+	ASSERT_FALSE(tree14.IsValidBST());
 	tree14.PrintTree();
 
 	a.clear();
@@ -355,7 +355,7 @@ TEST(BinaryTreeTests, BinaryTreeTraversalConstructionsTest)
 	*/
 	Tree<long> tree15(TraversalType::PostOrder, a, b);
 	ASSERT_EQ(5, tree15.Count());
-	ASSERT_FALSE(tree15.isValidBST());
+	ASSERT_FALSE(tree15.IsValidBST());
 	tree15.PrintTree();
 
 	a.clear();
@@ -371,5 +371,5 @@ TEST(BinaryTreeTests, BinaryTreeTraversalConstructionsTest)
 	Tree<long> tree16(TraversalType::PostOrder, a, b);
 	tree16.PrintTree();
 	ASSERT_EQ(4, tree16.Count());
-	ASSERT_TRUE(tree16.isValidBST());
+	ASSERT_TRUE(tree16.IsValidBST());
 }

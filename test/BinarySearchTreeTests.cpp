@@ -22,7 +22,7 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest)
 	a = views::iota(0, 9) | ranges::to<vector<long>>();
 	Tree<long> tree0(a, TreeType::BinarySearch);
 	tree0.PrintTree();
-	ASSERT_TRUE(tree0.isValidBST());
+	ASSERT_TRUE(tree0.IsValidBST());
 	ASSERT_EQ(9, tree0.Count());
 	ASSERT_EQ(0, tree0.Min());
 	ASSERT_EQ(8, tree0.Max());
@@ -53,7 +53,7 @@ TEST(BinarySearchTreeTests, BinarySearchTreeTest)
 	b.clear();
 	a = {50, -100, 0, 10, -50, 60, 100, 75, 150};
 	Tree<long> tree1(a, TreeType::BinarySearch);
-	ASSERT_TRUE(tree1.isValidBST());
+	ASSERT_TRUE(tree1.IsValidBST());
 	ASSERT_EQ(9, tree1.Count());
 	ASSERT_EQ(-100, tree1.Min());
 	ASSERT_EQ(150, tree1.Max());
@@ -145,7 +145,7 @@ protected:
 };
 TEST_P(BinarySearchTreeFindSumTestFixture, BinarySearchTreeFindSumTests)
 {
-	ASSERT_TRUE(this->_tree.isValidBST());
+	ASSERT_TRUE(this->_tree.IsValidBST());
 	ASSERT_EQ(this->_data.size(), this->_tree.Count());
 	ASSERT_EQ(*ranges::min_element(this->_data), this->_tree.Min());
 	ASSERT_EQ(*ranges::max_element(this->_data), this->_tree.Max());
@@ -163,7 +163,7 @@ TEST(BinarySearchTreeTests, BinarySearchTreeInOrderSuccessorTest)
 	map<size_t, vector<shared_ptr<Node<long>>>> nodes;
 	a = {50, -100, 0, 10, -50, 60, 100, 75, 150};
 	Tree<long> tree(a, TreeType::BinarySearch);
-	ASSERT_TRUE(tree.isValidBST());
+	ASSERT_TRUE(tree.IsValidBST());
 	ASSERT_EQ(9, tree.Count());
 	ASSERT_EQ(-100, tree.Min());
 	ASSERT_EQ(150, tree.Max());
@@ -199,7 +199,7 @@ TEST(BinarySearchTreeTests, BinarySearchTreeCommonAncestorTest)
 	shared_ptr<Node<long>> node, node1, node2, node3;
 	a = {50, -100, 0, 10, -50, 60, 100, 75, 150};
 	Tree<long> tree(a, TreeType::BinarySearch);
-	ASSERT_TRUE(tree.isValidBST());
+	ASSERT_TRUE(tree.IsValidBST());
 	ASSERT_EQ(9, tree.Count());
 	ASSERT_EQ(-100, tree.Min());
 	ASSERT_EQ(150, tree.Max());
@@ -274,7 +274,7 @@ Level 3:        -100(-50)               60(75)
 };
 TEST_P(BinarySearchTreekthSmallestTestFixture, BinarySearchTreekthSmallestTests)
 {
-	ASSERT_TRUE(this->_tree.isValidBST());
+	ASSERT_TRUE(this->_tree.IsValidBST());
 	ASSERT_EQ(this->_data.size(), this->_tree.Count());
 	ASSERT_EQ(*ranges::min_element(this->_data), this->_tree.Min());
 	ASSERT_EQ(*ranges::max_element(this->_data), this->_tree.Max());
@@ -307,7 +307,7 @@ Level 3:        -100(-50)               60(75)
 };
 TEST_P(BinarySearchTreekthLargestTestFixture, BinarySearchTreekthLargestTests)
 {
-	ASSERT_TRUE(this->_tree.isValidBST());
+	ASSERT_TRUE(this->_tree.IsValidBST());
 	ASSERT_EQ(this->_data.size(), this->_tree.Count());
 	ASSERT_EQ(*ranges::min_element(this->_data), this->_tree.Min());
 	ASSERT_EQ(*ranges::max_element(this->_data), this->_tree.Max());

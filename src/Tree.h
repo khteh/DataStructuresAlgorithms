@@ -39,35 +39,35 @@ private:
 
 protected:
 	shared_ptr<Node<T>> _root;
-	void Swap(Tree &);
-	void Clear(shared_ptr<Node<T>> &);
-	shared_ptr<Node<T>> AddToTree(shared_ptr<Node<T>>, vector<T> &, long, long);
-	shared_ptr<Node<T>> AddToTree(vector<T> &);
-	shared_ptr<Node<T>> FindNode(const shared_ptr<Node<T>> &, T item);
-	void PrintColumns(const shared_ptr<Node<T>> &, long, map<long, shared_ptr<vector<T>>> &);
-	void AddToColumn(T, long, map<long, shared_ptr<vector<T>>> &);
-	T MinDiffInBST(shared_ptr<Node<T>>, shared_ptr<Node<T>>) const
+	void _Swap(Tree &);
+	void _Clear(shared_ptr<Node<T>> &);
+	void _PrintColumns(const shared_ptr<Node<T>> &, long, map<long, shared_ptr<vector<T>>> &);
+	void _AddToColumn(T, long, map<long, shared_ptr<vector<T>>> &);
+	void _Split(string const &s, char delim, vector<string> &elems);
+	void _RecoverBinarySearchTree(const shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &)
 		requires arithmetic_type<T>;
-	shared_ptr<Node<T>> Copy(const shared_ptr<Node<T>> &, map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> &);
-	shared_ptr<Node<T>> LeftMostChild(shared_ptr<Node<T>> &);
-	bool covers(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
+	shared_ptr<Node<T>> _AddToTree(shared_ptr<Node<T>>, vector<T> &, long, long);
+	shared_ptr<Node<T>> _AddToTree(vector<T> &);
+	shared_ptr<Node<T>> _FindNode(const shared_ptr<Node<T>> &, T item);
+	shared_ptr<Node<T>> _Copy(const shared_ptr<Node<T>> &, map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> &);
+	shared_ptr<Node<T>> _LeftMostChild(shared_ptr<Node<T>> &);
+	bool _IsValidBST(const shared_ptr<Node<T>> &) const;
+	bool _Covers(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	void _FindSum(const shared_ptr<Node<T>> &, const T, long, vector<T>, vector<string> &)
 		requires arithmetic_type<T>;
 	vector<string> _GetRoot2LeafNumbers(const shared_ptr<Node<T>> &);
-	size_t Count(const shared_ptr<Node<T>> &) const;
-	T Min(const shared_ptr<Node<T>> &) const;
-	T Max(const shared_ptr<Node<T>> &) const;
-	bool isValidBST(const shared_ptr<Node<T>> &) const;
-	vector<size_t> GetLevelNodeCount(const shared_ptr<Node<T>> &, size_t);
+	size_t _Count(const shared_ptr<Node<T>> &) const;
+	T _MinDiffInBST(shared_ptr<Node<T>>, shared_ptr<Node<T>>) const
+		requires arithmetic_type<T>;
+	T _Min(const shared_ptr<Node<T>> &) const;
+	T _Max(const shared_ptr<Node<T>> &) const;
+	T _MaxPathSum(const shared_ptr<Node<T>> &, T &)
+		requires arithmetic_type<T>;
+	vector<size_t> _GetLevelNodeCount(const shared_ptr<Node<T>> &, size_t);
 	shared_ptr<Node<T>> _ToLinkedList(const shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> _BuildTreePreOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> _BuildTreePostOrder(vector<T> &, vector<T> &, long, long, long);
-	shared_ptr<Node<T>> CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
-	void split(string const &s, char delim, vector<string> &elems);
-	T MaxPathSum(const shared_ptr<Node<T>> &, T &)
-		requires arithmetic_type<T>;
-	void RecoverBinarySearchTree(const shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &, shared_ptr<Node<T>> &)
-		requires arithmetic_type<T>;
+	shared_ptr<Node<T>> _CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 
 public:
 	Tree();
@@ -77,9 +77,18 @@ public:
 	Tree(vector<T> &, TreeType);
 	Tree(TraversalType, vector<T> &preorder, vector<T> &inorder);
 	Tree(shared_ptr<Node<T>> &);
-	void LoadData(vector<T> &, TreeType);
 	virtual ~Tree();
 	void Clear();
+	void InsertItem(T);
+	void PrintTreeColumns();
+	void LoadData(vector<T> &, TreeType);
+	void Serialize(const shared_ptr<Node<T>> &, vector<T> &);
+	void GetNodes(map<size_t, vector<shared_ptr<Node<T>>>> &, long level = -1 /* Get nodes of all levels by default*/) const;
+	void FindSum(const shared_ptr<Node<T>> &, const T, vector<string> &)
+		requires arithmetic_type<T>;
+	virtual void PrintTree() const;
+	virtual void InsertNode(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
+
 	// Tree<T> &operator=(Tree<T> const &); // Copy assignment operator
 	// Tree<T> &operator=(Tree<T> &&); // Move assignment operator
 	/*
@@ -89,47 +98,39 @@ public:
 	using its copy constructor or move constructor...
 	*/
 	Tree<T> &operator=(Tree<T>);
-	bool operator==(const Tree<T> &) const;
-	void Serialize(const shared_ptr<Node<T>> &, vector<T> &);
 	shared_ptr<Node<T>> Root() const;
-	void InsertItem(T);
-	virtual void InsertNode(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> FindNode(T);
-	void GetNodes(map<size_t, vector<shared_ptr<Node<T>>>> &, long level = -1 /* Get nodes of all levels by default*/) const;
+	shared_ptr<Node<T>> ToLinkedList();
 	shared_ptr<Node<T>> InOrderSuccessor(shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> CommonAncestor1(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
-	void FindSum(const shared_ptr<Node<T>> &, const T, vector<string> &)
-		requires arithmetic_type<T>;
-	T SumRoot2LeafNumbers();
+	bool operator==(const Tree<T> &) const;
+	bool IsValidPreOrderTreeSerialization(string const &);
+	bool HasNextMin() const;
+	bool HasNextMax() const;
+	bool IsBalancedTree() const;
 	bool SubTree(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
 	bool MatchTree(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &) const;
+	bool IsValidBST() const;
+	bool RecoverBinarySearchTree()
+		requires arithmetic_type<T>;
+	size_t Count() const;
 	size_t MinDepth(const shared_ptr<Node<T>> &) const;
 	size_t MaxDepth(const shared_ptr<Node<T>> &) const;
 	T NextMin();
 	T NextMax();
 	T kthSmallest(size_t);
 	T kthLargest(size_t);
-	bool HasNextMin() const;
-	bool HasNextMax() const;
+	T SumRoot2LeafNumbers();
 	T Min() const;
 	T Max() const;
 	T MinSubTreesDifference() const
 		requires arithmetic_type<T>;
-	bool IsBalancedTree() const;
 	T MinDiffInBST() const
 		requires arithmetic_type<T>;
-	size_t Count() const;
-	virtual void PrintTree() const;
-	void PrintTreeColumns();
-	vector<size_t> GetLevelNodeCount();
-	shared_ptr<Node<T>> ToLinkedList();
-	bool isValidBST() const;
 	T TreeArithmeticTotal(shared_ptr<Node<string>>)
 		requires arithmetic_type<T>;
-	bool IsValidPreOrderTreeSerialization(string const &);
 	T MaxPathSum()
 		requires arithmetic_type<T>;
-	bool RecoverBinarySearchTree()
-		requires arithmetic_type<T>;
+	vector<size_t> GetLevelNodeCount();
 };
