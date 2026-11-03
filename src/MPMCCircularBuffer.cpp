@@ -77,6 +77,7 @@ bool MPMCCircularBuffer<T>::Push(T const &data)
          * When the counters straddle 2⁶³, casting both to signed and then subtracting overflows, which is undefined behaviour.
          * At 1 billion operations per second that’s about 292 years away, so it won’t happen in practice, but it’s still a real defect.
          * So, Subtract while unsigned, which is well defined when the counters wrap around. Otherwise tests would log that error in every sanitizer run.
+         * (2⁶³ − 1) − 2⁶³ wraps to 2⁶⁴ − 1, which casts to −1
          */
         intptr_t diff = static_cast<intptr_t>(seq - pos);
         if (diff == 0)
@@ -118,6 +119,7 @@ bool MPMCCircularBuffer<T>::Pop(T &value)
          * When the counters straddle 2⁶³, casting both to signed and then subtracting overflows, which is undefined behaviour.
          * At 1 billion operations per second that’s about 292 years away, so it won’t happen in practice, but it’s still a real defect.
          * So, Subtract while unsigned, which is well defined when the counters wrap around. Otherwise tests would log that error in every sanitizer run.
+         * (2⁶³ − 1) − 2⁶³ wraps to 2⁶⁴ − 1, which casts to −1
          */
         intptr_t diff = static_cast<intptr_t>(seq - (pos + 1));
         if (diff == 0)
