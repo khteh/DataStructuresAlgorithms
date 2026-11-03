@@ -14,8 +14,8 @@ public:
 	static vector<uintptr_t> SlotAddresses(MPMCCircularBuffer<T> const &buffer)
 	{
 		vector<uintptr_t> addresses;
-		for (auto const &node : buffer._buffer)
-			addresses.push_back(reinterpret_cast<uintptr_t>(&node));
+		for (auto const &slot : buffer._buffer)
+			addresses.push_back(reinterpret_cast<uintptr_t>(&slot));
 		return addresses;
 	}
 	template <typename T>
@@ -23,6 +23,15 @@ public:
 	{
 		uintptr_t const enqueue = reinterpret_cast<uintptr_t>(&buffer.enqueue_idx_), dequeue = reinterpret_cast<uintptr_t>(&buffer.dequeue_idx_);
 		return enqueue > dequeue ? enqueue - dequeue : dequeue - enqueue;
+	}
+	// Puts an empty buffer in the state it would reach after position items went through it
+	template <typename T>
+	static void MoveTo(MPMCCircularBuffer<T> &buffer, size_t position)
+	{
+		buffer.enqueue_idx_.store(position, memory_order_relaxed);
+		buffer.dequeue_idx_.store(position, memory_order_relaxed);
+		for (size_t i = 0; i < buffer._capacity; i++)
+			buffer._buffer[(position + i) & buffer._mask].sequence.store(position + i, memory_order_relaxed);
 	}
 };
 namespace
@@ -531,6 +540,88 @@ TEST(MPMCCircularBufferTests, ProducerAndConsumerIndicesDoNotShareACacheLine)
 	MPMCCircularBuffer<long> buffer(8);
 	ASSERT_GE(MPMCCircularBufferInspector::DistanceBetweenIndices(buffer), MPMCCircularBufferInspector::CacheLineSize(buffer));
 }
+// Counter wrap around, which takes centuries to reach naturally. Parameters: where the counters overflow, capacity
+class MPMCCircularBufferCounterWrapTestFixture : public testing::TestWithParam<tuple<size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_capacity = get<1>(GetParam());
+		_buffer = make_unique<MPMCCircularBuffer<long>>(_capacity);
+		MPMCCircularBufferInspector::MoveTo(*_buffer, get<0>(GetParam()) - _capacity / 2); // Half a lap before the overflow
+	}
+
+protected:
+	size_t _capacity;
+	unique_ptr<MPMCCircularBuffer<long>> _buffer;
+};
+TEST_P(MPMCCircularBufferCounterWrapTestFixture, OrderIsKept)
+{
+	long value = -1;
+	for (long i = 0; i < 4 * static_cast<long>(_capacity); i++)
+	{
+		ASSERT_TRUE(_buffer->Push(i));
+		ASSERT_TRUE(_buffer->Pop(value));
+		ASSERT_EQ(i, value);
+	}
+}
+TEST_P(MPMCCircularBufferCounterWrapTestFixture, FullAndEmptyAreDetected)
+{
+	long value = -1;
+	for (int lap = 0; lap < 4; lap++)
+	{
+		ASSERT_FALSE(_buffer->Pop(value));
+		for (size_t i = 0; i < _capacity; i++)
+			ASSERT_TRUE(_buffer->Push(static_cast<long>(i)));
+		ASSERT_FALSE(_buffer->Push(-1));
+		for (size_t i = 0; i < _capacity; i++)
+		{
+			ASSERT_TRUE(_buffer->Pop(value));
+			ASSERT_EQ(static_cast<long>(i), value);
+		}
+	}
+}
+TEST_P(MPMCCircularBufferCounterWrapTestFixture, EveryItemIsConsumedOnceByConcurrentThreads)
+{
+	static constexpr size_t THREADS = 5, ITEMS_PER_PRODUCER = 2000, TOTAL = THREADS * ITEMS_PER_PRODUCER;
+	vector<vector<long>> received(THREADS);
+	atomic<size_t> consumed{0};
+	atomic<bool> start{false};
+	{
+		vector<jthread> threads;
+		for (size_t producer = 0; producer < THREADS; producer++)
+			threads.emplace_back([&, producer]
+								 {
+				WaitFor(start);
+				for (size_t i = 0; i < ITEMS_PER_PRODUCER; i++)
+					while (!_buffer->Push(static_cast<long>(producer * ITEMS_PER_PRODUCER + i)))
+						this_thread::yield(); });
+		for (size_t consumer = 0; consumer < THREADS; consumer++)
+			threads.emplace_back([&, consumer]
+								 {
+				WaitFor(start);
+				long value;
+				while (consumed.load(memory_order_relaxed) < TOTAL)
+					if (_buffer->Pop(value))
+					{
+						received[consumer].push_back(value);
+						consumed.fetch_add(1, memory_order_relaxed);
+					}
+					else
+						this_thread::yield(); });
+		start.store(true, memory_order_release);
+	}
+	vector<long> all;
+	for (vector<long> const &items : received)
+		all.insert(all.end(), items.begin(), items.end());
+	ExpectEachValueOnce(move(all), TOTAL);
+}
+INSTANTIATE_TEST_SUITE_P(
+	MPMCCircularBufferTests,
+	MPMCCircularBufferCounterWrapTestFixture,
+	::testing::Combine(::testing::Values(static_cast<size_t>(0),	  // size_t overflows to 0
+										 size_t{1} << 63),			  // The sign of intptr_t flips
+					   ::testing::Values<size_t>(2, 8, 1024)));
 // Reference counts show what happens to the item, also in builds without the sanitizers
 TEST(MPMCCircularBufferTests, PopMovesTheItemOutOfTheSlot)
 {

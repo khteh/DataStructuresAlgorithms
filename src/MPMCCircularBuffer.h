@@ -21,7 +21,7 @@ private:
 #endif
 
     // Each slot starts on its own cache line so that threads working on neighbouring slots do not contend
-    struct alignas(CacheLineSize) Node
+    struct alignas(CacheLineSize) Slot
     {
         T data;
         /*
@@ -31,7 +31,7 @@ private:
         */
         atomic<size_t> sequence;
     };
-    vector<Node> _buffer;
+    vector<Slot> _buffer;
 
     // Align pointers to prevent performance degradation caused by cache-line bouncing
     alignas(CacheLineSize) atomic<size_t> enqueue_idx_{0};

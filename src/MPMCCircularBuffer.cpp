@@ -8,6 +8,33 @@ template class MPMCCircularBuffer<shared_ptr<long>>;
 template class MPMCCircularBuffer<vector<long>>;
 template class MPMCCircularBuffer<array<char, 40>>;
 template class MPMCCircularBuffer<array<char, 100>>;
+/*
+On a 64-bit build, effectively zero. I’m working this out from the code and arithmetic, not from a test.
+
+What ABA would take here: the only compare-exchanges are on enqueue_idx_ and dequeue_idx_. For one to wrongly succeed, a thread would have to:
+
+Read pos, check the slot, then get paused just before compare_exchange_weak.
+Stay paused while the index advances by exactly a multiple of 2⁶⁴, so it lands back on the same value.
+Wake up, and have the stale compare-exchange succeed.
+
+The classic ABA problem comes from a memory address being freed and reused, so a pointer looks unchanged when it isn’t. This class has no such pointers: the indices and sequence numbers only ever count upward, and the slots are never freed while in use. The only way to see the same value twice is for the 64-bit counter to wrap around.
+
+size_t	Operations per second	Time for one full wrap
+64-bit	1 billion	About 585 years
+32-bit	1 billion	About 4.3 seconds
+32-bit	100 million	About 43 seconds
+
+So on 64-bit, one thread would have to stay paused for centuries. The header’s comment that the sequence numbers avoid ABA is fair for x64.
+
+32-bit is different: a thread paused for seconds is unusual but possible. It would still have to resume with the index on exactly the same value, so the odds are very low, but not unthinkable. Your CMakeLists.txt accepts Win32 as well as x64, so the risk applies only if you build that. Also, the diff calculation handles normal counter wraparound correctly, since it subtracts and casts to signed.
+
+A more likely problem: a stalled thread can happen in normal use. If a producer claims a slot and is paused before publishing it, then:
+
+Consumers reach that slot and Pop returns false, even if later slots already hold data.
+Once the buffer wraps round to that slot, Push returns false too, so the queue stalls until that thread resumes.
+
+No data is lost or corrupted, and it recovers when the thread wakes. It does mean false doesn’t always mean truly empty or full, and strictly the queue isn’t lock-free in that case. It’s a known trade-off of this design, and it’s why callers need to retry.
+*/
 template <typename T>
 MPMCCircularBuffer<T>::MPMCCircularBuffer(size_t capacity)
     : _capacity(capacity),
@@ -39,14 +66,14 @@ MPMCCircularBuffer<T>::~MPMCCircularBuffer()
 template <typename T>
 bool MPMCCircularBuffer<T>::Push(T const &data)
 {
-    Node *node;
+    Slot *slot;
     size_t pos = enqueue_idx_.load(memory_order_relaxed);
 
     while (true)
     {
-        node = &_buffer[pos & _mask];
-        size_t seq = node->sequence.load(memory_order_acquire);
-        intptr_t diff = static_cast<intptr_t>(seq) - static_cast<intptr_t>(pos);
+        slot = &_buffer[pos & _mask];
+        size_t seq = slot->sequence.load(memory_order_acquire);
+        intptr_t diff = static_cast<intptr_t>(seq - pos); // Subtract while unsigned, which is well defined when the counters wrap around
 
         if (diff == 0)
         {
@@ -67,23 +94,23 @@ bool MPMCCircularBuffer<T>::Push(T const &data)
     }
 
     // Write the data into the safely claimed unique slot
-    node->data = data;
+    slot->data = data;
 
     // Pass the baton: hand off ownership to the waiting consumer
-    node->sequence.store(pos + 1, memory_order_release);
+    slot->sequence.store(pos + 1, memory_order_release);
     return true;
 }
 template <typename T>
 bool MPMCCircularBuffer<T>::Pop(T &value)
 {
-    Node *node;
+    Slot *slot;
     size_t pos = dequeue_idx_.load(memory_order_relaxed);
 
     while (true)
     {
-        node = &_buffer[pos & _mask];
-        size_t seq = node->sequence.load(memory_order_acquire);
-        intptr_t diff = static_cast<intptr_t>(seq) - static_cast<intptr_t>(pos + 1);
+        slot = &_buffer[pos & _mask];
+        size_t seq = slot->sequence.load(memory_order_acquire);
+        intptr_t diff = static_cast<intptr_t>(seq - (pos + 1)); // Subtract while unsigned, which is well defined when the counters wrap around
 
         if (diff == 0)
         {
@@ -104,9 +131,9 @@ bool MPMCCircularBuffer<T>::Pop(T &value)
     }
 
     // Extract the data from the safely claimed slot
-    value = move(node->data);
+    value = move(slot->data);
 
     // Reset the baton: hand ownership back to the next producer cycle
-    node->sequence.store(pos + _capacity, memory_order_release);
+    slot->sequence.store(pos + _capacity, memory_order_release);
     return true;
 }
