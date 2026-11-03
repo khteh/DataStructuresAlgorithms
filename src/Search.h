@@ -9,14 +9,14 @@ class Search
 {
 private:
     uint64_t _lcm_ab, _lcm_bc, _lcm_ac, _lcm_abc;
-    void KMPTable(string const &, vector<long> &);
-    bool CanEatAllBananasInTime(vector<size_t> const &, size_t, size_t);
-    bool IsValidSubSequence(vector<size_t> const &, size_t, size_t);
-    bool CanMakeBouquets(vector<size_t> const &, size_t, size_t, size_t);
-    bool HasKthSmallest(size_t, size_t, size_t, size_t);
-    bool HasKthSmallestPairs(vector<size_t> &, size_t, size_t);
-    bool HasNUglyNumbers(size_t, uint64_t, uint64_t, uint64_t, uint64_t);
-    bool WithinThreshold(vector<size_t> const &, size_t, size_t);
+    void _KMPTable(string const &, vector<long> &);
+    bool _CanEatAllBananasInTime(vector<size_t> const &, size_t, size_t);
+    bool _IsValidSubSequence(vector<size_t> const &, size_t, size_t);
+    bool _CanMakeBouquets(vector<size_t> const &, size_t, size_t, size_t);
+    bool _HasKthSmallest(size_t, size_t, size_t, size_t);
+    bool _HasKthSmallestPairs(vector<size_t> &, size_t, size_t);
+    bool _HasNUglyNumbers(size_t, uint64_t, uint64_t, uint64_t, uint64_t);
+    bool _WithinThreshold(vector<size_t> const &, size_t, size_t);
 
 public:
     void KMPSearch(string const &, string const &, vector<size_t> &);

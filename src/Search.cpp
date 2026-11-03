@@ -3,7 +3,7 @@
 /* https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm
  * https://cp-algorithms.com/string/prefix-function.html
  */
-void Search::KMPTable(string const &w, vector<long> &T)
+void Search::_KMPTable(string const &w, vector<long> &T)
 {
     // the first few values are fixed but different from what the algorithm might suggest
     T.resize(w.size() + 1);
@@ -26,7 +26,7 @@ void Search::KMPTable(string const &w, vector<long> &T)
 void Search::KMPSearch(string const &s, string const &w, vector<size_t> &result)
 {
     vector<long> T;
-    KMPTable(w, T);
+    _KMPTable(w, T);
     for (long j = 0, k = 0; j < (long)s.size();)
     {
         if (w[k] == s[j])
@@ -568,14 +568,14 @@ size_t Search::MinEatingSpeed(vector<size_t> const &piles, size_t hours)
     for (; start <= end;)
     {
         mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
-        if (CanEatAllBananasInTime(piles, mid, hours))
+        if (_CanEatAllBananasInTime(piles, mid, hours))
             end = mid - 1;
         else
             start = mid + 1;
     }
     return start; // start is the minimal k​ satisfying the condition function.
 }
-bool Search::CanEatAllBananasInTime(vector<size_t> const &piles, size_t rate, size_t hours)
+bool Search::_CanEatAllBananasInTime(vector<size_t> const &piles, size_t rate, size_t hours)
 {
     size_t duration = parallel_reduce(
         blocked_range<size_t>(0, piles.size()), 0, [rate, &piles](tbb::blocked_range<size_t> const &r, size_t running_total)
@@ -586,7 +586,7 @@ bool Search::CanEatAllBananasInTime(vector<size_t> const &piles, size_t rate, si
         std::plus<size_t>());
     return duration <= hours;
 }
-bool Search::IsValidSubSequence(vector<size_t> const &data, size_t check, size_t k)
+bool Search::_IsValidSubSequence(vector<size_t> const &data, size_t check, size_t k)
 {
     size_t count = 1, sum = 0;
     for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
@@ -618,7 +618,7 @@ size_t Search::MinCapacityToShipWithinDays(vector<size_t> const &weights, size_t
          * The following condition shows monotonicity. If condition(mid) is True, end = mid - 1. So condition is True for all values of (mid - 1)
          * If condition(mid) is true, condition(mid + 1) is True. This is prerequisite for applying binary search as a solution to the problem.
          */
-        if (IsValidSubSequence(weights, mid, days))
+        if (_IsValidSubSequence(weights, mid, days))
             end = mid - 1; // Return the least weight capacity of the ship. So, we decrease our capacity as long as it fits within days. Use mid instead of (mid - 1) because it needs to load the complete weight of the item
         else
             start = mid + 1; // If cannot ship within days, increase capacity.
@@ -641,14 +641,14 @@ size_t Search::MinimumLargestSum(vector<size_t> const &data, size_t k)
          * The following condition shows monotonicity. If condition(mid) is True, end = mid - 1. So condition is True for all values of (mid - 1)
          * If condition(mid) is true, condition(mid + 1) is True. This is prerequisite for applying binary search as a solution to the problem.
          */
-        if (IsValidSubSequence(data, mid, k))
+        if (_IsValidSubSequence(data, mid, k))
             end = mid - 1; // Return the least weight capacity of the ship. So, we decrease our capacity as long as it fits within days. Use mid instead of (mid - 1) because it needs to load the complete weight of the item
         else
             start = mid + 1; // If cannot ship within days, increase capacity.
     }
     return start; // start is the minimal k​ satisfying the condition function.
 }
-bool Search::CanMakeBouquets(vector<size_t> const &bloomDay, size_t m, size_t k, size_t day)
+bool Search::_CanMakeBouquets(vector<size_t> const &bloomDay, size_t m, size_t k, size_t day)
 {
     string flowers = "";
     for (size_t i = 0; i < bloomDay.size(); i++)
@@ -691,14 +691,14 @@ long Search::MinDaysToMakeBouquets(vector<size_t> const &bloomDays, size_t m, si
          * The following condition shows monotonicity. If condition(mid) is True, end = mid - 1. So condition is True for all values of (mid - 1)
          * If condition(mid) is true, condition(mid + 1) is True. This is prerequisite for applying binary search as a solution to the problem.
          */
-        if (CanMakeBouquets(bloomDays, m, k, mid))
+        if (_CanMakeBouquets(bloomDays, m, k, mid))
             end = mid - 1;
         else
             start = mid + 1;
     }
     return start; // start is the minimal k​ satisfying the condition function.
 }
-bool Search::HasKthSmallest(size_t m, size_t n, size_t k, size_t current)
+bool Search::_HasKthSmallest(size_t m, size_t n, size_t k, size_t current)
 {
     size_t count = 0;
     for (size_t i = 1; i <= m; i++)
@@ -747,14 +747,14 @@ size_t Search::MultiplicationTableKthSmallestNumber(size_t m, size_t n, size_t k
          * The following condition shows monotonicity. If condition(mid) is True, end = mid - 1. So condition is True for all values of (mid - 1)
          * If condition(mid) is true, condition(mid + 1) is True. This is prerequisite for applying binary search as a solution to the problem.
          */
-        if (HasKthSmallest(m, n, k, mid))
+        if (_HasKthSmallest(m, n, k, mid))
             end = mid - 1;
         else
             start = mid + 1;
     }
     return start; // start is the minimal k​ satisfying the condition function.
 }
-bool Search::HasKthSmallestPairs(vector<size_t> &data, size_t k, size_t distance)
+bool Search::_HasKthSmallestPairs(vector<size_t> &data, size_t k, size_t distance)
 {
     size_t pairs = 0;
     // The entire for loop is actually calculating Binomial Coefficients.
@@ -830,14 +830,14 @@ int Search::SmallestDistancePair(vector<size_t> &data, size_t k)
     {
         // size_t mid = start + (end - start) / 2 + (end - start) % 2; // XXX: Doesn't work in this case. If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
         size_t mid = start + (end - start) / 2;
-        if (HasKthSmallestPairs(data, k, mid))
+        if (_HasKthSmallestPairs(data, k, mid))
             end = mid;
         else
             start = mid + 1;
     }
     return start;
 }
-bool Search::HasNUglyNumbers(size_t n, uint64_t a, uint64_t b, uint64_t c, uint64_t check)
+bool Search::_HasNUglyNumbers(size_t n, uint64_t a, uint64_t b, uint64_t c, uint64_t check)
 {
     return (check / a + check / b + check / c - check / _lcm_ab - check / _lcm_bc - check / _lcm_ac + check / _lcm_abc) >= n;
 }
@@ -914,14 +914,14 @@ size_t Search::NthUglyNumber(size_t n, size_t a, size_t b, size_t c)
     {
         // size_t mid = start + (end - start) / 2 + (end - start) % 2; // XXX: Doesn't work in this case. If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
         size_t mid = start + (end - start) / 2;
-        if (HasNUglyNumbers(n, a, b, c, mid))
+        if (_HasNUglyNumbers(n, a, b, c, mid))
             end = mid;
         else
             start = mid + 1;
     }
     return start;
 }
-bool Search::WithinThreshold(vector<size_t> const &data, size_t threshold, size_t check)
+bool Search::_WithinThreshold(vector<size_t> const &data, size_t threshold, size_t check)
 {
 #if 0
     This also works!
@@ -948,7 +948,7 @@ size_t Search::SmallestDivisor(vector<size_t> const &data, size_t threshold)
     {
         // size_t mid = start + (end - start) / 2 + (end - start) % 2; // XXX: Doesn't work in this case. If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
         size_t mid = start + (end - start) / 2;
-        if (WithinThreshold(data, threshold, mid))
+        if (_WithinThreshold(data, threshold, mid))
             end = mid;
         else
             start = mid + 1;
