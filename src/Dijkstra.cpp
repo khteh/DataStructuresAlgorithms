@@ -285,7 +285,7 @@ long Dijkstra<T>::ShortestPath(T start, T end, vector<shared_ptr<DVertex<T>>> &r
                     // Update the costs queue of the next Vertex
                     erase_if(costs, [nextVertex](const auto &it1)
                              { return it1.second == nextVertex; });
-                    costs.emplace(newCost, nextVertex);
+                    costs.emplace(newCost /* + heuristic value in A-Star algorithm */, nextVertex);
                 }
             }
         }
@@ -334,7 +334,7 @@ long Dijkstra<T>::ShortestPathStateless(T start, T end, vector<shared_ptr<DVerte
                     //  Update the costs queue of the next Vertex
                     erase_if(costs, [nextVertex](const auto &it1)
                              { return it1.second == nextVertex; });
-                    costs.emplace(newCost, nextVertex);
+                    costs.emplace(newCost /* + heuristic value in A-Star algorithm */, nextVertex);
                 }
             }
         }
