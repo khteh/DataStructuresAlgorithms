@@ -8,7 +8,7 @@ template class DynamicProgramming<string>;
 template class DynamicProgramming<__int128>;
 template class DynamicProgramming<unsigned __int128>;
 #endif
-#if defined(_MSC_VER)                    // Use MSVC++ intrinsics
+#if defined(_MSC_VER)
 template class DynamicProgramming<long>; // This is duplicate of int64_t on GNUC / GNUG
 #endif
 template class DynamicProgramming<int64_t>;
