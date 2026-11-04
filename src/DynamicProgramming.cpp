@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "DynamicProgramming.h"
 template class DynamicProgramming<int>;
+template class DynamicProgramming<long>;
 template class DynamicProgramming<long long>;
 template class DynamicProgramming<unsigned long long>;
 template class DynamicProgramming<string>;
