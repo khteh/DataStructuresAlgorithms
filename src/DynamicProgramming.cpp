@@ -1,13 +1,15 @@
 #include "pch.h"
 #include "DynamicProgramming.h"
 template class DynamicProgramming<int>;
-template class DynamicProgramming<long>;
 template class DynamicProgramming<long long>;
 template class DynamicProgramming<unsigned long long>;
 template class DynamicProgramming<string>;
 #if defined(__GNUC__) || defined(__GNUG__)
 template class DynamicProgramming<__int128>;
 template class DynamicProgramming<unsigned __int128>;
+#endif
+#if defined(_MSC_VER)                    // Use MSVC++ intrinsics
+template class DynamicProgramming<long>; // This is duplicate of int64_t on GNUC / GNUG
 #endif
 template class DynamicProgramming<int64_t>;
 template class DynamicProgramming<uint64_t>;
