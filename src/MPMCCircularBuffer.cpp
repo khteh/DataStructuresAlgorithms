@@ -80,16 +80,13 @@ bool MPMCCircularBuffer<T>::Push(T const &data)
          * (2⁶³ − 1) − 2⁶³ wraps to 2⁶⁴ − 1, which casts to −1
          */
         intptr_t diff = static_cast<intptr_t>(seq - pos);
-        if (diff == 0)
-        {
-            /*
-            A producer can only write to a slot if seq == pos. After publishing data, it updates seq to pos + 1
-            The slot is empty and ready for this exact sequence turn.
-            Try to claim the index before other producer threads do.
-            */
-            if (enqueue_idx_.compare_exchange_weak(pos, pos + 1, memory_order_relaxed)) // Advance the enqueue index to the next slot for the next producer thread
-                break;
-        }
+        /*
+        A producer can only write to a slot if seq == pos. After publishing data, it updates seq to pos + 1
+        The slot is empty and ready for this exact sequence turn.
+        Try to claim the index before other producer threads do.
+        */
+        if (diff == 0 && enqueue_idx_.compare_exchange_weak(pos, pos + 1, memory_order_relaxed) /* Advance the enqueue index to the next slot for the next producer thread */)
+            break;
         else if (diff < 0)
             // The buffer is completely full
             return false;
@@ -122,16 +119,13 @@ bool MPMCCircularBuffer<T>::Pop(T &value)
          * (2⁶³ − 1) − 2⁶³ wraps to 2⁶⁴ − 1, which casts to −1
          */
         intptr_t diff = static_cast<intptr_t>(seq - (pos + 1));
-        if (diff == 0)
-        {
-            /*
-            A consumer can only read from a slot if seq == pos + 1. After consumption, it resets seq to pos + capacity_, making it available for the next production wrap-around lap.
-            The slot has data waiting for this specific consumer turn.
-            Try to claim the index before other consumer threads do.
-            */
-            if (dequeue_idx_.compare_exchange_weak(pos, pos + 1, memory_order_relaxed)) // Advance the dequeue index to the next slot for the next consumer thread
-                break;
-        }
+        /*
+        A consumer can only read from a slot if seq == pos + 1. After consumption, it resets seq to pos + capacity_, making it available for the next production wrap-around lap.
+        The slot has data waiting for this specific consumer turn.
+        Try to claim the index before other consumer threads do.
+        */
+        if (diff == 0 && dequeue_idx_.compare_exchange_weak(pos, pos + 1, memory_order_relaxed) /* Advance the dequeue index to the next slot for the next consumer thread*/)
+            break;
         else if (diff < 0)
             // The buffer is completely empty
             return false;

@@ -1,7 +1,6 @@
 #pragma once
 #include "pch.h"
 #include "GenericConstraints.h"
-using namespace std;
 
 class MPMCCircularBufferInspector; // Lets the tests check the memory layout
 template <typename T>
