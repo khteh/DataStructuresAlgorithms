@@ -11,7 +11,7 @@ C++-latest data structures and algorithms using only standard libraries. This an
 
 ## Windows
 
-- Use Visual Studio 2022, latest Windows SDK and ISO C++26 Standard.
+- Use Visual Studio 2026, latest Windows SDK and ISO C++26 Standard.
 - Download googletest from https://github.com/google/googletest/releases and extract to C:\Projects\C++\googletest
 - Intel oneAPI toolkits: https://www.intel.com/content/www/us/en/docs/onetbb/get-started-guide
 - Intel oneAPI TBB: https://www.intel.com/content/www/us/en/developer/tools/oneapi/onetbb-download.html

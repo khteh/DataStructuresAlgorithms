@@ -38,9 +38,6 @@ class Tree
 private:
 	vector<size_t> _levelNodeCount;
 	stack<shared_ptr<Node<T>>> _minStack, _maxStack;
-
-protected:
-	shared_ptr<Node<T>> _root;
 	void _Swap(Tree &);
 	void _Clear(shared_ptr<Node<T>> &);
 	void _PrintColumns(const shared_ptr<Node<T>> &, long, map<long, shared_ptr<vector<T>>> &);
@@ -70,6 +67,9 @@ protected:
 	shared_ptr<Node<T>> _BuildTreePreOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> _BuildTreePostOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> _CommonAncestor(const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &, const shared_ptr<Node<T>> &);
+
+protected:
+	shared_ptr<Node<T>> _root;
 
 public:
 	Tree();

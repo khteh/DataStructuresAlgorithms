@@ -73,7 +73,7 @@
 
 #include <cstdint>
 #include <cassert>
-#include <iostream>
+#include <iosfwd>
 
 #ifdef _MSC_VER
     #pragma warning(disable:4146)
