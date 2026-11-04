@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 using namespace std;
 template <typename T>
 class TrieNode;

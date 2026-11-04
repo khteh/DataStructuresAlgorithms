@@ -6,34 +6,30 @@ template class Arithmetic<size_t>;
 template class Arithmetic<long>;
 template class Arithmetic<long long>;
 template class Arithmetic<unsigned long long>;
-template class Arithmetic<string>;
 template class GCDExtendedEuclideanResult<char>;
 template class GCDExtendedEuclideanResult<int>;
 template class GCDExtendedEuclideanResult<size_t>;
 template class GCDExtendedEuclideanResult<long>;
 template class GCDExtendedEuclideanResult<long long>;
 template class GCDExtendedEuclideanResult<unsigned long long>;
-template <typename T>
+template <arithmetic_type T>
 GCDExtendedEuclideanResult<T>::GCDExtendedEuclideanResult()
-	requires arithmetic_type<T>
 	: gcd(0), x(0), y(0)
 {
 }
-template <typename T>
+template <arithmetic_type T>
 GCDExtendedEuclideanResult<T>::GCDExtendedEuclideanResult(T gcd, T x, T y)
-	requires arithmetic_type<T>
 	: gcd(gcd), x(x), y(y)
 {
 }
-template <typename T>
+template <arithmetic_type T>
 bool GCDExtendedEuclideanResult<T>::operator==(GCDExtendedEuclideanResult<T> const &rhs) const
-	requires arithmetic_type<T>
 {
 	return gcd == rhs.gcd && x == rhs.x && y == rhs.y;
 }
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::gcd(T a, T b)
-	requires arithmetic_type<T>
+
 {
 	if (!a)
 		return b;
@@ -45,18 +41,16 @@ T Arithmetic<T>::gcd(T a, T b)
 /* http://en.wikipedia.org/wiki/Least_common_multiple
  * The smallest positive integer that is divisible by both a and b.[1] If either a or b is 0, LCM(a, b) is defined to be zero.
  */
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::lcm(T a, T b)
-	requires arithmetic_type<T>
 {
 	return (!a || !b) ? 0 : (a * b) / gcd(a, b);
 }
 /* http://en.wikipedia.org/wiki/Greatest_common_divisor
  * the largest positive integer that divides the numbers without a remainder
  */
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::gcd_euclidean(T a, T b)
-	requires arithmetic_type<T>
 {
 	return !(a % b) ? b : gcd_euclidean(b, a % b);
 }
@@ -74,9 +68,8 @@ Comparing LHS and RHS,
 y = x1 – (a/b) * y1
 x = y1
 */
-template <typename T>
+template <arithmetic_type T>
 GCDExtendedEuclideanResult<T> Arithmetic<T>::gcd_euclidean_extended(T a, T b)
-	requires arithmetic_type<T>
 {
 	if (!(a % b))
 		// a == b || !a
@@ -100,9 +93,8 @@ Comparing LHS and RHS,
 y = x1 – (a/b) * y1
 x = y1
 */
-template <typename T>
+template <arithmetic_type T>
 GCDExtendedEuclideanResult<T> Arithmetic<T>::gcd_extended(T a, T b)
-	requires arithmetic_type<T>
 {
 	if (!a)
 		return GCDExtendedEuclideanResult<T>(b, 0, 1);
@@ -118,9 +110,8 @@ GCDExtendedEuclideanResult<T> Arithmetic<T>::gcd_extended(T a, T b)
  * Since x is the modular multiplicative inverse of “a modulo b”, and y is the modular multiplicative inverse of “b modulo a”.
  * In particular, the computation of the modular multiplicative inverse is an essential step in RSA public-key encryption method.
  */
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::ModInverse(T num, T mod)
-	requires arithmetic_type<T>
 {
 	GCDExtendedEuclideanResult<T> result = gcd_extended(num, mod);
 	if (result.gcd != 1)
@@ -129,36 +120,31 @@ T Arithmetic<T>::ModInverse(T num, T mod)
 	T modInverse = (result.y % mod + mod) % mod;
 	return modInverse;
 }
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::XOR(T n)
-	requires arithmetic_type<T>
 {
 	return (n <= 1) ? n : n ^ XOR(n - 1);
 }
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::ToggleSign(T a)
-	requires arithmetic_type<T>
 {
 	T i, d = a < 0 ? 1 : -1;
 	for (i = 0; a; i += d, a += d)
 		;
 	return i;
 }
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::absolute(T a)
-	requires arithmetic_type<T>
 {
 	return a > 0 ? a : ToggleSign(a);
 }
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::SubtractWithPlusSign(T a, T b)
-	requires arithmetic_type<T>
 {
 	return a + ToggleSign(b);
 }
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::MultiplyWithPlusSign(T a, T b)
-	requires arithmetic_type<T>
 {
 	if (b > a)
 		return MultiplyWithPlusSign(b, a); // Just faster doing it the other way round
@@ -167,9 +153,8 @@ T Arithmetic<T>::MultiplyWithPlusSign(T a, T b)
 		;
 	return b < 0 ? ToggleSign(sum) : sum;
 }
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::DivideWithPlusSign(T a, T b)
-	requires arithmetic_type<T>
 {
 #ifdef _MSC_VER
 #pragma warning(disable : 4146)
@@ -202,9 +187,8 @@ T Arithmetic<T>::DivideWithPlusSign(T a, T b)
 		;
 	return isNegative ? -quotient : quotient;
 }
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::Divide(T dividend, T divisor)
-	requires arithmetic_type<T>
 {
 #ifdef _MSC_VER
 #pragma warning(disable : 4146)
@@ -259,9 +243,8 @@ Input  : a  = 23, b = 11, m = 17
 Output : 16
 Note that (16*11)%17=6 is same as 23%17
  */
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::Divide(T dividend, T divisor, T modulo)
-	requires arithmetic_type<T>
 {
 	T y_inv = ModInverse(divisor, modulo);
 	if (y_inv == -1)
@@ -288,9 +271,8 @@ T Arithmetic<T>::Divide(T dividend, T divisor, T modulo)
  * sum 0, carry 1
  * sum^carry = 1 (sum & carry) << 1 = 0 => return 1
  */
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::AddWithoutArithmetic(T sum, T carry)
-	requires arithmetic_type<T>
 {
 	return !carry ? sum : AddWithoutArithmetic(sum ^ carry, (unsigned long long)(sum & carry) << 1);
 }
@@ -298,7 +280,7 @@ T Arithmetic<T>::AddWithoutArithmetic(T sum, T carry)
  * https://leetcode.com/problems/sqrtx/description/
  * 100%
  */
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::Sqrt(T x)
 	requires unsigned_integral<T>
 {
@@ -312,152 +294,6 @@ T Arithmetic<T>::Sqrt(T x)
 			end = mid - 1;
 	}
 	return end;
-}
-template <typename T>
-char Arithmetic<T>::Add2BinaryDigits(string &result, char a, char b, char carry)
-{
-	char sum = a + b + carry - (3 * '0');
-	carry = (sum / 2) ? '1' : '0';
-	result.append(1, !(sum % 2) ? '0' : '1');
-	return carry;
-}
-/*
- * https://leetcode.com/problems/add-binary/
- * 100%
- */
-template <typename T>
-string Arithmetic<T>::Add2Binary(string const &a, string const &b)
-{
-	string result;
-	char carry = '0';
-	for (int i = a.size() - 1, j = b.size() - 1; i >= 0 && j >= 0; i--, j--)
-		carry = Add2BinaryDigits(result, a[i], b[j], carry);
-	if (a.size() > b.size())
-	{
-		for (int i = a.size() - b.size() - 1; i >= 0; i--)
-			carry = Add2BinaryDigits(result, a[i], '0', carry);
-	}
-	else if (b.size() > a.size())
-	{
-		for (int i = b.size() - a.size() - 1; i >= 0; i--)
-			carry = Add2BinaryDigits(result, b[i], '0', carry);
-	}
-	if (carry == '1')
-		result.append(1, '1');
-	ranges::reverse(result);
-	return result;
-}
-
-template <typename T>
-// Function for finding sum of larger numbers
-string Arithmetic<T>::NumberStringSum(const string &str1, const string &str2)
-{
-	if (str1.empty() && !str2.empty())
-		return str2;
-	else if (!str1.empty() && str2.empty())
-		return str1;
-	else if (str1.empty() && str2.empty())
-		return "";
-	// Initially take carry zero
-	int carry = 0;
-	string::const_reverse_iterator it1 = str1.rbegin();
-	string::const_reverse_iterator it2 = str2.rbegin();
-	vector<char> result(max(str1.size(), str2.size()) + 1, '0');
-	vector<char>::reverse_iterator it3 = result.rbegin();
-	for (; !(it1 == str1.rend() && it2 == str2.rend());)
-	{
-		// Do school mathematics, compute sum of current digits and carry
-		int sum = carry;
-		if (it1 != str1.rend())
-			sum += *it1 - '0';
-		if (it2 != str2.rend())
-			sum += *it2 - '0';
-		*it3++ = (sum % 10) + '0';
-		carry = sum / 10;
-		if (it1 != str1.rend())
-			it1++;
-		if (it2 != str2.rend())
-			it2++;
-	}
-	// Add remaining carry
-	if (carry)
-		*it3 = carry + '0';
-	string str(result.begin(), result.end());
-	return carry ? str : str.substr(1);
-}
-/*
-  Multiplies str1 and str2, and prints result.
-	  345 (n2)
-	 x 76 (n1)
-	 ----
-	 2070 result: 0(3) 7(2) 0(2) 2(carry) n1: 0, n2: 3
-	2415  result:      2(4) 2(3) 6(2)  2(carry) n1: 1, n2: 3
-	-----
-	26220
-*/
-template <typename T>
-string Arithmetic<T>::NumberStringMultiplication(string &num1, string &num2)
-{
-	if (num1.empty() || num2.empty())
-		return "0";
-	bool isNegative = (num1[0] == '-' && num2[0] != '-') || (num1[0] != '-' && num2[0] == '-');
-	if (num1[0] == '-')
-		num1 = num1.substr(1);
-	if (num2[0] == '-')
-		num2 = num2.substr(1);
-	/* Will keep the result number in vector in reverse order.
-	 * [LSB,MSB]
-	 */
-	vector<long> result(num1.size() + num2.size(), 0);
-	size_t i_n1 = 0, i_n2 = 0;
-	// Go from right to left in num1 (bottom)
-	for (int i = num1.size() - 1; i >= 0; i--)
-	{
-		int carry = 0;
-		int n1 = num1[i] - '0';
-		// To shift position to left after every multiplication of a digit in num2 (top)
-		i_n2 = 0;
-		// Go from right (LSB) to left (MSB) in num2
-		for (int j = num2.size() - 1; j >= 0; j--)
-		{
-			// Take current digit of second number
-			int n2 = num2[j] - '0';
-
-			// Multiply with current digit of first number
-			// and add result to previously stored result
-			// at current position.
-			int sum = n1 * n2 + result[i_n1 + i_n2] + carry;
-
-			// Carry for next iteration
-			carry = sum / 10;
-
-			// Store result
-			result[i_n1 + i_n2] = sum % 10;
-
-			i_n2++;
-		}
-
-		// store carry in next cell
-		if (carry)
-			result[i_n1 + i_n2] += carry;
-
-		// To shift position to left after every multiplication of a digit in num1.
-		i_n1++;
-	}
-	// Ignore '0's from the right (MSBs in reversed order)
-	int i = result.size() - 1;
-	for (; i >= 0 && !result[i]; i--)
-		;
-	// If all were '0's - means either both or one of num1 or num2 were '0'
-	if (i < 0)
-		return "0";
-	// generate the result string
-	ostringstream oss;
-	if (isNegative)
-		oss << '-';
-	while (i >= 0)
-		oss << result[i--];
-	return oss.str();
 }
 /*
  * https://www.hackerrank.com/challenges/xor-se/problem
@@ -501,9 +337,8 @@ string Arithmetic<T>::NumberStringMultiplication(string &num1, string &num2)
  * Solution: generate result[0, l-1] and result[0, r]
  * final result = data[0, l-1] ^ data[0, r]. It will cancel out the accumulated xor from 0 too l-1
  */
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::XorSequence(T l, T r)
-	requires arithmetic_type<T>
 {
 	size_t left = 0, right = 0;
 	if (l > 0)
@@ -555,9 +390,8 @@ For example: [1,2,3] has the following sublists = [1],[1,2],[1,2,3],[2],[2,3],[3
 This means that the elements that are on odd positions will cancel out, and we only need to take into consideration the ones that are on even positions, thus we only need to XOR the elements on the array stepping by 2.
 100%
  */
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::SansaXor(vector<T> const &data)
-	requires arithmetic_type<T>
 {
 	T result = 0;
 	if (!(data.size() % 2))
@@ -566,55 +400,12 @@ T Arithmetic<T>::SansaXor(vector<T> const &data)
 		result ^= data[i];
 	return result;
 }
-/* https://leetcode.com/problems/additive-number/
- * 100%
- * i: width of the first operand
- * j: width of the second operand
- * width of sum is max(i, j). So i must be <= half the input string size
- */
-template <typename T>
-bool Arithmetic<T>::IsAdditiveNumber(string const &str)
-{
-	for (size_t i = 1; i <= str.size() / 2; i++)
-		for (size_t j = 1; max(i, j) <= str.size() - i - j; j++)
-			if (CheckIfAdditiveSequence(i, j, str))
-				return true;
-	return false;
-}
-/*
- * 123581321
- * 1 2 3
- *   2 3 5
- *     3 5 8
- *       5 8 13
- *         8 13 21
- */
-template <typename T>
-bool Arithmetic<T>::CheckIfAdditiveSequence(size_t i, size_t j, string const &str)
-{
-	if ((str[0] == '0' && i > 1) || (str[i] == '0' && j > 1))
-		return false;
-	unsigned long long first, second;
-	string sum;
-	istringstream(str.substr(0, i)) >> first;
-	istringstream(str.substr(i, j)) >> second;
-	for (size_t k = i + j; k < str.size(); k += sum.size())
-	{
-		second = first + second;
-		first = second - first;
-		sum = to_string(second);
-		if (str.substr(k, sum.size()) != sum)
-			return false;
-	}
-	return true;
-}
 /*
  * https://leetcode.com/problems/evaluate-reverse-polish-notation/
  * 100%
  */
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::ReversePolishNotation(vector<string> const &tokens)
-	requires arithmetic_type<T>
 {
 	stack<T> numbers;
 	for (size_t i = 0; i < tokens.size(); i++)
@@ -653,9 +444,8 @@ T Arithmetic<T>::ReversePolishNotation(vector<string> const &tokens)
 	}
 	return !numbers.empty() ? numbers.top() : numeric_limits<T>::max();
 }
-template <typename T>
+template <arithmetic_type T>
 void Arithmetic<T>::NumberToVector(T number, vector<T> &digits)
-	requires arithmetic_type<T>
 {
 	digits.clear();
 	// Index 0: LSB
@@ -664,9 +454,8 @@ void Arithmetic<T>::NumberToVector(T number, vector<T> &digits)
 	for (; number > 0; number /= 10)
 		digits.push_back(number % 10);
 }
-template <typename T>
+template <arithmetic_type T>
 T Arithmetic<T>::DigitsVectorToNumber(vector<T> const &digits)
-	requires arithmetic_type<T>
 {
 	T result = 0;
 	// Index 0: LSB
@@ -678,9 +467,8 @@ T Arithmetic<T>::DigitsVectorToNumber(vector<T> const &digits)
 	result /= 10; // Remove trailing 0
 	return result;
 }
-template <typename T>
+template <arithmetic_type T>
 string Arithmetic<T>::DigitsVectorToNumberString(vector<T> const &digits)
-	requires arithmetic_type<T>
 {
 	bool skip = true;
 	ostringstream oss;
@@ -694,9 +482,8 @@ string Arithmetic<T>::DigitsVectorToNumberString(vector<T> const &digits)
 	cout << oss.str() << endl;
 	return oss.str();
 }
-template <typename T>
+template <arithmetic_type T>
 void Arithmetic<T>::NumberVectorsSum(vector<T> const &num1, vector<T> const &num2, vector<T> &result)
-	requires arithmetic_type<T>
 {
 	result.clear();
 #if 0
@@ -774,9 +561,8 @@ r: [42 60 73 40 16]
 	-----
 	26220
 */
-template <typename T>
+template <arithmetic_type T>
 void Arithmetic<T>::NumberVectorsMultiplication(vector<T> const &num1, vector<T> const &num2, vector<T> &result)
-	requires arithmetic_type<T>
 {
 	/* Will keep the result number in vector in reverse order.
 	 * [LSB,MSB]
@@ -847,9 +633,9 @@ tmp:9
 r:  [25 40 46 24 9]
 */
 #if 0
-template <typename T>
+template <arithmetic_type T>
 void Arithmetic<T>::NumberVectorsSquare(vector<T> const &num, vector<T> &result)
-	requires arithmetic_type<T>
+	
 {
 	result.clear();
 	result.assign(2 * num.size(), 0);

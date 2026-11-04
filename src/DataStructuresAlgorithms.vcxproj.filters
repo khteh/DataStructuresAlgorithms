@@ -127,6 +127,9 @@
     <ClCompile Include="Square.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StringArithmetic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="SuffixTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -297,10 +300,10 @@
     <ClInclude Include="Square.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SuffixTree.h">
+    <ClInclude Include="StringArithmetic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="SuffixTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tower.h">

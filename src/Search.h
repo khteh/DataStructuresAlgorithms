@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 template <typename T>
 T BinomialCoefficients(size_t, size_t);
 template <typename T>

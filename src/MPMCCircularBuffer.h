@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 #include "GenericConstraints.h"
 
 class MPMCCircularBufferInspector; // Lets the tests check the memory layout

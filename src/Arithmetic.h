@@ -1,77 +1,43 @@
 #pragma once
 using namespace std;
-template <typename T>
+template <arithmetic_type T>
 class GCDExtendedEuclideanResult
 {
 public:
-	GCDExtendedEuclideanResult()
-		requires arithmetic_type<T>;
-	explicit GCDExtendedEuclideanResult(T, T, T)
-		requires arithmetic_type<T>;
+	GCDExtendedEuclideanResult();
+	explicit GCDExtendedEuclideanResult(T, T, T);
 	T gcd, x, y;
-	bool operator==(GCDExtendedEuclideanResult<T> const &) const
-		requires arithmetic_type<T>;
+	bool operator==(GCDExtendedEuclideanResult<T> const &) const;
 };
-template <typename T>
+template <arithmetic_type T>
 class Arithmetic
 {
-private:
-	bool CheckIfAdditiveSequence(size_t, size_t, string const &);
-	char Add2BinaryDigits(string &, char, char, char);
-
 public:
-	T gcd(T, T)
-		requires arithmetic_type<T>;
-	GCDExtendedEuclideanResult<T> gcd_extended(T, T)
-		requires arithmetic_type<T>;
-	T gcd_euclidean(T, T)
-		requires arithmetic_type<T>;
-	GCDExtendedEuclideanResult<T> gcd_euclidean_extended(T, T)
-		requires arithmetic_type<T>;
-	T lcm(T, T)
-		requires arithmetic_type<T>;
-	T ModInverse(T, T)
-		requires arithmetic_type<T>;
-	T XOR(T)
-		requires arithmetic_type<T>;
-	T XorSequence(T, T)
-		requires arithmetic_type<T>;
-	T SansaXor(vector<T> const &)
-		requires arithmetic_type<T>;
-	T ToggleSign(T)
-		requires arithmetic_type<T>;
-	T absolute(T)
-		requires arithmetic_type<T>;
-	T SubtractWithPlusSign(T, T)
-		requires arithmetic_type<T>;
-	T MultiplyWithPlusSign(T, T)
-		requires arithmetic_type<T>;
-	T DivideWithPlusSign(T, T)
-		requires arithmetic_type<T>;
-	T Divide(T, T)
-		requires arithmetic_type<T>;
-	T Divide(T, T, T)
-		requires arithmetic_type<T>;
-	T AddWithoutArithmetic(T, T)
-		requires arithmetic_type<T>;
+	T gcd(T, T);
+	GCDExtendedEuclideanResult<T> gcd_extended(T, T);
+	T gcd_euclidean(T, T);
+	GCDExtendedEuclideanResult<T> gcd_euclidean_extended(T, T);
+	T lcm(T, T);
+	T ModInverse(T, T);
+	T XOR(T);
+	T XorSequence(T, T);
+	T SansaXor(vector<T> const &);
+	T ToggleSign(T);
+	T absolute(T);
+	T SubtractWithPlusSign(T, T);
+	T MultiplyWithPlusSign(T, T);
+	T DivideWithPlusSign(T, T);
+	T Divide(T, T);
+	T Divide(T, T, T);
+	T AddWithoutArithmetic(T, T);
 	T Sqrt(T)
 		requires unsigned_integral<T>;
-	string Add2Binary(string const &, string const &);
-	bool IsAdditiveNumber(string const &);
-	void NumberToVector(T, vector<T> &)
-		requires arithmetic_type<T>;
-	T DigitsVectorToNumber(vector<T> const &)
-		requires arithmetic_type<T>;
-	string DigitsVectorToNumberString(vector<T> const &)
-		requires arithmetic_type<T>;
-	string NumberStringSum(const string &, const string &);
-	string NumberStringMultiplication(string &, string &);
-	void NumberVectorsSum(vector<T> const &, vector<T> const &, vector<T> &)
-		requires arithmetic_type<T>;
-	void NumberVectorsMultiplication(vector<T> const &, vector<T> const &, vector<T> &)
-		requires arithmetic_type<T>;
+	void NumberToVector(T, vector<T> &);
+	T DigitsVectorToNumber(vector<T> const &);
+	string DigitsVectorToNumberString(vector<T> const &);
+	void NumberVectorsSum(vector<T> const &, vector<T> const &, vector<T> &);
+	void NumberVectorsMultiplication(vector<T> const &, vector<T> const &, vector<T> &);
 	// void NumberVectorsSquare(vector<T> const &, vector<T> &)
-	//	requires arithmetic_type<T>;
-	T ReversePolishNotation(vector<string> const &)
-		requires arithmetic_type<T>;
+	//	;
+	T ReversePolishNotation(vector<string> const &);
 };

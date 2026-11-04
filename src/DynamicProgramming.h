@@ -1,5 +1,6 @@
 #pragma once
 #include "Arithmetic.h"
+#include "StringArithmetic.h"
 #include "cout128.h"
 using namespace std;
 template <typename T>

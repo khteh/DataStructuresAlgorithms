@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+#include <stack>
 #include "Node.h"
 using namespace std;
 /*

@@ -34,7 +34,7 @@ TEST(ArithmerticOperationsTests, MultiplyWithPlusSignTest)
 	ASSERT_EQ(-50, arithmetic.MultiplyWithPlusSign(10, -5));
 }
 template <typename T>
-class ArithmerticOperationsTestFixture
+class ArithmeticOperationsTestFixture
 {
 public:
 	void SetUp(T expected, T var1, T var2)
@@ -48,12 +48,12 @@ protected:
 	Arithmetic<T> _arithmetic;
 	T _var1, _var2, _expected;
 };
-class GCDTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
+class GCDTestFixture : public ArithmeticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
 {
 public:
 	void SetUp() override
 	{
-		ArithmerticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+		ArithmeticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
 	long GCDTest()
 	{
@@ -96,12 +96,12 @@ INSTANTIATE_TEST_SUITE_P(
 	GCDExtendedTestFixture,
 	::testing::Values(make_tuple(GCDExtendedEuclideanResult<long>(5, 1, -2), 15, 35), make_tuple(GCDExtendedEuclideanResult<long>(10, 1, -1), 20, 30), make_tuple(GCDExtendedEuclideanResult<long>(7, 1, -1), 14, 21),
 					  make_tuple(GCDExtendedEuclideanResult<long>(11, 1, -2), 55, 121), make_tuple(GCDExtendedEuclideanResult<long>(13, -1, 2), 91, 169)));
-class ModInverseTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
+class ModInverseTestFixture : public ArithmeticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
 {
 public:
 	void SetUp() override
 	{
-		ArithmerticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+		ArithmeticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
 	long ModInverseTest()
 	{
@@ -143,12 +143,12 @@ INSTANTIATE_TEST_SUITE_P(
 	DivideModuloTests,
 	DivideModuloTestFixture,
 	::testing::Values(make_tuple(2, 8, 4, 5), make_tuple(1, 8, 3, 5), make_tuple(4, 11, 4, 5), make_tuple(10, 15, 7, 11), make_tuple(16, 23, 11, 17)));
-class DivideWithPlusSignTestFixture : public ArithmerticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
+class DivideWithPlusSignTestFixture : public ArithmeticOperationsTestFixture<long>, public testing::TestWithParam<tuple<long, long, long>>
 {
 public:
 	void SetUp() override
 	{
-		ArithmerticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+		ArithmeticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
 	long DivideWithPlusSignTest()
 	{
@@ -172,12 +172,12 @@ INSTANTIATE_TEST_SUITE_P(
 	DivideWithPlusSignTestFixture,
 	::testing::Values(make_tuple(3, 10, 3), make_tuple(-3, 10, -3), make_tuple(-3, -10, 3), make_tuple(3, -10, -3), make_tuple(10, -10, -1), make_tuple(-1, -1, 1), make_tuple(-1, 1, -1), make_tuple(1, -1, -1),
 					  make_tuple(2147483648L, -2147483648, -1), make_tuple(-2147483648, -2147483648, 1), make_tuple(-2147483648, 2147483648L, -1)));
-class AddWithoutArithmeticTestFixture : public ArithmerticOperationsTestFixture<long long>, public testing::TestWithParam<tuple<long long, long long, long long>>
+class AddWithoutArithmeticTestFixture : public ArithmeticOperationsTestFixture<long long>, public testing::TestWithParam<tuple<long long, long long, long long>>
 {
 public:
 	void SetUp() override
 	{
-		ArithmerticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+		ArithmeticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
 	long long AddWithoutArithmeticTest()
 	{
@@ -217,18 +217,23 @@ INSTANTIATE_TEST_SUITE_P(
 	SqrtTests,
 	SqrtTestFixture,
 	::testing::Values(make_tuple(2, 4), make_tuple(10, 100), make_tuple(61122, 0xdeadbeef), make_tuple(65398, 0xfeedbeef)));
-
-class NumberStringSumTestFixture : public ArithmerticOperationsTestFixture<string>, public testing::TestWithParam<tuple<string, string, string>>
+class NumberStringSumTestFixture : public testing::TestWithParam<tuple<string, string, string>>
 {
 public:
 	void SetUp() override
 	{
-		ArithmerticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+		_expected = get<0>(GetParam());
+		_var1 = get<1>(GetParam());
+		_var2 = get<2>(GetParam());
 	}
 	string NumberStringSumTest()
 	{
 		return _arithmetic.NumberStringSum(_var1, _var2);
 	}
+
+protected:
+	StringArithmetic _arithmetic;
+	string _var1, _var2, _expected;
 };
 TEST_P(NumberStringSumTestFixture, NumberStringSumTests)
 {
@@ -238,17 +243,23 @@ INSTANTIATE_TEST_SUITE_P(
 	NumberStringSumTests,
 	NumberStringSumTestFixture,
 	::testing::Values(make_tuple("11111111100", "1234567890", "9876543210"), make_tuple("168", "123", "45")));
-class NumberStringMultiplicationTestFixture : public ArithmerticOperationsTestFixture<string>, public testing::TestWithParam<tuple<string, string, string>>
+class NumberStringMultiplicationTestFixture : public testing::TestWithParam<tuple<string, string, string>>
 {
 public:
 	void SetUp() override
 	{
-		ArithmerticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+		_expected = get<0>(GetParam());
+		_var1 = get<1>(GetParam());
+		_var2 = get<2>(GetParam());
 	}
 	string NumberStringMultiplicationTest()
 	{
 		return _arithmetic.NumberStringMultiplication(_var1, _var2);
 	}
+
+protected:
+	StringArithmetic _arithmetic;
+	string _var1, _var2, _expected;
 };
 TEST_P(NumberStringMultiplicationTestFixture, NumberStringMultiplicationTests)
 {
@@ -318,12 +329,12 @@ INSTANTIATE_TEST_SUITE_P(
 	NumberVectorsMultiplicationTests,
 	NumberVectorsMultiplicationTestFixture,
 	::testing::Values(make_tuple(56088, 123, 456), make_tuple(80779853376, 123456, 654321), make_tuple(451149483006, 456789, 987654)));
-class XorSequenceTestFixture : public ArithmerticOperationsTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, size_t>>
+class XorSequenceTestFixture : public ArithmeticOperationsTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, size_t>>
 {
 public:
 	void SetUp() override
 	{
-		ArithmerticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+		ArithmeticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
 	size_t XorSequenceTest()
 	{
@@ -382,7 +393,7 @@ public:
 	}
 
 protected:
-	Arithmetic<string> _arithmetic;
+	StringArithmetic _arithmetic;
 	bool _expected;
 	string _var;
 };

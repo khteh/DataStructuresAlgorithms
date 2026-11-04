@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 #include "cout128.h"
 #include "Arithmetic.h"
 #include "Dijkstra.h"
@@ -46,6 +45,12 @@
 #include "GameTheory.h"
 #include "Permutation.h"
 #include "Position.h"
+#include "StringArithmetic.h"
+#include "oneapi/tbb.h"
+#include "pcg_extras.hpp"
+#include "pcg_random.hpp"
+#include "pcg_uint128.hpp"
+#include "GenericConstraints.h"
 /*
  * https://stackoverflow.com/questions/1452721/whats-the-problem-with-using-namespace-std
  * https://stackoverflow.com/questions/495021/why-can-templates-only-be-implemented-in-the-header-file

@@ -4,13 +4,12 @@ set(PROJECT_NAME Console)
 # Source groups
 # ###############################################################################
 set(Header_Files
-    "Console.h"
+    "pch.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
 set(Source_Files
     "Console.cpp"
-    "pch.cpp"
 )
 source_group("Source Files" FILES ${Source_Files})
 
@@ -24,9 +23,8 @@ set(ALL_FILES
 # ###############################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 target_precompile_headers(${PROJECT_NAME} PRIVATE
-    "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/Console.h>"
+    "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/pch.h>"
 )
-
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE Console)
 

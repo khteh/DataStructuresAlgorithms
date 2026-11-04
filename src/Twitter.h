@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 using namespace std;
 using namespace chrono;
 /* https://leetcode.com/problems/design-twitter/

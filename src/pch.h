@@ -1,5 +1,4 @@
 #pragma once
-#include "targetver.h"
 #include <algorithm>
 #include <assert.h>
 #include <atomic>

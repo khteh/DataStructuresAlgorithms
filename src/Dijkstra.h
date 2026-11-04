@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 #include "Vertex.h"
 using namespace std;
 namespace ranges = std::ranges;

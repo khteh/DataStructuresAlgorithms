@@ -163,8 +163,8 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Sort.h" />
     <ClInclude Include="Square.h" />
+    <ClInclude Include="StringArithmetic.h" />
     <ClInclude Include="SuffixTree.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="Tower.h" />
     <ClInclude Include="TreasureGame.h" />
     <ClInclude Include="Tree.h" />
@@ -206,6 +206,7 @@
     <ClCompile Include="Range.cpp" />
     <ClCompile Include="Sort.cpp" />
     <ClCompile Include="Square.cpp" />
+    <ClCompile Include="StringArithmetic.cpp" />
     <ClCompile Include="TreasureGame.cpp" />
     <ClCompile Include="Employee.cpp" />
     <ClCompile Include="Error.cpp" />

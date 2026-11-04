@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 #include "Vertex.h"
 /*
 https://en.wikipedia.org/wiki/Fenwick_tree

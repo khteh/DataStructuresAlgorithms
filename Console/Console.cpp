@@ -1,7 +1,7 @@
 ﻿// ConsoleApplication.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
+#include "pch.h"
 #include <iostream>
-#include "Console.h"
 using namespace std;
 namespace ranges = std::ranges;
 using namespace oneapi::tbb;
@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 	vector<vector<size_t>> ugrid, ugrid1;
 	Graph<size_t, size_t> graph;
 	Arithmetic<size_t> arithmetic;
+	StringArithmetic stringArithmetic;
 	Arithmetic<long> larithmetic;
 	DynamicProgramming<size_t> dp;
 	Matrix<long> lmatrix;
@@ -2046,7 +2047,7 @@ int main(int argc, char *argv[])
 	// 56088, 123, 456
 	str = "123";
 	str1 = "456";
-	assert(arithmetic.NumberStringMultiplication(str, str1) == "56088");
+	assert(stringArithmetic.NumberStringMultiplication(str, str1) == "56088");
 	arithmetic.NumberToVector(123, udata);
 	arithmetic.NumberToVector(456, udata1);
 	arithmetic.NumberVectorsMultiplication(udata, udata1, cresult);
@@ -2295,14 +2296,14 @@ int main(int argc, char *argv[])
 	for (auto [itr, rangeEnd] = myFlippedMap.equal_range(2); itr != rangeEnd; ++itr)
 		cout << itr->second << ", ";
 	cout << endl;
-	str = arithmetic.Add2Binary("11", "1");
-	assert("100" == arithmetic.Add2Binary("11", "1"));
-	str = arithmetic.Add2Binary("1010", "1011");
-	assert("10101" == arithmetic.Add2Binary("1010", "1011"));
-	str = arithmetic.Add2Binary("100", "10");
-	assert("110" == arithmetic.Add2Binary("100", "10"));
-	str = arithmetic.Add2Binary("100", "110010");
-	assert("110110" == arithmetic.Add2Binary("100", "110010"));
+	str = stringArithmetic.Add2Binary("11", "1");
+	assert("100" == stringArithmetic.Add2Binary("11", "1"));
+	str = stringArithmetic.Add2Binary("1010", "1011");
+	assert("10101" == stringArithmetic.Add2Binary("1010", "1011"));
+	str = stringArithmetic.Add2Binary("100", "10");
+	assert("110" == stringArithmetic.Add2Binary("100", "10"));
+	str = stringArithmetic.Add2Binary("100", "110010");
+	assert("110110" == stringArithmetic.Add2Binary("100", "110010"));
 	a.clear();
 	a = {5, 4, 8, 11, numeric_limits<long>::min(), 13, 4, 7, 2, numeric_limits<long>::min(), numeric_limits<long>::min(), numeric_limits<long>::min(), numeric_limits<long>::min(), 1};
 	ltree = Tree(a, TreeType::Binary);

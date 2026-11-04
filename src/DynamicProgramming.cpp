@@ -76,7 +76,7 @@ string DynamicProgramming<T>::FibonacciModified(T t1, T t2, size_t n)
         return to_string(t1);
     else if (n == 1)
         return to_string(t2);
-    Arithmetic<string> arithmetic;
+    StringArithmetic arithmetic;
     vector<string> result = {to_string(t1), to_string(t2)};
     for (size_t i = 2; i <= (size_t)n; i++)
         result[i % 2] = arithmetic.NumberStringSum(result[(i - 2) % 2], arithmetic.NumberStringMultiplication(result[(i - 1) % 2], result[(i - 1) % 2]));

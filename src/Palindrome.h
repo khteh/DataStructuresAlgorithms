@@ -1,5 +1,4 @@
 #pragma once
-#include "pch.h"
 #include "Arithmetic.h"
 class Palindrome
 {

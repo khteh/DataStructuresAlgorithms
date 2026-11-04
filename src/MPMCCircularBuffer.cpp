@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "MPMCCircularBuffer.h"
 // Instantiated in this file as the definitions are not in the header
 template class MPMCCircularBuffer<int>;
