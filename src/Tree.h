@@ -64,7 +64,6 @@ protected:
 	shared_ptr<Node<T>> _FindNode(const shared_ptr<Node<T>> &, T item);
 	shared_ptr<Node<T>> _Copy(const shared_ptr<Node<T>> &, map<shared_ptr<Node<T>>, shared_ptr<Node<T>>> &);
 	shared_ptr<Node<T>> _LeftMostChild(shared_ptr<Node<T>> &);
-
 	shared_ptr<Node<T>> _ToLinkedList(const shared_ptr<Node<T>> &);
 	shared_ptr<Node<T>> _BuildTreePreOrder(vector<T> &, vector<T> &, long, long, long);
 	shared_ptr<Node<T>> _BuildTreePostOrder(vector<T> &, vector<T> &, long, long, long);
