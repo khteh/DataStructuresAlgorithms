@@ -290,10 +290,15 @@ TEST_P(MPMCCircularBufferConcurrencyTestFixture, EveryItemIsConsumedOnceAndInPro
 		for (size_t producer = 0; producer < _producers; producer++)
 			threads.emplace_back([&, producer]
 								 {
-				WaitFor(start);
-				for (size_t i = 0; i < ITEMS_PER_PRODUCER; i++)
-					while (!buffer.Push(static_cast<long>(producer * ITEMS_PER_PRODUCER + i)))
-						this_thread::yield(); });
+									 WaitFor(start);
+									 for (size_t i = 0; i < ITEMS_PER_PRODUCER; i++)
+										 /*
+										  * producer * ITEMS_PER_PRODUCER + i gives every item a unique number across all producers, so the test can tell afterwards which items arrived and who sent them.
+										  * producer is the thread’s number (0, 1, 2…) and i is its item count. Multiplying by ITEMS_PER_PRODUCER (10000) gives each producer its own block of numbers, and i picks the position inside that block:
+										  */
+										 while (!buffer.Push(static_cast<long>(producer * ITEMS_PER_PRODUCER + i))) // retries the same item until it succeeds, so nothing gets skipped.
+											 this_thread::yield();													// lets another thread run between tries, such as a consumer that can free up a slot.
+								 });
 		for (size_t consumer = 0; consumer < _consumers; consumer++)
 			threads.emplace_back([&, consumer]
 								 {
@@ -321,13 +326,22 @@ TEST_P(MPMCCircularBufferConcurrencyTestFixture, EveryItemIsConsumedOnceAndInPro
 		vector<long> last(_producers, -1);
 		for (long item : items)
 		{
+			/*
+			 * Who sent it check: item / ITEMS_PER_PRODUCER reverses the formula, because integer division drops the remainder. For example, 20005 / 10000 = 2, so producer 2.
+			 */
 			size_t const producer = static_cast<size_t>(item) / ITEMS_PER_PRODUCER;
 			ASSERT_LT(producer, _producers);
+			/*
+			 * Order check: each producer’s numbers go up as it pushes, so a consumer must see them increasing.
+			 */
 			ASSERT_GT(item, last[producer]);
 			last[producer] = item;
 		}
 		all.insert(all.end(), items.begin(), items.end());
 	}
+	/*
+	 * Exactly once check:	the blocks join up into 0, 1, 2… up to total − 1 with no gaps. Sorted together, the received values must match that list exactly, so a lost item leaves a gap and a duplicate shows up as an extra.
+	 */
 	ExpectEachValueOnce(move(all), total);
 }
 INSTANTIATE_TEST_SUITE_P(
@@ -619,8 +633,8 @@ TEST_P(MPMCCircularBufferCounterWrapTestFixture, EveryItemIsConsumedOnceByConcur
 INSTANTIATE_TEST_SUITE_P(
 	MPMCCircularBufferTests,
 	MPMCCircularBufferCounterWrapTestFixture,
-	::testing::Combine(::testing::Values(static_cast<size_t>(0),	  // size_t overflows to 0
-										 size_t{1} << 63),			  // The sign of intptr_t flips
+	::testing::Combine(::testing::Values(static_cast<size_t>(0), // size_t overflows to 0
+										 size_t{1} << 63),		 // The sign of intptr_t flips
 					   ::testing::Values<size_t>(2, 8, 1024)));
 // Reference counts show what happens to the item, also in builds without the sanitizers
 TEST(MPMCCircularBufferTests, PopMovesTheItemOutOfTheSlot)
