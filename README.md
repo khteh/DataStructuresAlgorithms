@@ -30,7 +30,7 @@ C++-latest data structures and algorithms using only standard libraries. This an
    ii.
 
    ```
-   cmake -S . -B build -G "Visual Studio 18 2026" -A x64 -DBUILD_SHARED_LIBS=ON -Dgtest_force_shared_crt=ON -Dgtest_build_tests=OFF -Dgmock_build_tests=OFF -DCMAKE_CXX_FLAGS="/fsanitize=address,undefined,leak" -DCMAKE_C_FLAGS="/fsanitize=address,undefined,leak"
+   cmake -S . -B build -G "Visual Studio 18 2026" -A x64 -DBUILD_SHARED_LIBS=ON -Dgtest_force_shared_crt=ON -DCMAKE_DEBUG_POSTFIX=_debug -Dgtest_build_tests=OFF -Dgmock_build_tests=OFF -DCMAKE_CXX_FLAGS="/fsanitize=address,undefined,leak" -DCMAKE_C_FLAGS="/fsanitize=address,undefined,leak"
    ```
 
    iii.`cmake --build build --config Debug --target gtest`
