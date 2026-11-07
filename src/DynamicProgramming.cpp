@@ -917,3 +917,104 @@ T DynamicProgramming<T>::NonAdjacentMaxSum(vector<T> &data)
         result[i % 2] = max<T>(result[(i - 2) % 2] + data[i], result[(i - 1) % 2]);
     return result[(data.size() - 1) % 2];
 }
+/* Codility MaxZeroProduct (task page no longer available on codility.com)
+ * https://www.geeksforgeeks.org/dsa/maximum-number-of-trailing-zeros-in-the-product-of-the-subsets-of-size-k/ (general case: subsets of size k; here k = 3)
+ * #trailing zeros = min(total 2s, total 5s).
+ * For the same total 5s, more 2s is never worse, so keep only the max 2s per (#elements, total 5s):
+ * dp[j][f] = max total 2s choosing exactly j elements whose total 5s == f. -1: impossible.
+ * 0/1 knapsack: each element used at most once -> iterate j and f downwards.
+ * #columns: maxFives = count * (max #fives in any single element), computed from the data.
+ * TC: O(N * count * maxFives) - roughly O(N) by noticing that most triples never need to be compared.
+ * Space: O(count * maxFives)
+ *
+ * The key observation
+ * Trailing zeros = min(total 2s, total 5s). Suppose two different choices of 3 elements have the same total number of 5s, f. The one with more 2s is never worse: min(f, more 2s) ≥ min(f, fewer 2s). So for each total f, you only need to remember the most 2s you can get. You don’t need every triple, just the best one for each f.
+
+ * The table
+ * dp[j][f] = the most 2s you can get by choosing exactly j elements whose 5s add up to exactly f
+           (-1 if no such choice exists)
+
+ * The columns are indexed by 5s because they’re few. An int can hold up to 2,147,483,647. That includes 5¹³ = 1,220,703,125, which has 13 factors of 5. So three elements have at most 39 fives in total, and the table is just 4 × 39 = 156.
+ * You could index by 2s instead, but there are more of those per number (up to 31), so the table would be bigger.
+
+ * Filling it: a 0/1 knapsack
+
+ * Go through the elements one at a time. For an element with twos 2s and fives 5s, every existing choice of j − 1 elements can be extended by adding this one:
+
+ * dp[j][f] = max(dp[j][f],               // don't take this element
+               dp[j-1][f - fives] + twos) // take it: j-1 elements with f-fives 5s, plus this one
+
+ * This is the 0/1 knapsack we discussed for the egg drop: each element can be used at most once, so j and f loop downwards. That way, dp[j−1][…] still describes choices that don’t include this element.
+
+ * Answer: the best min(f, dp[3][f]) over all f where dp[3][f] isn’t −1.
+
+ * Each element moves reachable cells one row down (one more element chosen) and 'fives' columns right (more 5s), adding twos to the value.
+ * How many cells change depends on how many are reachable at that point, which is why the first element fills one cell and later elements fill more.
+
+ * Why the downward order matters here:
+ * If j went upwards, j = 1 would run first and set dp[1][1] = 2. Then j = 2, f = 2 would read that new value and set dp[2][2] = 2 + 2 = 4.
+ * That would mean choosing 20 twice, which the task doesn’t allow, since the three elements have to be at different positions.
+ * Going downwards, dp[1][…] still describes choices without 20 when row 2 reads it, so each element is used at most once.
+ *
+ Start: only “0 elements, 0 fives, 0 twos” is possible.
+
+        f=0  f=1  f=2  f=3
+j=0      0    ·    ·    ·
+j=1      ·    ·    ·    ·
+j=2      ·    ·    ·    ·
+
+After 20 (2s: 2, 5s: 1). Taking 20 adds 1 five, so each new cell is one row down and one column right of a reachable cell. The only reachable cell is [0][0], so only [1][1] can change:
+
+        f=0  f=1  f=2  f=3
+j=0      0    ·    ·    ·
+j=1      ·    2*   ·    ·        [1][1] = [0][0] + 2   {20}
+j=2      ·    ·    ·    ·        [2][f] would need a reachable [1][f−1]: none yet
+
+After 25 (2s: 0, 5s: 2). Now each new cell is one row down and two columns right. Reachable cells are [0][0] and [1][1]:
+
+        f=0  f=1  f=2  f=3
+j=0      0    ·    ·    ·
+j=1      ·    2    0*   ·        [1][2] = [0][0] + 0   {25}
+j=2      ·    ·    ·    2*       [2][3] = [1][1] + 0   {20,25}
+
+The loop doesn’t even look at columns 0 and 1 for 25. It runs f down to fives = 2 only, because a choice that includes 25 has at least 2 fives. f − fives would be negative for those columns.
+
+After 8 (2s: 3, 5s: 0). Taking 8 adds no fives, so each new cell is one row straight down, in the same column. Reachable cells are [0][0], [1][1] and [1][2], plus [2][3], which is already in the last row and can’t go further:
+
+        f=0  f=1  f=2  f=3
+j=0      0    ·    ·    ·
+j=1      3*   2    0    ·        [1][0] = [0][0] + 3   {8}
+j=2      ·    5*   3*   2        [2][1] = [1][1] + 3   {20,8}
+                                 [2][2] = [1][2] + 3   {25,8}
+
+Since fives = 0, the loop covers every column down to 0, which is why [1][0] can be filled.
+
+Answer: read row j = 2, the choices with exactly 2 elements: min(1, 5) = 1, min(2, 3) = 2, min(3, 2) = 2. The best is 2.
+ */
+template <typename T>
+size_t MaxZeroProduct(vector<T> const &data, size_t count)
+    requires integral_type<T>
+{
+    vector<pair<int, int>> factors; // {twos, fives} per element
+    size_t maxElementFives = 0;
+    for (T x : data)
+        if (x)
+        {
+            size_t twos = FactorsCount(x, 2), fives = FactorsCount(x, 5);
+            factors.emplace_back(twos, fives);
+            maxElementFives = max(maxElementFives, fives);
+        }
+    const size_t maxFives = maxElementFives * count; // no choice of `count` elements can exceed this
+    vector<vector<int64_t>> dp(count + 1, vector<int64_t>(maxFives + 1, -1));
+    dp[0][0] = 0;
+    for (auto [twos, fives] : factors)
+        for (size_t j = count; j >= 1; j--)
+            for (size_t f = maxFives; f >= fives; f--)
+                if (dp[j - 1][f - fives] != -1)
+                    dp[j][f] = max(dp[j][f], dp[j - 1][f - fives] + twos);
+    size_t result = 0;
+    for (size_t f = 0; f <= maxFives; f++)
+        if (dp[count][f] != -1)
+            result = max<size_t>(result, min<int64_t>(f, dp[count][f]));
+    return result;
+}

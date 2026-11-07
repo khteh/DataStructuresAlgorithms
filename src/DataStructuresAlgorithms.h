@@ -87,28 +87,6 @@ typedef struct ZeroFactors
 		return min(two, five) == min(other.two, other.five) ? value < other.value : min(two, five) < min(other.two, other.five);
 	}
 } zerofactors_t;
-typedef struct ZeroFactorsTwoCount
-{
-	long count, fives, value, index;
-	bool operator>(const ZeroFactorsTwoCount &other) const
-	{
-		if (count == other.count)
-			return (fives == other.fives) ? value > other.value : fives > other.fives;
-		else
-			return count > other.count;
-	}
-} zerofactorstwocount_t;
-typedef struct ZeroFactorsFiveCount
-{
-	long count, twos, value, index;
-	bool operator>(const ZeroFactorsFiveCount &other) const
-	{
-		if (count == other.count)
-			return (twos == other.twos) ? value > other.value : twos > other.twos;
-		else
-			return count > other.count;
-	}
-} zerofactorsfivecount_t;
 typedef struct ZigZagEscape
 {
 	size_t index;
@@ -177,8 +155,12 @@ template <typename T>
 T BinomialCoefficientsMultiplicative(size_t, size_t);
 template <typename T>
 T MultinomialCoefficients(size_t, vector<size_t> const &, T modulo = 0);
-size_t FactorsCount(uint64_t, size_t);
-size_t MaxZeroProductBruteForce(vector<uint64_t> const &, size_t elementCount = 3);
+template <typename T>
+constexpr size_t FactorsCount(T, size_t)
+	requires integral_type<T>;
+template <typename T>
+size_t MaxZeroProductBruteForce(vector<T> const &, size_t elementCount = 3)
+	requires integral_type<T>;
 bool isUniqueString(string const &);
 vector<string> findUnique(vector<string> const &, vector<string> const &);
 bool CanShuffleWithoutRepeat(string &);

@@ -35,4 +35,6 @@ public:
     size_t MinimumEditDistance(string const &, string const &, size_t, size_t, size_t);
     T NonAdjacentMaxSum(vector<T> &)
         requires arithmetic_type<T>;
+    size_t MaxZeroProduct(vector<T> const &, size_t)
+        requires integral_type<T>;
 };

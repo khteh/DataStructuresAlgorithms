@@ -19,6 +19,13 @@ template long long ceil_div(long long, long long);
 template unsigned long long ceil_div(unsigned long long, unsigned long long);
 template long long Fibonacci(long);
 template long long Factorial(long);
+#if defined(_MSC_VER)
+template size_t MaxZeroProductBruteForce(vector<long> const &, size_t); // This is duplicate of int64_t on GNUC / GNUG
+#endif
+template size_t MaxZeroProductBruteForce(vector<int64_t> const &, size_t);
+template size_t MaxZeroProductBruteForce(vector<size_t> const &, size_t);
+template size_t MaxZeroProductBruteForce(vector<long long> const &, size_t);
+template size_t MaxZeroProductBruteForce(vector<unsigned long long> const &, size_t);
 template long long BinomialCoefficients(size_t, size_t);
 template unsigned long long BinomialCoefficients(size_t, size_t);
 template long long BinomialCoefficientsMultiplicative(size_t, size_t);
@@ -658,33 +665,37 @@ long FactorialTrailingZeroesCount(long n)
 		count += (n / i);
 	return count;
 }
-size_t FactorsCount(uint64_t number, size_t factor)
+template <typename T>
+constexpr size_t FactorsCount(T number, size_t factor)
+	requires integral_type<T>
 {
-	size_t count = 0;
-	for (; (number / factor) > 0 && !(number % factor); count++, number /= factor)
+	size_t n = 0;
+	for (T v = number; v >= factor; n++, v /= factor)
 		;
-	return count;
+	return n;
 }
 /* Codility MaxZeroProduct (task page no longer available on codility.com)
  * Given an array of N positive integers, returns the maximum number of trailing zeros of the number obtained by multiplying three different elements from the array.
  * Numbers are considered different if they are at different positions in the array.
  * 100% correctness However, performance is bad with O(N**3).
  */
-size_t MaxZeroProductBruteForce(vector<uint64_t> const &data, size_t elementCount)
+template <typename T>
+size_t MaxZeroProductBruteForce(vector<T> const &data, size_t elementCount)
+	requires integral_type<T>
 {
-	long result = 0;
-	map<int, ZeroFactors> multipleMap;
-	map<int, ZeroFactors>::const_iterator it;
-	vector<ZeroFactors> factors;
+	size_t result = 0;
+	map<T, zerofactors_t> multipleMap;
+	typename map<T, zerofactors_t>::const_iterator it;
+	vector<zerofactors_t> factors;
 	for (size_t i = 0; i < data.size(); i++)
 		if (!(data[i] % 10 && data[i] % 2 && data[i] % 5))
 		{
 			it = multipleMap.find(data[i]);
-			ZeroFactors factor;
+			zerofactors_t factor;
 			if (it == multipleMap.end())
 			{
-				factor.two = FactorsCount(data[i], 2);
-				factor.five = FactorsCount(data[i], 5);
+				factor.two = FactorsCount<long>(data[i], 2);
+				factor.five = FactorsCount<long>(data[i], 5);
 				multipleMap.emplace(data[i], factor);
 				factors.push_back(factor);
 			}
@@ -696,7 +707,7 @@ size_t MaxZeroProductBruteForce(vector<uint64_t> const &data, size_t elementCoun
 			}
 		}
 	if (factors.size() < elementCount)
-		result = min(ranges::fold_left(factors | views::transform(&ZeroFactors::two), 0L, plus<long>()), ranges::fold_left(factors | views::transform(&ZeroFactors::five), 0L, plus<long>()));
+		result = min(ranges::fold_left(factors | views::transform(&zerofactors_t::two), 0L, plus<long>()), ranges::fold_left(factors | views::transform(&zerofactors_t::five), 0L, plus<long>()));
 	else if (factors.size() > (elementCount - 1))
 		for (size_t i = 0; i < factors.size() - (elementCount - 1); i++)
 			for (size_t j = i + 1; j < factors.size() - 1; j++)
