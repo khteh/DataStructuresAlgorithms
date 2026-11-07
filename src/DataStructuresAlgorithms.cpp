@@ -76,7 +76,7 @@ void testPointerReference(int *&ptr)
 long Min(long a, long b)
 {
 	long delta = b - a;
-	long sign = (delta >> 31) & 1;
+	long sign = (delta >> ((sizeof(long) * 8) - 1)) & 1;
 	// b > a: sign = 0: returns a
 	// b < a: sign = 1: returns a - (a - b) = b
 	return a - sign * (a - b);
@@ -84,7 +84,7 @@ long Min(long a, long b)
 long Max(long a, long b)
 {
 	long delta = a - b;
-	long sign = (delta >> 31) & 1;
+	long sign = (delta >> ((sizeof(long) * 8) - 1)) & 1;
 	// a > b: sign = 0 => return a
 	// a < b: sign = 1 => return a - (a - b) = b
 	return a - sign * (a - b);
@@ -680,9 +680,8 @@ long FactorialTrailingZeroesCount(long n)
  * FactorsCount(8, -2):  8 → -4 → 2 → -1     3 divisions, same as FactorsCount(8, 2)
  * What you’re counting is how many times the factor divides the number, so the sign of the factor never changes the result. The sign of the number doesn’t matter either; that’s why negative inputs work.
  */
-template <typename T>
+template <integral_type T>
 constexpr size_t FactorsCount(T number, T factor)
-	requires integral_type<T>
 {
 	size_t count = 0;
 	assert(factor >= 2); // 0: division by zero, 1: infinite loop
@@ -697,9 +696,8 @@ constexpr size_t FactorsCount(T number, T factor)
  * 100% correctness However, performance is bad with O(N**3).
  * DynamicProgramming::MaxZeroProduct
  */
-template <typename T>
+template <integral_type T>
 size_t MaxZeroProductBruteForce(vector<T> const &data, size_t elementCount)
-	requires integral_type<T>
 {
 	size_t result = 0;
 	map<T, zerofactors_t> multipleMap;

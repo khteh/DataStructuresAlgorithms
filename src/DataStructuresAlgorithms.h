@@ -155,12 +155,10 @@ template <typename T>
 T BinomialCoefficientsMultiplicative(size_t, size_t);
 template <typename T>
 T MultinomialCoefficients(size_t, vector<size_t> const &, T modulo = 0);
-template <typename T>
-constexpr size_t FactorsCount(T, T)
-	requires integral_type<T>;
-template <typename T>
-size_t MaxZeroProductBruteForce(vector<T> const &, size_t elementCount = 3)
-	requires integral_type<T>;
+template <integral_type T>
+constexpr size_t FactorsCount(T, T);
+template <integral_type T>
+size_t MaxZeroProductBruteForce(vector<T> const &, size_t elementCount = 3);
 bool isUniqueString(string const &);
 vector<string> findUnique(vector<string> const &, vector<string> const &);
 bool CanShuffleWithoutRepeat(string &);

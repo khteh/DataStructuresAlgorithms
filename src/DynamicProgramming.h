@@ -3,9 +3,8 @@
 #include "StringArithmetic.h"
 #include "cout128.h"
 using namespace std;
-template <typename T>
-extern constexpr size_t FactorsCount(T, T)
-    requires integral_type<T>;
+template <integral_type T>
+constexpr size_t FactorsCount(T, T);
 template <typename T>
 class DynamicProgramming
 {
