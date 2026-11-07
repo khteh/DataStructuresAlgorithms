@@ -658,23 +658,19 @@ long FactorialTrailingZeroesCount(long n)
 		count += (n / i);
 	return count;
 }
-void MultiplesCount(int dividend, long &twos, long &fives)
+size_t FactorsCount(uint64_t number, size_t factor)
 {
-	long div = dividend;
-	if (dividend > 0)
-	{
-		for (; (dividend / 5) > 0 && !(dividend % 5); dividend /= 5)
-			fives++;
-		dividend = div;
-		for (; (dividend >> 1) > 0 && !(dividend % 2); dividend >>= 1)
-			twos++;
-	}
+	size_t count = 0;
+	for (; (number / factor) > 0 && !(number % factor); number /= factor)
+		count++;
+	return count;
 }
-/* Given an array of N positive integers, returns the maximum number of trailing zeros of the number obtained by multiplying three different elements from the array.
- * Numbers are considered different if they are at different positions in the array
+/* Codility MaxZeroProduct (task page no longer available on codility.com)
+ * Given an array of N positive integers, returns the maximum number of trailing zeros of the number obtained by multiplying three different elements from the array.
+ * Numbers are considered different if they are at different positions in the array.
  * 100% correctness However, performance is bad with O(N**3).
  */
-long MaxZeroProductBruteForce(vector<int> const &data)
+size_t MaxZeroProductBruteForce(vector<uint64_t> const &data, size_t elementCount)
 {
 	long result = 0;
 	map<int, ZeroFactors> multipleMap;
@@ -687,10 +683,8 @@ long MaxZeroProductBruteForce(vector<int> const &data)
 			ZeroFactors factor;
 			if (it == multipleMap.end())
 			{
-				long two = 0, five = 0;
-				MultiplesCount(data[i], two, five);
-				factor.two = two;
-				factor.five = five;
+				factor.two = FactorsCount(data[i], 2);
+				factor.five = FactorsCount(data[i], 5);
 				multipleMap.emplace(data[i], factor);
 				factors.push_back(factor);
 			}
@@ -698,16 +692,13 @@ long MaxZeroProductBruteForce(vector<int> const &data)
 			{
 				factor.two = it->second.two;
 				factor.five = it->second.five;
-				;
 				factors.push_back(factor);
 			}
 		}
-	if (factors.size() == 1)
-		result = min(factors[0].two, factors[0].five);
-	else if (factors.size() == 2)
-		result = min(factors[0].two + factors[1].two, factors[0].five + factors[1].five);
-	else if (factors.size() > 2)
-		for (size_t i = 0; i < factors.size() - 2; i++)
+	if (factors.size() < elementCount)
+		result = min(ranges::fold_left(factors | views::transform(&ZeroFactors::two), 0L, plus<long>()), ranges::fold_left(factors | views::transform(&ZeroFactors::five), 0L, plus<long>()));
+	else if (factors.size() > (elementCount - 1))
+		for (size_t i = 0; i < factors.size() - (elementCount - 1); i++)
 			for (size_t j = i + 1; j < factors.size() - 1; j++)
 				for (size_t k = j + 1; k < factors.size(); k++)
 				{
@@ -717,62 +708,6 @@ long MaxZeroProductBruteForce(vector<int> const &data)
 						result = min(twofactor, fivefactor);
 				}
 	return result;
-}
-// XXX: WIP
-long MaxZeroProduct(vector<int> const &data, size_t count)
-{
-	long result = 0;
-	map<int, ZeroFactors> multipleMap;
-	map<int, ZeroFactors>::const_iterator it;
-	vector<ZeroFactors> factors;
-	// Initializing each value with -1;
-#define MAX5 100
-	// vector<vector<long>> subset(count, vector<long>(100, -1));
-	// map<long, long> twos, fives;
-	set<long> twos, fives;
-	for (size_t i = 0; i < data.size(); i++)
-	{
-		if (!(data[i] % 10 && data[i] % 2 && data[i] % 5))
-		{
-			it = multipleMap.find(data[i]);
-			ZeroFactors factor;
-			if (it == multipleMap.end())
-			{
-				long two = 0, five = 0;
-				MultiplesCount(data[i], two, five);
-				factor.two = two;
-				factor.five = five;
-				multipleMap.emplace(data[i], factor);
-				factors.push_back(factor);
-			}
-			else
-			{
-				factor.two = it->second.two;
-				factor.five = it->second.five;
-				;
-				factors.push_back(factor);
-			}
-			// twos[factor.two] = max(twos[factor.two], factor.five);
-			// fives[factor.five] = max(fives[factor.five], factor.two);
-			twos.emplace(factor.two);
-			fives.emplace(factor.five);
-#if 0
-			// Calculating subset[i][j] for maximum amount of twos we can collect by checking first i numbers and taking 
-			// j of them with total power of five. 
-			//for (int i = count - 1; i >= 0; i--)
-			for (size_t j = 0; j < count; j++)
-				for (int k = 0; k < subset[j].size(); k++)
-				//for (size_t k = 0; k < 100; k++)
-					// If subset[j][k] is not calculated. 
-					//if (subset[j][k] != -1)
-					//subset[j][k + factor.five] = max(subset[j][k + factor.five], subset[j][k] + factor.two);
-					subset[j][k] = max(subset[j][k], subset[j][k] + factor.two);
-#endif
-		}
-	}
-	// for (map<long, long>::const_iterator it = subset.begin(); it != subset.end(); it++)
-	//	result = max(result, min(it->))
-	return 0;
 }
 long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t> &data, vector<zerofactors_t> &result, int value)
 {

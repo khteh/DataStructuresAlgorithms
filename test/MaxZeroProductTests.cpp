@@ -1,14 +1,14 @@
 #include "pch.h"
 using namespace std;
-TEST(MaxZeroProductTests, MaxZeroProductTest)
+TEST(MaxZeroProductTests, MaxZeroProductBruteForceTest)
 {
-	vector<int> data;
+	vector<uint64_t> data;
 	data.push_back(2 * 2);
 	data.push_back(2 * 2 * 2);
-	data.push_back(2 * 2 * 2 * 2);
+	data.push_back(2 * 2 * 2 * 2); // 4
 	data.push_back(5 * 5);
 	data.push_back(5 * 5 * 5 * 5);
-	data.push_back(5 * 5 * 5 * 5 * 5);
+	data.push_back(5 * 5 * 5 * 5 * 5); // 5
 	ASSERT_EQ(5, MaxZeroProductBruteForce(data));
 	data.clear();
 	data.push_back(2 * 5 * 5);
@@ -174,11 +174,11 @@ TEST(MaxZeroProductTests, MaxZeroProductTest)
 	random_device device;
 	// Uniform distribution used with vector
 	// Distribution is [-5, 5] inclusive
-	uniform_int_distribution<int> dist(0, 1000000000);
+	uniform_int_distribution<uint64_t> dist(0, 1000000000);
 	data.resize(100);
 	ranges::generate(data, [&]
 					 { return dist(device); });
 	long result1 = MaxZeroProductBruteForce(data);
-	long result2 = MaxZeroProduct(data);
-	// ASSERT_EQ(result1, result2); MaxZeroProduct still WIP
+	// long result2 = MaxZeroProduct(data);
+	//  ASSERT_EQ(result1, result2); MaxZeroProduct still WIP
 }

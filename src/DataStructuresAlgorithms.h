@@ -177,9 +177,8 @@ template <typename T>
 T BinomialCoefficientsMultiplicative(size_t, size_t);
 template <typename T>
 T MultinomialCoefficients(size_t, vector<size_t> const &, T modulo = 0);
-void MultiplesCount(int, long &, long &);
-long MaxZeroProductBruteForce(vector<int> const &);
-long MaxZeroProduct(vector<int> const &, size_t count = 3);
+size_t FactorsCount(uint64_t, size_t);
+size_t MaxZeroProductBruteForce(vector<uint64_t> const &, size_t elementCount = 3);
 bool isUniqueString(string const &);
 vector<string> findUnique(vector<string> const &, vector<string> const &);
 bool CanShuffleWithoutRepeat(string &);
