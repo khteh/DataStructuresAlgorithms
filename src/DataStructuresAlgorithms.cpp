@@ -7,6 +7,8 @@ template __int128 BinomialCoefficients(size_t, size_t);
 template __int128 BinomialCoefficientsMultiplicative(size_t, size_t);
 template __int128 MultinomialCoefficients(size_t, vector<size_t> const &, __int128);
 template __int128 ceil_div(__int128, __int128);
+template size_t FactorsCount(__int128, __int128);
+template size_t FactorsCount(unsigned __int128, unsigned __int128);
 template unsigned __int128 ceil_div(unsigned __int128, unsigned __int128);
 template unsigned __int128 Fibonacci(long);
 template unsigned __int128 Factorial(long);
@@ -20,8 +22,14 @@ template unsigned long long ceil_div(unsigned long long, unsigned long long);
 template long long Fibonacci(long);
 template long long Factorial(long);
 #if defined(_MSC_VER)
+template size_t FactorsCount(long, long);								// This is duplicate of int64_t on GNUC / GNUG
 template size_t MaxZeroProductBruteForce(vector<long> const &, size_t); // This is duplicate of int64_t on GNUC / GNUG
 #endif
+template size_t FactorsCount(int, int);
+template size_t FactorsCount(int64_t, int64_t);
+template size_t FactorsCount(size_t, size_t);
+template size_t FactorsCount(long long, long long);
+template size_t FactorsCount(unsigned long long, unsigned long long);
 template size_t MaxZeroProductBruteForce(vector<int64_t> const &, size_t);
 template size_t MaxZeroProductBruteForce(vector<size_t> const &, size_t);
 template size_t MaxZeroProductBruteForce(vector<long long> const &, size_t);
@@ -665,19 +673,29 @@ long FactorialTrailingZeroesCount(long n)
 		count += (n / i);
 	return count;
 }
+/*
+ * A negative factor gives the same count as its positive version, so it adds nothing. The values that actually cause problems are 0 and 1.
+ * Why a negative factor is redundant
+ * Divisibility ignores the sign: if 2 divides a number, so does −2. Counting with −2 gives the same answer as counting with 2:
+ * FactorsCount(8, -2):  8 → -4 → 2 → -1     3 divisions, same as FactorsCount(8, 2)
+ * What you’re counting is how many times the factor divides the number, so the sign of the factor never changes the result. The sign of the number doesn’t matter either; that’s why negative inputs work.
+ */
 template <typename T>
-constexpr size_t FactorsCount(T number, size_t factor)
+constexpr size_t FactorsCount(T number, T factor)
 	requires integral_type<T>
 {
-	size_t n = 0;
-	for (T v = number; v >= factor; n++, v /= factor)
-		;
-	return n;
+	size_t count = 0;
+	assert(factor >= 2); // 0: division by zero, 1: infinite loop
+	if (number)			 // 0 is divisible by any factor forever
+		for (; !(number % factor); count++, number /= factor)
+			;
+	return count;
 }
 /* Codility MaxZeroProduct (task page no longer available on codility.com)
  * Given an array of N positive integers, returns the maximum number of trailing zeros of the number obtained by multiplying three different elements from the array.
  * Numbers are considered different if they are at different positions in the array.
  * 100% correctness However, performance is bad with O(N**3).
+ * DynamicProgramming::MaxZeroProduct
  */
 template <typename T>
 size_t MaxZeroProductBruteForce(vector<T> const &data, size_t elementCount)

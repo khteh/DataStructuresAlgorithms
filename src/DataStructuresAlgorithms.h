@@ -156,7 +156,7 @@ T BinomialCoefficientsMultiplicative(size_t, size_t);
 template <typename T>
 T MultinomialCoefficients(size_t, vector<size_t> const &, T modulo = 0);
 template <typename T>
-constexpr size_t FactorsCount(T, size_t)
+constexpr size_t FactorsCount(T, T)
 	requires integral_type<T>;
 template <typename T>
 size_t MaxZeroProductBruteForce(vector<T> const &, size_t elementCount = 3)

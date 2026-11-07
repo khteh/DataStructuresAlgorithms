@@ -992,7 +992,7 @@ Since fives = 0, the loop covers every column down to 0, which is why [1][0] can
 Answer: read row j = 2, the choices with exactly 2 elements: min(1, 5) = 1, min(2, 3) = 2, min(3, 2) = 2. The best is 2.
  */
 template <typename T>
-size_t MaxZeroProduct(vector<T> const &data, size_t count)
+size_t DynamicProgramming<T>::MaxZeroProduct(vector<T> const &data, size_t count)
     requires integral_type<T>
 {
     vector<pair<int, int>> factors; // {twos, fives} per element
@@ -1000,7 +1000,7 @@ size_t MaxZeroProduct(vector<T> const &data, size_t count)
     for (T x : data)
         if (x)
         {
-            size_t twos = FactorsCount(x, 2), fives = FactorsCount(x, 5);
+            size_t twos = FactorsCount<T>(x, 2), fives = FactorsCount<T>(x, 5);
             factors.emplace_back(twos, fives);
             maxElementFives = max(maxElementFives, fives);
         }
@@ -1009,7 +1009,7 @@ size_t MaxZeroProduct(vector<T> const &data, size_t count)
     dp[0][0] = 0;
     for (auto [twos, fives] : factors)
         for (size_t j = count; j >= 1; j--)
-            for (size_t f = maxFives; f >= fives; f--)
+            for (long f = maxFives; f >= fives; f--) // Use long here in case fives==0 it will loop forever.
                 if (dp[j - 1][f - fives] != -1)
                     dp[j][f] = max(dp[j][f], dp[j - 1][f - fives] + twos);
     size_t result = 0;

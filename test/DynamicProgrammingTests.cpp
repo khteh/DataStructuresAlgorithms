@@ -568,3 +568,64 @@ INSTANTIATE_TEST_SUITE_P(
 	NonAdjacentMaxSumTests,
 	NonAdjacentMaxSumTestFixture,
 	::testing::Values(make_tuple(4, vector<long>{1, 2, 3, 1}), make_tuple(12, vector<long>{2, 7, 9, 3, 1}), make_tuple(12, vector<long>{5, 1, 3, 2, 4})));
+class MaxZeroProductTestFixture : public testing::TestWithParam<tuple<size_t, vector<long>, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_data = get<1>(GetParam());
+		_count = get<2>(GetParam());
+	}
+	size_t MaxZeroProductTest()
+	{
+		return _dp.MaxZeroProduct(_data, _count);
+	}
+
+protected:
+	DynamicProgramming<long> _dp;
+	size_t _expected, _count;
+	vector<long> _data;
+};
+TEST_P(MaxZeroProductTestFixture, MaxZeroProductTests)
+{
+	ASSERT_EQ(this->_expected, this->MaxZeroProductTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	MaxZeroProductTests,
+	MaxZeroProductTestFixture,
+	::testing::Values(
+		// Basic cases
+		make_tuple(3, vector<long>{7, 15, 6, 20, 5, 10}, 3),							 // 15 * 20 * 10 = 3000
+		make_tuple(4, vector<long>{25, 10, 25, 10, 32}, 3),								 // 25 * 25 * 32 = 20000
+		make_tuple(2, vector<long>{1, 1, 100}, 3),										 // 100
+		make_tuple(2, vector<long>{1, 4, 25}, 3),										 // 4 * 25 = 100
+		make_tuple(6, vector<long>{125, 100, 125, 100, 64}, 3),							 // 125 * 125 * 64 = 1000000
+		make_tuple(1, vector<long>{1, 2, 3, 4, 5, 6, 7, 8, 9}, 3),						 // e.g. 5 * 8 * 9 = 360
+		make_tuple(2, vector<long>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 3),					 // e.g. 5 * 8 * 10 = 400
+		make_tuple(6, vector<long>{2 * 5 * 5, 2 * 2 * 5 * 5, 2 * 2 * 2 * 5 * 5 * 5}, 3), // 2^6 * 5^7
+		// The best triple is not the one with the most 2s or the most 5s
+		make_tuple(5, vector<long>{4, 8, 16, 25, 625, 3125}, 3), // 16 * 625 * 3125 = 2^4 * 5^9 -> 4; 8 * 16 * 3125 = 2^7 * 5^5 -> 5
+		// No zeros possible
+		make_tuple(0, vector<long>{1, 1, 101}, 3),	 // no 2s or 5s
+		make_tuple(0, vector<long>{1, 25, 25}, 3),	 // 5s only
+		make_tuple(0, vector<long>{2, 4, 8}, 3),	 // 2s only: no element has any 5s
+		make_tuple(0, vector<long>{3, 7, 9, 11}, 3), // neither
+		// Large values
+		make_tuple(21, vector<long>{10, 1000, 1000000000, 1000000000}, 3),
+		make_tuple(27, vector<long>{100000000, 1000000000, 1000000000, 2000000000}, 3),
+		make_tuple(13, vector<long>{1220703125, 1073741824, 1}, 3), // 5^13 * 2^30: the most 5s / 2s in a positive int
+		// Fewer elements than count
+		make_tuple(0, vector<long>{}, 3),
+		make_tuple(0, vector<long>{10, 100}, 3),
+		// Other counts
+		make_tuple(3, vector<long>{10, 1000, 7}, 1),
+		make_tuple(13, vector<long>{1220703125, 8192}, 2),	   // 5^13 * 2^13
+		make_tuple(4, vector<long>{10, 1000, 7, 3}, 2),		   // 10 * 1000
+		make_tuple(10, vector<long>{10, 100, 1000, 10000}, 4), // all four
+		// Zeros are skipped
+		make_tuple(0, vector<long>{0, 0, 0}, 3),
+		make_tuple(6, vector<long>{0, 10, 100, 1000}, 3),
+		// Negative numbers: the sign doesn't change the trailing zeros
+		make_tuple(3, vector<long>{-7, -15, 6, -20, 5, -10}, 3),
+		make_tuple(6, vector<long>{-10, -100, -1000}, 3)));

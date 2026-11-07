@@ -4,6 +4,9 @@
 #include "cout128.h"
 using namespace std;
 template <typename T>
+extern constexpr size_t FactorsCount(T, T)
+    requires integral_type<T>;
+template <typename T>
 class DynamicProgramming
 {
 public:
