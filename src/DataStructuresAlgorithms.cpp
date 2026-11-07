@@ -661,8 +661,8 @@ long FactorialTrailingZeroesCount(long n)
 size_t FactorsCount(uint64_t number, size_t factor)
 {
 	size_t count = 0;
-	for (; (number / factor) > 0 && !(number % factor); number /= factor)
-		count++;
+	for (; (number / factor) > 0 && !(number % factor); count++, number /= factor)
+		;
 	return count;
 }
 /* Codility MaxZeroProduct (task page no longer available on codility.com)
