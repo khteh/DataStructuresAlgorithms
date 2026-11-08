@@ -59,9 +59,14 @@
  * Without constexpr, DataStructuresAlgorithms.cpp compiles FactorialTrailingZeroesCount into a normal function and exports it.
  * In the object file it appears as a T symbol, which means “defined here, available to other files”. When Console.cpp calls it, the linker finds that symbol.
  * With constexpr, the function is implicitly inline. The rules for inline functions assume every file that uses one has its own copy of the body, so the compiler only generates code for it where it’s actually needed.
- * If DataStructuresAlgorithms.cpp doesn’t call it, the compiler generates nothing at all: no symbol is exported. Console.cpp only saw the declaration, so it expects to find the function in another file, and the linker can’t find it anywhere.
  * If a function doesn’t need to run at compile time (for example, you never use it in static_assert, a constexpr variable or a template argument), you can simply not make it constexpr.
  * Being constexpr is only useful when you actually use the result at compile time, and it costs you this restructuring.
+ *
+ * The accurate rule is:
+ * (1) The compiler emits a copy of an inline function only when that file needs an actual call to it: the call isn’t inlined, or the function’s address is taken.
+ * (2) Calling it isn’t enough. If the optimiser inlines every call, which is common at -O2 for small functions, there’s still no copy.
+ * (3) Even when a copy is emitted, it’s a weak (W) symbol that exists for that file’s own use. Another file linking against it works only by coincidence, which is what happened in your -O0 build.
+ * So whether another file can link against it depends on the optimisation level and the compiler’s inlining decisions. The language doesn’t guarantee it in either case. The only reliable rule is the one from before: a constexpr (or inline) function used in more than one file must have its body in a header.
  */
 using namespace std;
 using namespace chrono;
@@ -69,7 +74,7 @@ using namespace oneapi::tbb;
 namespace ranges = std::ranges;
 typedef struct ZeroFactors
 {
-	size_t two, five, value, minValue;
+	size_t two, five, value;
 	bool operator>(const ZeroFactors &other) const
 	{
 		return max(two, five) == max(other.two, other.five) ? value > other.value : max(two, five) > max(other.two, other.five);
@@ -217,7 +222,7 @@ size_t CountDigits(char, size_t);
 size_t CountNumbersWithUniqueDigits(size_t);
 size_t Count1Bits(long);
 size_t Count1Bits(long, set<size_t> &);
-constexpr size_t BitCountOfNChoices(size_t);
+size_t BitCountOfNChoices(size_t);
 size_t BitCount(size_t);
 void WordsLadder(string const &, string const &, set<string> &, vector<string> &);
 void trim(string &);

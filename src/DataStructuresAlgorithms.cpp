@@ -2480,11 +2480,13 @@ log2(7) = 2.807355, floor(log2(7)) = 2.000000 + 1 = 3(8 choices)
 
 log2(8) = 3.000000, floor(log2(8)) = 3.000000 + 1 = 4(9 choices)
 log2(9) = 3.169925, floor(log2(9)) = 3.000000 + 1 = 4(10 choices)
+
+log2 works on doubles, which have 53 bits of precision. So for n above 2⁵³, converting n to a double can round it. For n = 2⁵³ + 1, it rounds down to 2⁵³ and you get 53 instead of 54:
+n = 2⁵³ + 1:   ceil(log2(n)) = 53,   bit_width(n - 1) = 54 ✓
 */
-constexpr size_t BitCountOfNChoices(size_t n)
+size_t BitCountOfNChoices(size_t n)
 {
-	return !n ? 0 : n == 1 ? 1
-						   : ceil(log2(n));
+	return n <= 1 ? n : bit_width(n - 1); // #bits to number n choices 0 .. n-1
 }
 /* https://leetcode.com/problems/gray-code/
  * 100%
