@@ -644,13 +644,17 @@ constexpr long SequenceSum(long n)
  Examples:
  25(5*5) 24 23 22 21 20(5*4) 19 18 17 16 15(5*3) 14 13 12 11 10(5*2) 9 8 7 6 5 4 3 2 1 => 6 zeroes
  10(5*2) 9 8 7 6 5 4 3 2 1 => 2 zeroes
- */
-long FactorialTrailingZeroesCount(long n)
+ 25! #fives: [25,20,15,10,5] 25/5 = 5, 5/5 = 1 => 5+1=6
+ 30! #fives: [30,25,20,15,10,5] 30/5 = 6, 6/5 = 1 => 6+1=7
+ 35! #fives: [35,30,25,20,15,10,5] 35/5 = 7, 7/5 = 1 => 7+1=8
+ 40! #fives: [40,35,30,25,20,15,10,5] 40/5 = 8, 8/5 = 1 => 8+1=9
+ 45! #fives: [45,40,35,30,25,20,15,10,5] 45/5 = 9, 9/5 = 1 => 9+1=10
+ 50! #fives: [50,45,40,35,30,25,20,15,10,5] 50/5 = 10, 10/5 = 2 => 10+2=12 <- 50 = 5 * 5 * 2
+  */
+size_t FactorialTrailingZeroesCount(size_t n)
 {
-	long count = 0;
-	if (n < 0)
-		return 0;
-	for (long i = 5; (n / i) > 0; i *= 5)
+	size_t count = 0;
+	for (size_t i = 5; n / i; i *= 5)
 		count += (n / i);
 	return count;
 }

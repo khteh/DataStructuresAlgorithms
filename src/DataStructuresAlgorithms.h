@@ -139,7 +139,7 @@ constexpr T Factorial(long);
 template <typename T>
 constexpr T Fibonacci(long);
 string FibonacciModified(size_t, size_t, size_t);
-long FactorialTrailingZeroesCount(long);
+size_t FactorialTrailingZeroesCount(size_t);
 constexpr long SequenceSum(long);
 template <typename T>
 constexpr T BinomialCoefficients(size_t, size_t);
