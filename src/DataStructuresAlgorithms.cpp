@@ -636,8 +636,10 @@ constexpr long SequenceSum(long n)
 	return (n + 1) * (n) / 2;
 }
 /*
+ https://leetcode.com/problems/factorial-trailing-zeroes/description/
+ 100%
  Trailing zeros are contributed by pairs of 5 and 2, because 5*2 = 10.
- To count the number of pairs, we just have to count the number of multiples of 5.
+ To count the number of pairs, we just have to count the number of multiples of 5. Since factorial counts down, as long as there is a '5', there is a '2'.
  Note that while 5 contributes to one multiple of 10, 25 contributes two (because 25 = 5*5).
  Examples:
  25(5*5) 24 23 22 21 20(5*4) 19 18 17 16 15(5*3) 14 13 12 11 10(5*2) 9 8 7 6 5 4 3 2 1 => 6 zeroes
