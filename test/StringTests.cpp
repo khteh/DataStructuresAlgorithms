@@ -11,6 +11,7 @@ public:
     }
 
 protected:
+    String _strObj;
     T1 _expected;
     T2 _var1;
 };
@@ -25,7 +26,7 @@ public:
     vector<string> PhoneKeyLettersTest()
     {
         vector<string> result;
-        PhoneKeyLetters(_var1, result);
+        _strObj.PhoneKeyLetters(_var1, result);
         return result;
     }
 };
@@ -46,7 +47,7 @@ public:
     }
     long BasicCalculatorTest()
     {
-        return BasicCalculator(_var1);
+        return _strObj.BasicCalculator(_var1);
     }
 };
 TEST_P(BasicCalculatorTestFixture, BasicCalculatorTests)
@@ -67,7 +68,7 @@ public:
     }
     size_t LongestSubstringTest()
     {
-        return LengthOfLongestSubstring(_var1);
+        return _strObj.LengthOfLongestSubstring(_var1);
     }
 };
 TEST_P(LongestSubstringTestFixture, LongestSubstringTests)
@@ -88,7 +89,7 @@ public:
     }
     string TwentyFourHourTimeConversionTest()
     {
-        return TwentyFourHourTimeConversion(_var1);
+        return _strObj.TwentyFourHourTimeConversion(_var1);
     }
 };
 TEST_P(TwentyFourHourTimeConversionTestFixture, TwentyFourHourTimeConversionTests)
@@ -109,7 +110,7 @@ public:
     }
     string NextBiggerStringTest()
     {
-        return NextBiggerString(_var1);
+        return _strObj.NextBiggerString(_var1);
     }
 };
 TEST_P(NextBiggerStringTestFixture, NextBiggerStringTests)
@@ -132,10 +133,11 @@ public:
     }
     string MorganAndStringTest()
     {
-        return MorganAndString(_data1, _data2);
+        return _strObj.MorganAndString(_data1, _data2);
     }
 
 protected:
+    String _strObj;
     string _expected;
     string _data1, _data2;
 };
@@ -157,7 +159,7 @@ public:
     }
     bool SherlockValidStringTest()
     {
-        return SherlockValidString(_var1);
+        return _strObj.SherlockValidString(_var1);
     }
 };
 TEST_P(SherlockValidStringTestFixture, SherlockValidStringTests)
@@ -181,10 +183,11 @@ public:
     }
     bool AreRotatedStringsTest()
     {
-        return AreRotatedStrings(_data1, _data2, _offset);
+        return _strObj.AreRotatedStrings(_data1, _data2, _offset);
     }
 
 protected:
+    String _strObj;
     bool _expected;
     size_t _offset;
     string _data1, _data2;
@@ -208,7 +211,7 @@ public:
     vector<string> ParenthesesTest()
     {
         vector<string> result;
-        Parentheses(result, _var1);
+        _strObj.Parentheses(result, _var1);
         return result;
     }
 };
@@ -230,7 +233,7 @@ public:
     }
     bool IsValidParenthesesTest()
     {
-        return IsValidParentheses(_var1);
+        return _strObj.IsValidParentheses(_var1);
     }
 };
 TEST_P(IsValidParenthesesTestFixture, IsValidParenthesesTests)
@@ -251,7 +254,7 @@ public:
     }
     long LongestValidParenthesesTest()
     {
-        return LongestValidParentheses(_var1);
+        return _strObj.LongestValidParentheses(_var1);
     }
 };
 TEST_P(LongestValidParenthesesTestFixture, LongestValidParenthesesTests)
@@ -275,10 +278,11 @@ public:
     }
     string CipherChallengeTest()
     {
-        return Cipher(_n, _k, _data);
+        return _strObj.Cipher(_n, _k, _data);
     }
 
 protected:
+    String _strObj;
     string _expected;
     size_t _n, _k;
     string _data;
@@ -301,7 +305,7 @@ public:
     }
     string DecryptPasswordTest()
     {
-        return DecryptPassword(_var1);
+        return _strObj.DecryptPassword(_var1);
     }
 };
 TEST_P(DecryptPasswordTestFixture, DecryptPasswordTests)
@@ -321,7 +325,7 @@ public:
     }
     string DecodeStringTest()
     {
-        return DecodeString(_var1);
+        return _strObj.DecodeString(_var1);
     }
 };
 TEST_P(DecodeStringTestFixture, DecodeStringTests)
@@ -342,7 +346,7 @@ public:
     }
     size_t LengthOfLongestUniqueSubstringTest()
     {
-        return LengthOfLongestUniqueSubstring(_var1);
+        return _strObj.LengthOfLongestUniqueSubstring(_var1);
     }
 };
 TEST_P(LengthOfLongestUniqueSubstringTestFixture, LengthOfLongestUniqueSubstringTests)
@@ -365,10 +369,11 @@ public:
     }
     string ZigZagConvertTest()
     {
-        return ZigZagConvert(_data, _numRows);
+        return _strObj.ZigZagConvert(_data, _numRows);
     }
 
 protected:
+    String _strObj;
     string _expected;
     string _data;
     size_t _numRows;
@@ -393,10 +398,11 @@ public:
     }
     vector<string> WordBreakDFSTest()
     {
-        return WordBreakDFS(_str1, _strs);
+        return _strObj.WordBreakDFS(_str1, _strs);
     }
 
 protected:
+    String _strObj;
     string _str1;
     set<string> _strs;
     vector<string> _expected;
@@ -424,7 +430,7 @@ public:
     }
     bool HappyLadyBugsChallengeTest()
     {
-        return HappyLadyBugs(_var1);
+        return _strObj.HappyLadyBugs(_var1);
     }
 };
 TEST_P(HappyLadyBugsChallengeTestFixture, HappyLadyBugsChallengeTests)
@@ -446,10 +452,11 @@ public:
     }
     string GetHintChallengeTest()
     {
-        return GetHint(_secret, _guess);
+        return _strObj.GetHint(_secret, _guess);
     }
 
 protected:
+    String _strObj;
     string _expected, _secret, _guess;
 };
 TEST_P(GetHintChallengeTestFixture, GetHintChallengeTests)
@@ -469,7 +476,7 @@ public:
     }
     size_t SteadyGeneChallengeTest()
     {
-        return SteadyGene(_var1);
+        return _strObj.SteadyGene(_var1);
     }
 };
 TEST_P(SteadyGeneChallengeTestFixture, SteadyGeneChallengeTests)
@@ -491,10 +498,11 @@ public:
     }
     size_t LongestStringWithCharacterReplacementTest()
     {
-        return LongestStringWithCharacterReplacement(_string, _k);
+        return _strObj.LongestStringWithCharacterReplacement(_string, _k);
     }
 
 protected:
+    String _strObj;
     size_t _expected, _k;
     string _string;
 };
@@ -517,10 +525,11 @@ public:
     }
     string LongestMatchingWordWithDeletionTest()
     {
-        return LongestMatchingWordWithDeletion(_string, _dictionary);
+        return _strObj.LongestMatchingWordWithDeletion(_string, _dictionary);
     }
 
 protected:
+    String _strObj;
     set<string> _dictionary;
     string _string, _expected;
 };
@@ -546,11 +555,12 @@ public:
     vector<string> WordsLadderTest()
     {
         vector<string> result;
-        WordsLadder(_start, _finish, _dictionary, result);
+        _strObj.WordsLadder(_start, _finish, _dictionary, result);
         return result;
     }
 
 protected:
+    String _strObj;
     vector<string> _expected;
     string _start, _finish;
     set<string> _dictionary;
@@ -574,7 +584,7 @@ public:
     vector<size_t> ZFunctionTest()
     {
         vector<size_t> result;
-        Z(result, _var1);
+        _strObj.Z(result, _var1);
         return result;
     }
 };
@@ -595,7 +605,7 @@ public:
     }
     string RemoveDuplicateCharactersTest()
     {
-        RemoveDuplicateCharacters(_var1);
+        _strObj.RemoveDuplicateCharacters(_var1);
         return _var1;
     }
 };
@@ -616,7 +626,7 @@ public:
     }
     string RemoveDuplicateCharactersLexicographicalOrderTest()
     {
-        RemoveDuplicateCharactersLexicographicalOrder(_var1);
+        _strObj.RemoveDuplicateCharactersLexicographicalOrder(_var1);
         return _var1;
     }
 };
@@ -637,7 +647,7 @@ public:
     }
     size_t AlternateCharsTest()
     {
-        return AlternateChars(_var1);
+        return _strObj.AlternateChars(_var1);
     }
 };
 TEST_P(AlternateCharsTestFixture, AlternateCharsTests)
@@ -657,7 +667,7 @@ public:
     }
     string SuperReducedStringTest()
     {
-        return SuperReducedString(_var1);
+        return _strObj.SuperReducedString(_var1);
     }
 };
 TEST_P(SuperReducedStringTestFixture, SuperReducedStringTests)
@@ -679,10 +689,11 @@ public:
     }
     vector<bool> WeightedUniformStringsTest()
     {
-        return WeightedUniformStrings(_data, _queries);
+        return _strObj.WeightedUniformStrings(_data, _queries);
     }
 
 protected:
+    String _strObj;
     vector<bool> _expected;
     string _data;
     vector<size_t> _queries;
@@ -695,23 +706,39 @@ INSTANTIATE_TEST_SUITE_P(
     WeightedUniformStringsTests,
     WeightedUniformStringsTestFixture,
     ::testing::Values(make_tuple(vector<bool>{true, false, false, true, false}, "abbcccdddd", vector<size_t>{1, 7, 5, 4, 15}), make_tuple(vector<bool>{true, true, true, true, false, false}, "abccddde", vector<size_t>{1, 3, 12, 5, 9, 10}), make_tuple(vector<bool>{true, false, true, true, false}, "aaabbbbcccddd", vector<size_t>{9, 7, 8, 12, 5})));
-
-class LongestCommonPrefixTestFixture : public testing::TestWithParam<tuple<string, vector<string>>>
+class MaxProductOfNonOverlappingWordLengthsTestFixture : public StringTestFixture<size_t, vector<string>>, public testing::TestWithParam<tuple<size_t, vector<string>>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _data = get<1>(GetParam());
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+    }
+    size_t MaxProductOfNonOverlappingWordLengthsTest()
+    {
+        return _strObj.MaxProductOfNonOverlappingWordLengths(_var1);
+    }
+};
+TEST_P(MaxProductOfNonOverlappingWordLengthsTestFixture, MaxProductOfNonOverlappingWordLengthsTests)
+{
+    ASSERT_EQ(this->_expected, this->MaxProductOfNonOverlappingWordLengthsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    MaxProductOfNonOverlappingWordLengthsTests,
+    MaxProductOfNonOverlappingWordLengthsTestFixture,
+    ::testing::Values(make_tuple(16, vector<string>{"abcw", "baz", "foo", "bar", "xtfn", "abcdef"}), // "abcw", "xtfn"
+                      make_tuple(4, vector<string>{"a", "ab", "abc", "d", "cd", "bcd", "abcd"}),     // "ab", "cd"
+                      make_tuple(0, vector<string>{"a", "aa", "aaa", "aaaa"})));
+class LongestCommonPrefixTestFixture : public StringTestFixture<string, vector<string>>, public testing::TestWithParam<tuple<string, vector<string>>>
+{
+public:
+    void SetUp() override
+    {
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     string LongestCommonPrefixTest()
     {
-        return LongestCommonPrefix(_data);
+        return _strObj.LongestCommonPrefix(_var1);
     }
-
-protected:
-    string _expected;
-    vector<string> _data;
 };
 TEST_P(LongestCommonPrefixTestFixture, LongestCommonPrefixTests)
 {
@@ -721,22 +748,17 @@ INSTANTIATE_TEST_SUITE_P(
     LongestCommonPrefixTests,
     LongestCommonPrefixTestFixture,
     ::testing::Values(make_tuple("fl", vector<string>{"flower", "flow", "flight"}), make_tuple("", vector<string>{"dog", "racecar", "car"}), make_tuple("c", vector<string>{"cir", "car"})));
-class BuildLargestNumberTestFixture : public testing::TestWithParam<tuple<string, vector<size_t>>>
+class BuildLargestNumberTestFixture : public StringTestFixture<string, vector<size_t>>, public testing::TestWithParam<tuple<string, vector<size_t>>>
 {
 public:
     void SetUp() override
     {
-        _expected = get<0>(GetParam());
-        _data = get<1>(GetParam());
+        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
     }
     string BuildLargestNumberTest()
     {
-        return BuildLargestNumber(_data);
+        return _strObj.BuildLargestNumber(_var1);
     }
-
-protected:
-    string _expected;
-    vector<size_t> _data;
 };
 TEST_P(BuildLargestNumberTestFixture, BuildLargestNumberTests)
 {

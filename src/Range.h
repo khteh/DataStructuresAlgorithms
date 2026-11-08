@@ -40,7 +40,6 @@ public:
 	vector<size_t> WiggleMaxLength(vector<size_t> const &);
 	bool ContainsNearbyAlmostDuplicate(vector<int64_t> const &, int64_t, int64_t);
 	size_t VectorEqualSplit(vector<int> const &); // Only tested working with int type.
-	size_t MaxProductOfNonOverlappingWordLengths(vector<string> const &);
 	string AlmostSorted(vector<long> const &);
 	size_t PickNumbersFromRange(vector<size_t> const &);
 	vector<long> LastNumbers(size_t, long, long);

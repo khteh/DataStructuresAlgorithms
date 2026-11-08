@@ -40,6 +40,7 @@
 #include "Palindrome.h"
 #include "Range.h"
 #include "Sort.h"
+#include "String.h"
 #include "Poker.h"
 #include "VariantVisitor.h"
 #include "GameTheory.h"
@@ -98,19 +99,6 @@ typedef struct ZigZagEscape
 		return value < other.value;
 	}
 } zigzag_t;
-typedef struct BuildLargestNumber_comparator
-{
-	bool operator()(string lhs, string rhs) const
-	{
-		ostringstream oss1, oss2;
-		oss1 << lhs << rhs;
-		oss2 << rhs << lhs;
-		// True: lhs goes before rhs; False: lhs goes after rhs
-		// lhsrhs < rhslhs : lhs goes after rhs
-		// lhsrhs > rhslhs : lhs goes before rhs
-		return oss1.str() > oss2.str();
-	}
-} BuildLargestNumber_comparator_t;
 class VariantException
 {
 public:
@@ -179,13 +167,9 @@ void ReverseWords(string &);
 void ReverseWordsTrimmed(string &);
 int32_t ReverseInt32(int32_t);
 size_t RemoveDuplicates(vector<long> &);
-void RemoveDuplicateCharacters(string &);
-void RemoveDuplicateCharactersLexicographicalOrder(string &);
 bool AreAnagrams(string const &, string const &);
 size_t FindAnagrams(vector<string> const &, vector<vector<string>> &);
-bool SherlockValidString(string const &);
 size_t SherlockAndAnagrams(string const &);
-bool AreRotatedStrings(string const &, string const &, size_t);
 bool SolvabilityOfTheTilesGame(vector<size_t> &);
 void RotateRightArray(vector<int> &, int);
 vector<int> RotateLeftArray(vector<int> &, int);
@@ -200,10 +184,6 @@ void FindPrimes(unsigned long, vector<long> &);
 bool IsPrime(unsigned long);
 size_t CommonPrimeDivisors(vector<long> &, vector<long> &);
 void Merge(vector<long> &, vector<long> &);
-void Parentheses(vector<string> &, size_t);
-void Parentheses(vector<string> &, string &, size_t, long, long);
-bool IsValidParentheses(string const &);
-long LongestValidParentheses(string const &);
 long LongestValidParenthesesWithFixes(string const &, size_t k);
 vector<long> diffWaysToCompute(string);
 void KDTreeTests();
@@ -224,7 +204,6 @@ size_t Count1Bits(long);
 size_t Count1Bits(long, set<size_t> &);
 size_t BitCountOfNChoices(size_t);
 size_t BitCount(size_t);
-void WordsLadder(string const &, string const &, set<string> &, vector<string> &);
 void trim(string &);
 size_t minDiffPairs(vector<long> &, long);
 string uncompress(string const &);
@@ -241,7 +220,6 @@ void EqualAverageDivide(vector<long> &, vector<long> &);
 bool GetSum(vector<long> &, size_t K, long sum, size_t index, vector<long> &);
 bool match(string const &, string const &);
 string EncodeString(string);
-string Cipher(size_t, size_t, string const &);
 void FindPattern(string, set<string> &, set<string> &);
 string subtract(istream &, istream &);
 set<string> intersectionNgram(string const &, string const &, int n);
@@ -250,7 +228,6 @@ void *alignedMalloc(size_t bytes, size_t alignment);
 void alignedFree(void **p);
 vector<string> numbersegments(vector<long> &);
 long concat(vector<long> &);
-string BuildLargestNumber(vector<size_t> &);
 bool JSONValidation(string);
 vector<char> AddVectors(vector<char> &, vector<char> &);
 long MaxLengths(vector<string> &);
@@ -263,7 +240,6 @@ bool IsValidMatrix(vector<vector<char>> const &);
 size_t ZigZagEscape(vector<long> &);
 size_t ZigZagEscape(vector<long> &, set<string> &);
 vector<string> ZigZagEscape(vector<long> &, vector<long> &, size_t lIndex, size_t rIndex, long current, bool dir);
-size_t LengthOfLongestSubstring(string const &);
 size_t IncreasingSequences(vector<long> &, vector<long> &);
 size_t LongestIncreasingSubsequenceNlogN(vector<size_t> const &);
 size_t LongestNonDecreasingSubsequenceNlogN(vector<size_t> const &);
@@ -285,20 +261,12 @@ size_t BeautifulQuadruples(size_t, size_t, size_t, size_t);
 long kruskals(int, vector<long> &, vector<long> &, vector<long> &);
 long getLowestPathCost(size_t, vector<long> &, vector<long> &, vector<long> &);
 size_t PostmanProblemWithoutLoop(size_t, set<size_t> const &, vector<vector<size_t>> const &, bool print = false);
-string DecryptPassword(string const &);
 unsigned long long substrings(string const &);
 vector<string> BomberMan(size_t, vector<string> const &);
-size_t LengthOfLongestUniqueSubstring(string const &);
-string ZigZagConvert(string const &, size_t);
 string NumberToRoman(size_t);
 size_t RomanToNumber(string const &);
 double SortedListsMedian(vector<long> &, vector<long> &);
-long BasicCalculator(string const &);
 size_t hIndex(vector<size_t> &);
-void PhoneKeyLetters(string const &, vector<string> &);
-vector<string> WordBreakDFS(string const &, set<string> const &);
-vector<string> WordBreakDFS(string const &, set<string> const &, map<string, vector<string>> &);
-string GetHint(string const &, string const &);
 vector<string> FindItinerary(vector<vector<string>> &, string const &);
 void EulerianPath(string, map<string, multiset<string>> &, vector<string> &);
 vector<string> fizzBuzz(size_t);
@@ -314,39 +282,13 @@ typedef struct TowerOfHanoiState
 	size_t moves;
 } towerofhanoi_state_t;
 int ResetTowerOfHanoi(size_t, vector<size_t> const &);
-size_t SteadyGene(string const &);
 size_t IntervalSelection(vector<vector<size_t>> &);
-string TwentyFourHourTimeConversion(string const &);
 vector<long> KaprekarNumbers(long, long);
 size_t kMarsh(vector<string> const &);
 size_t MatrixPerimeter(vector<vector<size_t>> &, vector<string> &);
-bool HappyLadyBugs(string const &);
 size_t PowerSum(size_t, size_t, size_t i = 1);
-string MorganAndString(string const &, string const &);
 unsigned long long DistinctPairs(size_t, vector<vector<long>> const &);
-void Z(vector<size_t> &, string const &);
-string NextBiggerString(string &);
-size_t AlternateChars(string const &);
-string SuperReducedString(string const &);
-vector<bool> WeightedUniformStrings(string const &, vector<size_t> const &);
 size_t RoadsAndLibraries(size_t, size_t, size_t, vector<vector<size_t>> const &);
 char SuperDigit(string const &, size_t);
 size_t FindConnectedComponents(vector<long> &);
 string LongestCommonPrefix(vector<string> const &);
-string DecodeString(string const &);
-size_t LongestStringWithCharacterReplacement(string const &, size_t);
-typedef struct LongestMatchingWordWithDeletionState
-{
-	size_t index; // The number refers to the number of characters in w that have already been found in input string.
-	string word;
-	LongestMatchingWordWithDeletionState(size_t i, string const &w) : index(i), word(w) {}
-	bool operator<(const LongestMatchingWordWithDeletionState &other) const
-	{
-		return word < other.word;
-	}
-	bool operator>(const LongestMatchingWordWithDeletionState &other) const
-	{
-		return word > other.word;
-	}
-} longestmatchingwordwithdeletion_state_t;
-string LongestMatchingWordWithDeletion(string const &, set<string> const &);

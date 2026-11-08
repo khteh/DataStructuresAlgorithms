@@ -364,28 +364,6 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(4, vector<int>{16384, 8192, 8192, 16384, 8192, 8192, 32768, 32768}),
 					  make_tuple(1, vector<int>{8760958, 8760957, 547560, 547560, 547560, 273780, 273780, 2190239, 4380479, 4380479, 4380478}),
 					  make_tuple(4, vector<int>{0, 0, 0, 0, 0})));
-class MaxProductOfNonOverlappingWordLengthsTestFixture : public RangeTestFixture1<size_t, string>, public testing::TestWithParam<tuple<size_t, vector<string>>>
-{
-public:
-	void SetUp() override
-	{
-		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-	}
-	size_t MaxProductOfNonOverlappingWordLengthsTest()
-	{
-		return _rangeObj.MaxProductOfNonOverlappingWordLengths(_data);
-	}
-};
-TEST_P(MaxProductOfNonOverlappingWordLengthsTestFixture, MaxProductOfNonOverlappingWordLengthsTests)
-{
-	ASSERT_EQ(this->_expected, this->MaxProductOfNonOverlappingWordLengthsTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	MaxProductOfNonOverlappingWordLengthsTests,
-	MaxProductOfNonOverlappingWordLengthsTestFixture,
-	::testing::Values(make_tuple(16, vector<string>{"abcw", "baz", "foo", "bar", "xtfn", "abcdef"}), // "abcw", "xtfn"
-					  make_tuple(4, vector<string>{"a", "ab", "abc", "d", "cd", "bcd", "abcd"}),	 // "ab", "cd"
-					  make_tuple(0, vector<string>{"a", "aa", "aaa", "aaaa"})));
 class AlmostSortedTestFixture : public RangeTestFixture1<string, long>, public testing::TestWithParam<tuple<string, vector<long>>>
 {
 public:

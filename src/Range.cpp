@@ -918,25 +918,6 @@ size_t Range::VectorEqualSplit(vector<int> const &data)
 	}
 	return result;
 }
-/* https://leetcode.com/problems/maximum-product-of-word-lengths/
- * 100%
- */
-size_t Range::MaxProductOfNonOverlappingWordLengths(vector<string> const &words)
-{
-	size_t result = 0;
-	map<size_t, size_t> patterns;
-	for (vector<string>::const_iterator it = words.begin(); it != words.end(); it++)
-	{
-		int pattern = 0;
-		for (size_t c = 0; c < it->size(); c++)
-			pattern |= 1 << ((*it)[c] - 'a');
-		patterns[pattern] = max(patterns[pattern], it->size());
-		for (map<size_t, size_t>::iterator it1 = patterns.begin(); it1 != patterns.end(); it1++)
-			if (!(it1->first & pattern))
-				result = max(result, it1->second * it->size());
-	}
-	return result;
-}
 /* https://www.hackerrank.com/challenges/almost-sorted/problem
    100%
 4 2

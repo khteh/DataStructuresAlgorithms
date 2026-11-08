@@ -163,6 +163,7 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Sort.h" />
     <ClInclude Include="Square.h" />
+    <ClInclude Include="String.h" />
     <ClInclude Include="StringArithmetic.h" />
     <ClInclude Include="SuffixTree.h" />
     <ClInclude Include="Tower.h" />
@@ -223,6 +224,7 @@
     <ClCompile Include="PriorityQueueMedian.cpp" />
     <ClCompile Include="Search.cpp" />
     <ClCompile Include="Singleton.cpp" />
+    <ClCompile Include="String.cpp" />
     <ClCompile Include="SuffixTree.cpp" />
     <ClCompile Include="Tower.cpp" />
     <ClCompile Include="Tree.cpp" />
