@@ -9,6 +9,7 @@ private:
 	set<vector<size_t>> _BoundedKnapsack(long, vector<size_t> const &);
 	set<vector<size_t>> _BoundedKnapsackCombinationSum(size_t, size_t, size_t);
 	set<vector<size_t>> _KnapsackCombinations(long, vector<size_t> const &);
+	void _NumberCombinations(size_t, size_t, size_t, vector<size_t> &, vector<vector<size_t>> &);
 
 public:
 	void ClearCoinsChangeCache();
@@ -22,6 +23,7 @@ public:
 	size_t UnboundedKnapsack(long, vector<size_t> const &);
 	vector<vector<size_t>> BoundedKnapsack(long, vector<size_t> const &);
 	set<vector<size_t>> BoundedKnapsackCombinationSum(size_t, size_t, size_t max = 10);
+	void NumberCombinations(size_t, size_t, vector<vector<size_t>> &);
 	size_t StairsClimbingDynamicProgramming(long, vector<size_t> const &);
 	size_t StairsClimbingDynamicProgrammingBottomUp(long, vector<size_t> const &);
 };

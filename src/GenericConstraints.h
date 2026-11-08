@@ -8,6 +8,8 @@ template <typename T>
 concept integral_type = integral<T>;
 template <typename T>
 concept signed_integral_type = signed_integral<T>;
+template <typename T>
+concept floating_point_type = floating_point<T>;
 template <class T, class U>
 concept Derived = is_base_of<U, T>::value;
 

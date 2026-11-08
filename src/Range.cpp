@@ -527,7 +527,27 @@ vector<long> Range::ProductExceptSelf(vector<long> const &nums)
 	}
 	return result;
 }
-
+// 2 1 1 2 => (2+1)*(2+1) = 9
+// 2 3 3 2 :
+// (1) 2 + 3 + 3 + 2 = 10
+// (2) 2 * 3 * 3 * 2 = 36
+// (3) (2 + 3) * (3 + 2) = 25
+// (4) 2 + (3 * 3) + 2 = 11
+unsigned long long Range::FindMax(vector<unsigned long long> const &data)
+{
+	vector<unsigned long long> result;
+	if (data.size() == 1)
+		return data[0];
+	else if (data.size() == 2)
+		return (data[0] * data[1] > data[0] + data[1]) ? data[0] * data[1] : data[0] + data[1];
+	else
+		for (vector<unsigned long long>::const_iterator it = data.begin(); it != data.end(); it += 2)
+			if (it <= data.end() - 2)
+				result.push_back((*it + *(it + 1)) > (*it * *(it + 1)) ? (*it + *(it + 1)) : (*it * *(it + 1)));
+			else
+				result.push_back(*it);
+	return FindMax(result);
+}
 /*
  * https://www.geeksforgeeks.org/maximum-value-pair-array/
  * Start from MSB, add the bit to the result if there are 2 elements having the same prefix value when ANDed

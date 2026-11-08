@@ -1,7 +1,7 @@
 #pragma once
 #include "DisJointSet.h"
 using namespace std;
-extern size_t BitCount(size_t n);
+extern size_t BitCount(size_t);
 typedef enum class Direction
 {
 	Up,
@@ -21,6 +21,7 @@ public:
 	size_t SumPairs(size_t, vector<size_t> const &);
 	void SumPairs(size_t, vector<size_t> const &, vector<size_t> &);
 	vector<long> ProductExceptSelf(vector<long> const &);
+	unsigned long long FindMax(vector<unsigned long long> const &);
 	unsigned long long MaxAndPair(vector<unsigned long long> const &);
 	unsigned long long MaxXorPair(vector<unsigned long long> const &);
 	unsigned long long BeautifulQuadruples(size_t, size_t, size_t, size_t);

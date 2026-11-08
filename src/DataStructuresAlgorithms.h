@@ -54,30 +54,22 @@
 /*
  * https://stackoverflow.com/questions/1452721/whats-the-problem-with-using-namespace-std
  * https://stackoverflow.com/questions/495021/why-can-templates-only-be-implemented-in-the-header-file
+ *
+ * Notes on 'constexpr':
+ * Without constexpr, DataStructuresAlgorithms.cpp compiles FactorialTrailingZeroesCount into a normal function and exports it.
+ * In the object file it appears as a T symbol, which means “defined here, available to other files”. When Console.cpp calls it, the linker finds that symbol.
+ * With constexpr, the function is implicitly inline. The rules for inline functions assume every file that uses one has its own copy of the body, so the compiler only generates code for it where it’s actually needed.
+ * If DataStructuresAlgorithms.cpp doesn’t call it, the compiler generates nothing at all: no symbol is exported. Console.cpp only saw the declaration, so it expects to find the function in another file, and the linker can’t find it anywhere.
+ * If a function doesn’t need to run at compile time (for example, you never use it in static_assert, a constexpr variable or a template argument), you can simply not make it constexpr.
+ * Being constexpr is only useful when you actually use the result at compile time, and it costs you this restructuring.
  */
 using namespace std;
 using namespace chrono;
 using namespace oneapi::tbb;
-typedef union
-{
-	long l;
-	float f;
-} thirty_two_bit;
-typedef union
-{
-	long long ll;
-	double d;
-} sixty_four_bit;
-#if defined(__GNUC__) || defined(__GNUG__)
-typedef union
-{
-	__int128 lll;
-	long double ld;
-} one_two_eight_bit;
-#endif
+namespace ranges = std::ranges;
 typedef struct ZeroFactors
 {
-	long two, five, value, minValue;
+	size_t two, five, value, minValue;
 	bool operator>(const ZeroFactors &other) const
 	{
 		return max(two, five) == max(other.two, other.five) ? value > other.value : max(two, five) > max(other.two, other.five);
@@ -130,13 +122,17 @@ multimap<B, A, Cmp> flip_map(const map<A, B> &, Cmp cmp = {});
 void cpp20readonlyranges();
 void cpp20ranges();
 void cpp20variants();
-float MachineEpsilon(float value);
-float FloatMachineEpsilonApproximation();
-double MachineEpsilon(double value);
-double MachineEpsilonApproximation();
+template <floating_point_type T>
+constexpr T Ulp(T);
+template <floating_point_type T>
+constexpr bool AlmostEqual(T a, T b, size_t ulps = 4);
+template <floating_point_type T>
+constexpr T MachineEpsilonApproximation();
 void testPointerReference(int *&);
-long Min(long, long);
-long Max(long, long);
+template <signed_integral_type T>
+constexpr T MinBitTrick(T, T);
+template <signed_integral_type T>
+constexpr T MaxBitTrick(T, T);
 unsigned long long _atoull(string, char base = 10);
 double _atod(string, char base = 10);
 long _atoi(string);
@@ -144,15 +140,18 @@ generator<const size_t &> GenerateSequence(size_t, size_t);
 generator<const size_t &> Generate2Sequence(size_t, size_t, size_t, size_t);
 double round(double num, int n);
 template <typename T>
-T ceil_div(T, T);
+constexpr T ceil_div(T, T);
 template <typename T>
-T Factorial(long);
+constexpr T Factorial(long);
+template <typename T>
+constexpr T Fibonacci(long);
+string FibonacciModified(size_t, size_t, size_t);
 long FactorialTrailingZeroesCount(long);
-long SequenceSum(long);
+constexpr long SequenceSum(long);
 template <typename T>
-T BinomialCoefficients(size_t, size_t);
+constexpr T BinomialCoefficients(size_t, size_t);
 template <typename T>
-T BinomialCoefficientsMultiplicative(size_t, size_t);
+constexpr T BinomialCoefficientsMultiplicative(size_t, size_t);
 template <typename T>
 T MultinomialCoefficients(size_t, vector<size_t> const &, T modulo = 0);
 template <integral_type T>
@@ -187,20 +186,14 @@ void RotateRightArray(vector<int> &, int);
 vector<int> RotateLeftArray(vector<int> &, int);
 vector<size_t> FindSubString(string const &, string const);
 void copy_on_write_string();
-template <typename T>
-T Fibonacci(long);
-string FibonacciModified(size_t, size_t, size_t);
 void BitCombinations(size_t, vector<long> &);
 vector<size_t> grayCode(size_t);
 void OrderedMergedCombinations(set<string> &, string const &, string const &, string);
-void numberCombinations1(size_t, size_t, size_t, vector<size_t> &, vector<vector<size_t>> &);
-void numberCombinations(size_t, size_t, vector<vector<size_t>> &);
 size_t LargestNumberCompositionProduct(size_t);
-void findDistinct(vector<long> &, vector<long> &);
-void findPrimes(unsigned long, vector<long> &);
-bool isPrime(unsigned long);
+void FindDistinct(vector<long> &, vector<long> &);
+void FindPrimes(unsigned long, vector<long> &);
+bool IsPrime(unsigned long);
 size_t CommonPrimeDivisors(vector<long> &, vector<long> &);
-unsigned long long findMax(vector<unsigned long long> const &);
 void Merge(vector<long> &, vector<long> &);
 void Parentheses(vector<string> &, size_t);
 void Parentheses(vector<string> &, string &, size_t, long, long);
@@ -224,7 +217,7 @@ size_t CountDigits(char, size_t);
 size_t CountNumbersWithUniqueDigits(size_t);
 size_t Count1Bits(long);
 size_t Count1Bits(long, set<size_t> &);
-size_t BitCountOfNChoices(size_t);
+constexpr size_t BitCountOfNChoices(size_t);
 size_t BitCount(size_t);
 void WordsLadder(string const &, string const &, set<string> &, vector<string> &);
 void trim(string &);

@@ -1,5 +1,10 @@
 #include "pch.h"
 using namespace std;
+TEST(MinMaxTests, MinMaxTests)
+{
+	ASSERT_EQ(0xdeadbeef, MinBitTrick<long>(0xdeadbeef, 0xfeedbeef));
+	ASSERT_EQ(0xfeedbeef, MaxBitTrick<long>(0xdeadbeef, 0xfeedbeef));
+}
 class BitCountTestFixture : public testing::TestWithParam<tuple<size_t, size_t>>
 {
 public:

@@ -7,6 +7,8 @@ template __int128 BinomialCoefficients(size_t, size_t);
 template __int128 BinomialCoefficientsMultiplicative(size_t, size_t);
 template __int128 MultinomialCoefficients(size_t, vector<size_t> const &, __int128);
 template __int128 ceil_div(__int128, __int128);
+template __int128 MinBitTrick(__int128, __int128);
+template __int128 MaxBitTrick(__int128, __int128);
 template size_t FactorsCount(__int128, __int128);
 template size_t FactorsCount(unsigned __int128, unsigned __int128);
 template unsigned __int128 ceil_div(unsigned __int128, unsigned __int128);
@@ -22,9 +24,23 @@ template unsigned long long ceil_div(unsigned long long, unsigned long long);
 template long long Fibonacci(long);
 template long long Factorial(long);
 #if defined(_MSC_VER)
+template long MinBitTrick(long, long);
+template long MaxBitTrick(long, long);
 template size_t FactorsCount(long, long);								// This is duplicate of int64_t on GNUC / GNUG
 template size_t MaxZeroProductBruteForce(vector<long> const &, size_t); // This is duplicate of int64_t on GNUC / GNUG
 #endif
+template float Ulp(float);
+template double Ulp(double);
+template long double Ulp(long double);
+template float MachineEpsilonApproximation();
+template double MachineEpsilonApproximation();
+template long double MachineEpsilonApproximation();
+template int MinBitTrick(int, int);
+template int64_t MinBitTrick(int64_t, int64_t);
+template long long MinBitTrick(long long, long long);
+template int MaxBitTrick(int, int);
+template int64_t MaxBitTrick(int64_t, int64_t);
+template long long MaxBitTrick(long long, long long);
 template size_t FactorsCount(int, int);
 template size_t FactorsCount(int64_t, int64_t);
 template size_t FactorsCount(size_t, size_t);
@@ -40,8 +56,6 @@ template long long BinomialCoefficientsMultiplicative(size_t, size_t);
 template unsigned long long BinomialCoefficientsMultiplicative(size_t, size_t);
 template long long MultinomialCoefficients(size_t, vector<size_t> const &, long long);
 template multimap<size_t, string, less<size_t>> flip_map(const map<string, size_t> &, less<size_t>);
-namespace ranges = std::ranges;
-using namespace oneapi::tbb;
 long **my2DAlloc(long rows, long cols)
 {
 	size_t header = rows * sizeof(long *);			// Store the row pointers [i]
@@ -73,46 +87,120 @@ void testPointerReference(int *&ptr)
 	ptr = (int *)malloc(101 * sizeof(int));
 	memset(ptr, 0xabababab, 101 * sizeof(int)); // XXX: sizeof(int*) is 8 bytes on x64!!!
 }
-long Min(long a, long b)
+/*
+The trick needs b − a to come out negative when b < a, so that the sign bit can say which one is smaller. Unsigned numbers have no negative values.
+When b < a, b − a wraps around to a large positive number instead.
+
+With 8-bit numbers (uint8_t, range 0–255)
+
+Unsigned arithmetic is modulo 256, so b − a means (b − a) mod 256. The trick reads the top bit, bit 7, which is set when the result is 128 or more:
+
+a	b	b − a (true)	b − a (uint8_t)	top bit	trick says	correct?
+10	100	90	  			90				0		a is smaller	✓
+100	10	−90				166				1		b is smaller	✓
+200	10	−190			66				0		a is smaller	✗ (b = 10 is)
+10	200	190				190				1		b is smaller	✗ (a = 10 is)
+
+The top bit only tells you whether the wrapped result landed in the upper half (128–255). That matches “b < a” only when the two numbers are less than 128 apart.
+When they’re further apart, the wrap moves the result into the other half, and the answer flips. That’s what happened with Min(4000000000u, 1u): the two values are almost the full 32-bit range apart.
+
+Why signed numbers are different:
+In a signed type, b − a really is negative when b < a, as long as it doesn’t overflow. The top bit is defined as the sign, so it gives the right answer whenever the true difference fits in the type.
+That’s the same “less than half the range apart” condition, and it’s why the signed version also breaks for Min(LONG_MIN, LONG_MAX).
+So the trick reads the sign of the difference, and an unsigned difference never has one. You’d need the borrow, meaning whether b − a wrapped.
+The CPU has that as a flag, but C++ doesn’t give you access to it, and calculating it in code amounts to comparing b < a, which is what the plain comparison already does.
+
+Floating point tppes:
+'>>' isn’t defined for floating-point types.
+You can get around that by reading the raw bits. A double does have a sign bit, bit 63, and std::bit_cast<uint64_t> lets you shift it out.
+Unlike integers, floating-point subtraction doesn’t wrap around, so the sign of b − a really does say which one is smaller. I tried that version:
+
+double sign = (bit_cast<uint64_t>(delta) >> 63) & 1;
+
+Picking the smaller value works, but the last line breaks:
+
+Call				Result	Expected
+MinBits(2.9, 2.1)	2.1		✓
+MinBits(1e20, 1)	0		1
+MinBits(inf, 5)		NaN		5
+MinBits(-inf, 5)	NaN		−inf
+
+Rounding: The trick returns b by computing a − (a − b). With integers that’s exact. With floating point, each operation rounds. 1e20 − 1 rounds back to 1e20, because a double holds only about 16 significant digits.
+		  Then 1e20 − 1e20 = 0, so the 1 is lost. It works for 2.9 and 2.1 only because no information is lost in those subtractions.
+Infinity: inf − inf is NaN, and 0 × inf is NaN too. So any call involving infinity returns NaN, even when the sign bit was read correctly.
+NaN inputs: NaN has a sign bit too, but it doesn’t mean “smaller” or “larger”. So the result depends on whichever bit pattern the NaN happens to have.
+−0.0 and +0.0: These compare equal but have different sign bits. The trick may return either, which can matter if your code later divides by the result.
+
+When this function fails:
+The difference overflows whenever the two numbers are more than the type’s maximum apart.
+That can only happen when they have opposite signs, such as a large negative and a large positive.
+Min(-5000000000000000000, 5000000000000000000) fails the same way, returning the positive value, because their difference of 10¹⁹ exceeds LONG_MAX.
+It’s the same limit as with unsigned numbers. The sign bit of b − a only gives the right answer when the true difference fits in the type.
+For unsigned types, wrap-around is defined; for signed types, overflow is undefined behaviour.
+The plain comparison b < a never computes a difference, so it can’t overflow.
+*/
+template <signed_integral_type T>
+constexpr T MinBitTrick(T a, T b)
 {
-	long delta = b - a;
-	long sign = (delta >> ((sizeof(long) * 8) - 1)) & 1;
+	// Sign-bit trick. Only valid when b - a doesn't overflow (|a|, |b| < max/2)
+	T delta = b - a;
+	T sign = (delta >> numeric_limits<T>::digits) & 1; // digits = #value bits: 31 for int, 63 for 64-bit long
 	// b > a: sign = 0: returns a
 	// b < a: sign = 1: returns a - (a - b) = b
 	return a - sign * (a - b);
 }
-long Max(long a, long b)
+template <signed_integral_type T>
+constexpr T MaxBitTrick(T a, T b)
 {
-	long delta = a - b;
-	long sign = (delta >> ((sizeof(long) * 8) - 1)) & 1;
-	// a > b: sign = 0 => return a
-	// a < b: sign = 1 => return a - (a - b) = b
+	// Sign-bit trick. Only valid when b - a doesn't overflow (|a|, |b| < max/2)
+	T delta = a - b;
+	T sign = (delta >> numeric_limits<T>::digits) & 1; // digits = #value bits: 31 for int, 63 for 64-bit long
+	// b > a: sign = 0: returns a
+	// b < a: sign = 1: returns a - (a - b) = b
 	return a - sign * (a - b);
 }
-float MachineEpsilon(float value)
+/*
+Machine epsilon is usually defined as one fixed number per type: the gap just above 1.0. That’s numeric_limits<double>::epsilon() = 2⁻⁵² ≈ 2.22 × 10⁻¹⁶. It doesn’t change.
+ULP (“unit in the last place”) is the gap between a particular value and the next double. It changes with value. This function computes the ULP.
+The result equals machine epsilon only when value is in [1, 2).
+
+value				Ulp(value)
+0.0 and −0.0		4.94 × 10⁻³²⁴
+1.0 and −1.0		2.22 × 10⁻¹⁶
+denorm_min(), min()	4.94 × 10⁻³²⁴
+max() and lowest()	1.996 × 10²⁹²
+inf, NaN			NaN
+
+Two things to know:
+At powers of 2, it gives the gap above. Ulp(1.0) is 2⁻⁵² even though the gap below 1.0 is 2⁻⁵³. That’s the definition it uses (the gap above the magnitude), not a bug. If you’d rather get the smaller gap, you’d need a different definition.
+-ffast-math breaks it. As we saw with NaN, that flag lets the compiler remove isnan and isinf checks, so infinity and NaN inputs would no longer return NaN. Finite values are unaffected.
+
+Use case: It tells you how precisely a floating-point type can represent numbers near a given value.
+*/
+template <floating_point_type T>
+constexpr T Ulp(T value)
 {
-	thirty_two_bit f;
-	f.f = value;
-	f.l++;
-	return f.f - value;
+	T a = fabs(value);
+	if (isnan(a) || isinf(a))
+		return numeric_limits<T>::quiet_NaN(); // no meaningful gap
+	T up = nextafter(a, numeric_limits<T>::infinity());
+	return isinf(up) ? a - nextafter(a, T(0)) // a == max(): use the gap below
+					 : up - a;
 }
-double MachineEpsilon(double value)
+/*
+There’s no mathematical reason for 4. It’s a rule of thumb, and it is copied from GoogleTest. Here’s its own comment from gtest-internal.h, next to kMaxUlps = 4:
+The maximum error of a single floating-point operation is 0.5 units in the last place. On Intel CPU’s, all floating-point calculations are done with 80-bit precision, while double has 64 bits.
+Therefore, 4 should be enough for ordinary use.
+*/
+template <floating_point_type T>
+constexpr bool AlmostEqual(T a, T b, size_t ulps)
 {
-	sixty_four_bit d;
-	d.d = value;
-	d.ll++;
-	return d.d - value;
+	return fabs(a - b) <= ulps * Ulp(max(fabs(a), fabs(b)));
 }
-float FloatMachineEpsilonApproximation()
+template <floating_point_type T>
+constexpr T MachineEpsilonApproximation()
 {
-	float e = 1.0;
-	while ((1 + 0.5 * e) != 1.0)
-		e *= 0.5;
-	return e;
-}
-double MachineEpsilonApproximation()
-{
-	double e = 1.0;
+	T e = 1.0;
 	while ((1 + 0.5 * e) != 1.0)
 		e *= 0.5;
 	return e;
@@ -520,7 +608,7 @@ void copy_on_write_string()
 	cout << "s2 @ " << (void *)(cptr1) << endl;
 }
 template <typename T>
-T Fibonacci(long n)
+constexpr T Fibonacci(long n)
 {
 	// {0 1 1 2 ...}
 	return (n <= 1) ? n : Fibonacci<T>(n - 2) + Fibonacci<T>(n - 1);
@@ -559,13 +647,13 @@ string FibonacciModified(size_t t1, size_t t2, size_t n)
  * Overflow happens at 21!
  */
 template <typename T>
-T Factorial(long n)
+constexpr T Factorial(long n)
 {
 	return (n <= 0) ? 1 : n * Factorial<T>(n - 1);
 }
 // Integer division rounded up (toward positive infinity), e.g. 7 / 2 == 4, -7 / 2 == -3.
 template <typename T>
-T ceil_div(T x, T y)
+constexpr T ceil_div(T x, T y)
 {
 	T q = x / y;
 	if (x % y != 0 && ((x % y < 0) == (y < 0)))
@@ -609,7 +697,7 @@ a b c d e f
 
  */
 template <typename T>
-T BinomialCoefficients(size_t n, size_t k)
+constexpr T BinomialCoefficients(size_t n, size_t k)
 {
 	if (n == k)
 		return 1;
@@ -624,7 +712,7 @@ https://en.wikipedia.org/wiki/Binomial_coefficient#Multiplicative_formula
 https://stackoverflow.com/questions/15301885/best-way-of-calculating-n-choose-k
 */
 template <typename T>
-T BinomialCoefficientsMultiplicative(size_t n, size_t k)
+constexpr T BinomialCoefficientsMultiplicative(size_t n, size_t k)
 {
 	if (n == k)
 		return 1;
@@ -651,7 +739,7 @@ T MultinomialCoefficients(size_t n, vector<size_t> const &k, T modulo)
 	T result = dp.Factorial(n) / divisor;
 	return modulo ? result % modulo : result;
 }
-long SequenceSum(long n)
+constexpr long SequenceSum(long n)
 {
 	// return (n <= 0) ? 0 : n + SequenceSum(n - 1);
 	return (n + 1) * (n) / 2;
@@ -723,16 +811,16 @@ size_t MaxZeroProductBruteForce(vector<T> const &data, size_t elementCount)
 			}
 		}
 	if (factors.size() < elementCount)
-		result = min(ranges::fold_left(factors | views::transform(&zerofactors_t::two), 0L, plus<long>()), ranges::fold_left(factors | views::transform(&zerofactors_t::five), 0L, plus<long>()));
+		result = min(ranges::fold_left(factors | views::transform(&zerofactors_t::two), 0L, plus<size_t>()), ranges::fold_left(factors | views::transform(&zerofactors_t::five), 0L, plus<size_t>()));
 	else if (factors.size() > (elementCount - 1))
 		for (size_t i = 0; i < factors.size() - (elementCount - 1); i++)
 			for (size_t j = i + 1; j < factors.size() - 1; j++)
 				for (size_t k = j + 1; k < factors.size(); k++)
 				{
-					long twofactor = factors[i].two + factors[j].two + factors[k].two;
-					long fivefactor = factors[i].five + factors[j].five + factors[k].five;
-					if (min(twofactor, fivefactor) > result)
-						result = min(twofactor, fivefactor);
+					size_t twofactor = factors[i].two + factors[j].two + factors[k].two;
+					size_t fivefactor = factors[i].five + factors[j].five + factors[k].five;
+					if (min<size_t>(twofactor, fivefactor) > result)
+						result = min<size_t>(twofactor, fivefactor);
 				}
 	return result;
 }
@@ -976,7 +1064,7 @@ bool JSONValidation(string json)
 	return leftBraceCount == rightBraceCount && keyCount == valueCount;
 }
 // 0 1 2 3 4 5 6 7 8 9 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
-void findDistinct(vector<long> &input, vector<long> &output)
+void FindDistinct(vector<long> &input, vector<long> &output)
 {
 	for (vector<long>::const_iterator it = input.begin(); it != input.end(); it++)
 	{
@@ -988,7 +1076,7 @@ void findDistinct(vector<long> &input, vector<long> &output)
 	}
 }
 // http://en.wikipedia.org/wiki/Prime_number - Trial division implementation
-void findPrimes(unsigned long n, vector<long> &result)
+void FindPrimes(unsigned long n, vector<long> &result)
 {
 	if (n <= 3)
 		result = {2, 3};
@@ -1007,7 +1095,7 @@ void findPrimes(unsigned long n, vector<long> &result)
 	}
 }
 // https://en.wikipedia.org/wiki/Primality_test
-bool isPrime(unsigned long n)
+bool IsPrime(unsigned long n)
 {
 	if (n <= 3)
 		return n > 1;
@@ -1029,7 +1117,7 @@ size_t CommonPrimeDivisors(vector<long> &data1, vector<long> &data2)
 	ranges::sort(b);
 	long maxNum = max(a.back(), b.back());
 	vector<long> primes;
-	findPrimes(maxNum, primes);
+	FindPrimes(maxNum, primes);
 	if (data1.size() == 1 && data2.size() == 1 && data1[0] == 1 && data2[0] == 1)
 		return 1;
 	for (size_t i = 0; i < data1.size(); i++)
@@ -1045,31 +1133,6 @@ size_t CommonPrimeDivisors(vector<long> &data1, vector<long> &data2)
 			indices.push_back(i);
 	}
 	return indices.size();
-}
-// 2 1 1 2 => (2+1)*(2+1) = 9
-// 2 3 3 2 :
-// (1) 2 + 3 + 3 + 2 = 10
-// (2) 2 * 3 * 3 * 2 = 36
-// (3) (2 + 3) * (3 + 2) = 25
-// (4) 2 + (3 * 3) + 2 = 11
-unsigned long long findMax(vector<unsigned long long> const &data)
-{
-	vector<unsigned long long> result;
-	if (data.size() == 1)
-		return data[0];
-	else if (data.size() == 2)
-		return (data[0] * data[1] > data[0] + data[1]) ? data[0] * data[1] : data[0] + data[1];
-	else
-	{
-		for (vector<unsigned long long>::const_iterator it = data.begin(); it != data.end(); it += 2)
-		{
-			if (it <= data.end() - 2)
-				result.push_back((*it + *(it + 1)) > (*it * *(it + 1)) ? (*it + *(it + 1)) : (*it * *(it + 1)));
-			else
-				result.push_back(*it);
-		}
-	}
-	return findMax(result);
 }
 string uncompress(string const &str)
 {
@@ -1585,7 +1648,7 @@ long KthNumberWith357PrimeFactors(long n)
 		seven.push(7);
 		for (--n; n > 0; n--)
 		{
-			value = Min(three.front(), Min(five.front(), seven.front()));
+			value = min(three.front(), min(five.front(), seven.front()));
 			if (value == seven.front())
 				seven.pop();
 			else
@@ -2418,7 +2481,7 @@ log2(7) = 2.807355, floor(log2(7)) = 2.000000 + 1 = 3(8 choices)
 log2(8) = 3.000000, floor(log2(8)) = 3.000000 + 1 = 4(9 choices)
 log2(9) = 3.169925, floor(log2(9)) = 3.000000 + 1 = 4(10 choices)
 */
-size_t BitCountOfNChoices(size_t n)
+constexpr size_t BitCountOfNChoices(size_t n)
 {
 	return !n ? 0 : n == 1 ? 1
 						   : ceil(log2(n));
@@ -2474,77 +2537,6 @@ void OrderedMergedCombinations(set<string> &result, string const &s1, string con
 		OrderedMergedCombinations(result, s1.substr(1, s1.size() - 1), s2.substr(i, s2.size() - i), cur + s2.substr(0, i) + s1[0]);
 	// for (size_t i = 0; i <= s1.size(); i++) // Same result as above
 	//	OrderedMergedCombinations(result, s1.substr(i, s1.size() - i), s2.substr(1, s2.size() - 1), cur + s1.substr(0, i) + s2[0]);
-}
-/*
-k: 2
-i: 1
-comb: 1
-
-k: 1
-i: 2
-comb: 1,2 combs: {{1,2}}
-comb: 1
-i: 3
-comb: 1,3 combs: {{1,2}, {1,3}}
-comb: 1
-i: 4
-comb: 1,4 combs: {{1,2}, {1,3}, {1,4}}
-comb: 1
-
-k: 2
-i: 2
-comb: 2
-
-k: 1
-i: 3
-comb: 2,3 combs: {{1,2}, {1,3}, {1,4}, {2,3}}
-comb: 2
-i: 4
-comb: 2,4 combs: {{1,2}, {1,3}, {1,4}, {2,3}, {2,4}}
-comb: 2
-
-k: 2
-i: 3
-comb: 3
-
-k: 1
-i: 4
-comb: 3,4 combs: {{1,2}, {1,3}, {1,4}, {2,3}, {2,4}, {3,4}}
-comb: 3
-
-k: 2
-i: 4
-comb: 4
-
-k: 1
-i: 4
-comb: 4 combs: {{1,2}, {1,3}, {1,4}, {2,3}, {2,4}, {3,4}}
-comb: {}
-* C=1, L: O(count), Other: O(n) n: end-start
-* #nodes = O(count).
-* TC = O(count * n)
-*/
-void numberCombinations1(size_t start, size_t end, size_t count, vector<size_t> &comb, vector<vector<size_t>> &result)
-{
-	if (!count)
-		result.push_back(comb);
-	else
-	{
-		for (size_t i = start; i <= end; i++)
-		{
-			comb.push_back(i);
-			numberCombinations1(i + 1, end, count - 1, comb, result);
-			comb.pop_back();
-		}
-	}
-}
-/* https://leetcode.com/problems/combinations/
- * 100%
- */
-void numberCombinations(size_t n, size_t k, vector<vector<size_t>> &result)
-{
-	vector<size_t> comb;
-	numberCombinations1(1, n, k, comb, result);
 }
 /*A zero-indexed array A consisting of N integers is given. A triplet(P, Q, R) is triangular if it is possible to build a triangle with sides of lengths A[P], A[Q] and A[R].
  * In other words, triplet(P, Q, R) is triangular if 0 ≤ P < Q < R < N and:

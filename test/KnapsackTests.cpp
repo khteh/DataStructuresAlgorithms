@@ -293,6 +293,37 @@ INSTANTIATE_TEST_SUITE_P(
 	BoundedKnapsackCombinationSumTestFixture,
 	::testing::Values(make_tuple(set<vector<size_t>>{{1, 2, 4}}, 3, 7, 10), make_tuple(set<vector<size_t>>{{1, 2, 6}, {1, 3, 5}, {2, 3, 4}}, 3, 9, 10), make_tuple(set<vector<size_t>>{}, 4, 1, 10), make_tuple(set<vector<size_t>>{}, 3, 2, 10),
 					  make_tuple(set<vector<size_t>>{{1, 2, 3, 4, 5, 6, 7, 8, 9}}, 9, 45, 10)));
+class NumberCombinationsTestFixture : public testing::TestWithParam<tuple<vector<vector<size_t>>, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_n = get<1>(GetParam());
+		_k = get<2>(GetParam());
+	}
+	vector<vector<size_t>> NumberCombinationsTest()
+	{
+		vector<vector<size_t>> result;
+		_knapsack.NumberCombinations(_n, _k, result);
+		return result;
+	}
+
+protected:
+	Knapsack _knapsack;
+	vector<vector<size_t>> _expected;
+	size_t _n, _k;
+};
+TEST_P(NumberCombinationsTestFixture, NumberCombinationsTests)
+{
+	ASSERT_EQ(this->_expected, this->NumberCombinationsTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	NumberCombinationsTests,
+	NumberCombinationsTestFixture,
+	::testing::Values(make_tuple(vector<vector<size_t>>{{1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4}}, 4, 2),
+					  make_tuple(vector<vector<size_t>>{{1}}, 1, 1)));
+
 class BoundedCombinationSumWithMaxElementTestFixture : public testing::TestWithParam<tuple<set<vector<size_t>>, size_t, size_t, size_t>>
 {
 public:

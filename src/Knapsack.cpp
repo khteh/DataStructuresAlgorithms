@@ -20,7 +20,6 @@ set<vector<size_t>> Knapsack::CoinsChange(long amount, vector<size_t> &coins)
 	set<vector<size_t>> combinations;
 	if (amount > 0)
 		for (vector<size_t>::iterator coin = coins.begin(); coin != coins.end(); coin++)
-		{
 			if (amount >= (long)*coin)
 			{
 				set<vector<size_t>> tmp;
@@ -56,7 +55,6 @@ set<vector<size_t>> Knapsack::CoinsChange(long amount, vector<size_t> &coins)
 				else if (*coin == amount)
 					combinations.insert(vector<size_t>{*coin});
 			} // if (amount >= (long)coins[i]) {
-		}
 	return combinations;
 }
 set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<size_t> &coins)
@@ -217,8 +215,9 @@ set<vector<size_t>> Knapsack::_KnapsackCombinations(long amount, vector<size_t> 
 	}
 	return combinations;
 }
-// Bounded places an upper bound on the number of copies of each kind of item included in the knapsack
-// Unbounded places no upper bound on the number of copies of each kind of item included in the knapsack
+/* Bounded places an upper bound on the number of copies of each kind of item included in the knapsack
+ * Unbounded places no upper bound on the number of copies of each kind of item included in the knapsack
+ */
 size_t Knapsack::UnboundedKnapsack(long k, vector<size_t> const &arr)
 {
 	knapsackCache.clear();
@@ -363,6 +362,77 @@ set<vector<size_t>> Knapsack::BoundedKnapsackCombinationSum(size_t size, size_t 
 		else
 			it++;
 	return combinations;
+}
+/*
+k: 2
+i: 1
+comb: 1
+
+k: 1
+i: 2
+comb: 1,2 combs: {{1,2}}
+comb: 1
+i: 3
+comb: 1,3 combs: {{1,2}, {1,3}}
+comb: 1
+i: 4
+comb: 1,4 combs: {{1,2}, {1,3}, {1,4}}
+comb: 1
+
+k: 2
+i: 2
+comb: 2
+
+k: 1
+i: 3
+comb: 2,3 combs: {{1,2}, {1,3}, {1,4}, {2,3}}
+comb: 2
+i: 4
+comb: 2,4 combs: {{1,2}, {1,3}, {1,4}, {2,3}, {2,4}}
+comb: 2
+
+k: 2
+i: 3
+comb: 3
+
+k: 1
+i: 4
+comb: 3,4 combs: {{1,2}, {1,3}, {1,4}, {2,3}, {2,4}, {3,4}}
+comb: 3
+
+k: 2
+i: 4
+comb: 4
+
+k: 1
+i: 4
+comb: 4 combs: {{1,2}, {1,3}, {1,4}, {2,3}, {2,4}, {3,4}}
+comb: {}
+* C=1, L: O(count), Other: O(n) n: end-start
+* #nodes = O(count).
+* TC = O(count * n)
+*/
+void Knapsack::_NumberCombinations(size_t start, size_t end, size_t count, vector<size_t> &comb, vector<vector<size_t>> &result)
+{
+	if (!count)
+		result.push_back(comb);
+	else
+		for (size_t i = start; i <= end; i++)
+		{
+			comb.push_back(i);
+			_NumberCombinations(i + 1, end, count - 1, comb, result);
+			comb.pop_back();
+		}
+}
+/* https://leetcode.com/problems/combinations/
+ * 100%
+ * Given two integers n and k, return all possible combinations of k numbers chosen from the range [1, n].
+ * You may return the answer in any order. Note that combinations are unordered, i.e., [1,2] and [2,1] are considered to be the same combination.
+ */
+void Knapsack::NumberCombinations(size_t n, size_t k, vector<vector<size_t>> &result)
+{
+	vector<size_t> comb;
+	_NumberCombinations(1, n, k, comb, result);
 }
 /* Recursive + memo (top-down)
  *			   6(13)

@@ -2,9 +2,6 @@
 //
 #include "pch.h"
 #include <iostream>
-using namespace std;
-namespace ranges = std::ranges;
-using namespace oneapi::tbb;
 int main(int argc, char *argv[])
 {
 	bool flag;
@@ -148,8 +145,8 @@ int main(int argc, char *argv[])
 	assert(numeric_limits<int>::max() == numeric_limits<long>::max());
 #endif
 	cout << "https://en.wikipedia.org/wiki/Machine_epsilon: Float: " << numeric_limits<float>::epsilon() << ", Double: " << numeric_limits<double>::epsilon() << ", Long Double: " << numeric_limits<long double>::epsilon() << endl;
-	cout << "Machine Epsilon: Float: " << MachineEpsilon((float)1) << ", Approximation: " << FloatMachineEpsilonApproximation() << endl;
-	cout << "Machine Epsilon: Double: " << MachineEpsilon((double)1) << ", Approximation: " << MachineEpsilonApproximation() << endl;
+	cout << "Machine Epsilon: Float: " << Ulp<float>((float)1) << ", Approximation: " << MachineEpsilonApproximation<float>() << endl;
+	cout << "Machine Epsilon: Double: " << Ulp<double>((double)1) << ", Approximation: " << MachineEpsilonApproximation<double>() << endl;
 	cout << "numeric_limits<int>::min(): " << numeric_limits<int>::min() << " (0x" << hex << numeric_limits<int>::min() << dec << "), numeric_limits<int>::max(): " << numeric_limits<int>::max() << " (0x" << hex << numeric_limits<int>::max() << ")" << endl;
 	cout << "numeric_limits<unsigned int>::min(): " << numeric_limits<unsigned int>::min() << " (0x" << hex << numeric_limits<unsigned int>::min() << dec << "), numeric_limits<unsigned int>::max(): " << numeric_limits<unsigned int>::max() << " (0x" << hex << numeric_limits<unsigned int>::max() << ")" << endl;
 	cout << "numeric_limits<int32_t>::min(): " << dec << numeric_limits<int32_t>::min() << " (0x" << hex << numeric_limits<int32_t>::min() << dec << "), numeric_limits<int32_t>::max(): " << numeric_limits<int32_t>::max() << " (0x" << hex << numeric_limits<int32_t>::max() << ")" << endl;
@@ -470,8 +467,8 @@ int main(int argc, char *argv[])
 	free(iPtr);
 	iPtr = nullptr;
 	// End of Test C++ *& "pointer reference" construct
-	assert(Min(123, 456) == 123);
-	assert(Max(123, 456) == 456);
+	assert(MinBitTrick(123, 456) == 123);
+	assert(MaxBitTrick(123, 456) == 456);
 	assert(gcd(48, 15) == 3);
 	assert(gcd(108, 48) == 12);
 	assert(gcd(1050, 507) == 3);
@@ -666,12 +663,12 @@ int main(int argc, char *argv[])
 	ranges::generate(a.begin() + 10, a.end(), [n = 5]() mutable
 					 { return n++; });
 	b.clear();
-	findDistinct(a, b);
+	FindDistinct(a, b);
 	assert(b.size() == 20);
 
 	a.clear();
 	b.clear();
-	findPrimes(20, a); // Find prime numbers 0 to 20: 2,3,5,7,11,13,17,19
+	FindPrimes(20, a); // Find prime numbers 0 to 20: 2,3,5,7,11,13,17,19
 	assert(a.size() == 8);
 	a.clear();
 	b.clear();
@@ -684,26 +681,26 @@ int main(int argc, char *argv[])
 	b = {7, 11, 5, 2};
 	assert(CommonPrimeDivisors(a, b) == 2);
 
-	assert(!isPrime(1));
-	assert(isPrime(2));
-	assert(isPrime(3));
-	assert(!isPrime(4));
-	assert(isPrime(5));
-	assert(!isPrime(6));
-	assert(isPrime(7));
-	assert(!isPrime(8));
-	assert(!isPrime(9));
-	assert(!isPrime(10));
+	assert(!IsPrime(1));
+	assert(IsPrime(2));
+	assert(IsPrime(3));
+	assert(!IsPrime(4));
+	assert(IsPrime(5));
+	assert(!IsPrime(6));
+	assert(IsPrime(7));
+	assert(!IsPrime(8));
+	assert(!IsPrime(9));
+	assert(!IsPrime(10));
 	a.clear();
 	b.clear();
 	ull.clear();
 	ull = {1, 2, 1, 2};
-	unsigned long long findMaxResult = findMax(ull);
+	unsigned long long findMaxResult = range.FindMax(ull);
 	assert(findMaxResult == 9);
 
 	ull.clear();
 	ull = {2, 3, 3, 2};
-	findMaxResult = findMax(ull);
+	findMaxResult = range.FindMax(ull);
 	assert(findMaxResult == 36);
 
 	str = "     Hello     World!!!     ";
@@ -1491,19 +1488,6 @@ int main(int argc, char *argv[])
 	assert(listSum1.Sum(0, 0) == -1);
 	listSum1.Update(0, 1);
 	assert(listSum1.Sum(0, 0) == 1);
-	ugrid.clear();
-	numberCombinations(4, 2, ugrid);
-	assert(!ugrid.empty());
-	assert(ugrid.size() == 6);
-	for (vector<vector<size_t>>::iterator it = ugrid.begin(); it != ugrid.end(); it++)
-		assert(it->size() == 2);
-	ugrid1.clear();
-	ugrid1 = {{1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4}};
-	assert(ugrid1 == ugrid);
-	ugrid.clear();
-	numberCombinations(20, 16, ugrid);
-	assert(!ugrid.empty());
-	assert(ugrid.size() == 4845);
 	assert(fizzBuzz(3) == vector<string>({"1", "2", "Fizz"}));
 	assert(fizzBuzz(5) == vector<string>({"1", "2", "Fizz", "4", "Buzz"}));
 	assert(fizzBuzz(10) == vector<string>({"1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz"}));

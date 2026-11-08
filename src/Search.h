@@ -1,8 +1,8 @@
 #pragma once
 template <typename T>
-T BinomialCoefficients(size_t, size_t);
+constexpr T BinomialCoefficients(size_t, size_t);
 template <typename T>
-T ceil_div(T, T);
+constexpr T ceil_div(T, T);
 
 class Search
 {
