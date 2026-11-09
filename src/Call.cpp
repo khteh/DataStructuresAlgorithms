@@ -1,13 +1,12 @@
 #include "pch.h"
 #include "Call.h"
-#include "Employee.h"
 
 Call::Call(Employee::Rank r)
 	: rank_((int)r)
 {
 }
 
-Call::Call(Call& call)
+Call::Call(Call &call)
 	: rank_(call.rank_)
 {
 }

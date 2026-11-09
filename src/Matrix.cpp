@@ -665,7 +665,7 @@ size_t Matrix<T>::SurfaceArea3D(vector<vector<size_t>> const &data)
 			if (data[i][j] > 0)
 				zArea++;
 			// X-Axis : Side / Left/Right views
-			if (i == 0) // Start X-Axis border
+			if (!i) // Start X-Axis border
 				xArea += data[i][j];
 			if (i == data.size() - 1)
 			{ // End X-Axis border
@@ -676,7 +676,7 @@ size_t Matrix<T>::SurfaceArea3D(vector<vector<size_t>> const &data)
 			if (i && i != data.size() - 1)
 				xArea += abs((long)(data[i][j] - data[i - 1][j]));
 			// Y-Axis : Front/Back views
-			if (j == 0) // Start Y-Axis border
+			if (!j) // Start Y-Axis border
 				yArea += data[i][j];
 			if (j == data[i].size() - 1)
 			{ // End Y-Axis border

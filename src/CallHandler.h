@@ -1,7 +1,7 @@
 #pragma once
-class Employee;
-class Call;
-
+#include "Call.h"
+#include "Employee.h"
+using namespace std;
 class CallHandler
 {
 public:

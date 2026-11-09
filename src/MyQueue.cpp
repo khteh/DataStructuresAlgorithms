@@ -20,7 +20,7 @@ size_t MyQueue<T>::size()
 template <typename T>
 bool MyQueue<T>::isEmpty()
 {
-	return size() == 0;
+	return !size();
 }
 
 template <typename T>

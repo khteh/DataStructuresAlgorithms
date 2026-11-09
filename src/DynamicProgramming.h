@@ -9,12 +9,6 @@ template <typename T>
 class DynamicProgramming
 {
 public:
-    T Factorial(size_t, T modulo = 0)
-        requires arithmetic_type<T>;
-    T Fibonacci(long)
-        requires arithmetic_type<T>;
-    string FibonacciModified(T, T, size_t)
-        requires arithmetic_type<T>;
     T LargestNumberCompositionProduct(T)
         requires arithmetic_type<T>;
     T EggDrops(T, T)

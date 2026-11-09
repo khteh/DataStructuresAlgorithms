@@ -52,7 +52,7 @@ MPMCCircularBuffer<T>::MPMCCircularBuffer(size_t capacity)
     With only one slot, position 1 maps back to that same slot, so the next Push also sees 1 and reads it as “free for me”.
     The two meanings only stay distinct with at least 2 slots, and the constructor accepts capacity 1 anyway because 1 is a power of two.
      */
-    if (capacity < 2 || (capacity & _mask) != 0)
+    if (capacity < 2 || (capacity & _mask))
         throw invalid_argument("Capacity must be a power of two and at least 2.");
 
     // Initialize every slot ticket with its linear position index
@@ -86,7 +86,7 @@ bool MPMCCircularBuffer<T>::Push(T const &data)
         The slot is empty and ready for this exact sequence turn.
         Try to claim the index before other producer threads do.
         */
-        if (diff == 0 && enqueue_idx_.compare_exchange_weak(pos, pos + 1, memory_order_relaxed) /* Advance the enqueue index to the next slot for the next producer thread */)
+        if (!diff && enqueue_idx_.compare_exchange_weak(pos, pos + 1, memory_order_relaxed) /* Advance the enqueue index to the next slot for the next producer thread */)
             break;
         else if (diff < 0)
             // The buffer is completely full
@@ -125,7 +125,7 @@ bool MPMCCircularBuffer<T>::Pop(T &value)
         The slot has data waiting for this specific consumer turn.
         Try to claim the index before other consumer threads do.
         */
-        if (diff == 0 && dequeue_idx_.compare_exchange_weak(pos, pos + 1, memory_order_relaxed) /* Advance the dequeue index to the next slot for the next consumer thread*/)
+        if (!diff && dequeue_idx_.compare_exchange_weak(pos, pos + 1, memory_order_relaxed) /* Advance the dequeue index to the next slot for the next consumer thread*/)
             break;
         else if (diff < 0)
             // The buffer is completely empty

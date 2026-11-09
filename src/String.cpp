@@ -806,7 +806,7 @@ vector<string> String::_WordBreakDFS(string const &s, set<string> const &words, 
     for (set<string>::iterator it = words.begin(); it != words.end(); it++)
     {
         size_t found = s.find(*it);
-        if (found == 0)
+        if (!found)
         {
             vector<string> tmp = _WordBreakDFS(s.substr(it->size()), words, strings);
             for (vector<string>::iterator it1 = tmp.begin(); it1 != tmp.end(); it1++)

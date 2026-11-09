@@ -411,7 +411,7 @@ long Range::LongestNonNegativeSumSlice(vector<long> const &data)
 		sum += data[i];
 		if (sum >= 0)
 			max_len = i + 1;
-		else if (data[i] >= 0 && max_len == 0)
+		else if (data[i] >= 0 && !max_len)
 			max_len = 1;
 		if (sums.count(sum))
 			max_len = max(max_len, i - sums[sum]);
@@ -985,7 +985,7 @@ string Range::AlmostSorted(vector<long> const &arr)
 			size_t index = i - positive;
 			diff.push_back(delta);
 			sum += diff[index];
-			if (diff[index] < 0 && sum == 0)
+			if (diff[index] < 0 && !sum)
 			{
 				size_t positives = ranges::count_if(diff, [](long i)
 													{ return i > 0; });

@@ -134,18 +134,24 @@ generator<const size_t &> Generate2Sequence(size_t, size_t, size_t, size_t);
 double round(double num, int n);
 template <typename T>
 constexpr T ceil_div(T, T);
-template <typename T>
-constexpr T Factorial(long);
-template <typename T>
+template <arithmetic_type T>
+constexpr T Factorial(size_t, T modulo = 0);
+template <arithmetic_type T>
+constexpr T FactorialRecursive(size_t, T modulo = 0);
+template <arithmetic_type T>
 constexpr T Fibonacci(long);
+template <arithmetic_type T>
+constexpr T FibonacciRecursive(long);
 string FibonacciModified(size_t, size_t, size_t);
+string FibonacciModifiedStringArithmetic(size_t, size_t, size_t);
+unsigned __int128 FibonacciModified_int128(size_t, size_t, size_t);
 size_t FactorialTrailingZeroesCount(size_t);
 constexpr long SequenceSum(long);
-template <typename T>
+template <arithmetic_type T>
 constexpr T BinomialCoefficients(size_t, size_t);
-template <typename T>
+template <arithmetic_type T>
 constexpr T BinomialCoefficientsMultiplicative(size_t, size_t);
-template <typename T>
+template <arithmetic_type T>
 T MultinomialCoefficients(size_t, vector<size_t> const &, T modulo = 0);
 template <integral_type T>
 constexpr size_t FactorsCount(T, T);

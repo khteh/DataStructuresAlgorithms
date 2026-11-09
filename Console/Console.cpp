@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 	assert(stringset.erase("Does not exist") == 0); // Erasing non-existing element does NOT throw
 	str = to_string(0);
 	istringstream(str) >> i;
-	assert(i == 0);
+	assert(!i);
 	Singleton *singleton = Singleton::Instance();
 	assert(singleton);
 	singleton->Print("Hello Singleton!!!");
@@ -115,9 +115,6 @@ int main(int argc, char *argv[])
 	cout << "sizeof(void*): " << sizeof(void *) << endl;						  // Linux: 8, Windows: 8
 	cout << "sizeof(double): " << sizeof(double) << endl;						  // LInux: 8, Windows: 8
 	cout << "sizeof(long double): " << sizeof(long double) << endl;				  // Linux: 16, Windows: 8
-#if defined(__GNUC__) || defined(__GNUG__)
-	cout << "sizeof(__int128): " << sizeof(__int128) << endl; // Linux: 16, Windows: 8
-#endif
 	assert(sizeof(char) == 1);
 	assert(sizeof(short) == 2);
 	assert(sizeof(int) == 4);
@@ -153,6 +150,7 @@ int main(int argc, char *argv[])
 	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << " (0x" << hex << numeric_limits<long>::min() << dec << "), numeric_limits<long>::max(): " << numeric_limits<long>::max() << " (0x" << hex << numeric_limits<long>::max() << dec << ")" << endl;
 	cout << "numeric_limits<long long>::min(): " << numeric_limits<long long>::min() << " (0x" << hex << numeric_limits<long long>::min() << dec << "), numeric_limits<long long>::max(): " << dec << fixed << numeric_limits<long long>::max() << " (0x" << hex << numeric_limits<long long>::max() << dec << ")" << endl;
 #if defined(__GNUC__) || defined(__GNUG__)
+	cout << "sizeof(__int128): " << sizeof(__int128) << endl; // Linux: 16, Windows: 8
 	cout << "numeric_limits<__int128>::min(): " << numeric_limits<__int128>::min() << " (0x" << hex << numeric_limits<__int128>::min() << dec << "), numeric_limits<__int128>::max(): " << dec << fixed << numeric_limits<__int128>::max() << " (0x" << hex << numeric_limits<__int128>::max() << dec << ")" << endl;
 	assert("-170141183460469231731687303715884105728" == to_string(numeric_limits<__int128>::min()));
 	assert("170141183460469231731687303715884105727" == to_string(numeric_limits<__int128>::max()));
@@ -407,8 +405,8 @@ int main(int argc, char *argv[])
 
 	time_point timestamp = system_clock::now();
 	duration timespan = timestamp.time_since_epoch();
-	unsigned long long ticks = timespan.count();
-	long long signedTicks = timespan.count();
+	int64_t ticks = timespan.count();
+	int64_t signedTicks = timespan.count();
 	assert(std::chrono::system_clock::duration::min().count() == numeric_limits<long long>::min());
 	assert(std::chrono::system_clock::duration::max().count() == numeric_limits<long long>::max());
 	assert(signedTicks == ticks);
@@ -422,8 +420,8 @@ int main(int argc, char *argv[])
 	cpp20readonlyranges();
 	cpp20ranges();
 	cpp20variants();
-	cout << "30! " << dp.Factorial(30) << endl;				// The CPU signals loss of precision via a flag in the FPU control registers starting from i=26
-	cout << "Fibonacci(100) " << dp.Fibonacci(100) << endl; // The CPU signals loss of precision via a flag in the FPU control registers starting from i=94
+	cout << "30! " << Factorial<size_t>(30) << endl;			 // The CPU signals loss of precision via a flag in the FPU control registers starting from i=26
+	cout << "Fibonacci(100) " << Fibonacci<size_t>(100) << endl; // The CPU signals loss of precision via a flag in the FPU control registers starting from i=94
 	grid = {{1, 3, 5}, {2, 4, 6}, {7, 8, 9}};
 	// grid.back() = {7,8,9}
 	assert(grid.back().back() == 9);
@@ -645,6 +643,21 @@ int main(int argc, char *argv[])
 	assert(FibonacciModified(2, 0, 6) == "107602");
 	assert(FibonacciModified(2, 0, 7) == "11578190732");
 	assert(FibonacciModified(2, 0, 11) == "104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308");
+#else
+	assert(FibonacciModified_int128(0, 1, 5) == 5);
+	assert(FibonacciModified_int128(0, 1, 6) == 27);
+	assert(FibonacciModified_int128(0, 1, 7) == 734);
+	assert(FibonacciModified_int128(0, 1, 8) == 538783);
+	assert(FibonacciModified_int128(0, 1, 9) == 290287121823);
+	assert(FibonacciModified_int128(2, 0, 3) == 2);
+	assert(FibonacciModified_int128(2, 0, 4) == 4);
+	assert(FibonacciModified_int128(2, 0, 5) == 18);
+	assert(FibonacciModified_int128(2, 0, 6) == 328);
+	assert(FibonacciModified_int128(2, 0, 7) == 107602);
+	assert(FibonacciModified_int128(2, 1, 7) == 112763264);
+	assert(FibonacciModified_int128(2, 0, 8) == 11578190732);
+	assert(FibonacciModified_int128(0, 1, 10) == (unsigned __int128)84266613096281243382112);
+	// assert(FibonacciModified_int128(2, 0, 11) == "104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308");
 #endif
 	unsigned long long factorialResult = Factorial<long long>(26);
 	cout << "26!: " << setiosflags(ios::fixed) << factorialResult << endl;

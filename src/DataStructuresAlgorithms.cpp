@@ -1,8 +1,10 @@
 ﻿#include "pch.h"
 #include "DataStructuresAlgorithms.h"
-#if defined(__GNUC__) || defined(__GNUG__)
+#ifdef __SIZEOF_INT128__
 template __int128 Fibonacci(long);
-template __int128 Factorial(long);
+template __int128 Factorial(size_t, __int128);
+template __int128 FibonacciRecursive(long);
+template __int128 FactorialRecursive(size_t, __int128);
 template __int128 BinomialCoefficients(size_t, size_t);
 template __int128 BinomialCoefficientsMultiplicative(size_t, size_t);
 template __int128 MultinomialCoefficients(size_t, vector<size_t> const &, __int128);
@@ -13,7 +15,9 @@ template size_t FactorsCount(__int128, __int128);
 template size_t FactorsCount(unsigned __int128, unsigned __int128);
 template unsigned __int128 ceil_div(unsigned __int128, unsigned __int128);
 template unsigned __int128 Fibonacci(long);
-template unsigned __int128 Factorial(long);
+template unsigned __int128 Factorial(size_t, unsigned __int128);
+template unsigned __int128 FibonacciRecursive(long);
+template unsigned __int128 FactorialRecursive(size_t, unsigned __int128);
 template unsigned __int128 BinomialCoefficients(size_t, size_t);
 template unsigned __int128 BinomialCoefficientsMultiplicative(size_t, size_t);
 template unsigned __int128 MultinomialCoefficients(size_t, vector<size_t> const &, unsigned __int128);
@@ -21,13 +25,20 @@ template unsigned __int128 MultinomialCoefficients(size_t, vector<size_t> const 
 template size_t ceil_div(size_t, size_t);
 template long long ceil_div(long long, long long);
 template unsigned long long ceil_div(unsigned long long, unsigned long long);
+template int64_t Fibonacci(long);
+template int64_t Factorial(size_t, int64_t);
+template uint64_t Fibonacci(long);
+template uint64_t Factorial(size_t, uint64_t);
 template long long Fibonacci(long);
-template long long Factorial(long);
+template long long Factorial(size_t, long long);
+template unsigned long long FibonacciRecursive(long);
+template unsigned long long FactorialRecursive(size_t, unsigned long long);
 #if defined(_MSC_VER)
+// The following are duplicates of int64_t on GNUC / GNUG
 template long MinBitTrick(long, long);
 template long MaxBitTrick(long, long);
-template size_t FactorsCount(long, long);								// This is duplicate of int64_t on GNUC / GNUG
-template size_t MaxZeroProductBruteForce(vector<long> const &, size_t); // This is duplicate of int64_t on GNUC / GNUG
+template size_t FactorsCount(long, long);
+template size_t MaxZeroProductBruteForce(vector<long> const &, size_t);
 #endif
 template float Ulp(float);
 template double Ulp(double);
@@ -398,7 +409,7 @@ int32_t ReverseInt32(int32_t x)
 	size_t count = 0;
 	for (int32_t i = numeric_limits<int32_t>::max(); i > 0; i /= 10, count++)
 		;
-	for (size_t i = 0; x != 0; x /= 10, i++)
+	for (size_t i = 0; x; x /= 10, i++)
 	{
 		if (i == (count - 1) && ((positive && y > numeric_limits<int32_t>::max() / 10) || (!positive && y < numeric_limits<int32_t>::min() / 10)))
 			return 0;
@@ -498,13 +509,46 @@ void copy_on_write_string()
 	cout << hex << "s1 @ " << (void *)(cptr) << endl;
 	cout << "s2 @ " << (void *)(cptr1) << endl;
 }
-template <typename T>
-constexpr T Fibonacci(long n)
+template <arithmetic_type T>
+constexpr T FibonacciRecursive(long n)
 {
 	// {0 1 1 2 ...}
 	return (n <= 1) ? n : Fibonacci<T>(n - 2) + Fibonacci<T>(n - 1);
 }
+/* Bottom-up Dynamic Programming
+ */
+template <arithmetic_type T>
+constexpr T Fibonacci(long n)
+{
+	/* 0 1 2 3
+	 * {0 1 1 2 3 5 8}
+	 * {0, 1}, {1, 1}, {1, 2}, {3, 2}, {3, 5}
+	 * [a,b] = [0,1] => a=0, b=1
+	 * [a,b] = [1,1] => a=b=1, b=a+b=0+1=1
+	 * [a,b] = [1,2] => a=b=1, b=a+b=1+1=2
+	 */
+	// https://stackoverflow.com/questions/79421066/c-long-double-128-bit-precision
+	vector<T> result = {0, 1};
+	if (n <= 1)
+		return n;
+	/*
+for (size_t i = 2; i <= (size_t)n; i++)
+	result[i % 2] = result[(i - 2) % 2] + result[(i - 1) % 2];
+return result[n % 2];
+	*/
+	T a = 0, b = 1;
+	for (size_t i = 2; i <= (size_t)n; i++)
+	{
+		T temp = a + b;
+		a = b;
+		b = temp;
+	}
+	return b;
+}
 /* https://www.hackerrank.com/challenges/fibonacci-modified/problem
+ * 0 <= t1, t2 <= 2
+ * 3 <= n <= 20
+ *
  * t1:0, t2: 1, n:4
  * 0 1 2 3 4
  * 0 1 1 2 5
@@ -533,21 +577,74 @@ string FibonacciModified(size_t t1, size_t t2, size_t n)
 	}
 	return arithmetic.DigitsVectorToNumberString(result[n % 2]);
 }
+/* https://www.hackerrank.com/challenges/fibonacci-modified/problem
+ * This is slightly better. It fails 2 tests due to timeout!
+ */
+string FibonacciModifiedStringArithmetic(size_t t1, size_t t2, size_t n)
+{
+	// Index: 0 1 2 3 4 5  6   7	  8
+	// Value: 0 1 1 2 5 27 734 538783 ...
+	if (!n)
+		return to_string(t1);
+	else if (n == 1)
+		return to_string(t2);
+	StringArithmetic arithmetic;
+	vector<string> result = {to_string(t1), to_string(t2)};
+	for (size_t i = 2; i <= (size_t)n; i++)
+		result[i % 2] = arithmetic.NumberStringSum(result[(i - 2) % 2], arithmetic.NumberStringMultiplication(result[(i - 1) % 2], result[(i - 1) % 2]));
+	return result[n % 2];
+}
+unsigned __int128 FibonacciModified_int128(size_t t1, size_t t2, size_t n)
+{
+	unsigned __int128 _t1 = t1, _t2 = t2, result = _t1 + (_t2 * _t2);
+	for (size_t i = 3; i <= n; i++)
+	{
+		result = _t1 + (_t2 * _t2);
+		_t1 = _t2;
+		_t2 = result;
+	}
+	cout << "(" << t1 << ", " << t2 << ", " << n << "): " << result << endl;
+	return result;
+}
 /* http://web2.0calc.com/
  * 64-bit max is 18446744073709551615
  * Overflow happens at 21!
  */
-template <typename T>
-constexpr T Factorial(long n)
+template <arithmetic_type T>
+constexpr T FactorialRecursive(size_t n, T modulo)
 {
-	return (n <= 0) ? 1 : n * Factorial<T>(n - 1);
+	if (n <= 0)
+		return 1;
+	T result = n * Factorial<T>(n - 1);
+	return modulo ? result % modulo : result;
+}
+template <arithmetic_type T>
+constexpr T Factorial(size_t n, T modulo)
+{
+	/* 0 1 2 3 4
+	 * {1 1 2 6 24 ...}
+	 * result = 1,
+	 */
+	T result = 1;
+	if (n <= 0)
+		return 1;
+	for (size_t i = 2; i <= (size_t)n; i++)
+	{
+		T tmp = result * i;
+		if ((result > 0 && tmp < 0) || (result < 0 && tmp > 0))
+			throw range_error("overflow!");
+		result = tmp;
+		if (modulo)
+			result %= modulo;
+	}
+	return result;
 }
 // Integer division rounded up (toward positive infinity), e.g. 7 / 2 == 4, -7 / 2 == -3.
 template <typename T>
 constexpr T ceil_div(T x, T y)
 {
 	T q = x / y;
-	if (x % y != 0 && ((x % y < 0) == (y < 0)))
+	if (x % y && ((x % y < 0) == (y < 0)))
 		++q;
 	return q;
 }
@@ -585,9 +682,8 @@ a b c d e
 
 a b c d e f
 5 4 3 2 1 0 => 5 + 4 + 3 + 2 + 1 = 15
-
  */
-template <typename T>
+template <arithmetic_type T>
 constexpr T BinomialCoefficients(size_t n, size_t k)
 {
 	if (n == k)
@@ -596,13 +692,13 @@ constexpr T BinomialCoefficients(size_t n, size_t k)
 		return 0;
 	else if (k == 2) // pairs
 		return n * (n - 1) / 2;
-	return Factorial<T>(n) / (Factorial<T>((long)k) * Factorial<T>((long)(n - k)));
+	return Factorial<T>(n) / (Factorial<T>(k) * Factorial<T>(n - k));
 }
 /*
 https://en.wikipedia.org/wiki/Binomial_coefficient#Multiplicative_formula
 https://stackoverflow.com/questions/15301885/best-way-of-calculating-n-choose-k
 */
-template <typename T>
+template <arithmetic_type T>
 constexpr T BinomialCoefficientsMultiplicative(size_t n, size_t k)
 {
 	if (n == k)
@@ -620,14 +716,13 @@ constexpr T BinomialCoefficientsMultiplicative(size_t n, size_t k)
  * https://en.wikipedia.org/wiki/Multinomial_theorem
  * Permutations of length-nword with n1 a's, n2 b's, ..., nk z's = n! / (n1! * n2! * ... * nk!)
  */
-template <typename T>
+template <arithmetic_type T>
 T MultinomialCoefficients(size_t n, vector<size_t> const &k, T modulo)
 {
 	T divisor = 1;
-	DynamicProgramming<T> dp;
 	for (vector<size_t>::const_iterator it = k.begin(); it != k.end(); it++)
-		divisor *= dp.Factorial(*it);
-	T result = dp.Factorial(n) / divisor;
+		divisor *= Factorial<T>(*it);
+	T result = Factorial<T>(n) / divisor;
 	return modulo ? result % modulo : result;
 }
 constexpr long SequenceSum(long n)
@@ -780,9 +875,9 @@ long LongestValidParenthesesWithFixes(string const &str, size_t k)
 	long *stackBegin = stackEnd - stack.size();
 	vector<long> list(stackBegin, stackEnd);
 	// The algorithm implemented is based on reverse-engineering of the result sets obtained from the remaining stack elements after the for loop above.
-	if (k == 0 || list.empty() || (list.size() == 1 && list[0] == -1))
+	if (!k || list.empty() || (list.size() == 1 && list[0] == -1))
 		return result;
-	if (result == 0)
+	if (!result)
 	{
 		if (list[0] == -1 || list.size() == 1)
 		{
@@ -796,7 +891,7 @@ long LongestValidParenthesesWithFixes(string const &str, size_t k)
 				size--; // remove -1
 						// if (list[0] != 0) {
 			result = !(size % 2) ? size : size - 1;
-			if ((list[0] == 0 && (long)k > (result / 2)) || (list[0] && (long)k >= (result / 2)))
+			if ((!list[0] && (long)k > (result / 2)) || (list[0] && (long)k >= (result / 2)))
 				result = min<long>(k * 2, result);
 			else
 				result = 0;
@@ -1633,9 +1728,9 @@ void EqualAverageDivide(vector<long> &data, vector<long> &left)
 bool GetSum(vector<long> &data, size_t K, long P, size_t index, vector<long> &left)
 {
 	if (!P)
-		return K == 0;
+		return !K;
 	else if (!K)
-		return P == 0;
+		return !P;
 	else if (index >= data.size())
 		return false;
 	for (size_t i = index; i < data.size(); i++)
@@ -1767,7 +1862,7 @@ long NextSparseNumber(long number)
 		else if ((i & 7) == 1)
 			return 1 << (shift + 1) > number ? 1 << (shift + 1) : number - (1 << shift) + (1 << (shift + 1));
 	}
-	return number == 0 ? 1 : 1 << (shift + 1);
+	return !number ? 1 : 1 << (shift + 1);
 }
 // a and b are streams of integer from LSB to MSB
 // Assume a >= b
@@ -2343,7 +2438,7 @@ size_t binary_gap(long n)
 	bitset<32> x(n);
 	for (size_t i = 0; i < x.size(); i++)
 	{
-		if (start && x[i] == 0)
+		if (start && !x[i])
 			count++;
 		else if (x[i] == 1)
 		{
@@ -2427,7 +2522,7 @@ size_t countPaths(size_t m, size_t n, size_t x, size_t y, size_t k)
 	size_t minMoves = x + y;
 	if (k >= minMoves && !((k - minMoves) % 2) && x < m && y < n)
 	{
-		if (k == 0 && x == 0 && y == 0)
+		if (!k && !x && !y)
 			return 1;
 		size_t sum = 0;
 		// cout << "sizeof(moves): " << sizeof(moves) << ", sizeof(decltype(moves[0])): " << sizeof(decltype(moves[0])) << endl;
@@ -2483,7 +2578,7 @@ int findMinFlip(vector<int> &binary)
 	size_t left = 0, right = binary.size() - 1;
 	for (; left < right;)
 	{
-		if (binary[left] == 0)
+		if (!binary[left])
 			last_left = left;
 		else if (last_left != -1 && last_left != left)
 		{
@@ -3295,7 +3390,7 @@ string TimeInWords(size_t h, size_t m)
 		{19, "nineteen"},
 		{20, "twenty"}};
 	ostringstream str, hour;
-	if (m == 0)
+	if (!m)
 	{
 		str << numbers[h] << " o' clock";
 		return str.str();
@@ -4090,13 +4185,13 @@ void cpp20readonlyranges()
 	vector<Node<int>>::iterator it = find_if(nodes.begin(), nodes.end(), [](Node<int> &n)
 											 { return n.Item() >= 0; });
 	assert(it != nodes.end());
-	assert(it->Item() == 0);
+	assert(!it->Item());
 
 	// ranges version:
 	it = ranges::find_if(nodes, [](Node<int> &n)
 						 { return n.Item() >= 0; });
 	assert(it != nodes.end());
-	assert(it->Item() == 0);
+	assert(!it->Item());
 
 	// 5. find_first_of
 	cout << "c++26 find_first_of:" << endl;

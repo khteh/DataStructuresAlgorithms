@@ -320,7 +320,7 @@ protected:
 class BinomialCoefficientsTestFixture :
 #if defined(__GNUC__) || defined(__GNUG__)
 	public BinomialCoefficientsTestFixtureBase<unsigned __int128>,
-	public testing::TestWithParam<tuple<unsigned long long, size_t, size_t>>
+	public testing::TestWithParam<tuple<unsigned __int128, size_t, size_t>>
 #else
 	public BinomialCoefficientsTestFixtureBase<unsigned long long>,
 	public testing::TestWithParam<tuple<unsigned long long, size_t, size_t>>
@@ -368,7 +368,7 @@ public:
 	}
 	T MultinomialCoefficientsTest()
 	{
-		return MultinomialCoefficients(_n, _k, _modulo);
+		return MultinomialCoefficients<T>(_n, _k, _modulo);
 	}
 
 protected:
@@ -378,8 +378,8 @@ protected:
 };
 class MultinomialCoefficientsTestFixture :
 #if defined(__GNUC__) || defined(__GNUG__)
-	public MultinomialCoefficientsFixtureBase<__int128>,
-	public testing::TestWithParam<tuple<__int128, size_t, vector<size_t>, __int128>>
+	public MultinomialCoefficientsFixtureBase<unsigned __int128>,
+	public testing::TestWithParam<tuple<unsigned __int128, size_t, vector<size_t>, unsigned __int128>>
 #else
 	public MultinomialCoefficientsFixtureBase<long long>,
 	public testing::TestWithParam<tuple<long long, size_t, vector<size_t>, long long>>
@@ -464,6 +464,158 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(8, "9875", 4),
 					  make_tuple(3, "148", 3), make_tuple(1, "1000000000", 1000),
 					  make_tuple(9, "123", 3), make_tuple(9, "9999999999", 1000)));
+template <typename T>
+class FibonacciTestFixtureBase
+{
+public:
+	void SetUp(T expected, long n)
+	{
+		_expected = expected;
+		_n = n;
+	}
+	T FibonacciTest()
+	{
+		return Fibonacci<T>(_n);
+	}
+
+protected:
+	T _expected;
+	long _n;
+};
+class FibonacciTestFixture :
+#if defined(__GNUC__) || defined(__GNUG__)
+	public FibonacciTestFixtureBase<__int128>,
+	public testing::TestWithParam<tuple<__int128, long>>
+#else
+	public FibonacciTestFixtureBase<long long>,
+	public testing::TestWithParam<tuple<long long, long>>
+#endif
+{
+public:
+	void SetUp() override
+	{
+		FibonacciTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+};
+TEST_P(FibonacciTestFixture, FibonacciTests)
+{
+	ASSERT_EQ(this->_expected, this->FibonacciTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	FibonacciTests,
+	FibonacciTestFixture,
+	::testing::Values(make_tuple(-1, -1), make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(5, 5), make_tuple(8, 6), make_tuple(13, 7), make_tuple(21, 8), make_tuple(34, 9), make_tuple(2880067194370816120, 90)));
+template <typename T>
+class FactorialTestFixtureBase
+{
+public:
+	void SetUp(T expected, size_t n, T modulo)
+	{
+		_expected = expected;
+		_n = n;
+		_modulo = modulo;
+	}
+	T FactorialTest()
+	{
+		return Factorial(_n, _modulo);
+	}
+
+protected:
+	T _expected, _modulo;
+	size_t _n;
+};
+
+class FactorialTestFixture :
+#if defined(__GNUC__) || defined(__GNUG__)
+	public FactorialTestFixtureBase<__int128>,
+	public testing::TestWithParam<tuple<__int128, size_t, size_t>>
+#else
+	public FactorialTestFixtureBase<long long>,
+	public testing::TestWithParam<tuple<long long, size_t, size_t>>
+#endif
+{
+public:
+	void SetUp() override
+	{
+		FactorialTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+	}
+};
+TEST_P(FactorialTestFixture, FactorialTests)
+{
+	ASSERT_EQ(this->_expected, this->FactorialTest());
+}
+/*
+https://gcc.gnu.org/onlinedocs/gcc/_005f_005fint128.html
+As an extension the integer scalar type __int128 is supported for targets which have an integer mode wide enough to hold 128 bits. Simply write __int128 for a signed 128-bit integer, or unsigned __int128 for an unsigned 128-bit integer.
+There is no support in GCC for expressing an integer constant of type __int128 for targets with long long integer less than 128 bits wide.
+
+sizeof(long long): 8 (64-bit) ::max() = 9223372036854775807. So, the max constant is 20!
+*/
+INSTANTIATE_TEST_SUITE_P(
+	FactorialTests,
+	FactorialTestFixture,
+	::testing::Values(make_tuple(178290591, 14, 1e9 + 7), make_tuple(146326063, 20, 1e9 + 7), make_tuple(440732388, 25, 1e9 + 7), make_tuple(2432902008176640000, 20, 0)));
+class FibonacciModified_int128TestFixture : public testing::TestWithParam<tuple<unsigned __int128, size_t, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = static_cast<unsigned __int128>(get<0>(GetParam()));
+		_t1 = get<1>(GetParam());
+		_t2 = get<2>(GetParam());
+		_n = get<3>(GetParam());
+	}
+	unsigned __int128 FibonacciModified_int128Test()
+	{
+		return FibonacciModified_int128(_t1, _t2, _n);
+	}
+
+protected:
+	size_t _t1, _t2, _n;
+	unsigned __int128 _expected;
+};
+class FibonacciModifiedTestFixture : public testing::TestWithParam<tuple<string, long, long, long>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_t1 = get<1>(GetParam());
+		_t2 = get<2>(GetParam());
+		_n = get<3>(GetParam());
+	}
+	string FibonacciModifiedTest()
+	{
+		return FibonacciModified(_t1, _t2, _n);
+	}
+
+protected:
+	long _t1, _t2, _n;
+	string _expected;
+};
+TEST_P(FibonacciModifiedTestFixture, FibonacciModifiedTests)
+{
+	ASSERT_EQ(this->_expected, this->FibonacciModifiedTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	FibonacciModifiedTests,
+	FibonacciModifiedTestFixture,
+	::testing::Values(make_tuple("5", 0, 1, 4), make_tuple("27", 0, 1, 5), make_tuple("734", 0, 1, 6), make_tuple("538783", 0, 1, 7), make_tuple("290287121823", 0, 1, 8), make_tuple("2", 2, 0, 0), make_tuple("0", 2, 0, 1), make_tuple("2", 2, 0, 2), make_tuple("4", 2, 0, 3), make_tuple("18", 2, 0, 4), make_tuple("328", 2, 0, 5), make_tuple("107602", 2, 0, 6), make_tuple("11578190732", 2, 0, 7), make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)));
+
+TEST_P(FibonacciModified_int128TestFixture, FibonacciModified_int128Tests)
+{
+	ASSERT_EQ(this->_expected, this->FibonacciModified_int128Test());
+	// ASSERT_TRUE(this->_expected == this->FibonacciModified_int128Test());
+}
+INSTANTIATE_TEST_SUITE_P(
+	FibonacciModified_int128Tests,
+	FibonacciModified_int128TestFixture,
+	::testing::Values(make_tuple(5, 0, 1, 5), make_tuple(27, 0, 1, 6), make_tuple(734, 0, 1, 7), make_tuple(538783, 0, 1, 8), make_tuple(290287121823, 0, 1, 9),
+					  make_tuple((unsigned __int128)84266613096281243382112, 0, 1, 10), make_tuple(2, 2, 0, 3), make_tuple(4, 2, 0, 4), make_tuple(18, 2, 0, 5),
+					  make_tuple(328, 2, 0, 6), make_tuple(107602, 2, 0, 7), make_tuple(11578190732, 2, 0, 8), make_tuple(112763264, 2, 1, 7)
+					  /*make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)*/
+					  ));
+
 class PriorityQueueMedianTestFixture : public testing::TestWithParam<tuple<double, vector<long>>>
 {
 public:

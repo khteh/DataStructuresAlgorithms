@@ -2,12 +2,25 @@
 #include <concepts>
 #include <type_traits>
 using namespace std;
+// __int128 / unsigned __int128 are GCC/Clang extensions. std::integral accepts them only in gnu++ modes,
+// so list them explicitly: these concepts then behave the same with -std=c++XX, -std=gnu++XX and IntelliSense.
+template <typename T>
+concept int128_type =
+#ifdef __SIZEOF_INT128__
+    same_as<remove_cv_t<T>, __int128> || same_as<remove_cv_t<T>, unsigned __int128>;
+#else
+    false;
+#endif
+template <typename T>
+concept integral_type = integral<T> || int128_type<T>;
+template <typename T>
+concept signed_integral_type = signed_integral<T>
+#ifdef __SIZEOF_INT128__
+                               || same_as<remove_cv_t<T>, __int128>
+#endif
+    ;
 template <typename T>
 concept arithmetic_type = integral<T> || floating_point<T>;
-template <typename T>
-concept integral_type = integral<T>;
-template <typename T>
-concept signed_integral_type = signed_integral<T>;
 template <typename T>
 concept floating_point_type = floating_point<T>;
 template <class T, class U>
