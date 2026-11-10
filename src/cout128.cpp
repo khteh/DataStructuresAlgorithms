@@ -4,6 +4,8 @@ template ostream &operator<<(ostream &, int128_t);
 template ostream &operator<<(ostream &, uint128_t);
 template string to_string(int128_t);
 template string to_string(uint128_t);
+template istream &operator>>(istream &, int128_t &);
+template istream &operator>>(istream &, uint128_t &);
 // https://stackoverflow.com/questions/25114597/how-to-print-int128-in-g
 to_chars_result to_chars(char *begin, char *end, uint128_t x) noexcept
 {
@@ -161,6 +163,20 @@ ostream &operator<<(ostream &out, T val)
     {
         // Overload << for a signed 128-bit integer. Negation of the most negative
         // signed value gives the correct unsigned absolute value.
+        /*
+        When C++ writes a signed integer in hex or octal, it doesn’t write -1f. It writes the number’s bit pattern, the two’s complement representation, as if the value were unsigned:
+
+        long long -1 in hex:  ffffffffffffffff                    (16 f's: all 64 bits set)
+        int128_t  -1 in hex:  ffffffffffffffffffffffffffffffff    (32 f's: all 128 bits set)
+        Reading that back doesn’t give −1
+
+        When operator>> reads ffff…ff, it sees a positive number, 2¹²⁸ − 1. That’s far bigger than the largest int128_t (2¹²⁷ − 1), so it reports “out of range”: it stores the maximum and sets the fail flag. The standard library does the same with long long:
+
+        read back into long long:  9223372036854775807, fail = 1
+        read back into int128_t:   170141183460469231731687303715884105727, fail = 1
+
+        So for negative signed values, “write in hex, then read back in hex” doesn’t give you the original number, for every signed integer type in C++.
+        */
         auto state = out.flags();
         if (val < 0 && !(state & (ios_base::hex | ios_base::oct)))
             out128(out, -(uint128_t)val, 1);
@@ -179,4 +195,122 @@ string to_string(T x)
     char buffer[40];
     to_chars_result result = ::to_chars(buffer, end(buffer), x);
     return string{buffer, result.ptr};
+}
+// Read a 128-bit integer from in. Follows the same rules as the standard operator>> for
+// long long / unsigned long long (std::num_get), so the two behave the same way:
+// - Leading whitespace is skipped if skipws is set (the default).
+// - An optional '+' or '-' sign. For uint128_t, '-' negates the value modulo 2^128, like strtoull: "-1" -> max.
+// - The base comes from the basefield flags: dec (default), hex or oct. A "0x" / "0X" prefix is accepted in hex.
+//   With no basefield flag set, the base is taken from the prefix: "0x" / "0X" -> hex, "0" -> octal, otherwise decimal.
+// - Reading stops at the first character that is not a digit in that base. That character stays in the stream.
+// - No digits: val = 0 and failbit.
+// - Out of range: val = max (min for a negative int128_t) and failbit.
+// - Reaching the end of the input sets eofbit.
+// - Empty input or only whitespace: val is unchanged, failbit and eofbit (set by the sentry).
+template <typename T>
+istream &operator>>(istream &in, T &val)
+    requires is_128_bits<T>
+{
+    istream::sentry sentry(in); // Skips leading whitespace if skipws is set
+    if (!sentry)
+        return in;
+    streambuf *buf = in.rdbuf();
+    ios_base::iostate state = ios_base::goodbit;
+    int c = buf->sgetc(); // Peek at the next character without consuming it
+
+    // Optional sign
+    bool negative = false;
+    if (c == '+' || c == '-')
+    {
+        negative = c == '-';
+        buf->sbumpc();
+        c = buf->sgetc();
+    }
+
+    // Base. 0: detect from the prefix
+    unsigned base;
+    switch (in.flags() & ios_base::basefield)
+    {
+    case ios_base::hex:
+        base = 16;
+        break;
+    case ios_base::oct:
+        base = 8;
+        break;
+    case ios_base::dec:
+        base = 10;
+        break;
+    default:
+        base = 0;
+    }
+    bool digits = false; // At least one digit read
+    if (c == '0' && base != 10)
+    {
+        buf->sbumpc();
+        c = buf->sgetc();
+        digits = true; // The '0' itself is a valid number if nothing follows
+        if ((c == 'x' || c == 'X') && (base == 16 || base == 0))
+        {
+            buf->sbumpc(); // "0x" prefix: hex digits must follow
+            c = buf->sgetc();
+            base = 16;
+            digits = false;
+        }
+        else if (!base)
+            base = 8; // Leading '0': octal
+    }
+    if (!base)
+        base = 10;
+
+    // Largest magnitude that fits: 2^127 - 1 (2^127 if negative) for int128_t, 2^128 - 1 for uint128_t
+    uint128_t limit;
+    if constexpr (is_same_v<T, int128_t>)
+        limit = negative ? uint128_t(1) << 127 : (uint128_t(1) << 127) - 1;
+    else
+        limit = numeric_limits<uint128_t>::max();
+
+    // Digits. Keep consuming them after an overflow, as the standard does, so they don't stay in the stream.
+    uint128_t magnitude = 0;
+    bool overflow = false;
+    for (; c != istream::traits_type::eof(); buf->sbumpc(), c = buf->sgetc())
+    {
+        unsigned digit;
+        if (c >= '0' && c <= '9')
+            digit = c - '0';
+        else if (c >= 'a' && c <= 'f')
+            digit = c - 'a' + 10;
+        else if (c >= 'A' && c <= 'F')
+            digit = c - 'A' + 10;
+        else
+            break;
+        if (digit >= base)
+            break;
+        digits = true;
+        if (overflow || magnitude > (limit - digit) / base) // magnitude * base + digit > limit
+            overflow = true;
+        else
+            magnitude = magnitude * base + digit;
+    }
+    if (c == istream::traits_type::eof())
+        state |= ios_base::eofbit;
+
+    if (!digits)
+    {
+        val = 0;
+        state |= ios_base::failbit;
+    }
+    else if (overflow)
+    {
+        if constexpr (is_same_v<T, int128_t>)
+            val = negative ? numeric_limits<int128_t>::min() : numeric_limits<int128_t>::max();
+        else
+            val = numeric_limits<uint128_t>::max();
+        state |= ios_base::failbit;
+    }
+    else if constexpr (is_same_v<T, int128_t>)
+        val = negative ? int128_t(-magnitude) : int128_t(magnitude); // -2^127 -> min: two's complement, well-defined since C++20
+    else
+        val = negative ? -magnitude : magnitude;
+    in.setstate(state);
+    return in;
 }

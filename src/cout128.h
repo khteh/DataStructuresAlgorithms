@@ -12,4 +12,7 @@ ostream &operator<<(ostream &, T)
 template <typename T>
 string to_string(T)
     requires is_128_bits<T>;
+template <typename T>
+istream &operator>>(istream &, T &)
+    requires is_128_bits<T>;
 #endif
