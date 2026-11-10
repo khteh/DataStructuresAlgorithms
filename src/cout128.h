@@ -1,6 +1,6 @@
 #pragma once
 #include "GenericConstraints.h"
-#if defined(__GNUC__) || defined(__GNUG__)
+#ifdef __SIZEOF_INT128__
 using namespace std;
 using int128_t = __int128;
 using uint128_t = unsigned __int128;

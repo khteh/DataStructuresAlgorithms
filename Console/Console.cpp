@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
 	cout << "numeric_limits<int32_t>::min(): " << dec << numeric_limits<int32_t>::min() << " (0x" << hex << numeric_limits<int32_t>::min() << dec << "), numeric_limits<int32_t>::max(): " << numeric_limits<int32_t>::max() << " (0x" << hex << numeric_limits<int32_t>::max() << ")" << endl;
 	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << " (0x" << hex << numeric_limits<long>::min() << dec << "), numeric_limits<long>::max(): " << numeric_limits<long>::max() << " (0x" << hex << numeric_limits<long>::max() << dec << ")" << endl;
 	cout << "numeric_limits<long long>::min(): " << numeric_limits<long long>::min() << " (0x" << hex << numeric_limits<long long>::min() << dec << "), numeric_limits<long long>::max(): " << dec << fixed << numeric_limits<long long>::max() << " (0x" << hex << numeric_limits<long long>::max() << dec << ")" << endl;
-#if defined(__GNUC__) || defined(__GNUG__)
+#ifdef __SIZEOF_INT128__
 	cout << "sizeof(__int128): " << sizeof(__int128) << endl; // Linux: 16, Windows: 8
 	cout << "numeric_limits<__int128>::min(): " << numeric_limits<__int128>::min() << " (0x" << hex << numeric_limits<__int128>::min() << dec << "), numeric_limits<__int128>::max(): " << dec << fixed << numeric_limits<__int128>::max() << " (0x" << hex << numeric_limits<__int128>::max() << dec << ")" << endl;
 	assert("-170141183460469231731687303715884105728" == to_string(numeric_limits<__int128>::min()));
