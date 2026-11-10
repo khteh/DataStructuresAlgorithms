@@ -1,5 +1,4 @@
 #include "pch.h"
-using namespace std;
 TEST(LRUCacheTests, LRUCacheTest)
 {
 	LRUCache<long, long> lruCache(2);

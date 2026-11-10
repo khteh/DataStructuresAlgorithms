@@ -6,6 +6,8 @@ template string to_string(int128_t);
 template string to_string(uint128_t);
 template istream &operator>>(istream &, int128_t &);
 template istream &operator>>(istream &, uint128_t &);
+template istream &operator>>(istream &&, int128_t &);
+template istream &operator>>(istream &&, uint128_t &);
 // https://stackoverflow.com/questions/25114597/how-to-print-int128-in-g
 to_chars_result to_chars(char *begin, char *end, uint128_t x) noexcept
 {
@@ -147,23 +149,17 @@ void out128(ostream &out, uint128_t val, int neg)
             pad--;
         }
 }
-template <typename T>
+template <is_128_bits T>
 ostream &operator<<(ostream &out, T val)
-    requires is_128_bits<T>
 {
-#if 0
-    // 40 characters is always enough to fit 128-bit integers.
-    char buffer[40];
-    to_chars_result result = ::to_chars(buffer, end(buffer), val);
-    return out << string_view{buffer, result.ptr};
-#endif
     if constexpr (is_same_v<T, uint128_t>)
         out128(out, val, 0);
     else if constexpr (is_same_v<T, int128_t>)
     {
-        // Overload << for a signed 128-bit integer. Negation of the most negative
-        // signed value gives the correct unsigned absolute value.
         /*
+         * Overload << for a signed 128-bit integer. Negation of the most negative
+         * signed value gives the correct unsigned absolute value.
+
         When C++ writes a signed integer in hex or octal, it doesn’t write -1f. It writes the number’s bit pattern, the two’s complement representation, as if the value were unsigned:
 
         long long -1 in hex:  ffffffffffffffff                    (16 f's: all 64 bits set)
@@ -176,6 +172,11 @@ ostream &operator<<(ostream &out, T val)
         read back into int128_t:   170141183460469231731687303715884105727, fail = 1
 
         So for negative signed values, “write in hex, then read back in hex” doesn’t give you the original number, for every signed integer type in C++.
+        If you need hex round trips of negative values, read the bit pattern into the unsigned type, then convert:
+
+        uint128_t bits;
+        iss >> hex >> bits;
+        int128_t value = (int128_t)bits;   // ffff…ff → -1
         */
         auto state = out.flags();
         if (val < 0 && !(state & (ios_base::hex | ios_base::oct)))
@@ -187,29 +188,28 @@ ostream &operator<<(ostream &out, T val)
         throw invalid_argument("Invalid template paramater type!");
     return out;
 }
-template <typename T>
+template <is_128_bits T>
 string to_string(T x)
-    requires is_128_bits<T>
 {
     // 40 characters is always enough to fit 128-bit integers.
     char buffer[40];
     to_chars_result result = ::to_chars(buffer, end(buffer), x);
     return string{buffer, result.ptr};
 }
-// Read a 128-bit integer from in. Follows the same rules as the standard operator>> for
-// long long / unsigned long long (std::num_get), so the two behave the same way:
-// - Leading whitespace is skipped if skipws is set (the default).
-// - An optional '+' or '-' sign. For uint128_t, '-' negates the value modulo 2^128, like strtoull: "-1" -> max.
-// - The base comes from the basefield flags: dec (default), hex or oct. A "0x" / "0X" prefix is accepted in hex.
-//   With no basefield flag set, the base is taken from the prefix: "0x" / "0X" -> hex, "0" -> octal, otherwise decimal.
-// - Reading stops at the first character that is not a digit in that base. That character stays in the stream.
-// - No digits: val = 0 and failbit.
-// - Out of range: val = max (min for a negative int128_t) and failbit.
-// - Reaching the end of the input sets eofbit.
-// - Empty input or only whitespace: val is unchanged, failbit and eofbit (set by the sentry).
-template <typename T>
+/* Read a 128-bit integer from in. Follows the same rules as the standard operator>> for
+ * long long / unsigned long long (std::num_get), so the two behave the same way:
+ * - Leading whitespace is skipped if skipws is set (the default).
+ * - An optional '+' or '-' sign. For uint128_t, '-' negates the value modulo 2^128, like strtoull: "-1" -> max.
+ * - The base comes from the basefield flags: dec (default), hex or oct. A "0x" / "0X" prefix is accepted in hex.
+ *   With no basefield flag set, the base is taken from the prefix: "0x" / "0X" -> hex, "0" -> octal, otherwise decimal.
+ * - Reading stops at the first character that is not a digit in that base. That character stays in the stream.
+ * - No digits: val = 0 and failbit.
+ * - Out of range: val = max (min for a negative int128_t) and failbit.
+ * - Reaching the end of the input sets eofbit.
+ * - Empty input or only whitespace: val is unchanged, failbit and eofbit (set by the sentry).
+ */
+template <is_128_bits T>
 istream &operator>>(istream &in, T &val)
-    requires is_128_bits<T>
 {
     istream::sentry sentry(in); // Skips leading whitespace if skipws is set
     if (!sentry)
@@ -313,4 +313,11 @@ istream &operator>>(istream &in, T &val)
         val = negative ? -magnitude : magnitude;
     in.setstate(state);
     return in;
+}
+// For a temporary stream, e.g. istringstream(s) >> value. A temporary can't bind to istream &,
+// and the standard library's own rvalue-stream overload can't find the one above from inside namespace std.
+template <is_128_bits T>
+istream &operator>>(istream &&in, T &val)
+{
+    return in >> val; // in has a name, so it's an lvalue here: calls the overload above
 }

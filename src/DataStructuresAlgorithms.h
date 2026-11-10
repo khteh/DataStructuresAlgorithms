@@ -76,6 +76,11 @@ namespace ranges = std::ranges;
 #ifdef __SIZEOF_INT128__
 typedef __int128 int128_t;
 typedef unsigned __int128 uint128_t;
+#define BIG_SIGNED_INT int128_t
+#define BIG_UNSIGNED_INT uint128_t
+#else
+#define BIG_SIGNED_INT int64_t
+#define BIG_UNSIGNED_INT uint64_t
 #endif
 typedef struct ZeroFactors
 {

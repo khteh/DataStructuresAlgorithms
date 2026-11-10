@@ -251,14 +251,8 @@ protected:
 	T _expected;
 	size_t _n, _k, _x;
 };
-class WaysToFillRangeTestFixture :
-#ifdef __SIZEOF_INT128__
-	public WaysToFillRangeTestFixtureBase<int128_t>,
-	public testing::TestWithParam<tuple<int128_t, size_t, size_t, size_t>>
-#else
-	public WaysToFillRangeTestFixtureBase<uint64_t>,
-	public testing::TestWithParam<tuple<uint64_t, size_t, size_t, size_t>>
-#endif
+class WaysToFillRangeTestFixture : public WaysToFillRangeTestFixtureBase<BIG_SIGNED_INT>,
+								   public testing::TestWithParam<tuple<BIG_SIGNED_INT, size_t, size_t, size_t>>
 {
 public:
 	void SetUp() override

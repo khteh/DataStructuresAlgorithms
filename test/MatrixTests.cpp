@@ -1,5 +1,4 @@
 #include "pch.h"
-using namespace std;
 TEST(MatrixTests, MatrixSortTest)
 {
 	Matrix<long> matrix;

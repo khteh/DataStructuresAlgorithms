@@ -1,6 +1,7 @@
 #include "pch.h"
 using namespace std;
-TEST(QueueTests, QueueTest) {
+TEST(QueueTests, QueueTest)
+{
 	MyQueue<int> myQueue;
 	myQueue.push_back(-1);
 	myQueue.push_back(0);

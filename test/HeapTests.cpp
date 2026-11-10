@@ -1,6 +1,7 @@
 #include "pch.h"
 using namespace std;
-TEST(HeapTests, MaxHeapTest) {
+TEST(HeapTests, MaxHeapTest)
+{
 	vector<long> result;
 	Heap<long> heap(50, HeapType::MaxHeap);
 	heap.InsertItem(-100);
@@ -12,7 +13,7 @@ TEST(HeapTests, MaxHeapTest) {
 	heap.InsertItem(75);
 	heap.InsertItem(150);
 	ASSERT_EQ(9, heap.Count());
-	ASSERT_EQ(4, heap.MaxDepth(heap.Root())/* Change this assertion number if items are added/removed*/);
+	ASSERT_EQ(4, heap.MaxDepth(heap.Root()) /* Change this assertion number if items are added/removed*/);
 	cout << "MaxHeap content: " << endl;
 	heap.PrintTree();
 	cout << endl;
@@ -44,7 +45,8 @@ TEST(HeapTests, MaxHeapTest) {
 			}
 	}
 }
-TEST(HeapTests, MinMaxHeapTest) {
+TEST(HeapTests, MinMaxHeapTest)
+{
 	vector<long> result;
 	Heap<long> heap(50, HeapType::MinMaxHeap);
 	heap.InsertItem(-100);
@@ -56,7 +58,7 @@ TEST(HeapTests, MinMaxHeapTest) {
 	heap.InsertItem(75);
 	heap.InsertItem(150);
 	ASSERT_EQ(9, heap.Count());
-	ASSERT_EQ(4, heap.MaxDepth(heap.Root())/* Change this assertion number if items are added/removed*/);
+	ASSERT_EQ(4, heap.MaxDepth(heap.Root()) /* Change this assertion number if items are added/removed*/);
 	cout << "MinMaxHeap content: " << endl;
 	heap.PrintTree();
 	cout << endl;
@@ -88,7 +90,8 @@ TEST(HeapTests, MinMaxHeapTest) {
 			}
 	}
 }
-TEST(HeapTests, MinHeapTest) {
+TEST(HeapTests, MinHeapTest)
+{
 	vector<long> result;
 	Heap<long> heap(50);
 	heap.InsertItem(-100);
@@ -100,7 +103,7 @@ TEST(HeapTests, MinHeapTest) {
 	heap.InsertItem(75);
 	heap.InsertItem(150);
 	ASSERT_EQ(9, heap.Count());
-	ASSERT_EQ(4, heap.MaxDepth(heap.Root())/* Change this assertion number if items are added/removed*/);
+	ASSERT_EQ(4, heap.MaxDepth(heap.Root()) /* Change this assertion number if items are added/removed*/);
 	cout << "MinHeap content: " << endl;
 	heap.PrintTree();
 	cout << endl;

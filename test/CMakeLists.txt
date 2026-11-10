@@ -9,6 +9,7 @@ set(Headers
 source_group("Headers" FILES ${Headers})
 
 set(Sources
+    "128BitStreamTests.cpp"
     "AnagramTests.cpp"
     "ArithmeticOperationTests.cpp"
     "BinarySearchTreeTests.cpp"

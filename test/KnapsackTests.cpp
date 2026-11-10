@@ -1,5 +1,4 @@
 #include "pch.h"
-using namespace std;
 class CoinsChangeTestFixture : public testing::TestWithParam<tuple<set<vector<size_t>>, long, vector<size_t>>>
 {
 public:

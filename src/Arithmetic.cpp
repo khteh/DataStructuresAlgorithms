@@ -1,12 +1,11 @@
 #include "pch.h"
 #include "Arithmetic.h"
-#if 0
-need operator>> implementation in cout128.cpp.
+#ifdef __SIZEOF_INT128__
 template class Arithmetic<int128_t>;
 template class Arithmetic<uint128_t>;
+template class GCDExtendedEuclideanResult<int128_t>;
+template class GCDExtendedEuclideanResult<uint128_t>;
 #endif
-template class Arithmetic<char>;
-template class Arithmetic<int>;
 #if defined(_MSC_VER)
 // The following are duplicates of int64_t on GNUC / GNUG
 template class Arithmetic<size_t>;
@@ -14,6 +13,8 @@ template class Arithmetic<long>;
 template class GCDExtendedEuclideanResult<size_t>;
 template class GCDExtendedEuclideanResult<long>;
 #endif
+template class Arithmetic<char>;
+template class Arithmetic<int>;
 template class Arithmetic<int64_t>;
 template class Arithmetic<uint64_t>;
 template class GCDExtendedEuclideanResult<char>;
@@ -417,7 +418,6 @@ T Arithmetic<T>::ReversePolishNotation(vector<string> const &tokens)
 {
 	stack<T> numbers;
 	for (size_t i = 0; i < tokens.size(); i++)
-	{
 		if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/")
 		{
 			T num2 = numbers.top();
@@ -449,7 +449,6 @@ T Arithmetic<T>::ReversePolishNotation(vector<string> const &tokens)
 			istringstream(tokens[i]) >> num;
 			numbers.push(num);
 		}
-	}
 	return !numbers.empty() ? numbers.top() : numeric_limits<T>::max();
 }
 template <arithmetic_type T>

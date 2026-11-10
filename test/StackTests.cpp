@@ -1,6 +1,7 @@
 #include "pch.h"
 using namespace std;
-TEST(StackTests, StackTest) {
+TEST(StackTests, StackTest)
+{
 	MyStack<int> stack, sortedStack;
 	stack.push(100);
 	stack.push(-100);

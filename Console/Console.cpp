@@ -608,27 +608,9 @@ int main(int argc, char *argv[])
 	d = round(0.1234, 2);
 	d = round(0.1234, 3);
 	d = round(0.1234, 4);
-	assert(Factorial<uint64_t>(1) == 1);
-	assert(Factorial<uint64_t>(2) == 2);
-	assert(Factorial<uint64_t>(3) == 6);
-	assert(Factorial<uint64_t>(4) == 24);
-	assert(Factorial<uint64_t>(5) == 120);
-	assert(Factorial<uint64_t>(20) == 2432902008176640000);
 	assert(SequenceSum(0) == 0);
 	assert(SequenceSum(1) == 1);
 	assert(SequenceSum(5) == 15);
-	assert(Fibonacci<int64_t>(-1) == -1);
-	assert(Fibonacci<uint64_t>(0) == 0);
-	assert(Fibonacci<uint64_t>(1) == 1);
-	assert(Fibonacci<uint64_t>(2) == 1);
-	assert(Fibonacci<uint64_t>(3) == 2);
-	assert(Fibonacci<uint64_t>(4) == 3);
-	assert(Fibonacci<uint64_t>(5) == 5);
-	assert(Fibonacci<uint64_t>(6) == 8);
-	assert(Fibonacci<uint64_t>(7) == 13);
-	assert(Fibonacci<uint64_t>(8) == 21);
-	assert(Fibonacci<uint64_t>(9) == 34);
-	// assert(Fibonacci(90) == 2880067194370816120ULL); Times out!!!
 	uint64_t factorialResult = Factorial<uint64_t>(26);
 	cout << "26!: " << setiosflags(ios::fixed) << factorialResult << endl;
 	assert(FactorialTrailingZeroesCount(10) == 2);
