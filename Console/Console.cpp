@@ -155,14 +155,14 @@ int main(int argc, char *argv[])
 	cout << "numeric_limits<long>::min(): " << numeric_limits<long>::min() << " (0x" << hex << numeric_limits<long>::min() << dec << "), numeric_limits<long>::max(): " << numeric_limits<long>::max() << " (0x" << hex << numeric_limits<long>::max() << dec << ")" << endl;
 	cout << "numeric_limits<long long>::min(): " << numeric_limits<long long>::min() << " (0x" << hex << numeric_limits<long long>::min() << dec << "), numeric_limits<long long>::max(): " << dec << fixed << numeric_limits<long long>::max() << " (0x" << hex << numeric_limits<long long>::max() << dec << ")" << endl;
 #ifdef __SIZEOF_INT128__
-	cout << "sizeof(__int128): " << sizeof(__int128) << endl; // Linux: 16, Windows: 8
-	cout << "numeric_limits<__int128>::min(): " << numeric_limits<__int128>::min() << " (0x" << hex << numeric_limits<__int128>::min() << dec << "), numeric_limits<__int128>::max(): " << dec << fixed << numeric_limits<__int128>::max() << " (0x" << hex << numeric_limits<__int128>::max() << dec << ")" << endl;
-	assert("-170141183460469231731687303715884105728" == to_string(numeric_limits<__int128>::min()));
-	assert("170141183460469231731687303715884105727" == to_string(numeric_limits<__int128>::max()));
-	cout << "numeric_limits<unsigned __int128>::min(): " << numeric_limits<unsigned __int128>::min() << " (0x" << hex << numeric_limits<unsigned __int128>::min() << dec << "), numeric_limits<unsigned __int128>::max(): " << dec << fixed << numeric_limits<unsigned __int128>::max() << " (0x" << hex << numeric_limits<unsigned __int128>::max() << dec << ")" << endl;
-	assert("0" == to_string(numeric_limits<unsigned __int128>::min()));
-	assert("340282366920938463463374607431768211455" == to_string(numeric_limits<unsigned __int128>::max()));
-	assert(numeric_limits<__int128>::min() * -1 == numeric_limits<__int128>::min()); // 0x8000_0000_0000_0000 * -1 = 0x8000_0000_0000_0000
+	cout << "sizeof(int128_t): " << sizeof(int128_t) << endl; // Linux: 16, Windows: 8
+	cout << "numeric_limits<int128_t>::min(): " << numeric_limits<int128_t>::min() << " (0x" << hex << numeric_limits<int128_t>::min() << dec << "), numeric_limits<int128_t>::max(): " << dec << fixed << numeric_limits<int128_t>::max() << " (0x" << hex << numeric_limits<int128_t>::max() << dec << ")" << endl;
+	assert("-170141183460469231731687303715884105728" == to_string(numeric_limits<int128_t>::min()));
+	assert("170141183460469231731687303715884105727" == to_string(numeric_limits<int128_t>::max()));
+	cout << "numeric_limits<uint128_t>::min(): " << numeric_limits<uint128_t>::min() << " (0x" << hex << numeric_limits<uint128_t>::min() << dec << "), numeric_limits<uint128_t>::max(): " << dec << fixed << numeric_limits<uint128_t>::max() << " (0x" << hex << numeric_limits<uint128_t>::max() << dec << ")" << endl;
+	assert("0" == to_string(numeric_limits<uint128_t>::min()));
+	assert("340282366920938463463374607431768211455" == to_string(numeric_limits<uint128_t>::max()));
+	assert(numeric_limits<int128_t>::min() * -1 == numeric_limits<int128_t>::min()); // 0x8000_0000_0000_0000 * -1 = 0x8000_0000_0000_0000
 #endif
 	cout << "numeric_limits<size_t>::min(): " << numeric_limits<size_t>::min() << " (0x" << hex << numeric_limits<size_t>::min() << "), numeric_limits<size_t>::max(): " << dec << fixed << numeric_limits<size_t>::max() << " (0x" << hex << numeric_limits<size_t>::max() << dec << ")" << endl;
 

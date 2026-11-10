@@ -253,8 +253,8 @@ protected:
 };
 class WaysToFillRangeTestFixture :
 #ifdef __SIZEOF_INT128__
-	public WaysToFillRangeTestFixtureBase<__int128>,
-	public testing::TestWithParam<tuple<__int128, size_t, size_t, size_t>>
+	public WaysToFillRangeTestFixtureBase<int128_t>,
+	public testing::TestWithParam<tuple<int128_t, size_t, size_t, size_t>>
 #else
 	public WaysToFillRangeTestFixtureBase<uint64_t>,
 	public testing::TestWithParam<tuple<uint64_t, size_t, size_t, size_t>>

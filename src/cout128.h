@@ -2,8 +2,8 @@
 #include "GenericConstraints.h"
 #ifdef __SIZEOF_INT128__
 using namespace std;
-using int128_t = __int128;
-using uint128_t = unsigned __int128;
+using int128_t = int128_t;
+using uint128_t = uint128_t;
 to_chars_result to_chars(char *, char *, uint128_t) noexcept;
 to_chars_result to_chars(char *, char *, int128_t) noexcept;
 template <typename T>

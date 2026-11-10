@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "cout128.h"
-template ostream &operator<<(ostream &, __int128);
-template ostream &operator<<(ostream &, unsigned __int128);
-template string to_string(__int128);
-template string to_string(unsigned __int128);
+template ostream &operator<<(ostream &, int128_t);
+template ostream &operator<<(ostream &, uint128_t);
+template string to_string(int128_t);
+template string to_string(uint128_t);
 // https://stackoverflow.com/questions/25114597/how-to-print-int128-in-g
 to_chars_result to_chars(char *begin, char *end, uint128_t x) noexcept
 {

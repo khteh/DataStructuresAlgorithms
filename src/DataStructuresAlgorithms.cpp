@@ -531,17 +531,15 @@ for (size_t i = 2; i <= (size_t)n; i++)
 return result[n % 2];
 	*/
 	T a = 0, b = 1;
-	if (n >= 0)
-	{
-		if (n <= 1)
-			return n;
+	if (!n)
+		return 0;
+	else if (n > 0)
 		for (size_t i = 2; i <= (size_t)n; i++)
 		{
 			T temp = a + b;
 			a = b;
 			b = temp;
 		}
-	}
 	else
 		for (long i = -2; i >= n; i--)
 		{

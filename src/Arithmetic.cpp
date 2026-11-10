@@ -2,8 +2,8 @@
 #include "Arithmetic.h"
 #if 0
 need operator>> implementation in cout128.cpp.
-template class Arithmetic<__int128>;
-template class Arithmetic<unsigned __int128>;
+template class Arithmetic<int128_t>;
+template class Arithmetic<uint128_t>;
 #endif
 template class Arithmetic<char>;
 template class Arithmetic<int>;

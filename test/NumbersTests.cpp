@@ -319,8 +319,8 @@ protected:
 
 class BinomialCoefficientsTestFixture :
 #ifdef __SIZEOF_INT128__
-	public BinomialCoefficientsTestFixtureBase<unsigned __int128>,
-	public testing::TestWithParam<tuple<unsigned __int128, size_t, size_t>>
+	public BinomialCoefficientsTestFixtureBase<uint128_t>,
+	public testing::TestWithParam<tuple<uint128_t, size_t, size_t>>
 #else
 	public BinomialCoefficientsTestFixtureBase<uint64_t>,
 	public testing::TestWithParam<tuple<uint64_t, size_t, size_t>>
@@ -378,8 +378,8 @@ protected:
 };
 class MultinomialCoefficientsTestFixture :
 #ifdef __SIZEOF_INT128__
-	public MultinomialCoefficientsFixtureBase<unsigned __int128>,
-	public testing::TestWithParam<tuple<unsigned __int128, size_t, vector<size_t>, unsigned __int128>>
+	public MultinomialCoefficientsFixtureBase<uint128_t>,
+	public testing::TestWithParam<tuple<uint128_t, size_t, vector<size_t>, uint128_t>>
 #else
 	public MultinomialCoefficientsFixtureBase<int64_t>,
 	public testing::TestWithParam<tuple<int64_t, size_t, vector<size_t>, int64_t>>
@@ -484,8 +484,8 @@ protected:
 };
 class PositiveFibonacciTestFixture :
 #ifdef __SIZEOF_INT128__
-	public FibonacciTestFixtureBase<__int128>,
-	public testing::TestWithParam<tuple<__int128, long>>
+	public FibonacciTestFixtureBase<int128_t>,
+	public testing::TestWithParam<tuple<int128_t, long>>
 #else
 	public FibonacciTestFixtureBase<int64_t>,
 	public testing::TestWithParam<tuple<int64_t, long>>
@@ -507,8 +507,8 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(5, 5), make_tuple(8, 6), make_tuple(13, 7), make_tuple(21, 8), make_tuple(34, 9), make_tuple(2880067194370816120, 90)));
 class NegativeFibonacciTestFixture :
 #ifdef __SIZEOF_INT128__
-	public FibonacciTestFixtureBase<__int128>,
-	public testing::TestWithParam<tuple<__int128, long>>
+	public FibonacciTestFixtureBase<int128_t>,
+	public testing::TestWithParam<tuple<int128_t, long>>
 #else
 	public FibonacciTestFixtureBase<int64_t>,
 	public testing::TestWithParam<tuple<int64_t, long>>
@@ -551,8 +551,8 @@ protected:
 
 class FactorialTestFixture :
 #ifdef __SIZEOF_INT128__
-	public FactorialTestFixtureBase<__int128>,
-	public testing::TestWithParam<tuple<__int128, size_t, size_t>>
+	public FactorialTestFixtureBase<int128_t>,
+	public testing::TestWithParam<tuple<int128_t, size_t, size_t>>
 #else
 	public FactorialTestFixtureBase<int64_t>,
 	public testing::TestWithParam<tuple<int64_t, size_t, size_t>>
@@ -570,8 +570,8 @@ TEST_P(FactorialTestFixture, FactorialTests)
 }
 /*
 https://gcc.gnu.org/onlinedocs/gcc/_005f_005fint128.html
-As an extension the integer scalar type __int128 is supported for targets which have an integer mode wide enough to hold 128 bits. Simply write __int128 for a signed 128-bit integer, or unsigned __int128 for an unsigned 128-bit integer.
-There is no support in GCC for expressing an integer constant of type __int128 for targets with int64_t integer less than 128 bits wide.
+As an extension the integer scalar type int128_t is supported for targets which have an integer mode wide enough to hold 128 bits. Simply write int128_t for a signed 128-bit integer, or uint128_t for an unsigned 128-bit integer.
+There is no support in GCC for expressing an integer constant of type int128_t for targets with int64_t integer less than 128 bits wide.
 
 sizeof(int64_t): 8 (64-bit) ::max() = 9223372036854775807. So, the max constant is 20!
 */

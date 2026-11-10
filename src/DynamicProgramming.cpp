@@ -5,8 +5,8 @@ template class DynamicProgramming<int64_t>;
 template class DynamicProgramming<uint64_t>;
 template class DynamicProgramming<string>;
 #ifdef __SIZEOF_INT128__
-template class DynamicProgramming<__int128>;
-template class DynamicProgramming<unsigned __int128>;
+template class DynamicProgramming<int128_t>;
+template class DynamicProgramming<uint128_t>;
 #endif
 #if defined(_MSC_VER)
 template class DynamicProgramming<long>; // This is duplicate of int64_t on GNUC / GNUG
