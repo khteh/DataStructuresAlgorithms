@@ -127,7 +127,9 @@ int main(int argc, char *argv[])
 #endif
 	assert(sizeof(float) == 4);
 	assert(sizeof(long long) == 8);
+	assert(sizeof(int64_t) == 8);
 	assert(sizeof(unsigned long long) == 8);
+	assert(sizeof(uint64_t) == 8);
 	assert(sizeof(double) == 8);
 #if defined(__GNUC__) || defined(__GNUG__)
 	assert(sizeof(long double) == 16);

@@ -73,6 +73,10 @@ using namespace std;
 using namespace chrono;
 using namespace oneapi::tbb;
 namespace ranges = std::ranges;
+#ifdef __SIZEOF_INT128__
+typedef __int128 int128_t;
+typedef unsigned __int128 uint128_t;
+#endif
 typedef struct ZeroFactors
 {
 	size_t two, five, value;

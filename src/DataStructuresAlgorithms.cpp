@@ -1,26 +1,26 @@
 ﻿#include "pch.h"
 #include "DataStructuresAlgorithms.h"
 #ifdef __SIZEOF_INT128__
-template __int128 Fibonacci(long);
-template __int128 Factorial(size_t, __int128);
-template __int128 FibonacciRecursive(long);
-template __int128 FactorialRecursive(size_t, __int128);
-template __int128 BinomialCoefficients(size_t, size_t);
-template __int128 BinomialCoefficientsMultiplicative(size_t, size_t);
-template __int128 MultinomialCoefficients(size_t, vector<size_t> const &, __int128);
-template __int128 ceil_div(__int128, __int128);
-template __int128 MinBitTrick(__int128, __int128);
-template __int128 MaxBitTrick(__int128, __int128);
-template size_t FactorsCount(__int128, __int128);
-template size_t FactorsCount(unsigned __int128, unsigned __int128);
-template unsigned __int128 ceil_div(unsigned __int128, unsigned __int128);
-template unsigned __int128 Fibonacci(long);
-template unsigned __int128 Factorial(size_t, unsigned __int128);
-template unsigned __int128 FibonacciRecursive(long);
-template unsigned __int128 FactorialRecursive(size_t, unsigned __int128);
-template unsigned __int128 BinomialCoefficients(size_t, size_t);
-template unsigned __int128 BinomialCoefficientsMultiplicative(size_t, size_t);
-template unsigned __int128 MultinomialCoefficients(size_t, vector<size_t> const &, unsigned __int128);
+template int128_t Fibonacci(long);
+template int128_t Factorial(size_t, int128_t);
+template int128_t FibonacciRecursive(long);
+template int128_t FactorialRecursive(size_t, int128_t);
+template int128_t BinomialCoefficients(size_t, size_t);
+template int128_t BinomialCoefficientsMultiplicative(size_t, size_t);
+template int128_t MultinomialCoefficients(size_t, vector<size_t> const &, int128_t);
+template int128_t ceil_div(int128_t, int128_t);
+template int128_t MinBitTrick(int128_t, int128_t);
+template int128_t MaxBitTrick(int128_t, int128_t);
+template size_t FactorsCount(int128_t, int128_t);
+template size_t FactorsCount(uint128_t, uint128_t);
+template uint128_t ceil_div(uint128_t, uint128_t);
+template uint128_t Fibonacci(long);
+template uint128_t Factorial(size_t, uint128_t);
+template uint128_t FibonacciRecursive(long);
+template uint128_t FactorialRecursive(size_t, uint128_t);
+template uint128_t BinomialCoefficients(size_t, size_t);
+template uint128_t BinomialCoefficientsMultiplicative(size_t, size_t);
+template uint128_t MultinomialCoefficients(size_t, vector<size_t> const &, uint128_t);
 #endif
 template size_t ceil_div(size_t, size_t);
 template long long ceil_div(long long, long long);
@@ -601,7 +601,7 @@ string FibonacciModifiedStringArithmetic(size_t t1, size_t t2, size_t n)
  */
 string FibonacciModified_int128(size_t t1, size_t t2, size_t n)
 {
-	unsigned __int128 _t1 = t1, _t2 = t2, result = _t1 + (_t2 * _t2);
+	uint128_t _t1 = t1, _t2 = t2, result = _t1 + (_t2 * _t2);
 	// Index: 0 1 2 3 4 5  6   7	  8
 	// Value: 0 1 1 2 5 27 734 538783 ...
 	if (!n)
