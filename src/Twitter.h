@@ -10,13 +10,13 @@ class TweetItem
 private:
 	TTweetID _id;
 	TUserID _user;
-	unsigned long long _timestamp;
+	uint64_t _timestamp;
 
 public:
 	TweetItem(TUserID, TTweetID);
 	TTweetID ID() const;
 	TUserID UserID() const;
-	unsigned long long TimeStamp() const;
+	uint64_t TimeStamp() const;
 	bool operator<(const TweetItem<TUserID, TTweetID> &) const;
 	bool operator>(const TweetItem<TUserID, TTweetID> &) const;
 	bool operator==(const TweetItem<TUserID, TTweetID> &) const;

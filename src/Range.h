@@ -21,10 +21,10 @@ public:
 	size_t SumPairs(size_t, vector<size_t> const &);
 	void SumPairs(size_t, vector<size_t> const &, vector<size_t> &);
 	vector<long> ProductExceptSelf(vector<long> const &);
-	unsigned long long FindMax(vector<unsigned long long> const &);
-	unsigned long long MaxAndPair(vector<unsigned long long> const &);
-	unsigned long long MaxXorPair(vector<unsigned long long> const &);
-	unsigned long long BeautifulQuadruples(size_t, size_t, size_t, size_t);
+	uint64_t FindMax(vector<uint64_t> const &);
+	uint64_t MaxAndPair(vector<uint64_t> const &);
+	uint64_t MaxXorPair(vector<uint64_t> const &);
+	uint64_t BeautifulQuadruples(size_t, size_t, size_t, size_t);
 	size_t GreaterThanSumPairs(size_t, vector<size_t> const &);
 	vector<vector<long>> TripletsZeroSum(vector<long> &);
 	vector<vector<long>> QuadrupletsSum(long, vector<long> &);
@@ -53,7 +53,7 @@ public:
 	size_t TrapRainWater(vector<size_t> const &);
 	size_t FirstMissingPositive(vector<long> &);
 	bool IsTrionic(vector<long> const &);
-	long long MaxSumTrionic(vector<long> const &);
+	int64_t MaxSumTrionic(vector<long> const &);
 	size_t MaxHarvest(vector<size_t> const &, size_t);
 	vector<long> NextGreaterElements(vector<long> &);
 };

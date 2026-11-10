@@ -322,8 +322,8 @@ class BinomialCoefficientsTestFixture :
 	public BinomialCoefficientsTestFixtureBase<unsigned __int128>,
 	public testing::TestWithParam<tuple<unsigned __int128, size_t, size_t>>
 #else
-	public BinomialCoefficientsTestFixtureBase<unsigned long long>,
-	public testing::TestWithParam<tuple<unsigned long long, size_t, size_t>>
+	public BinomialCoefficientsTestFixtureBase<uint64_t>,
+	public testing::TestWithParam<tuple<uint64_t, size_t, size_t>>
 #endif
 {
 public:
@@ -381,8 +381,8 @@ class MultinomialCoefficientsTestFixture :
 	public MultinomialCoefficientsFixtureBase<unsigned __int128>,
 	public testing::TestWithParam<tuple<unsigned __int128, size_t, vector<size_t>, unsigned __int128>>
 #else
-	public MultinomialCoefficientsFixtureBase<long long>,
-	public testing::TestWithParam<tuple<long long, size_t, vector<size_t>, long long>>
+	public MultinomialCoefficientsFixtureBase<int64_t>,
+	public testing::TestWithParam<tuple<int64_t, size_t, vector<size_t>, int64_t>>
 #endif
 {
 public:
@@ -487,8 +487,8 @@ class FibonacciTestFixture :
 	public FibonacciTestFixtureBase<__int128>,
 	public testing::TestWithParam<tuple<__int128, long>>
 #else
-	public FibonacciTestFixtureBase<long long>,
-	public testing::TestWithParam<tuple<long long, long>>
+	public FibonacciTestFixtureBase<int64_t>,
+	public testing::TestWithParam<tuple<int64_t, long>>
 #endif
 {
 public:
@@ -530,8 +530,8 @@ class FactorialTestFixture :
 	public FactorialTestFixtureBase<__int128>,
 	public testing::TestWithParam<tuple<__int128, size_t, size_t>>
 #else
-	public FactorialTestFixtureBase<long long>,
-	public testing::TestWithParam<tuple<long long, size_t, size_t>>
+	public FactorialTestFixtureBase<int64_t>,
+	public testing::TestWithParam<tuple<int64_t, size_t, size_t>>
 #endif
 {
 public:
@@ -547,9 +547,9 @@ TEST_P(FactorialTestFixture, FactorialTests)
 /*
 https://gcc.gnu.org/onlinedocs/gcc/_005f_005fint128.html
 As an extension the integer scalar type __int128 is supported for targets which have an integer mode wide enough to hold 128 bits. Simply write __int128 for a signed 128-bit integer, or unsigned __int128 for an unsigned 128-bit integer.
-There is no support in GCC for expressing an integer constant of type __int128 for targets with long long integer less than 128 bits wide.
+There is no support in GCC for expressing an integer constant of type __int128 for targets with int64_t integer less than 128 bits wide.
 
-sizeof(long long): 8 (64-bit) ::max() = 9223372036854775807. So, the max constant is 20!
+sizeof(int64_t): 8 (64-bit) ::max() = 9223372036854775807. So, the max constant is 20!
 */
 INSTANTIATE_TEST_SUITE_P(
 	FactorialTests,

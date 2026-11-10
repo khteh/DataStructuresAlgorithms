@@ -1,9 +1,13 @@
 #include "pch.h"
 #include "FenwickTree.h"
-template class FenwickTree<size_t>;
 template class FenwickTree<int>;
+#if defined(_MSC_VER)
+// The following are duplicates of int64_t on GNUC / GNUG
 template class FenwickTree<long>;
-template class FenwickTree<long long>;
+template class FenwickTree<size_t>;
+#endif
+template class FenwickTree<int64_t>;
+template class FenwickTree<uint64_t>;
 template <integral_type T>
 FenwickTree<T>::FenwickTree(size_t size) : _data(size + 1, T()) {}
 template <integral_type T>
@@ -28,7 +32,7 @@ void FenwickTree<T>::Construct(vector<T> const &data)
 template <integral_type T>
 T FenwickTree<T>::lsb(T index)
 {
-    // https://stackoverflow.com/questions/26892674/warning-c4146-minus-operator-on-unsigned-type
+  // https://stackoverflow.com/questions/26892674/warning-c4146-minus-operator-on-unsigned-type
   return index & (0 - index);
 }
 /*
@@ -47,7 +51,7 @@ template <integral_type T>
 T FenwickTree<T>::Query(T index)
 {
   T sum = T();
-  for (long long i = index; i > 0; i -= lsb(i))
+  for (int64_t i = index; i > 0; i -= lsb(i))
     sum += _data[i];
   return sum;
 }

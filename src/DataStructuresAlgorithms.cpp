@@ -22,23 +22,23 @@ template uint128_t BinomialCoefficients(size_t, size_t);
 template uint128_t BinomialCoefficientsMultiplicative(size_t, size_t);
 template uint128_t MultinomialCoefficients(size_t, vector<size_t> const &, uint128_t);
 #endif
-template size_t ceil_div(size_t, size_t);
-template long long ceil_div(long long, long long);
-template unsigned long long ceil_div(unsigned long long, unsigned long long);
+template int64_t ceil_div(int64_t, int64_t);
+template uint64_t ceil_div(uint64_t, uint64_t);
 template int64_t Fibonacci(long);
-template int64_t Factorial(size_t, int64_t);
 template uint64_t Fibonacci(long);
+template int64_t Factorial(size_t, int64_t);
 template uint64_t Factorial(size_t, uint64_t);
-template long long Fibonacci(long);
-template long long Factorial(size_t, long long);
-template unsigned long long FibonacciRecursive(long);
-template unsigned long long FactorialRecursive(size_t, unsigned long long);
+template uint64_t FibonacciRecursive(long);
+template uint64_t FactorialRecursive(size_t, uint64_t);
 #if defined(_MSC_VER)
 // The following are duplicates of int64_t on GNUC / GNUG
+template size_t ceil_div(size_t, size_t);
 template long MinBitTrick(long, long);
 template long MaxBitTrick(long, long);
 template size_t FactorsCount(long, long);
+template size_t FactorsCount(size_t, size_t);
 template size_t MaxZeroProductBruteForce(vector<long> const &, size_t);
+template size_t MaxZeroProductBruteForce(vector<size_t> const &, size_t);
 #endif
 template float Ulp(float);
 template double Ulp(double);
@@ -48,24 +48,18 @@ template double MachineEpsilonApproximation();
 template long double MachineEpsilonApproximation();
 template int MinBitTrick(int, int);
 template int64_t MinBitTrick(int64_t, int64_t);
-template long long MinBitTrick(long long, long long);
 template int MaxBitTrick(int, int);
 template int64_t MaxBitTrick(int64_t, int64_t);
-template long long MaxBitTrick(long long, long long);
 template size_t FactorsCount(int, int);
 template size_t FactorsCount(int64_t, int64_t);
-template size_t FactorsCount(size_t, size_t);
-template size_t FactorsCount(long long, long long);
-template size_t FactorsCount(unsigned long long, unsigned long long);
+template size_t FactorsCount(uint64_t, uint64_t);
 template size_t MaxZeroProductBruteForce(vector<int64_t> const &, size_t);
-template size_t MaxZeroProductBruteForce(vector<size_t> const &, size_t);
-template size_t MaxZeroProductBruteForce(vector<long long> const &, size_t);
-template size_t MaxZeroProductBruteForce(vector<unsigned long long> const &, size_t);
-template long long BinomialCoefficients(size_t, size_t);
-template unsigned long long BinomialCoefficients(size_t, size_t);
-template long long BinomialCoefficientsMultiplicative(size_t, size_t);
-template unsigned long long BinomialCoefficientsMultiplicative(size_t, size_t);
-template long long MultinomialCoefficients(size_t, vector<size_t> const &, long long);
+template size_t MaxZeroProductBruteForce(vector<uint64_t> const &, size_t);
+template int64_t BinomialCoefficients(size_t, size_t);
+template uint64_t BinomialCoefficients(size_t, size_t);
+template int64_t BinomialCoefficientsMultiplicative(size_t, size_t);
+template uint64_t BinomialCoefficientsMultiplicative(size_t, size_t);
+template int64_t MultinomialCoefficients(size_t, vector<size_t> const &, int64_t);
 template multimap<size_t, string, less<size_t>> flip_map(const map<string, size_t> &, less<size_t>);
 long **my2DAlloc(long rows, long cols)
 {
@@ -1197,7 +1191,7 @@ void Merge(vector<long> &dest, vector<long> &source)
  */
 void shuffleCards(vector<long> &cards)
 {
-	unsigned long long mask = 0; // bitmask of 52 cards.
+	uint64_t mask = 0; // bitmask of 52 cards.
 	int tmp, index;
 	random_device device;
 	// Seed with a real random value, if available
@@ -1220,8 +1214,8 @@ void shuffleCards(vector<long> &cards)
 			 */
 			uniform_int_distribution<int> dist(i, 51);
 			index = dist(rng);
-			assert(!(mask & ((unsigned long long)1 << cards[index])));
-			mask |= ((unsigned long long)1 << cards[index]);
+			assert(!(mask & ((uint64_t)1 << cards[index])));
+			mask |= ((uint64_t)1 << cards[index]);
 			tmp = cards[i];
 			cards[i] = cards[index];
 			cards[index] = tmp;
@@ -1374,10 +1368,10 @@ size_t CountNumbersWithUniqueDigits(size_t n)
 	}
 	return 0;
 }
-unsigned long long _atoull(string str, char base)
+uint64_t _atoull(string str, char base)
 {
 	size_t i = 0;
-	unsigned long long result = 0;
+	uint64_t result = 0;
 	if ((str.length() > 2) && str[0] == '0' && str[1] == 'x')
 	{
 		base = 16;
@@ -1412,7 +1406,7 @@ double _atod(string str, char base)
 	bool isRemainder = false;
 	double quotient = 0;
 	double remainder = 0;
-	unsigned long long qCount = 1;
+	uint64_t qCount = 1;
 	if ((str.length() > 2) && str[0] == '0' && str[1] == 'x')
 	{
 		base = 16;
@@ -1530,7 +1524,7 @@ long _atoi(string str)
 // 1234.5678
 double round(double num, int n)
 {
-	unsigned long long tmp, tmp1;
+	uint64_t tmp, tmp1;
 	tmp = num * pow(10, n + 1);
 	tmp1 = num * pow(10, n);
 	if (tmp % 10 >= 5)
@@ -3536,7 +3530,7 @@ string DecodeStringRegex(string const &str)
 /* https://www.hackerrank.com/challenges/sam-and-substrings/problem
  * 100%
  */
-unsigned long long substrings(string const &s)
+uint64_t substrings(string const &s)
 {
 	/*
 	Example: "6789". Substrings: 6, 7, 8, 9, 67, 78, 89, 678, 789, 6789.
@@ -3552,13 +3546,13 @@ Digit   Unit    Ten     Hundred     Thousand        Sum
 
 		s[i] * n * 11..1 (s.size() - n + 1 times '1').
 	*/
-	unsigned long long sum = 0;
-	unsigned long long ones = 1;
+	uint64_t sum = 0;
+	uint64_t ones = 1;
 	for (int i = s.size() - 1; i >= 0; i--)
 	{
-		sum += ((unsigned long long)s[i] - '0') * ones * (unsigned long long)(i + 1ull);
-		ones = (ones * 10 + 1) % (unsigned long long)(1e9 + 7);
-		sum %= (unsigned long long)(1e9 + 7);
+		sum += ((uint64_t)s[i] - '0') * ones * (uint64_t)(i + 1ull);
+		ones = (ones * 10 + 1) % (uint64_t)(1e9 + 7);
+		sum %= (uint64_t)(1e9 + 7);
 	}
 	return sum;
 }
@@ -4655,10 +4649,10 @@ void cpp20variants()
  * Towers: 1      2 3 4
  * Discs : [3, 1]     2 {1: [3, 1], 4: [2]}
  */
-vector<unsigned long long> BFSNextMoves(unsigned long long state, size_t towerCount, size_t discCount)
+vector<uint64_t> BFSNextMoves(uint64_t state, size_t towerCount, size_t discCount)
 {
 	// Returns a list of states that can be achieved from the given state
-	vector<unsigned long long> states;
+	vector<uint64_t> states;
 	size_t towerBitCount = (floor(log2(towerCount - 1)) + 1);
 	size_t towerBitMask = ~(-(1 << towerBitCount));
 	map<size_t, size_t> topDiscs;
@@ -4697,7 +4691,7 @@ vector<unsigned long long> BFSNextMoves(unsigned long long state, size_t towerCo
 			if (!skippedPoles.count(p))
 			{
 				size_t offset = towerBitCount * it->first;
-				unsigned long long s = state & ~(towerBitMask << offset);
+				uint64_t s = state & ~(towerBitMask << offset);
 				s |= (p << offset);
 				bitset<64> bs(s);
 				// cout << "Next move: " << bs << " Pole: " << p << ", disc: " << it->first << endl;
@@ -4721,12 +4715,12 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 	size_t towerBitCount = BitCountOfNChoices(towerCount); // floor(log2(towerCount - 1)) + 1;
 	size_t towerBitMask = ~(-(1 << towerBitCount));
 	size_t discCount = poles.size(), bitCount = towerBitCount * discCount;
-	if (bitCount > sizeof(unsigned long long) * 8)
+	if (bitCount > sizeof(uint64_t) * 8)
 	{
 		oss << "Too many discs/poles! " << towerCount << " towers " << discCount << " discs needs " << bitCount << " number of bits!";
 		throw invalid_argument(oss.str());
 	}
-	unsigned long long state = 0; // 64-bit
+	uint64_t state = 0; // 64-bit
 	// bitset<64> bm(towerBitMask);
 	// cout << "towerBitMask: " << bm << endl;
 	/* {1, 4, 2, 4, 2, 2}: 01_01_11_01_11_00
@@ -4744,7 +4738,7 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 	// cout << "state: " << s << endl;
 	deque<towerofhanoi_state_t> queue;
 	queue.push_back(towerofhanoi_state_t(state, 0));
-	set<unsigned long long> visited{state};
+	set<uint64_t> visited{state};
 	for (; !queue.empty();)
 	{
 		towerofhanoi_state_t s = queue.front();
@@ -4753,8 +4747,8 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 			return s.moves;
 		else
 		{
-			vector<unsigned long long> states = BFSNextMoves(s.state, towerCount, discCount);
-			for (vector<unsigned long long>::const_iterator it = states.begin(); it != states.end(); it++)
+			vector<uint64_t> states = BFSNextMoves(s.state, towerCount, discCount);
+			for (vector<uint64_t>::const_iterator it = states.begin(); it != states.end(); it++)
 			{
 				if (!visited.count(*it))
 				{
@@ -4775,14 +4769,14 @@ vector<long> KaprekarNumbers(long p, long q)
 {
 	string d, str, r, l;
 	long j, k;
-	long long square;
+	int64_t square;
 	vector<long> result;
 	for (long i = p; i <= q; i++)
 		try
 		{
 			d = to_string(i);
-			square = (long long)i * (long long)i;
-			str = to_string((long long)i * (long long)i);	 // Overflows for 32-bit system when i > 65535
+			square = (int64_t)i * (int64_t)i;
+			str = to_string((int64_t)i * (int64_t)i);		 // Overflows for 32-bit system when i > 65535
 			r = str.substr(str.size() - d.size(), d.size()); // str: 1234, d: 12 => r: 34
 			l = str.substr(0, str.size() - r.size());		 // l: 12
 			j = 0;
@@ -5036,7 +5030,7 @@ size_t PowerSum(size_t sum, size_t power, size_t i)
  * Sizes:
  * {1:3} {2:1} => (1*3)*(2*1) + BinomialCoefficient(3,2) = 6 + 3 = 9
  */
-unsigned long long DistinctPairs(size_t n, vector<vector<long>> const &astronauts)
+uint64_t DistinctPairs(size_t n, vector<vector<long>> const &astronauts)
 {
 	vector<long> data(n);
 	ranges::generate(data, [n = 0]() mutable
@@ -5047,21 +5041,21 @@ unsigned long long DistinctPairs(size_t n, vector<vector<long>> const &astronaut
 	// disjointSet.Print(data);
 	map<long, vector<long>> sets;
 	disjointSet.GetSets(data, sets);
-	unsigned long long sum = 0;
+	uint64_t sum = 0;
 	map<size_t, size_t> sizes; /* Key: items # in groups, Value: Count of such groups */
 	for (map<long, vector<long>>::const_iterator it = sets.begin(); it != sets.end(); it++)
 		sizes[it->second.size()]++;
 	for (map<size_t, size_t>::const_iterator it = sizes.begin(); it != sizes.end(); it++)
 	{
-		unsigned long long s1;
+		uint64_t s1;
 		s1 = it->first * it->second;
 		if (it->second > 1)
 		{
 			if (it->first == 1)
-				sum += BinomialCoefficients<unsigned long long>(it->second, 2);
+				sum += BinomialCoefficients<uint64_t>(it->second, 2);
 			else
 			{
-				for (unsigned long long i = s1 - it->first; i > 0; i -= it->first)
+				for (uint64_t i = s1 - it->first; i > 0; i -= it->first)
 					sum += it->first * i;
 			}
 		}

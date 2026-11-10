@@ -46,7 +46,7 @@ TEST(DisJointSetTests, DisJointSetTest)
 	// assert(disjointSet.Find(2) == 0); C++ map will insert non-existing key silently
 	// assert(disjointSet.Find(1) != disjointSet.Find(2)); C++ map will insert non-existing key silently
 }
-class DistinctPairsTestFixture : public testing::TestWithParam<tuple<unsigned long long, size_t, vector<vector<long>>>>
+class DistinctPairsTestFixture : public testing::TestWithParam<tuple<uint64_t, size_t, vector<vector<long>>>>
 {
 public:
 	void SetUp() override
@@ -55,14 +55,14 @@ public:
 		_n = get<1>(GetParam());
 		_groups = get<2>(GetParam());
 	}
-	unsigned long long DistinctPairsTest()
+	uint64_t DistinctPairsTest()
 	{
 		return DistinctPairs(_n, _groups);
 	}
 
 protected:
 	vector<vector<long>> _groups;
-	unsigned long long _expected;
+	uint64_t _expected;
 	size_t _n;
 };
 TEST_P(DistinctPairsTestFixture, DistinctPairsTests)

@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	long l, l1, l2;
 	int32_t i, j, *iPtr;
 	unsigned int ui;
-	unsigned long long mask = 0;
+	uint64_t mask = 0;
 	long double ld, ld1;
 	set<char> cset, cset1;
 	set<size_t> uset1, uset2;
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 	vector<long double> vld;
 	vector<int> data, data1;
 	vector<size_t> udata, udata1;
-	vector<unsigned long long> ull;
+	vector<uint64_t> ull;
 	vector<bool> bools;
 	set<vector<size_t>> usetvec;
 	set<set<size_t>> usetgrid;
@@ -52,6 +52,9 @@ int main(int argc, char *argv[])
 	ExceptionTest();
 	TestRandom();
 	KDTreeTests();
+	cpp20readonlyranges();
+	cpp20ranges();
+	cpp20variants();
 	strings = {"111", "100", "100"};
 	cgrid1.resize(strings.size());
 	for (size_t i = 0; i < strings.size(); i++)
@@ -409,8 +412,8 @@ int main(int argc, char *argv[])
 	duration timespan = timestamp.time_since_epoch();
 	int64_t ticks = timespan.count();
 	int64_t signedTicks = timespan.count();
-	assert(std::chrono::system_clock::duration::min().count() == numeric_limits<long long>::min());
-	assert(std::chrono::system_clock::duration::max().count() == numeric_limits<long long>::max());
+	assert(std::chrono::system_clock::duration::min().count() == numeric_limits<int64_t>::min());
+	assert(std::chrono::system_clock::duration::max().count() == numeric_limits<int64_t>::max());
 	assert(signedTicks == ticks);
 	cout << "Current timestamp (ticks since Epoch): " << ticks << ", signed ticks: " << signedTicks << endl;
 #if defined(__cpp_lib_hardware_interference_size)
@@ -419,9 +422,6 @@ int main(int argc, char *argv[])
 	static constexpr size_t CacheLineSize = 64; // Default standard fallback
 #endif
 	cout << "CacheLineSize: " << CacheLineSize << endl;
-	cpp20readonlyranges();
-	cpp20ranges();
-	cpp20variants();
 	cout << "30! " << Factorial<size_t>(30) << endl;			 // The CPU signals loss of precision via a flag in the FPU control registers starting from i=26
 	cout << "Fibonacci(100) " << Fibonacci<size_t>(100) << endl; // The CPU signals loss of precision via a flag in the FPU control registers starting from i=94
 	grid = {{1, 3, 5}, {2, 4, 6}, {7, 8, 9}};
@@ -678,7 +678,7 @@ int main(int argc, char *argv[])
 	b.clear();
 	ull.clear();
 	ull = {1, 2, 1, 2};
-	unsigned long long findMaxResult = range.FindMax(ull);
+	uint64_t findMaxResult = range.FindMax(ull);
 	assert(findMaxResult == 9);
 
 	ull.clear();
@@ -814,7 +814,7 @@ int main(int argc, char *argv[])
 	free(my3Dbuffer);
 
 	for (i = 0; i < 64; i++)
-		mask |= ((unsigned long long)1 << i);
+		mask |= ((uint64_t)1 << i);
 	cout << "mask: " << hex << mask << dec << endl
 		 << endl;
 

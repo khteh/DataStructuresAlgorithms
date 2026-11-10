@@ -172,14 +172,14 @@ INSTANTIATE_TEST_SUITE_P(
 	DivideWithPlusSignTestFixture,
 	::testing::Values(make_tuple(3, 10, 3), make_tuple(-3, 10, -3), make_tuple(-3, -10, 3), make_tuple(3, -10, -3), make_tuple(10, -10, -1), make_tuple(-1, -1, 1), make_tuple(-1, 1, -1), make_tuple(1, -1, -1),
 					  make_tuple(2147483648L, -2147483648, -1), make_tuple(-2147483648, -2147483648, 1), make_tuple(-2147483648, 2147483648L, -1)));
-class AddWithoutArithmeticTestFixture : public ArithmeticOperationsTestFixture<long long>, public testing::TestWithParam<tuple<long long, long long, long long>>
+class AddWithoutArithmeticTestFixture : public ArithmeticOperationsTestFixture<int64_t>, public testing::TestWithParam<tuple<int64_t, int64_t, int64_t>>
 {
 public:
 	void SetUp() override
 	{
 		ArithmeticOperationsTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
-	long long AddWithoutArithmeticTest()
+	int64_t AddWithoutArithmeticTest()
 	{
 		return _arithmetic.AddWithoutArithmetic(_var1, _var2);
 	}

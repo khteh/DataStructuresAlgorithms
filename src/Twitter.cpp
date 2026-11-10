@@ -21,7 +21,7 @@ TTweetID TweetItem<TUserID, TTweetID>::ID() const
     return _id;
 }
 template <typename TUserID, typename TTweetID>
-unsigned long long TweetItem<TUserID, TTweetID>::TimeStamp() const
+uint64_t TweetItem<TUserID, TTweetID>::TimeStamp() const
 {
     return _timestamp;
 }

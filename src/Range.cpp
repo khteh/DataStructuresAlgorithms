@@ -533,15 +533,15 @@ vector<long> Range::ProductExceptSelf(vector<long> const &nums)
 // (2) 2 * 3 * 3 * 2 = 36
 // (3) (2 + 3) * (3 + 2) = 25
 // (4) 2 + (3 * 3) + 2 = 11
-unsigned long long Range::FindMax(vector<unsigned long long> const &data)
+uint64_t Range::FindMax(vector<uint64_t> const &data)
 {
-	vector<unsigned long long> result;
+	vector<uint64_t> result;
 	if (data.size() == 1)
 		return data[0];
 	else if (data.size() == 2)
 		return (data[0] * data[1] > data[0] + data[1]) ? data[0] * data[1] : data[0] + data[1];
 	else
-		for (vector<unsigned long long>::const_iterator it = data.begin(); it != data.end(); it += 2)
+		for (vector<uint64_t>::const_iterator it = data.begin(); it != data.end(); it += 2)
 			if (it <= data.end() - 2)
 				result.push_back((*it + *(it + 1)) > (*it * *(it + 1)) ? (*it + *(it + 1)) : (*it * *(it + 1)));
 			else
@@ -552,13 +552,13 @@ unsigned long long Range::FindMax(vector<unsigned long long> const &data)
  * https://www.geeksforgeeks.org/maximum-value-pair-array/
  * Start from MSB, add the bit to the result if there are 2 elements having the same prefix value when ANDed
  */
-unsigned long long Range::MaxAndPair(vector<unsigned long long> const &data)
+uint64_t Range::MaxAndPair(vector<uint64_t> const &data)
 {
-	unsigned long long result = 0;
-	for (unsigned long long msb = 1 << BitCount(*ranges::max_element(data)) - 1, pattern = result | msb; msb > 0; msb >>= 1, pattern = result | msb)
+	uint64_t result = 0;
+	for (uint64_t msb = 1 << BitCount(*ranges::max_element(data)) - 1, pattern = result | msb; msb > 0; msb >>= 1, pattern = result | msb)
 	{
 		size_t count = 0;
-		for (vector<unsigned long long>::const_iterator it = data.begin(); count < 2 && it != data.end(); it++)
+		for (vector<uint64_t>::const_iterator it = data.begin(); count < 2 && it != data.end(); it++)
 			if ((*it & pattern) == pattern)
 				count++;
 		if (count >= 2)
@@ -608,16 +608,16 @@ maxx ^ prefix: 0x111 ^ 1 = 0x110
 			   0x111 ^ 0x10 = 0x101
 			   0x111 ^ 0x11 = 0x100 => result = 0x111
 */
-unsigned long long Range::MaxXorPair(vector<unsigned long long> const &data)
+uint64_t Range::MaxXorPair(vector<uint64_t> const &data)
 {
-	unsigned long long result = 0;
-	set<unsigned long long> prefixes;
-	for (unsigned long long msb = 1 << BitCount(*ranges::max_element(data)) - 1, mask = msb; msb > 0; msb >>= 1, mask |= msb)
+	uint64_t result = 0;
+	set<uint64_t> prefixes;
+	for (uint64_t msb = 1 << BitCount(*ranges::max_element(data)) - 1, mask = msb; msb > 0; msb >>= 1, mask |= msb)
 	{
 		prefixes.clear();
-		for (vector<unsigned long long>::const_iterator it = data.begin(); it != data.end(); it++)
+		for (vector<uint64_t>::const_iterator it = data.begin(); it != data.end(); it++)
 			prefixes.emplace(*it & mask);
-		unsigned long long maxx = result | msb;
+		uint64_t maxx = result | msb;
 		/*
 		 Find a pair in the prefixes where a^b = maxx
 		1 ^ 2 = 3 => 1 = 3 ^ 2
@@ -625,7 +625,7 @@ unsigned long long Range::MaxXorPair(vector<unsigned long long> const &data)
 		a ^ b = maxx => a = maxx ^ b (True if a is in the prefixes set)
 						b = maxx ^ a (True if b is in the prefixes set)
 		*/
-		for (set<unsigned long long>::const_iterator it = prefixes.begin(); it != prefixes.end(); it++)
+		for (set<uint64_t>::const_iterator it = prefixes.begin(); it != prefixes.end(); it++)
 			if (prefixes.count(*it ^ maxx))
 			{
 				result = maxx;
@@ -1430,21 +1430,21 @@ void Range::MaxSlidingWindow(vector<long> const &data, size_t k, vector<long> &r
 6: [[1 1 2 4]]
 7: [[1 1 3 4]]
 */
-unsigned long long Range::BeautifulQuadruples(size_t a, size_t b, size_t c, size_t d)
+uint64_t Range::BeautifulQuadruples(size_t a, size_t b, size_t c, size_t d)
 {
 	/*
 		if a^b^c^d = 0 then a^b = c^d, therefore sort values to avoid duplications
 	*/
 	vector<size_t> abcd{a, b, c, d};
 	ranges::sort(abcd);
-	vector<unsigned long long> totalB(abcd[3] + 1, 0); // pair# (w,x} 1 <= w <= A, 1 <= x <= B, w <= x
-	vector<unsigned long long> data;
+	vector<uint64_t> totalB(abcd[3] + 1, 0); // pair# (w,x} 1 <= w <= A, 1 <= x <= B, w <= x
+	vector<uint64_t> data;
 	data.resize(abcd[3]);
 	ranges::generate(data, [n = 1]() mutable
 					 { return n++; });
 	Range range;
-	unsigned long long maxXOR = range.MaxXorPair(data);
-	vector<vector<unsigned long long>> cntB(abcd[3] + 1, vector<unsigned long long>(maxXOR + 1, 0)); // pair# {w,x} 1 <= w <= A, 1 <= x <= B, w <= x, cntB[x][1] = w ^ x
+	uint64_t maxXOR = range.MaxXorPair(data);
+	vector<vector<uint64_t>> cntB(abcd[3] + 1, vector<uint64_t>(maxXOR + 1, 0)); // pair# {w,x} 1 <= w <= A, 1 <= x <= B, w <= x, cntB[x][1] = w ^ x
 	for (size_t w = 1; w <= abcd[0]; w++)
 		for (size_t x = w; x <= abcd[1]; x++)
 		{
@@ -1462,7 +1462,7 @@ unsigned long long Range::BeautifulQuadruples(size_t a, size_t b, size_t c, size
 	 * We can choose from totalB[y] pairs of [w,x]. Out of these pairs there are cntB[y][i] which, when combined with [y,z], will produce 0.
 	 * This means we have a total of totalB[y] - cntB[y][i] provide non-zero result
 	 */
-	unsigned long long result = 0;
+	uint64_t result = 0;
 	for (size_t y = 1; y <= abcd[2]; y++)
 		for (size_t z = y; z <= abcd[3]; z++)
 			result += totalB[y] - cntB[y][y ^ z];
@@ -1636,18 +1636,18 @@ i:2 prev=993  b=995-791=204, a=min c=min
 i:3 prev=-791 a=-791-635=-1426, c=204-635=-431, b=min result=-431
 i:4 prev=-635 a=-635-569=-1204, c=-431-569=-1000 b=min result=-431
  */
-long long Range::MaxSumTrionic(vector<long> const &data)
+int64_t Range::MaxSumTrionic(vector<long> const &data)
 {
-	// numeric_limits<long long>::min(): -9223372036854775808
-	const long long INF = -1e18; // XXX: Using numeric_limits<long long>::min() here will result in overflow and result will be very large number due to min() + -ve overflowing to large positive numbers. Need a number between lower range of data[i] and numeric_limits<long long>::min()
-	long long result = INF, a = INF, b = INF, c = INF;
+	// numeric_limits<int64_t>::min(): -9223372036854775808
+	const int64_t INF = -1e18; // XXX: Using numeric_limits<int64_t>::min() here will result in overflow and result will be very large number due to min() + -ve overflowing to large positive numbers. Need a number between lower range of data[i] and numeric_limits<int64_t>::min()
+	int64_t result = INF, a = INF, b = INF, c = INF;
 	for (size_t i = 1; i < data.size(); i++)
 	{
-		long long a1 = INF, b1 = INF, c1 = INF;
+		int64_t a1 = INF, b1 = INF, c1 = INF;
 		if (data[i] > data[i - 1])
 		{
 			// First ascending - either start a new climb using the prev element or add curr to the existing A.
-			a1 = max<long long>(a, data[i - 1]) + data[i];
+			a1 = max<int64_t>(a, data[i - 1]) + data[i];
 			// Second ascending - must come after a descent. It either starts climbing from the valley of B or continues the final climb C.
 			c1 = max(b, c) + data[i];
 		}

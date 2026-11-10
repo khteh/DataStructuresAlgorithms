@@ -7,16 +7,19 @@ template class Arithmetic<unsigned __int128>;
 #endif
 template class Arithmetic<char>;
 template class Arithmetic<int>;
+#if defined(_MSC_VER)
+// The following are duplicates of int64_t on GNUC / GNUG
 template class Arithmetic<size_t>;
 template class Arithmetic<long>;
-template class Arithmetic<long long>;
-template class Arithmetic<unsigned long long>;
-template class GCDExtendedEuclideanResult<char>;
-template class GCDExtendedEuclideanResult<int>;
 template class GCDExtendedEuclideanResult<size_t>;
 template class GCDExtendedEuclideanResult<long>;
-template class GCDExtendedEuclideanResult<long long>;
-template class GCDExtendedEuclideanResult<unsigned long long>;
+#endif
+template class Arithmetic<int64_t>;
+template class Arithmetic<uint64_t>;
+template class GCDExtendedEuclideanResult<char>;
+template class GCDExtendedEuclideanResult<int>;
+template class GCDExtendedEuclideanResult<int64_t>;
+template class GCDExtendedEuclideanResult<uint64_t>;
 template <arithmetic_type T>
 GCDExtendedEuclideanResult<T>::GCDExtendedEuclideanResult()
 	: gcd(0), x(0), y(0)
@@ -279,7 +282,7 @@ T Arithmetic<T>::Divide(T dividend, T divisor, T modulo)
 template <arithmetic_type T>
 T Arithmetic<T>::AddWithoutArithmetic(T sum, T carry)
 {
-	return !carry ? sum : AddWithoutArithmetic(sum ^ carry, (unsigned long long)(sum & carry) << 1);
+	return !carry ? sum : AddWithoutArithmetic(sum ^ carry, (uint64_t)(sum & carry) << 1);
 }
 /*
  * https://leetcode.com/problems/sqrtx/description/

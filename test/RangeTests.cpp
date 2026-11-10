@@ -177,14 +177,14 @@ INSTANTIATE_TEST_SUITE_P(
 					  make_tuple(9, vector<size_t>{4, 2, 0, 3, 2, 5}),
 					  make_tuple(1, vector<size_t>{4, 2, 3}), make_tuple(1, vector<size_t>{5, 4, 1, 2})));
 
-class MaxAndPairTestFixture : public RangeTestFixture1<unsigned long long, unsigned long long>, public testing::TestWithParam<tuple<unsigned long long, vector<unsigned long long>>>
+class MaxAndPairTestFixture : public RangeTestFixture1<uint64_t, uint64_t>, public testing::TestWithParam<tuple<uint64_t, vector<uint64_t>>>
 {
 public:
 	void SetUp() override
 	{
 		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
-	unsigned long long MaxAndPairTest()
+	uint64_t MaxAndPairTest()
 	{
 		return _rangeObj.MaxAndPair(_data);
 	}
@@ -196,20 +196,20 @@ TEST_P(MaxAndPairTestFixture, MaxAndPairTests)
 INSTANTIATE_TEST_SUITE_P(
 	MaxAndPairTests,
 	MaxAndPairTestFixture,
-	::testing::Values(make_tuple(8, vector<unsigned long long>{16, 12, 8, 4}),
-					  make_tuple(0, vector<unsigned long long>{4, 8, 16, 2}),
-					  make_tuple(8ull, views::iota(0ull, 10ull) | ranges::to<vector<unsigned long long>>())
-					  /*make_tuple(8, []() -> generator<unsigned long long>
+	::testing::Values(make_tuple(8, vector<uint64_t>{16, 12, 8, 4}),
+					  make_tuple(0, vector<uint64_t>{4, 8, 16, 2}),
+					  make_tuple(8ull, views::iota(0ull, 10ull) | ranges::to<vector<uint64_t>>())
+					  /*make_tuple(8, []() -> generator<uint64_t>
 												{ co_yield ranges::elements_of(views::iota(0, 10)); }() | ranges::to<vector>())*/
 					  ));
-class MaxXorPairTestFixture : public RangeTestFixture1<unsigned long long, unsigned long long>, public testing::TestWithParam<tuple<unsigned long long, vector<unsigned long long>>>
+class MaxXorPairTestFixture : public RangeTestFixture1<uint64_t, uint64_t>, public testing::TestWithParam<tuple<uint64_t, vector<uint64_t>>>
 {
 public:
 	void SetUp() override
 	{
 		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
-	unsigned long long MaxXorPairTest()
+	uint64_t MaxXorPairTest()
 	{
 		return _rangeObj.MaxXorPair(_data);
 	}
@@ -221,14 +221,14 @@ TEST_P(MaxXorPairTestFixture, MaxXorPairTests)
 INSTANTIATE_TEST_SUITE_P(
 	MaxXorPairTests,
 	MaxXorPairTestFixture,
-	::testing::Values(make_tuple(7, vector<unsigned long long>{1, 2, 3, 4, 5, 6, 7}),
-					  make_tuple(7, vector<unsigned long long>{1, 2, 3, 4}),
-					  make_tuple(28, vector<unsigned long long>{25, 10, 2, 8, 5, 3}),
-					  make_tuple(15ull, views::iota(0ull, 10ull) | ranges::to<vector<unsigned long long>>()),
-					  make_tuple(4095ull, views::iota(1ull, 3001ull) | ranges::to<vector<unsigned long long>>())
-					  /*make_tuple(15, []() -> generator<unsigned long long>
+	::testing::Values(make_tuple(7, vector<uint64_t>{1, 2, 3, 4, 5, 6, 7}),
+					  make_tuple(7, vector<uint64_t>{1, 2, 3, 4}),
+					  make_tuple(28, vector<uint64_t>{25, 10, 2, 8, 5, 3}),
+					  make_tuple(15ull, views::iota(0ull, 10ull) | ranges::to<vector<uint64_t>>()),
+					  make_tuple(4095ull, views::iota(1ull, 3001ull) | ranges::to<vector<uint64_t>>())
+					  /*make_tuple(15, []() -> generator<uint64_t>
 												 { co_yield ranges::elements_of(views::iota(0, 10)); }() | ranges::to<vector>()),
-					  make_tuple(4095, []() -> generator<unsigned long long>
+					  make_tuple(4095, []() -> generator<uint64_t>
 												   { co_yield ranges::elements_of(views::iota(1, 3001)); }() | ranges::to<vector>())*/
 					  ));
 
@@ -1136,14 +1136,14 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(true, vector<long>{1, 3, 5, 4, 2, 6}),
 					  make_tuple(false, vector<long>{2, 1, 3}),
 					  make_tuple(false, vector<long>{2, 3, 1}), make_tuple(false, vector<long>{2, 4, 3, 3})));
-class MaxSumTrionicTestFixture : public RangeTestFixture1<long long, long>, public testing::TestWithParam<tuple<long long, vector<long>>>
+class MaxSumTrionicTestFixture : public RangeTestFixture1<int64_t, long>, public testing::TestWithParam<tuple<int64_t, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
 		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
-	long long MaxSumTrionicTest()
+	int64_t MaxSumTrionicTest()
 	{
 		return _rangeObj.MaxSumTrionic(_data);
 	}
@@ -1166,7 +1166,7 @@ public:
 	{
 		RangeTestFixture2::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
-	long long MaxHarvestTest()
+	int64_t MaxHarvestTest()
 	{
 		return _rangeObj.MaxHarvest(_data, _param);
 	}

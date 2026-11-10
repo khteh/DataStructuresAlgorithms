@@ -130,7 +130,7 @@ template <signed_integral_type T>
 constexpr T MinBitTrick(T, T);
 template <signed_integral_type T>
 constexpr T MaxBitTrick(T, T);
-unsigned long long _atoull(string, char base = 10);
+uint64_t _atoull(string, char base = 10);
 double _atod(string, char base = 10);
 long _atoi(string);
 generator<const size_t &> GenerateSequence(size_t, size_t);
@@ -271,7 +271,7 @@ size_t BeautifulQuadruples(size_t, size_t, size_t, size_t);
 long kruskals(int, vector<long> &, vector<long> &, vector<long> &);
 long getLowestPathCost(size_t, vector<long> &, vector<long> &, vector<long> &);
 size_t PostmanProblemWithoutLoop(size_t, set<size_t> const &, vector<vector<size_t>> const &, bool print = false);
-unsigned long long substrings(string const &);
+uint64_t substrings(string const &);
 vector<string> BomberMan(size_t, vector<string> const &);
 string NumberToRoman(size_t);
 size_t RomanToNumber(string const &);
@@ -287,8 +287,8 @@ string RoadsInHackerland2(size_t, vector<vector<size_t>> &);
 typedef struct TowerOfHanoiState
 {
 	TowerOfHanoiState() : state(0), moves(0) {}
-	TowerOfHanoiState(unsigned long long s, size_t m) : state(s), moves(m) {}
-	unsigned long long state;
+	TowerOfHanoiState(uint64_t s, size_t m) : state(s), moves(m) {}
+	uint64_t state;
 	size_t moves;
 } towerofhanoi_state_t;
 int ResetTowerOfHanoi(size_t, vector<size_t> const &);
@@ -297,7 +297,7 @@ vector<long> KaprekarNumbers(long, long);
 size_t kMarsh(vector<string> const &);
 size_t MatrixPerimeter(vector<vector<size_t>> &, vector<string> &);
 size_t PowerSum(size_t, size_t, size_t i = 1);
-unsigned long long DistinctPairs(size_t, vector<vector<long>> const &);
+uint64_t DistinctPairs(size_t, vector<vector<long>> const &);
 size_t RoadsAndLibraries(size_t, size_t, size_t, vector<vector<size_t>> const &);
 char SuperDigit(string const &, size_t);
 size_t FindConnectedComponents(vector<long> &);

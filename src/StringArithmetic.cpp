@@ -12,7 +12,7 @@ bool StringArithmetic::_CheckIfAdditiveSequence(size_t i, size_t j, string const
 {
     if ((str[0] == '0' && i > 1) || (str[i] == '0' && j > 1))
         return false;
-    unsigned long long first, second;
+    uint64_t first, second;
     string sum;
     istringstream(str.substr(0, i)) >> first;
     istringstream(str.substr(i, j)) >> second;

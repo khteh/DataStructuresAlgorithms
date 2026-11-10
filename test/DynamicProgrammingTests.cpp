@@ -256,8 +256,8 @@ class WaysToFillRangeTestFixture :
 	public WaysToFillRangeTestFixtureBase<__int128>,
 	public testing::TestWithParam<tuple<__int128, size_t, size_t, size_t>>
 #else
-	public WaysToFillRangeTestFixtureBase<unsigned long long>,
-	public testing::TestWithParam<tuple<unsigned long long, size_t, size_t, size_t>>
+	public WaysToFillRangeTestFixtureBase<uint64_t>,
+	public testing::TestWithParam<tuple<uint64_t, size_t, size_t, size_t>>
 #endif
 {
 public:
