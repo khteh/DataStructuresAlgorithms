@@ -522,21 +522,33 @@ constexpr T Fibonacci(long n)
 	 * [a,b] = [1,2] => a=b=1, b=a+b=1+1=2
 	 */
 	// https://stackoverflow.com/questions/79421066/c-long-double-128-bit-precision
+	/*
 	vector<T> result = {0, 1};
 	if (n <= 1)
 		return n;
-	/*
 for (size_t i = 2; i <= (size_t)n; i++)
 	result[i % 2] = result[(i - 2) % 2] + result[(i - 1) % 2];
 return result[n % 2];
 	*/
 	T a = 0, b = 1;
-	for (size_t i = 2; i <= (size_t)n; i++)
+	if (n >= 0)
 	{
-		T temp = a + b;
-		a = b;
-		b = temp;
+		if (n <= 1)
+			return n;
+		for (size_t i = 2; i <= (size_t)n; i++)
+		{
+			T temp = a + b;
+			a = b;
+			b = temp;
+		}
 	}
+	else
+		for (long i = -2; i >= n; i--)
+		{
+			T temp = a - b;
+			a = b;
+			b = temp;
+		}
 	return b;
 }
 /* https://www.hackerrank.com/challenges/fibonacci-modified/problem

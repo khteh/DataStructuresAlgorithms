@@ -482,7 +482,7 @@ protected:
 	T _expected;
 	long _n;
 };
-class FibonacciTestFixture :
+class PositiveFibonacciTestFixture :
 #ifdef __SIZEOF_INT128__
 	public FibonacciTestFixtureBase<__int128>,
 	public testing::TestWithParam<tuple<__int128, long>>
@@ -497,14 +497,38 @@ public:
 		FibonacciTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 };
-TEST_P(FibonacciTestFixture, FibonacciTests)
+TEST_P(PositiveFibonacciTestFixture, PositiveFibonacciTests)
 {
 	ASSERT_EQ(this->_expected, this->FibonacciTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	FibonacciTests,
-	FibonacciTestFixture,
-	::testing::Values(make_tuple(-1, -1), make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(5, 5), make_tuple(8, 6), make_tuple(13, 7), make_tuple(21, 8), make_tuple(34, 9), make_tuple(2880067194370816120, 90)));
+	PositiveFibonacciTests,
+	PositiveFibonacciTestFixture,
+	::testing::Values(make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(5, 5), make_tuple(8, 6), make_tuple(13, 7), make_tuple(21, 8), make_tuple(34, 9), make_tuple(2880067194370816120, 90)));
+class NegativeFibonacciTestFixture :
+#ifdef __SIZEOF_INT128__
+	public FibonacciTestFixtureBase<__int128>,
+	public testing::TestWithParam<tuple<__int128, long>>
+#else
+	public FibonacciTestFixtureBase<int64_t>,
+	public testing::TestWithParam<tuple<int64_t, long>>
+#endif
+{
+public:
+	void SetUp() override
+	{
+		FibonacciTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+	}
+};
+TEST_P(NegativeFibonacciTestFixture, NegativeFibonacciTests)
+{
+	ASSERT_EQ(this->_expected, this->FibonacciTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	NegativeFibonacciTests,
+	NegativeFibonacciTestFixture,
+	::testing::Values(make_tuple(-21, -8), make_tuple(13, -7), make_tuple(-8, -6), make_tuple(5, -5), make_tuple(-3, -4), make_tuple(2, -3), make_tuple(-1, -2), make_tuple(1, -1), make_tuple(0, 0)));
+
 template <typename T>
 class FactorialTestFixtureBase
 {
