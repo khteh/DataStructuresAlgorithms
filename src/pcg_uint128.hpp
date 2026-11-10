@@ -234,7 +234,7 @@ namespace pcg_extras
         return flog2(uint32_t(v));
     }
 
-#if __SIZEOF_INT128__
+#ifdef __SIZEOF_INT128__
     inline bitcount_t flog2(__uint128_t v)
     {
         uint64_t high = uint64_t(v >> 64);
@@ -254,7 +254,7 @@ namespace pcg_extras
         return trailingzeros(uint32_t(v));
     }
 
-#if __SIZEOF_INT128__
+#ifdef __SIZEOF_INT128__
     inline bitcount_t trailingzeros(__uint128_t v)
     {
         uint64_t high = uint64_t(v >> 64);

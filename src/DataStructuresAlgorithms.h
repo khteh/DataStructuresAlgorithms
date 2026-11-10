@@ -144,7 +144,7 @@ template <arithmetic_type T>
 constexpr T FibonacciRecursive(long);
 string FibonacciModified(size_t, size_t, size_t);
 string FibonacciModifiedStringArithmetic(size_t, size_t, size_t);
-unsigned __int128 FibonacciModified_int128(size_t, size_t, size_t);
+string FibonacciModified_int128(size_t, size_t, size_t);
 size_t FactorialTrailingZeroesCount(size_t);
 constexpr long SequenceSum(long);
 template <arithmetic_type T>

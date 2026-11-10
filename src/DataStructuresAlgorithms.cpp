@@ -561,8 +561,10 @@ return result[n % 2];
  */
 string FibonacciModified(size_t t1, size_t t2, size_t n)
 {
-	Arithmetic<size_t> arithmetic;
-	vector<vector<size_t>> result(2, vector<size_t>());
+	// Index: 0 1 2 3 4 5  6   7	  8
+	// Value: 0 1 1 2 5 27 734 538783 ...
+	Arithmetic<char> arithmetic;
+	vector<vector<char>> result(2, vector<char>());
 	if (!n)
 		return to_string(t1);
 	else if (n == 1)
@@ -571,7 +573,7 @@ string FibonacciModified(size_t t1, size_t t2, size_t n)
 	arithmetic.NumberToVector(t2, result[1]);
 	for (size_t i = 2; i <= n; i++)
 	{
-		vector<size_t> num1(result[(i - 2) % 2]), num2;
+		vector<char> num1(result[(i - 2) % 2]), num2;
 		arithmetic.NumberVectorsMultiplication(result[(i - 1) % 2], result[(i - 1) % 2], num2);
 		arithmetic.NumberVectorsSum(num1, num2, result[i % 2]);
 	}
@@ -590,21 +592,30 @@ string FibonacciModifiedStringArithmetic(size_t t1, size_t t2, size_t n)
 		return to_string(t2);
 	StringArithmetic arithmetic;
 	vector<string> result = {to_string(t1), to_string(t2)};
-	for (size_t i = 2; i <= (size_t)n; i++)
+	for (size_t i = 2; i <= n; i++)
 		result[i % 2] = arithmetic.NumberStringSum(result[(i - 2) % 2], arithmetic.NumberStringMultiplication(result[(i - 1) % 2], result[(i - 1) % 2]));
 	return result[n % 2];
 }
-unsigned __int128 FibonacciModified_int128(size_t t1, size_t t2, size_t n)
+/* https://www.hackerrank.com/challenges/fibonacci-modified/problem
+ * 6/10 test cases failed :(
+ */
+string FibonacciModified_int128(size_t t1, size_t t2, size_t n)
 {
 	unsigned __int128 _t1 = t1, _t2 = t2, result = _t1 + (_t2 * _t2);
-	for (size_t i = 3; i <= n; i++)
+	// Index: 0 1 2 3 4 5  6   7	  8
+	// Value: 0 1 1 2 5 27 734 538783 ...
+	if (!n)
+		return to_string(t1);
+	else if (n == 1)
+		return to_string(t2);
+	for (size_t i = 2; i <= n; i++)
 	{
 		result = _t1 + (_t2 * _t2);
 		_t1 = _t2;
 		_t2 = result;
 	}
 	cout << "(" << t1 << ", " << t2 << ", " << n << "): " << result << endl;
-	return result;
+	return to_string(result);
 }
 /* http://web2.0calc.com/
  * 64-bit max is 18446744073709551615
@@ -721,7 +732,7 @@ T MultinomialCoefficients(size_t n, vector<size_t> const &k, T modulo)
 {
 	T divisor = 1;
 	for (vector<size_t>::const_iterator it = k.begin(); it != k.end(); it++)
-		divisor *= Factorial<T>(*it);
+		divisor *= Factorial<T>(*it, modulo);
 	T result = Factorial<T>(n) / divisor;
 	return modulo ? result % modulo : result;
 }

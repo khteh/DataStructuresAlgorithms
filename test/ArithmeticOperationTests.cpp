@@ -269,7 +269,7 @@ INSTANTIATE_TEST_SUITE_P(
 	NumberStringMultiplicationTests,
 	NumberStringMultiplicationTestFixture,
 	::testing::Values(make_tuple("-20", "-4", "5"), make_tuple("-12", "3", "-4"), make_tuple("56", "-7", "-8"), make_tuple("80779853376", "123456", "654321"), make_tuple("451149483006", "456789", "987654")));
-class NumberVectorsSumTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t>>
+class NumberVectorsSumTestFixture : public testing::TestWithParam<tuple<uint64_t, size_t, size_t>>
 {
 public:
 	void SetUp() override
@@ -278,9 +278,9 @@ public:
 		_var1 = get<1>(GetParam());
 		_var2 = get<2>(GetParam());
 	}
-	size_t NumberVectorsSumTest()
+	uint64_t NumberVectorsSumTest()
 	{
-		vector<size_t> var1, var2, result;
+		vector<uint64_t> var1, var2, result;
 		_arithmetic.NumberToVector(_var1, var1);
 		_arithmetic.NumberToVector(_var2, var2);
 		_arithmetic.NumberVectorsSum(var1, var2, result);
@@ -288,7 +288,7 @@ public:
 	}
 
 protected:
-	Arithmetic<size_t> _arithmetic;
+	Arithmetic<uint64_t> _arithmetic;
 	size_t _var1, _var2, _expected;
 };
 TEST_P(NumberVectorsSumTestFixture, NumberVectorsSumTests)
@@ -298,8 +298,8 @@ TEST_P(NumberVectorsSumTestFixture, NumberVectorsSumTests)
 INSTANTIATE_TEST_SUITE_P(
 	NumberVectorsSumTests,
 	NumberVectorsSumTestFixture,
-	::testing::Values(make_tuple(11111111100, 1234567890, 9876543210), make_tuple(168, 123, 45)));
-class NumberVectorsMultiplicationTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t>>
+	::testing::Values(make_tuple(11111111100, 1234567890, 9876543210), make_tuple(168, 123, 45), make_tuple(0x1dd9b7dde, 0xdeadbeef, 0xfeedbeef)));
+class NumberVectorsMultiplicationTestFixture : public testing::TestWithParam<tuple<uint64_t, size_t, size_t>>
 {
 public:
 	void SetUp() override
@@ -308,9 +308,9 @@ public:
 		_var1 = get<1>(GetParam());
 		_var2 = get<2>(GetParam());
 	}
-	size_t NumberVectorsMultiplicationTest()
+	uint64_t NumberVectorsMultiplicationTest()
 	{
-		vector<size_t> var1, var2, result;
+		vector<uint64_t> var1, var2, result;
 		_arithmetic.NumberToVector(_var1, var1);
 		_arithmetic.NumberToVector(_var2, var2);
 		_arithmetic.NumberVectorsMultiplication(var1, var2, result);
@@ -318,7 +318,7 @@ public:
 	}
 
 protected:
-	Arithmetic<size_t> _arithmetic;
+	Arithmetic<uint64_t> _arithmetic;
 	size_t _var1, _var2, _expected;
 };
 TEST_P(NumberVectorsMultiplicationTestFixture, NumberVectorsMultiplicationTests)
@@ -328,7 +328,12 @@ TEST_P(NumberVectorsMultiplicationTestFixture, NumberVectorsMultiplicationTests)
 INSTANTIATE_TEST_SUITE_P(
 	NumberVectorsMultiplicationTests,
 	NumberVectorsMultiplicationTestFixture,
-	::testing::Values(make_tuple(56088, 123, 456), make_tuple(80779853376, 123456, 654321), make_tuple(451149483006, 456789, 987654)));
+	::testing::Values(make_tuple(56088, 123, 456), make_tuple(80779853376, 123456, 654321), make_tuple(451149483006, 456789, 987654)
+#ifdef __SIZEOF_INT128__
+//																								,
+// make_tuple(0xddbf305fbd2da321, 0xdeadbeef, 0xfeedbeef) Overflows in Arithmetic<T>::DigitsVectorToNumber; using 128-bit will need operator>> implementation in cout128.cpp.
+#endif
+						  ));
 class XorSequenceTestFixture : public ArithmeticOperationsTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, size_t, size_t>>
 {
 public:

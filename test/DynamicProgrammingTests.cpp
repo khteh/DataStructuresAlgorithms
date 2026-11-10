@@ -252,7 +252,7 @@ protected:
 	size_t _n, _k, _x;
 };
 class WaysToFillRangeTestFixture :
-#if defined(__GNUC__) || defined(__GNUG__)
+#ifdef __SIZEOF_INT128__
 	public WaysToFillRangeTestFixtureBase<__int128>,
 	public testing::TestWithParam<tuple<__int128, size_t, size_t, size_t>>
 #else

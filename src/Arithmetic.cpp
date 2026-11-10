@@ -1,5 +1,10 @@
 #include "pch.h"
 #include "Arithmetic.h"
+#if 0
+need operator>> implementation in cout128.cpp.
+template class Arithmetic<__int128>;
+template class Arithmetic<unsigned __int128>;
+#endif
 template class Arithmetic<char>;
 template class Arithmetic<int>;
 template class Arithmetic<size_t>;
@@ -479,52 +484,40 @@ string Arithmetic<T>::DigitsVectorToNumberString(vector<T> const &digits)
 			oss << to_string(*it);
 			skip = false;
 		}
-	cout << oss.str() << endl;
 	return oss.str();
 }
 template <arithmetic_type T>
 void Arithmetic<T>::NumberVectorsSum(vector<T> const &num1, vector<T> const &num2, vector<T> &result)
 {
 	result.clear();
-#if 0
 	T carry = 0;
 	size_t i = 0, j = 0;
 	for (; i < num1.size() && j < num2.size(); i++, j++)
 	{
-		// if (num1[i] < 0 || num1[i] > 9 || num2[j] < 0 || num2[j] > 9)
-		//	throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
+		if (num1[i] < 0 || num1[i] > 9 || num2[j] < 0 || num2[j] > 9)
+			throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
 		T tmp = num1[i] + num2[j] + carry;
 		carry = tmp / 10;
 		result.push_back(tmp % 10);
 	}
 	for (; i < num1.size(); i++)
 	{
-		// if (num1[i] < 0 || num1[i] > 9)
-		//	throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
+		if (num1[i] < 0 || num1[i] > 9)
+			throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
 		T tmp = num1[i] + carry;
 		carry = tmp / 10;
 		result.push_back(tmp % 10);
 	}
 	for (; j < num2.size(); j++)
 	{
-		// if (num2[j] < 0 || num2[j] > 9)
-		//	throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
+		if (num2[j] < 0 || num2[j] > 9)
+			throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
 		T tmp = num2[j] + carry;
 		carry = tmp / 10;
 		result.push_back(tmp % 10);
 	}
 	if (carry)
 		result.push_back(carry);
-#endif
-	for (size_t i = 0; i < max(num1.size(), num2.size()); i++)
-	{
-		T sum = 0;
-		if (i < num1.size())
-			sum += num1[i];
-		if (i < num2.size())
-			sum += num2[i];
-		result.push_back(sum);
-	}
 }
 /*
   456
@@ -567,42 +560,26 @@ void Arithmetic<T>::NumberVectorsMultiplication(vector<T> const &num1, vector<T>
 	/* Will keep the result number in vector in reverse order.
 	 * [LSB,MSB]
 	 */
+	vector<T> tmpResult;
 	result.clear();
-	result.assign(num1.size() + num2.size(), 0);
-	size_t i_n1 = 0, i_n2 = 0;
-	// Go from left (LSB) to right (MSB) in num1 (bottom)
 	for (size_t i = 0; i < num1.size(); i++)
 	{
 		T carry = 0;
-		T n1 = num1[i];
-		// To shift position to left after every multiplication of a digit in num2 (top)
-		i_n2 = 0;
-		// Go from right to left in num2
+		vector<T> tmp;
+		for (long k = i; k > 0; k--)
+			tmp.push_back(0);
 		for (size_t j = 0; j < num2.size(); j++)
 		{
-			// Take current digit of second number
-			T n2 = num2[j];
-
-			// Multiply with current digit of first number
-			// and add result to previously stored result
-			// at current position.
-			T sum = n1 * n2 + result[i_n1 + i_n2] + carry;
-
-			// Carry for next iteration
-			carry = sum / 10;
-
-			// Store result
-			result[i_n1 + i_n2] = sum % 10;
-
-			i_n2++;
+			if (num1[i] < 0 || num1[i] > 9 || num2[j] < 0 || num2[j] > 9)
+				throw runtime_error("Vector elements must be numeric digits within the range of [0:9]");
+			T tmp1 = num1[i] * num2[j] + carry;
+			carry = tmp1 / 10;
+			tmp.push_back(tmp1 % 10);
 		}
-
-		// store carry in next cell
 		if (carry)
-			result[i_n1 + i_n2] += carry;
-
-		// To shift position to left after every multiplication of a digit in num1.
-		i_n1++;
+			tmp.push_back(carry);
+		NumberVectorsSum(tmp, tmpResult, result);
+		tmpResult = result;
 	}
 }
 /*
