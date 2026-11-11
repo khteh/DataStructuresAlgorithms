@@ -314,8 +314,23 @@ istream &operator>>(istream &in, T &val)
     in.setstate(state);
     return in;
 }
-// For a temporary stream, e.g. istringstream(s) >> value. A temporary can't bind to istream &,
-// and the standard library's own rvalue-stream overload can't find the one above from inside namespace std.
+/* For a temporary stream, e.g. istringstream(s) >> value. A temporary can't bind to istream &,
+ * and the standard library's own rvalue-stream overload can't find the one above from inside namespace std.
+It’s about where C++ looks when it sees >> inside a function. The inner >> code in std library implementation is looked up from inside std.
+When the compiler sees __is >> x inside that function, it has to find a matching operator>>. It searches in two ways:
+(1) From where the code is written, outwards. The code is inside namespace std, so it searches std first. std contains plenty of operator>> functions, so it finds some and stops there.
+    It never continues out to the global namespace, where our operator>> lives.
+(2) Argument-dependent lookup (ADL). It also searches the namespaces that the argument types belong to. istringstream belongs to std, already searched.
+    __int128 is a built-in type like int, so it belongs to no namespace and adds nothing.
+Neither search reaches the global namespace, so our operator>> is never considered. The __rvalue_stream_extraction_t in the return type is a check that __is >> x would compile.
+Since it wouldn’t, this standard overload removes itself from the candidates, and you get “no match for operator>>”.
+
+Why our own code could see it:
+When you write iss >> num in your code, which is in the global namespace, step 1 starts in the global namespace and finds our operator>>.
+The only problem with istringstream(tokens[i]) >> num was the temporary. This istream && overload fixes that, and because it’s also in the global namespace, its inner in >> val finds our real implementation.
+The same applies to anything in std that uses >> or << internally, such as std::istream_iterator<int128_t> or std::ostream_iterator<int128_t>.
+They can’t see your global 128-bit operators for the same reason, so they won’t work with them.
+ */
 template <is_128_bits T>
 istream &operator>>(istream &&in, T &val)
 {
