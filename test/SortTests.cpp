@@ -65,6 +65,11 @@ public:
 		_sort.BubbleSort(_data);
 		return ranges::is_sorted(_data);
 	}
+	bool HeapSortTest()
+	{
+		_sort.HeapSort(_data);
+		return ranges::is_sorted(_data);
+	}
 	bool InsertionSortTest()
 	{
 		_sort.InsertionSort(_data);
@@ -87,6 +92,10 @@ Having several TEST_Ps isn’t wrong in itself: GoogleTest runs every TEST_P of 
 TEST_P(SortTestFixture, BubbleSortTests)
 {
 	ASSERT_EQ(this->_expected, this->BubbleSortTest());
+}
+TEST_P(SortTestFixture, HeapSortTests)
+{
+	ASSERT_EQ(this->_expected, this->HeapSortTest());
 }
 TEST_P(SortTestFixture, InsertionSortTests)
 {
@@ -144,27 +153,6 @@ INSTANTIATE_TEST_SUITE_P(
 	MergeSortTests,
 	MergeSortTestFixture,
 	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 1, 3, 1, 2}, vector<long>{2, 1, 3, 1, 2}), make_tuple(true, vector<long>{5, 9, -1, 3, -3, 0}, vector<long>{6, -5, 8, -8, 7, -10})));
-class HeapSortTestFixture : public SortTestFixtureBase<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
-{
-public:
-	void SetUp() override
-	{
-		SortTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-	}
-	bool HeapSortTest()
-	{
-		_sort.HeapSort(_data);
-		return ranges::is_sorted(_data);
-	}
-};
-TEST_P(HeapSortTestFixture, HeapSortTests)
-{
-	ASSERT_EQ(this->_expected, this->HeapSortTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	HeapSortTests,
-	HeapSortTestFixture,
-	::testing::Values(make_tuple(true, vector<long>{0}), make_tuple(true, vector<long>{1, 0, 2}), make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
 class CountingSortTestFixture : public SortTestFixtureBase<bool, size_t>, public testing::TestWithParam<tuple<bool, vector<size_t>>>
 {
 public:
