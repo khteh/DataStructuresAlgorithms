@@ -327,22 +327,19 @@ public:
 												   get<2>(GetParam()));
 	}
 };
+/*
+Having several TEST_Ps isn’t wrong in itself: GoogleTest runs every TEST_P of a fixture with every INSTANTIATE_TEST_SUITE_P of that fixture.
+*/
 TEST_P(BinomialCoefficientsTestFixture, BinomialCoefficientsTests)
 {
 	ASSERT_EQ(this->_expected, this->BinomialCoefficientsTest());
 }
-INSTANTIATE_TEST_SUITE_P(
-	BinomialCoefficientsTests,
-	BinomialCoefficientsTestFixture,
-	::testing::Values(make_tuple(6, 4, 2),
-					  make_tuple(252, 10, 5),
-					  make_tuple(184756, 20, 10)));
 TEST_P(BinomialCoefficientsTestFixture, BinomialCoefficientsMultiplicativeTests)
 {
 	ASSERT_EQ(this->_expected, this->BinomialCoefficientsMultiplicativeTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	BinomialCoefficientsMultiplicativeTests,
+	BinomialCoefficientsTests,
 	BinomialCoefficientsTestFixture,
 	::testing::Values(make_tuple(6, 4, 2),
 					  make_tuple(252, 10, 5),

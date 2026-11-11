@@ -159,6 +159,9 @@ public:
 		return _arithmetic.Divide(_var1, _var2);
 	}
 };
+/*
+Having several TEST_Ps isn’t wrong in itself: GoogleTest runs every TEST_P of a fixture with every INSTANTIATE_TEST_SUITE_P of that fixture.
+*/
 TEST_P(DivideWithPlusSignTestFixture, DivideWithPlusSignTests)
 {
 	ASSERT_EQ(this->_expected, this->DivideWithPlusSignTest());

@@ -153,10 +153,6 @@ TEST_P(InsertionSortTestFixture, InsertionSortTests)
 {
 	ASSERT_EQ(this->_expected, this->InsertionSortTest());
 }
-TEST_P(InsertionSortTestFixture, InsertionSortTest)
-{
-	ASSERT_EQ(this->_expected, this->InsertionSortTest());
-}
 INSTANTIATE_TEST_SUITE_P(
 	InsertionSortTests,
 	InsertionSortTestFixture,

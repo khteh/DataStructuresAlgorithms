@@ -204,7 +204,6 @@ T Arithmetic<T>::Divide(T dividend, T divisor)
 #endif
 	if (!divisor)
 		throw invalid_argument("Divide by zero exception");
-	int quotient = 0;
 	bool isNegative = (dividend < 0) ^ (divisor < 0);
 	if (divisor == 1 || divisor == -1)
 	{
@@ -224,6 +223,7 @@ T Arithmetic<T>::Divide(T dividend, T divisor)
 		divisor = -divisor;
 	if (dividend < 0)
 		dividend = -dividend;
+	T quotient = 0;
 	for (; dividend >= divisor; quotient++, dividend -= divisor)
 		;
 	return isNegative ? -quotient : quotient;

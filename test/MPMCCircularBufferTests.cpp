@@ -569,6 +569,9 @@ protected:
 	size_t _capacity;
 	unique_ptr<MPMCCircularBuffer<long>> _buffer;
 };
+/*
+Having several TEST_Ps isn’t wrong in itself: GoogleTest runs every TEST_P of a fixture with every INSTANTIATE_TEST_SUITE_P of that fixture.
+*/
 TEST_P(MPMCCircularBufferCounterWrapTestFixture, OrderIsKept)
 {
 	long value = -1;
