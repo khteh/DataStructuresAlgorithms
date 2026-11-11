@@ -482,6 +482,27 @@ vector object (24 bytes)              heap memory
  * unvisited / stillUnvisited play the roles of your nodes1 / nodes2. swap exchanges them in O(1) instead of copying.
  * No visited set is needed. A city leaves unvisited the moment it gets its distance, so it can’t be reached twice.
  * The loop stops as soon as unvisited is empty. With a dense village-road graph, that’s usually after the first few cities.
+ *
+ * If the graph is dense:
+ * The formula stays O(n + m), but in a dense graph m is about n², so it becomes O(n²).
+ * A graph with n cities can have at most n(n − 1)/2 roads. “Dense” means m is a constant fraction of that, for example half of all possible roads. Then:
+ * O(n + m) = O(n + n²/4) = O(n²)
+ *
+ * Even for a dense graph, you can’t do better than O(n + m), because just reading the m roads already takes O(m). So the algorithm is optimal at any density.
+ * A dense input is simply a big input: 4,000 cities at 99% density is almost 8 million roads.
+ *
+ * The cost does shift between the parts of the algorithm:
+ *
+ * Marking neighbours costs 2m in total, so it grows to O(n²).
+ * Keeping cities in unvisited: with almost every pair connected by a main road, most cities are kept on each pass rather than removed. The 2m limit on keeps is now large, about n².
+ * The BFS goes deeper. With few village roads, paths are longer: in the 99% case, the furthest city was 3 to 4 village roads away, compared with 2 for the sparse graphs.
+ * Compared with building the village roads explicitly
+
+ * The obvious alternative is to build the village-road graph, the complement, and run an ordinary BFS on it. Building the complement means checking all n(n − 1)/2 pairs of cities, which is O(n²) whatever m is:
+
+ * Main-road graph	This algorithm	Build the complement, then BFS
+ * Sparse (m ≈ n)	O(n)			O(n²)
+ * Dense (m ≈ n²)	O(n²)			O(n²)
  */
 template <typename TTag, typename TItem>
 vector<long> Graph<TTag, TItem>::UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
@@ -507,7 +528,7 @@ vector<long> Graph<TTag, TItem>::UnbeatenPaths(size_t n, vector<vector<size_t>> 
 	{
 		size_t u = queue[head];
 		for (size_t v : adjacency[u])
-			neighbourOf[v] = u;
+			neighbourOf[v] = u; // O(2*M) in sparse graph. O(M^2) in dense graph.
 		stillUnvisited.clear();
 		for (size_t v : unvisited)
 			if (neighbourOf[v] == u)

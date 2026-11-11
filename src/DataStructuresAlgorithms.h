@@ -285,7 +285,6 @@ size_t hIndex(vector<size_t> &);
 vector<string> FindItinerary(vector<vector<string>> &, string const &);
 void EulerianPath(string, map<string, multiset<string>> &, vector<string> &);
 vector<string> fizzBuzz(size_t);
-vector<long> UnbeatenPaths(size_t, vector<vector<size_t>> &, size_t);
 string RoadsInHackerland(size_t, vector<vector<size_t>> &);
 string RoadsInHackerland1(size_t, vector<vector<size_t>> &);
 string RoadsInHackerland2(size_t, vector<vector<size_t>> &);
