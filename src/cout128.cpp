@@ -59,8 +59,9 @@ to_chars_result to_chars(char *begin, char *end, int128_t x) noexcept
 // Write the 128-bit integer val to out, with a minus sign if decimal and neg
 // is true. Obey all of the ostream settings of out for integer display: octal
 // or hexadecimal, upper case letters, plus sign, fill character and width, and
-// fill placement.
-void out128(ostream &out, uint128_t val, int neg)
+// fill placement. isSigned: like the standard integer types, showpos adds a '+'
+// only to signed types, so unsigned values never get one.
+void out128(ostream &out, uint128_t val, bool neg, bool isSigned)
 {
     // Note if the number is zero. (No hex or octal prefix in this case.)
     auto zero = val == 0;
@@ -101,7 +102,7 @@ void out128(ostream &out, uint128_t val, int neg)
     {
         if (neg)
             *--pre = '-';
-        else if (state & ios_base::showpos)
+        else if (isSigned && (state & ios_base::showpos))
             *--pre = '+';
     }
 
@@ -153,7 +154,7 @@ template <is_128_bits T>
 ostream &operator<<(ostream &out, T val)
 {
     if constexpr (is_same_v<T, uint128_t>)
-        out128(out, val, 0);
+        out128(out, val, false, false);
     else if constexpr (is_same_v<T, int128_t>)
     {
         /*
@@ -180,9 +181,9 @@ ostream &operator<<(ostream &out, T val)
         */
         auto state = out.flags();
         if (val < 0 && !(state & (ios_base::hex | ios_base::oct)))
-            out128(out, -(uint128_t)val, 1);
+            out128(out, -(uint128_t)val, true, true);
         else
-            out128(out, (uint128_t)val, 0);
+            out128(out, (uint128_t)val, false, true);
     }
     else
         throw invalid_argument("Invalid template paramater type!");
