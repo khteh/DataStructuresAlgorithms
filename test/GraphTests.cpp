@@ -841,10 +841,11 @@ public:
 	}
 	vector<long> UnbeatenPathsTest()
 	{
-		return UnbeatenPaths(_n, _data, _source);
+		return _graph.UnbeatenPaths(_n, _data, _source);
 	}
 
 protected:
+	Graph<size_t, size_t> _graph;
 	vector<long> _expected;
 	vector<vector<size_t>> _data;
 	size_t _n, _source;
