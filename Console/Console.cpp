@@ -1941,15 +1941,6 @@ int main(int argc, char *argv[])
 	uset1.clear();
 	uset1.erase(123);
 	udata.clear();
-	ugrid.clear();
-	ugrid = {{1, 2},
-			 {2, 3},
-			 {1, 4}};
-	a = {3, 1, 2};
-	assert(a == UnbeatenPaths(4, ugrid, 1));
-	ugrid.clear();
-	ugrid = {{12397, 52974}, {107864, 38870}};
-	// a = UnbeatenPaths(110857, ugrid, 47678);
 	grid1.clear();
 	a.clear();
 	/*

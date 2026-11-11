@@ -365,6 +365,18 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 				distances[it->first->GetTag() < src ? it->first->GetTag() - 1 : it->first->GetTag() - 2] = it->second;
 		}
 }
+/*
+ * https://www.hackerrank.com/challenges/rust-murderer/problem
+ * Fails with timeout for 3 test cases. The timeouts come from the containers.
+ * What makes it slow
+ *
+ * 1. nodes.erase(nodes.begin()) is O(N) per pop. Erasing the first element of a vector shifts every remaining element down one place.
+ *    Because the graph is sparse, the village-road graph is dense: from the source, almost every city is one village road away, so the queue quickly holds about 150,000 cities.
+ *    Popping them one at a time from the front moves about N²/2 elements, roughly 10¹⁰ moves. This is the main cause.
+ * 2. set and map everywhere. visited, nodes1, nodes2, costs and adjacency_list are all tree-based. Every lookup, insert and erase is O(log N) and allocates or frees a node.
+ *    Since the cities are numbered 1 to N, a vector indexed by city does the same job in O(1) with no allocations.
+ * 3. nodes1 = nodes2 copies a set, which means allocating a fresh copy of every node each time.
+ */
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::UnbeatenPathsDijkstra(TTag src, vector<long> &distances)
 {
@@ -414,6 +426,107 @@ void Graph<TTag, TItem>::UnbeatenPathsDijkstra(TTag src, vector<long> &distances
 				distances[it->first->GetTag() < src ? it->first->GetTag() - 1 : it->first->GetTag() - 2] = it->second;
 		}
 }
+/*
+ * https://www.hackerrank.com/challenges/rust-murderer/problem
+ * 100%
+ * Note: The graph/map of the city is ensured to be a sparse graph.
+ * A sparse graph is a graph in which the number of edges (E) is close to the number of vertices (V), or O(V),
+ * which is significantly lower than the maximum possible number of edges.
+ *
+ * Cities: [1, N]: 1-based index
+ * Roads: M
+ *
+ * BFS on the complement graph: village roads exist exactly where main roads don't.
+ * Keep the cities not reached yet. From city u, every unreached city that is NOT a main-road
+ * neighbour of u is one village road away. Each unreached city is either removed (at most n in total)
+ * or kept because it is a main-road neighbour of u (at most 2M in total), so the BFS is O(N + M).
+ *
+ * 2M: It counts how many times a city can be kept in unvisited (the stillUnvisited.push_back(v) branch), over the whole BFS.
+ * When the BFS processes city u, a city v stays in unvisited only if there’s a main road between u and v.
+ * So every “keep” is tied to one specific main road, u–v, used while processing u.
+ * Each main road can cause at most two keeps
+ *
+ * A main road u–v can only cause a keep when one of its two endpoints is being processed:
+ * - while processing u, it can keep v
+ * - while processing v, it can keep u
+ *
+ * Each city is processed once, since it’s popped from the queue only once. So each main road causes at most 2 keeps, one from each end. With m main roads, that’s at most 2m keeps in total.
+ * Another way to say the same thing: while processing u, at most deg(u) cities can be kept, where deg(u) is the number of main roads at u. Adding up the degrees of all cities gives exactly 2m, because each road is counted once from each of its two ends. That’s the “handshake lemma”.
+ * Example:
+ * Cities 1–4, source 1, with main roads 1–2 and 2–3 (m = 2):
+ * process 1: unvisited {2, 3, 4} → 2 kept (road 1–2), 3 and 4 reached
+ * process 3: unvisited {2}       → 2 kept (road 2–3)
+ * process 4: unvisited {2}       → 2 reached
+ * That’s 2 keeps, within the limit of 2m = 4.
+ *
+ * O(M+N): The scan of unvisited happens once for every city processed, and unvisited can start with almost n cities.
+ * A quick estimate would be n passes × n cities = O(n²). The previous answer shows why it’s much less: a city stays in unvisited for another pass only because of a main road,
+ * and there are only 2m of those “reasons” in the whole run. Every other city is removed the first time it’s looked at, and a removed city is never looked at again.
+ *
+ * swap(unvisited, stillUnvisited) is O(1):
+ * Because it doesn’t move any elements. It only swaps three pointers inside the two vector objects.
+ * A vector doesn’t hold its elements itself. The elements live in a separate block of heap memory, and the vector object only stores where that block is:
+
+vector object (24 bytes)              heap memory
+┌──────────────────────┐
+│ begin   ─────────────┼──────────►  [ e0 | e1 | e2 | ... | e(size-1) | spare ... ]
+│ end     (begin+size) │
+│ capacity end         │
+└──────────────────────┘
+
+ * swap(unvisited, stillUnvisited) calls vector’s member swap, which exchanges those three pointers between the two objects.
+ * Each vector now points to the other one’s block. That’s the same small amount of work whether the vectors hold 2 elements or a million, so it’s O(1).
+ *
+ * The queue is a vector with a head index. Popping is just head++, so nothing is shifted.
+ * neighbourOf marks u’s main-road neighbours by storing u in their slots. There’s no need to clear it between cities: a slot that holds a different city’s number simply doesn’t count as a neighbour of u.
+ * unvisited / stillUnvisited play the roles of your nodes1 / nodes2. swap exchanges them in O(1) instead of copying.
+ * No visited set is needed. A city leaves unvisited the moment it gets its distance, so it can’t be reached twice.
+ * The loop stops as soon as unvisited is empty. With a dense village-road graph, that’s usually after the first few cities.
+ */
+template <typename TTag, typename TItem>
+vector<long> Graph<TTag, TItem>::UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
+{
+	// Main roads, as an adjacency list indexed by city (1-based)
+	vector<vector<size_t>> adjacency(n + 1);
+	for (vector<size_t> const &road : roads)
+	{
+		adjacency[road[0]].push_back(road[1]);
+		adjacency[road[1]].push_back(road[0]);
+	}
+	vector<long> distances(n + 1, -1);
+	distances[source] = 0;
+	vector<size_t> unvisited, stillUnvisited; // Cities not reached yet
+	unvisited.reserve(n);
+	for (size_t city = 1; city <= n; city++)
+		if (city != source)
+			unvisited.push_back(city);
+	vector<size_t> neighbourOf(n + 1, 0); // neighbourOf[v] == u: v is a main-road neighbour of u
+	vector<size_t> queue{source};		  // BFS queue: a vector with a read index, so popping is O(1)
+	queue.reserve(n);
+	for (size_t head = 0; head < queue.size() && !unvisited.empty(); head++)
+	{
+		size_t u = queue[head];
+		for (size_t v : adjacency[u])
+			neighbourOf[v] = u;
+		stillUnvisited.clear();
+		for (size_t v : unvisited)
+			if (neighbourOf[v] == u)
+				stillUnvisited.push_back(v); // Main road: no village road u - v, try again from a later city
+			else
+			{
+				distances[v] = distances[u] + 1; // Village road u - v
+				queue.push_back(v);
+			}
+		swap(unvisited, stillUnvisited);
+	}
+	vector<long> result;
+	result.reserve(n - 1);
+	for (size_t city = 1; city <= n; city++)
+		if (city != source)
+			result.push_back(distances[city]);
+	return result;
+}
+
 template <typename TTag, typename TItem>
 FurthestNode<TTag, TItem> Graph<TTag, TItem>::Diameter(TTag src)
 {

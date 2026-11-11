@@ -41,6 +41,7 @@ public:
 	void Dijkstra(TTag, map<shared_ptr<Vertex<TTag, TItem>>, long> &);
 	long Dijkstra(TTag, TTag);
 	void Dijkstra(TTag, vector<long> &);
+	vector<long> UnbeatenPaths(size_t, vector<vector<size_t>> &, size_t);
 	void UnbeatenPathsDijkstra(TTag, vector<long> &);
 	FurthestNode<TTag, TItem> Diameter(TTag);
 	long Diameter();
