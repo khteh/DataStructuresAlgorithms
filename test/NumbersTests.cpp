@@ -571,62 +571,33 @@ public:
 	{
 		return FibonacciModified(_t1, _t2, _n);
 	}
-};
-TEST_P(FibonacciModifiedTestFixture, FibonacciModifiedTests)
-{
-	ASSERT_EQ(this->_expected, this->FibonacciModifiedTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	FibonacciModifiedTests,
-	FibonacciModifiedTestFixture,
-	::testing::Values(make_tuple("5", 0, 1, 4), make_tuple("27", 0, 1, 5), make_tuple("734", 0, 1, 6), make_tuple("538783", 0, 1, 7), make_tuple("290287121823", 0, 1, 8),
-					  make_tuple("84266613096281243382112", 0, 1, 9), make_tuple("2", 2, 0, 2), make_tuple("4", 2, 0, 3), make_tuple("18", 2, 0, 4),
-					  make_tuple("328", 2, 0, 5), make_tuple("107602", 2, 0, 6), make_tuple("11578190732", 2, 0, 7), make_tuple("112763264", 2, 1, 6)
-					  /*make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)*/
-					  ));
-class FibonacciModifiedStringArithmeticTestFixture : public FibonacciModifiedTestFixtureBase, public testing::TestWithParam<tuple<string, size_t, size_t, size_t>>
-{
-public:
-	void SetUp() override
-	{
-		FibonacciModifiedTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
-	}
 	string FibonacciModifiedStringArithmeticTest()
 	{
 		return FibonacciModifiedStringArithmetic(_t1, _t2, _n);
-	}
-};
-TEST_P(FibonacciModifiedStringArithmeticTestFixture, FibonacciModifiedStringArithmeticTests)
-{
-	ASSERT_EQ(this->_expected, this->FibonacciModifiedStringArithmeticTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	FibonacciModifiedStringArithmeticTests,
-	FibonacciModifiedStringArithmeticTestFixture,
-	::testing::Values(make_tuple("5", 0, 1, 4), make_tuple("27", 0, 1, 5), make_tuple("734", 0, 1, 6), make_tuple("538783", 0, 1, 7), make_tuple("290287121823", 0, 1, 8),
-					  make_tuple("84266613096281243382112", 0, 1, 9), make_tuple("2", 2, 0, 2), make_tuple("4", 2, 0, 3), make_tuple("18", 2, 0, 4),
-					  make_tuple("328", 2, 0, 5), make_tuple("107602", 2, 0, 6), make_tuple("11578190732", 2, 0, 7), make_tuple("112763264", 2, 1, 6)
-					  /*make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)*/
-					  ));
-class FibonacciModified_int128TestFixture : public FibonacciModifiedTestFixtureBase, public testing::TestWithParam<tuple<string, size_t, size_t, size_t>>
-{
-public:
-	void SetUp() override
-	{
-		FibonacciModifiedTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()), get<3>(GetParam()));
 	}
 	string FibonacciModified_int128Test()
 	{
 		return FibonacciModified_int128(_t1, _t2, _n);
 	}
 };
-TEST_P(FibonacciModified_int128TestFixture, FibonacciModified_int128Tests)
+/*
+Having several TEST_Ps isn’t wrong in itself: GoogleTest runs every TEST_P of a fixture with every INSTANTIATE_TEST_SUITE_P of that fixture.
+*/
+TEST_P(FibonacciModifiedTestFixture, FibonacciModifiedTests)
+{
+	ASSERT_EQ(this->_expected, this->FibonacciModifiedTest());
+}
+TEST_P(FibonacciModifiedTestFixture, FibonacciModifiedStringArithmeticTests)
+{
+	ASSERT_EQ(this->_expected, this->FibonacciModifiedStringArithmeticTest());
+}
+TEST_P(FibonacciModifiedTestFixture, FibonacciModified_int128Tests)
 {
 	ASSERT_EQ(this->_expected, this->FibonacciModified_int128Test());
 }
 INSTANTIATE_TEST_SUITE_P(
-	FibonacciModified_int128Tests,
-	FibonacciModified_int128TestFixture,
+	FibonacciModifiedTests,
+	FibonacciModifiedTestFixture,
 	::testing::Values(make_tuple("5", 0, 1, 4), make_tuple("27", 0, 1, 5), make_tuple("734", 0, 1, 6), make_tuple("538783", 0, 1, 7), make_tuple("290287121823", 0, 1, 8),
 					  make_tuple("84266613096281243382112", 0, 1, 9), make_tuple("2", 2, 0, 2), make_tuple("4", 2, 0, 3), make_tuple("18", 2, 0, 4),
 					  make_tuple("328", 2, 0, 5), make_tuple("107602", 2, 0, 6), make_tuple("11578190732", 2, 0, 7), make_tuple("112763264", 2, 1, 6)

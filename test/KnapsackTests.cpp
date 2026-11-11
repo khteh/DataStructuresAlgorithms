@@ -149,7 +149,7 @@ INSTANTIATE_TEST_SUITE_P(
 	CoinsChangeFewestCoinsDynamicProgrammingTests,
 	CoinsChangeFewestCoinsDynamicProgrammingTestFixture,
 	::testing::Values(make_tuple(3, 11, vector<size_t>{1, 2, 5}), make_tuple(2, 10, vector<size_t>{1, 2, 5}), make_tuple(-1, 3, vector<size_t>{2}), make_tuple(0, 0, vector<size_t>{1}), make_tuple(1, 1, vector<size_t>{1}), make_tuple(2, 2, vector<size_t>{1})));
-class StairsClimbingDynamicProgrammingTestFixture
+class StairsClimbingDynamicProgrammingTestFixtureBase
 {
 public:
 	void SetUp(size_t expected, long amount, vector<size_t> data)
@@ -165,46 +165,36 @@ protected:
 	long _amount;
 	vector<size_t> _data;
 };
-
-class StairsClimbingDynamicProgrammingTopDownTestFixture : public StairsClimbingDynamicProgrammingTestFixture, public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
+class StairsClimbingDynamicProgrammingTestFixture : public StairsClimbingDynamicProgrammingTestFixtureBase, public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
 {
 public:
 	void SetUp() override
 	{
-		StairsClimbingDynamicProgrammingTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
+		StairsClimbingDynamicProgrammingTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
 	size_t StairsClimbingDynamicProgrammingTopDownTest()
 	{
 		return _knapsack.StairsClimbingDynamicProgramming(_amount, _data);
-	}
-};
-TEST_P(StairsClimbingDynamicProgrammingTopDownTestFixture, StairsClimbingDynamicProgrammingTopDownTestTests)
-{
-	ASSERT_EQ(this->_expected, this->StairsClimbingDynamicProgrammingTopDownTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	StairsClimbingDynamicProgrammingTopDownTestTests,
-	StairsClimbingDynamicProgrammingTopDownTestFixture,
-	::testing::Values(make_tuple(13, 6, vector<size_t>{1, 2}), make_tuple(24, 6, vector<size_t>{1, 2, 3})));
-class StairsClimbingDynamicProgrammingBottomUpTestFixture : public StairsClimbingDynamicProgrammingTestFixture, public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
-{
-public:
-	void SetUp() override
-	{
-		StairsClimbingDynamicProgrammingTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
 	}
 	size_t StairsClimbingDynamicProgrammingBottomUpTest()
 	{
 		return _knapsack.StairsClimbingDynamicProgrammingBottomUp(_amount, _data);
 	}
 };
-TEST_P(StairsClimbingDynamicProgrammingBottomUpTestFixture, StairsClimbingDynamicProgrammingBottomUpTests)
+/*
+Having several TEST_Ps isn’t wrong in itself: GoogleTest runs every TEST_P of a fixture with every INSTANTIATE_TEST_SUITE_P of that fixture.
+*/
+TEST_P(StairsClimbingDynamicProgrammingTestFixture, StairsClimbingDynamicProgrammingTopDownTestTests)
+{
+	ASSERT_EQ(this->_expected, this->StairsClimbingDynamicProgrammingTopDownTest());
+}
+TEST_P(StairsClimbingDynamicProgrammingTestFixture, StairsClimbingDynamicProgrammingBottomUpTests)
 {
 	ASSERT_EQ(this->_expected, this->StairsClimbingDynamicProgrammingBottomUpTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	StairsClimbingDynamicProgrammingBottomUpTests,
-	StairsClimbingDynamicProgrammingBottomUpTestFixture,
+	StairsClimbingDynamicProgrammingTests,
+	StairsClimbingDynamicProgrammingTestFixture,
 	::testing::Values(make_tuple(13, 6, vector<size_t>{1, 2}), make_tuple(24, 6, vector<size_t>{1, 2, 3})));
 class UnboundedKnapsackTestFixture : public testing::TestWithParam<tuple<size_t, long, vector<size_t>>>
 {

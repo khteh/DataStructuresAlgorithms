@@ -13,30 +13,6 @@ public:
 		_sort.AlternateSignSortNumbers(_data);
 		return _data;
 	}
-
-protected:
-	vector<long> _expected, _data;
-	Sort<long> _sort;
-};
-TEST_P(AlternateSignSortNumbersTestFixture, AlternateSignSortNumbersTests)
-{
-	ASSERT_EQ(this->_expected, this->AlternateSignSortNumbersTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	AlternateSignSortNumbersTests,
-	AlternateSignSortNumbersTestFixture,
-	::testing::Values(make_tuple(vector<long>{2, -1, 9, -3, 5, -7, -8, -5, -7}, vector<long>{2, -1, -3, -7, -8, 9, 5, -5, -7}), make_tuple(vector<long>{-1, 9, -3, 5, -7, 2, -8, -5, -7}, vector<long>{-1, -3, -7, -8, 9, 5, -5, -7, 2}),
-					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, -8, -5, -7}, vector<long>{2, -1, -3, -7, -8, 9, 5, -5, -7}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, 9, 5, 3, 2, 1, -1, -3, -7, -8, -5, -7}),
-					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, -8, -5, -7, 9, 5, 3, 2, 1}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, 9, 5, 3, 2, 1, -8, -5, -7}),
-					  make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, 2, 9, 5, 3, 2, 1, -8, -5, -7}), make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, -8, -5, -7, 2, 9, 5, 3, 2, 1})));
-class AlternateSignSortNumbers1TestFixture : public testing::TestWithParam<tuple<vector<long>, vector<long>>>
-{
-public:
-	void SetUp() override
-	{
-		_expected = get<0>(GetParam());
-		_data = get<1>(GetParam());
-	}
 	vector<long> AlternateSignSortNumbers1Test()
 	{
 		_sort.AlternateSignSortNumbers1(_data);
@@ -47,19 +23,23 @@ protected:
 	vector<long> _expected, _data;
 	Sort<long> _sort;
 };
-TEST_P(AlternateSignSortNumbers1TestFixture, AlternateSignSortNumbers1Tests)
+TEST_P(AlternateSignSortNumbersTestFixture, AlternateSignSortNumbersTests)
+{
+	ASSERT_EQ(this->_expected, this->AlternateSignSortNumbersTest());
+}
+TEST_P(AlternateSignSortNumbersTestFixture, AlternateSignSortNumbers1Tests)
 {
 	ASSERT_EQ(this->_expected, this->AlternateSignSortNumbers1Test());
 }
 INSTANTIATE_TEST_SUITE_P(
-	AlternateSignSortNumbers1Tests,
-	AlternateSignSortNumbers1TestFixture,
+	AlternateSignSortNumbersTests,
+	AlternateSignSortNumbersTestFixture,
 	::testing::Values(make_tuple(vector<long>{2, -1, 9, -3, 5, -7, -8, -5, -7}, vector<long>{2, -1, -3, -7, -8, 9, 5, -5, -7}), make_tuple(vector<long>{-1, 9, -3, 5, -7, 2, -8, -5, -7}, vector<long>{-1, -3, -7, -8, 9, 5, -5, -7, 2}),
 					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, -8, -5, -7}, vector<long>{2, -1, -3, -7, -8, 9, 5, -5, -7}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, 9, 5, 3, 2, 1, -1, -3, -7, -8, -5, -7}),
 					  make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, -8, -5, -7, 9, 5, 3, 2, 1}), make_tuple(vector<long>{2, -1, 9, -3, 5, -7, 3, -8, 2, -5, 1, -7}, vector<long>{2, -1, -3, -7, 9, 5, 3, 2, 1, -8, -5, -7}),
 					  make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, 2, 9, 5, 3, 2, 1, -8, -5, -7}), make_tuple(vector<long>{-1, 2, -3, 9, -7, 5, -8, 3, -5, 2, -7, 1}, vector<long>{-1, -3, -7, -8, -5, -7, 2, 9, 5, 3, 2, 1})));
 template <typename TResult, typename T>
-class SortTestFixture
+class SortTestFixtureBase
 {
 public:
 	void SetUp(TResult expected, vector<T> data)
@@ -73,54 +53,27 @@ protected:
 	TResult _expected;
 	vector<T> _data;
 };
-class BubbleSortTestFixture : public SortTestFixture<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
+class SortTestFixture : public SortTestFixtureBase<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
-		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		SortTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	bool BubbleSortTest()
 	{
 		_sort.BubbleSort(_data);
 		return ranges::is_sorted(_data);
 	}
-};
-TEST_P(BubbleSortTestFixture, BubbleSortTests)
-{
-	ASSERT_EQ(this->_expected, this->BubbleSortTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	BubbleSortTests,
-	BubbleSortTestFixture,
-	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
-class QuickSortTestFixture : public SortTestFixture<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
-{
-public:
-	void SetUp() override
+	bool InsertionSortTest()
 	{
-		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		_sort.InsertionSort(_data);
+		return ranges::is_sorted(_data);
 	}
 	bool QuickSortTest()
 	{
 		_sort.QuickSort(_data, 0, _data.size() - 1);
 		return ranges::is_sorted(_data);
-	}
-};
-TEST_P(QuickSortTestFixture, QuickSortTests)
-{
-	ASSERT_EQ(this->_expected, this->QuickSortTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	QuickSortTests,
-	QuickSortTestFixture,
-	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
-class SelectionSortTestFixture : public SortTestFixture<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
-{
-public:
-	void SetUp() override
-	{
-		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	bool SelectionSortTest()
 	{
@@ -128,64 +81,30 @@ public:
 		return ranges::is_sorted(_data);
 	}
 };
-TEST_P(SelectionSortTestFixture, SelectionSortTests)
+/*
+Having several TEST_Ps isn’t wrong in itself: GoogleTest runs every TEST_P of a fixture with every INSTANTIATE_TEST_SUITE_P of that fixture.
+*/
+TEST_P(SortTestFixture, BubbleSortTests)
+{
+	ASSERT_EQ(this->_expected, this->BubbleSortTest());
+}
+TEST_P(SortTestFixture, InsertionSortTests)
+{
+	ASSERT_EQ(this->_expected, this->InsertionSortTest());
+}
+TEST_P(SortTestFixture, QuickSortTests)
+{
+	ASSERT_EQ(this->_expected, this->QuickSortTest());
+}
+TEST_P(SortTestFixture, SelectionSortTests)
 {
 	ASSERT_EQ(this->_expected, this->SelectionSortTest());
 }
 INSTANTIATE_TEST_SUITE_P(
-	SelectionSortTests,
-	SelectionSortTestFixture,
+	SortTests,
+	SortTestFixture,
 	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
-class InsertionSortTestFixture : public SortTestFixture<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
-{
-public:
-	void SetUp() override
-	{
-		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-	}
-	bool InsertionSortTest()
-	{
-		_sort.InsertionSort(_data);
-		return ranges::is_sorted(_data);
-	}
-};
-TEST_P(InsertionSortTestFixture, InsertionSortTests)
-{
-	ASSERT_EQ(this->_expected, this->InsertionSortTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	InsertionSortTests,
-	InsertionSortTestFixture,
-	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
-class TopDownMergeSortTestFixture : public testing::TestWithParam<tuple<bool, vector<long>, vector<long>>>
-{
-public:
-	void SetUp() override
-	{
-		_expected = get<0>(GetParam());
-		_data = get<1>(GetParam());
-		_data1 = get<2>(GetParam());
-	}
-	bool TopDownMergeSortTest()
-	{
-		_sort.TopDownMergeSort(_data, _data1, 0, max(_data.size(), _data1.size()));
-		return ranges::is_sorted(_data1);
-	}
-
-protected:
-	Sort<long> _sort;
-	bool _expected;
-	vector<long> _data, _data1;
-};
-TEST_P(TopDownMergeSortTestFixture, TopDownMergeSortTests)
-{
-	ASSERT_EQ(this->_expected, this->TopDownMergeSortTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	TopDownMergeSortTests,
-	TopDownMergeSortTestFixture,
-	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 1, 3, 1, 2}, vector<long>{2, 1, 3, 1, 2}), make_tuple(true, vector<long>{5, 9, -1, 3, -3, 0}, vector<long>{6, -5, 8, -8, 7, -10})));
-class BottomUpMergeSortTestFixture : public testing::TestWithParam<tuple<bool, vector<long>, vector<long>>>
+class MergeSortTestFixture : public testing::TestWithParam<tuple<bool, vector<long>, vector<long>>>
 {
 public:
 	void SetUp() override
@@ -199,27 +118,38 @@ public:
 		_sort.BottomUpMergeSort(_data, _data1);
 		return ranges::is_sorted(_data);
 	}
+	bool TopDownMergeSortTest()
+	{
+		_sort.TopDownMergeSort(_data, _data1, 0, max(_data.size(), _data1.size()));
+		return ranges::is_sorted(_data1);
+	}
 
 protected:
 	Sort<long> _sort;
 	bool _expected;
 	vector<long> _data, _data1;
 };
-TEST_P(BottomUpMergeSortTestFixture, BottomUpMergeSortTests)
+/*
+Having several TEST_Ps isn’t wrong in itself: GoogleTest runs every TEST_P of a fixture with every INSTANTIATE_TEST_SUITE_P of that fixture.
+*/
+TEST_P(MergeSortTestFixture, BottomUpMergeSortTests)
 {
 	ASSERT_EQ(this->_expected, this->BottomUpMergeSortTest());
 }
+TEST_P(MergeSortTestFixture, TopDownMergeSortTests)
+{
+	ASSERT_EQ(this->_expected, this->TopDownMergeSortTest());
+}
 INSTANTIATE_TEST_SUITE_P(
-	BottomUpMergeSortTests,
-	BottomUpMergeSortTestFixture,
+	MergeSortTests,
+	MergeSortTestFixture,
 	::testing::Values(make_tuple(true, vector<long>{1, 0, -1}, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 1, 3, 1, 2}, vector<long>{2, 1, 3, 1, 2}), make_tuple(true, vector<long>{5, 9, -1, 3, -3, 0}, vector<long>{6, -5, 8, -8, 7, -10})));
-
-class HeapSortTestFixture : public SortTestFixture<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
+class HeapSortTestFixture : public SortTestFixtureBase<bool, long>, public testing::TestWithParam<tuple<bool, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
-		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		SortTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	bool HeapSortTest()
 	{
@@ -235,12 +165,12 @@ INSTANTIATE_TEST_SUITE_P(
 	HeapSortTests,
 	HeapSortTestFixture,
 	::testing::Values(make_tuple(true, vector<long>{0}), make_tuple(true, vector<long>{1, 0, 2}), make_tuple(true, vector<long>{1, 0, -1}), make_tuple(true, vector<long>{2, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1, -1})));
-class CountingSortTestFixture : public SortTestFixture<bool, size_t>, public testing::TestWithParam<tuple<bool, vector<size_t>>>
+class CountingSortTestFixture : public SortTestFixtureBase<bool, size_t>, public testing::TestWithParam<tuple<bool, vector<size_t>>>
 {
 public:
 	void SetUp() override
 	{
-		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		SortTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	bool CountingSortTest()
 	{
@@ -294,12 +224,12 @@ INSTANTIATE_TEST_SUITE_P(
 																				  {"300", "or"},
 																				  {"1250", "the"}}),
 					  make_tuple("Hey, Hello World !!!", vector<vector<string>>{{"100", "!!!"}, {"55", "Hello"}, {"10", "Hey,"}, {"55", "World"}})));
-class WiggleSortTestFixture : public SortTestFixture<vector<long>, long>, public testing::TestWithParam<tuple<vector<long>, vector<long>>>
+class WiggleSortTestFixture : public SortTestFixtureBase<vector<long>, long>, public testing::TestWithParam<tuple<vector<long>, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
-		SortTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
+		SortTestFixtureBase::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
 	vector<long> WiggleSortTest()
 	{

@@ -52,36 +52,26 @@ public:
 	{
 		return _palindrome.PalindromeAnagramCount(_data);
 	}
-};
-TEST_P(PalindromeAnagramCountTestFixture, PalindromeAnagramCountTests)
-{
-	ASSERT_EQ(this->_expected, this->PalindromeAnagramCountTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	PalindromeAnagramCountTests,
-	PalindromeAnagramCountTestFixture,
-	::testing::Values(make_tuple(11, "02002")));
-class PalindromeAnagramCount1TestFixture : public PalindromeTestFixture<size_t>, public testing::TestWithParam<tuple<size_t, string>>
-{
-public:
-	void SetUp() override
-	{
-		PalindromeTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-	}
 	size_t PalindromeAnagramCount1Test()
 	{
 		return _palindrome.PalindromeAnagramCount1(_data);
 	}
 };
-TEST_P(PalindromeAnagramCount1TestFixture, PalindromeAnagramCount1Tests)
+/*
+Having several TEST_Ps isn’t wrong in itself: GoogleTest runs every TEST_P of a fixture with every INSTANTIATE_TEST_SUITE_P of that fixture.
+*/
+TEST_P(PalindromeAnagramCountTestFixture, PalindromeAnagramCountTests)
+{
+	ASSERT_EQ(this->_expected, this->PalindromeAnagramCountTest());
+}
+TEST_P(PalindromeAnagramCountTestFixture, PalindromeAnagramCount1Tests)
 {
 	ASSERT_EQ(this->_expected, this->PalindromeAnagramCount1Test());
 }
 INSTANTIATE_TEST_SUITE_P(
-	PalindromeAnagramCount1Tests,
-	PalindromeAnagramCount1TestFixture,
+	PalindromeAnagramCountTests,
+	PalindromeAnagramCountTestFixture,
 	::testing::Values(make_tuple(11, "02002")));
-
 class FindPalindromeSubstringsTestFixture : public PalindromeTestFixture<set<string>>, public testing::TestWithParam<tuple<set<string>, string>>
 {
 public:
