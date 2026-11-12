@@ -560,9 +560,6 @@ return result[n % 2];
  *
 // Index: 0 1 2 3 4 5  6   7	  8
 // Value: 0 1 1 2 5 27 734 538783 ...
- * WIP
- * This fails 3 tests due to timeout!
- * Timeout for n >= 20. 2 tests timeout.
  */
 string FibonacciBigNumber(size_t t1, size_t t2, size_t n)
 {
@@ -589,7 +586,7 @@ string FibonacciBigNumber(size_t t1, size_t t2, size_t n)
  *
 // Index: 0 1 2 3 4 5  6   7	  8
 // Value: 0 1 1 2 5 27 734 538783 ...
- * WIP
+ * XXX
  * This fails 3 tests due to timeout!
  * Timeout for n >= 20. 2 tests timeout.
  */
@@ -614,7 +611,7 @@ string FibonacciModified(size_t t1, size_t t2, size_t n)
 	return arithmetic.DigitsVectorToNumberString(result[n % 2]);
 }
 /* https://www.hackerrank.com/challenges/fibonacci-modified/problem
- * This is slightly better. It fails 2 tests due to timeout!
+ * XXX: This is slightly better. It fails 2 tests due to timeout!
  */
 string FibonacciModifiedStringArithmetic(size_t t1, size_t t2, size_t n)
 {
