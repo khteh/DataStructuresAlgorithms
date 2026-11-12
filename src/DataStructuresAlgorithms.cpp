@@ -550,6 +550,36 @@ return result[n % 2];
 	return b;
 }
 /* https://www.hackerrank.com/challenges/fibonacci-modified/problem
+ * 100%
+ * 0 <= t1, t2 <= 2
+ * 3 <= n <= 20
+ *
+ * t1:0, t2: 1, n:4
+ * 0 1 2 3 4
+ * 0 1 1 2 5
+ *
+// Index: 0 1 2 3 4 5  6   7	  8
+// Value: 0 1 1 2 5 27 734 538783 ...
+ * WIP
+ * This fails 3 tests due to timeout!
+ * Timeout for n >= 20. 2 tests timeout.
+ */
+string FibonacciBigNumber(size_t t1, size_t t2, size_t n)
+{
+	if (!n)
+		return to_string(t1);
+	else if (n == 1)
+		return to_string(t2);
+	BigNumber _t1 = BigFromNumber(t1), _t2 = BigFromNumber(t2);
+	for (size_t i = 2; i <= n; i++)
+	{
+		BigNumber tmp = BigAdd(_t1, BigMultiply(_t2, _t2));
+		_t1 = move(_t2);
+		_t2 = move(tmp); // After the move, tmp is in a “valid but unspecified” state. For vector, that’s empty in practice. You may only destroy it or assign it a new value,
+	}
+	return BigToString(_t2);
+}
+/* https://www.hackerrank.com/challenges/fibonacci-modified/problem
  * 0 <= t1, t2 <= 2
  * 3 <= n <= 20
  *
@@ -599,27 +629,6 @@ string FibonacciModifiedStringArithmetic(size_t t1, size_t t2, size_t n)
 	for (size_t i = 2; i <= n; i++)
 		result[i % 2] = arithmetic.NumberStringSum(result[(i - 2) % 2], arithmetic.NumberStringMultiplication(result[(i - 1) % 2], result[(i - 1) % 2]));
 	return result[n % 2];
-}
-/* https://www.hackerrank.com/challenges/fibonacci-modified/problem
- * 6/10 test cases failed :(
- */
-string FibonacciModified_int128(size_t t1, size_t t2, size_t n)
-{
-	uint128_t _t1 = t1, _t2 = t2, result = _t1 + (_t2 * _t2);
-	// Index: 0 1 2 3 4 5  6   7	  8
-	// Value: 0 1 1 2 5 27 734 538783 ...
-	if (!n)
-		return to_string(t1);
-	else if (n == 1)
-		return to_string(t2);
-	for (size_t i = 2; i <= n; i++)
-	{
-		result = _t1 + (_t2 * _t2);
-		_t1 = _t2;
-		_t2 = result;
-	}
-	cout << "(" << t1 << ", " << t2 << ", " << n << "): " << result << endl;
-	return to_string(result);
 }
 /* http://web2.0calc.com/
  * 64-bit max is 18446744073709551615

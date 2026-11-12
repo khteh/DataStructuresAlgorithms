@@ -1,4 +1,5 @@
 #pragma once
+#include "GenericConstraints.h"
 using namespace std;
 template <arithmetic_type T>
 class GCDExtendedEuclideanResult

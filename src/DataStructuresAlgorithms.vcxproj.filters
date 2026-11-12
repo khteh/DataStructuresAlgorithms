@@ -4,6 +4,9 @@
     <ClCompile Include="Arithmetic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BigNumber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Call.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -166,6 +169,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arithmetic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BigNumber.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Call.h">

@@ -113,6 +113,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Arithmetic.h" />
+    <ClInclude Include="BigNumber.h" />
     <ClInclude Include="Call.h" />
     <ClInclude Include="CallHandler.h" />
     <ClInclude Include="Card.h" />
@@ -176,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Arithmetic.cpp" />
+    <ClCompile Include="BigNumber.cpp" />
     <ClCompile Include="Call.cpp" />
     <ClCompile Include="CallHandler.cpp" />
     <ClCompile Include="Card.cpp" />

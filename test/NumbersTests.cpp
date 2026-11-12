@@ -575,9 +575,9 @@ public:
 	{
 		return FibonacciModifiedStringArithmetic(_t1, _t2, _n);
 	}
-	string FibonacciModified_int128Test()
+	string FibonacciBigNumberTest()
 	{
-		return FibonacciModified_int128(_t1, _t2, _n);
+		return FibonacciBigNumber(_t1, _t2, _n);
 	}
 };
 /*
@@ -591,18 +591,17 @@ TEST_P(FibonacciModifiedTestFixture, FibonacciModifiedStringArithmeticTests)
 {
 	ASSERT_EQ(this->_expected, this->FibonacciModifiedStringArithmeticTest());
 }
-TEST_P(FibonacciModifiedTestFixture, FibonacciModified_int128Tests)
+TEST_P(FibonacciModifiedTestFixture, FibonacciBigNumberTestTests)
 {
-	ASSERT_EQ(this->_expected, this->FibonacciModified_int128Test());
+	ASSERT_EQ(this->_expected, this->FibonacciBigNumberTest());
 }
 INSTANTIATE_TEST_SUITE_P(
 	FibonacciModifiedTests,
 	FibonacciModifiedTestFixture,
-	::testing::Values(make_tuple("5", 0, 1, 4), make_tuple("27", 0, 1, 5), make_tuple("734", 0, 1, 6), make_tuple("538783", 0, 1, 7), make_tuple("290287121823", 0, 1, 8),
-					  make_tuple("84266613096281243382112", 0, 1, 9), make_tuple("2", 2, 0, 2), make_tuple("4", 2, 0, 3), make_tuple("18", 2, 0, 4),
-					  make_tuple("328", 2, 0, 5), make_tuple("107602", 2, 0, 6), make_tuple("11578190732", 2, 0, 7), make_tuple("112763264", 2, 1, 6)
-					  /*make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)*/
-					  ));
+	::testing::Values(make_tuple("5", 0, 1, 4), make_tuple("2", 2, 0, 2), make_tuple("4", 2, 0, 3), make_tuple("18", 2, 0, 4), make_tuple("27", 0, 1, 5), make_tuple("734", 0, 1, 6), make_tuple("328", 2, 0, 5),
+					  make_tuple("538783", 0, 1, 7), make_tuple("107602", 2, 0, 6), make_tuple("112763264", 2, 1, 6), make_tuple("290287121823", 0, 1, 8),
+					  make_tuple("84266613096281243382112", 0, 1, 9), make_tuple("84266613096281243382112", 1, 1, 8), make_tuple("17970609138239271928332405705914711528208", 0, 2, 8),
+					  make_tuple("11578190732", 2, 0, 7), make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)));
 class PriorityQueueMedianTestFixture : public testing::TestWithParam<tuple<double, vector<long>>>
 {
 public:

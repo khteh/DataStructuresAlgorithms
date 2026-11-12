@@ -12,6 +12,7 @@ set(Sources
     "128BitStreamTests.cpp"
     "AnagramTests.cpp"
     "ArithmeticOperationTests.cpp"
+    "BigNumberTests.cpp"
     "BinarySearchTreeTests.cpp"
     "BinaryTreeTests.cpp"
     "CircularLinkedListTests.cpp"

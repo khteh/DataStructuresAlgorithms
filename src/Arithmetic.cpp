@@ -522,6 +522,9 @@ void Arithmetic<T>::NumberVectorsSum(vector<T> const &num1, vector<T> const &num
 		result.push_back(carry);
 }
 /*
+This function stores one decimal digit per element and multiplies digit by digit.
+Squaring a 50,000-digit number that way takes about 50,000² = 2.5 × 10⁹ digit products. On top of that, for every digit of the first number it builds a whole new vector, adds it to the running total with NumberVectorsSum, and then copies the total (tmpResult = result).
+So each of the 50,000 rows allocates and copies about 100,000 elements.
   456
 x 123
 -----

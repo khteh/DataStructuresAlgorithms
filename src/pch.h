@@ -9,6 +9,7 @@
 #include <cfloat>
 #include <chrono>
 #include <cmath>
+#include <compare>
 #include <concepts>
 #include <cstddef>
 #include <cstdlib>
@@ -40,6 +41,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <string_view>
 #ifdef _MSC_VER
 #include <tchar.h>
 #endif
