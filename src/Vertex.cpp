@@ -10,17 +10,17 @@ Vertex<TTag, TItem>::Vertex()
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag)
-	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(tag), _item(TItem()), _sum(TItem()), _cost(numeric_limits<long>::max())
+	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(move(tag)), _item(TItem()), _sum(TItem()), _cost(numeric_limits<long>::max())
 {
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag, TItem item)
-	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(tag), _item(item), _sum(TItem()), _cost(numeric_limits<long>::max())
+	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(move(tag)), _item(move(item)), _sum(TItem()), _cost(numeric_limits<long>::max())
 {
 }
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex(TTag tag, TItem item, map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours)
-	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(tag), _item(item), _sum(TItem()), _cost(numeric_limits<long>::max()), _neighbours(neighbours)
+	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(move(tag)), _item(move(item)), _sum(TItem()), _cost(numeric_limits<long>::max()), _neighbours(move(neighbours))
 {
 }
 template <typename TTag, typename TItem>

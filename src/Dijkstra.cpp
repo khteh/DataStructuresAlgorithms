@@ -15,11 +15,11 @@ template class Dijkstra<string>;
  */
 ////////////////////////////////// DVertex<T> //////////////////////////////////////////////////
 template <typename T>
-DVertex<T>::DVertex(T value) : _value(value), _previous({}), _cost(numeric_limits<long>::max())
+DVertex<T>::DVertex(T value) : _value(move(value)), _previous({}), _cost(numeric_limits<long>::max())
 {
 }
 template <typename T>
-DVertex<T>::DVertex(T value, long cost) : _value(value), _previous({}), _cost(cost)
+DVertex<T>::DVertex(T value, long cost) : _value(move(value)), _previous({}), _cost(cost)
 {
 }
 template <typename T>
@@ -34,7 +34,7 @@ DVertex<T>::DVertex(DVertex &&node) noexcept // Move constructor
 }
 
 template <typename T>
-DVertex<T>::DVertex(weak_ptr<DVertex<T>> previous, long cost) : _previous(previous), _cost(cost)
+DVertex<T>::DVertex(weak_ptr<DVertex<T>> previous, long cost) : _previous(move(previous)), _cost(cost)
 {
 }
 template <typename T>
@@ -114,7 +114,7 @@ T DVertex<T>::Value() const
 
 ////////////////////////////////// DEdge<T> //////////////////////////////////////////////////
 template <typename T>
-DEdge<T>::DEdge(shared_ptr<DVertex<T>> v, long cost) : _cost(cost), _vertex(v)
+DEdge<T>::DEdge(shared_ptr<DVertex<T>> v, long cost) : _cost(cost), _vertex(move(v))
 {
 }
 template <typename T>

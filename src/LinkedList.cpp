@@ -24,7 +24,7 @@ LinkedList<T>::LinkedList(vector<T> const &data)
 	LoadData(data);
 }
 template <typename T>
-LinkedList<T>::LinkedList(LinkedList &&other) noexcept : _head(std::move(other._head)), _tail(std::move(other._tail))
+LinkedList<T>::LinkedList(LinkedList &&other) noexcept : _head(move(other._head)), _tail(move(other._tail))
 {
 }
 template <typename T>
@@ -33,8 +33,8 @@ LinkedList<T> &LinkedList<T>::operator=(LinkedList &&other) noexcept
 	if (this != &other)
 	{
 		Clear(); // Virtual: a CircularLinkedList breaks its ring here before taking over other's nodes
-		_head = std::move(other._head);
-		_tail = std::move(other._tail);
+		_head = move(other._head);
+		_tail = move(other._tail);
 	}
 	return *this;
 }
@@ -59,7 +59,7 @@ void LinkedList<T>::LoadData(vector<T> const &data)
 			shared_ptr<Node<T>> n = make_shared<Node<T>>(*it);
 			_tail->SetNext(n);	   // Point the existing tail to this new node
 			n->SetPrevious(_tail); // Point the new node to to existing tail as parent. This is done in SetNext
-			_tail = n;
+			_tail = move(n);
 		}
 }
 template <typename T>
@@ -73,7 +73,7 @@ void LinkedList<T>::SetHead(shared_ptr<Node<T>> node)
 	if (!node)
 		_head.reset();
 	else
-		_head = node;
+		_head = move(node);
 }
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::Tail()
@@ -124,7 +124,7 @@ void LinkedList<T>::SplitList(shared_ptr<Node<T>> &even, shared_ptr<Node<T>> &od
 				evenTail->SetNext(node);
 				node->SetPrevious(evenTail); // This is done in SetNext
 			}
-			evenTail = node;
+			evenTail = move(node);
 		}
 		else
 		{
@@ -135,7 +135,7 @@ void LinkedList<T>::SplitList(shared_ptr<Node<T>> &even, shared_ptr<Node<T>> &od
 				oddTail->SetNext(node);
 				node->SetPrevious(oddTail); // This is done in SetNext
 			}
-			oddTail = node;
+			oddTail = move(node);
 		}
 	}
 	if (evenTail)
@@ -209,7 +209,7 @@ void LinkedList<T>::MoveHead2Tail()
 			_head->SetPrevious(tail); // This is done in SetNext
 			_head->SetNext(nullptr);
 			newHead->SetPrevious(nullptr); // It is the new head. Leaving the old head as its parent corrupts later relinking.
-			_head = newHead;
+			_head = move(newHead);
 		}
 	}
 }
@@ -340,7 +340,7 @@ void LinkedList<T>::RotateRight(size_t k)
 					;
 				prev->SetNext(nullptr);
 				n->SetNext(_head);
-				_head = n;
+				_head = move(n);
 			}
 		}
 	}
@@ -376,7 +376,7 @@ void LinkedList<T>::Sort()
 			tail = dummy;
 			while (n)
 			{
-				left = n;
+				left = move(n); // n is reassigned 2 lines below
 				right = Split(left, width);
 				n = Split(right, width);
 				Merge(left, right, tail);

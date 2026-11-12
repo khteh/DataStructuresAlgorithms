@@ -17,7 +17,7 @@ bool KDTreeCompare<T>::operator()(const vector<T> &lhs, const vector<T> &rhs) co
 }
 template <typename T>
 KDNode<T>::KDNode(vector<T> &location, long axis, long depth, shared_ptr<KDNode<T>> left, shared_ptr<KDNode<T>> right)
-	: location_(location), axis_(axis), depth_(depth), left_(left), right_(right)
+	: location_(location), axis_(axis), depth_(depth), left_(move(left)), right_(move(right))
 {
 }
 template <typename T>

@@ -97,7 +97,7 @@ TrieNode<T>::TrieNode()
 
 template <typename T>
 TrieNode<T>::TrieNode(T value)
-	: _key(value)
+	: _key(move(value))
 {
 	_children.clear();
 }
@@ -132,7 +132,7 @@ void TrieNode<T>::InsertString(string const &str, T value)
 		result.first->second->InsertString(str.substr(1), value);
 	}
 	else
-		_key = value; // Store the value at the leaf node.
+		_key = move(value); // Store the value at the leaf node.
 }
 template <typename T>
 T TrieNode<T>::Find(string const &prefix)
@@ -172,7 +172,7 @@ T TrieNode<T>::Key() const
 template <typename T>
 void TrieNode<T>::SetKey(T key)
 {
-	_key = key;
+	_key = move(key);
 }
 template <typename T>
 typename map<char, shared_ptr<TrieNode<T>>>::const_iterator TrieNode<T>::ChildrenStart() const

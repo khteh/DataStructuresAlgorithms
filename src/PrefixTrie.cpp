@@ -83,7 +83,7 @@ void PrefixTrieNode::InsertString(string str, size_t index)
 		result.first->second->InsertString(str, index + 1);
 	}
 	else
-		_key = str; // Store the prefix string at the leaf node.
+		_key = move(str); // Store the prefix string at the leaf node.
 }
 void PrefixTrieNode::RemoveString(string str)
 {

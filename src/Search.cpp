@@ -245,7 +245,7 @@ bool Search::GridSearch(vector<string> const &pattern, vector<string> const &gri
             resetI = true;
         }
         else if (!locations1.empty() && locations.empty())
-            locations = locations1;
+            locations = move(locations1);
         else if (!locations1.empty() && !locations.empty())
         {
             set<size_t> intersections;
@@ -258,7 +258,7 @@ bool Search::GridSearch(vector<string> const &pattern, vector<string> const &gri
                 resetI = true;
             }
             else
-                locations = intersections;
+                locations = move(intersections);
         }
         if (!locations.empty())
         {

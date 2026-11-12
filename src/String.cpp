@@ -154,7 +154,7 @@ void String::PhoneKeyLetters(string const &digits, vector<string> &result)
                     }
                 i++;
             }
-            result = tmp;
+            result = move(tmp);
         }
 }
 // DAMP -> LAMP -> LIMP -> LIME -> LIKE
@@ -296,7 +296,7 @@ void String::RemoveDuplicateCharactersLexicographicalOrder(string &str)
             result.push_back(c);
         counts[c]--;
     }
-    str = result;
+    str = move(result);
 }
 
 /*

@@ -74,7 +74,7 @@ void MyStack<T>::clear()
 	{
 		next = node->Next();
 		node.reset();
-		node = next;
+		node = move(next);
 	}
 	_top.reset();
 	_size = 0;

@@ -98,7 +98,7 @@ string Palindrome::FindBiggestPalindromeSubstring(string const &s)
             right++;
         }
         if (palindrome.size() > result.size())
-            result = palindrome;
+            result = move(palindrome);
     }
     return result;
 }

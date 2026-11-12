@@ -16,7 +16,7 @@ Node<T>::Node()
 }
 template <typename T>
 Node<T>::Node(T item)
-	: _item(item), _left(nullptr), _right(nullptr), _next(nullptr), _previous({}), _parent({})
+	: _item(move(item)), _left(nullptr), _right(nullptr), _next(nullptr), _previous({}), _parent({})
 {
 }
 template <typename T>
@@ -176,7 +176,7 @@ void Node<T>::ClearLinks()
 template <typename T>
 void Node<T>::SetNext(shared_ptr<Node<T>> node)
 {
-	_next = node;
+	_next = move(node);
 	// if (node)
 	//	node->SetPrevious(this->shared_from_this()); Let application code decide on this.
 	/*
@@ -195,24 +195,24 @@ void Node<T>::AddAdjacent(shared_ptr<Node<T>> node)
 template <typename T>
 void Node<T>::SetLeft(shared_ptr<Node<T>> node)
 {
-	_left = node;
+	_left = move(node);
 }
 
 template <typename T>
 void Node<T>::SetRight(shared_ptr<Node<T>> node)
 {
-	_right = node;
+	_right = move(node);
 }
 
 template <typename T>
 void Node<T>::SetItem(T item)
 {
-	_item = item;
+	_item = move(item);
 }
 template <typename T>
 Node<T> &Node<T>::operator=(T item)
 {
-	_item = item;
+	_item = move(item);
 	return *this;
 }
 #if 0

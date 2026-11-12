@@ -579,8 +579,9 @@ void Arithmetic<T>::NumberVectorsMultiplication(vector<T> const &num1, vector<T>
 		if (carry)
 			tmp.push_back(carry);
 		NumberVectorsSum(tmp, tmpResult, result);
-		tmpResult = result;
+		swap(tmpResult, result); // tmpResult: the running sum. result's old contents are overwritten by the next NumberVectorsSum
 	}
+	result = move(tmpResult);
 }
 /*
   Multiplies num1 and num2, and prints result.

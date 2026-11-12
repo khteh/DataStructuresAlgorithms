@@ -319,13 +319,10 @@ size_t CountDistinctSlices(vector<long> &data)
 // "Hello World!!!" -> "!!!dlroW olleH"
 void reverse(string &str)
 {
-	char tmp;
 	size_t pivot = str.size() / 2 + str.size() % 2;
 	for (size_t i = 0, tail = str.size() - 1; i < pivot; i++, tail--)
 	{
-		tmp = str[tail];
-		str[tail] = str[i];
-		str[i] = tmp;
+		swap(str[tail], str[i]);
 	}
 }
 /*
@@ -1208,7 +1205,7 @@ void Merge(vector<long> &dest, vector<long> &source)
 void shuffleCards(vector<long> &cards)
 {
 	uint64_t mask = 0; // bitmask of 52 cards.
-	int tmp, index;
+	int index;
 	random_device device;
 	// Seed with a real random value, if available
 	pcg_extras::seed_seq_from<random_device> seed_source;
@@ -1232,16 +1229,14 @@ void shuffleCards(vector<long> &cards)
 			index = dist(rng);
 			assert(!(mask & ((uint64_t)1 << cards[index])));
 			mask |= ((uint64_t)1 << cards[index]);
-			tmp = cards[i];
-			cards[i] = cards[index];
-			cards[index] = tmp;
+			swap(cards[i], cards[index]); // Was through an int tmp, which would truncate long values outside int's range
 		}
 	}
 }
 void randomSubset(vector<long> &source, size_t count, vector<long> &result)
 {
 	set<long> masks;
-	long index, tmp;
+	long index;
 	if (count > source.size())
 		return;
 	//  Seed with a real random value, if available
@@ -1257,9 +1252,7 @@ void randomSubset(vector<long> &source, size_t count, vector<long> &result)
 		assert(!masks.count(source[index]));
 		masks.emplace(source[index]);
 		result.push_back(source[index]);
-		tmp = source[i];
-		source[i] = source[index];
-		source[index] = tmp;
+		swap(source[i], source[index]);
 	}
 }
 /*
@@ -1598,9 +1591,7 @@ void MaxHeapifyDown(vector<long> &data, size_t start)
 		max = right;
 	if (max != start)
 	{
-		long tmp = data[start];
-		data[start] = data[max];
-		data[max] = tmp;
+		swap(data[start], data[max]);
 		MaxHeapifyDown(data, max);
 	}
 }
@@ -1619,9 +1610,7 @@ void MinHeapifyDown(vector<long> &data, size_t start)
 		min = right;
 	if (min != start)
 	{
-		long tmp = data[start];
-		data[start] = data[min];
-		data[min] = tmp;
+		swap(data[start], data[min]);
 		MinHeapifyDown(data, min);
 	}
 }

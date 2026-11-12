@@ -26,17 +26,17 @@ CircularLinkedList<T>::CircularLinkedList(vector<T> const &data)
 				n = make_shared<Node<T>>(*it);
 			_tail->SetNext(n);
 			// n->SetPrevious(tail); Not applicable as the loop start will have 2 parents
-			_tail = n;
+			_tail = move(n);
 		}
 }
 template <typename T>
-CircularLinkedList<T>::CircularLinkedList(CircularLinkedList &&other) noexcept : LinkedList<T>(std::move(other))
+CircularLinkedList<T>::CircularLinkedList(CircularLinkedList &&other) noexcept : LinkedList<T>(move(other))
 {
 }
 template <typename T>
 CircularLinkedList<T> &CircularLinkedList<T>::operator=(CircularLinkedList &&other) noexcept
 {
-	LinkedList<T>::operator=(std::move(other)); // Calls the virtual Clear(), i.e. CircularLinkedList::Clear(), to release the current ring
+	LinkedList<T>::operator=(move(other)); // Calls the virtual Clear(), i.e. CircularLinkedList::Clear(), to release the current ring
 	return *this;
 }
 template <typename T>
@@ -76,7 +76,7 @@ void CircularLinkedList<T>::Clear()
 		visited.insert(n);
 		shared_ptr<Node<T>> next = n->Next();
 		n->ClearLinks(); // Break the ring. Resetting a local copy of the shared_ptr does not release the node.
-		n = next;
+		n = move(next);
 	}
 	// XXX: These must be done to prevent base LinkedList destructor from infinite circular loop
 	_head.reset();

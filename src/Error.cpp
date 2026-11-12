@@ -3,7 +3,7 @@
 using namespace std;
 Error::Error(string msg)
 {
-	msg_ = msg;
+	msg_ = move(msg);
 	cout << "Error() @" << this << endl;
 }
 Error::Error(const Error &other)
@@ -16,7 +16,7 @@ Error::~Error()
 	cout << "~Error() @" << this << endl;
 }
 ErrorDerived::ErrorDerived(string msg)
-	: Error(msg)
+	: Error(move(msg))
 {
 	cout << "ErrorDerived() @" << this << endl;
 }

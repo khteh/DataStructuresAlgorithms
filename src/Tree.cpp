@@ -43,7 +43,7 @@ Tree<T>::Tree()
 }
 template <typename T>
 Tree<T>::Tree(T item)
-	: _root(make_shared<Node<T>>(item))
+	: _root(make_shared<Node<T>>(move(item)))
 {
 }
 /*
@@ -370,7 +370,7 @@ void Tree<T>::InsertItem(T item)
 {
 	shared_ptr<Node<T>> node = make_shared<Node<T>>(item);
 	if (!_root)
-		_root = node;
+		_root = move(node);
 	else
 		InsertNode(_root, node);
 }
@@ -644,7 +644,7 @@ void Tree<T>::GetNodes(map<size_t, vector<shared_ptr<Node<T>>>> &result, long lv
 	// result.emplace(level, vector<shared_ptr<Node<T>>>{_root});
 	vector<shared_ptr<Node<T>>> nodes;
 	nodes.push_back(_root);
-	result[level] = nodes;
+	result[level] = move(nodes);
 	for (; !result[level].empty() && (lvl == -1 || level <= lvl); level++)
 	{
 		vector<shared_ptr<Node<T>>> nodes;
@@ -657,7 +657,7 @@ void Tree<T>::GetNodes(map<size_t, vector<shared_ptr<Node<T>>>> &result, long lv
 					nodes.push_back((*it)->Right());
 			}
 		if (!nodes.empty())
-			result.emplace(level + 1, nodes);
+			result.emplace(level + 1, move(nodes));
 	}
 }
 // In-Order: Traverse left node, current node, then right [usually used for binary search trees]

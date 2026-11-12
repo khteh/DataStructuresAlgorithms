@@ -16,14 +16,11 @@ Space: O(1)
 template <typename T>
 void Sort<T>::BubbleSort(vector<T> &data)
 {
-	T tmp = T();
 	for (size_t lastIndex = data.size() - 1; lastIndex >= 1; lastIndex--)
 		for (size_t i = 0; i < lastIndex; i++)
 			if (data[i] > data[i + 1])
 			{
-				tmp = data[i];
-				data[i] = data[i + 1];
-				data[i + 1] = tmp;
+				swap(data[i], data[i + 1]);
 			}
 }
 /* Quick Sort (http://en.wikipedia.org/wiki/Quicksort)
@@ -262,10 +259,10 @@ void Sort<T>::BottomUpMergeSort(vector<T> &A, vector<T> &B)
 			 */
 			Merge(A, B, i, min(i + width, n), min(i + 2 * width, n)); // O(N)
 		/* Now work array B is full of runs (sorted) of length 2*width.
-		 * Copy array B to array A for next iteration.
-		 * A more efficient implementation would swap the roles of A and B.
+		 * Swap the roles of A and B for the next iteration, instead of copying B to A: O(1) instead of O(N).
+		 * Merge writes every element of B in each pass, so B's old contents never need to be kept.
 		 */
-		A = B;
+		swap(A, B);
 		// Now array A is full of runs (sorted) of length 2*width.
 	}
 }
@@ -490,7 +487,7 @@ void Sort<T>::WiggleSort(vector<T> &data)
 		result.push_back(data[i]);
 	else if (j > (int)middle)
 		result.push_back(data[j]);
-	data = result;
+	data = move(result);
 }
 /* https://www.hackerrank.com/challenges/ctci-merge-sort/problem
  * 100%

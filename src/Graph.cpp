@@ -12,7 +12,7 @@ using namespace oneapi::tbb;
 template <typename TTag, typename TItem>
 FurthestNode<TTag, TItem>::FurthestNode() : distance(0), vertex(nullptr) {}
 template <typename TTag, typename TItem>
-FurthestNode<TTag, TItem>::FurthestNode(shared_ptr<Vertex<TTag, TItem>> v, long d) : vertex(v), distance(d) {}
+FurthestNode<TTag, TItem>::FurthestNode(shared_ptr<Vertex<TTag, TItem>> v, long d) : vertex(move(v)), distance(d) {}
 
 template <typename TTag, typename TItem>
 Graph<TTag, TItem>::Graph() : _totalCost(0)
@@ -414,8 +414,7 @@ void Graph<TTag, TItem>::UnbeatenPathsDijkstra(TTag src, vector<long> &distances
 			costs[*it] = costs[vertex] + 1;
 		}
 		nodes1.clear();
-		nodes1 = nodes2;
-		nodes2.clear();
+		swap(nodes1, nodes2); // nodes1 takes nodes2's contents; nodes2 gets nodes1's, which were just cleared
 	}
 	for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::const_iterator it = costs.begin(); it != costs.end(); it++)
 		if (it->first->GetTag() != src)

@@ -26,14 +26,14 @@ void Cluster::AddNode(string item)
 	shared_ptr<Node<string>> n(make_shared<Node<string>>(item));
 	if (!_head)
 	{
-		_head = n;
+		_head = move(n);
 		_tail = _head;
 	}
 	else
 	{
 		_tail->SetNext(n);
 		n->SetPrevious(_tail);
-		_tail = n;
+		_tail = move(n);
 	}
 	_size++;
 }
@@ -258,7 +258,7 @@ T Matrix<T>::LargestSumSubmatrix(vector<vector<size_t>> &matrix)
 					if (tmp > sum)
 					{
 						sum = tmp;
-						matrix = area;
+						matrix = move(area);
 					}
 				}
 	return sum;
@@ -1561,7 +1561,7 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_BFS()
 							location << r << "," << c;
 							shared_ptr<Node<string>> n(make_shared<Node<string>>(location.str()));
 							tail->SetNext(n);
-							tail = n;
+							tail = move(n);
 							count++;
 							_grid[r][c] = _inactive;
 							todo.emplace(r, c);
@@ -1576,7 +1576,7 @@ size_t Matrix<T>::LargestGridCluster_LinkedList_BFS()
 							location << r << "," << c;
 							shared_ptr<Node<string>> n(make_shared<Node<string>>(location.str()));
 							tail->SetNext(n);
-							tail = n;
+							tail = move(n);
 							count++;
 							_grid[r][c] = _inactive;
 							todo.emplace(r, c);

@@ -19,7 +19,7 @@ Heap<T>::Heap(HeapType t)
 
 template <typename T>
 Heap<T>::Heap(T item, HeapType t)
-	: _type(t), Tree<T>::Tree(item)
+	: _type(t), Tree<T>::Tree(move(item))
 {
 }
 

@@ -274,7 +274,7 @@ vector<string> Permutation<T>::LetterCombinations(string const &digits)
                 }
             i++;
         }
-        result = tmp;
+        result = move(tmp);
     }
     return result;
 }
