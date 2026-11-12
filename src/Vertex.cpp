@@ -281,17 +281,7 @@ bool Vertex<TTag, TItem>::operator==(const Vertex<TTag, TItem> &rhs) const // co
 	return _item == rhs._item && _tag == rhs._tag;
 }
 template <typename TTag, typename TItem>
-bool Vertex<TTag, TItem>::operator!=(const Vertex<TTag, TItem> &rhs) const
+common_comparison_category_t<compare_three_way_result_t<TItem>, weak_ordering> Vertex<TTag, TItem>::operator<=>(const Vertex<TTag, TItem> &rhs) const
 {
-	return !(*this == rhs);
-}
-template <typename TTag, typename TItem>
-bool Vertex<TTag, TItem>::operator<(const Vertex<TTag, TItem> &rhs) const
-{
-	return _item < rhs._item;
-}
-template <typename TTag, typename TItem>
-bool Vertex<TTag, TItem>::operator>(const Vertex<TTag, TItem> &rhs) const
-{
-	return _item > rhs._item;
+	return _item <=> rhs._item;
 }

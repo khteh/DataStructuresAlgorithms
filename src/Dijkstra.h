@@ -25,9 +25,8 @@ public:
     void UpdatePreviousVertex(shared_ptr<DVertex<T>>, long);
     void UpdateCost(long);
     bool operator==(const DVertex<T> &) const; // const member, const param. it works for const and non-const objects alike
-    bool operator!=(const DVertex<T> &) const;
-    bool operator<(const DVertex<T> &) const;
-    bool operator>(const DVertex<T> &) const;
+    // By value, as ==. !=, <, <=, > and >= are rewritten from == and <=>. The result type is T's: strong_ordering for integers and strings
+    compare_three_way_result_t<T> operator<=>(const DVertex<T> &) const;
     typedef typename set<DEdge<T>>::const_iterator IteratorType;
     shared_ptr<DVertex<T>> PreviousVertex() const;
     T Value() const;
@@ -50,11 +49,9 @@ public:
     shared_ptr<DVertex<T>> NextVertex() const;
     long Cost() const;
     void UpdateCost(long);
-    bool operator<(const DEdge<T> &) const;
-    bool operator==(DEdge<T> &);
-    bool operator!=(DEdge<T> &);
-    bool operator<(DEdge<T> &);
-    bool operator>(DEdge<T> &);
+    // By the vertex pointer, as before. These replace a const operator< and non-const ==, !=, < and > that did the same
+    bool operator==(const DEdge<T> &) const;
+    strong_ordering operator<=>(const DEdge<T> &) const;
 };
 template <typename T>
 class Dijkstra

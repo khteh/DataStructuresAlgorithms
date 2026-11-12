@@ -20,13 +20,10 @@ typedef struct LongestMatchingWordWithDeletionState
     size_t index; // The number refers to the number of characters in w that have already been found in input string.
     string word;
     LongestMatchingWordWithDeletionState(size_t i, string const &w) : index(i), word(w) {}
-    bool operator<(const LongestMatchingWordWithDeletionState &other) const
+    // By word only, so weak_ordering: states with the same word and different indices are equivalent
+    weak_ordering operator<=>(const LongestMatchingWordWithDeletionState &other) const
     {
-        return word < other.word;
-    }
-    bool operator>(const LongestMatchingWordWithDeletionState &other) const
-    {
-        return word > other.word;
+        return word <=> other.word;
     }
 } longestmatchingwordwithdeletion_state_t;
 

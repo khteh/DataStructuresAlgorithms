@@ -48,9 +48,9 @@ public:
 	shared_ptr<Node<T>> RemoveMiddle();
 	void MoveItem2Tail(T);
 	bool operator==(LinkedList<T> &);
-	bool operator!=(LinkedList<T> &);
-	bool operator<=(LinkedList<T> &);
-	bool operator>=(LinkedList<T> &);
+	// By length only, while == compares the head, tail and length: lists of the same length are equivalent, not equal.
+	// !=, <, <=, > and >= are rewritten from == and <=>
+	weak_ordering operator<=>(const LinkedList<T> &) const;
 	shared_ptr<Node<T>> operator[](size_t) const;
 	// Implement an algorithm to find the nth to last element of a singly linked list.
 	shared_ptr<Node<T>> NthElementFromBack(long);

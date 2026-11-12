@@ -17,10 +17,10 @@ public:
 	TTweetID ID() const;
 	TUserID UserID() const;
 	uint64_t TimeStamp() const;
-	bool operator<(const TweetItem<TUserID, TTweetID> &) const;
-	bool operator>(const TweetItem<TUserID, TTweetID> &) const;
 	bool operator==(const TweetItem<TUserID, TTweetID> &) const;
-	bool operator!=(const TweetItem<TUserID, TTweetID> &) const;
+	// By timestamp only, while == compares all the fields: tweets with the same timestamp are equivalent, not equal.
+	// !=, <, <=, > and >= are rewritten from == and <=>
+	weak_ordering operator<=>(const TweetItem<TUserID, TTweetID> &) const;
 };
 template <typename TUserID, typename TTweetID>
 class Twitter

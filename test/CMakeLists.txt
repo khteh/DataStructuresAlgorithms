@@ -16,6 +16,7 @@ set(Sources
     "BinarySearchTreeTests.cpp"
     "BinaryTreeTests.cpp"
     "CircularLinkedListTests.cpp"
+    "ComparisonOperatorTests.cpp"
     "DisJointSetTests.cpp"
     "DynamicProgrammingTests.cpp"
     "EulerianPathTests.cpp"

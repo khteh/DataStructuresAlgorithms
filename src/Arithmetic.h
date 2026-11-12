@@ -8,7 +8,7 @@ public:
 	GCDExtendedEuclideanResult();
 	explicit GCDExtendedEuclideanResult(T, T, T);
 	T gcd, x, y;
-	bool operator==(GCDExtendedEuclideanResult<T> const &) const;
+	bool operator==(GCDExtendedEuclideanResult<T> const &) const = default; // Compares gcd, x and y, in that order
 };
 template <arithmetic_type T>
 class Arithmetic

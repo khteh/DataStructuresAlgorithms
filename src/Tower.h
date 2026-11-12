@@ -20,6 +20,6 @@ public:
 	void print();
 	void MoveTopTo(shared_ptr<Tower<T>> &);
 	size_t MoveDiscs(T, shared_ptr<Tower<T>> &, shared_ptr<Tower<T>> &);
-	bool operator<(Tower<T> &) const;
-	bool operator>(Tower<T> &) const;
+	// By top disc. An empty tower is greater than any non-empty one: any disc can be moved onto it
+	weak_ordering operator<=>(const Tower<T> &) const;
 };

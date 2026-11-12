@@ -86,13 +86,17 @@ typedef unsigned __int128 uint128_t;
 typedef struct ZeroFactors
 {
 	size_t two, five, value;
-	bool operator>(const ZeroFactors &other) const
+	/*
+	 * Ordered by the trailing zeros the value contributes on its own, min(two, five), then by value.
+	 * weak_ordering: values with different two / five counts can be equivalent.
+	 * This replaces operator< and operator>, which contradicted each other: operator< compared min(two, five)
+	 * but operator> compared max(two, five), so a < b and b > a could give different answers.
+	 */
+	weak_ordering operator<=>(const ZeroFactors &other) const
 	{
-		return max(two, five) == max(other.two, other.five) ? value > other.value : max(two, five) > max(other.two, other.five);
-	}
-	bool operator<(const ZeroFactors &other) const
-	{
-		return min(two, five) == min(other.two, other.five) ? value < other.value : min(two, five) < min(other.two, other.five);
+		if (weak_ordering order = min(two, five) <=> min(other.two, other.five); order != 0)
+			return order;
+		return value <=> other.value;
 	}
 } zerofactors_t;
 typedef struct ZigZagEscape
@@ -100,13 +104,13 @@ typedef struct ZigZagEscape
 	size_t index;
 	int value;
 	ZigZagEscape(size_t i, int v) : index(i), value(v) {}
-	bool operator<(const ZigZagEscape &other) const
+	/*
+	 * Ordered by value only, so weak_ordering: different indices can be equivalent.
+	 * This replaces operator>, which was wrong: it returned value < other.value, the same as operator<.
+	 */
+	weak_ordering operator<=>(const ZigZagEscape &other) const
 	{
-		return value < other.value;
-	}
-	bool operator>(const ZigZagEscape &other) const
-	{
-		return value < other.value;
+		return value <=> other.value;
 	}
 } zigzag_t;
 class VariantException

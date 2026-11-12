@@ -171,20 +171,9 @@ bool LinkedList<T>::operator==(LinkedList<T> &other)
 	return Head() == other.Head() && Tail() == other.Tail() && Length() == other.Length();
 }
 template <typename T>
-bool LinkedList<T>::operator!=(LinkedList<T> &other)
+weak_ordering LinkedList<T>::operator<=>(const LinkedList<T> &other) const
 {
-	return !(*this == other);
-}
-template <typename T>
-bool LinkedList<T>::operator<=(LinkedList<T> &other)
-{
-	return Length() <= other.Length();
-	// if constexpr (is_integral_v<T>)
-}
-template <typename T>
-bool LinkedList<T>::operator>=(LinkedList<T> &other)
-{
-	return Length() >= other.Length();
+	return Length() <=> other.Length();
 }
 template <typename T>
 shared_ptr<Node<T>> LinkedList<T>::operator[](size_t index) const

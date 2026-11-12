@@ -1,4 +1,5 @@
 #pragma once
+#include <compare>
 #include <ranges>
 #include <sstream>
 using namespace std;
@@ -15,10 +16,12 @@ typedef struct Position
         col = rhs.col;
         return *this;
     }
-    bool operator==(Position rhs) const { return row == rhs.row && col == rhs.col; }
-    bool operator!=(Position const &rhs) const { return !(*this == rhs); }
-    bool operator<(Position const &rhs) const { return row < rhs.row || (row == rhs.row && col < rhs.col); }
-    bool operator>(Position const &rhs) const { return row > rhs.row || (row == row && col > rhs.col); }
+    /*
+     * Compares row first, then col, in member declaration order. Defaulting <=> also defaults ==,
+     * and !=, <, <=, > and >= are rewritten from those two.
+     * This replaces operator>, which was wrong: its "row == row" was always true, so {0,5} > {1,0} was true.
+     */
+    auto operator<=>(Position const &) const = default;
     // The operator must be a non-member friend function
     friend ostream &operator<<(ostream &os, const Position &pos)
     {

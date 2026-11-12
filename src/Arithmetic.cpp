@@ -32,11 +32,6 @@ GCDExtendedEuclideanResult<T>::GCDExtendedEuclideanResult(T gcd, T x, T y)
 {
 }
 template <arithmetic_type T>
-bool GCDExtendedEuclideanResult<T>::operator==(GCDExtendedEuclideanResult<T> const &rhs) const
-{
-	return gcd == rhs.gcd && x == rhs.x && y == rhs.y;
-}
-template <arithmetic_type T>
 T Arithmetic<T>::gcd(T a, T b)
 
 {

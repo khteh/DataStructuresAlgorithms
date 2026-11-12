@@ -26,24 +26,14 @@ uint64_t TweetItem<TUserID, TTweetID>::TimeStamp() const
     return _timestamp;
 }
 template <typename TUserID, typename TTweetID>
-bool TweetItem<TUserID, TTweetID>::operator<(const TweetItem<TUserID, TTweetID> &other) const
-{
-    return _timestamp < other._timestamp;
-}
-template <typename TUserID, typename TTweetID>
-bool TweetItem<TUserID, TTweetID>::operator>(const TweetItem<TUserID, TTweetID> &other) const
-{
-    return _timestamp > other._timestamp;
-}
-template <typename TUserID, typename TTweetID>
 bool TweetItem<TUserID, TTweetID>::operator==(const TweetItem<TUserID, TTweetID> &other) const
 {
     return _id == other._id && _user == other._user && _timestamp == other._timestamp;
 }
 template <typename TUserID, typename TTweetID>
-bool TweetItem<TUserID, TTweetID>::operator!=(const TweetItem<TUserID, TTweetID> &other) const
+weak_ordering TweetItem<TUserID, TTweetID>::operator<=>(const TweetItem<TUserID, TTweetID> &other) const
 {
-    return _id != other._id || _user != other._user || _timestamp != other._timestamp;
+    return _timestamp <=> other._timestamp;
 }
 template <typename TUserID, typename TTweetID>
 Twitter<TUserID, TTweetID>::~Twitter()

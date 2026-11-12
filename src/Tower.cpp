@@ -58,15 +58,18 @@ void Tower<T>::MoveTopTo(shared_ptr<Tower<T>> &t)
 	t->Add(_discs.pop());
 }
 
+/*
+ * By top disc. An empty tower is greater than any non-empty one, as any disc can be moved onto it, and two empty
+ * towers are equivalent. weak_ordering: towers with the same top disc can hold different discs below it.
+ * This replaces operator< and operator>, which contradicted each other for empty towers (an empty tower was
+ * greater than every tower but never less than any) and called rhs.TopDisc() even when rhs was empty.
+ */
 template <typename T>
-bool Tower<T>::operator<(Tower<T> &rhs) const
+weak_ordering Tower<T>::operator<=>(const Tower<T> &rhs) const
 {
-	return !isEmpty() && TopDisc() < rhs.TopDisc();
-}
-template <typename T>
-bool Tower<T>::operator>(Tower<T> &rhs) const
-{
-	return isEmpty() || TopDisc() > rhs.TopDisc();
+	if (isEmpty() || rhs.isEmpty())
+		return isEmpty() <=> rhs.isEmpty(); // Empty (true) sorts after non-empty (false)
+	return TopDisc() <=> rhs.TopDisc();
 }
 
 template <typename T>

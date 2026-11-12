@@ -51,7 +51,10 @@ public:
 	*/
 	Vertex<TTag, TItem> &operator=(Vertex<TTag, TItem>);
 	bool operator==(const Vertex<TTag, TItem> &) const; // const member, const param. it works for const and non-const objects alike
-	bool operator!=(const Vertex<TTag, TItem> &) const;
-	bool operator<(const Vertex<TTag, TItem> &) const;
-	bool operator>(const Vertex<TTag, TItem> &) const;
+	/*
+	 * By item only, while == also compares the tag. So two vertices can be equivalent without being equal:
+	 * weak_ordering (or partial_ordering, if TItem's own comparison is partial, e.g. double).
+	 * !=, <, <=, > and >= are rewritten from == and <=>.
+	 */
+	common_comparison_category_t<compare_three_way_result_t<TItem>, weak_ordering> operator<=>(const Vertex<TTag, TItem> &) const;
 };

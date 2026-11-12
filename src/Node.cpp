@@ -256,22 +256,9 @@ bool Node<T>::operator==(const Node<T> &rhs) const // const member, const param.
 	return _item == rhs.Item();
 }
 template <typename T>
-bool Node<T>::operator!=(const Node<T> &rhs) const
+compare_three_way_result_t<T> Node<T>::operator<=>(const Node<T> &rhs) const
 {
-	// return !(*this == rhs);
-	return _item != rhs.Item();
-}
-
-template <typename T>
-bool Node<T>::operator<(const Node<T> &rhs) const
-{
-	return _item < rhs.Item();
-}
-
-template <typename T>
-bool Node<T>::operator>(const Node<T> &rhs) const
-{
-	return _item > rhs.Item();
+	return _item <=> rhs.Item();
 }
 template <typename T>
 bool Node<T>::isLeaf() const

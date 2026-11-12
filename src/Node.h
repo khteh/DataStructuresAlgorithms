@@ -47,9 +47,9 @@ public:
 	*/
 	Node<T> &operator=(Node<T>);
 	bool operator==(const Node<T> &) const; // const member, const param. it works for const and non-const objects alike
-	bool operator!=(const Node<T> &) const;
-	bool operator<(const Node<T> &) const;
-	bool operator>(const Node<T> &) const;
+	// By item, as ==. !=, <, <=, > and >= are rewritten from == and <=>.
+	// The result type is T's: strong_ordering for integers and strings, partial_ordering for float and double
+	compare_three_way_result_t<T> operator<=>(const Node<T> &) const;
 	bool isLeaf() const;
 	typedef typename set<shared_ptr<Node<T>>>::const_iterator IteratorType;
 	IteratorType AdjacentsStart() const;

@@ -70,19 +70,9 @@ bool DVertex<T>::operator==(const DVertex<T> &rhs) const // const member, const 
     return _value == rhs._value;
 }
 template <typename T>
-bool DVertex<T>::operator!=(const DVertex<T> &rhs) const
+compare_three_way_result_t<T> DVertex<T>::operator<=>(const DVertex<T> &rhs) const
 {
-    return !(*this == rhs);
-}
-template <typename T>
-bool DVertex<T>::operator<(const DVertex<T> &rhs) const
-{
-    return _value < rhs._value;
-}
-template <typename T>
-bool DVertex<T>::operator>(const DVertex<T> &rhs) const
-{
-    return _value > rhs._value;
+    return _value <=> rhs._value;
 }
 // typedef typename set<DEdge<T>>::const_iterator IteratorType;
 template <typename T>
@@ -159,33 +149,14 @@ shared_ptr<DVertex<T>> DEdge<T>::NextVertex() const
     return _vertex;
 }
 template <typename T>
-bool DEdge<T>::operator<(const DEdge<T> &rhs) const
-{
-    return _vertex < rhs._vertex;
-}
-
-template <typename T>
-bool DEdge<T>::operator==(DEdge<T> &rhs)
+bool DEdge<T>::operator==(const DEdge<T> &rhs) const
 {
     return _vertex == rhs._vertex;
 }
-
 template <typename T>
-bool DEdge<T>::operator!=(DEdge<T> &rhs)
+strong_ordering DEdge<T>::operator<=>(const DEdge<T> &rhs) const
 {
-    return !(*this == rhs);
-}
-
-template <typename T>
-bool DEdge<T>::operator<(DEdge<T> &rhs)
-{
-    return _vertex < rhs._vertex;
-}
-
-template <typename T>
-bool DEdge<T>::operator>(DEdge<T> &rhs)
-{
-    return _vertex > rhs._vertex;
+    return _vertex <=> rhs._vertex; // shared_ptr compares the pointers
 }
 
 ////////////////////////////////// Dijkstra<T> //////////////////////////////////////////////////
