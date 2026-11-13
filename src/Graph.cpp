@@ -376,12 +376,38 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 }
 /*
  * https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm
+Floyd–Warshall works on an undirected graph as long as all its edge weights are non-negative. The algorithm itself never asks whether the graph is directed.
+It only sees a matrix where distances[u][v] is the cost of going from u to v. An undirected edge u – v with cost w is just two directed edges, u → v and v → u, both with cost w.
+That’s exactly how the Wikipedia Dijkstra test builds its graph: every edge is added in both directions, {0, 1, 7}, {1, 0, 7}, ….
+The result is a symmetric matrix, distances[i][j] == distances[j][i], which you can see in that test’s expected values.
+
+The catch is negative weights. If an undirected edge u – v has cost w < 0, its two directions form the directed 2-cycle u → v → u with cost 2w < 0.
+Floyd–Warshall then sees a negative cycle and marks everything around it as −∞. With the patched code, a single undirected edge of cost −1 makes FloydWarshallDistances return false.
+So on undirected graphs:
+
+Edge weights	Floyd–Warshall on an undirected graph
+All ≥ 0			Correct. Results are symmetric.
+Any < 0			Every negative edge counts as a negative cycle, so pairs that can reach it are −∞
+
+Whether that −∞ is the “right” answer depends on what you mean by a path:
+
+(1) If a path may reuse an edge (a walk), going back and forth over a negative edge really does lower the cost without limit, so −∞ is correct.
+(2) If you want simple paths, which never reuse an edge or vertex, the problem is well defined but much harder. Floyd–Warshall, Bellman–Ford and Dijkstra can’t solve it. It needs matching-based methods, known as the T-join approach.
+
+So it’s more accurate to say that Floyd–Warshall supports directed graphs with negative edges but no negative cycles, and undirected graphs with non-negative weights. Treating an undirected graph as edges in both directions, as the test does, is the standard approach.
+
+ * distances[i][j]: the shortest distance from i to j.
+ *   numeric_limits<long>::max(): no path from i to j.
+ *   numeric_limits<long>::min(): no shortest path, because a path from i to j can pass through a negative cycle,
+ *   and going round it again always gives a shorter path (-infinity). FloydWarshallPath then gives an empty path.
+ * Returns false if the graph has a negative cycle. A vertex k is on one exactly when distances[k][k] < 0.
  */
 template <typename TTag, typename TItem>
-void Graph<TTag, TItem>::FloydWarshallDistances(vector<vector<long>> &distances)
+bool Graph<TTag, TItem>::FloydWarshallDistances(vector<vector<long>> &distances)
 {
+	constexpr long noPath = numeric_limits<long>::max(), minusInfinity = numeric_limits<long>::min();
 	size_t vertices = _vertices.size();
-	distances = vector<vector<long>>(vertices, vector<long>(vertices, numeric_limits<long>::max()));											 // 0-based index!
+	distances = vector<vector<long>>(vertices, vector<long>(vertices, noPath));																	 // 0-based index!
 	_FloydWarshallPaths = vector<vector<shared_ptr<Vertex<TTag, TItem>>>>(vertices, vector<shared_ptr<Vertex<TTag, TItem>>>(vertices, nullptr)); // Holds the penultimate vertex on the path from u to Values(v1, v2, v3)
 	TTag minTag = _vertices.begin()->first, maxTag = _vertices.rbegin()->first;
 	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = _vertices.begin(); it != _vertices.end(); it++)
@@ -390,22 +416,61 @@ void Graph<TTag, TItem>::FloydWarshallDistances(vector<vector<long>> &distances)
 		_FloydWarshallPaths[it->first][it->first] = it->second;
 		map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours = it->second->GetNeighboursWithCost();
 		for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::iterator v = neighbours.begin(); v != neighbours.end(); v++)
-		{
-			distances[it->first][v->first->GetTag()] = v->second;
-			_FloydWarshallPaths[it->first][v->first->GetTag()] = it->second; // [u][v] = u
-		}
+			if (v->second < distances[it->first][v->first->GetTag()]) // A self-loop costing >= 0 doesn't beat the distance 0 from a vertex to itself
+			{
+				distances[it->first][v->first->GetTag()] = v->second;
+				_FloydWarshallPaths[it->first][v->first->GetTag()] = it->second; // [u][v] = u
+			}
 	}
 	/*
-	 * XXX: This limits the data type of graph vertices' tags to numerical data types!
+	 * XXX: This and the input parameter format vector<vector<long>> &distances limit the data type of graph vertices' tags to numerical data types!
 	 */
 	for (TTag k = minTag; k <= maxTag; k++)
 		for (TTag i = minTag; i <= maxTag; i++)
 			for (TTag j = minTag; j <= maxTag; j++)
-				if (distances[i][k] != numeric_limits<long>::max() && distances[k][j] != numeric_limits<long>::max() && distances[i][j] > distances[i][k] + distances[k][j])
+				if (distances[i][k] != noPath && distances[k][j] != noPath)
 				{
-					distances[i][j] = distances[i][k] + distances[k][j];
-					_FloydWarshallPaths[i][j] = _FloydWarshallPaths[k][j];
+					/*
+					 * add_sat (C++26 <numeric>) stops at numeric_limits<long>::min() instead of overflowing. With a negative cycle,
+					 * distances can roughly double on every pass of k, as two negative distances are added together, so plain + would
+					 * overflow a long (undefined behaviour) in larger graphs.
+					 */
+					long through = add_sat(distances[i][k], distances[k][j]);
+					if (distances[i][j] > through)
+					{
+						distances[i][j] = through;
+						_FloydWarshallPaths[i][j] = _FloydWarshallPaths[k][j];
+					}
 				}
+	/*
+	 * A vertex k is on a negative cycle exactly when its distance to itself is negative: going round the cycle costs less than staying.
+	 * Every pair (i, j) where i can reach k and k can reach j then has no shortest path. Mark it -infinity, with no path to rebuild,
+	 * so that FloydWarshallPath gives an empty path instead of following the predecessors round the cycle forever.
+	 * Pairs that can't reach a negative cycle keep their distances.
+	 */
+	bool negativeCycle = false;
+	for (TTag k = minTag; k <= maxTag; k++)
+		if (distances[k][k] < 0)
+		{
+			negativeCycle = true;
+			for (TTag i = minTag; i <= maxTag; i++)
+				for (TTag j = minTag; j <= maxTag; j++)
+					if (distances[i][k] != noPath && distances[k][j] != noPath) // 1. i reaches k, and 2. k reaches j and k is in a negative loop.
+					{
+						/*
+						2 conditions for the pair (i, j) to have no shortest path, meaning distances[i][j] is −∞:
+
+						i can reach k: there is a path from i to some vertex k on the negative cycle.
+						k can reach j: there is a path from that k to j.
+
+						Only when both hold can a walk from i to j make a detour round the cycle as many times as it likes, lowering the cost by the same amount each time.
+						If either one fails, the cycle can’t affect that pair, and distances[i][j] keeps its ordinary value, or noPath.
+						*/
+						distances[i][j] = minusInfinity;
+						_FloydWarshallPaths[i][j] = nullptr;
+					}
+		}
+	return !negativeCycle;
 }
 template <typename TTag, typename TItem>
 void Graph<TTag, TItem>::FloydWarshallPath(TTag start, TTag end, vector<TTag> &path)

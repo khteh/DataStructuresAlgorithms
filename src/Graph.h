@@ -42,7 +42,7 @@ public:
 	void Dijkstra(TTag, map<shared_ptr<Vertex<TTag, TItem>>, long> &);
 	long Dijkstra(TTag, TTag);
 	void Dijkstra(TTag, vector<long> &);
-	void FloydWarshallDistances(vector<vector<long>> &);
+	bool FloydWarshallDistances(vector<vector<long>> &); // false: the graph has a negative cycle
 	void FloydWarshallPath(TTag, TTag, vector<TTag> &);
 	vector<long>
 	UnbeatenPaths(size_t, vector<vector<size_t>> &, size_t);

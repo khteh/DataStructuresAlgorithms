@@ -1059,10 +1059,112 @@ TEST_P(FloydWarshallDistanceTestFixture, FloydWarshallDistanceTests)
 {
 	ASSERT_EQ(this->_expected, this->FloydWarshallDistanceTest());
 }
+// FloydWarshallDistances uses numeric_limits<long>::max() for "no path", and numeric_limits<long>::min() for
+// "no shortest path": the path can pass through a negative cycle, so it can always be made shorter (-infinity)
+static const long noPath = numeric_limits<long>::max(), minusInfinity = numeric_limits<long>::min();
+// Columns: expected distances[from][to], directed edges {from, to, cost}. Vertex tags must be 0 .. V-1: they index the matrix.
 INSTANTIATE_TEST_SUITE_P(
 	FloydWarshallDistanceTests,
 	FloydWarshallDistanceTestFixture,
-	::testing::Values(make_tuple(vector<vector<long>>{{0, -1, -2, 0}, {4, 0, 2, 4}, {5, 1, 0, 2}, {3, -1, 1, 0}}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}})));
+	::testing::Values(make_tuple(vector<vector<long>>{{0, -1, -2, 0}, {4, 0, 2, 4}, {5, 1, 0, 2}, {3, -1, 1, 0}}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}),
+					  // Single edge: no way back
+					  make_tuple(vector<vector<long>>{{0, 5}, {noPath, 0}}, vector<vector<long>>{{0, 1, 5}}),
+					  // Chain: 0 -> 2 only through 1, and nothing leads back
+					  make_tuple(vector<vector<long>>{{0, 3, 7}, {noPath, 0, 4}, {noPath, noPath, 0}}, vector<vector<long>>{{0, 1, 3}, {1, 2, 4}}),
+					  // Two separate components
+					  make_tuple(vector<vector<long>>{{0, 2, noPath, noPath}, {noPath, 0, noPath, noPath}, {noPath, noPath, 0, 5}, {noPath, noPath, noPath, 0}}, vector<vector<long>>{{0, 1, 2}, {2, 3, 5}}),
+					  // The direct edge 0 -> 2 (10) is longer than 0 -> 1 -> 2 (3 + 4)
+					  make_tuple(vector<vector<long>>{{0, 3, 7}, {noPath, 0, 4}, {noPath, noPath, 0}}, vector<vector<long>>{{0, 2, 10}, {0, 1, 3}, {1, 2, 4}}),
+					  // Parallel edges: the cheaper one counts
+					  make_tuple(vector<vector<long>>{{0, 2}, {noPath, 0}}, vector<vector<long>>{{0, 1, 5}, {0, 1, 2}}),
+					  // Negative edges, no negative cycle: CLRS Figure 25.4, with vertices 1 .. 5 renumbered 0 .. 4
+					  make_tuple(vector<vector<long>>{{0, 1, -3, 2, -4}, {3, 0, -4, 1, -1}, {7, 4, 0, 5, 3}, {2, -1, -5, 0, -2}, {8, 5, 1, 6, 0}},
+								 vector<vector<long>>{{0, 1, 3}, {0, 2, 8}, {0, 4, -4}, {1, 3, 1}, {1, 4, 7}, {2, 1, 4}, {3, 0, 2}, {3, 2, -5}, {4, 3, 6}}),
+					  // Undirected graph, as edges in both directions: the Wikipedia Dijkstra example, with vertices 1 .. 6 renumbered 0 .. 5
+					  make_tuple(vector<vector<long>>{{0, 7, 9, 20, 20, 11}, {7, 0, 10, 15, 21, 12}, {9, 10, 0, 11, 11, 2}, {20, 15, 11, 0, 6, 13}, {20, 21, 11, 6, 0, 9}, {11, 12, 2, 13, 9, 0}},
+								 vector<vector<long>>{{0, 1, 7}, {1, 0, 7}, {0, 2, 9}, {2, 0, 9}, {0, 5, 14}, {5, 0, 14}, {1, 2, 10}, {2, 1, 10}, {1, 3, 15}, {3, 1, 15}, {2, 3, 11}, {3, 2, 11}, {2, 5, 2}, {5, 2, 2}, {3, 4, 6}, {4, 3, 6}, {4, 5, 9}, {5, 4, 9}}),
+					  // A positive self-loop doesn't make a vertex's distance to itself more than 0
+					  make_tuple(vector<vector<long>>{{0, 1}, {noPath, 0}}, vector<vector<long>>{{0, 0, 5}, {0, 1, 1}}),
+					  // Negative cycle 0 -> 1 -> 0 (1 - 2 = -1): every pair can go round it, so none has a shortest path
+					  make_tuple(vector<vector<long>>{{minusInfinity, minusInfinity}, {minusInfinity, minusInfinity}}, vector<vector<long>>{{0, 1, 1}, {1, 0, -2}}),
+					  /*
+					   * Negative cycle 1 <-> 2 (-1 + -1) that only some pairs can reach: 4 -> 0 -> 1 leads into it and 2 -> 3 leads out of it,
+					   * so pairs from 0, 1, 2 or 4 to 1, 2 or 3 are -infinity. 4 -> 0, 3 -> 3 and the separate 5 -> 6 (a negative edge, but no cycle)
+					   * keep their distances.
+					   */
+					  make_tuple(vector<vector<long>>{{0, minusInfinity, minusInfinity, minusInfinity, noPath, noPath, noPath},
+													  {noPath, minusInfinity, minusInfinity, minusInfinity, noPath, noPath, noPath},
+													  {noPath, minusInfinity, minusInfinity, minusInfinity, noPath, noPath, noPath},
+													  {noPath, noPath, noPath, 0, noPath, noPath, noPath},
+													  {1, minusInfinity, minusInfinity, minusInfinity, 0, noPath, noPath},
+													  {noPath, noPath, noPath, noPath, noPath, 0, -3},
+													  {noPath, noPath, noPath, noPath, noPath, noPath, 0}},
+								 vector<vector<long>>{{4, 0, 1}, {0, 1, 1}, {1, 2, -1}, {2, 1, -1}, {2, 3, 2}, {5, 6, -3}}),
+					  // A negative self-loop is a negative cycle on its own
+					  make_tuple(vector<vector<long>>{{minusInfinity, minusInfinity, noPath}, {noPath, 0, noPath}, {minusInfinity, minusInfinity, 0}}, vector<vector<long>>{{0, 0, -1}, {0, 1, 2}, {2, 0, 3}}),
+					  // Large negative cycle: going round it more than once would overflow a long. add_sat stops at numeric_limits<long>::min()
+					  make_tuple(vector<vector<long>>{{minusInfinity, minusInfinity}, {minusInfinity, minusInfinity}}, vector<vector<long>>{{0, 1, -4000000000000000000}, {1, 0, -4000000000000000000}}),
+					  /*
+					   * Junction: vertex 2 sits where positive and negative paths cross.
+					   *
+					   *                          3
+					   *                     (1) ^ | (1)        positive cycle 2 -> 3 -> 2 (+2)
+					   *                         | v
+					   *   0 --(5)--> 1 --(-1)--> 2 --(2)--> 5
+					   *                         | ^
+					   *                     (1) v | (-3)       negative cycle 2 -> 4 -> 2 (-2)
+					   *                          4
+					   *
+					   *   0 -(5)-> 1 -(-1)-> 2         leads into the junction
+					   *   2 -(1)-> 3 -(1)-> 2          positive cycle (+2)
+					   *   2 -(1)-> 4 -(-3)-> 2         negative cycle (-2)
+					   *   2 -(2)-> 5                   leads out of the junction
+					   *
+					   * Floyd-Warshall doesn't distinguish positive from negative edges: only a cycle's total matters, and the positive
+					   * cycle through 2 doesn't offset the negative one. Each lap of 2 -> 4 -> 2 subtracts 2, so distances[2][2] < 0 and
+					   * distances[4][4] < 0, and every pair that can reach 2 or 4 and get back out is -infinity:
+					   * - 3 is only on a positive simple cycle (3 -> 2 -> 3), but a walk from 3 can enter 2, go round 2 <-> 4 as often
+					   *   as it likes, then return: 3 -> 2 -> (4 -> 2)^n -> 3. So distances[3][3] is -infinity too. It is caught by the
+					   *   marking step (3 reaches k = 2 and 2 reaches 3), not by its own diagonal.
+					   * - Downstream of the junction is -infinity as well: 0 -> 5 can go round the cycle at 2 before leaving by 2 -> 5.
+					   * - Pairs that never touch the cycle keep their distances: 0 -> 1 (5) is reached before the junction, and 5 can't
+					   *   reach the cycle at all.
+					   */
+					  make_tuple(vector<vector<long>>{{0, 5, minusInfinity, minusInfinity, minusInfinity, minusInfinity},
+													  {noPath, 0, minusInfinity, minusInfinity, minusInfinity, minusInfinity},
+													  {noPath, noPath, minusInfinity, minusInfinity, minusInfinity, minusInfinity},
+													  {noPath, noPath, minusInfinity, minusInfinity, minusInfinity, minusInfinity},
+													  {noPath, noPath, minusInfinity, minusInfinity, minusInfinity, minusInfinity},
+													  {noPath, noPath, noPath, noPath, noPath, 0}},
+								 vector<vector<long>>{{0, 1, 5}, {1, 2, -1}, {2, 3, 1}, {3, 2, 1}, {2, 5, 2}, {2, 4, 1}, {4, 2, -3}}),
+					  /*
+					   * The same junction with 4 -> 2 costing -1, so the cycle 2 <-> 4 totals 0: no negative cycle. The negative edges
+					   * (1 -> 2 and 4 -> 2) and negative distances (1 -> 2 = -1, 4 -> 2 = -1) are fine: going round a zero-cost cycle
+					   * never makes a path cheaper, so every pair has an ordinary shortest distance.
+					   */
+					  make_tuple(vector<vector<long>>{{0, 5, 4, 5, 5, 6}, {noPath, 0, -1, 0, 0, 1}, {noPath, noPath, 0, 1, 1, 2}, {noPath, noPath, 1, 0, 2, 3}, {noPath, noPath, -1, 0, 0, 1}, {noPath, noPath, noPath, noPath, noPath, 0}},
+								 vector<vector<long>>{{0, 1, 5}, {1, 2, -1}, {2, 3, 1}, {3, 2, 1}, {2, 5, 2}, {2, 4, 1}, {4, 2, -1}})));
+// FloydWarshallDistances returns false if, and only if, the graph has a negative cycle
+TEST(FloydWarshallDistanceTests, FloydWarshallNegativeCycleTest)
+{
+	vector<tuple<bool, vector<vector<long>>>> cases{
+		{true, {{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}}, // Negative edges, but every cycle is positive
+		{true, {{0, 0, 5}, {0, 1, 1}}},									  // Positive self-loop
+		{true, {{0, 1, 2}, {1, 0, -2}}},								  // Cycle costing exactly 0
+		{false, {{0, 1, 1}, {1, 0, -2}}},
+		{false, {{0, 0, -1}, {0, 1, 2}}}, // Negative self-loop
+		{false, {{4, 0, 1}, {0, 1, 1}, {1, 2, -1}, {2, 1, -1}, {2, 3, 2}, {5, 6, -3}}},
+		{false, {{0, 1, 5}, {1, 2, -1}, {2, 3, 1}, {3, 2, 1}, {2, 5, 2}, {2, 4, 1}, {4, 2, -3}}}, // Junction 2 on a positive and a negative cycle: the negative one wins
+		{true, {{0, 1, 5}, {1, 2, -1}, {2, 3, 1}, {3, 2, 1}, {2, 5, 2}, {2, 4, 1}, {4, 2, -1}}}};  // The same junction with a zero-cost cycle
+	for (auto const &[expected, edges] : cases)
+	{
+		Graph<size_t, size_t> graph;
+		for (vector<long> const &edge : edges)
+			graph.AddDirectedEdge(edge[0], edge[1], edge[2]);
+		vector<vector<long>> distances;
+		ASSERT_EQ(expected, graph.FloydWarshallDistances(distances)) << edges.size() << " edges";
+	}
+}
 class FloydWarshallPathsTestFixture : public testing::TestWithParam<tuple<vector<size_t>, vector<vector<long>>, size_t, size_t>>
 {
 public:
@@ -1097,7 +1199,44 @@ TEST_P(FloydWarshallPathsTestFixture, FloydWarshallPathTests)
 INSTANTIATE_TEST_SUITE_P(
 	FloydWarshallPathTests,
 	FloydWarshallPathsTestFixture,
+	// Columns: expected path (excluding the start vertex, including the end), directed edges {from, to, cost}, start, end
 	::testing::Values(make_tuple(vector<size_t>{2, 3, 1}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}, 0, 1),
 					  make_tuple(vector<size_t>{2, 3}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}, 0, 3),
 					  make_tuple(vector<size_t>{3, 1}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}, 2, 1),
-					  make_tuple(vector<size_t>{0, 2}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}, 1, 2)));
+					  make_tuple(vector<size_t>{0, 2}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}, 1, 2),
+					  make_tuple(vector<size_t>{3, 1, 0}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}, 2, 0),
+					  make_tuple(vector<size_t>{0, 2, 3}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}, 1, 3),
+					  // Start == end: nothing to travel
+					  make_tuple(vector<size_t>{}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}, 0, 0),
+					  // No path: empty
+					  make_tuple(vector<size_t>{}, vector<vector<long>>{{0, 1, 3}, {1, 2, 4}}, 2, 0),
+					  make_tuple(vector<size_t>{}, vector<vector<long>>{{0, 1, 2}, {2, 3, 5}}, 0, 3), // Different components
+					  // Through 1 when the direct edge is longer; the direct edge when it is shorter
+					  make_tuple(vector<size_t>{1, 2}, vector<vector<long>>{{0, 2, 10}, {0, 1, 3}, {1, 2, 4}}, 0, 2),
+					  make_tuple(vector<size_t>{2}, vector<vector<long>>{{0, 2, 2}, {0, 1, 3}, {1, 2, 4}}, 0, 2),
+					  // CLRS Figure 25.4 (vertices renumbered 0 .. 4): negative edges make the long way round the shortest
+					  make_tuple(vector<size_t>{4, 3, 2, 1}, vector<vector<long>>{{0, 1, 3}, {0, 2, 8}, {0, 4, -4}, {1, 3, 1}, {1, 4, 7}, {2, 1, 4}, {3, 0, 2}, {3, 2, -5}, {4, 3, 6}}, 0, 1),
+					  make_tuple(vector<size_t>{1, 3, 0, 4}, vector<vector<long>>{{0, 1, 3}, {0, 2, 8}, {0, 4, -4}, {1, 3, 1}, {1, 4, 7}, {2, 1, 4}, {3, 0, 2}, {3, 2, -5}, {4, 3, 6}}, 2, 4),
+					  make_tuple(vector<size_t>{3, 2, 1}, vector<vector<long>>{{0, 1, 3}, {0, 2, 8}, {0, 4, -4}, {1, 3, 1}, {1, 4, 7}, {2, 1, 4}, {3, 0, 2}, {3, 2, -5}, {4, 3, 6}}, 4, 1),
+					  // Undirected Wikipedia Dijkstra example (vertices renumbered 0 .. 5): 1 -> 3 -> 6 -> 5 in its numbering
+					  make_tuple(vector<size_t>{2, 5, 4}, vector<vector<long>>{{0, 1, 7}, {1, 0, 7}, {0, 2, 9}, {2, 0, 9}, {0, 5, 14}, {5, 0, 14}, {1, 2, 10}, {2, 1, 10}, {1, 3, 15}, {3, 1, 15}, {2, 3, 11}, {3, 2, 11}, {2, 5, 2}, {5, 2, 2}, {3, 4, 6}, {4, 3, 6}, {4, 5, 9}, {5, 4, 9}}, 0, 4),
+					  make_tuple(vector<size_t>{2, 0}, vector<vector<long>>{{0, 1, 7}, {1, 0, 7}, {0, 2, 9}, {2, 0, 9}, {0, 5, 14}, {5, 0, 14}, {1, 2, 10}, {2, 1, 10}, {1, 3, 15}, {3, 1, 15}, {2, 3, 11}, {3, 2, 11}, {2, 5, 2}, {5, 2, 2}, {3, 4, 6}, {4, 3, 6}, {4, 5, 9}, {5, 4, 9}}, 3, 0),
+					  // Negative cycle 1 <-> 2: paths through it have no shortest version, so they're empty. Before, these looped forever
+					  make_tuple(vector<size_t>{}, vector<vector<long>>{{4, 0, 1}, {0, 1, 1}, {1, 2, -1}, {2, 1, -1}, {2, 3, 2}, {5, 6, -3}}, 0, 3),
+					  make_tuple(vector<size_t>{}, vector<vector<long>>{{4, 0, 1}, {0, 1, 1}, {1, 2, -1}, {2, 1, -1}, {2, 3, 2}, {5, 6, -3}}, 1, 2),
+					  make_tuple(vector<size_t>{}, vector<vector<long>>{{4, 0, 1}, {0, 1, 1}, {1, 2, -1}, {2, 1, -1}, {2, 3, 2}, {5, 6, -3}}, 1, 1), // Start on the cycle
+					  // ...while paths that don't reach the cycle are still found
+					  make_tuple(vector<size_t>{0}, vector<vector<long>>{{4, 0, 1}, {0, 1, 1}, {1, 2, -1}, {2, 1, -1}, {2, 3, 2}, {5, 6, -3}}, 4, 0),
+					  make_tuple(vector<size_t>{6}, vector<vector<long>>{{4, 0, 1}, {0, 1, 1}, {1, 2, -1}, {2, 1, -1}, {2, 3, 2}, {5, 6, -3}}, 5, 6),
+					  // Junction 2 on the positive cycle 2 <-> 3 and the negative cycle 2 <-> 4 (see FloydWarshallDistanceTests):
+					  // paths into, out of or through the junction are empty, including 3 -> 3, whose own simple cycle is positive...
+					  make_tuple(vector<size_t>{}, vector<vector<long>>{{0, 1, 5}, {1, 2, -1}, {2, 3, 1}, {3, 2, 1}, {2, 5, 2}, {2, 4, 1}, {4, 2, -3}}, 0, 5),
+					  make_tuple(vector<size_t>{}, vector<vector<long>>{{0, 1, 5}, {1, 2, -1}, {2, 3, 1}, {3, 2, 1}, {2, 5, 2}, {2, 4, 1}, {4, 2, -3}}, 3, 3),
+					  make_tuple(vector<size_t>{}, vector<vector<long>>{{0, 1, 5}, {1, 2, -1}, {2, 3, 1}, {3, 2, 1}, {2, 5, 2}, {2, 4, 1}, {4, 2, -3}}, 1, 3),
+					  // ...while 0 -> 1, reached before the junction, is still found
+					  make_tuple(vector<size_t>{1}, vector<vector<long>>{{0, 1, 5}, {1, 2, -1}, {2, 3, 1}, {3, 2, 1}, {2, 5, 2}, {2, 4, 1}, {4, 2, -3}}, 0, 1),
+					  // The same junction with a zero-cost cycle 2 <-> 4: ordinary paths, through the negative edges
+					  make_tuple(vector<size_t>{1, 2, 5}, vector<vector<long>>{{0, 1, 5}, {1, 2, -1}, {2, 3, 1}, {3, 2, 1}, {2, 5, 2}, {2, 4, 1}, {4, 2, -1}}, 0, 5),
+					  make_tuple(vector<size_t>{1, 2, 4}, vector<vector<long>>{{0, 1, 5}, {1, 2, -1}, {2, 3, 1}, {3, 2, 1}, {2, 5, 2}, {2, 4, 1}, {4, 2, -1}}, 0, 4),
+					  make_tuple(vector<size_t>{2, 3}, vector<vector<long>>{{0, 1, 5}, {1, 2, -1}, {2, 3, 1}, {3, 2, 1}, {2, 5, 2}, {2, 4, 1}, {4, 2, -1}}, 4, 3),
+					  make_tuple(vector<size_t>{2, 4}, vector<vector<long>>{{0, 1, 5}, {1, 2, -1}, {2, 3, 1}, {3, 2, 1}, {2, 5, 2}, {2, 4, 1}, {4, 2, -1}}, 3, 4)));
