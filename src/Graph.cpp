@@ -1,14 +1,23 @@
 #include "pch.h"
-#include <string>
-#include <set>
-#include <iostream>
-#include <limits>
 #include "Graph.h"
+template class Graph<int, int>;
+template class FurthestNode<int, int>;
+template class Graph<uint32_t, uint32_t>;
+template class FurthestNode<uint32_t, uint32_t>;
 template class Graph<long, long>;
-template class Graph<size_t, size_t>;
 template class FurthestNode<long, long>;
+template class Graph<uint64_t, uint64_t>;
+template class FurthestNode<uint64_t, uint64_t>;
+#ifdef __SIZEOF_INT128__
+template class Graph<uint128_t, uint128_t>;
+template class FurthestNode<uint128_t, uint128_t>;
+#endif
+#if defined(_MSC_VER)
+// The following are duplicates of int64_t on GNUC / GNUG
+template class Graph<size_t, size_t>;
 template class FurthestNode<size_t, size_t>;
-using namespace oneapi::tbb;
+#endif
+
 template <typename TTag, typename TItem>
 FurthestNode<TTag, TItem>::FurthestNode() : distance(0), vertex(nullptr) {}
 template <typename TTag, typename TItem>
@@ -364,6 +373,49 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 			else
 				distances[it->first->GetTag() < src ? it->first->GetTag() - 1 : it->first->GetTag() - 2] = it->second;
 		}
+}
+/*
+ * https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm
+ */
+template <typename TTag, typename TItem>
+void Graph<TTag, TItem>::FloydWarshallDistances(vector<vector<long>> &distances)
+{
+	size_t vertices = _vertices.size();
+	distances = vector<vector<long>>(vertices, vector<long>(vertices, numeric_limits<long>::max()));											 // 0-based index!
+	_FloydWarshallPaths = vector<vector<shared_ptr<Vertex<TTag, TItem>>>>(vertices, vector<shared_ptr<Vertex<TTag, TItem>>>(vertices, nullptr)); // Holds the penultimate vertex on the path from u to Values(v1, v2, v3)
+	TTag minTag = _vertices.begin()->first, maxTag = _vertices.rbegin()->first;
+	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = _vertices.begin(); it != _vertices.end(); it++)
+	{
+		distances[it->first][it->first] = 0;
+		_FloydWarshallPaths[it->first][it->first] = it->second;
+		map<shared_ptr<Vertex<TTag, TItem>>, long> neighbours = it->second->GetNeighboursWithCost();
+		for (typename map<shared_ptr<Vertex<TTag, TItem>>, long>::iterator v = neighbours.begin(); v != neighbours.end(); v++)
+		{
+			distances[it->first][v->first->GetTag()] = v->second;
+			_FloydWarshallPaths[it->first][v->first->GetTag()] = it->second; // [u][v] = u
+		}
+	}
+	/*
+	 * XXX: This limits the data type of graph vertices' tags to numerical data types!
+	 */
+	for (TTag k = minTag; k <= maxTag; k++)
+		for (TTag i = minTag; i <= maxTag; i++)
+			for (TTag j = minTag; j <= maxTag; j++)
+				if (distances[i][k] != numeric_limits<long>::max() && distances[k][j] != numeric_limits<long>::max() && distances[i][j] > distances[i][k] + distances[k][j])
+				{
+					distances[i][j] = distances[i][k] + distances[k][j];
+					_FloydWarshallPaths[i][j] = _FloydWarshallPaths[k][j];
+				}
+}
+template <typename TTag, typename TItem>
+void Graph<TTag, TItem>::FloydWarshallPath(TTag start, TTag end, vector<TTag> &path)
+{
+	if (_vertices.count(start) && _vertices.count(end) && _FloydWarshallPaths[start][end])
+	{
+		shared_ptr<Vertex<TTag, TItem>> startV = _vertices[start], endV = _vertices[end];
+		for (shared_ptr<Vertex<TTag, TItem>> n = endV; n && n != startV; n = _FloydWarshallPaths[start][n->GetTag()])
+			path.insert(path.begin(), n->GetTag());
+	}
 }
 /*
  * https://www.hackerrank.com/challenges/rust-murderer/problem

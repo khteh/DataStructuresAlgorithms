@@ -1033,3 +1033,71 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(2, vector<vector<size_t>>{{2, 1, 1}, {2, 3, 1}, {3, 4, 1}}, 4, 2),
 					  make_tuple(1, vector<vector<size_t>>{{1, 2, 1}}, 2, 1),
 					  make_tuple(-1, vector<vector<size_t>>{{1, 2, 1}}, 2, 2)));
+class FloydWarshallDistanceTestFixture : public testing::TestWithParam<tuple<vector<vector<long>>, vector<vector<long>>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_edges = get<1>(GetParam());
+		for (typename vector<vector<long>>::iterator it = _edges.begin(); it != _edges.end(); it++)
+			_graph.AddDirectedEdge((*it)[0], (*it)[1], (*it)[2]);
+	}
+	vector<vector<long>> FloydWarshallDistanceTest()
+	{
+		vector<vector<long>> distances;
+		_graph.FloydWarshallDistances(distances);
+		return distances;
+	}
+
+protected:
+	Graph<size_t, size_t> _graph;
+	vector<vector<long>> _expected;
+	vector<vector<long>> _edges;
+};
+TEST_P(FloydWarshallDistanceTestFixture, FloydWarshallDistanceTests)
+{
+	ASSERT_EQ(this->_expected, this->FloydWarshallDistanceTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	FloydWarshallDistanceTests,
+	FloydWarshallDistanceTestFixture,
+	::testing::Values(make_tuple(vector<vector<long>>{{0, -1, -2, 0}, {4, 0, 2, 4}, {5, 1, 0, 2}, {3, -1, 1, 0}}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}})));
+class FloydWarshallPathsTestFixture : public testing::TestWithParam<tuple<vector<size_t>, vector<vector<long>>, size_t, size_t>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_edges = get<1>(GetParam());
+		_start = get<2>(GetParam());
+		_end = get<3>(GetParam());
+		for (typename vector<vector<long>>::iterator it = _edges.begin(); it != _edges.end(); it++)
+			_graph.AddDirectedEdge((*it)[0], (*it)[1], (*it)[2]);
+		vector<vector<long>> distances;
+		_graph.FloydWarshallDistances(distances); // Build the shortest paths first.
+	}
+	vector<size_t> FloydWarshallPathTest()
+	{
+		vector<size_t> path;
+		_graph.FloydWarshallPath(_start, _end, path);
+		return path;
+	}
+
+protected:
+	Graph<size_t, size_t> _graph;
+	vector<size_t> _expected;
+	vector<vector<long>> _edges;
+	size_t _start, _end;
+};
+TEST_P(FloydWarshallPathsTestFixture, FloydWarshallPathTests)
+{
+	ASSERT_EQ(this->_expected, this->FloydWarshallPathTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	FloydWarshallPathTests,
+	FloydWarshallPathsTestFixture,
+	::testing::Values(make_tuple(vector<size_t>{2, 3, 1}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}, 0, 1),
+					  make_tuple(vector<size_t>{2, 3}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}, 0, 3),
+					  make_tuple(vector<size_t>{3, 1}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}, 2, 1),
+					  make_tuple(vector<size_t>{0, 2}, vector<vector<long>>{{1, 0, 4}, {0, 2, -2}, {1, 2, 3}, {2, 3, 2}, {3, 1, -1}}, 1, 2)));

@@ -2,7 +2,15 @@
 #include "Vertex.h"
 template class Vertex<int, int>;
 template class Vertex<long, long>;
+template class Vertex<uint32_t, uint32_t>;
+template class Vertex<uint64_t, uint64_t>;
+#ifdef __SIZEOF_INT128__
+template class Vertex<uint128_t, uint128_t>;
+#endif
+#if defined(_MSC_VER)
+// The following are duplicates of int64_t on GNUC / GNUG
 template class Vertex<size_t, size_t>;
+#endif
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::Vertex()
 	: _tag(TTag()), _item(TItem()), _sum(TItem()), _cost(numeric_limits<long>::max())

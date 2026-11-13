@@ -15,6 +15,7 @@ class Graph
 {
 private:
 	long _totalCost;
+	vector<vector<shared_ptr<Vertex<TTag, TItem>>>> _FloydWarshallPaths;
 	map<TTag, shared_ptr<Vertex<TTag, TItem>>> _vertices;
 	TItem GetSubGraphSum(TTag);
 	void AddVertex(shared_ptr<Vertex<TTag, TItem>>);
@@ -41,7 +42,10 @@ public:
 	void Dijkstra(TTag, map<shared_ptr<Vertex<TTag, TItem>>, long> &);
 	long Dijkstra(TTag, TTag);
 	void Dijkstra(TTag, vector<long> &);
-	vector<long> UnbeatenPaths(size_t, vector<vector<size_t>> &, size_t);
+	void FloydWarshallDistances(vector<vector<long>> &);
+	void FloydWarshallPath(TTag, TTag, vector<TTag> &);
+	vector<long>
+	UnbeatenPaths(size_t, vector<vector<size_t>> &, size_t);
 	void UnbeatenPathsDijkstra(TTag, vector<long> &);
 	FurthestNode<TTag, TItem> Diameter(TTag);
 	long Diameter();

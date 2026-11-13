@@ -10,6 +10,7 @@
 #include "Edge.h"
 #include "Error.h"
 #include "FenwickTree.h"
+#include "FloydWarshall.h"
 #include "FunctionObject.h"
 #include "GameTheory.h"
 #include "Graph.h"
