@@ -11,7 +11,7 @@ template int128_t MultinomialCoefficients(size_t, vector<size_t> const &, int128
 template int128_t ceil_div(int128_t, int128_t);
 template int128_t MinBitTrick(int128_t, int128_t);
 template int128_t MaxBitTrick(int128_t, int128_t);
-template int128_t Kruskals(vector<size_t> const &, vector<size_t> const &, vector<int128_t> const &);
+template int128_t Kruskal(vector<size_t> const &, vector<size_t> const &, vector<int128_t> const &);
 template size_t FactorsCount(int128_t, int128_t);
 template size_t FactorsCount(uint128_t, uint128_t);
 template uint128_t ceil_div(uint128_t, uint128_t);
@@ -24,7 +24,7 @@ template uint128_t BinomialCoefficientsMultiplicative(size_t, size_t);
 template uint128_t MultinomialCoefficients(size_t, vector<size_t> const &, uint128_t);
 #endif
 template int64_t ceil_div(int64_t, int64_t);
-template int64_t Kruskals(vector<size_t> const &, vector<size_t> const &, vector<int64_t> const &);
+template int64_t Kruskal(vector<size_t> const &, vector<size_t> const &, vector<int64_t> const &);
 template uint64_t ceil_div(uint64_t, uint64_t);
 template int64_t Fibonacci(long);
 template uint64_t Fibonacci(long);
@@ -41,7 +41,7 @@ template size_t FactorsCount(long, long);
 template size_t FactorsCount(size_t, size_t);
 template size_t MaxZeroProductBruteForce(vector<long> const &, size_t);
 template size_t MaxZeroProductBruteForce(vector<size_t> const &, size_t);
-template long Kruskals(vector<size_t> const &, vector<size_t> const &, vector<long> const &);
+template long Kruskal(vector<size_t> const &, vector<size_t> const &, vector<long> const &);
 #endif
 template float Ulp(float);
 template double Ulp(double);
@@ -3445,7 +3445,7 @@ string TimeInWords(size_t h, size_t m)
    100%
 */
 template <typename TTag, arithmetic_type TItem>
-TItem Kruskals(vector<TTag> const &from, vector<TTag> const &to, vector<TItem> const &weight)
+TItem Kruskal(vector<TTag> const &from, vector<TTag> const &to, vector<TItem> const &weight)
 {
 	multiset<Edge<TTag, TItem>> edges; // Sort the graph edges by weight.
 	TItem sum = 0;

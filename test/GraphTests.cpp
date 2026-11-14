@@ -815,7 +815,7 @@ public:
 	}
 	long KruskalTest()
 	{
-		return Kruskals<size_t, long>(_from, _to, _weights);
+		return Kruskal<size_t, long>(_from, _to, _weights);
 	}
 
 protected:

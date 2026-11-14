@@ -280,7 +280,7 @@ long CalculateMedian(vector<long> &);
 string TimeInWords(size_t, size_t);
 size_t BeautifulQuadruples(size_t, size_t, size_t, size_t);
 template <typename TTag, arithmetic_type TItem>
-TItem Kruskals(vector<TTag> const &, vector<TTag> const &, vector<TItem> const &);
+TItem Kruskal(vector<TTag> const &, vector<TTag> const &, vector<TItem> const &);
 size_t PostmanProblemWithoutLoop(size_t, set<size_t> const &, vector<vector<size_t>> const &, bool print = false);
 uint64_t substrings(string const &);
 vector<string> BomberMan(size_t, vector<string> const &);
