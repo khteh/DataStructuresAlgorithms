@@ -6,7 +6,7 @@ template class Arithmetic<uint128_t>;
 template class GCDExtendedEuclideanResult<int128_t>;
 template class GCDExtendedEuclideanResult<uint128_t>;
 #endif
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
 // The following are duplicates of int64_t on GNUC / GNUG
 template class Arithmetic<size_t>;
 template class Arithmetic<long>;

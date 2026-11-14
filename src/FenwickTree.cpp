@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "FenwickTree.h"
 template class FenwickTree<int>;
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
 // The following are duplicates of int64_t on GNUC / GNUG
 template class FenwickTree<long>;
 template class FenwickTree<size_t>;

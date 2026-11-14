@@ -11,7 +11,6 @@ template int128_t MultinomialCoefficients(size_t, vector<size_t> const &, int128
 template int128_t ceil_div(int128_t, int128_t);
 template int128_t MinBitTrick(int128_t, int128_t);
 template int128_t MaxBitTrick(int128_t, int128_t);
-template int128_t Kruskal(vector<size_t> const &, vector<size_t> const &, vector<int128_t> const &);
 template size_t FactorsCount(int128_t, int128_t);
 template size_t FactorsCount(uint128_t, uint128_t);
 template uint128_t ceil_div(uint128_t, uint128_t);
@@ -24,7 +23,6 @@ template uint128_t BinomialCoefficientsMultiplicative(size_t, size_t);
 template uint128_t MultinomialCoefficients(size_t, vector<size_t> const &, uint128_t);
 #endif
 template int64_t ceil_div(int64_t, int64_t);
-template int64_t Kruskal(vector<size_t> const &, vector<size_t> const &, vector<int64_t> const &);
 template uint64_t ceil_div(uint64_t, uint64_t);
 template int64_t Fibonacci(long);
 template uint64_t Fibonacci(long);
@@ -32,7 +30,7 @@ template int64_t Factorial(size_t, int64_t);
 template uint64_t Factorial(size_t, uint64_t);
 template uint64_t FibonacciRecursive(long);
 template uint64_t FactorialRecursive(size_t, uint64_t);
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
 // The following are duplicates of int64_t on GNUC / GNUG
 template size_t ceil_div(size_t, size_t);
 template long MinBitTrick(long, long);
@@ -41,7 +39,6 @@ template size_t FactorsCount(long, long);
 template size_t FactorsCount(size_t, size_t);
 template size_t MaxZeroProductBruteForce(vector<long> const &, size_t);
 template size_t MaxZeroProductBruteForce(vector<size_t> const &, size_t);
-template long Kruskal(vector<size_t> const &, vector<size_t> const &, vector<long> const &);
 #endif
 template float Ulp(float);
 template double Ulp(double);
@@ -3437,33 +3434,6 @@ string TimeInWords(size_t h, size_t m)
 		str << numbers[m] << (m > 1 ? " minutes" : " minute");
 	str << hour.str();
 	return str.str();
-}
-/* https://www.hackerrank.com/challenges/kruskalmstrsub/problem
-   https://en.wikipedia.org/wiki/Kruskal%27s_algorithm
-   https://stackoverflow.com/questions/1195872/when-should-i-use-kruskal-as-opposed-to-prim-and-vice-versa
-   Kruskal can have better performance if the edges can be sorted in linear time, or are already sorted
-   100%
-*/
-template <typename TTag, arithmetic_type TItem>
-TItem Kruskal(vector<TTag> const &from, vector<TTag> const &to, vector<TItem> const &weight)
-{
-	multiset<Edge<TTag, TItem>> edges; // Sort the graph edges by weight.
-	TItem sum = 0;
-	for (size_t i = 0; i < weight.size(); i++)
-		edges.emplace(Edge(from[i], to[i], weight[i]));
-	/*
-	Create a forest (a set of trees) initially consisting of a separate single-vertex tree for each vertex in the input graph.
-	*/
-	DisJointSet<TTag> disjointSet(from); // Every vertex is a disjoint set
-	disjointSet.MakeSet(to);
-	for (typename multiset<Edge<TTag, TItem>>::const_iterator it = edges.cbegin(); it != edges.cend(); it++)
-		if (disjointSet.Find(it->node1) != disjointSet.Find(it->node2)) // Test whether adding the edge to the current forest would create a cycle.
-		{
-			// If not, add the edge to the forest, combining two trees into a single tree.
-			sum += it->weight;
-			disjointSet.Union(it->node1, it->node2);
-		}
-	return sum;
 }
 /* https://www.hackerrank.com/challenges/jeanies-route/problem
  * This only works for the requirement N cities and N-1 roads. It will NOT work if there is a circle/loop of nodes!

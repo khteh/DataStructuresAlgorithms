@@ -8,7 +8,7 @@ template class DynamicProgramming<string>;
 template class DynamicProgramming<int128_t>;
 template class DynamicProgramming<uint128_t>;
 #endif
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
 template class DynamicProgramming<long>; // This is duplicate of int64_t on GNUC / GNUG
 #endif
 /* https://leetcode.com/problems/integer-break/

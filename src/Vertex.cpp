@@ -2,12 +2,20 @@
 #include "Vertex.h"
 template class Vertex<int, int>;
 template class Vertex<long, long>;
+template class Vertex<size_t, long>;
 template class Vertex<uint32_t, uint32_t>;
 template class Vertex<uint64_t, uint64_t>;
+template class Vertex<uint32_t, int32_t>;
+template class Vertex<uint32_t, long>;
 #ifdef __SIZEOF_INT128__
 template class Vertex<uint128_t, uint128_t>;
+template class Vertex<uint128_t, int128_t>;
+template class Vertex<size_t, uint128_t>;
+template class Vertex<size_t, int128_t>;
+template class Vertex<uint32_t, uint128_t>;
+template class Vertex<uint32_t, int128_t>;
 #endif
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
 // The following are duplicates of int64_t on GNUC / GNUG
 template class Vertex<size_t, size_t>;
 #endif
@@ -47,7 +55,6 @@ Vertex<TTag, TItem>::Vertex(const shared_ptr<Vertex<TTag, TItem>> vertex)
 	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(vertex->_tag), _item(vertex->_item), _sum(vertex->_sum), _cost(vertex->_cost), _neighbours(vertex->_neighbours)
 {
 }
-
 template <typename TTag, typename TItem>
 Vertex<TTag, TItem>::~Vertex()
 {

@@ -2,23 +2,40 @@
 #include "DisJointSet.h"
 template class DisJointSet<char>;
 template class DisJointSet<int>;
-template class DisJointSet<size_t>;
 template class DisJointSet<long>;
+template class DisJointSet<uint32_t>;
+template class DisJointSet<uint64_t>;
+#ifdef _MSC_VER
+template class DisJointSet<size_t>;
+#endif
+#ifdef __SIZEOF_INT128__
+template class DisJointSet<int128_t>;
+template class DisJointSet<uint128_t>;
+#endif
 template <typename T>
 DisJointSet<T>::DisJointSet(vector<T> const &data)
 {
+	/*
+	 * Gives each vertex its own set, a “forest” of single-vertex trees.
+	 */
 	MakeSet(data);
 }
 template <typename T>
 void DisJointSet<T>::MakeSet(vector<T> const &data)
 {
-	// perform makeset operation by creating n disjoint sets
+	/*
+	 * Gives each vertex its own set, a “forest” of single-vertex trees.
+	 * perform makeset operation by creating n disjoint sets
+	 */
 	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
 		_sets.emplace(*it, *it); // Key: current item; Value: parent of the current item
 }
 template <typename T>
 T DisJointSet<T>::Find(T item)
 {
+	/*
+	 * Gives the root, which names the tree a vertex belongs to.
+	 */
 	// C++ map will insert non-existing key silently
 	if (!_sets.count(item))
 	{

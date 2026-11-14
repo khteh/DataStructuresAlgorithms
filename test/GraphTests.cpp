@@ -815,10 +815,11 @@ public:
 	}
 	long KruskalTest()
 	{
-		return Kruskal<size_t, long>(_from, _to, _weights);
+		return _graph.Kruskal(_from, _to, _weights);
 	}
 
 protected:
+	Graph<size_t, long> _graph;
 	long _expected;
 	vector<size_t> _from, _to;
 	vector<long> _weights;

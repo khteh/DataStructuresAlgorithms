@@ -3,18 +3,23 @@
 template class Graph<int, int>;
 template class FurthestNode<int, int>;
 template class Graph<uint32_t, uint32_t>;
+template class Graph<uint32_t, int64_t>;
 template class FurthestNode<uint32_t, uint32_t>;
 template class Graph<long, long>;
 template class FurthestNode<long, long>;
+template class Graph<uint64_t, long>;
+template class FurthestNode<uint32_t, long>;
 template class Graph<uint64_t, uint64_t>;
 template class FurthestNode<uint64_t, uint64_t>;
 #ifdef __SIZEOF_INT128__
+template class Graph<uint32_t, int128_t>;
 template class Graph<uint128_t, uint128_t>;
 template class FurthestNode<uint128_t, uint128_t>;
 #endif
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
 // The following are duplicates of int64_t on GNUC / GNUG
 template class Graph<size_t, size_t>;
+template class Graph<size_t, long>;
 template class FurthestNode<size_t, size_t>;
 #endif
 
@@ -181,6 +186,45 @@ void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex) const
 		else
 			cout << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << " " << (*it)->GetTag() << "(" << (*it)->GetItem() << ") "
 				 << " [" << previous->GetCost(*it) << "] " << endl;
+}
+/* https://www.hackerrank.com/challenges/kruskalmstrsub/problem
+   https://en.wikipedia.org/wiki/Kruskal%27s_algorithm
+   https://stackoverflow.com/questions/1195872/when-should-i-use-kruskal-as-opposed-to-prim-and-vice-versa
+   Kruskal can have better performance if the edges can be sorted in linear time, or are already sorted
+   100%
+Worked example: the first test case. The edges are 1–2 (5), 1–3 (3), 4–1 (6), 2–4 (7), 3–2 (4) and 3–4 (5), and the expected total is 12.
+Edge (weight)	Trees before	Same root?	Action							Sum
+1–3 (3)			{1} {2} {3} {4}	no			take, union						3
+3–2 (4)			{1, 3} {2} {4}	no			take, union						7
+1–2 (5)			{1, 2, 3} {4}	yes			skip: it would close 1–3–2–1	7
+3–4 (5)			{1, 2, 3} {4}	no			take, union						12
+4–1 (6)			{1, 2, 3, 4}	yes			skip							12
+2–4 (7)			{1, 2, 3, 4}	yes			skip							12 ✓
+*/
+template <typename TTag, typename TItem>
+TItem Graph<TTag, TItem>::Kruskal(vector<TTag> const &from, vector<TTag> const &to, vector<TItem> const &weight)
+{
+	multiset<Edge<TTag, TItem>> edges; // Sort the graph edges by weight.
+	TItem sum = 0;
+	for (size_t i = 0; i < weight.size(); i++)
+		edges.emplace(Edge(from[i], to[i], weight[i]));
+	/*
+	Create a forest (a set of trees) initially consisting of a separate single-vertex tree for each vertex in the input graph.
+	*/
+	DisJointSet<TTag> disjointSet(from); // Every vertex is a disjoint set
+	disjointSet.MakeSet(to);
+	for (typename multiset<Edge<TTag, TItem>>::const_iterator it = edges.cbegin(); it != edges.cend(); it++)
+		if (disjointSet.Find(it->node1) != disjointSet.Find(it->node2)) // Test whether adding the edge to the current forest would create a cycle.
+		{
+			/*
+			 * If the two ends have different roots, they’re in different trees. The edge joins them without closing a loop, so it’s added: sum += weight, and Union merges the two trees.
+			 * If they have the same root, they’re already connected by cheaper edges. Adding this edge would close a cycle, so it’s skipped.
+			 */
+			// If not, add the edge to the forest, combining two trees into a single tree.
+			sum += it->weight;
+			disjointSet.Union(it->node1, it->node2);
+		}
+	return sum;
 }
 /* https://www.hackerrank.com/challenges/primsmstsub/problem
    https://en.wikipedia.org/wiki/Prim%27s_algorithm

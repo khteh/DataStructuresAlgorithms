@@ -36,7 +36,7 @@
 
 #include <cstdint>
 
-#if defined(_MSC_VER) // Use MSVC++ intrinsics
+#ifdef _MSC_VER // Use MSVC++ intrinsics
 #include <intrin.h>
 #endif
 
@@ -727,16 +727,16 @@ namespace pcg_extras
     }
 
 #if PCG_64BIT_SPECIALIZATIONS
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
 #pragma intrinsic(_umul128)
 #endif
 
-#if defined(_MSC_VER) || __SIZEOF_INT128__
+#ifdef _MSC_VER || __SIZEOF_INT128__
     template <typename UInt32>
     uint_x4<UInt32, uint64_t> operator*(const uint_x4<UInt32, uint64_t> &a,
                                         const uint_x4<UInt32, uint64_t> &b)
     {
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
         uint64_t hi;
         uint64_t lo = _umul128(a.d.v01, b.d.v01, &hi);
 #else
