@@ -75,7 +75,22 @@ TEST(KruskalTests, KruskalTreeTest)
 	// Equal weights keep their input order: 1 - 2 (5) is considered before 3 - 4 (5), and skipped because 1 and 2 are already joined
 	result = Kruskal<size_t, long>({1, 1, 4, 2, 3, 3}, {2, 3, 1, 4, 2, 4}, {5, 3, 6, 7, 4, 5});
 	ASSERT_EQ((vector<tuple<size_t, size_t, long>>{{1, 3, 3}, {3, 2, 4}, {3, 4, 5}}), Edges(result.edges));
-	// A forest: one tree per connected part, so 4 vertices in 2 parts give 2 edges, not 3
+	/*
+	 A forest: edges 1 - 2 (1) and 3 - 4 (2) form two separate parts, so 4 vertices give 2 edges, not 3
+				i = 0   i = 1
+	from  = {   1,      3   }
+	to    = {   2,      4   }
+	weight= {   1,      2   }
+				│       │
+				▼       ▼
+				1 –(1)– 2   3 –(2)– 4
+	Tuple		Means
+	{1, 2, 1}	edge 1 – 2, weight 1: the tree for part {1, 2}
+	{3, 4, 2}	edge 3 – 4, weight 2: the tree for part {3, 4}
+	Why “2 edges, not 3”: a spanning tree on 4 vertices would need 3 edges. Here no edge joins the two parts, so Kruskal can only build one tree per part.
+	A part with k vertices needs k − 1 edges, so the total is (2 − 1) + (2 − 1) = 2. In general, that’s vertices − trees = 4 − 2.
+	Connected() is false because result.trees is 2.
+	*/
 	result = Kruskal<size_t, long>({1, 3}, {2, 4}, {1, 2});
 	ASSERT_FALSE(result.Connected());
 	ASSERT_EQ((vector<tuple<size_t, size_t, long>>{{1, 2, 1}, {3, 4, 2}}), Edges(result.edges));
