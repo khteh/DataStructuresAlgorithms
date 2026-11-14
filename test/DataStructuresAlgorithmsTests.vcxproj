@@ -75,6 +75,7 @@
     <ClCompile Include="HIndexTests.cpp" />
     <ClCompile Include="IncreasingSequenceTests.cpp" />
     <ClCompile Include="KnapsackTests.cpp" />
+    <ClCompile Include="KruskalTests.cpp" />
     <ClCompile Include="LinkedListTests.cpp" />
     <ClCompile Include="HeapTests.cpp" />
     <ClCompile Include="LongestCommonSubsequenceTests.cpp" />

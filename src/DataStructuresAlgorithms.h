@@ -18,6 +18,7 @@
 #include "IntervalMap.h"
 #include "KDTree.h"
 #include "Knapsack.h"
+#include "Kruskal.h"
 #include "LinkedList.h"
 #include "ListRangeSum.h"
 #include "LongestCommonSubsequence.h"

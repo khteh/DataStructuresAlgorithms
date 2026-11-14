@@ -803,36 +803,6 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple<size_t, vector<vector<long>>, size_t, long>(15, vector<vector<long>>{{1, 2, 3}, {1, 3, 4}, {4, 2, 6}, {5, 2, 2}, {2, 3, 5}, {3, 5, 7}}, 5, 1),
 					  make_tuple<size_t, vector<vector<long>>, size_t, long>(150, vector<vector<long>>{{1, 2, 20}, {1, 3, 50}, {1, 4, 70}, {1, 5, 90}, {2, 3, 30}, {3, 4, 40}, {4, 5, 60}}, 5, 2),
 					  make_tuple<size_t, vector<vector<long>>, size_t, long>(1106, vector<vector<long>>{{2, 1, 1000}, {3, 4, 299}, {2, 4, 200}, {2, 4, 100}, {3, 2, 300}, {3, 2, 6}}, 4, 2)));
-class KruskalTestFixture : public testing::TestWithParam<tuple<long, vector<size_t>, vector<size_t>, vector<long>>>
-{
-public:
-	void SetUp() override
-	{
-		_expected = get<0>(GetParam());
-		_from = get<1>(GetParam());
-		_to = get<2>(GetParam());
-		_weights = get<3>(GetParam());
-	}
-	long KruskalTest()
-	{
-		return _graph.Kruskal(_from, _to, _weights);
-	}
-
-protected:
-	Graph<size_t, long> _graph;
-	long _expected;
-	vector<size_t> _from, _to;
-	vector<long> _weights;
-};
-TEST_P(KruskalTestFixture, KruskalTests)
-{
-	ASSERT_EQ(this->_expected, this->KruskalTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-	KruskalTests,
-	KruskalTestFixture,
-	::testing::Values(make_tuple<long, vector<size_t>, vector<size_t>, vector<long>>(12, vector<size_t>{1, 1, 4, 2, 3, 3}, vector<size_t>{2, 3, 1, 4, 2, 4}, vector<long>{5, 3, 6, 7, 4, 5}),
-					  make_tuple<long, vector<size_t>, vector<size_t>, vector<long>>(200, vector<size_t>{1, 3, 4, 1, 3}, vector<size_t>{2, 2, 3, 4, 1}, vector<long>{1, 150, 99, 100, 200})));
 /*
  * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
  * 100%

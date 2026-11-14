@@ -10,6 +10,17 @@ template class Edge<size_t, int32_t>;
 #ifdef _MSC_VER
 template class Edge<size_t, long>;
 #endif
+// The rest of the TTag and TWeight combinations Kruskal.cpp instantiates (the ones above cover the others)
+template class Edge<int, long>;
+template class Edge<int, size_t>;
+template class Edge<int, double>;
+template class Edge<uint32_t, int>;
+template class Edge<uint32_t, size_t>;
+template class Edge<uint32_t, double>;
+template class Edge<long, int>;
+template class Edge<long, size_t>;
+template class Edge<long, double>;
+template class Edge<size_t, double>;
 #ifdef __SIZEOF_INT128__
 template class Edge<uint128_t, uint128_t>;
 template class Edge<uint128_t, int128_t>;
@@ -17,6 +28,8 @@ template class Edge<size_t, uint128_t>;
 template class Edge<size_t, int128_t>;
 template class Edge<uint32_t, uint128_t>;
 template class Edge<uint32_t, int128_t>;
+template class Edge<int, int128_t>;
+template class Edge<long, int128_t>;
 #endif
 template <typename TTag, arithmetic_type TItem>
 Edge<TTag, TItem>::Edge(TTag n1, TTag n2, TItem w)

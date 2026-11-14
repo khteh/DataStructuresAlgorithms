@@ -27,6 +27,7 @@ set(Sources
     "HIndexTests.cpp"
     "IncreasingSequenceTests.cpp"
     "KnapsackTests.cpp"
+    "KruskalTests.cpp"
     "LinkedListTests.cpp"
     "LongestCommonSubsequenceTests.cpp"
     "LRUCacheTests.cpp"

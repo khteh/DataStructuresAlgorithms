@@ -1,5 +1,4 @@
 #pragma once
-#include "Edge.h"
 #include "Vertex.h"
 using namespace std;
 template <typename TTag, typename TItem>
@@ -39,7 +38,6 @@ public:
 	bool HasVertex(TTag) const;
 	shared_ptr<Vertex<TTag, TItem>> GetVertex(TTag);
 	bool Remove(TTag);
-	TItem Kruskal(vector<TTag> const &, vector<TTag> const &, vector<TItem> const &);
 	size_t PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem>>);
 	void Dijkstra(TTag, map<shared_ptr<Vertex<TTag, TItem>>, long> &);
 	long Dijkstra(TTag, TTag);

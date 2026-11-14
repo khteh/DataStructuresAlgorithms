@@ -138,6 +138,7 @@
     <ClInclude Include="IntervalMap.h" />
     <ClInclude Include="KDTree.h" />
     <ClInclude Include="Knapsack.h" />
+    <ClInclude Include="Kruskal.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="ListRangeSum.h" />
     <ClInclude Include="LongestCommonSubsequence.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="DataStructuresAlgorithms.cpp" />
     <ClCompile Include="KDTree.cpp" />
     <ClCompile Include="Knapsack.cpp" />
+    <ClCompile Include="Kruskal.cpp" />
     <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="ListRangeSum.cpp" />
     <ClCompile Include="LongestCommonSubsequence.cpp" />
