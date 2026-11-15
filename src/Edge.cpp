@@ -31,13 +31,13 @@ template class Edge<uint32_t, int128_t>;
 template class Edge<int, int128_t>;
 template class Edge<long, int128_t>;
 #endif
-template <typename TTag, arithmetic_type TItem>
-Edge<TTag, TItem>::Edge(TTag n1, TTag n2, TItem w)
+template <typename TTag, arithmetic_type TWeight>
+Edge<TTag, TWeight>::Edge(TTag n1, TTag n2, TWeight w)
 	: node1(n1), node2(n2), weight(w)
 {
 }
-template <typename TTag, arithmetic_type TItem>
-bool Edge<TTag, TItem>::operator<(const Edge &other) const
+template <typename TTag, arithmetic_type TWeight>
+bool Edge<TTag, TWeight>::operator<(const Edge &other) const
 {
 	return weight < other.weight;
 }

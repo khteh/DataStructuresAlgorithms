@@ -550,6 +550,8 @@ void Graph<TTag, TItem>::UnbeatenPathsDijkstra(TTag src, vector<long> &distances
 /*
  * https://www.hackerrank.com/challenges/rust-murderer/problem
  * 100%
+ * Return the distances from source to every other cities through the unbeaten paths (complement graph).
+ *
  * Note: The graph/map of the city is ensured to be a sparse graph.
  * A sparse graph is a graph in which the number of edges (E) is close to the number of vertices (V), or O(V),
  * which is significantly lower than the maximum possible number of edges.
@@ -557,10 +559,9 @@ void Graph<TTag, TItem>::UnbeatenPathsDijkstra(TTag src, vector<long> &distances
  * Cities: [1, N]: 1-based index
  * Roads: M
  *
- * BFS on the complement graph: village roads exist exactly where main roads don't.
- * Keep the cities not reached yet. From city u, every unreached city that is NOT a main-road
- * neighbour of u is one village road away. Each unreached city is either removed (at most n in total)
- * or kept because it is a main-road neighbour of u (at most 2M in total), so the BFS is O(N + M).
+ * BFS on the complement graph: village roads exist exactly where main roads don't. Keep the cities not reached yet.
+ * From city u, every unreached city that is NOT a main-road neighbour of u is one village road away.
+ * Each unreached city is either removed (at most n in total) or kept because it is a main-road neighbour of u (at most 2M in total), so the BFS is O(N + M).
  *
  * 2M: It counts how many times a city can be kept in unvisited (the stillUnvisited.push_back(v) branch), over the whole BFS.
  * When the BFS processes city u, a city v stays in unvisited only if there’s a main road between u and v.
@@ -572,7 +573,8 @@ void Graph<TTag, TItem>::UnbeatenPathsDijkstra(TTag src, vector<long> &distances
  * - while processing v, it can keep u
  *
  * Each city is processed once, since it’s popped from the queue only once. So each main road causes at most 2 keeps, one from each end. With m main roads, that’s at most 2m keeps in total.
- * Another way to say the same thing: while processing u, at most deg(u) cities can be kept, where deg(u) is the number of main roads at u. Adding up the degrees of all cities gives exactly 2m, because each road is counted once from each of its two ends. That’s the “handshake lemma”.
+ * Another way to say the same thing: while processing u, at most deg(u) cities can be kept, where deg(u) is the number of main roads at u.
+ * Adding up the degrees of all cities gives exactly 2m, because each road is counted once from each of its two ends. That’s the “handshake lemma”.
  * Example:
  * Cities 1–4, source 1, with main roads 1–2 and 2–3 (m = 2):
  * process 1: unvisited {2, 3, 4} → 2 kept (road 1–2), 3 and 4 reached
@@ -600,7 +602,7 @@ vector object (24 bytes)              heap memory
  *
  * The queue is a vector with a head index. Popping is just head++, so nothing is shifted.
  * neighbourOf marks u’s main-road neighbours by storing u in their slots. There’s no need to clear it between cities: a slot that holds a different city’s number simply doesn’t count as a neighbour of u.
- * unvisited / stillUnvisited play the roles of your nodes1 / nodes2. swap exchanges them in O(1) instead of copying.
+ * unvisited / stillUnvisited play the roles of nodes1 / nodes2 in the set implementation above. swap exchanges them in O(1) instead of copying.
  * No visited set is needed. A city leaves unvisited the moment it gets its distance, so it can’t be reached twice.
  * The loop stops as soon as unvisited is empty. With a dense village-road graph, that’s usually after the first few cities.
  *
@@ -617,13 +619,16 @@ vector object (24 bytes)              heap memory
  * Marking neighbours costs 2m in total, so it grows to O(n²).
  * Keeping cities in unvisited: with almost every pair connected by a main road, most cities are kept on each pass rather than removed. The 2m limit on keeps is now large, about n².
  * The BFS goes deeper. With few village roads, paths are longer: in the 99% case, the furthest city was 3 to 4 village roads away, compared with 2 for the sparse graphs.
- * Compared with building the village roads explicitly
-
+ *
+ * Compared with building the village roads explicitly:
  * The obvious alternative is to build the village-road graph, the complement, and run an ordinary BFS on it. Building the complement means checking all n(n − 1)/2 pairs of cities, which is O(n²) whatever m is:
 
  * Main-road graph	This algorithm	Build the complement, then BFS
  * Sparse (m ≈ n)	O(n)			O(n²)
  * Dense (m ≈ n²)	O(n²)			O(n²)
+ *
+ * Number of roads: m = n(n-1)/2.
+ * Number of neighbourOf[v] = u writes, if every city is processed: Σ deg(u) = 2m. Each road is written once from each end.
  */
 template <typename TTag, typename TItem>
 vector<long> Graph<TTag, TItem>::UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
@@ -649,7 +654,7 @@ vector<long> Graph<TTag, TItem>::UnbeatenPaths(size_t n, vector<vector<size_t>> 
 	{
 		size_t u = queue[head];
 		for (size_t v : adjacency[u])
-			neighbourOf[v] = u; // O(2*M) in sparse graph. O(M^2) in dense graph.
+			neighbourOf[v] = u; // 2M in total over the whole BFS: O(M) in every case, O(N) when sparse, O(N²) when dense.
 		stillUnvisited.clear();
 		for (size_t v : unvisited)
 			if (neighbourOf[v] == u)
@@ -668,7 +673,6 @@ vector<long> Graph<TTag, TItem>::UnbeatenPaths(size_t n, vector<vector<size_t>> 
 			result.push_back(distances[city]);
 	return result;
 }
-
 template <typename TTag, typename TItem>
 FurthestNode<TTag, TItem> Graph<TTag, TItem>::Diameter(TTag src)
 {
