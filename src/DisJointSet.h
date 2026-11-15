@@ -8,7 +8,10 @@ private:
 	map<T, size_t> _rank;
 
 public:
+	DisJointSet() = default;
 	DisJointSet(vector<T> const &);
+	virtual ~DisJointSet();
+	void Reset();
 	void MakeSet(vector<T> const &);
 	T Find(T);
 	size_t Rank(T);

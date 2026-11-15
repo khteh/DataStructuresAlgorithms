@@ -430,12 +430,11 @@ INSTANTIATE_TEST_SUITE_P(
  * https://www.hackerrank.com/challenges/johnland/problem
  * Timeout!
  */
-#if 0
 template <typename TTag, typename TItem>
 class RoadsInHackerlandFixture
 {
 protected:
-	void SetUp(string expected, size_t nodes, vector<vector<T>> edges)
+	void SetUp(string expected, size_t nodes, vector<vector<TItem>> edges)
 	{
 		_expected = expected;
 		_nodes = nodes;
@@ -444,161 +443,29 @@ protected:
 	string _expected;
 	size_t _nodes;
 	vector<vector<TItem>> _edges;
-	Graph<TTag, TItem> _graph;
-	Dijkstra<T> _dijkstra;
 };
-class RoadsInHackerlandTestFixture : public RoadsInHackerlandFixture<size_t, BIG_UNSIGNED_INT>, public testing::TestWithParam<tuple<string, size_t, vector<vector<size_t>>>>
+class RoadsInHackerlandTestFixture : public RoadsInHackerlandFixture<size_t, size_t>, public testing::TestWithParam<tuple<string, size_t, vector<vector<size_t>>>>
 {
 public:
 	void SetUp() override
 	{
 		RoadsInHackerlandFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()), get<2>(GetParam()));
-		vector<size_t> data(_nodes);
-		ranges::generate(data, [n = 1]() mutable
-						 { return n++; }); // Item values
-		_graph.AddVertices(data);		   // Tag values are indices
-		for (vector<vector<size_t>>::iterator it = _edges.begin(); it != _edges.end(); it++)
-			_graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, 1 << (*it)[2]);
 	}
 	string RoadsInHackerlandTest()
 	{
-		unsigned __int128 sum = 0;
-		vector<vector<size_t>> distances;
-		bool negativeCycle = _graph.FloydWarshallDistances(distances);
-		for (size_t i = 0; i < _nodes; i++)
-			for (size_t j = 0; j < _nodes; j++)
-				if (distances[i][j] != numeric_limits<unsigned __int128>::max())
-					sum += distances[i][j];
-		ASSERT_FALSE(negativeCycle);
+		return RoadsInHackerland(_nodes, _edges);
 	}
-//#if 0
-		string RoadsInHackerlandTest()
-	{
-		size_t distance = 0;
-		std::mutex m;
-		set<string> computed;
-		parallel_for(blocked_range<size_t>(1, _nodes, 2), [&](blocked_range<size_t> r)
-					 {
-		m.lock();
-		cout << "parallel_for blocked range [" << r.begin() << "," << r.end() << "]" << endl;
-		m.unlock();
-		for (size_t i = r.begin(); i < r.end(); i++)
-			for (size_t j = i + 1; j <= _nodes; j++)
-			{
-				if (i != j)
-				{
-					ostringstream oss1, oss2;
-					oss1 << i << "-" << j;
-					oss2 << j << "-" << i;
-					m.lock();
-					if (!computed.count(oss1.str()) && !computed.count(oss2.str()))
-					{
-						computed.emplace(oss1.str());
-						computed.emplace(oss2.str());
-						m.unlock();
-						long cost = _graph.Dijkstra(i - 1, j - 1);
-						m.lock();
-						if (cost >= 0)
-							distance += cost;
-						m.unlock();
-					}
-					else
-						m.unlock();
-				}
-			} });
-		string binary = decimal_to_binary(distance ? distance : -1);
-		size_t offset = binary.find_first_not_of('0');
-		return binary.substr(offset != string::npos ? offset : 0);
-	}
-	string RoadsInHackerland1Test()
-	{
-		size_t distance = 0;
-		set<string> computed;
-		for (size_t i = 1; i < _nodes; i++)
-			for (size_t j = i + 1; j <= _nodes; j++)
-			{
-				if (i != j)
-				{
-					ostringstream oss1, oss2;
-					oss1 << i << "-" << j;
-					oss2 << j << "-" << i;
-					if (!computed.count(oss1.str()) && !computed.count(oss2.str()))
-					{
-						computed.emplace(oss1.str());
-						computed.emplace(oss2.str());
-						vector<shared_ptr<DVertex<size_t>>> path;
-						long cost = _dijkstra.ShortestPath(i, j, path);
-						_dijkstra.InitVertices(); // This prevents the routine from being used in multi-threading mode.
-						distance += cost;
-					}
-				}
-			}
-		string binary = decimal_to_binary(distance ? distance : -1);
-		size_t offset = binary.find_first_not_of('0');
-		return binary.substr(offset != string::npos ? offset : 0);
-	}
-	string RoadsInHackerland2Test()
-	{
-		size_t distance = 0;
-		std::mutex m;
-		set<string> computed;
-		parallel_for(blocked_range<size_t>(1, _nodes, 2), [&](blocked_range<size_t> r)
-					 {
-		m.lock();
-		cout << "parallel_for blocked range [" << r.begin() << "," << r.end() << "]" << endl;
-		m.unlock();
-		for (size_t i = r.begin(); i < r.end(); i++)
-			for (size_t j = i + 1; j <= _nodes; j++)
-			{
-				if (i != j)
-				{
-					ostringstream oss1, oss2;
-					oss1 << i << "-" << j;
-					oss2 << j << "-" << i;
-					m.lock();
-					if (!computed.count(oss1.str()) && !computed.count(oss2.str()))
-					{
-						computed.emplace(oss1.str());
-						computed.emplace(oss2.str());
-						m.unlock();
-						vector<shared_ptr<DVertex<size_t>>> path;
-						long cost = _dijkstra.ShortestPathStateless(i, j, path);
-						m.lock();
-						distance += cost;
-						m.unlock();
-					}
-					else
-						m.unlock();
-				}
-			} });
-		string binary = decimal_to_binary(distance ? distance : -1);
-		size_t offset = binary.find_first_not_of('0');
-		return binary.substr(offset != string::npos ? offset : 0);
-	}
-//#endif
 };
-//#if 0
 TEST_P(RoadsInHackerlandTestFixture, RoadsInHackerlandTests)
 {
-	// The root of the graph is Node 1
-	ASSERT_EQ(this->_nodes, _graph.Count());
 	ASSERT_EQ(this->_expected, this->RoadsInHackerlandTest());
 }
-TEST_P(RoadsInHackerlandTestFixture, RoadsInHackerland1Tests)
-{
-	// The root of the graph is Node 1
-	ASSERT_EQ(this->_expected, this->RoadsInHackerland1Test());
-}
-TEST_P(RoadsInHackerlandTestFixture, RoadsInHackerland2Tests)
-{
-	// The root of the graph is Node 1
-	ASSERT_EQ(this->_expected, this->RoadsInHackerland2Test());
-}
-//#endif
+// #endif
 INSTANTIATE_TEST_SUITE_P(
 	RoadsInHackerlandTests,
 	RoadsInHackerlandTestFixture,
 	::testing::Values(make_tuple<string, size_t, vector<vector<size_t>>>("1000100", 5, vector<vector<size_t>>{{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}}),
+					  make_tuple<string, size_t, vector<vector<size_t>>>("110101010000", 7, vector<vector<size_t>>{{4, 3, 4}, {2, 5, 3}, {5, 7, 8}, {5, 3, 1}, {1, 2, 5}, {7, 5, 6}, {7,4,7}, {6,2,9}, {3,2,0}, {7,3,2}}),
 					  make_tuple<string, size_t, vector<vector<size_t>>>("10100011101101000001001000", 18, vector<vector<size_t>>{
 																											   {5, 12, 18},
 																											   {17, 2, 5},
@@ -622,8 +489,35 @@ INSTANTIATE_TEST_SUITE_P(
 																											   {18, 3, 14},
 																											   {4, 11, 6},
 																											   {15, 3, 1},
-																											   {12, 5, 22},
+																											   {12, 5, 22}
 																										   }),
+					  make_tuple<string, size_t, vector<vector<size_t>>>("10111001100101001010001000",19, vector<vector<size_t>>{
+																												{1, 14, 10},
+																												{18, 11, 6}, 
+																												{19, 17, 22},
+																												{5, 17, 9}, 
+																												{6, 8, 19}, 
+																												{3, 4, 4},
+																												{15, 19, 5}, 
+																												{2, 10, 11},
+																												{9, 4, 0},
+																												{2, 4, 7},
+																												{1, 14, 23},
+																												{18, 5, 14}, 
+																												{15, 18, 12},
+																												{12, 11, 1}, 
+																												{3, 19, 2}, 
+																												{6, 7, 8},
+																												{9, 1, 17}, 
+																												{18, 16, 21},
+																												{8, 9, 15}, 
+																												{13, 6, 18}, 
+																												{17, 9, 16}, 
+																												{1, 13, 13},
+																												{19, 10, 20},
+																												{6, 14, 3}, 
+																												{13, 18, 24}
+																												}),
 					  make_tuple<string, size_t, vector<vector<size_t>>>("1010100000000011001101110101111", 20, vector<vector<size_t>>{
 																													{4, 11, 27},
 																													{7, 9, 14},
@@ -656,7 +550,6 @@ INSTANTIATE_TEST_SUITE_P(
 																													{14, 6, 12},
 																													{9, 2, 13},
 																												})));
-#endif
 class MinSubGraphsDifferenceTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, vector<vector<size_t>>>>
 {
 public:

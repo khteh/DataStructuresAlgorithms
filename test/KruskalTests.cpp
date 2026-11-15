@@ -14,13 +14,15 @@ public:
 		_from = get<2>(GetParam());
 		_to = get<3>(GetParam());
 		_weights = get<4>(GetParam());
+		_kruskal = Kruskal<size_t, long>(_from, _to, _weights);
 	}
 	KruskalResult<size_t, long> KruskalTest()
 	{
-		return Kruskal(_from, _to, _weights);
+		return _kruskal.MST();
 	}
 
 protected:
+	Kruskal<size_t, long> _kruskal;
 	long _expectedWeight;
 	size_t _expectedTrees;
 	vector<size_t> _from, _to;
@@ -70,10 +72,13 @@ static vector<tuple<size_t, size_t, long>> Edges(vector<Edge<size_t, long>> cons
 // The chosen edges, cheapest first
 TEST(KruskalTests, KruskalTreeTest)
 {
-	KruskalResult<size_t, long> result = Kruskal<size_t, long>({1, 4, 2, 3, 4, 4}, {3, 5, 1, 2, 3, 2}, {32, 1, 8, 2, 16, 4});
+	Kruskal<size_t, long> kruskal({1, 4, 2, 3, 4, 4}, {3, 5, 1, 2, 3, 2}, {32, 1, 8, 2, 16, 4});
+	KruskalResult<size_t, long> result = kruskal.MST();
 	ASSERT_EQ((vector<tuple<size_t, size_t, long>>{{4, 5, 1}, {3, 2, 2}, {4, 2, 4}, {2, 1, 8}}), Edges(result.edges));
 	// Equal weights keep their input order: 1 - 2 (5) is considered before 3 - 4 (5), and skipped because 1 and 2 are already joined
-	result = Kruskal<size_t, long>({1, 1, 4, 2, 3, 3}, {2, 3, 1, 4, 2, 4}, {5, 3, 6, 7, 4, 5});
+	kruskal.Reset();
+	kruskal = Kruskal<size_t, long>({1, 1, 4, 2, 3, 3}, {2, 3, 1, 4, 2, 4}, {5, 3, 6, 7, 4, 5}); 
+	result = kruskal.MST();
 	ASSERT_EQ((vector<tuple<size_t, size_t, long>>{{1, 3, 3}, {3, 2, 4}, {3, 4, 5}}), Edges(result.edges));
 	/*
 	 A forest: edges 1 - 2 (1) and 3 - 4 (2) form two separate parts, so 4 vertices give 2 edges, not 3
@@ -91,28 +96,38 @@ TEST(KruskalTests, KruskalTreeTest)
 	A part with k vertices needs k − 1 edges, so the total is (2 − 1) + (2 − 1) = 2. In general, that’s vertices − trees = 4 − 2.
 	Connected() is false because result.trees is 2.
 	*/
-	result = Kruskal<size_t, long>({1, 3}, {2, 4}, {1, 2});
+	kruskal.Reset();
+	kruskal = Kruskal<size_t, long>({1, 3}, {2, 4}, {1, 2}); 
+	result = kruskal.MST();
 	ASSERT_FALSE(result.Connected());
 	ASSERT_EQ((vector<tuple<size_t, size_t, long>>{{1, 2, 1}, {3, 4, 2}}), Edges(result.edges));
 	// Three parts: 1 - 2, 3 on its own (only a self-loop) and 4 - 5
-	result = Kruskal<size_t, long>({1, 3, 4}, {2, 3, 5}, {1, 1, 1});
+	kruskal.Reset();
+	kruskal = Kruskal<size_t, long>({1, 3, 4}, {2, 3, 5}, {1, 1, 1}); 
+	result = kruskal.MST();
 	ASSERT_EQ(3, result.trees);
 	ASSERT_EQ(2, result.weight);
 }
 // The weight type is the caller's, independent of the vertex type: signed, unsigned, floating point or 128-bit
 TEST(KruskalTests, KruskalWeightTypesTest)
 {
-	KruskalResult<int, int> ints = Kruskal(vector<int>{-1, 0, -1}, vector<int>{0, 1, 1}, vector<int>{-5, -2, 3});
+	Kruskal<int, int> intKruskal(vector<int>{-1, 0, -1}, vector<int>{0, 1, 1}, vector<int>{-5, -2, 3});
+	KruskalResult<int, int> ints = intKruskal.MST();
 	ASSERT_EQ(-7, ints.weight);
 	ASSERT_TRUE(ints.Connected());
-	KruskalResult<size_t, size_t> unsignedWeights = Kruskal(vector<size_t>{1, 2, 1}, vector<size_t>{2, 3, 3}, vector<size_t>{10, 20, 15});
+
+	Kruskal<size_t, size_t> sizetKruskal(vector<size_t>{1, 2, 1}, vector<size_t>{2, 3, 3}, vector<size_t>{10, 20, 15});
+	KruskalResult<size_t, size_t> unsignedWeights = sizetKruskal.MST();
 	ASSERT_EQ(25, unsignedWeights.weight);
-	KruskalResult<size_t, double> doubles = Kruskal(vector<size_t>{1, 2, 1}, vector<size_t>{2, 3, 3}, vector<double>{0.5, 0.25, 1.0});
+
+	Kruskal<size_t, double> doubleKruskal(vector<size_t>{1, 2, 1}, vector<size_t>{2, 3, 3}, vector<double>{0.5, 0.25, 1.0});
+	KruskalResult<size_t, double> doubles = doubleKruskal.MST();
 	ASSERT_DOUBLE_EQ(0.75, doubles.weight);
 #ifdef __SIZEOF_INT128__
 	// Weights far beyond 64 bits: 2^100 + 2^101
 	int128_t two100 = (int128_t)1 << 100;
-	KruskalResult<size_t, int128_t> big = Kruskal(vector<size_t>{1, 2, 1}, vector<size_t>{2, 3, 3}, vector<int128_t>{two100, two100 * 2, two100 * 4});
+	Kruskal<size_t, int128_t> int128Kruskal(vector<size_t>{1, 2, 1}, vector<size_t>{2, 3, 3}, vector<int128_t>{two100, two100 * 2, two100 * 4});
+	KruskalResult<size_t, int128_t> big = int128Kruskal.MST();
 	ASSERT_TRUE(big.weight == two100 * 3);
 #endif
 }

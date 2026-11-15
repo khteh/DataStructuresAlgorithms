@@ -21,6 +21,17 @@ DisJointSet<T>::DisJointSet(vector<T> const &data)
 	MakeSet(data);
 }
 template <typename T>
+DisJointSet<T>::~DisJointSet()
+{
+	Reset();
+}
+template <typename T>
+void DisJointSet<T>::Reset()
+{
+	_sets.clear();
+	_rank.clear();
+}
+template <typename T>
 void DisJointSet<T>::MakeSet(vector<T> const &data)
 {
 	/*

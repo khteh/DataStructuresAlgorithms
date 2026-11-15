@@ -3874,166 +3874,228 @@ vector<string> fizzBuzz(size_t n)
 	return result;
 }
 /*
- * https://www.hackerrank.com/challenges/johnland/problem
- * WIP
- * Timeout!
- * 16/21 test cases failed :(
- */
+https://www.hackerrank.com/challenges/johnland/problem
+100%
+It's possible for John to reach any city from any other city. <- connected graph.
+1 ≤ N ≤ 10⁵ cities
+1 ≤ M ≤ 2 × 10⁵ roads
+0 ≤ Cᵢ < M, all distinct
+a road’s length is 2^Cᵢ <- max c is 2^200000
+Ranges:
+
+Quantity						Upper bound																			Bits
+One road						2^(M−1) = 2^199999																	200,000
+One shortest path				Its roads all have different Cs, so the cost is < 2^0 + 2^1 + … + 2^(M−1) = 2^M − 1	≤ 200,000
+Sum over all pairs (the answer)	N(N−1)/2 ≈ 5 × 10⁹ < 2³³ pairs, so < 2^200033										≈ 200,033 (about 60,000 decimal digits)
+
+10^5 * (10^5 - 1) / 2 = (10^10 - 10^5) / 2 = 0.5 * 10^10 - 0.5 * 10^5 = 5 * 10^9 - 5 * 10^4 ~= 5 * 10^9
+
+The intended solution follows from the powers of two. Because 2^c is greater than the sum of all smaller powers, one more expensive road outweighs any number of cheaper ones.
+So every shortest path runs along the minimum spanning tree.
+
+(1) Build the MST with Kruskal: sort the roads by C and use union-find. Since the Cs are distinct, the MST is unique.
+(2) Removing a tree edge with cost 2^c splits the tree into two parts of sizes s and N − s. The edge is on exactly s·(N − s) shortest paths, so it adds s·(N − s) · 2^c to the answer.
+(3) Add each s·(N − s) into a bit array of about M + 32 bits, starting at bit c, and carry. Print the bits from the highest set one down.
+This runs in O(M log M) time, and no number is ever wider than 32 bits.
+Why 32 is enough for "count":
+Every c is below M = edges.size(), so the highest column a count is written to is M − 1.
+Every count is s · (N − s) ≤ (N/2)² = 2.5 × 10⁹ < 2³².	(N/2) means cutting of the edge which splits the graph into equal 2 halves.
+So the answer = Σ count × 2^c < 2³² × (2⁰ + … + 2^(M−1)) < 2³² × 2^M = 2^(M+32).
+
+A number below 2^(M+32) has its highest set bit at position M + 31 or lower. That’s columns 0 … M + 31, exactly M + 32 of them. The carry loop doesn’t carry out of the last column, so once every column below it is done, the last column holds just 0 or 1 and nothing is lost.
+
+Where it depends on the limits:
+N must be below 2¹⁷ = 131,072. (N/2)² < 2³² holds only while N/2 < 2¹⁶. The limit N ≤ 10⁵ satisfies that comfortably. If N could be larger, the counts would need more than 32 bits, and the top bits of the answer would be cut off without any error.
+c must be below M. The constraint guarantees this. If an input broke it, bits[c] would be written out of bounds with either margin, so it’s worth a check or an at().
+
+In the sample data, N = 5:
+The tree. Kruskal adds the roads from cheapest to most expensive and skips any road that would close a loop. It keeps 4–5 (2⁰ = 1), 3–2 (2¹ = 2), 4–2 (2² = 4) and 2–1 (2³ = 8).
+It skips 4–3 (2⁴) and 1–3 (2⁵), because their ends are already connected by cheaper roads:
+ 1 ─(8)─ 2 ─(2)─ 3
+		 │
+		(4)
+		 │
+		 4 ─(1)─ 5
+
+Point 2: How many pairs use each edge?
+In a tree there is exactly one path between any two cities. Take one edge and imagine cutting it: the tree falls into two parts. A pair of cities on opposite sides must cross that edge, exactly once. A pair on the same side never uses it.
+So the number of pairs that use the edge is (size of one part) × (size of the other part) = s · (N − s).
+Edge (cost)	Cutting it gives		s · (N − s)	Pairs that cross it				Adds to the sum
+4–5 (1)		{5} and {1, 2, 3, 4}	1 · 4 = 4	5–1, 5–2, 5–3, 5–4				4 · 1 = 4
+3–2 (2)		{3} and {1, 2, 4, 5}	1 · 4 = 4	3–1, 3–2, 3–4, 3–5				4 · 2 = 8
+4–2 (4)		{4, 5} and {1, 2, 3}	2 · 3 = 6	4–1, 4–2, 4–3, 5–1, 5–2, 5–3	6 · 4 = 24
+2–1 (8)		{1} and {2, 3, 4, 5}	1 · 4 = 4	1–2, 1–3, 1–4, 1–5				4 · 8 = 32
+																				Total	68 ✓
+
+This turns the question around. Instead of finding all ~5 × 10⁹ paths and adding up their edges, you ask each of the N − 1 edges how many paths go through it.
+To get s for every edge in one pass, do a DFS from any root and record each vertex’s subtree size. For the edge from a parent down to a child, s is the child’s subtree size.
+
+Point 3: adding up numbers that are too big to store
+The answer is Σ count × 2^c. Each count is small: at most (N/2)² = 2.5 × 10⁹, which fits in a uint32_t. But 2^c can have up to 200,000 bits. The trick is that multiplying by 2^c just shifts the count c places to the left in binary.
+So it never multiply but writes each count in binary, starting at bit c, and add the columns as you would by hand, carrying 1s:
+ count  c   count in binary, shifted left by c   value
+   4    0                 100                       4
+   4    1                1000                       8
+   6    2               11000                      24
+   4    3              100000                      32
+					 ─────────
+					  1000100                      68  ← the expected output
+
+The count for an edge is s · (N − s): the sizes of the two parts you get by cutting it. Those two sizes always add up to N. Of all pairs of numbers with a fixed sum, the product is largest when the two are equal, here s = N − s = N/2. That gives (N/2) · (N/2) = (N/2)².
+The 64 is a safety margin: room for the answer to grow above column M − 1, the highest place a count starts.
+Why the answer is longer than M bits. Every C is below M, so counts are only placed in columns 0 … M − 1. But a count isn’t a single bit, and it’s much bigger than 1. The count placed at column M − 1 spills into the columns above it.
+In the sample, the count 4 = 100 placed at c = 3 reaches column 5. The answer is 7 bits long even though M = 6. Carries from the columns below can push it one place further.
+How far it can spill. Every count fits in 32 bits, so every count is below 2³². Then:
+
+answer = Σ count × 2^c < 2³² × (2⁰ + 2¹ + … + 2^(M−1)) < 2³² × 2^M = 2^(M+32)
+
+So the answer has at most M + 32 bits, columns 0 … M + 32. That is why there are M + 32 columns. The bound uses only “a count fits in a uint32_t”, so it holds whatever N is.
+It also keeps the carry loop correct. The loop stops at the last column without carrying out of it. Every column the answer could reach is inside the array, so the last few columns end up 0 and no carry is lost.
+With too few columns, the last one would hold a multi-bit leftover and the printed answer would be wrong.
+The tighter bound. With N ≤ 10⁵, the largest count is s · (N − s) ≤ 50,000 × 50,000 = 2.5 × 10⁹ < 2³². The same calculation then gives answer < 2^(M+32), so M + 32 columns would be enough.
+Allocating 32 extra uint64_ts costs 256 bytes, so M + 64 is simply a round number that doesn’t depend on N’s limit.
+
+In code this is an array of M + 64 uint64_t columns, where bits[c] = count for each tree edge (each c appears only once, because the Cs are distinct). Then you sweep from the lowest column up:
+Read from the highest 1 down to column 0, the array is the binary answer. Each column only ever holds one count plus a carry of about the same size, so it never overflows 64 bits.
+
+What a column holds. Before the sweep, bits[c] holds one count, up to (N/2)² = 2.5 × 10⁹. During the sweep, it holds that count plus the carry from the column below:
+
+value at column i = count[i] + carry from column i − 1, where that carry = (value at column i − 1) >> 1
+
+The carry can be about as big as a count itself. If neighbouring columns all held the maximum count K, the carry would settle at about K, because K is the solution of carry = (K + carry) / 2. A column could then hold up to about 2K = 5 × 10⁹.
+
+Which types fit:
+Type					Max			Holds 5 × 10⁹?
+vector<bool> / uint8_t	1 / 255		no: only enough for the final digits, not for counts or carries
+uint32_t				4.29 × 10⁹	no: a count alone fits (2.5 × 10⁹), but count + carry can overflow
+uint64_t				1.8 × 10¹⁹	yes, with plenty to spare
+
+Why unsigned: the counts are never negative, and >> and & 1 on unsigned values are exactly “divide by 2” and “lowest bit”. On signed values, >> of a negative number doesn’t mean the same thing.
+The product needs 64 bits too. size[v] * (n - size[v]) is up to 2.5 × 10⁹, more than a 32-bit type holds. Here size is uint64_t and n is size_t, so the multiplication is done in 64 bits.
+
+That’s how the program handles a 200,000-bit answer without big-number arithmetic.
+*/
 string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 {
-	vector<size_t> data(n);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; }); // Item values
-	Graph<size_t, size_t> graph(data); // Tag values are indices
-	assert(graph.Count() == n);
-	for (vector<vector<size_t>>::const_iterator it = edges.begin(); it != edges.end(); it++)
-		graph.AddUndirectedEdge((*it)[0] - 1, (*it)[1] - 1, 1 << (*it)[2] /* This explodes with insane big values! */);
-	long sum = 0;
-	for (size_t i = 0; i < n; i++)
+	vector<size_t> from, to;
+	vector<size_t> weights;
+	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
 	{
-		vector<long> result(n, 0);
-		graph.Dijkstra(i, result);
-		result.erase(result.begin(), result.begin() + i);
-		sum += parallel_reduce(
-			blocked_range<size_t>(0, result.size()), 0,
-			[&](tbb::blocked_range<size_t> const &r, long running_total)
-			{
-				for (size_t i = r.begin(); i < r.end(); i++)
-					running_total += result[i];
-				return running_total;
-			},
-			std::plus<long>());
+		from.push_back((*it)[0]);
+		to.push_back((*it)[1]);
+		weights.push_back((*it)[2]);
 	}
-	string binary = decimal_to_binary(sum ? sum : -1);
-	size_t offset = binary.find_first_not_of('0');
-	return binary.substr(offset != string::npos ? offset : 0);
-}
-#if 0
-string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
-{
-	vector<size_t> data(n);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
-	Graph<size_t, size_t> graph(data);
-	assert(graph.Count() == n);
-	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
-		graph.AddUndirectedEdge((*it)[0], (*it)[1], 1 << (*it)[2]);
-	size_t distance = 0;
-	std::mutex m;
-	set<string> computed;
-	parallel_for(blocked_range<size_t>(1, n, 2), [&](blocked_range<size_t> r)
-				 {
-		m.lock();
-		cout << "parallel_for blocked range [" << r.begin() << "," << r.end() << "]" << endl;
-		m.unlock();
-		for (size_t i = r.begin(); i < r.end(); i++)
-			for (size_t j = i + 1; j <= n; j++)
+	Kruskal<size_t, size_t> kruskal(from, to, weights);
+	KruskalResult<size_t, size_t> mst = kruskal.MST();
+	/*
+	mst.edges gives you the first column, the N − 1 tree edges with their c. To fill in the other columns, you need each edge’s s, the size of the part on one side of the cut.
+	Root the tree anywhere, say at city 1. Then for the edge between a city v and its parent, the part on v’s side is v’s subtree, so s = size[v].
+
+	The steps are:
+	(1) Build the tree’s adjacency list from mst.edges.
+	(2) Walk the tree from the root, recording each city’s parent and the c of the edge up to it. This uses a loop rather than recursion: a chain-shaped tree of 10⁵ cities could overflow the stack.
+	(3) Go through the cities in reverse order, so children come before parents, adding up subtree sizes. As each city’s subtree is finished, write its count into the bit array.
+	*/
+	size_t maxExponent = 0;
+	// 1. The tree as an adjacency list: (neighbour, c)
+	vector<vector<pair<size_t, size_t>>> tree(n + 1);
+	for (Edge<size_t, size_t> const &edge : mst.edges)
+	{
+		maxExponent = max(maxExponent, edge.weight);
+		tree[edge.node1].emplace_back(edge.node2, edge.weight);
+		tree[edge.node2].emplace_back(edge.node1, edge.weight);
+	}
+	// 2. Visit order from city 1: every city comes after its parent
+	vector<size_t> order{1}, parent(n + 1, 0), upExponent(n + 1, 0); // upExponent[v]: c of the edge parent[v] - v
+	vector<bool> seen(n + 1, false);
+	seen[1] = true;
+	order.reserve(n);
+	for (size_t i = 0; i < order.size(); i++)
+		for (auto [v, c] : tree[order[i]])
+			if (!seen[v])
 			{
-				if (i != j)
-				{
-					ostringstream oss1, oss2;
-					oss1 << i << "-" << j;
-					oss2 << j << "-" << i;
-					m.lock();
-					if (!computed.count(oss1.str()) && !computed.count(oss2.str()))
-					{
-						computed.emplace(oss1.str());
-						computed.emplace(oss2.str());
-						m.unlock();
-						long cost = graph.Dijkstra(i, j);
-						m.lock();
-						if (cost >= 0)
-							distance += cost;
-						m.unlock();
-					}
-					else
-						m.unlock();
-				}
-			} });
-	string binary = decimal_to_binary(distance ? distance : -1);
-	size_t offset = binary.find_first_not_of('0');
-	return binary.substr(offset != string::npos ? offset : 0);
-}
-string RoadsInHackerland1(size_t n, vector<vector<size_t>> &edges)
-{
-	vector<size_t> data(n);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
-	Dijkstra<size_t> dijkstra(data);
-	assert(dijkstra.Count() == n);
-	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
-		dijkstra.AddUndirectedEdge((*it)[0], (*it)[1], 1 << (*it)[2]);
-	size_t distance = 0;
-	set<string> computed;
-	for (size_t i = 1; i < n; i++)
-		for (size_t j = i + 1; j <= n; j++)
-		{
-			if (i != j)
-			{
-				ostringstream oss1, oss2;
-				oss1 << i << "-" << j;
-				oss2 << j << "-" << i;
-				if (!computed.count(oss1.str()) && !computed.count(oss2.str()))
-				{
-					computed.emplace(oss1.str());
-					computed.emplace(oss2.str());
-					vector<shared_ptr<DVertex<size_t>>> path;
-					long cost = dijkstra.ShortestPath(i, j, path);
-					dijkstra.InitVertices(); // This prevents the routine from being used in multi-threading mode.
-					distance += cost;
-				}
+				seen[v] = true;
+				parent[v] = order[i];
+				upExponent[v] = c;
+				order.push_back(v);
 			}
-		}
-	string binary = decimal_to_binary(distance ? distance : -1);
-	size_t offset = binary.find_first_not_of('0');
-	return binary.substr(offset != string::npos ? offset : 0);
+	size_t maxCount = (n / 2) * (n - n / 2); // the largest s · (N − s)
+	/*
+	vector<uint64_t> because during the carry sweep each column has to hold more than a single binary digit, and the largest value a column can reach doesn’t fit in 32 bits.
+	What a column holds. Before the sweep, bits[c] holds one count, up to (N/2)² = 2.5 × 10⁹. During the sweep, it holds that count plus the carry from the column below:
+	value at column i = count[i] + carry from column i − 1, where that carry = (value at column i − 1) >> 1
+	The carry can be about as big as a count itself. If neighbouring columns all held the maximum count K, the carry would settle at about K, because K is the solution of carry = (K + carry) / 2. A column could then hold up to about 2K = 5 × 10⁹.
+
+	Which types fit:
+	Type	Max	Holds 5 × 10⁹?
+	vector<bool> / uint8_t	1 / 255	no: only enough for the final digits, not for counts or carries
+	uint32_t	4.29 × 10⁹	no: a count alone fits (2.5 × 10⁹), but count + carry can overflow
+	uint64_t	1.8 × 10¹⁹	yes, with plenty to spare
+
+	On the sample, mst.edges is (4, 5, c=0), (3, 2, c=1), (4, 2, c=2), (2, 1, c=3). Rooted at 1, the tree is 1 – 2, with 3 and 4 under 2 and 5 under 4.
+	maxExponent = 3
+	maxCount = 2 * (5 - 2) = 6
+	bits.size() = 3 + 1 + 3 = 7
+
+	answer < 2^bit_width(maxCount) × 2^(maxExponent + 1)
+	The + 1 comes from adding up the powers of two for columns 0 … maxExponent.
+
+	Step 1: write the answer as a sum. Each tree edge puts its count in column c, which means it contributes count × 2^c. Every c is at most maxExponent, so:
+	answer = Σ count_c × 2^c, over c from 0 to maxExponent
+
+	Step 2: bound each count. bit_width(x) is the number of bits needed to write x, so x is always below 2^bit_width(x). For example, 6 = 110 has 3 bits, and 6 < 2³ = 8. Writing B = bit_width(maxCount), every count is below 2^B. So:
+	answer < 2^B × (2⁰ + 2¹ + … + 2^maxExponent)
+
+	Step 3: the sum of the powers is where the + 1 comes from. Adding up the powers of two from 2⁰ to 2^k gives a binary number with k + 1 ones. That’s one below 2^(k + 1):
+	2⁰ + 2¹ + 2² + 2³ = 1 + 2 + 4 + 8 = 15 = 1111 (binary) = 16 − 1 = 2⁴ − 1
+
+	Columns 0 … 3 are 4 columns, so the sum is 2⁴ − 1, not 2³ − 1. In general, columns 0 … maxExponent are maxExponent + 1 columns:
+
+	2⁰ + … + 2^maxExponent = 2^(maxExponent + 1) − 1 < 2^(maxExponent + 1)
+
+	Putting it together:
+	answer < 2^B × 2^(maxExponent + 1)
+
+	On the sample (B = 3, maxExponent = 3): answer < 8 × 16 = 128 = 2⁷, so it fits in 7 bits, columns 0 … 6. The answer is 68 = 1000100, which is exactly 7 bits.
+
+	The + 1 is the same one that turns a highest index into a size. A column index can go up to maxExponent, so there are maxExponent + 1 columns, and the largest number that fits in them is 2^(maxExponent + 1) − 1.
+
+	Processing children first fills in the table row by row:
+	City v (processed)	Edge parent[v] – v	c	size[v] = s				s · (N − s)	bits[c]
+	5					4 – 5				0	1						1 · 4 = 4	bits[0] = 4
+	4					2 – 4				2	2 (itself + 5)			2 · 3 = 6	bits[2] = 6
+	3					2 – 3				1	1						1 · 4 = 4	bits[1] = 4
+	2					1 – 2				3	4 (itself + 3, 4, 5)	4 · 1 = 4	bits[3] = 4
+																					bits = [4, 4, 6, 4]
+	// 3. Children before parents: size[v] is final when v is reached
+	*/
+	vector<uint64_t> size(n + 1, 1), bits(maxExponent + 1 + bit_width(maxCount), 0); // + 1: room for the carries from below
+	for (size_t i = order.size() - 1; i > 0; i--)									 // order[0] is the root: it has no edge above it
+	{
+		size_t v = order[i];
+		size[parent[v]] += size[v];
+		bits[upExponent[v]] = size[v] * (n - size[v]); // the edge parent[v] - v: s · (N − s), placed in column c
+	}
+	// Then the carry loop and printing, as before}
+	/*
+	bits = [4, 4, 6, 4], answer: 1000100
+	0: bits: [0, 110]
+	1: bits: [0, 0, 1001]
+	2: bits: [0, 0, 1, 1000]
+	*/
+	for (size_t i = 0; i + 1 < bits.size(); i++)
+	{
+		bits[i + 1] += bits[i] >> 1; // carry everything above the lowest bit into the next column
+		bits[i] &= 1;				 // this column's final binary digit
+	}
+	ostringstream oss;
+	long i = bits.size() - 1;
+	for (; i >= 0 && !bits[i]; i--)
+		; // SKip leading zeros
+	for (; i >= 0; i--)
+		oss << format("{:b}", bits[i]);
+	return oss.str();
 }
-string RoadsInHackerland2(size_t n, vector<vector<size_t>> &edges)
-{
-	vector<size_t> data(n);
-	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
-	Dijkstra<size_t> dijkstra(data);
-	assert(dijkstra.Count() == n);
-	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
-		dijkstra.AddUndirectedEdge((*it)[0], (*it)[1], 1 << (*it)[2]);
-	size_t distance = 0;
-	std::mutex m;
-	set<string> computed;
-	parallel_for(blocked_range<size_t>(1, n, 2), [&](blocked_range<size_t> r)
-				 {
-		m.lock();
-		cout << "parallel_for blocked range [" << r.begin() << "," << r.end() << "]" << endl;
-		m.unlock();
-		for (size_t i = r.begin(); i < r.end(); i++)
-			for (size_t j = i + 1; j <= n; j++)
-			{
-				if (i != j)
-				{
-					ostringstream oss1, oss2;
-					oss1 << i << "-" << j;
-					oss2 << j << "-" << i;
-					m.lock();
-					if (!computed.count(oss1.str()) && !computed.count(oss2.str()))
-					{
-						computed.emplace(oss1.str());
-						computed.emplace(oss2.str());
-						m.unlock();
-						vector<shared_ptr<DVertex<size_t>>> path;
-						long cost = dijkstra.ShortestPathStateless(i, j, path);
-						m.lock();
-						distance += cost;
-						m.unlock();
-					}
-					else
-						m.unlock();
-				}
-			} });
-	string binary = decimal_to_binary(distance ? distance : -1);
-	size_t offset = binary.find_first_not_of('0');
-	return binary.substr(offset != string::npos ? offset : 0);
-}
-#endif
 /*
  * https://www.cppstories.com/2022/ranges-alg-part-one/
  */

@@ -19,10 +19,10 @@ Edge (weight)	Trees before	Same root?	Action							Sum
 template <typename TTag, arithmetic_type TWeight>
 struct KruskalResult
 {
-	TWeight weight;					  // Total weight of the minimum spanning tree, or of the minimum spanning forest
-	size_t trees;					  // Connected parts: 1 means a spanning tree; more means a forest, one tree per part
-	vector<Edge<TTag, TWeight>> edges; // The chosen edges, cheapest first: (vertices - trees) of them
-	bool Connected() const { return trees <= 1; } // 0 trees: no vertices at all
+   TWeight weight;                               // Total weight of the minimum spanning tree, or of the minimum spanning forest
+   size_t trees;                                 // Connected parts: 1 means a spanning tree; more means a forest, one tree per part
+   vector<Edge<TTag, TWeight>> edges;            // The chosen edges, cheapest first: (vertices - trees) of them
+   bool Connected() const { return trees <= 1; } // 0 trees: no vertices at all
 };
 /*
  * from[i] - to[i] is an undirected edge of weight weight[i]. The vertices are the ones the edges name.
@@ -34,4 +34,17 @@ struct KruskalResult
  * and an Edge<TTag, TWeight> line in Edge.cpp if it isn't listed already.
  */
 template <typename TTag, arithmetic_type TWeight>
-KruskalResult<TTag, TWeight> Kruskal(vector<TTag> const &, vector<TTag> const &, vector<TWeight> const &);
+class Kruskal
+{
+private:
+   vector<Edge<TTag, TWeight>> _edges;
+   size_t _vertices;
+   DisJointSet<TTag> _disjointSet;
+
+public:
+   Kruskal() = default;
+   Kruskal(vector<TTag> const &, vector<TTag> const &, vector<TWeight> const &);
+   virtual ~Kruskal();
+   void Reset();
+   KruskalResult<TTag, TWeight> MST();
+};
