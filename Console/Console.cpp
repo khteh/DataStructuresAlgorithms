@@ -738,7 +738,7 @@ int main(int argc, char *argv[])
 	assert(towers[1]->isEmpty());
 	assert(!towers[2]->isEmpty());
 	for (i = 0; i < 3; i++)
-		towers[i]->Clear();
+		towers[i]->Reset();
 	for (i = 10; i > 0; i--) // Smallest disk is "1"
 	{
 		towers[0]->Add(i);

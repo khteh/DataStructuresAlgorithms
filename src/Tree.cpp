@@ -107,7 +107,7 @@ Tree<T>::Tree(TraversalType type, vector<T> &inorder, vector<T> &otherorder)
 template <typename T>
 Tree<T>::~Tree()
 {
-	Clear();
+	Reset();
 }
 template <typename T>
 void Tree<T>::_Swap(Tree<T> &other)
@@ -119,7 +119,7 @@ void Tree<T>::LoadData(vector<T> &data, TreeType type)
 {
 	if (!data.empty())
 	{
-		Clear();
+		Reset();
 		switch (type)
 		{
 		case TreeType::BinarySearch:
@@ -338,7 +338,7 @@ shared_ptr<Node<T>> Tree<T>::Root() const
 	return _root;
 }
 template <typename T>
-void Tree<T>::Clear()
+void Tree<T>::Reset()
 {
 	for (; !_minStack.empty(); _minStack.pop())
 		;

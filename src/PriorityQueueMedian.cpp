@@ -12,10 +12,10 @@ PriorityQueueMedian<T>::PriorityQueueMedian(vector<T> const &data)
 template <typename T>
 PriorityQueueMedian<T>::~PriorityQueueMedian()
 {
-	Clear();
+	Reset();
 }
 template <typename T>
-void PriorityQueueMedian<T>::Clear()
+void PriorityQueueMedian<T>::Reset()
 {
 	while (!_maxHeap.empty())
 		_maxHeap.pop();

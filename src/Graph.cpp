@@ -46,10 +46,10 @@ void Graph<TTag, TItem>::AddVertices(vector<TItem> &data)
 template <typename TTag, typename TItem>
 Graph<TTag, TItem>::~Graph()
 {
-	Clear();
+	Reset();
 }
 template <typename TTag, typename TItem>
-void Graph<TTag, TItem>::Clear()
+void Graph<TTag, TItem>::Reset()
 {
 	_totalCost = 0;
 	// Vertices hold shared_ptrs to each other (every undirected edge is a 2-cycle). Break those cycles first,

@@ -27,7 +27,7 @@ TEST(TwitterAPITests, TwitterAPITest)
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(1, feeds.size());
 	ASSERT_EQ(6, feeds[0]);
-	twitter.Clear();
+	twitter.Reset();
 	twitter.PostTweet(1, 5);
 	twitter.Follow(1, 2);
 	twitter.Follow(2, 1);
@@ -49,7 +49,7 @@ TEST(TwitterAPITests, TwitterAPITest)
 	ASSERT_FALSE(feeds1.empty());
 	ASSERT_EQ(2, feeds.size());
 	ASSERT_EQ(1, feeds1.size());
-	twitter.Clear();
+	twitter.Reset();
 	twitter.PostTweet(2, 5);   // 2: 5
 	twitter.PostTweet(1, 3);   // 1: 3
 	twitter.PostTweet(1, 101); // 1: {3, 101}
@@ -75,7 +75,7 @@ TEST(TwitterAPITests, TwitterAPITest)
 	ASSERT_EQ(10, feeds.size());
 	feeds1 = {22, 333, 505, 94, 2, 10, 13, 101, 3, 5};
 	ASSERT_EQ(feeds1, feeds);
-	twitter.Clear();
+	twitter.Reset();
 	twitter.PostTweet(1, 6765); // 1: {6765}
 	twitter.PostTweet(5, 671);	// 5: {671}
 	twitter.PostTweet(3, 2868); // 3: {2868}
@@ -184,7 +184,7 @@ TEST(TwitterAPITests, TwitterAPITest)
 	ASSERT_FALSE(feeds.empty());
 	ASSERT_EQ(feeds1, feeds);
 
-	twitter.Clear();
+	twitter.Reset();
 	twitter.PostTweet(1, 1);
 	twitter.PostTweet(1, 2);
 	twitter.PostTweet(1, 3);

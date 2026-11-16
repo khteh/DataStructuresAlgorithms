@@ -32,13 +32,13 @@ CircularLinkedList<T>::CircularLinkedList(CircularLinkedList &&other) noexcept :
 template <typename T>
 CircularLinkedList<T> &CircularLinkedList<T>::operator=(CircularLinkedList &&other) noexcept
 {
-	LinkedList<T>::operator=(move(other)); // Calls the virtual Clear(), i.e. CircularLinkedList::Clear(), to release the current ring
+	LinkedList<T>::operator=(move(other)); // Calls the virtual Reset(), i.e. CircularLinkedList::Reset(), to release the current ring
 	return *this;
 }
 template <typename T>
 CircularLinkedList<T>::~CircularLinkedList()
 {
-	Clear();
+	Reset();
 }
 template <typename T>
 size_t CircularLinkedList<T>::Length() const
@@ -64,7 +64,7 @@ void CircularLinkedList<T>::Print(shared_ptr<Node<T>> node)
 	cout << endl;
 }
 template <typename T>
-void CircularLinkedList<T>::Clear()
+void CircularLinkedList<T>::Reset()
 {
 	set<shared_ptr<Node<T>>> visited;
 	for (shared_ptr<Node<T>> n = _head; n && !visited.count(n);)

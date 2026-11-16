@@ -10,7 +10,7 @@ public:
 	PrefixTrie();
 	PrefixTrie(vector<string> &);
 	~PrefixTrie();
-	void Clear();
+	void Reset();
 	void InsertString(string const &);
 	void RemoveString(string const &);
 	PrefixTrieNode *GetNode(string const &);

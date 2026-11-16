@@ -32,7 +32,7 @@ LinkedList<T> &LinkedList<T>::operator=(LinkedList &&other) noexcept
 {
 	if (this != &other)
 	{
-		Clear(); // Virtual: a CircularLinkedList breaks its ring here before taking over other's nodes
+		Reset(); // Virtual: a CircularLinkedList breaks its ring here before taking over other's nodes
 		_head = move(other._head);
 		_tail = move(other._tail);
 	}
@@ -41,7 +41,7 @@ LinkedList<T> &LinkedList<T>::operator=(LinkedList &&other) noexcept
 template <typename T>
 LinkedList<T>::~LinkedList()
 {
-	Clear();
+	Reset();
 }
 template <typename T>
 void LinkedList<T>::LoadData(vector<T> const &data)
@@ -144,7 +144,7 @@ void LinkedList<T>::SplitList(shared_ptr<Node<T>> &even, shared_ptr<Node<T>> &od
 		oddTail->SetNext(nullptr);
 }
 // XXX: After join the ownership of the nodes in 'other' LinkedList is/should be transferred to
-// *this LinkedList. So when other calls Clear() AFTER this->Clear() it results in dangling pointer
+// *this LinkedList. So when other calls Reset() AFTER this->Reset() it results in dangling pointer
 // and undefined behaviour. To prevent that, set other.Head to nullptr
 template <typename T>
 size_t LinkedList<T>::Join(LinkedList<T> &other)
@@ -185,7 +185,7 @@ shared_ptr<Node<T>> LinkedList<T>::operator[](size_t index) const
 	return node;
 }
 template <typename T>
-void LinkedList<T>::Clear()
+void LinkedList<T>::Reset()
 {
 	for (shared_ptr<Node<T>> n = _head; n;)
 	{

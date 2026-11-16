@@ -15,7 +15,7 @@ public:
 	bool isEmpty() const;
 	T TopDisc() const;
 	size_t DiscCount() const;
-	void Clear();
+	void Reset();
 	void Add(T);
 	void print();
 	void MoveTopTo(shared_ptr<Tower<T>> &);

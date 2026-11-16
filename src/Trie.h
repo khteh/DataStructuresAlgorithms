@@ -18,7 +18,7 @@ public:
 	void RemoveString(string const &);
 	T Find(string const &);
 	T FindFast(string const &);
-	void Clear();
+	void Reset();
 	size_t Count() const;
 };
 

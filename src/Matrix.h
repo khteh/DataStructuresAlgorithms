@@ -22,7 +22,7 @@ public:
 	Cluster();
 	~Cluster();
 	void AddNode(string);
-	void Clear();
+	void Reset();
 	size_t Size() const;
 	shared_ptr<Node<string>> Head() const;
 	shared_ptr<Node<string>> Tail() const;

@@ -36,5 +36,5 @@ public:
 	vector<TTweetID> GetFromLastNewsFeed(TUserID, TTweetID, size_t size = 10);
 	void Follow(TUserID, TUserID);
 	void UnFollow(TUserID, TUserID);
-	void Clear();
+	void Reset();
 };

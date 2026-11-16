@@ -5,13 +5,13 @@ template class Matrix<long>;
 template class Matrix<size_t>;
 Cluster::Cluster() : _size(0)
 {
-	Clear();
+	Reset();
 }
 Cluster::~Cluster()
 {
-	Clear();
+	Reset();
 }
-void Cluster::Clear()
+void Cluster::Reset()
 {
 	_size = 0;
 	_head.reset();

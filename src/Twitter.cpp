@@ -38,10 +38,10 @@ weak_ordering TweetItem<TUserID, TTweetID>::operator<=>(const TweetItem<TUserID,
 template <typename TUserID, typename TTweetID>
 Twitter<TUserID, TTweetID>::~Twitter()
 {
-    Clear();
+    Reset();
 }
 template <typename TUserID, typename TTweetID>
-void Twitter<TUserID, TTweetID>::Clear()
+void Twitter<TUserID, TTweetID>::Reset()
 {
     _follows.clear();
     _tweets.clear();

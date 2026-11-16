@@ -36,7 +36,7 @@ public:
 	void SplitList(shared_ptr<Node<T>> &, shared_ptr<Node<T>> &);
 	void ToVector(vector<T> &);
 	virtual size_t Length() const;
-	virtual void Clear();
+	virtual void Reset();
 	void Reverse(size_t, size_t);
 	void RotateRight(size_t);
 	void Sort();

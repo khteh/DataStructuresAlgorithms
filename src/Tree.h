@@ -80,7 +80,7 @@ public:
 	Tree(TraversalType, vector<T> &preorder, vector<T> &inorder);
 	Tree(shared_ptr<Node<T>> &);
 	virtual ~Tree();
-	void Clear();
+	void Reset();
 	void InsertItem(T);
 	void PrintTreeColumns();
 	void LoadData(vector<T> &, TreeType);

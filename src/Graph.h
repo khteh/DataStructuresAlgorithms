@@ -28,7 +28,7 @@ public:
 	virtual ~Graph();
 	size_t Count() const;
 	long TotalCost() const;
-	void Clear();
+	void Reset();
 	void AddVertices(vector<TItem> &);
 	shared_ptr<Vertex<TTag, TItem>> AddVertex(TTag);
 	void AddDirectedEdge(shared_ptr<Vertex<TTag, TItem>>, shared_ptr<Vertex<TTag, TItem>>, long);

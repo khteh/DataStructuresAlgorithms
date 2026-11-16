@@ -99,7 +99,7 @@ TEST(BinaryTreeTests, BinaryTreeFindSumTest)
 	ASSERT_EQ(expected, result);
 	result.clear();
 
-	tree.Clear();
+	tree.Reset();
 	tree.InsertItem(2);
 	tree.InsertItem(3);
 	tree.InsertItem(-4);

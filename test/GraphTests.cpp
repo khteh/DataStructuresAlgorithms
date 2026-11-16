@@ -100,7 +100,7 @@ public:
 	}
 	vector<long> BFSShortestPathsTest()
 	{
-		_graph.Clear();
+		_graph.Reset();
 		return _graph.BFSShortestPaths(_vertices, _edges, _start);
 	}
 
@@ -136,7 +136,7 @@ public:
 	}
 	long GetLowestPathCostTest()
 	{
-		_graph.Clear();
+		_graph.Reset();
 		return _graph.GetLowestPathCost(_vertices, _from, _to, _weights);
 	}
 
@@ -284,7 +284,7 @@ TEST(GraphTests, DijkstraTest)
 	ASSERT_FALSE(v2->HasNeighbour(v3));
 	ASSERT_FALSE(v5->HasNeighbour(v3));
 	costs.clear();
-	graph.Clear();
+	graph.Reset();
 	ASSERT_EQ(0, graph.Count());
 	v1 = graph.AddVertex(0);
 	v2 = graph.AddVertex(1);
@@ -465,59 +465,9 @@ INSTANTIATE_TEST_SUITE_P(
 	RoadsInHackerlandTests,
 	RoadsInHackerlandTestFixture,
 	::testing::Values(make_tuple<string, size_t, vector<vector<size_t>>>("1000100", 5, vector<vector<size_t>>{{1, 3, 5}, {4, 5, 0}, {2, 1, 3}, {3, 2, 1}, {4, 3, 4}, {4, 2, 2}}),
-					  make_tuple<string, size_t, vector<vector<size_t>>>("110101010000", 7, vector<vector<size_t>>{{4, 3, 4}, {2, 5, 3}, {5, 7, 8}, {5, 3, 1}, {1, 2, 5}, {7, 5, 6}, {7,4,7}, {6,2,9}, {3,2,0}, {7,3,2}}),
-					  make_tuple<string, size_t, vector<vector<size_t>>>("10100011101101000001001000", 18, vector<vector<size_t>>{
-																											   {5, 12, 18},
-																											   {17, 2, 5},
-																											   {7, 18, 3},
-																											   {17, 6, 0},
-																											   {15, 12, 16},
-																											   {2, 3, 8},
-																											   {14, 9, 20},
-																											   {4, 9, 11},
-																											   {13, 1, 21},
-																											   {13, 12, 15},
-																											   {15, 12, 10},
-																											   {6, 16, 9},
-																											   {11, 18, 2},
-																											   {9, 16, 17},
-																											   {12, 4, 4},
-																											   {7, 4, 19},
-																											   {17, 1, 12},
-																											   {10, 14, 7},
-																											   {8, 5, 13},
-																											   {18, 3, 14},
-																											   {4, 11, 6},
-																											   {15, 3, 1},
-																											   {12, 5, 22}
-																										   }),
-					  make_tuple<string, size_t, vector<vector<size_t>>>("10111001100101001010001000",19, vector<vector<size_t>>{
-																												{1, 14, 10},
-																												{18, 11, 6}, 
-																												{19, 17, 22},
-																												{5, 17, 9}, 
-																												{6, 8, 19}, 
-																												{3, 4, 4},
-																												{15, 19, 5}, 
-																												{2, 10, 11},
-																												{9, 4, 0},
-																												{2, 4, 7},
-																												{1, 14, 23},
-																												{18, 5, 14}, 
-																												{15, 18, 12},
-																												{12, 11, 1}, 
-																												{3, 19, 2}, 
-																												{6, 7, 8},
-																												{9, 1, 17}, 
-																												{18, 16, 21},
-																												{8, 9, 15}, 
-																												{13, 6, 18}, 
-																												{17, 9, 16}, 
-																												{1, 13, 13},
-																												{19, 10, 20},
-																												{6, 14, 3}, 
-																												{13, 18, 24}
-																												}),
+					  make_tuple<string, size_t, vector<vector<size_t>>>("110101010000", 7, vector<vector<size_t>>{{4, 3, 4}, {2, 5, 3}, {5, 7, 8}, {5, 3, 1}, {1, 2, 5}, {7, 5, 6}, {7, 4, 7}, {6, 2, 9}, {3, 2, 0}, {7, 3, 2}}),
+					  make_tuple<string, size_t, vector<vector<size_t>>>("10100011101101000001001000", 18, vector<vector<size_t>>{{5, 12, 18}, {17, 2, 5}, {7, 18, 3}, {17, 6, 0}, {15, 12, 16}, {2, 3, 8}, {14, 9, 20}, {4, 9, 11}, {13, 1, 21}, {13, 12, 15}, {15, 12, 10}, {6, 16, 9}, {11, 18, 2}, {9, 16, 17}, {12, 4, 4}, {7, 4, 19}, {17, 1, 12}, {10, 14, 7}, {8, 5, 13}, {18, 3, 14}, {4, 11, 6}, {15, 3, 1}, {12, 5, 22}}),
+					  make_tuple<string, size_t, vector<vector<size_t>>>("10111001100101001010001000", 19, vector<vector<size_t>>{{1, 14, 10}, {18, 11, 6}, {19, 17, 22}, {5, 17, 9}, {6, 8, 19}, {3, 4, 4}, {15, 19, 5}, {2, 10, 11}, {9, 4, 0}, {2, 4, 7}, {1, 14, 23}, {18, 5, 14}, {15, 18, 12}, {12, 11, 1}, {3, 19, 2}, {6, 7, 8}, {9, 1, 17}, {18, 16, 21}, {8, 9, 15}, {13, 6, 18}, {17, 9, 16}, {1, 13, 13}, {19, 10, 20}, {6, 14, 3}, {13, 18, 24}}),
 					  make_tuple<string, size_t, vector<vector<size_t>>>("1010100000000011001101110101111", 20, vector<vector<size_t>>{
 																													{4, 11, 27},
 																													{7, 9, 14},

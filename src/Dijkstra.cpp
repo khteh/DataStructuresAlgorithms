@@ -189,10 +189,10 @@ void Dijkstra<T>::AddUndirectedEdge(T from, T to, long cost)
 template <typename T>
 Dijkstra<T>::~Dijkstra()
 {
-    Clear();
+    Reset();
 }
 template <typename T>
-void Dijkstra<T>::Clear()
+void Dijkstra<T>::Reset()
 {
     // DEdge holds a shared_ptr to its target vertex, so every undirected edge is a 2-cycle. Break them first.
     for (auto &[value, vertex] : _vertices)

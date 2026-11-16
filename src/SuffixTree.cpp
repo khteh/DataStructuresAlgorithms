@@ -40,9 +40,9 @@ SuffixTree::SuffixTree(string const &str)
 
 SuffixTree::~SuffixTree()
 {
-	Clear();
+	Reset();
 }
-void SuffixTree::Clear()
+void SuffixTree::Reset()
 {
 	_strings.clear();
 	_root.reset();

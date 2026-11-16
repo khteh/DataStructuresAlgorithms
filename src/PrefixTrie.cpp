@@ -13,7 +13,7 @@ PrefixTrie::PrefixTrie(vector<string> &str)
 
 PrefixTrie::~PrefixTrie()
 {
-	Clear();
+	Reset();
 }
 size_t PrefixTrie::Count() const
 {
@@ -50,7 +50,7 @@ string PrefixTrie::LongestCommonPrefix(string const &prefix)
 {
 	return _root && !prefix.empty() ? _root->LongestCommonPrefix(prefix) : "";
 }
-void PrefixTrie::Clear()
+void PrefixTrie::Reset()
 {
 	_root.reset();
 }

@@ -9,7 +9,6 @@ Tower<T>::Tower(size_t index)
 {
 }
 
-
 template <typename T>
 size_t Tower<T>::Index() const
 {
@@ -26,7 +25,7 @@ bool Tower<T>::isEmpty() const
 	return _discs.isEmpty();
 }
 template <typename T>
-void Tower<T>::Clear()
+void Tower<T>::Reset()
 {
 	_discs.clear();
 }

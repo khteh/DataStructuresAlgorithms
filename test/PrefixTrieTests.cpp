@@ -115,7 +115,7 @@ TEST(PrefixTrieTests, PrefixTrieTest)
 	ASSERT_EQ(1, result.size());
 	ASSERT_EQ("apple", result[0]);
 
-	prefixTrie.Clear();
+	prefixTrie.Reset();
 	ASSERT_FALSE(prefixTrie.Find(string("a")));
 	result = prefixTrie.StartsWith(string("a"));
 	ASSERT_TRUE(result.empty());
@@ -151,7 +151,7 @@ TEST(PrefixTrieTests, PrefixTrieTest)
 	result = prefixTrie.StartsWith(string("Hello"));
 	ASSERT_FALSE(result.empty());
 	ASSERT_EQ(1, result.size());
-	prefixTrie.Clear();
+	prefixTrie.Reset();
 
 	prefixTrie.InsertString("ababaa");
 	result = prefixTrie.StartsWith(string("ababaa"));

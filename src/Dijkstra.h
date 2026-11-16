@@ -61,7 +61,7 @@ public:
     Dijkstra(vector<T> const &);
     virtual ~Dijkstra();
     size_t Count() const;
-    void Clear();
+    void Reset();
     void InitVertices();
     void AddVertices(vector<T> const &);
     void AddVertex(T);

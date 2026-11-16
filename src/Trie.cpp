@@ -18,11 +18,11 @@ Trie<T>::Trie(string const &str, T value)
 template <typename T>
 Trie<T>::~Trie()
 {
-	Clear();
+	Reset();
 }
 
 template <typename T>
-void Trie<T>::Clear()
+void Trie<T>::Reset()
 {
 	_root.reset();
 }

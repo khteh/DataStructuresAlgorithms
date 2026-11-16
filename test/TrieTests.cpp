@@ -1,6 +1,7 @@
 #include "pch.h"
 using namespace std;
-TEST(TrieTests, TrieTest) {
+TEST(TrieTests, TrieTest)
+{
 	Trie<int> trie;					   // Node count:
 	trie.InsertFast("Amy", 12);		   // 3
 	trie.InsertFast("Christine", 34);  // 9
@@ -93,5 +94,5 @@ TEST(TrieTests, TrieTest) {
 	ASSERT_EQ(numeric_limits<int>::min(), trie.FindFast("Robert"));
 	ASSERT_EQ(numeric_limits<int>::min(), trie.FindFast("Kristy"));
 	ASSERT_EQ(numeric_limits<int>::min(), trie.FindFast("ABC"));
-	trie.Clear();
+	trie.Reset();
 }
