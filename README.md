@@ -53,24 +53,11 @@ C++-latest data structures and algorithms using only standard libraries. This an
    ```
 5. Then the Google Test project can be built successfully.
 
-#### Use vcpkg
-
-- Use vcpkg to download (Note: Currently in vcpkg, gtest version is 1.14.0)
-  ```
-  git clone https://github.com/Microsoft/vcpkg.git
-  cd vcpkg
-  bootstrap-vcpkg.bat
-  vcpkg integrate install
-  vcpkg.exe install gtest:x64-windows
-  Use ‘vcpkg list’ to view installed Google Test versions
-  Create a Google Test project, manage nuget packages and uninstall the package Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn and then build it.
-  ```
-
 ## Address Sanitizer
 
 ### Google Test
 
-- Add the path of `clang_rt.asan_dynamic-x86_64.dll` to User and System environment variables. At the time of this writing and for Visual Studio 2026, the path is `C:\Program Files\Microsoft Visual Studio\18\Insiders\VC\Tools\MSVC\14.52.37025\bin\Hostx64\x64`.
+- Add the path of `clang_rt.asan_dynamic-x86_64.dll` to User and System environment variables. At the time of this writing and for Visual Studio 2026, the path is `C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.52.37025\bin\Hostx64\x64`.
 
 **Note that the path changes every time Visual Studio is upgraded, especially the `14.52.37025` string in the path.**
 
