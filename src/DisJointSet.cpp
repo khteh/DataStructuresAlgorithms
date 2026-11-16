@@ -98,7 +98,20 @@ T DisJointSet<T>::Union(T x, T y)
 	T root = numeric_limits<T>::max(); // Already joined
 	if (rootX != rootY)
 	{
-		// Put smaller ranked item under bigger ranked item if ranks are different. Copying of smaller ranked item saves time!
+		/* Put smaller ranked item under bigger ranked item if ranks are different. Copying of smaller ranked item saves time!
+		1 <- 2 <- 3(y)
+		4 <- 5(x)
+		rootX = 4, _rank[rootX] = 1
+		rootY = 1, _rank[rootY] = 2
+
+		This keeps the rank and is lower
+		1 <- 2 <- 3(y)
+		  <- 4 <- 5(x)
+
+		This increases the rank and is higher - further from the root, takes longer time to Find()
+		4 <- 5(x)
+		  <- 1 <- 2 <- 3(y)
+		 */
 		if (_rank[rootX] <= _rank[rootY])
 		{
 			_sets[rootX] = rootY;

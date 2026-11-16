@@ -3987,6 +3987,8 @@ string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
 	}
 	Kruskal<size_t, size_t> kruskal(from, to, weights);
 	KruskalResult<size_t, size_t> mst = kruskal.MST();
+	if (!mst.Connected())
+		throw invalid_argument("The graph is disconnected! Some cities would never be reached in the following steps!");
 	/*
 	mst.edges gives you the first column, the N − 1 tree edges with their c. To fill in the other columns, you need each edge’s s, the size of the part on one side of the cut.
 	Root the tree anywhere, say at city 1. Then for the edge between a city v and its parent, the part on v’s side is v’s subtree, so s = size[v].
