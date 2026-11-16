@@ -10,7 +10,7 @@ private:
 
 public:
 	Tower(size_t);
-	~Tower();
+	~Tower() = default;
 	size_t Index() const;
 	bool isEmpty() const;
 	T TopDisc() const;

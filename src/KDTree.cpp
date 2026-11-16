@@ -54,10 +54,6 @@ KDTree<T>::KDTree(vector<vector<T>> &data, long depth)
 	_root = Construct(data, depth);
 }
 
-template <typename T>
-KDTree<T>::~KDTree()
-{
-}
 
 template <typename T>
 shared_ptr<KDNode<T>> KDTree<T>::Construct(vector<vector<T>> data, long depth)

@@ -1,13 +1,6 @@
 #include "pch.h"
 #include "CallHandler.h"
 
-CallHandler::CallHandler(void)
-{
-}
-
-CallHandler::~CallHandler(void)
-{
-}
 
 bool CallHandler::dispatch(Call &call)
 {

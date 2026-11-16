@@ -10,7 +10,7 @@ private:
 
 public:
 	InterleavingIterator(std::vector<std::vector<T>> &);
-	virtual ~InterleavingIterator();
+	virtual ~InterleavingIterator() = default;
 	bool HasNext();
 	T Next();
 };

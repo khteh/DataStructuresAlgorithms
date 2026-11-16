@@ -29,7 +29,7 @@ private:
 	string ExtendPrefix();
 
 public:
-	PrefixTrieNode();
+	PrefixTrieNode() = default;
 	~PrefixTrieNode();
 	string Value();
 	size_t Count() const;

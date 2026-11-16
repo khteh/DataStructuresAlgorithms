@@ -3,9 +3,6 @@
 #include <iostream>
 using namespace std;
 Singleton* Singleton::_instance = nullptr;
-Singleton::Singleton()
-{
-}
 Singleton::~Singleton()
 {
 	if (_instance) {

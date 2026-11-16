@@ -9,7 +9,7 @@ private:
 	using LinkedList<T>::_tail;
 
 public:
-	CircularLinkedList(); // Needed by GoogleTest TEST_P
+	CircularLinkedList() = default; // Needed by GoogleTest TEST_P: https://github.com/google/googletest/issues/4965
 	CircularLinkedList(vector<T> const &);
 	/*
 	 * Copying is disabled (as in LinkedList): Clear() breaks the ring on destruction, so a shallow copy sharing the ring

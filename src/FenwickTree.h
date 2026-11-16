@@ -12,7 +12,7 @@ private:
     vector<T> _data;
 
 public:
-    FenwickTree();
+    FenwickTree() = default;
     explicit FenwickTree(size_t);
     FenwickTree(vector<T> const &);
     void Construct(vector<T> const &);

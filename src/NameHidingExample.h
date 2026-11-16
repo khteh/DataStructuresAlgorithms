@@ -6,7 +6,7 @@ protected:
 public:
 	NameHidingExample(void);
 	explicit NameHidingExample(long);
-	virtual ~NameHidingExample(void);
+	virtual ~NameHidingExample(void) = default;
 	void Print(long);
 	virtual void Print(long, long);
 };
@@ -14,9 +14,9 @@ public:
 class NameHidingExampleDerived : public NameHidingExample
 {
 public:
-	NameHidingExampleDerived(void);
+	NameHidingExampleDerived(void) = default;
 	explicit NameHidingExampleDerived(long);
-	virtual ~NameHidingExampleDerived(void);
+	virtual ~NameHidingExampleDerived(void) = default;
 	void Print(long);
 	//virtual void Hide(long, long);
 };

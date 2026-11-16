@@ -161,10 +161,6 @@ strong_ordering DEdge<T>::operator<=>(const DEdge<T> &rhs) const
 
 ////////////////////////////////// Dijkstra<T> //////////////////////////////////////////////////
 template <typename T>
-Dijkstra<T>::Dijkstra()
-{
-}
-template <typename T>
 Dijkstra<T>::Dijkstra(vector<T> const &data)
 {
     AddVertices(data);

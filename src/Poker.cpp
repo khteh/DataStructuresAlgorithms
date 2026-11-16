@@ -6,6 +6,3 @@ Poker::Poker(int v, Suit s)
 {
 }
 
-Poker::~Poker(void)
-{
-}

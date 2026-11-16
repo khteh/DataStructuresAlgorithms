@@ -4,7 +4,7 @@ class Door
 {
 public:
 	Door(Room *, int);
-	virtual ~Door();
+	virtual ~Door() = default;
 	Room *next_;
 	int lock_;
 };
@@ -13,7 +13,7 @@ class Room
 public:
 	Room(bool);
 	Room(int);
-	virtual ~Room();
+	virtual ~Room() = default;
 	void addDoor(Room *, int key = -1);
 	bool hasTreasure_;
 	int lock_ = -1;
@@ -22,7 +22,7 @@ public:
 class TreasureGame
 {
 public:
-	TreasureGame();
-	virtual ~TreasureGame();
+	TreasureGame() = default;
+	virtual ~TreasureGame() = default;
 	bool hasTreasure(Room const *);
 };

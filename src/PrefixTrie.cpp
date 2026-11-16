@@ -54,9 +54,6 @@ void PrefixTrie::Clear()
 {
 	_root.reset();
 }
-PrefixTrieNode::PrefixTrieNode()
-{
-}
 PrefixTrieNode::~PrefixTrieNode()
 {
 	_children.clear();

@@ -9,10 +9,6 @@ Tower<T>::Tower(size_t index)
 {
 }
 
-template <typename T>
-Tower<T>::~Tower()
-{
-}
 
 template <typename T>
 size_t Tower<T>::Index() const

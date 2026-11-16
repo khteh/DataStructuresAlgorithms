@@ -2,14 +2,6 @@
 #include "MyQueue.h"
 template class MyQueue<int>;
 
-template <typename T>
-MyQueue<T>::MyQueue()
-{
-}
-template <typename T>
-MyQueue<T>::~MyQueue()
-{
-}
 
 template <typename T>
 size_t MyQueue<T>::size()

@@ -36,6 +36,6 @@ private:
 
 public:
 	KDTree(vector<vector<T>> &, long depth = 0);
-	virtual ~KDTree();
+	virtual ~KDTree() = default;
 	virtual void PrintTree();
 };

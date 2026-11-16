@@ -47,7 +47,7 @@ private:
 	bool TopBottomPathExists(vector<vector<T>> const &, size_t, T);
 
 public:
-	Matrix();
+	Matrix() = default;
 	Matrix(vector<vector<T>> &, T, T);
 	Matrix(vector<vector<T>> &);
 	void MatrixDistance(vector<vector<T>> &, size_t, size_t);

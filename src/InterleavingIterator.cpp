@@ -12,10 +12,6 @@ InterleavingIterator<T>::InterleavingIterator(vector<vector<T>> &containers)
 		size += it->size();
 }
 
-template <typename T>
-InterleavingIterator<T>::~InterleavingIterator()
-{
-}
 
 template <typename T>
 bool InterleavingIterator<T>::HasNext()

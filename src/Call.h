@@ -6,7 +6,7 @@ class Call
 public:
 	Call(Employee::Rank = Employee::Rank::FRESHER);
 	Call(Call&);
-	virtual ~Call(void);
+	virtual ~Call(void) = default;
 	void Connect();
 	void Disconnect();
 	Employee::Rank rank();

@@ -6,7 +6,7 @@ public:
 	void Print(string);
 
 protected:
-	Singleton();
+	Singleton() = default;
 	virtual ~Singleton();
 
 private:

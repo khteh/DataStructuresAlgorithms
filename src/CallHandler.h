@@ -5,8 +5,8 @@ using namespace std;
 class CallHandler
 {
 public:
-	CallHandler(void);
-	virtual ~CallHandler(void);
+	CallHandler(void) = default;
+	virtual ~CallHandler(void) = default;
 	bool dispatch(Call &);
 	Call *nextCall(Employee &);
 

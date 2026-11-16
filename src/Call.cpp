@@ -11,9 +11,6 @@ Call::Call(Call &call)
 {
 }
 
-Call::~Call(void)
-{
-}
 
 Employee::Rank Call::rank()
 {

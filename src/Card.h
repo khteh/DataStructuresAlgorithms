@@ -4,7 +4,7 @@ class Card
 public:
 	enum class Suit { DIAMOND, CLUB, HEART, SPADE	};
 	Card(int, Suit);
-	virtual ~Card(void);
+	virtual ~Card(void) = default;
 	int value();
 	Suit suit();
 

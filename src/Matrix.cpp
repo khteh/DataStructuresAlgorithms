@@ -65,9 +65,6 @@ Cluster operator+(Cluster lhs, const Cluster &rhs)
 }
 
 template <typename T>
-Matrix<T>::Matrix() {}
-
-template <typename T>
 Matrix<T>::Matrix(vector<vector<T>> &grid, T active, T inactive) : _active(active), _inactive(inactive), _grid(grid) {}
 
 /*

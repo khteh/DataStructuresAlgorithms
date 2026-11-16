@@ -3,9 +3,9 @@ using namespace std;
 class DiamondBase
 {
 public:
-	DiamondBase();
+	DiamondBase() = default;
 	DiamondBase(string);
-	virtual ~DiamondBase();
+	virtual ~DiamondBase() = default;
 	virtual void Write();
 	virtual void Write(string);
 	virtual string Read(); // = 0;
@@ -18,7 +18,7 @@ class Transmitter : public virtual DiamondBase
 public:
 	Transmitter();
 	Transmitter(string);
-	~Transmitter();
+	~Transmitter() = default;
 	using DiamondBase::Write; // https://en.cppreference.com/w/cpp/language/using_declaration
 	void Write();			  // Transmitter::Write(int) overrides DiamondBase::Write(int)
 };
@@ -28,14 +28,14 @@ class Receiver : public virtual DiamondBase
 public:
 	Receiver();
 	Receiver(string);
-	~Receiver();
+	~Receiver() = default;
 	string Read();
 };
 
 class Radio : public Transmitter, public Receiver
 {
 public:
-	Radio();
+	Radio() = default;
 	Radio(string);
-	~Radio();
+	~Radio() = default;
 };

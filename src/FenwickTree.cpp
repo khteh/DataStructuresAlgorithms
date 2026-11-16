@@ -11,10 +11,6 @@ template class FenwickTree<uint64_t>;
 template <integral_type T>
 FenwickTree<T>::FenwickTree(size_t size) : _data(size + 1, T()) {}
 template <integral_type T>
-FenwickTree<T>::FenwickTree()
-{
-}
-template <integral_type T>
 FenwickTree<T>::FenwickTree(vector<T> const &data)
 {
   _data.resize(*ranges::max_element(data) + 1);

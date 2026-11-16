@@ -9,8 +9,8 @@ private:
 	void back2front();
 
 public:
-	MyQueue();
-	virtual ~MyQueue();
+	MyQueue() = default;
+	virtual ~MyQueue() = default;
 	T front();
 	T peek();
 	void push_back(T);

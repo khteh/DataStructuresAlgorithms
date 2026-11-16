@@ -6,9 +6,6 @@ Employee::Employee(Rank r)
 {
 }
 
-Employee::~Employee(void)
-{
-}
 
 Employee::Rank Employee::rank()
 {

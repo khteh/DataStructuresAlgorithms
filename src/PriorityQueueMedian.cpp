@@ -4,10 +4,6 @@
 template class PriorityQueueMedian<long>;
 
 template <typename T>
-PriorityQueueMedian<T>::PriorityQueueMedian()
-{
-}
-template <typename T>
 PriorityQueueMedian<T>::PriorityQueueMedian(vector<T> const &data)
 {
 	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)

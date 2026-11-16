@@ -4,5 +4,5 @@ class FunctionObject
 {
 public:
 	FunctionObject();
-	~FunctionObject();
+	~FunctionObject() = default;
 };

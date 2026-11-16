@@ -4,10 +4,6 @@ template class CircularLinkedList<int>;
 template class CircularLinkedList<long>;
 template class CircularLinkedList<string>;
 template <typename T>
-CircularLinkedList<T>::CircularLinkedList()
-{ // Needed by GoogleTest TEST_P: https://github.com/google/googletest/issues/4965
-}
-template <typename T>
 CircularLinkedList<T>::CircularLinkedList(vector<T> const &data)
 {
 	_head.reset();

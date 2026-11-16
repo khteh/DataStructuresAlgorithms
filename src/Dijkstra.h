@@ -57,7 +57,7 @@ template <typename T>
 class Dijkstra
 {
 public:
-    Dijkstra();
+    Dijkstra() = default;
     Dijkstra(vector<T> const &);
     virtual ~Dijkstra();
     size_t Count() const;

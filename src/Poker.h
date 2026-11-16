@@ -5,5 +5,5 @@ class Poker : public Card
 {
 public:
 	Poker(int, Suit);
-	virtual ~Poker(void);
+	virtual ~Poker(void) = default;
 };

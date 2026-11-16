@@ -4,18 +4,12 @@ Door::Door(Room *r, int lock)
 	: next_(r), lock_(lock)
 {
 }
-Door::~Door()
-{
-}
 Room::Room(bool hasTreasure)
 	: hasTreasure_(hasTreasure), lock_(-1)
 {
 }
 Room::Room(int lock)
 	: hasTreasure_(false), lock_(lock)
-{
-}
-Room::~Room()
 {
 }
 void Room::addDoor(Room *next, int lock)
@@ -37,12 +31,6 @@ void Room::addDoor(Room *next, int lock)
 			next->doors_.push_back({this, lock});
 		}
 	}
-}
-TreasureGame::TreasureGame()
-{
-}
-TreasureGame::~TreasureGame()
-{
 }
 // You are a game developer working on a game that randomly generates levels. A level is an undirected graph of rooms, each connected by doors. The player starts in one room, and there is a treasure in another room. Some doors are locked, and each lock is opened by a unique key. A room may contain one of those unique keys, or the treasure, or nothing.
 // Implement a representation for a level and write code that, given a level and starting room, returns true if the treasure can be reached by the player�likely requiring them to find certain other keys first�or false if there is no solution.

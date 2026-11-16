@@ -7,9 +7,6 @@ Card::Card(int v, Suit s)
 {
 }
 
-Card::~Card(void)
-{
-}
 
 int Card::value()
 {

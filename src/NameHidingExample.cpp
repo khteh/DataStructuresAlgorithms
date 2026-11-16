@@ -13,9 +13,6 @@ NameHidingExample::NameHidingExample(long var)
 {
 }
 
-NameHidingExample::~NameHidingExample(void)
-{
-}
 
 void NameHidingExample::Print(long var)
 {
@@ -29,18 +26,11 @@ void NameHidingExample::Print(long var, long var1)
 	cout << "[" << __FUNCTION__ << " " << __LINE__ << "] var_: " << hex << var_ << dec << endl;
 }
 
-NameHidingExampleDerived::NameHidingExampleDerived(void)
-{
-}
-
 NameHidingExampleDerived::NameHidingExampleDerived(long var)
 	: NameHidingExample(var)
 {
 }
 
-NameHidingExampleDerived::~NameHidingExampleDerived(void)
-{
-}
 
 void NameHidingExampleDerived::Print(long var)
 {

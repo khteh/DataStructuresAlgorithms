@@ -57,6 +57,3 @@ FunctionObject::FunctionObject()
 	f_display_obj(18);
 }
 
-FunctionObject::~FunctionObject()
-{
-}
