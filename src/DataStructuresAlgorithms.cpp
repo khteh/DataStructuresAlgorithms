@@ -3975,11 +3975,11 @@ The product needs 64 bits too. size[v] * (n - size[v]) is up to 2.5 × 10⁹, mo
 
 That’s how the program handles a 200,000-bit answer without big-number arithmetic.
 */
-string RoadsInHackerland(size_t n, vector<vector<size_t>> &edges)
+string RoadsInHackerland(size_t n, vector<vector<size_t>> const &edges)
 {
 	vector<size_t> from, to;
 	vector<size_t> weights;
-	for (vector<vector<size_t>>::iterator it = edges.begin(); it != edges.end(); it++)
+	for (vector<vector<size_t>>::const_iterator it = edges.begin(); it != edges.end(); it++)
 	{
 		from.push_back((*it)[0]);
 		to.push_back((*it)[1]);
