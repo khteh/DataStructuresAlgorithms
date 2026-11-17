@@ -898,7 +898,7 @@ string String::GetHint(string const &secret, string const &guess)
 /*
  * https://www.hackerrank.com/challenges/bear-and-steady-gene/problem
  * 100%
- * find the length of the smallest possible substring that can be replaced to make a steady gene
+ * Find the length of the smallest possible substring that can be replaced to make a steady gene
  * Sliding window implementation
  */
 size_t String::SteadyGene(string const &gene)
@@ -911,7 +911,7 @@ size_t String::SteadyGene(string const &gene)
     for (string::const_iterator it = gene.begin(); it != gene.end(); it++)
         genes[*it]++;
     /*
-     * ACGTCCGT : length = 8, N = 2
+     * ACGTCCGT : length = 8, N = 2, balancedCount = 2
      * 'A': 1
      * 'G': 2
      * 'C': 3
@@ -929,16 +929,16 @@ size_t String::SteadyGene(string const &gene)
      * 'C': 2 -> j:2
      * 'T': 2
      *
-     * i: 0, j: 2 [ACG]TCCGT
-     * 'A': 1 -> count: 2, i:1, j:2
+     * i: 0, j: 2 [ACG]TCCGT => A[AG]TCCGT
+     * 'A': 1 -> count: 2 ("CG"), i:1, j:2
      * 'G': 2
      * 'C': 2
      * 'T': 2
      *
-     * i: 1, j: 2 A[CG]TCCGT => AAGTCCGT
+     * i: 1, j: 2 A[CG]TCCGT => AC[G]TCCGT
      * 'A': 1
      * 'G': 2
-     * 'C': 3 -> count: 1, i:2 j:2
+     * 'C': 3 -> count: 1 ("G"), i:2 j:2
      * 'T': 2
      *
      * i: 2, j: 2 AC[G]TCCGT
@@ -961,7 +961,7 @@ size_t String::SteadyGene(string const &gene)
      *
      * i: 2, j: 5 AC[GTCC]GT
      * 'A': 1
-     * 'G': 2 -> count: 3, i:3 j:5
+     * 'G': 2 -> count: 3 ("TCC"), i:3 j:5
      * 'C': 2
      * 'T': 1
      *
@@ -969,12 +969,12 @@ size_t String::SteadyGene(string const &gene)
      * 'A': 1
      * 'G': 2
      * 'C': 2
-     * 'T': 2 -> count: 2, i:4, j:5
+     * 'T': 2 -> count: 2 ("CC"), i:4, j:5
      *
-     * i: 4, j: 5 ACGT[CC]GT => ACGTACGT
+     * i: 4, j: 5 ACGT[CC]GT
      * 'A': 1
      * 'G': 2
-     * 'C': 3 -> count: 1, i:5, j:5
+     * 'C': 3 -> count: 1 ("C"), i:5, j:5
      * 'T': 2
      *
      * i: 5, j: 5 ACGTC[C]GT
@@ -986,7 +986,7 @@ size_t String::SteadyGene(string const &gene)
      * i: 5, j: 6 ACGTC[CG]T => ACGTCAGT
      * 'A': 1
      * 'G': 2
-     * 'C': 3 -> count: 1, i:6 j:6
+     * 'C': 3 -> count: 1 ("C"), i:6 j:6
      * 'T': 2
      *
      * i: 6, j: 6 ACGTCC[G]T
@@ -1057,6 +1057,9 @@ size_t String::LengthOfLongestUniqueSubstring(string const &s)
 /*
  * https://leetcode.com/problems/longest-repeating-character-replacement/
  * 100%
+ * You are given a string s and an integer k. You can choose any character of the string and change it to any other uppercase English character.
+ * You can perform this operation at most k times. Return the length of the longest substring containing the same letter you can get after performing the above operations.
+ *
  * Sliding window implementation
  * [A]BAB k=1: maxFreq:1, maxLength:1
  * [AB]AB : maxFreq:1, maxLength:2
