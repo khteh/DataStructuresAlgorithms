@@ -3987,7 +3987,11 @@ string RoadsInHackerland(size_t n, vector<vector<size_t>> const &edges)
 	}
 	Kruskal<size_t, size_t> kruskal(from, to, weights);
 	KruskalResult<size_t, size_t> mst = kruskal.MST();
-	if (!mst.Connected())
+	/*
+	Kruskal only knows about the cities named in the roads. A city with no roads at all is invisible to it. With RoadsInHackerland(3, {{1, 2, 0}}), Kruskal sees {1, 2}, which is one tree, so Connected() is true and nothing is thrown.
+	The function then returns "10" as if city 3 didn’t exist. A check that also catches this compares the tree’s size with N:
+	*/
+	if (!mst.Connected() || mst.edges.size() + 1 != n) // A spanning tree on N cities has exactly N − 1 edges
 		throw invalid_argument("The graph is disconnected! Some cities would never be reached in the following steps!");
 	/*
 	mst.edges gives you the first column, the N − 1 tree edges with their c. To fill in the other columns, you need each edge’s s, the size of the part on one side of the cut.

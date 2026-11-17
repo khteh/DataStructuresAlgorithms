@@ -492,7 +492,8 @@ INSTANTIATE_TEST_SUITE_P(
 TEST(RoadsInHackerlandTests, DisconnectGraphShouldThrowTests)
 {
 	ASSERT_THROW(RoadsInHackerland(6, vector<vector<size_t>>{{1, 2, 7}, {3, 4, 8}, {5, 6, 9}}), invalid_argument);
-	ASSERT_THROW(RoadsInHackerland(6, vector<vector<size_t>>{{1, 2, 7}, {2, 4, 8}, {5, 6, 9}}), invalid_argument);
+	ASSERT_THROW(RoadsInHackerland(5, vector<vector<size_t>>{{1, 2, 6}, {2, 3, 7}, {4, 5, 8}}), invalid_argument);
+	ASSERT_THROW(RoadsInHackerland(5, vector<vector<size_t>>{{1, 2, 6}, {2, 3, 7}, {3, 4, 8}}), invalid_argument); // City '5' is a city without any road to any other city.
 }
 class MinSubGraphsDifferenceTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, vector<vector<size_t>>>>
 {
