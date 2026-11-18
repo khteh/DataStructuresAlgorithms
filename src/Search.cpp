@@ -975,7 +975,7 @@ size_t Search::_BinarySearchLongestValidParenthesesWithFixes(size_t k, vector<lo
     if (start >= end)
         return 0;
     vector<long>::const_iterator lowestIt = min_element(P.begin() + start, P.begin() + end + 1);
-    if (lowestIt != P.end()) {
+    if (lowestIt != P.begin() + end + 1) {
         size_t t = distance(P.begin() + start, lowestIt);
         long m = *lowestIt;
         size_t leftSize = t - start, rightSize = end - t;
@@ -1084,8 +1084,8 @@ size_t Search::LongestValidParenthesesWithFixes(string const& str, size_t k)
 {
     if (str.empty())
         return 0;
-    if (k >= str.size())
-        return str.size();
+    if (k >= str.size() - str.size() % 2)
+        return str.size() - str.size() % 2;
     vector<long> P(str.size() + 1, 0);
     for (size_t i = 0; i < str.size(); i++)
         P[i + 1] = (str[i] == ')' ? P[i] - 1 : P[i] + 1);
