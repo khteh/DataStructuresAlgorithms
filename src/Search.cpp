@@ -1077,6 +1077,8 @@ Range of positions	Lowest point t	Best substring found through t
 6 … 7, 3 … 4	6, 4	nothing longer
 
 Every substring is checked exactly once: in the first range that contains it whose split point t falls inside it. At that point t is its lowest point, so its m is P[t].
+
+WIP: Using recursive algorithm hits stack overflow.
  */
 size_t Search::LongestValidParenthesesWithFixes(string const& str, size_t k)
 {
