@@ -5,7 +5,7 @@
  * https://leetcode.com/problems/maximum-subarray/
  * 100%
  */
-long Range::ConsecutiveMaximumSum(vector<long> const &data, vector<long> &result)
+long Range::ConsecutiveMaximumSum(vector<long> const& data, vector<long>& result)
 {
 	vector<long> kadane;
 	map<long, vector<long>> results;
@@ -42,7 +42,7 @@ long Range::ConsecutiveMaximumSum(vector<long> const &data, vector<long> &result
  * Return max(maxSum or (total - minSum))
  * 100%
  */
-long Range::ConsecutiveMaximumSumCircular(vector<long> const &data)
+long Range::ConsecutiveMaximumSumCircular(vector<long> const& data)
 {
 	long sum1 = 0, sum2 = 0, total = 0, minSum = numeric_limits<long>::max(), maxSum = numeric_limits<long>::min();
 	for (vector<long>::const_iterator it = data.begin(); it != data.end(); it++)
@@ -119,7 +119,7 @@ long Range::ConsecutiveMaximumSumCircular(vector<long> const &data)
  * 11	14	14		[1 3 13 2 9 0 7 10 3 14]
  * 12	11	14		[1 3 13 2 9 0 7 10 3 14 11]
  */
-size_t Range::ConsecutiveMaximumSumModulo(vector<long> const &data, size_t modulo)
+size_t Range::ConsecutiveMaximumSumModulo(vector<long> const& data, size_t modulo)
 {
 	size_t maxSum = numeric_limits<size_t>::min(), sum = numeric_limits<size_t>::min();
 	vector<size_t> sums; // Using set<size_t> will cause time out!
@@ -141,7 +141,7 @@ size_t Range::ConsecutiveMaximumSumModulo(vector<long> const &data, size_t modul
 /* https://leetcode.com/problems/maximum-product-subarray/
  * 100%
  */
-long Range::ConsecutiveLargestProduct(vector<long> const &data)
+long Range::ConsecutiveLargestProduct(vector<long> const& data)
 {
 	long maxproduct = numeric_limits<long>::min(), max_ending_here = 1, min_ending_here = 1;
 	bool zero = false;
@@ -199,7 +199,7 @@ long Range::ConsecutiveLargestProduct(vector<long> const &data)
    i,j   sum: 4 count: 1
 	 i,j sum: 4 count: 1
 */
-long Range::MinSumSubSequence(size_t target, vector<size_t> const &data)
+long Range::MinSumSubSequence(size_t target, vector<size_t> const& data)
 {
 	size_t count = numeric_limits<size_t>::max();
 	size_t sum = 0;
@@ -218,7 +218,7 @@ long Range::MinSumSubSequence(size_t target, vector<size_t> const &data)
  * https://www.hackerrank.com/challenges/minimum-loss/problem
  * 100%
  */
-size_t Range::MinimumLoss(vector<size_t> const &data)
+size_t Range::MinimumLoss(vector<size_t> const& data)
 {
 	map<size_t, size_t, greater<size_t>> prices;
 	for (size_t i = 0; i < data.size(); i++)
@@ -227,8 +227,8 @@ size_t Range::MinimumLoss(vector<size_t> const &data)
 	for (map<size_t, size_t, greater<size_t>>::iterator it = prices.begin(); it != prices.end(); it++)
 	{
 		size_t index = it->second;
-		map<size_t, size_t, greater<size_t>>::iterator it1 = find_if(next(it), prices.end(), [index](const auto &it2)
-																	 { return it2.second > index; });
+		map<size_t, size_t, greater<size_t>>::iterator it1 = find_if(next(it), prices.end(), [index](const auto& it2)
+			{ return it2.second > index; });
 		if (it1 != prices.end() && it1->first < it->first)
 			minPrice = min((it->first - it1->first), minPrice);
 	}
@@ -271,7 +271,7 @@ size_t Range::MinimumLoss(vector<size_t> const &data)
  * i: 1 -> [5]
  * i: 0
  */
-long Range::MinimumBribes(size_t maxBribes, vector<long> const &data)
+long Range::MinimumBribes(size_t maxBribes, vector<long> const& data)
 {
 	long bribes = 0;
 	for (long i = data.size() - 1; i >= 0; i--)
@@ -324,7 +324,7 @@ i: 0 1 2 3 4
    i:0 [2,0] j:1
 		   i:4 [4, 2] j: 3 result: 2
  */
-long Range::MinEnergyInstallations(vector<size_t> &data, long k)
+long Range::MinEnergyInstallations(vector<size_t>& data, long k)
 {
 	vector<size_t> installations;
 	for (size_t i = 0; i < data.size(); i = installations.back() + k)
@@ -373,7 +373,7 @@ Note that when two children have equal rating, they are allowed to have differen
 
 6 5 4 4 4 2 3 -> 3 2 1 2 1 2 3 = 14
  */
-size_t Range::MinimumCandies(vector<size_t> const &data)
+size_t Range::MinimumCandies(vector<size_t> const& data)
 {
 	vector<size_t> result(data.size(), 1);
 	for (size_t i = 0; i < data.size() - 1; i++)
@@ -384,7 +384,7 @@ size_t Range::MinimumCandies(vector<size_t> const &data)
 			result[i - 1] = result[i] + 1;
 	size_t sum = parallel_reduce(
 		blocked_range<size_t>(0, result.size()), 0uz,
-		[&](tbb::blocked_range<size_t> const &r, size_t running_total)
+		[&](tbb::blocked_range<size_t> const& r, size_t running_total)
 		{
 			for (size_t i = r.begin(); i < r.end(); i++)
 				running_total += result[i];
@@ -399,7 +399,7 @@ size_t Range::MinimumCandies(vector<size_t> const &data)
  * Find the longest sequence when the graph crosses a previous point. The crossing point is when negative becomes positive and vice versa
  * 100%
  */
-long Range::LongestNonNegativeSumSlice(vector<long> const &data)
+long Range::LongestNonNegativeSumSlice(vector<long> const& data)
 {
 	// -1, -1, -1, -1, -1, -1, 1 (max_len = max(1, 6 - 4) = 2), 1 (max_len = max(2, 7 - 3) = 4)
 	//  1,  1,  1,  1,  1,  1,-1 (max_len = max(6, 6 - 4) = 6),-1 (max_len = max(6, 7 - 3) = 6)
@@ -420,7 +420,7 @@ long Range::LongestNonNegativeSumSlice(vector<long> const &data)
 	}
 	return max_len;
 }
-size_t Range::LongestUpDownAlternatingSubSequence(vector<long> const &data, vector<long> &result)
+size_t Range::LongestUpDownAlternatingSubSequence(vector<long> const& data, vector<long>& result)
 {
 	map<size_t, vector<long>> sequences;
 	direction_t direction = Direction::NoChange, flag = Direction::NoChange;
@@ -429,7 +429,7 @@ size_t Range::LongestUpDownAlternatingSubSequence(vector<long> const &data, vect
 		for (vector<long>::const_iterator it = data.begin() + 1; it != data.end(); it++, index++)
 		{
 			flag = *it > *(it - 1) ? Direction::Up : *it < *(it - 1) ? Direction::Down
-																	 : Direction::NoChange;
+				: Direction::NoChange;
 			if (flag != direction)
 			{
 				count++;
@@ -458,7 +458,7 @@ size_t Range::LongestUpDownAlternatingSubSequence(vector<long> const &data, vect
  * diff: 7 6 5 4 3 2 3
  * pairs:1 2 3 4 . .    <= 2 pairs: {[3,5], [2,6]}
  */
-size_t Range::SumPairs(size_t sum, vector<size_t> const &data)
+size_t Range::SumPairs(size_t sum, vector<size_t> const& data)
 {
 	size_t count = 0;
 	size_t diff;
@@ -480,7 +480,7 @@ size_t Range::SumPairs(size_t sum, vector<size_t> const &data)
 https://www.hackerrank.com/challenges/icecream-parlor/problem
 100%
 */
-void Range::SumPairs(size_t sum, vector<size_t> const &data, vector<size_t> &result)
+void Range::SumPairs(size_t sum, vector<size_t> const& data, vector<size_t>& result)
 {
 	size_t diff;
 	map<size_t, size_t> pairs;
@@ -501,7 +501,7 @@ void Range::SumPairs(size_t sum, vector<size_t> const &data, vector<size_t> &res
 /* https://leetcode.com/problems/product-of-array-except-self/
  * 100%
  */
-vector<long> Range::ProductExceptSelf(vector<long> const &nums)
+vector<long> Range::ProductExceptSelf(vector<long> const& nums)
 {
 	vector<long> result(nums.size(), 1);
 	/*
@@ -533,7 +533,7 @@ vector<long> Range::ProductExceptSelf(vector<long> const &nums)
 // (2) 2 * 3 * 3 * 2 = 36
 // (3) (2 + 3) * (3 + 2) = 25
 // (4) 2 + (3 * 3) + 2 = 11
-uint64_t Range::FindMax(vector<uint64_t> const &data)
+uint64_t Range::FindMax(vector<uint64_t> const& data)
 {
 	vector<uint64_t> result;
 	if (data.size() == 1)
@@ -552,7 +552,7 @@ uint64_t Range::FindMax(vector<uint64_t> const &data)
  * https://www.geeksforgeeks.org/maximum-value-pair-array/
  * Start from MSB, add the bit to the result if there are 2 elements having the same prefix value when ANDed
  */
-uint64_t Range::MaxAndPair(vector<uint64_t> const &data)
+uint64_t Range::MaxAndPair(vector<uint64_t> const& data)
 {
 	uint64_t result = 0;
 	for (uint64_t msb = 1 << BitCount(*ranges::max_element(data)) - 1, pattern = result | msb; msb > 0; msb >>= 1, pattern = result | msb)
@@ -608,7 +608,7 @@ maxx ^ prefix: 0x111 ^ 1 = 0x110
 			   0x111 ^ 0x10 = 0x101
 			   0x111 ^ 0x11 = 0x100 => result = 0x111
 */
-uint64_t Range::MaxXorPair(vector<uint64_t> const &data)
+uint64_t Range::MaxXorPair(vector<uint64_t> const& data)
 {
 	uint64_t result = 0;
 	set<uint64_t> prefixes;
@@ -663,7 +663,7 @@ uint64_t Range::MaxXorPair(vector<uint64_t> const &data)
  * (9,10), (9,9) 2
  * Count = 45
  */
-size_t Range::GreaterThanSumPairs(size_t sum, vector<size_t> const &data)
+size_t Range::GreaterThanSumPairs(size_t sum, vector<size_t> const& data)
 {
 	size_t count = 0, count1;
 	for (size_t i = 0; i <= data.size() / 2 - 1; i++)
@@ -682,7 +682,7 @@ size_t Range::GreaterThanSumPairs(size_t sum, vector<size_t> const &data)
 /* https://leetcode.com/problems/3sum/
  * 100%
  */
-vector<vector<long>> Range::TripletsZeroSum(vector<long> &nums)
+vector<vector<long>> Range::TripletsZeroSum(vector<long>& nums)
 {
 	set<vector<long>> result;
 	if (nums.empty() || nums.size() < 3)
@@ -706,7 +706,7 @@ vector<vector<long>> Range::TripletsZeroSum(vector<long> &nums)
 /* https://leetcode.com/problems/4sum/
  * 100%
  */
-vector<vector<long>> Range::QuadrupletsSum(long target, vector<long> &nums)
+vector<vector<long>> Range::QuadrupletsSum(long target, vector<long>& nums)
 {
 	set<vector<long>> result;
 	if (nums.empty() || nums.size() < 4)
@@ -734,7 +734,7 @@ vector<vector<long>> Range::QuadrupletsSum(long target, vector<long> &nums)
  * tmp:  2 3 4 5 6 7
  * count:1 2 3 4 5  	=> 5 pairs
  */
-size_t Range::NumberDiffPairs(long diff, vector<long> const &numbers)
+size_t Range::NumberDiffPairs(long diff, vector<long> const& numbers)
 {
 	size_t count = 0;
 	set<long> pairs(numbers.begin(), numbers.end());
@@ -747,7 +747,7 @@ size_t Range::NumberDiffPairs(long diff, vector<long> const &numbers)
 	}
 	return count;
 }
-size_t Range::NumberDiffPairs(long diff, set<long> const &numbers)
+size_t Range::NumberDiffPairs(long diff, set<long> const& numbers)
 {
 	size_t count = 0;
 	long tmp;
@@ -779,7 +779,7 @@ hh = 9 - 7 = 2 {4 7 9}
 l = max(3, 6+6) = 12
 h = max(6+2, 3+8) = 11
 */
-size_t Range::SherlockAndCost(vector<size_t> const &data)
+size_t Range::SherlockAndCost(vector<size_t> const& data)
 {
 	/*
 		lh: low to high from data[i - 1]=1 to data[i]
@@ -812,7 +812,7 @@ size_t Range::SherlockAndCost(vector<size_t> const &data)
  * 1 17 5 10 13 11 12 5 16 8
  * 1 17 5 13 11 12 5 16 8
  */
-vector<size_t> Range::WiggleMaxLength(vector<size_t> const &nums)
+vector<size_t> Range::WiggleMaxLength(vector<size_t> const& nums)
 {
 	vector<size_t> result;
 	bool direction = false; // false: down. true: up
@@ -862,7 +862,7 @@ t: 10
 k: 1
 t: 1
 */
-bool Range::ContainsNearbyAlmostDuplicate(vector<int64_t> const &nums, int64_t k, int64_t t)
+bool Range::ContainsNearbyAlmostDuplicate(vector<int64_t> const& nums, int64_t k, int64_t t)
 {
 	multiset<int64_t> buckets;
 	if (k > 0 && t >= 0)
@@ -885,7 +885,7 @@ bool Range::ContainsNearbyAlmostDuplicate(vector<int64_t> const &nums, int64_t k
  * Do NOT change the data type from int to long!
  * Only tested working with int type.
  */
-size_t Range::VectorEqualSplit(vector<int> const &data)
+size_t Range::VectorEqualSplit(vector<int> const& data)
 {
 	set<int> unique(data.begin(), data.end());
 	size_t result = 0;
@@ -893,7 +893,7 @@ size_t Range::VectorEqualSplit(vector<int> const &data)
 		return result;
 	int right = parallel_reduce(
 		blocked_range<size_t>(0, data.size()), 0,
-		[&](tbb::blocked_range<size_t> const &r, int running_total)
+		[&](tbb::blocked_range<size_t> const& r, int running_total)
 		{
 			for (size_t j = r.begin(); j < r.end(); j++)
 				running_total += data[j];
@@ -968,7 +968,7 @@ size_t Range::VectorEqualSplit(vector<int> const &data)
 1 2 3 4 5 6 : No
 1 1 -2 0 0 0
 */
-string Range::AlmostSorted(vector<long> const &arr)
+string Range::AlmostSorted(vector<long> const& arr)
 {
 	ostringstream oss;
 	vector<long> sorted(arr);
@@ -988,9 +988,9 @@ string Range::AlmostSorted(vector<long> const &arr)
 			if (diff[index] < 0 && !sum)
 			{
 				size_t positives = ranges::count_if(diff, [](long i)
-													{ return i > 0; });
+					{ return i > 0; });
 				size_t negatives = ranges::count_if(diff, [](long i)
-													{ return i < 0; });
+					{ return i < 0; });
 				if (diff[index] + diff[0])
 					return "no";
 				else if (positives == 1 && negatives == 1)
@@ -1014,20 +1014,20 @@ string Range::AlmostSorted(vector<long> const &arr)
  * https://www.hackerrank.com/challenges/picking-numbers/problem
  * 100%
  */
-size_t Range::PickNumbersFromRange(vector<size_t> const &data)
+size_t Range::PickNumbersFromRange(vector<size_t> const& data)
 {
 	size_t max = 0;
 	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
 	{
 		size_t value = *it;
 		size_t cnt = ranges::count_if(data, [&value](size_t j)
-									  { return j == value; });
+			{ return j == value; });
 		size_t oneless = 0;
 		if (value > 0)
 			oneless = ranges::count_if(data, [&value](size_t j)
-									   { return j == (value - 1); });
+				{ return j == (value - 1); });
 		size_t onemore = ranges::count_if(data, [&value](size_t j)
-										  { return j == (value + 1); });
+			{ return j == (value + 1); });
 		cnt = cnt + oneless > cnt + onemore ? cnt + oneless : cnt + onemore;
 		if (cnt > max)
 			max = cnt;
@@ -1072,7 +1072,7 @@ vector<long> Range::LastNumbers(size_t n, long a, long b)
 		return vector<long>{num};
 	result.resize(((maximum - num) / diff) + 1);
 	ranges::generate(result, [n = num, diff]() mutable
-					 { long result = n; n += diff; return result; });
+		{ long result = n; n += diff; return result; });
 	return result;
 }
 /*
@@ -1116,7 +1116,7 @@ Ex: x:5 y:9 k:3 (Yes)
 
  * 100%
  */
-size_t Range::MaxNonDivisableSubset(vector<size_t> const &data, size_t k)
+size_t Range::MaxNonDivisableSubset(vector<size_t> const& data, size_t k)
 {
 	vector<size_t> counts(k, 0);
 	for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
@@ -1149,7 +1149,7 @@ size_t Range::MaxNonDivisableSubset(vector<size_t> const &data, size_t k)
  *                c
  *                        c
  */
-size_t Range::HackerlandRadioTransmitters(vector<size_t> &data, long k)
+size_t Range::HackerlandRadioTransmitters(vector<size_t>& data, long k)
 {
 	ranges::sort(data);
 	set<size_t> dataset(data.begin(), data.end());
@@ -1171,7 +1171,7 @@ size_t Range::HackerlandRadioTransmitters(vector<size_t> &data, long k)
  *
  * 100%
  */
-size_t Range::SherlockAndMinimax(vector<size_t> &data, size_t p, size_t q)
+size_t Range::SherlockAndMinimax(vector<size_t>& data, size_t p, size_t q)
 {
 	ranges::sort(data);
 	if (q < data[0])
@@ -1250,7 +1250,7 @@ size_t Range::SherlockAndMinimax(vector<size_t> &data, size_t p, size_t q)
 2 4
 *
  */
-size_t Range::ChiefHopper(vector<size_t> const &data)
+size_t Range::ChiefHopper(vector<size_t> const& data)
 {
 	size_t e = 0;
 	for (vector<size_t>::const_reverse_iterator it = data.rbegin(); it != data.rend(); it++)
@@ -1260,7 +1260,7 @@ size_t Range::ChiefHopper(vector<size_t> const &data)
 /* https://www.hackerrank.com/challenges/flatland-space-stations/problem
  * 100%
  */
-size_t Range::MaxClosestDistance(size_t n, vector<size_t> &c)
+size_t Range::MaxClosestDistance(size_t n, vector<size_t>& c)
 {
 	size_t distance = 0;
 	ranges::sort(c);
@@ -1298,7 +1298,7 @@ size_t Range::MaxClosestDistance(size_t n, vector<size_t> &c)
  * https://www.hackerrank.com/challenges/fraudulent-activity-notifications/problem
  * 100%
  */
-size_t Range::LiveMedianCalculation(size_t d, vector<size_t> const &data)
+size_t Range::LiveMedianCalculation(size_t d, vector<size_t> const& data)
 {
 	size_t count = 0;
 	bool odd = d % 2;
@@ -1332,6 +1332,7 @@ size_t Range::LiveMedianCalculation(size_t d, vector<size_t> const &data)
 /*
  * https://leetcode.com/problems/sliding-window-maximum/
  * 100%
+ * A sliding window needs monotonicity: if a window is fixable, so is a smaller one inside it.
  * Window position                Max
 ---------------               -----
 [1  3  -1] -3  5  3  6  7       3
@@ -1360,7 +1361,7 @@ size_t Range::LiveMedianCalculation(size_t d, vector<size_t> const &data)
  * i:0 [1] => result: [1]
  * i:1 [-1] => reulst: [1 -1]
  */
-void Range::MaxSlidingWindow(vector<long> const &data, size_t k, vector<long> &result)
+void Range::MaxSlidingWindow(vector<long> const& data, size_t k, vector<long>& result)
 {
 	deque<long> window;
 	for (long i = 0; i < data.size(); i++)
@@ -1435,13 +1436,13 @@ uint64_t Range::BeautifulQuadruples(size_t a, size_t b, size_t c, size_t d)
 	/*
 		if a^b^c^d = 0 then a^b = c^d, therefore sort values to avoid duplications
 	*/
-	vector<size_t> abcd{a, b, c, d};
+	vector<size_t> abcd{ a, b, c, d };
 	ranges::sort(abcd);
 	vector<uint64_t> totalB(abcd[3] + 1, 0); // pair# (w,x} 1 <= w <= A, 1 <= x <= B, w <= x
 	vector<uint64_t> data;
 	data.resize(abcd[3]);
 	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
+		{ return n++; });
 	Range range;
 	uint64_t maxXOR = range.MaxXorPair(data);
 	vector<vector<uint64_t>> cntB(abcd[3] + 1, vector<uint64_t>(maxXOR + 1, 0)); // pair# {w,x} 1 <= w <= A, 1 <= x <= B, w <= x, cntB[x][1] = w ^ x
@@ -1472,7 +1473,7 @@ uint64_t Range::BeautifulQuadruples(size_t a, size_t b, size_t c, size_t d)
  * https://leetcode.com/problems/trapping-rain-water/
  * 100%
  */
-size_t Range::TrapRainWater(vector<size_t> const &walls)
+size_t Range::TrapRainWater(vector<size_t> const& walls)
 {
 	size_t result = 0;
 	cout << endl;
@@ -1480,8 +1481,8 @@ size_t Range::TrapRainWater(vector<size_t> const &walls)
 		if (walls[i] > 0)
 		{
 			// Cannot use lower_bound as the range is not sorted or properly partitioned.
-			vector<size_t>::const_iterator it = ranges::find_if(walls | views::drop(i + 1), [i, &walls](const auto &value)
-																{ return value >= walls[i]; }); // Look for element >= walls[i]
+			vector<size_t>::const_iterator it = ranges::find_if(walls | views::drop(i + 1), [i, &walls](const auto& value)
+				{ return value >= walls[i]; }); // Look for element >= walls[i]
 			if (it != walls.end())
 			{
 				size_t j = distance(walls.begin(), it);
@@ -1496,8 +1497,8 @@ size_t Range::TrapRainWater(vector<size_t> const &walls)
 				for (size_t h = walls[i] - 1; h > 0 && !found; h--)
 				{
 					cout << "i: " << i << " Searching for height: " << h << endl;
-					vector<size_t>::const_iterator it = ranges::find_if(walls | views::drop(i + 1), [h](const auto &value)
-																		{ return value >= h; }); // Look for element >= h
+					vector<size_t>::const_iterator it = ranges::find_if(walls | views::drop(i + 1), [h](const auto& value)
+						{ return value >= h; }); // Look for element >= h
 					if (it != walls.end())
 					{
 						size_t j = distance(walls.begin(), it);
@@ -1549,7 +1550,7 @@ size_t Range::TrapRainWater(vector<size_t> const &walls)
 	i:2
 	A[2]=3 a[A[i] - 1] = A[3-1] = A[2] = 3 == A[1]
  */
-size_t Range::FirstMissingPositive(vector<long> &data)
+size_t Range::FirstMissingPositive(vector<long>& data)
 {
 	for (size_t i = 0; i < data.size(); i++)
 		for (; data[i] > 0 && data[i] <= data.size() && data[data[i] - 1] != data[i];)
@@ -1567,7 +1568,7 @@ size_t Range::FirstMissingPositive(vector<long> &data)
 	nums[p...q] is strictly decreasing,
 	nums[q...n − 1] is strictly increasing.
  */
-bool Range::IsTrionic(vector<long> const &data)
+bool Range::IsTrionic(vector<long> const& data)
 {
 	size_t p = 0, q = 0, direction = 0;
 	bool result = true;
@@ -1636,7 +1637,7 @@ i:2 prev=993  b=995-791=204, a=min c=min
 i:3 prev=-791 a=-791-635=-1426, c=204-635=-431, b=min result=-431
 i:4 prev=-635 a=-635-569=-1204, c=-431-569=-1000 b=min result=-431
  */
-int64_t Range::MaxSumTrionic(vector<long> const &data)
+int64_t Range::MaxSumTrionic(vector<long> const& data)
 {
 	// numeric_limits<int64_t>::min(): -9223372036854775808
 	const int64_t INF = -1e18; // XXX: Using numeric_limits<int64_t>::min() here will result in overflow and result will be very large number due to min() + -ve overflowing to large positive numbers. Need a number between lower range of data[i] and numeric_limits<int64_t>::min()
@@ -1664,7 +1665,7 @@ int64_t Range::MaxSumTrionic(vector<long> const &data)
 /*
  * https://leetcode.com/problems/fruit-into-baskets/description/
  * 100%
- *
+ * A sliding window needs monotonicity: if a window is fixable, so is a smaller one inside it.
  * Sliding Window approach.
  *
  * [1] 2 1
@@ -1725,7 +1726,7 @@ int64_t Range::MaxSumTrionic(vector<long> const &data)
  * basket[0]: 1
  * basket[2]: 3 j:5 result: j - i + 1 = 4
  */
-size_t Range::MaxHarvest(vector<size_t> const &fruits, size_t n)
+size_t Range::MaxHarvest(vector<size_t> const& fruits, size_t n)
 {
 	map<size_t, size_t> count;
 	size_t result = 0;
@@ -1744,13 +1745,13 @@ size_t Range::MaxHarvest(vector<size_t> const &fruits, size_t n)
  * 100%
  * The next greater number of a number x is the first greater number to its traversing-order next in the array, which means you could search circularly to find its next greater number. If it doesn't exist, return -1 for this number.
  */
-vector<long> Range::NextGreaterElements(vector<long> &nums)
+vector<long> Range::NextGreaterElements(vector<long>& nums)
 {
 	vector<long> result;
 	for (size_t i = 0; i < nums.size(); i++)
 	{
-		vector<long>::iterator it = ranges::find_if(nums | views::drop(1), [&nums](const auto &value)
-													{ return value > nums[0]; }); // cannot use upper_bound as nums is not sorted
+		vector<long>::iterator it = ranges::find_if(nums | views::drop(1), [&nums](const auto& value)
+			{ return value > nums[0]; }); // cannot use upper_bound as nums is not sorted
 		result.push_back(it != nums.end() ? *it : -1);
 		ranges::rotate(nums, nums.begin() + 1);
 	}
