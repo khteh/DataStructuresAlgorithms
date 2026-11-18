@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "String.h"
-void String::_Parentheses(vector<string> &result, string &str, size_t index, long left, long right)
+void String::_Parentheses(vector<string>& result, string& str, size_t index, long left, long right)
 {
     if (!left && !right)
         result.push_back(str);
@@ -22,7 +22,7 @@ void String::_Parentheses(vector<string> &result, string &str, size_t index, lon
  * https://leetcode.com/problems/generate-parentheses/
  * 100%
  */
-void String::Parentheses(vector<string> &result, size_t count)
+void String::Parentheses(vector<string>& result, size_t count)
 {
     string str;
     str.resize(count * 2);
@@ -32,10 +32,10 @@ void String::Parentheses(vector<string> &result, size_t count)
  * https://leetcode.com/problems/valid-parentheses/
  * 100%
  */
-bool String::IsValidParentheses(string const &s)
+bool String::IsValidParentheses(string const& s)
 {
     stack<char> stk;
-    map<char, char> pairs = {{'(', ')'}, {'[', ']'}, {'{', '}'}};
+    map<char, char> pairs = { { '(', ')' },{ '[', ']' },{ '{', '}' } };
     for (string::const_iterator it = s.begin(); it != s.end(); it++)
     {
         if (pairs.count(*it))
@@ -83,7 +83,7 @@ bool String::IsValidParentheses(string const &s)
  * 3: 2, 3
  * 4: 2 result = 2
  */
-long String::LongestValidParentheses(string const &str)
+long String::LongestValidParentheses(string const& str)
 {
     MyStack<long> stack;
     stack.push(-1); // The first element of stack is used to provide base for next valid string
@@ -106,18 +106,18 @@ long String::LongestValidParentheses(string const &str)
 /* https://leetcode.com/problems/letter-combinations-of-a-phone-number/
  * 100%
  */
-void String::PhoneKeyLetters(string const &digits, vector<string> &result)
+void String::PhoneKeyLetters(string const& digits, vector<string>& result)
 {
     map<char, string> letters{
-        {'1', ""},
-        {'2', "abc"},
-        {'3', "def"},
-        {'4', "ghi"},
-        {'5', "jkl"},
-        {'6', "mno"},
-        {'7', "pqrs"},
-        {'8', "tuv"},
-        {'9', "wxyz"}};
+        { '1', "" },
+        { '2', "abc" },
+        { '3', "def" },
+        { '4', "ghi" },
+        { '5', "jkl" },
+        { '6', "mno" },
+        { '7', "pqrs" },
+        { '8', "tuv" },
+        { '9', "wxyz" } };
     if (!digits.empty())
         for (size_t i = 0; i < digits.size();)
         {
@@ -158,7 +158,7 @@ void String::PhoneKeyLetters(string const &digits, vector<string> &result)
         }
 }
 // DAMP -> LAMP -> LIMP -> LIME -> LIKE
-void String::WordsLadder(string const &start, string const &stop, set<string> &dictionary, vector<string> &result)
+void String::WordsLadder(string const& start, string const& stop, set<string>& dictionary, vector<string>& result)
 {
     queue<string> actionQ;
     set<string> visited;
@@ -208,7 +208,7 @@ baa   0
 aa    1
 a     1
 */
-void String::Z(vector<size_t> &z, string const &str)
+void String::Z(vector<size_t>& z, string const& str)
 {
     z.resize(str.size());
     for (size_t l = 0, r = 0, i = 1; i < str.size(); i++)
@@ -237,7 +237,7 @@ void String::Z(vector<size_t> &z, string const &str)
  *        j
  *  a b   c
  */
-void String::RemoveDuplicateCharacters(string &str)
+void String::RemoveDuplicateCharacters(string& str)
 {
     if (str.size() > 1)
     {
@@ -281,7 +281,7 @@ c
   aidbcj
 WITHOUT reorder the original character sequence!
 */
-void String::RemoveDuplicateCharactersLexicographicalOrder(string &str)
+void String::RemoveDuplicateCharactersLexicographicalOrder(string& str)
 {
     string result;
     map<char, long> counts;
@@ -313,7 +313,7 @@ stack:   3 2 -4 -20 <= 3+2-20
 sign:	+ * + /
 stack:   3 6 5 1 <= 6+1 = 7
 */
-long String::BasicCalculator(string const &s)
+long String::BasicCalculator(string const& s)
 {
     stack<long> numbers;
     char sign = '+';
@@ -362,7 +362,7 @@ long String::BasicCalculator(string const &s)
  * Return longest string with only 2 alternating characters
  * 100%
  */
-size_t String::AlternateChars(string const &s)
+size_t String::AlternateChars(string const& s)
 {
     set<char> unique(s.begin(), s.end());
     if (unique.size() <= 1)
@@ -407,7 +407,7 @@ size_t String::AlternateChars(string const &s)
  * b -> !b   ab!
  * b -> b	 ab!
  */
-size_t String::LengthOfLongestSubstring(string const &s)
+size_t String::LengthOfLongestSubstring(string const& s)
 {
     size_t result = 0;
     string str;
@@ -434,7 +434,7 @@ size_t String::LengthOfLongestSubstring(string const &s)
  * https://www.hackerrank.com/challenges/time-conversion/problem
  * 100%
  */
-string String::TwentyFourHourTimeConversion(string const &s)
+string String::TwentyFourHourTimeConversion(string const& s)
 {
     int hour; // 12:00:00 AM - 11:59:59 AM => 00:00:00 - 11:59:59
     istringstream(s.substr(0, 2)) >> hour;
@@ -469,7 +469,7 @@ baPac => (swap) caPab => (sort) caabP
 bPa => (swap) Pba => (sort) Pab
 abPac => (swap) acPab => (sort) acabP
 */
-string String::NextBiggerString(string &str) // XXX: Cannot use const to the string as next_permutation needs to swap the characters in the string inline.
+string String::NextBiggerString(string& str) // XXX: Cannot use const to the string as next_permutation needs to swap the characters in the string inline.
 {
     return next_permutation(str.begin(), str.end()) ? str : "no answer";
 }
@@ -478,7 +478,7 @@ string String::NextBiggerString(string &str) // XXX: Cannot use const to the str
  * a: CAB, b: CAB => CABCAB
  * 100%
  */
-string String::MorganAndString(string const &a, string const &b)
+string String::MorganAndString(string const& a, string const& b)
 {
     string result;
     if (a.empty())
@@ -541,7 +541,7 @@ string String::MorganAndString(string const &a, string const &b)
 /* https://www.hackerrank.com/challenges/reduced-string/problem
  * 100%
  */
-string String::SuperReducedString(string const &s)
+string String::SuperReducedString(string const& s)
 {
     string result;
     for (size_t i = 0; i < s.size(); i++)
@@ -558,7 +558,7 @@ string String::SuperReducedString(string const &s)
  * adapt from IsPalindrome()
  * 100%
  */
-bool String::SherlockValidString(string const &s)
+bool String::SherlockValidString(string const& s)
 {
     size_t odd = 0;
     size_t length = s.length();
@@ -583,7 +583,7 @@ bool String::SherlockValidString(string const &s)
     return max - min > 1 ? false : result;
 }
 // Write a code to test whether string s2 is obtained by rotating the string s1 by n places.
-bool String::AreRotatedStrings(string const &s1, string const &s2, size_t n)
+bool String::AreRotatedStrings(string const& s1, string const& s2, size_t n)
 {
     string str(s1);
     ranges::rotate(str, str.begin() + n);
@@ -634,7 +634,7 @@ Observation:
     For i >= k, result[i] = s[i - 1] == s[i] ? result[i - k] : result[i - k] == '1' ? '0' : '1'
 100%
 */
-string String::Cipher(size_t n, size_t k, string const &s)
+string String::Cipher(size_t n, size_t k, string const& s)
 {
     string result;
     if (!s.empty() && k <= s.size() && s.size() >= n)
@@ -646,7 +646,7 @@ string String::Cipher(size_t n, size_t k, string const &s)
                 result.push_back(s[i - 1] == s[i] ? '0' : '1');
             else
                 result.push_back(s[i - 1] == s[i] ? result[i - k] : result[i - k] == '1' ? '0'
-                                                                                         : '1');
+                    : '1');
         }
     }
     return result;
@@ -656,7 +656,7 @@ string String::Cipher(size_t n, size_t k, string const &s)
  * If s[i] is a number, replace it with 0 and place the original number at the beginning.
  * 100%
  */
-string String::DecryptPassword(string const &s)
+string String::DecryptPassword(string const& s)
 {
     string result;
     long numbers = -1;
@@ -709,7 +709,7 @@ result: "acc" -> "accaccacc"
 
  * 100%
  */
-string String::DecodeString(string const &str)
+string String::DecodeString(string const& str)
 {
     string result;                      // Single output buffer
     vector<pair<size_t, size_t>> stack; // (start index in result, k)
@@ -768,7 +768,7 @@ Y   I       R
 P L            I     G
 A                 N
  */
-string String::ZigZagConvert(string const &s, size_t numRows)
+string String::ZigZagConvert(string const& s, size_t numRows)
 {
     bool direction = false;
     vector<string> str(numRows);
@@ -796,7 +796,7 @@ string String::ZigZagConvert(string const &s, size_t numRows)
         oss << str[i];
     return oss.str();
 }
-vector<string> String::_WordBreakDFS(string const &s, set<string> const &words, map<string, vector<string>> &strings)
+vector<string> String::_WordBreakDFS(string const& s, set<string> const& words, map<string, vector<string>>& strings)
 {
     vector<string> result;
     if (s.empty())
@@ -821,7 +821,7 @@ vector<string> String::_WordBreakDFS(string const &s, set<string> const &words, 
         strings.emplace(s, result);
     return result;
 }
-vector<string> String::WordBreakDFS(string const &s, set<string> const &words)
+vector<string> String::WordBreakDFS(string const& s, set<string> const& words)
 {
     map<string, vector<string>> strings;
     return _WordBreakDFS(s, words, strings);
@@ -830,7 +830,7 @@ vector<string> String::WordBreakDFS(string const &s, set<string> const &words)
  * https://www.hackerrank.com/challenges/happy-ladybugs/problem
  * 100%
  */
-bool String::HappyLadyBugs(string const &str)
+bool String::HappyLadyBugs(string const& str)
 {
     map<char, size_t> counts;
     for (size_t i = 0; i < str.size(); i++)
@@ -873,7 +873,7 @@ Given the secret number secret and your friend's guess guess, return the hint fo
 The hint should be formatted as "xAyB", where x is the number of bulls and y is the number of cows. Note that both secret and guess may contain duplicate digits.
  * 100%
  */
-string String::GetHint(string const &secret, string const &guess)
+string String::GetHint(string const& secret, string const& guess)
 {
     map<char, long> counts;
     size_t bulls = 0, cows = 0;
@@ -899,9 +899,10 @@ string String::GetHint(string const &secret, string const &guess)
  * https://www.hackerrank.com/challenges/bear-and-steady-gene/problem
  * 100%
  * Find the length of the smallest possible substring that can be replaced to make a steady gene
+ * A sliding window needs monotonicity: if a window is fixable, so is a smaller one inside it.
  * Sliding window implementation
  */
-size_t String::SteadyGene(string const &gene)
+size_t String::SteadyGene(string const& gene)
 {
     size_t count = numeric_limits<size_t>::max();
     if (gene.size() % 4) // gene.size() should be divisable by 4
@@ -1023,7 +1024,7 @@ size_t String::SteadyGene(string const &gene)
  * ohvhjdml ->
  * vqblqcb
  */
-size_t String::LengthOfLongestUniqueSubstring(string const &s)
+size_t String::LengthOfLongestUniqueSubstring(string const& s)
 {
     size_t maxLength = 0;
     set<char> chars;
@@ -1060,6 +1061,7 @@ size_t String::LengthOfLongestUniqueSubstring(string const &s)
  * You are given a string s and an integer k. You can choose any character of the string and change it to any other uppercase English character.
  * You can perform this operation at most k times. Return the length of the longest substring containing the same letter you can get after performing the above operations.
  *
+ * A sliding window needs monotonicity: if a window is fixable, so is a smaller one inside it.
  * Sliding window implementation
  * [A]BAB k=1: maxFreq:1, maxLength:1
  * [AB]AB : maxFreq:1, maxLength:2
@@ -1074,7 +1076,7 @@ size_t String::LengthOfLongestUniqueSubstring(string const &s)
  * A[CBA] : maxFreq:1, diff:2, maxLength:2
  * AC[BA] : maxFreq:1, diff:1, maxLength:2
  */
-size_t String::LongestStringWithCharacterReplacement(string const &s, size_t k)
+size_t String::LongestStringWithCharacterReplacement(string const& s, size_t k)
 {
     map<char, size_t> freqs;
     size_t maxLength = 0, maxFreq = 0;
@@ -1096,14 +1098,14 @@ size_t String::LongestStringWithCharacterReplacement(string const &s, size_t k)
  * "flower","flow","flight" -> "fl"
  * "dog","racecar","car" -> ""
  */
-string String::LongestCommonPrefix(vector<string> const &data)
+string String::LongestCommonPrefix(vector<string> const& data)
 {
     string result;
     if (data.size() == 1)
         return data[0];
     // Use std::max_element with a lambda function to compare strings by size
-    vector<string>::const_iterator it = ranges::max_element(data, [](const string &a, const string &b)
-                                                            { return a.size() < b.size(); });
+    vector<string>::const_iterator it = ranges::max_element(data, [](const string& a, const string& b)
+        { return a.size() < b.size(); });
     size_t length = it != data.end() ? it->size() : 0;
     bool match = true;
     for (size_t i = 0; i < length && match; i++)
@@ -1190,7 +1192,7 @@ a -> [("bale", 1)]
 k -> [("kangaroo", 0)]
 result: ["apple", "able", "ale"]
 */
-string String::LongestMatchingWordWithDeletion(string const &s, set<string> const &words)
+string String::LongestMatchingWordWithDeletion(string const& s, set<string> const& words)
 {
     vector<longestmatchingwordwithdeletion_state_t> tuples; // index: The number refers to the number of characters in w that have already been found in S.
     map<char, vector<longestmatchingwordwithdeletion_state_t>> groups;
@@ -1230,7 +1232,7 @@ string String::LongestMatchingWordWithDeletion(string const &s, set<string> cons
 /* https://www.hackerrank.com/challenges/weighted-uniform-string/problem
  * 100%
  */
-vector<bool> String::WeightedUniformStrings(string const &s, vector<size_t> const &queries)
+vector<bool> String::WeightedUniformStrings(string const& s, vector<size_t> const& queries)
 {
     set<size_t> weights;
     vector<bool> result;
@@ -1270,7 +1272,7 @@ Input: words = ["a","aa","aaa","aaaa"]
 Output: 0
 Explanation: No such pair of words.
  */
-size_t String::MaxProductOfNonOverlappingWordLengths(vector<string> const &words)
+size_t String::MaxProductOfNonOverlappingWordLengths(vector<string> const& words)
 {
     size_t result = 0;
     map<size_t, size_t> patterns;
@@ -1301,7 +1303,7 @@ size_t String::MaxProductOfNonOverlappingWordLengths(vector<string> const &words
  *
  * 100%
  */
-string String::BuildLargestNumber(vector<size_t> const &a)
+string String::BuildLargestNumber(vector<size_t> const& a)
 {
     bool nonZero = false;
     multiset<string, BuildLargestNumber_comparator_t> data;

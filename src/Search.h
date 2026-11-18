@@ -8,31 +8,33 @@ class Search
 {
 private:
     uint64_t _lcm_ab, _lcm_bc, _lcm_ac, _lcm_abc;
-    void _KMPTable(string const &, vector<long> &);
-    bool _CanEatAllBananasInTime(vector<size_t> const &, size_t, size_t);
-    bool _IsValidSubSequence(vector<size_t> const &, size_t, size_t);
-    bool _CanMakeBouquets(vector<size_t> const &, size_t, size_t, size_t);
+    void _KMPTable(string const&, vector<long>&);
+    bool _CanEatAllBananasInTime(vector<size_t> const&, size_t, size_t);
+    bool _IsValidSubSequence(vector<size_t> const&, size_t, size_t);
+    bool _CanMakeBouquets(vector<size_t> const&, size_t, size_t, size_t);
     bool _HasKthSmallest(size_t, size_t, size_t, size_t);
-    bool _HasKthSmallestPairs(vector<size_t> &, size_t, size_t);
+    bool _HasKthSmallestPairs(vector<size_t>&, size_t, size_t);
     bool _HasNUglyNumbers(size_t, uint64_t, uint64_t, uint64_t, uint64_t);
-    bool _WithinThreshold(vector<size_t> const &, size_t, size_t);
+    bool _WithinThreshold(vector<size_t> const&, size_t, size_t);
+    size_t _BinarySearchLongestValidParenthesesWithFixes(size_t, vector<long> const&, long, long);
 
 public:
-    void KMPSearch(string const &, string const &, vector<size_t> &);
-    vector<long> SearchRange(size_t, vector<size_t> const &);
-    long BinarySearch(size_t, vector<size_t> const &);
-    long BinarySearchMinimum(vector<long> const &data, long, long);
-    int BinarySearchCountUpper(vector<long> const &, long, long, long);
-    int BinarySearchCountLower(vector<long> const &, long, long, long);
-    int BinarySearch(const string &, vector<string> const &);
-    bool GridSearch(vector<string> const &, vector<string> const &);
+    void KMPSearch(string const&, string const&, vector<size_t>&);
+    vector<long> SearchRange(size_t, vector<size_t> const&);
+    long BinarySearch(size_t, vector<size_t> const&);
+    long BinarySearchMinimum(vector<long> const& data, long, long);
+    int BinarySearchCountUpper(vector<long> const&, long, long, long);
+    int BinarySearchCountLower(vector<long> const&, long, long, long);
+    int BinarySearch(const string&, vector<string> const&);
+    bool GridSearch(vector<string> const&, vector<string> const&);
     vector<string> FindShortestPath(int, int, int, int, int);
-    size_t MinEatingSpeed(vector<size_t> const &, size_t);
-    size_t MinCapacityToShipWithinDays(vector<size_t> const &, size_t);
-    size_t MinimumLargestSum(vector<size_t> const &, size_t);
-    long MinDaysToMakeBouquets(vector<size_t> const &, size_t, size_t);
+    size_t MinEatingSpeed(vector<size_t> const&, size_t);
+    size_t MinCapacityToShipWithinDays(vector<size_t> const&, size_t);
+    size_t MinimumLargestSum(vector<size_t> const&, size_t);
+    long MinDaysToMakeBouquets(vector<size_t> const&, size_t, size_t);
     size_t MultiplicationTableKthSmallestNumber(size_t, size_t, size_t);
-    int SmallestDistancePair(vector<size_t> &, size_t);
+    int SmallestDistancePair(vector<size_t>&, size_t);
     size_t NthUglyNumber(size_t, size_t, size_t, size_t);
-    size_t SmallestDivisor(vector<size_t> const &, size_t);
+    size_t SmallestDivisor(vector<size_t> const&, size_t);
+    size_t LongestValidParenthesesWithFixes(string const&, size_t);
 };

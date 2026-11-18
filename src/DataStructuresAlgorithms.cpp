@@ -7,7 +7,7 @@ template int128_t FibonacciRecursive(long);
 template int128_t FactorialRecursive(size_t, int128_t);
 template int128_t BinomialCoefficients(size_t, size_t);
 template int128_t BinomialCoefficientsMultiplicative(size_t, size_t);
-template int128_t MultinomialCoefficients(size_t, vector<size_t> const &, int128_t);
+template int128_t MultinomialCoefficients(size_t, vector<size_t> const&, int128_t);
 template int128_t ceil_div(int128_t, int128_t);
 template int128_t MinBitTrick(int128_t, int128_t);
 template int128_t MaxBitTrick(int128_t, int128_t);
@@ -20,7 +20,7 @@ template uint128_t FibonacciRecursive(long);
 template uint128_t FactorialRecursive(size_t, uint128_t);
 template uint128_t BinomialCoefficients(size_t, size_t);
 template uint128_t BinomialCoefficientsMultiplicative(size_t, size_t);
-template uint128_t MultinomialCoefficients(size_t, vector<size_t> const &, uint128_t);
+template uint128_t MultinomialCoefficients(size_t, vector<size_t> const&, uint128_t);
 #endif
 template int64_t ceil_div(int64_t, int64_t);
 template uint64_t ceil_div(uint64_t, uint64_t);
@@ -37,8 +37,8 @@ template long MinBitTrick(long, long);
 template long MaxBitTrick(long, long);
 template size_t FactorsCount(long, long);
 template size_t FactorsCount(size_t, size_t);
-template size_t MaxZeroProductBruteForce(vector<long> const &, size_t);
-template size_t MaxZeroProductBruteForce(vector<size_t> const &, size_t);
+template size_t MaxZeroProductBruteForce(vector<long> const&, size_t);
+template size_t MaxZeroProductBruteForce(vector<size_t> const&, size_t);
 #endif
 template float Ulp(float);
 template double Ulp(double);
@@ -53,31 +53,31 @@ template int64_t MaxBitTrick(int64_t, int64_t);
 template size_t FactorsCount(int, int);
 template size_t FactorsCount(int64_t, int64_t);
 template size_t FactorsCount(uint64_t, uint64_t);
-template size_t MaxZeroProductBruteForce(vector<int64_t> const &, size_t);
-template size_t MaxZeroProductBruteForce(vector<uint64_t> const &, size_t);
+template size_t MaxZeroProductBruteForce(vector<int64_t> const&, size_t);
+template size_t MaxZeroProductBruteForce(vector<uint64_t> const&, size_t);
 template int64_t BinomialCoefficients(size_t, size_t);
 template uint64_t BinomialCoefficients(size_t, size_t);
 template int64_t BinomialCoefficientsMultiplicative(size_t, size_t);
 template uint64_t BinomialCoefficientsMultiplicative(size_t, size_t);
-template int64_t MultinomialCoefficients(size_t, vector<size_t> const &, int64_t);
-template multimap<size_t, string, less<size_t>> flip_map(const map<string, size_t> &, less<size_t>);
-long **my2DAlloc(long rows, long cols)
+template int64_t MultinomialCoefficients(size_t, vector<size_t> const&, int64_t);
+template multimap<size_t, string, less<size_t>> flip_map(const map<string, size_t>&, less<size_t>);
+long** my2DAlloc(long rows, long cols)
 {
-	size_t header = rows * sizeof(long *);			// Store the row pointers [i]
+	size_t header = rows * sizeof(long*);			// Store the row pointers [i]
 	size_t data = rows * cols * sizeof(long);		// Store the data
-	long **rowptr = (long **)malloc(header + data); // row pointers + data buffers
-	long *dataptr = (long *)(rowptr + rows);		// Pointer arithmetic to get the first location of data buffer
+	long** rowptr = (long**)malloc(header + data); // row pointers + data buffers
+	long* dataptr = (long*)(rowptr + rows);		// Pointer arithmetic to get the first location of data buffer
 	for (int i = 0; i < rows; i++)
 		rowptr[i] = dataptr + i * cols;
 	return rowptr;
 }
-long ***my3DAlloc(long rows, long cols, long heights)
+long*** my3DAlloc(long rows, long cols, long heights)
 {
-	size_t header = rows * sizeof(long *) + rows * cols * sizeof(long *); // Store the row pointers [i] and every cell of the 2D-plane is pointer to the Z-buffer [i][j]
+	size_t header = rows * sizeof(long*) + rows * cols * sizeof(long*); // Store the row pointers [i] and every cell of the 2D-plane is pointer to the Z-buffer [i][j]
 	size_t data = rows * cols * heights * sizeof(long);					  // data
-	long ***ptrs = (long ***)malloc(header + data);						  // row pointers + 2-D plane of pointers to Z-plane data
-	long **columns = (long **)(ptrs + rows);							  // Pointer arithmetic to get the first location of 2D plane of Z-plane pointers [i][j]
-	long *dataPtr = (long *)(ptrs + rows + rows * cols);				  // Pointer arithmetic to get the first location of data buffer
+	long*** ptrs = (long***)malloc(header + data);						  // row pointers + 2-D plane of pointers to Z-plane data
+	long** columns = (long**)(ptrs + rows);							  // Pointer arithmetic to get the first location of 2D plane of Z-plane pointers [i][j]
+	long* dataPtr = (long*)(ptrs + rows + rows * cols);				  // Pointer arithmetic to get the first location of data buffer
 	for (long i = 0; i < rows; i++)
 	{
 		ptrs[i] = columns + i * cols;
@@ -86,10 +86,10 @@ long ***my3DAlloc(long rows, long cols, long heights)
 	}
 	return ptrs;
 }
-void testPointerReference(int *&ptr)
+void testPointerReference(int*& ptr)
 {
 	free(ptr);
-	ptr = (int *)malloc(101 * sizeof(int));
+	ptr = (int*)malloc(101 * sizeof(int));
 	memset(ptr, 0xabababab, 101 * sizeof(int)); // XXX: sizeof(int*) is 8 bytes on x64!!!
 }
 /*
@@ -190,7 +190,7 @@ constexpr T Ulp(T value)
 		return numeric_limits<T>::quiet_NaN(); // no meaningful gap
 	T up = nextafter(a, numeric_limits<T>::infinity());
 	return isinf(up) ? a - nextafter(a, T(0)) // a == max(): use the gap below
-					 : up - a;
+		: up - a;
 }
 /*
 There’s no mathematical reason for 4. It’s a rule of thumb, and it is copied from GoogleTest. Here’s its own comment from gtest-internal.h, next to kMaxUlps = 4:
@@ -210,23 +210,23 @@ constexpr T MachineEpsilonApproximation()
 		e *= 0.5;
 	return e;
 }
-generator<const size_t &> GenerateSequence(size_t start, size_t end)
+generator<const size_t&> GenerateSequence(size_t start, size_t end)
 {
 	// whatever you like here, e.g.
 	co_yield 123;
-	co_yield ranges::elements_of(ranges::iota_view{start, end});
+	co_yield ranges::elements_of(ranges::iota_view{ start, end });
 	co_yield 456;
 }
-generator<const size_t &> Generate2Sequence(size_t start, size_t end, size_t start1, size_t end1)
+generator<const size_t&> Generate2Sequence(size_t start, size_t end, size_t start1, size_t end1)
 {
 	// whatever you like here, e.g.
 	co_yield 123;
-	co_yield ranges::elements_of(ranges::iota_view{start, end});
-	co_yield ranges::elements_of(ranges::iota_view{start1, end1});
+	co_yield ranges::elements_of(ranges::iota_view{ start, end });
+	co_yield ranges::elements_of(ranges::iota_view{ start1, end1 });
 	co_yield 456;
 }
 /* Assume ASCII character set */
-bool isUniqueString(string const &str)
+bool isUniqueString(string const& str)
 {
 	size_t i;
 	bool char_set[256];
@@ -240,7 +240,7 @@ bool isUniqueString(string const &str)
 	}
 	return true;
 }
-vector<string> findUnique(vector<string> const &a, vector<string> const &b)
+vector<string> findUnique(vector<string> const& a, vector<string> const& b)
 {
 	vector<string> result;
 	vector<string> c(a);
@@ -263,7 +263,7 @@ vector<string> findUnique(vector<string> const &a, vector<string> const &b)
 	}
 	return result;
 }
-bool CanShuffleWithoutRepeat(string &str)
+bool CanShuffleWithoutRepeat(string& str)
 {
 	map<char, size_t> repeats;
 	size_t maxCount = 0;
@@ -274,7 +274,7 @@ bool CanShuffleWithoutRepeat(string &str)
 	}
 	return str.size() - maxCount >= maxCount - 1;
 }
-size_t CountDistinctSlices1(long m, vector<long> &data)
+size_t CountDistinctSlices1(long m, vector<long>& data)
 {
 	size_t slices = 0;
 	set<string> uniqueslices;
@@ -298,7 +298,7 @@ size_t CountDistinctSlices1(long m, vector<long> &data)
 // a.push_back(5); // 2
 // a.push_back(2); // 1
 // XXX: I don't know what this function is doing. May remove this function!
-size_t CountDistinctSlices(vector<long> &data)
+size_t CountDistinctSlices(vector<long>& data)
 {
 	size_t slices = 0, start = 0;
 	set<long> unique;
@@ -317,7 +317,7 @@ size_t CountDistinctSlices(vector<long> &data)
 	return slices + SequenceSum(data.size() - start); // 6 + f(2) = 6 + 3 = 9
 }
 // "Hello World!!!" -> "!!!dlroW olleH"
-void reverse(string &str)
+void reverse(string& str)
 {
 	size_t pivot = str.size() / 2 + str.size() % 2;
 	for (size_t i = 0, tail = str.size() - 1; i < pivot; i++, tail--)
@@ -330,7 +330,7 @@ void reverse(string &str)
  * 1: "Hello World!!!" -> "!!!dlroW olleH"
  * 2: "!!!dlroW olleH" -> "World!!! Hello"
  */
-void ReverseWords(string &str)
+void ReverseWords(string& str)
 {
 	reverse(str);
 	for (size_t i = 0, j = 0; i != string::npos; j = i + 1)
@@ -354,7 +354,7 @@ void ReverseWords(string &str)
  * 1: "Hello World!!!" -> "!!!dlroW olleH"
  * 2: "!!!dlroW olleH" -> World!!! Hello"
  */
-void ReverseWordsTrimmed(string &str)
+void ReverseWordsTrimmed(string& str)
 {
 	reverse(str);
 	for (size_t i = 0, j = 0; i != string::npos && j < str.size();)
@@ -416,7 +416,7 @@ int32_t ReverseInt32(int32_t x)
  * https://leetcode.com/problems/remove-duplicates-from-sorted-array/
  * 100%
  */
-size_t RemoveDuplicates(vector<long> &nums)
+size_t RemoveDuplicates(vector<long>& nums)
 {
 	// remove consecutive (adjacent) duplicates
 	// Ex: {1, 2, 1, 1, 3, 3, 3, 4, 5, 4};
@@ -425,7 +425,7 @@ size_t RemoveDuplicates(vector<long> &nums)
 	nums.erase(ret.begin(), ret.end());
 	return nums.size();
 }
-bool AreAnagrams(string const &s1, string const &s2)
+bool AreAnagrams(string const& s1, string const& s2)
 {
 	if (s1.size() == s2.size())
 	{
@@ -437,7 +437,7 @@ bool AreAnagrams(string const &s1, string const &s2)
 	else
 		return false;
 }
-size_t FindAnagrams(vector<string> const &s, vector<vector<string>> &result)
+size_t FindAnagrams(vector<string> const& s, vector<vector<string>>& result)
 {
 	map<string, vector<string>> anagrams;
 	for (vector<string>::const_iterator it = s.begin(); it != s.end(); it++)
@@ -464,7 +464,7 @@ size_t FindAnagrams(vector<string> const &s, vector<vector<string>> &result)
 /* https://www.hackerrank.com/challenges/sherlock-and-anagrams/problem
  * 100%
  */
-size_t SherlockAndAnagrams(string const &s)
+size_t SherlockAndAnagrams(string const& s)
 {
 	vector<string> strings;
 	vector<vector<string>> anagrams;
@@ -474,7 +474,7 @@ size_t SherlockAndAnagrams(string const &s)
 	return FindAnagrams(strings, anagrams);
 }
 // Return occurrance of any anagram of s2 in s1
-vector<size_t> FindSubString(string const &s1, string const s2)
+vector<size_t> FindSubString(string const& s1, string const s2)
 {
 	vector<size_t> result;
 	if (s1.size() >= s2.size())
@@ -487,18 +487,18 @@ vector<size_t> FindSubString(string const &s1, string const s2)
 }
 void copy_on_write_string()
 {
-	const char *cptr, *cptr1;
+	const char* cptr, * cptr1;
 	string s1("Hello World!!!");
 	string s2 = s1;
 	cptr = s1.c_str();
 	cptr1 = s1.c_str();
-	cout << hex << "s1 @ " << (void *)(cptr) << endl;
-	cout << "s2 @ " << (void *)(cptr1) << endl;
+	cout << hex << "s1 @ " << (void*)(cptr) << endl;
+	cout << "s2 @ " << (void*)(cptr1) << endl;
 	s2 += " Hello World!!!";
 	cptr = s1.c_str();
 	cptr1 = s1.c_str();
-	cout << hex << "s1 @ " << (void *)(cptr) << endl;
-	cout << "s2 @ " << (void *)(cptr1) << endl;
+	cout << hex << "s1 @ " << (void*)(cptr) << endl;
+	cout << "s2 @ " << (void*)(cptr1) << endl;
 }
 template <arithmetic_type T>
 constexpr T FibonacciRecursive(long n)
@@ -619,7 +619,7 @@ string FibonacciModifiedStringArithmetic(size_t t1, size_t t2, size_t n)
 	else if (n == 1)
 		return to_string(t2);
 	StringArithmetic arithmetic;
-	vector<string> result = {to_string(t1), to_string(t2)};
+	vector<string> result = { to_string(t1), to_string(t2) };
 	for (size_t i = 2; i <= n; i++)
 		result[i % 2] = arithmetic.NumberStringSum(result[(i - 2) % 2], arithmetic.NumberStringMultiplication(result[(i - 1) % 2], result[(i - 1) % 2]));
 	return result[n % 2];
@@ -735,7 +735,7 @@ constexpr T BinomialCoefficientsMultiplicative(size_t n, size_t k)
  * Permutations of length-nword with n1 a's, n2 b's, ..., nk z's = n! / (n1! * n2! * ... * nk!)
  */
 template <arithmetic_type T>
-T MultinomialCoefficients(size_t n, vector<size_t> const &k, T modulo)
+T MultinomialCoefficients(size_t n, vector<size_t> const& k, T modulo)
 {
 	T divisor = 1;
 	for (vector<size_t>::const_iterator it = k.begin(); it != k.end(); it++)
@@ -795,7 +795,7 @@ constexpr size_t FactorsCount(T number, T factor)
  * DynamicProgramming::MaxZeroProduct
  */
 template <integral_type T>
-size_t MaxZeroProductBruteForce(vector<T> const &data, size_t elementCount)
+size_t MaxZeroProductBruteForce(vector<T> const& data, size_t elementCount)
 {
 	size_t result = 0;
 	map<T, zerofactors_t> multipleMap;
@@ -834,7 +834,7 @@ size_t MaxZeroProductBruteForce(vector<T> const &data, size_t elementCount)
 				}
 	return result;
 }
-long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t> &data, vector<zerofactors_t> &result, int value)
+long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t>& data, vector<zerofactors_t>& result, int value)
 {
 	long max_ending_here = 0, max_so_far = 0, count = 0;
 	vector<zerofactors_t>::iterator start = data.end(), end = data.end();
@@ -866,7 +866,7 @@ long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t> &data, vector<zerofact
 /* https://app.codility.com/programmers/task/brackets_rotation/
  * WIP!
  */
-long LongestValidParenthesesWithFixes(string const &str, size_t k)
+long LongestValidParenthesesWithFixes(string const& str, size_t k)
 {
 	stack<long> stack;
 	long start = -1, end = -1;
@@ -889,8 +889,8 @@ long LongestValidParenthesesWithFixes(string const &str, size_t k)
 				stack.push(i);
 		}
 	}
-	long *stackEnd = &stack.top() + 1;
-	long *stackBegin = stackEnd - stack.size();
+	long* stackEnd = &stack.top() + 1;
+	long* stackBegin = stackEnd - stack.size();
 	vector<long> list(stackBegin, stackEnd);
 	// The algorithm implemented is based on reverse-engineering of the result sets obtained from the remaining stack elements after the for loop above.
 	if (!k || list.empty() || (list.size() == 1 && list[0] == -1))
@@ -913,7 +913,6 @@ long LongestValidParenthesesWithFixes(string const &str, size_t k)
 				result = min<long>(k * 2, result);
 			else
 				result = 0;
-			//}
 		}
 	}
 	else if (list.size() == 1 && list[0] != -1)
@@ -971,7 +970,7 @@ bool JSONValidation(string json)
 	return leftBraceCount == rightBraceCount && keyCount == valueCount;
 }
 // 0 1 2 3 4 5 6 7 8 9 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
-void FindDistinct(vector<long> &input, vector<long> &output)
+void FindDistinct(vector<long>& input, vector<long>& output)
 {
 	for (vector<long>::const_iterator it = input.begin(); it != input.end(); it++)
 	{
@@ -983,14 +982,14 @@ void FindDistinct(vector<long> &input, vector<long> &output)
 	}
 }
 // http://en.wikipedia.org/wiki/Prime_number - Trial division implementation
-void FindPrimes(unsigned long n, vector<long> &result)
+void FindPrimes(unsigned long n, vector<long>& result)
 {
 	if (n <= 3)
-		result = {2, 3};
+		result = { 2, 3 };
 	else
 	{
 		long double j;
-		result = {2, 3};
+		result = { 2, 3 };
 		for (unsigned long i = 4; i <= n; i++)
 		{
 			long double sqrtI = sqrt(i);
@@ -1016,7 +1015,7 @@ bool IsPrime(unsigned long n)
 // https://app.codility.com/programmers/lessons/12-euclidean_algorithm/common_prime_divisors/
 // Correctness: 100%
 // 61% due to timeout
-size_t CommonPrimeDivisors(vector<long> &data1, vector<long> &data2)
+size_t CommonPrimeDivisors(vector<long>& data1, vector<long>& data2)
 {
 	vector<size_t> indices;
 	vector<long> a(data1), b(data2);
@@ -1041,7 +1040,7 @@ size_t CommonPrimeDivisors(vector<long> &data1, vector<long> &data2)
 	}
 	return indices.size();
 }
-string uncompress(string const &str)
+string uncompress(string const& str)
 {
 	ostringstream oss;
 	for (size_t i = 0; i < str.size();)
@@ -1050,7 +1049,7 @@ string uncompress(string const &str)
 			oss << str[i++];
 		else if (isdigit(str[i]))
 		{
-			char *end(nullptr);
+			char* end(nullptr);
 			errno = 0;
 			unsigned long repeat = strtoul(&str[i], &end, 10);
 			if (!errno && repeat > 0 && repeat < numeric_limits<unsigned long>::max())
@@ -1076,7 +1075,7 @@ string uncompress(string const &str)
  "0010110100" => Length: 4
  "0010110110" => Length: 5
  */
-size_t FindLongestContiguousPattern(string &str, char c)
+size_t FindLongestContiguousPattern(string& str, char c)
 {
 	size_t max = 0;
 	int index = -1;
@@ -1107,7 +1106,7 @@ size_t FindLongestContiguousPattern(string &str, char c)
  * https://leetcode.com/problems/longest-consecutive-sequence/
  * 100%
  */
-size_t LongestConsecutive(vector<size_t> &nums)
+size_t LongestConsecutive(vector<size_t>& nums)
 {
 	if (nums.empty())
 		return 0;
@@ -1184,7 +1183,7 @@ size_t LargestNumberCompositionProduct(size_t n)
  * source:{1,3,5,7,9,11}
  * dest:  {1,3,5,[6],7,8,9,10 ,11 ,12 ,14 ,16 ,18 }
  */
-void Merge(vector<long> &dest, vector<long> &source)
+void Merge(vector<long>& dest, vector<long>& source)
 {
 	int k = dest.size() + source.size() - 1;
 	int i = dest.size() - 1;
@@ -1202,7 +1201,7 @@ void Merge(vector<long> &dest, vector<long> &source)
  * v2 = rand() % 100 + 1;     // v2 in the range 1 to 100
  * v3 = rand() % 30 + 1985;   // v3 in the range 1985 to 2014
  */
-void shuffleCards(vector<long> &cards)
+void shuffleCards(vector<long>& cards)
 {
 	uint64_t mask = 0; // bitmask of 52 cards.
 	int index;
@@ -1233,7 +1232,7 @@ void shuffleCards(vector<long> &cards)
 		}
 	}
 }
-void randomSubset(vector<long> &source, size_t count, vector<long> &result)
+void randomSubset(vector<long>& source, size_t count, vector<long>& result)
 {
 	set<long> masks;
 	long index;
@@ -1572,7 +1571,7 @@ long KthNumberWith357PrimeFactors(long n)
 }
 void KDTreeTests()
 {
-	vector<vector<long>> coordinates{{2, 3}, {5, 4}, {9, 6}, {4, 7}, {8, 1}, {7, 2}};
+	vector<vector<long>> coordinates{ { 2, 3 },{ 5, 4 },{ 9, 6 },{ 4, 7 },{ 8, 1 },{ 7, 2 } };
 	KDTree<long> kdTree(coordinates);
 	kdTree.PrintTree();
 }
@@ -1580,7 +1579,7 @@ void KDTreeTests()
  * Perform a down-heap or heapify-down operation for a max-heap
  * Index start from 0
  */
-void MaxHeapifyDown(vector<long> &data, size_t start)
+void MaxHeapifyDown(vector<long>& data, size_t start)
 {
 	size_t left = 2 * start + 1;
 	size_t right = 2 * start + 2;
@@ -1599,7 +1598,7 @@ void MaxHeapifyDown(vector<long> &data, size_t start)
  * Perform a down-heap or heapify-down operation for a min-heap
  * Index start from 0
  */
-void MinHeapifyDown(vector<long> &data, size_t start)
+void MinHeapifyDown(vector<long>& data, size_t start)
 {
 	size_t left = 2 * start + 1;
 	size_t right = 2 * start + 2;
@@ -1614,7 +1613,7 @@ void MinHeapifyDown(vector<long> &data, size_t start)
 		MinHeapifyDown(data, min);
 	}
 }
-void trim(string &str)
+void trim(string& str)
 {
 	size_t i = 0, j = 0;
 	for (i = 0; i < str.size(); i++)
@@ -1630,7 +1629,7 @@ void trim(string &str)
 	for (; j < str.size(); j++)
 		str[j] = ' ';
 }
-size_t minDiffPairs(vector<long> &numbers, long diff)
+size_t minDiffPairs(vector<long>& numbers, long diff)
 {
 	set<long> pairs;
 	size_t count = 0;
@@ -1657,7 +1656,7 @@ size_t minDiffPairs(vector<long> &numbers, long diff)
 	}
 	return pairs.size() / 2;
 }
-vector<char> AddVectors(vector<char> &a, vector<char> &b)
+vector<char> AddVectors(vector<char>& a, vector<char>& b)
 {
 	char carry = 0;
 	vector<char> result;
@@ -1684,7 +1683,7 @@ vector<char> AddVectors(vector<char> &a, vector<char> &b)
 	return result;
 }
 template <typename A, typename B>
-pair<B, A> flip_pair(const pair<A, B> &p)
+pair<B, A> flip_pair(const pair<A, B>& p)
 {
 	return pair<B, A>(p.second, p.first);
 }
@@ -1692,10 +1691,10 @@ pair<B, A> flip_pair(const pair<A, B> &p)
  * B is the map's ::mapped_type
  */
 template <typename A, typename B, typename Cmp>
-multimap<B, A, Cmp> flip_map(const map<A, B> &src, Cmp cmp)
+multimap<B, A, Cmp> flip_map(const map<A, B>& src, Cmp cmp)
 {
 	// using multimap's std::from_range constructor overload
-	return {from_range, src | views::transform(flip_pair<A, B>), cmp};
+	return { from_range, src | views::transform(flip_pair<A, B>), cmp };
 }
 /* Divide the array(+ve and -ve numbers) into two parts such that the average of both the parts is equal.
  *
@@ -1710,7 +1709,7 @@ multimap<B, A, Cmp> flip_map(const map<A, B> &src, Cmp cmp)
  * P * N = K * Sum
  * P = K * Sum / N
  */
-void EqualAverageDivide(vector<long> &data, vector<long> &left)
+void EqualAverageDivide(vector<long>& data, vector<long>& left)
 {
 	long sum = 0, P = 0;
 	size_t N = data.size(), K;
@@ -1718,7 +1717,7 @@ void EqualAverageDivide(vector<long> &data, vector<long> &left)
 	ranges::sort(data);
 	sum = parallel_reduce(
 		blocked_range<size_t>(0, data.size()), 0,
-		[&](tbb::blocked_range<size_t> const &r, long running_total)
+		[&](tbb::blocked_range<size_t> const& r, long running_total)
 		{
 			for (size_t i = r.begin(); i < r.end(); i++)
 				running_total += data[i];
@@ -1735,7 +1734,7 @@ void EqualAverageDivide(vector<long> &data, vector<long> &left)
 			break;
 	}
 }
-bool GetSum(vector<long> &data, size_t K, long P, size_t index, vector<long> &left)
+bool GetSum(vector<long>& data, size_t K, long P, size_t index, vector<long>& left)
 {
 	if (!P)
 		return !K;
@@ -1759,7 +1758,7 @@ bool GetSum(vector<long> &data, size_t K, long P, size_t index, vector<long> &le
 // 2) Pattern: "aaaa" (.+)\\1\\1\\1  input : "asdasdasdasd" should return 1.
 // 3) Pattern: "aabb" (.+)\\1(.+)\\2 input : "xyzabcxyzabc" should return 0.
 // 3) Pattern: "abab" (.+)(.+)\\1\\2 input : "xyzabcxyzabc" should return 1.
-bool match(string const &pattern, string const &input)
+bool match(string const& pattern, string const& input)
 {
 	map<char, long> patternCount;
 	ostringstream regexStr;
@@ -1793,14 +1792,14 @@ string EncodeString(string str)
 // where a char in the pattern maps uniquely to a char in the dictionary.
 // Eg: 'abc' <'cdf', 'too', 'hgfdt', 'paa'> => 'cdf'
 // Eg: 'acc' <'cdf', 'too', 'hgfdt', 'paa'> => 'too', 'paa'
-void FindPattern(string pattern, set<string> &dictionary, set<string> &result)
+void FindPattern(string pattern, set<string>& dictionary, set<string>& result)
 {
 	string encodedPattern = EncodeString(pattern);
 	for (set<string>::iterator it = dictionary.begin(); it != dictionary.end(); it++)
 		if (it->size() == pattern.size() && !encodedPattern.compare(EncodeString(*it)))
 			result.insert(*it);
 }
-string GetRange(vector<long> &input)
+string GetRange(vector<long>& input)
 {
 	ostringstream oss;
 	vector<long> numbers(input);
@@ -1827,12 +1826,12 @@ string GetRange(vector<long> &input)
 /* https://leetcode.com/problems/merge-intervals/
  * 100%
  */
-vector<vector<long>> MergeIntervals(vector<vector<long>> &intervals)
+vector<vector<long>> MergeIntervals(vector<vector<long>>& intervals)
 {
 	vector<vector<long>> result;
 	// Sort the 2D vector in ascending order of the first element.
-	ranges::sort(intervals, [](const vector<long> &a, const vector<long> &b)
-				 { return a[0] < b[0]; });
+	ranges::sort(intervals, [](const vector<long>& a, const vector<long>& b)
+		{ return a[0] < b[0]; });
 	for (size_t i = 0; i < intervals.size(); i++)
 	{
 		if (!i)
@@ -1876,7 +1875,7 @@ long NextSparseNumber(long number)
 }
 // a and b are streams of integer from LSB to MSB
 // Assume a >= b
-string subtract(istream &a, istream &b)
+string subtract(istream& a, istream& b)
 {
 	ostringstream oss;
 	char i, j;
@@ -1888,7 +1887,7 @@ string subtract(istream &a, istream &b)
 	cout << "Result : " << oss.str() << endl;
 	return oss.str();
 }
-void split(string const &s, char delim, vector<string> &elems)
+void split(string const& s, char delim, vector<string>& elems)
 {
 	stringstream ss(s);
 	string item;
@@ -1902,7 +1901,7 @@ void split(string const &s, char delim, vector<string> &elems)
  * i:1 j:[1,2] s: "is a", ngrams: ["This is", "is a"]
  * i:2 j:[2,3] s: "a dog" ngrams: ["This is", "is a", "a dog"]
  */
-set<string> process(string const &str, int n)
+set<string> process(string const& str, int n)
 {
 	vector<string> words;
 	set<string> ngrams;
@@ -1920,7 +1919,7 @@ set<string> process(string const &str, int n)
 	}
 	return ngrams;
 }
-set<string> intersectionNgram(string const &str1, string const &str2, int n)
+set<string> intersectionNgram(string const& str1, string const& str2, int n)
 {
 	set<string> result;
 	set<string> ngrams1 = process(str1, n);
@@ -1938,7 +1937,7 @@ set<string> intersectionNgram(string const &str1, string const &str2, int n)
 	set_intersection(ngrams1.begin(), ngrams1.end(), ngrams2.begin(), ngrams2.end(), inserter(result, result.begin()));
 	return result;
 }
-vector<int> Increment(vector<int> &data)
+vector<int> Increment(vector<int>& data)
 {
 	int j = 1;
 	vector<int> result;
@@ -1961,7 +1960,7 @@ vector<int> Increment(vector<int> &data)
 	reverse(result.begin(), result.end());
 	return result;
 }
-vector<string> numbersegments(vector<long> &data)
+vector<string> numbersegments(vector<long>& data)
 {
 	ostringstream oss;
 	vector<string> result;
@@ -1995,34 +1994,34 @@ Align 4: alignment - 1 = 3
 9 : 9 + 3 = 12 / 4 = 3
 10 : 10 + 3 = 13 / 4 = 3
 */
-void *alignedMalloc(size_t size, size_t alignment)
+void* alignedMalloc(size_t size, size_t alignment)
 {
 	size_t bytes = alignment / 8;
 	return malloc(size + (size % bytes) / bytes);
 }
-void alignedFree(void **p)
+void alignedFree(void** p)
 {
 	free(*p);
 	*p = nullptr;
 }
 template <typename URNG>
-void TestURNG(URNG &urng)
+void TestURNG(URNG& urng)
 {
 	// Uniform distribution used with vector
 	// Distribution is [-5, 5] inclusive
 	uniform_int_distribution<long> dist(-5, 5);
 	vector<long> v(20);
 	ranges::generate(v, [&]
-					 { return dist(urng); });
+		{ return dist(urng); });
 	cout << "Randomized vector: ";
 	ranges::copy(v, ostream_iterator<long>(cout, " "));
 	cout << endl;
 
 	// Shuffle an array.
 	// Notice that shuffle() takes an URNG, not a distribution
-	vector<string> strings = {{"H", "He", "Li", "Be", "B", "C", "N", "O", "F",
+	vector<string> strings = { { "H", "He", "Li", "Be", "B", "C", "N", "O", "F",
 							   "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc",
-							   "Ti", "V", "Cr", "Mn", "Fe"}};
+							   "Ti", "V", "Cr", "Mn", "Fe" } };
 	shuffle(strings.begin(), strings.end(), urng);
 	cout << "Randomized vector<string>: ";
 	ranges::copy(strings, ostream_iterator<string>(cout, " "));
@@ -2037,18 +2036,18 @@ void TestRandom()
 	uniform_int_distribution<long> dist(-5, 5);
 	vector<long> v(20);
 	ranges::generate(v, [&]
-					 { return dist(device); });
+		{ return dist(device); });
 	TestURNG(device);
 
 	// Second run: simple integer seed. Repeatable results
 	cout << "Using constant-seed mersene twister engine URNG:" << endl;
-	mt19937_64 constant_seed_mersene_twister_engine{12345};
+	mt19937_64 constant_seed_mersene_twister_engine{ 12345 };
 	TestURNG(constant_seed_mersene_twister_engine);
 
 	// Third run: random_device as seed; different each run.
 	// Desirable for most purposes
 	cout << "Using non-deterministic-seed mersene twister engine URNG:" << endl;
-	mt19937_64 non_deterministic_seed_mersene_twister_engine{device()};
+	mt19937_64 non_deterministic_seed_mersene_twister_engine{ device() };
 	TestURNG(non_deterministic_seed_mersene_twister_engine);
 
 	// Fourth run: "warm-up" sequence as as seed; different each run.
@@ -2058,7 +2057,7 @@ void TestRandom()
 	cout << "mt19937_64::state_size: " << mt19937_64::state_size << endl;
 	ranges::generate_n(seeds.begin(), mt19937_64::state_size, ref(device));
 	seed_seq sequence(seeds.begin(), seeds.end());
-	mt19937_64 non_deterministic_seed_sequence_mersene_twister_engine{sequence};
+	mt19937_64 non_deterministic_seed_sequence_mersene_twister_engine{ sequence };
 	TestURNG(non_deterministic_seed_sequence_mersene_twister_engine);
 
 	/*
@@ -2072,25 +2071,25 @@ void TestRandom()
 	pcg64 rng(seed_source);
 	TestURNG(rng);
 }
-long concat(vector<long> &data)
+long concat(vector<long>& data)
 {
 	ostringstream oss;
 	ranges::sort(data, [](long i, long j) -> bool
-				 {
-		ostringstream a, b;
-		a << i << j;
-		b << j << i;
-		return a.str() < b.str(); });
+		{
+			ostringstream a, b;
+			a << i << j;
+			b << j << i;
+			return a.str() < b.str(); });
 	for (vector<long>::reverse_iterator it = data.rbegin(); it != data.rend(); it++)
 		oss << *it;
 	long result;
 	istringstream(oss.str()) >> result;
 	return result;
 }
-long MaxLengths(vector<string> &data)
+long MaxLengths(vector<string>& data)
 {
 	ranges::sort(data, [](string a, string b)
-				 { return a.size() > b.size(); });
+		{ return a.size() > b.size(); });
 	for (vector<string>::const_iterator it = data.begin(); it != data.end(); it++)
 		for (vector<string>::const_iterator it1 = it + 1; it1 != data.end(); it1++)
 		{
@@ -2197,7 +2196,7 @@ size_t Count1Bits(long a)
 	return count;
 }
 // Count number of '1' bits
-size_t Count1Bits(long a, set<size_t> &positions)
+size_t Count1Bits(long a, set<size_t>& positions)
 {
 	size_t count = 0;
 	for (long i = 1, j = 0; i <= a; i <<= 1, j++)
@@ -2211,7 +2210,7 @@ size_t Count1Bits(long a, set<size_t> &positions)
 /* Returns a sequence of bit patterns with increasing number of '1' bits
  * k: total number of bits in the bit patterns
  */
-void BitCombinations(size_t k, vector<long> &result)
+void BitCombinations(size_t k, vector<long>& result)
 {
 	for (size_t i = 0; i <= k; i++)
 		for (long j = (1 << i) - 1; j < (1 << k); j++)
@@ -2339,7 +2338,7 @@ vector<size_t> grayCode(size_t n)
 			result.push_back(result[j] | i);
 	return result;
 }
-void OrderedMergedCombinations(set<string> &result, string const &s1, string const &s2, string cur)
+void OrderedMergedCombinations(set<string>& result, string const& s1, string const& s2, string cur)
 {
 	if (s1.empty() && s2.empty())
 	{
@@ -2382,7 +2381,7 @@ void OrderedMergedCombinations(set<string> &result, string const &s1, string con
  * A[3] = 1     A[4] = 8    A[5] = 12
  * There are four triangular triplets that can be constructed from elements of this array, namely(0, 2, 4), (0, 2, 5), (0, 4, 5), and (2, 4, 5).
  */
-size_t CountTriangles(vector<long> &data)
+size_t CountTriangles(vector<long>& data)
 {
 	size_t result = 0;
 	if (data.size() < 3)
@@ -2414,7 +2413,7 @@ string decimal_to_binary(long decimal)
 	}
 	return "0";
 }
-int64_t binary_to_decimal(string const &binary)
+int64_t binary_to_decimal(string const& binary)
 {
 	int64_t result = 0;
 	size_t shift = 0;
@@ -2427,7 +2426,7 @@ int64_t binary_to_decimal(string const &binary)
 	}
 	return result;
 }
-void decimal_to_binary(int64_t decimal, vector<bool> &binary, size_t width)
+void decimal_to_binary(int64_t decimal, vector<bool>& binary, size_t width)
 {
 	binary.resize(width, false);
 	for (long i = width - 1; i >= 0 && decimal; i--)
@@ -2472,7 +2471,7 @@ size_t binary_gap(long n)
  * val:{-1,5, 2, 0}
  * your function should return 0, since for S = [−1, 1, −1, 1], val(A, S) = 0, which is the minimum possible value.
  */
-long MinAbsSum(vector<long> &data)
+long MinAbsSum(vector<long>& data)
 {
 	long sum = 0;
 	long min = numeric_limits<long>::max();
@@ -2523,7 +2522,7 @@ void PlayTreasureGame()
  * 0 0 0 0 0
  * (x, y) = (1, 1), k = 2, the output is 2
  */
-const long moves[][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+const long moves[][2] = { { 0, 1 },{ 0, -1 },{ 1, 0 },{ -1, 0 } };
 size_t countPaths(size_t m, size_t n, size_t x, size_t y, size_t k)
 {
 	// It is clear that the shortest path to reach (0, 0) from (x, y) will be minMoves = (|x| + |y|)
@@ -2582,7 +2581,7 @@ vector<shared_ptr<Node<string>>> shortest_cycle_path(shared_ptr<Node<string>> no
 // 1011000  -> 1111000 only need one flip 0 -> 1
 // example 2
 // 00001 -> 10000 require 2 flips
-int findMinFlip(vector<int> &binary)
+int findMinFlip(vector<int>& binary)
 {
 	size_t count = 0, last_left = -1, last_right = -1;
 	size_t left = 0, right = binary.size() - 1;
@@ -2612,7 +2611,7 @@ int findMinFlip(vector<int> &binary)
 	return count;
 }
 // The matrix is valid if there is no consecutive 3 elements with the same value.
-bool IsValidMatrix(vector<vector<char>> const &data)
+bool IsValidMatrix(vector<vector<char>> const& data)
 {
 	for (size_t row = 0; row < data.size(); row++)
 		for (size_t col = 0; col < data[row].size(); col++)
@@ -2630,7 +2629,7 @@ bool IsValidMatrix(vector<vector<char>> const &data)
 // Task Score: 18 %
 // Correctness: 44 %
 // Performance: 0 %
-size_t ZigZagEscape(vector<long> &data)
+size_t ZigZagEscape(vector<long>& data)
 {
 	vector<zigzag_t> zigzag;
 	set<set<int>> result;
@@ -2699,7 +2698,7 @@ size_t ZigZagEscape(vector<long> &data)
 #endif
 	return result.size();
 }
-size_t ZigZagEscape(vector<long> &data, set<string> &strResult)
+size_t ZigZagEscape(vector<long>& data, set<string>& strResult)
 {
 	long current;
 	vector<string> tmp;
@@ -2757,7 +2756,7 @@ size_t ZigZagEscape(vector<long> &data, set<string> &strResult)
 	}
 	return strResult.size();
 }
-vector<string> ZigZagEscape(vector<long> &left, vector<long> &right, size_t lIndex, size_t rIndex, long current, bool dir)
+vector<string> ZigZagEscape(vector<long>& left, vector<long>& right, size_t lIndex, size_t rIndex, long current, bool dir)
 { // 4, 6, 2, 1, 5
 	long next;
 	vector<string> result, tmp;
@@ -2843,7 +2842,7 @@ vector<string> ZigZagEscape(vector<long> &left, vector<long> &right, size_t lInd
  * fixRecord           0    0    0 (swap = 0)
  *
  */
-size_t IncreasingSequences(vector<long> &a, vector<long> &b)
+size_t IncreasingSequences(vector<long>& a, vector<long>& b)
 {
 	bool outOfSequence = false, isSwap = false;
 	// swapRecord[i]: min swaps to make A[0:i] and B[0:i] increasing if we swap A[i] and B[i]
@@ -2936,7 +2935,7 @@ size_t IncreasingSequences(vector<long> &a, vector<long> &b)
 [0 1 3 7 11]
 [0 1 3 7 11 15]
 */
-size_t LongestIncreasingSubsequenceNlogN(vector<size_t> const &data)
+size_t LongestIncreasingSubsequenceNlogN(vector<size_t> const& data)
 {
 	vector<size_t> tails; // Note: This records the tails of the subsequences. Not the actual longest increasing subsequence!
 	if (!data.empty())
@@ -2953,7 +2952,7 @@ size_t LongestIncreasingSubsequenceNlogN(vector<size_t> const &data)
 	}
 	return tails.size();
 }
-size_t LongestNonDecreasingSubsequenceNlogN(vector<size_t> const &data)
+size_t LongestNonDecreasingSubsequenceNlogN(vector<size_t> const& data)
 {
 	vector<size_t> tails; // Note: This records the tails of the subsequences. Not the actual longest increasing subsequence!
 	if (!data.empty())
@@ -3010,7 +3009,7 @@ size_t LongestNonDecreasingSubsequenceNlogN(vector<size_t> const &data)
 1 2  1  1 right
 3 3  4  4 result
 */
-size_t LongestNonDecreasingSubsequenceOneReplacement(vector<long> const &data)
+size_t LongestNonDecreasingSubsequenceOneReplacement(vector<long> const& data)
 {
 	if (data.empty())
 		return 0;
@@ -3079,7 +3078,7 @@ size_t LongestNonDecreasingSubsequenceOneReplacement(vector<long> const &data)
 [14 13 11 7 3]
 [15 13 11 7 3]
 */
-size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &data)
+size_t LongestDecreasingSubsequenceNlogN(vector<size_t>& data)
 {
 	vector<size_t> tails; // Note: This records the tails of the subsequences. Not the actual longest decreasing subsequence!
 	if (!data.empty())
@@ -3087,8 +3086,8 @@ size_t LongestDecreasingSubsequenceNlogN(vector<size_t> &data)
 		tails.push_back(data[0]);
 		for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
 		{
-			vector<size_t>::iterator it1 = ranges::find_if(tails, [it](const auto &value)
-														   { return value <= *it; }); // Look for element <= data[i]
+			vector<size_t>::iterator it1 = ranges::find_if(tails, [it](const auto& value)
+				{ return value <= *it; }); // Look for element <= data[i]
 			if (it1 != tails.end())													  // *it1 <= data[i]
 				*it1 = *it;
 			else
@@ -3113,15 +3112,15 @@ Result: 3 tails: [3 4 7]
 [30,50]
 Result: 3 tais: [2 15 50]
  */
-size_t LargestRussianDollStack(vector<vector<size_t>> &envelopes)
+size_t LargestRussianDollStack(vector<vector<size_t>>& envelopes)
 {
 	vector<size_t> tails; // Note: This records the tails of the subsequences. Not the actual longest increasing subsequence!
 	if (!envelopes.empty())
 	{
 		ranges::sort(envelopes, [](vector<size_t> a, vector<size_t> b) -> bool
-					 {
-						 return (a[0] < b[0]) || (a[0] == b[0] && a[1] >= b[1]); // Sort the first element ascending. Tie breaker with the second element descending.
-					 });
+			{
+				return (a[0] < b[0]) || (a[0] == b[0] && a[1] >= b[1]); // Sort the first element ascending. Tie breaker with the second element descending.
+			});
 		tails.push_back(envelopes[0][1]);
 		for (vector<vector<size_t>>::const_iterator it = envelopes.begin(); it != envelopes.end(); it++)
 		{
@@ -3134,7 +3133,7 @@ size_t LargestRussianDollStack(vector<vector<size_t>> &envelopes)
 	}
 	return tails.size();
 }
-bool IncreasingTriplet(vector<size_t> &data)
+bool IncreasingTriplet(vector<size_t>& data)
 {
 	vector<size_t> tails;
 	if (!data.empty())
@@ -3149,7 +3148,7 @@ bool IncreasingTriplet(vector<size_t> &data)
 	return tails.size() >= 3;
 }
 // https://stackoverflow.com/questions/6877249/find-the-number-of-occurrences-of-a-subsequence-in-a-string
-size_t FindSubsequenceRecursive(string const &str, string const &tomatch)
+size_t FindSubsequenceRecursive(string const& str, string const& tomatch)
 {
 	size_t result = 0;
 	if (tomatch.empty())
@@ -3172,14 +3171,14 @@ void cpluplus17()
 	assert(it->first == 1);
 	assert(it->second == "Hello World!!!");
 	// Compound object iterations
-	for (const auto &[key, value] : mymap)
+	for (const auto& [key, value] : mymap)
 		cout << key << ": " << value << endl;
 	// Direct Initialization
 	for (auto [i, ch] = pair(0U, ' '); i < 10; i++, ch++)
 		cout << "[" << i << ": '" << ch << "'] ";
 	cout << endl;
 }
-long MaxProductOfThree(vector<long> &data)
+long MaxProductOfThree(vector<long>& data)
 {
 	ranges::sort(data);
 	long tmp1 = data[0] * data[1];
@@ -3199,7 +3198,7 @@ long MaxProductOfThree(vector<long> &data)
  * https://www.hackerrank.com/challenges/circular-array-rotation/problem
  * 100%
  */
-void RotateRightArray(vector<int> &data, int n)
+void RotateRightArray(vector<int>& data, int n)
 {
 	n %= data.size();
 	reverse(data.begin(), data.end());
@@ -3212,7 +3211,7 @@ void RotateRightArray(vector<int> &data, int n)
  * 1 2 3 4 5, n = 2
  * 3 4 5 1 2
  */
-vector<int> RotateLeftArray(vector<int> &a, int d)
+vector<int> RotateLeftArray(vector<int>& a, int d)
 {
 	vector<int> result;
 	for (size_t i = 0; i < a.size(); i++)
@@ -3279,7 +3278,7 @@ long ChocolatesByNumbers(long n, long m)
  * 5/15 failed
  * Test case 5 data included in solution as queryFrequencyInput.txt
  */
-vector<int> freqQuery(vector<vector<int>> &queries)
+vector<int> freqQuery(vector<vector<int>>& queries)
 {
 	unordered_map<int, int> frequency;	 // frequency of data
 	unordered_map<int, int> frequencies; // frequeny of frequency
@@ -3318,7 +3317,7 @@ vector<int> freqQuery(vector<vector<int>> &queries)
  * https://www.hackerrank.com/challenges/encryption/problem
  * 100%
  */
-string encryption(string &s)
+string encryption(string& s)
 {
 	vector<vector<char>> result;
 	s.erase(remove_if(s.begin(), s.end(), ::isspace), s.end());
@@ -3351,7 +3350,7 @@ string encryption(string &s)
  * https://www.hackerrank.com/challenges/climbing-the-leaderboard/problem
  * 100%
  */
-vector<size_t> ClimbLeaderBoard(vector<long> &scores, vector<long> &alice)
+vector<size_t> ClimbLeaderBoard(vector<long>& scores, vector<long>& alice)
 {
 	vector<size_t> result;
 	ranges::sort(scores);
@@ -3365,7 +3364,7 @@ vector<size_t> ClimbLeaderBoard(vector<long> &scores, vector<long> &alice)
 	}
 	return result;
 }
-long CalculateMedian(vector<long> &data)
+long CalculateMedian(vector<long>& data)
 {
 	const auto middleItr = data.begin() + data.size() / 2; // +data.size() % 2;
 	nth_element(data.begin(), middleItr, data.end());
@@ -3379,26 +3378,26 @@ long CalculateMedian(vector<long> &data)
 string TimeInWords(size_t h, size_t m)
 {
 	static map<int, string> numbers = {
-		{1, "one"},
-		{2, "two"},
-		{3, "three"},
-		{4, "four"},
-		{5, "five"},
-		{6, "six"},
-		{7, "seven"},
-		{8, "eight"},
-		{9, "nine"},
-		{10, "ten"},
-		{11, "eleven"},
-		{12, "twelve"},
-		{13, "thirteen"},
-		{14, "fourteen"},
-		{15, "fifteen"},
-		{16, "sixteen"},
-		{17, "seventeen"},
-		{18, "eighteen"},
-		{19, "nineteen"},
-		{20, "twenty"}};
+		{ 1, "one" },
+		{ 2, "two" },
+		{ 3, "three" },
+		{ 4, "four" },
+		{ 5, "five" },
+		{ 6, "six" },
+		{ 7, "seven" },
+		{ 8, "eight" },
+		{ 9, "nine" },
+		{ 10, "ten" },
+		{ 11, "eleven" },
+		{ 12, "twelve" },
+		{ 13, "thirteen" },
+		{ 14, "fourteen" },
+		{ 15, "fifteen" },
+		{ 16, "sixteen" },
+		{ 17, "seventeen" },
+		{ 18, "eighteen" },
+		{ 19, "nineteen" },
+		{ 20, "twenty" } };
 	ostringstream str, hour;
 	if (!m)
 	{
@@ -3440,7 +3439,7 @@ string TimeInWords(size_t h, size_t m)
  * 'roads' will have duplicate routes just with opposite directions due to the Undirected Graph nature. For example, [1,2,3] and [2,1,3] are the same path but opposite direction.
  * 100%
  */
-size_t PostmanProblemWithoutLoop(size_t n, set<size_t> const &cities, vector<vector<size_t>> const &roads, bool print)
+size_t PostmanProblemWithoutLoop(size_t n, set<size_t> const& cities, vector<vector<size_t>> const& roads, bool print)
 {
 	Graph<size_t, size_t> graph;
 	for (vector<vector<size_t>>::const_iterator it = roads.begin(); it != roads.end(); it++)
@@ -3458,7 +3457,7 @@ size_t PostmanProblemWithoutLoop(size_t n, set<size_t> const &cities, vector<vec
 	set<size_t> all_cities;
 	size_t i = 1;
 	generate_n(inserter(all_cities, all_cities.begin()), n, [&i]()
-			   { return i++; });
+		{ return i++; });
 	set<size_t> remove, removed;
 	set_difference(all_cities.begin(), all_cities.end(), cities.begin(), cities.end(), inserter(remove, remove.begin())); // Present in first set but not the second.
 	long trimmedCost = graph.Prune(remove, removed);																	  // Prune updates the total cost of the graph
@@ -3482,17 +3481,17 @@ size_t PostmanProblemWithoutLoop(size_t n, set<size_t> const &cities, vector<vec
  * https://stackoverflow.com/questions/79915702/regex-nested-recursive-pattern
  * Needs to use either Boost:regex or PCRE2 library
  */
-string DecodeStringRegex(string const &str)
+string DecodeStringRegex(string const& str)
 {
 	long n;
 	string encoded;
 	ostringstream oss;
 	regex re("(\\d+)(\\[[a-zA-Z]+\\])");
 	for (sregex_iterator it = sregex_iterator(str.begin(), str.end(), re);
-		 it != sregex_iterator();
-		 it++)
+		it != sregex_iterator();
+		it++)
 	{
-		smatch const &match = *it;
+		smatch const& match = *it;
 		// cout << "Match: " << match.str() << endl;
 		//  for (const auto &sub_match : match)
 		//	cout << "  Sub-match: " << sub_match.str() << endl;
@@ -3513,7 +3512,7 @@ string DecodeStringRegex(string const &str)
 /* https://www.hackerrank.com/challenges/sam-and-substrings/problem
  * 100%
  */
-uint64_t substrings(string const &s)
+uint64_t substrings(string const& s)
 {
 	/*
 	Example: "6789". Substrings: 6, 7, 8, 9, 67, 78, 89, 678, 789, 6789.
@@ -3625,7 +3624,7 @@ string NumberToRoman(size_t num)
  * https://leetcode.com/problems/roman-to-integer/
  * 100%
  */
-size_t RomanToNumber(string const &s)
+size_t RomanToNumber(string const& s)
 {
 	size_t result = 0;
 	for (size_t m = s.find('M'); m != string::npos; m = s.find('M', m + 1))
@@ -3696,7 +3695,7 @@ right: 5
 
 median: Max element in the LEFT (more counts compared to RIGHT): max(a[i], b[j]) = max(a[2], b[2]) = max(5,6) = 6
 */
-double SortedListsMedian(vector<long> &a, vector<long> &b)
+double SortedListsMedian(vector<long>& a, vector<long>& b)
 {
 	double result = 0;
 	size_t minIndex = 0, maxIndex = min(a.size(), b.size());
@@ -3756,7 +3755,7 @@ double SortedListsMedian(vector<long> &a, vector<long> &b)
 /* https://leetcode.com/problems/h-index/
  * 100%
  */
-size_t hIndex(vector<size_t> &citations)
+size_t hIndex(vector<size_t>& citations)
 {
 	size_t result = 0;
 	if (citations.size() == 1)
@@ -3776,7 +3775,7 @@ size_t hIndex(vector<size_t> &citations)
 		{
 			size_t value = *it;
 			size_t count = ranges::count_if(citations, [&value](size_t i)
-											{ return i >= value; });
+				{ return i >= value; });
 			if (value < count && value > result)
 				result = value;
 			else if (value >= count && min(count, value) > result)
@@ -3830,7 +3829,7 @@ vector<long> diffWaysToCompute(string input)
  * (5) ATL -> SFO
  * JFK -> ATL -> JFK -> SFO -> ATL -> SFO
  */
-vector<string> FindItinerary(vector<vector<string>> &tickets, string const &start)
+vector<string> FindItinerary(vector<vector<string>>& tickets, string const& start)
 {
 	map<string, multiset<string>> vertices;
 	vector<string> itinerary;
@@ -3841,7 +3840,7 @@ vector<string> FindItinerary(vector<vector<string>> &tickets, string const &star
 	reverse(itinerary.begin(), itinerary.end());
 	return itinerary;
 }
-void EulerianPath(string vertex, map<string, multiset<string>> &vertices, vector<string> &path)
+void EulerianPath(string vertex, map<string, multiset<string>>& vertices, vector<string>& path)
 {
 	for (; !vertices[vertex].empty();)
 	{
@@ -3975,7 +3974,7 @@ The product needs 64 bits too. size[v] * (n - size[v]) is up to 2.5 × 10⁹, mo
 
 That’s how the program handles a 200,000-bit answer without big-number arithmetic.
 */
-string RoadsInHackerland(size_t n, vector<vector<size_t>> const &edges)
+string RoadsInHackerland(size_t n, vector<vector<size_t>> const& edges)
 {
 	vector<size_t> from, to;
 	vector<size_t> weights;
@@ -4005,14 +4004,14 @@ string RoadsInHackerland(size_t n, vector<vector<size_t>> const &edges)
 	size_t maxExponent = 0;
 	// 1. The tree as an adjacency list: (neighbour, c)
 	vector<vector<pair<size_t, size_t>>> tree(n + 1);
-	for (Edge<size_t, size_t> const &edge : mst.edges)
+	for (Edge<size_t, size_t> const& edge : mst.edges)
 	{
 		maxExponent = max(maxExponent, edge.weight);
 		tree[edge.node1].emplace_back(edge.node2, edge.weight);
 		tree[edge.node2].emplace_back(edge.node1, edge.weight);
 	}
 	// 2. Visit order from city 1: every city comes after its parent
-	vector<size_t> order{1}, parent(n + 1, 0), upExponent(n + 1, 0); // upExponent[v]: c of the edge parent[v] - v
+	vector<size_t> order{ 1 }, parent(n + 1, 0), upExponent(n + 1, 0); // upExponent[v]: c of the edge parent[v] - v
 	vector<bool> seen(n + 1, false);
 	seen[1] = true;
 	order.reserve(n);
@@ -4109,10 +4108,10 @@ void cpp20readonlyranges()
 {
 	// 1. all_of, any_of, none_of
 	cout << "c++26 ranges all_of, any_of, none_of:" << endl;
-	const vector<int> nums = {1, 2, 3, -4, 5, 6, 7, 8};
-	auto is_positive = [](const auto &v)
-	{ return v > 0; };
-	// standard version:
+	const vector<int> nums = { 1, 2, 3, -4, 5, 6, 7, 8 };
+	auto is_positive = [](const auto& v)
+		{ return v > 0; };
+		// standard version:
 	assert(!all_of(nums.begin(), nums.end(), is_positive));
 	assert(any_of(nums.begin(), nums.end(), is_positive));
 	// ranges version:
@@ -4123,11 +4122,11 @@ void cpp20readonlyranges()
 	int n = -5;
 	for (size_t i = 0; i < 10; i++, n++)
 		nodes.push_back(Node<int>(n));
-	auto is_positive_val = [](Node<int> &n)
-	{
-		return n.Item() > 0;
-	};
-	// standard version:
+	auto is_positive_val = [](Node<int>& n)
+		{
+			return n.Item() > 0;
+		};
+		// standard version:
 	assert(!all_of(nodes.begin(), nodes.end(), is_positive_val));
 	assert(any_of(nodes.begin(), nodes.end(), is_positive_val));
 	// ranges version:
@@ -4136,48 +4135,48 @@ void cpp20readonlyranges()
 
 	// 2. for_each
 	cout << "c++26 ranges for_each:" << endl;
-	auto print = [](const auto &v)
-	{ cout << v << ", "; };
-	// standard version:
+	auto print = [](const auto& v)
+		{ cout << v << ", "; };
+		// standard version:
 	cout << "std::for_each:" << endl;
-	for_each(nodes.begin(), nodes.end(), [](Node<int> &n)
-			 { cout << n.Item() << ", "; });
+	for_each(nodes.begin(), nodes.end(), [](Node<int>& n)
+		{ cout << n.Item() << ", "; });
 	cout << endl;
 	cout << "std::for_each only reversed:" << endl;
-	for_each(nodes.rbegin(), nodes.rend(), [](Node<int> &n)
-			 { cout << n.Item() << ", "; });
+	for_each(nodes.rbegin(), nodes.rend(), [](Node<int>& n)
+		{ cout << n.Item() << ", "; });
 	cout << endl;
 	// ranges version:
 	cout << "std::ranges::for_each:" << endl;
-	ranges::for_each(nodes, [](Node<int> &n)
-					 { cout << n.Item() << ", "; });
+	ranges::for_each(nodes, [](Node<int>& n)
+		{ cout << n.Item() << ", "; });
 	cout << endl;
 	cout << "std::ranges::for_each reversed:" << endl;
 	ranges::for_each(nodes | std::views::reverse,
-					 print, &Node<int>::Item);
+		print, &Node<int>::Item);
 	cout << endl;
 
 	// 3. count_if
 	cout << "c++26 count_if:" << endl;
 	// standard version:
-	assert(5 == count_if(nodes.begin(), nodes.end(), [](Node<int> &n)
-						 { return n.Item() >= 0; }));
-	// ranges version:
-	assert(5 == ranges::count_if(nodes, [](Node<int> &n)
-								 { return n.Item() >= 0; }));
+	assert(5 == count_if(nodes.begin(), nodes.end(), [](Node<int>& n)
+		{ return n.Item() >= 0; }));
+// ranges version:
+	assert(5 == ranges::count_if(nodes, [](Node<int>& n)
+		{ return n.Item() >= 0; }));
 	assert(1 == ranges::count(nodes, 0, &Node<int>::Item));
 
 	// 4. find_if
 	cout << "c++26 find_if:" << endl;
 	// standard version:
-	vector<Node<int>>::iterator it = find_if(nodes.begin(), nodes.end(), [](Node<int> &n)
-											 { return n.Item() >= 0; });
+	vector<Node<int>>::iterator it = find_if(nodes.begin(), nodes.end(), [](Node<int>& n)
+		{ return n.Item() >= 0; });
 	assert(it != nodes.end());
 	assert(!it->Item());
 
 	// ranges version:
-	it = ranges::find_if(nodes, [](Node<int> &n)
-						 { return n.Item() >= 0; });
+	it = ranges::find_if(nodes, [](Node<int>& n)
+		{ return n.Item() >= 0; });
 	assert(it != nodes.end());
 	assert(!it->Item());
 
@@ -4198,7 +4197,7 @@ void cpp20readonlyranges()
 
 	// Ranges version
 	// -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5
-	vector<int> invalidInts = {-3, 3};
+	vector<int> invalidInts = { -3, 3 };
 	it = ranges::find_first_of(nodes, invalidInts, ranges::equal_to{}, &Node<int>::Item);
 	assert(it != nodes.end());
 	auto pos = distance(nodes.begin(), it);
@@ -4222,8 +4221,8 @@ void cpp20readonlyranges()
 	assert(distance(firstStr.begin(), i1) == 6);
 
 	// 7. search
-	const string_view needle{"Super"};
-	const string_view needle1{"SUPER"};
+	const string_view needle{ "Super" };
+	const string_view needle1{ "SUPER" };
 	// standard
 	const auto it3 = search(firstStr.begin(), firstStr.end(), boyer_moore_searcher(needle.begin(), needle.end()));
 	assert(it3 != firstStr.end());
@@ -4253,7 +4252,7 @@ void cpp20readonlyranges()
 	assert(distance(sequence.begin(), found.begin()) == 3);
 	assert(distance(sequence.begin(), found.end()) == 6);
 }
-ostream &operator<<(ostream &os, const Node<int> &n)
+ostream& operator<<(ostream& os, const Node<int>& n)
 {
 	os << n.Item();
 	return os;
@@ -4270,12 +4269,12 @@ void cpp20ranges()
 	// copy_if
 	cout << "c++26 ranges copy_if:" << endl;
 	// standard version:
-	copy_if(nodes.begin(), nodes.end(), ostream_iterator<Node<int>>(cout, ", "), [](const Node<int> &n)
-			{ return n.Item() >= 0; });
+	copy_if(nodes.begin(), nodes.end(), ostream_iterator<Node<int>>(cout, ", "), [](const Node<int>& n)
+		{ return n.Item() >= 0; });
 	cout << endl;
 	// ranges version:
-	ranges::copy_if(nodes, ostream_iterator<Node<int>>(cout, ", "), [](const Node<int> &n)
-					{ return n.Item() >= 0; });
+	ranges::copy_if(nodes, ostream_iterator<Node<int>>(cout, ", "), [](const Node<int>& n)
+		{ return n.Item() >= 0; });
 	cout << endl;
 
 	// fill
@@ -4297,38 +4296,38 @@ void cpp20ranges()
 	cout << "c++26 ranges generate:" << endl;
 	// standard version
 	generate(nodes.begin(), nodes.end(), [n = 1]() mutable
-			 { return n++; });
+		{ return n++; });
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 	// ranges version
 	ranges::generate(nodes, [n = 1]() mutable
-					 { return n++; });
+		{ return n++; });
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 
 	// transform
 	cout << "c++26 ranges transform:" << endl;
 	// standard version
-	transform(nodes.begin(), nodes.end(), nodes.begin(), [](const Node<int> &n) mutable
-			  { return n.Item() * -10; });
+	transform(nodes.begin(), nodes.end(), nodes.begin(), [](const Node<int>& n) mutable
+		{ return n.Item() * -10; });
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 	// ranges version
 	nodes.clear();
 	nodes.resize(5);
 	ranges::generate(nodes, [n = 1]() mutable
-					 { return n++; });
-	ranges::transform(nodes, nodes.begin(), [](const Node<int> &n) mutable
-					  { return n.Item() * 10; });
+		{ return n++; });
+	ranges::transform(nodes, nodes.begin(), [](const Node<int>& n) mutable
+		{ return n.Item() * 10; });
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
-	vector<Node<int>> nodes1{5, Node<int>(10)};
-	vector<int> numbers = {-1, 1, 2, -2, 3};
+	vector<Node<int>> nodes1{ 5, Node<int>(10) };
+	vector<int> numbers = { -1, 1, 2, -2, 3 };
 	assert(nodes1.size() == 5);
 	for (vector<Node<int>>::iterator it = nodes1.begin(); it != nodes1.end(); it++)
 		assert(it->Item() == 10);
-	ranges::transform(nodes1, numbers, nodes1.begin(), [](const Node<int> &n, int number)
-					  { return n.Item() * number; });
+	ranges::transform(nodes1, numbers, nodes1.begin(), [](const Node<int>& n, int number)
+		{ return n.Item() * number; });
 	ranges::copy(nodes1, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 
@@ -4337,11 +4336,11 @@ void cpp20ranges()
 	nodes.clear();
 	nodes.resize(10);
 	ranges::generate(nodes, [n = -5]() mutable
-					 { return n++; });
-	// standard version
-	nodes.erase(remove_if(nodes.begin(), nodes.end(), [](const Node<int> &n)
-						  { return n.Item() < 0; }),
-				nodes.end());
+		{ return n++; });
+// standard version
+	nodes.erase(remove_if(nodes.begin(), nodes.end(), [](const Node<int>& n)
+		{ return n.Item() < 0; }),
+		nodes.end());
 	assert(nodes.size() == 5);
 	cout << "vector<Nodes<int>> after std::remove_if: ";
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
@@ -4350,11 +4349,11 @@ void cpp20ranges()
 	nodes.clear();
 	nodes.resize(10);
 	ranges::generate(nodes, [n = -5]() mutable
-					 { return n++; });
-	nodes.erase(ranges::remove_if(nodes, [](const Node<int> &n)
-								  { return n.Item() < 0; })
-					.begin(),
-				nodes.end());
+		{ return n++; });
+	nodes.erase(ranges::remove_if(nodes, [](const Node<int>& n)
+		{ return n.Item() < 0; })
+		.begin(),
+		nodes.end());
 	assert(nodes.size() == 5);
 	cout << "vector<Nodes<int>> after ranges::remove_if: ";
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
@@ -4363,9 +4362,9 @@ void cpp20ranges()
 	nodes.clear();
 	nodes.resize(10);
 	ranges::generate(nodes, [n = -5]() mutable
-					 { return n++; });
-	erase_if(nodes, [](const Node<int> &n)
-			 { return n.Item() < 0; });
+		{ return n++; });
+	erase_if(nodes, [](const Node<int>& n)
+		{ return n.Item() < 0; });
 	assert(nodes.size() == 5);
 	cout << "vector<Nodes<int>> after std::erase_if: ";
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
@@ -4377,7 +4376,7 @@ void cpp20ranges()
 	nodes.clear();
 	nodes.resize(10);
 	ranges::generate(nodes, [n = -5]() mutable
-					 { return n++; });
+		{ return n++; });
 	replace(nodes.begin(), nodes.end(), Node<int>(-1), Node<int>(100));
 	// ranges version
 	ranges::replace(nodes, 1, Node<int>(200), &Node<int>::Item);
@@ -4390,8 +4389,8 @@ void cpp20ranges()
 	nodes.clear();
 	nodes.resize(10);
 	ranges::generate(nodes, [n = -5]() mutable
-					 { return n++; });
-	// standard version
+		{ return n++; });
+// standard version
 	reverse_copy(nodes.begin(), nodes.end(), ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 	// ranges version
@@ -4430,14 +4429,14 @@ void cpp20ranges()
 	nodes.clear();
 	nodes.resize(10);
 	ranges::generate(nodes, [n = -5]() mutable
-					 { return n++; });
+		{ return n++; });
 	shuffle(nodes.begin(), nodes.end(), rng);
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
 	nodes.clear();
 	nodes.resize(10);
 	ranges::generate(nodes, [n = -5]() mutable
-					 { return n++; });
+		{ return n++; });
 	ranges::shuffle(nodes, rng);
 	ranges::copy(nodes, ostream_iterator<Node<int>>(cout, ", "));
 	cout << endl;
@@ -4502,7 +4501,7 @@ void cpp20ranges()
 	vector<long> a;
 	a.resize(10);
 	ranges::generate(a, [n = 1]() mutable
-					 { return n++; });
+		{ return n++; });
 	ranges::transform(a, a, a.begin(), std::plus{}); // This is binary_transform using 2 vectors. In this case, it uses duplicate vector a.
 	cout << "After transform with std::plus: ";
 	ranges::copy(a, ostream_iterator<long>(cout, ", "));
@@ -4547,7 +4546,7 @@ void cpp20variants()
 		auto f = get<float>(lfs);
 		cout << "It's float! " << f << endl;
 	}
-	catch (bad_variant_access &)
+	catch (bad_variant_access&)
 	{
 		cout << "Variant lfs currently does not hold a floating point value!" << endl;
 	}
@@ -4566,10 +4565,10 @@ void cpp20variants()
 	// Ambiguity: double might convert to float or long.
 	// variant<long, float, string> variant2 {123.456};
 	// Resolve ambiguity by in_place
-	variant<long, float, string> variant2{in_place_index<1>, 123.456}; // double!
+	variant<long, float, string> variant2{ in_place_index<1>, 123.456 }; // double!
 	cout << "variant active type: " << variant2.index() << ", value: " << get<float>(variant2) << endl;
 
-	variant<long, float, string> variant3{"Hello"};
+	variant<long, float, string> variant3{ "Hello" };
 	variant3 = 123;						  // long
 	variant3.emplace<2>(string("Hello")); // string
 	// get returns a reference.
@@ -4601,10 +4600,10 @@ void cpp20variants()
 		assert(!variant4.valueless_by_exception());
 		cout << get<long>(variant4) << endl;
 	}
-	variant<long, float, string> v1{"Hello World!!!"};
-	variant<long, double, string> v2{10};
-	variant<long, double, string> v3{123.456};
-	variant<long, float, string> v4{123.456f};
+	variant<long, float, string> v1{ "Hello World!!!" };
+	variant<long, double, string> v2{ 10 };
+	variant<long, double, string> v3{ 123.456 };
+	variant<long, float, string> v4{ 123.456f };
 	visit(VariantVisitor{}, v1, v2, v3, v4);
 }
 /*
@@ -4683,7 +4682,7 @@ vector<uint64_t> BFSNextMoves(uint64_t state, size_t towerCount, size_t discCoun
 	}
 	return states;
 }
-int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
+int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const& poles)
 {
 	ostringstream oss;
 	/*
@@ -4721,7 +4720,7 @@ int ResetTowerOfHanoi(size_t towerCount, vector<size_t> const &poles)
 	// cout << "state: " << s << endl;
 	deque<towerofhanoi_state_t> queue;
 	queue.push_back(towerofhanoi_state_t(state, 0));
-	set<uint64_t> visited{state};
+	set<uint64_t> visited{ state };
 	for (; !queue.empty();)
 	{
 		towerofhanoi_state_t s = queue.front();
@@ -4769,11 +4768,11 @@ vector<long> KaprekarNumbers(long p, long q)
 			if (j + k == i)
 				result.push_back(i);
 		}
-		catch (exception &e)
+		catch (exception& e)
 		{
 			cout << e.what() << '\n';
 		}
-	return result;
+		return result;
 }
 /*
  * ....
@@ -4828,7 +4827,7 @@ vector<long> KaprekarNumbers(long p, long q)
 3	x	9	9	10
 
 */
-size_t MatrixPerimeter(vector<vector<size_t>> &area, vector<string> &grid)
+size_t MatrixPerimeter(vector<vector<size_t>>& area, vector<string>& grid)
 {
 	if (grid.empty() || area.empty() || area.size() < 2 || area[0].size() < 2)
 		return 0;
@@ -5013,11 +5012,11 @@ size_t PowerSum(size_t sum, size_t power, size_t i)
  * Sizes:
  * {1:3} {2:1} => (1*3)*(2*1) + BinomialCoefficient(3,2) = 6 + 3 = 9
  */
-uint64_t DistinctPairs(size_t n, vector<vector<long>> const &astronauts)
+uint64_t DistinctPairs(size_t n, vector<vector<long>> const& astronauts)
 {
 	vector<long> data(n);
 	ranges::generate(data, [n = 0]() mutable
-					 { return n++; });
+		{ return n++; });
 	DisJointSet<long> disjointSet(data);
 	for (vector<vector<long>>::const_iterator it = astronauts.begin(); it != astronauts.end(); it++)
 		disjointSet.Union((*it)[0], (*it)[1]);
@@ -5050,11 +5049,11 @@ uint64_t DistinctPairs(size_t n, vector<vector<long>> const &astronauts)
 /* https://www.hackerrank.com/challenges/torque-and-development/problem
  * 100%
  */
-size_t RoadsAndLibraries(size_t n, size_t c_lib, size_t c_road, vector<vector<size_t>> const &cities)
+size_t RoadsAndLibraries(size_t n, size_t c_lib, size_t c_road, vector<vector<size_t>> const& cities)
 {
 	vector<long> data(n);
 	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
+		{ return n++; });
 	DisJointSet<long> disjointSet(data);
 	for (vector<vector<size_t>>::const_iterator it = cities.begin(); it != cities.end(); it++)
 		disjointSet.Union((*it)[0], (*it)[1]);
@@ -5072,7 +5071,7 @@ size_t RoadsAndLibraries(size_t n, size_t c_lib, size_t c_road, vector<vector<si
 /* https://www.hackerrank.com/challenges/recursive-digit-sum/problem
  * 100%
  */
-char SuperDigit(string const &n, size_t k)
+char SuperDigit(string const& n, size_t k)
 {
 	bool hasNine = false;
 	size_t sum = 0;
@@ -5137,18 +5136,18 @@ result += 7 = 498 + 7 = 505
 zeroes = [0]
 result -= 1 = 504
  */
-size_t FindConnectedComponents(vector<long> &data)
+size_t FindConnectedComponents(vector<long>& data)
 {
 	// Remove singletons (less than 2 set bits)
-	ranges::transform(data, data.begin(), [](const long &i) mutable
-					  { return Count1Bits(i) < 2 ? 0 : i; });
+	ranges::transform(data, data.begin(), [](const long& i) mutable
+		{ return Count1Bits(i) < 2 ? 0 : i; });
 	size_t result = 0;
 	for (size_t i = 0; i < sizeof(long) * 8; i++)
 	{
 		size_t zeroes = 0; // Number of zeroes at this bit for all numbers
 		zeroes = parallel_reduce(
 			blocked_range<size_t>(0, data.size()), 0,
-			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
+			[&](tbb::blocked_range<size_t> const& r, size_t running_total)
 			{
 				for (size_t j = r.begin(); j < r.end(); j++)
 					running_total += !(data[j] & (1L << i)) ? 1 : 0;
@@ -5161,7 +5160,7 @@ size_t FindConnectedComponents(vector<long> &data)
 	result += data.empty() ? 0 : (1 << data.size()) - 1; // XXX
 	// result += (1 << data.size()) - 1; // XXX
 	size_t count = ranges::count_if(data, [](size_t i)
-									{ return !i; });
-	//  return result - ((1 << count) - 1);
+		{ return !i; });
+//  return result - ((1 << count) - 1);
 	return result - (count ? ((1 << count) - 1) : 0);
 }

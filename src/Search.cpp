@@ -3,7 +3,7 @@
 /* https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm
  * https://cp-algorithms.com/string/prefix-function.html
  */
-void Search::_KMPTable(string const &w, vector<long> &T)
+void Search::_KMPTable(string const& w, vector<long>& T)
 {
     // the first few values are fixed but different from what the algorithm might suggest
     T.resize(w.size() + 1);
@@ -23,7 +23,7 @@ void Search::_KMPTable(string const &w, vector<long> &T)
     }
     T[pos] = cnd; // (only needed when all word occurrences are searched)
 }
-void Search::KMPSearch(string const &s, string const &w, vector<size_t> &result)
+void Search::KMPSearch(string const& s, string const& w, vector<size_t>& result)
 {
     vector<long> T;
     _KMPTable(w, T);
@@ -54,10 +54,10 @@ void Search::KMPSearch(string const &s, string const &w, vector<size_t> &result)
 /* https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
  * 100%
  */
-vector<long> Search::SearchRange(size_t target, vector<size_t> const &nums)
+vector<long> Search::SearchRange(size_t target, vector<size_t> const& nums)
 {
     long start = 0, end = nums.size() - 1, middle = end / 2 + end % 2;
-    vector<long> result{-1, -1}; // result[0] = start (inclusive); result[1] = end (exclusive)
+    vector<long> result{ -1, -1 }; // result[0] = start (inclusive); result[1] = end (exclusive)
     if (nums.empty())
         return result;
     for (; start <= end && (result[0] == -1 || result[1] == -1);)
@@ -111,7 +111,7 @@ vector<long> Search::SearchRange(size_t target, vector<size_t> const &nums)
  * https://leetcode.com/problems/search-in-rotated-sorted-array/
  * 100%
  */
-long Search::BinarySearch(size_t toSearch, vector<size_t> const &data)
+long Search::BinarySearch(size_t toSearch, vector<size_t> const& data)
 {
     for (size_t lower = 0, middle = 0, upper = data.size() - 1; lower <= upper;)
     {
@@ -147,7 +147,7 @@ long Search::BinarySearch(size_t toSearch, vector<size_t> const &data)
 /* https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
  * 100%
  */
-long Search::BinarySearchMinimum(vector<long> const &data, long start, long end)
+long Search::BinarySearchMinimum(vector<long> const& data, long start, long end)
 {
     if (start == end)
         return data[start];
@@ -166,7 +166,7 @@ long Search::BinarySearchMinimum(vector<long> const &data, long start, long end)
  * Binary search for the upper bound of sorted list with duplicate items.
  * Returns the last index of the repeated items found in the sorted list
  */
-int Search::BinarySearchCountUpper(vector<long> const &source, long toSearch, long start, long end)
+int Search::BinarySearchCountUpper(vector<long> const& source, long toSearch, long start, long end)
 {
     int mid = start + (end - start) / 2 + (end - start) % 2;
     if (end < start)
@@ -185,7 +185,7 @@ int Search::BinarySearchCountUpper(vector<long> const &source, long toSearch, lo
  * Binary search for the lower bound of sorted list with duplicate items.
  * Returns the first index of the repeated items found in the sorted list
  */
-int Search::BinarySearchCountLower(vector<long> const &source, long toSearch, long start, long end)
+int Search::BinarySearchCountLower(vector<long> const& source, long toSearch, long start, long end)
 {
     int mid = start + (end - start) / 2 + (end - start) % 2;
     if (end < start)
@@ -199,7 +199,7 @@ int Search::BinarySearchCountLower(vector<long> const &source, long toSearch, lo
     else
         return BinarySearchCountLower(source, toSearch, start, mid - 1);
 }
-int Search::BinarySearch(const string &toSearch, vector<string> const &source)
+int Search::BinarySearch(const string& toSearch, vector<string> const& source)
 {
     for (int lower = 0, upper = source.size() - 1, middle = 0; lower <= upper;)
     {
@@ -222,7 +222,7 @@ int Search::BinarySearch(const string &toSearch, vector<string> const &source)
 /* https://www.hackerrank.com/challenges/the-grid-search/problem
  * 100%
  */
-bool Search::GridSearch(vector<string> const &pattern, vector<string> const &grid)
+bool Search::GridSearch(vector<string> const& pattern, vector<string> const& grid)
 {
     size_t i = 0;
     size_t found = 0;
@@ -558,7 +558,7 @@ vector<string> Search::FindShortestPath(int n, int i_start, int j_start, int i_e
  * Use binary search
  * 100%
  */
-size_t Search::MinEatingSpeed(vector<size_t> const &piles, size_t hours)
+size_t Search::MinEatingSpeed(vector<size_t> const& piles, size_t hours)
 {
     /*
     rate = n / duration
@@ -575,18 +575,18 @@ size_t Search::MinEatingSpeed(vector<size_t> const &piles, size_t hours)
     }
     return start; // start is the minimal k​ satisfying the condition function.
 }
-bool Search::_CanEatAllBananasInTime(vector<size_t> const &piles, size_t rate, size_t hours)
+bool Search::_CanEatAllBananasInTime(vector<size_t> const& piles, size_t rate, size_t hours)
 {
     size_t duration = parallel_reduce(
-        blocked_range<size_t>(0, piles.size()), 0, [rate, &piles](tbb::blocked_range<size_t> const &r, size_t running_total)
+        blocked_range<size_t>(0, piles.size()), 0, [rate, &piles](tbb::blocked_range<size_t> const& r, size_t running_total)
         {
             for (size_t i = r.begin(); i < r.end(); i++)
-                running_total += (size_t)(piles[i] / rate) + ((piles[i] % rate) ? 1 : 0); 
+                running_total += (size_t)(piles[i] / rate) + ((piles[i] % rate) ? 1 : 0);
             return running_total; },
         std::plus<size_t>());
     return duration <= hours;
 }
-bool Search::_IsValidSubSequence(vector<size_t> const &data, size_t check, size_t k)
+bool Search::_IsValidSubSequence(vector<size_t> const& data, size_t check, size_t k)
 {
     size_t count = 1, sum = 0;
     for (vector<size_t>::const_iterator it = data.begin(); it != data.end(); it++)
@@ -607,7 +607,7 @@ bool Search::_IsValidSubSequence(vector<size_t> const &data, size_t check, size_
  * Use binary search
  * 100%
  */
-size_t Search::MinCapacityToShipWithinDays(vector<size_t> const &weights, size_t days)
+size_t Search::MinCapacityToShipWithinDays(vector<size_t> const& weights, size_t days)
 {
     /* Start with the weight of the single largest item. If start with min_element, other items with weights larger than it cannot fit into the capacity */
     size_t start = *ranges::max_element(weights), end = ranges::fold_left(weights, 0, std::plus<size_t>());
@@ -631,7 +631,7 @@ size_t Search::MinCapacityToShipWithinDays(vector<size_t> const &weights, size_t
  * Use binary search
  * 100%
  */
-size_t Search::MinimumLargestSum(vector<size_t> const &data, size_t k)
+size_t Search::MinimumLargestSum(vector<size_t> const& data, size_t k)
 {
     long start = *ranges::max_element(data), end = ranges::fold_left(data, 0, std::plus<long>());
     for (; start <= end;)
@@ -648,7 +648,7 @@ size_t Search::MinimumLargestSum(vector<size_t> const &data, size_t k)
     }
     return start; // start is the minimal k​ satisfying the condition function.
 }
-bool Search::_CanMakeBouquets(vector<size_t> const &bloomDay, size_t m, size_t k, size_t day)
+bool Search::_CanMakeBouquets(vector<size_t> const& bloomDay, size_t m, size_t k, size_t day)
 {
     string flowers = "";
     for (size_t i = 0; i < bloomDay.size(); i++)
@@ -679,7 +679,7 @@ Return the minimum number of days you need to wait to be able to make m bouquets
  * Use binary search
  * 100%
  */
-long Search::MinDaysToMakeBouquets(vector<size_t> const &bloomDays, size_t m, size_t k)
+long Search::MinDaysToMakeBouquets(vector<size_t> const& bloomDays, size_t m, size_t k)
 {
     if (bloomDays.size() < (uint64_t)((uint64_t)m * (uint64_t)k))
         return -1;
@@ -754,7 +754,7 @@ size_t Search::MultiplicationTableKthSmallestNumber(size_t m, size_t n, size_t k
     }
     return start; // start is the minimal k​ satisfying the condition function.
 }
-bool Search::_HasKthSmallestPairs(vector<size_t> &data, size_t k, size_t distance)
+bool Search::_HasKthSmallestPairs(vector<size_t>& data, size_t k, size_t distance)
 {
     size_t pairs = 0;
     // The entire for loop is actually calculating Binomial Coefficients.
@@ -822,7 +822,7 @@ BinomialCoefficients(2) = 2(1) / 2 = 1 condition: false
 
 [start: 5, end: 5, mid:4] => return 5
 */
-int Search::SmallestDistancePair(vector<size_t> &data, size_t k)
+int Search::SmallestDistancePair(vector<size_t>& data, size_t k)
 {
     ranges::sort(data);
     size_t start = 0, end = data.back() - data.front();
@@ -921,17 +921,17 @@ size_t Search::NthUglyNumber(size_t n, size_t a, size_t b, size_t c)
     }
     return start;
 }
-bool Search::_WithinThreshold(vector<size_t> const &data, size_t threshold, size_t check)
+bool Search::_WithinThreshold(vector<size_t> const& data, size_t threshold, size_t check)
 {
 #if 0
     This also works!
-    size_t result = ranges::fold_left(data | std::views::transform([&](size_t x) { return ceil_div(x, check); }), 0, std::plus<size_t>()) <= threshold;
+        size_t result = ranges::fold_left(data | std::views::transform([&](size_t x) { return ceil_div(x, check); }), 0, std::plus<size_t>()) <= threshold;
 #endif
     size_t result = parallel_reduce(
-        blocked_range<size_t>(0, data.size()), 0, [check, &data](tbb::blocked_range<size_t> const &r, size_t running_total)
+        blocked_range<size_t>(0, data.size()), 0, [check, &data](tbb::blocked_range<size_t> const& r, size_t running_total)
         {
             for (size_t i = r.begin(); i < r.end(); i++)
-                running_total += ceil_div(data[i], check); 
+                running_total += ceil_div(data[i], check);
             return running_total; },
         std::plus<size_t>());
     return result <= threshold;
@@ -941,7 +941,7 @@ bool Search::_WithinThreshold(vector<size_t> const &data, size_t threshold, size
  * Use binary search
  * 100%
  */
-size_t Search::SmallestDivisor(vector<size_t> const &data, size_t threshold)
+size_t Search::SmallestDivisor(vector<size_t> const& data, size_t threshold)
 {
     size_t start = 1, end = *ranges::max_element(data);
     for (; start < end;)
@@ -954,4 +954,138 @@ size_t Search::SmallestDivisor(vector<size_t> const &data, size_t threshold)
             start = mid + 1;
     }
     return start;
+}
+/*
+The key fact: the cost of one substring
+Match brackets greedily from left to right, as in the usual stack check. Whatever stays unmatched always looks like )))…(((: a unmatched ) followed by b unmatched (. The fewest flips that make the substring valid is then:
+⌈a/2⌉ + ⌈b/2⌉ (and the length must be even)
+You flip half of the )s to ( and half of the (s to ). For example, "))))" needs 2 flips, giving "()()".
+If a is odd, b is odd too, because the length is even, and the middle ")(" costs 2.
+So the task becomes: find the longest even-length substring with ⌈a/2⌉ + ⌈b/2⌉ ≤ K.
+x:       0  1  2  (k = 2)
+bracket:  )  (
+P[x]     0 -1  0
+t: 1, m = -1, a = P[0] - m = 0 - -1 = 1 startCost = 1, remainingFlips = k - 1 = 1
+              b = 1 * 2 = 2 -> 1 (If a is odd, b is odd too, because the length is even)
+     result: str[0,1]
+*/
+size_t Search::_BinarySearchLongestValidParenthesesWithFixes(size_t k, vector<long> const& P, long start, long end)
+{
+    size_t result = 0;
+    if (start >= end)
+        return 0;
+    vector<long>::const_iterator lowestIt = min_element(P.begin() + start, P.begin() + end + 1);
+    if (lowestIt != P.end()) {
+        size_t t = distance(P.begin() + start, lowestIt);
+        long m = *lowestIt;
+        size_t leftSize = t - start, rightSize = end - t;
+        // Loop over the smaller side
+        if (leftSize <= rightSize)
+            for (size_t i = start; i < t; i++) {
+                long a = P[i] - m;
+                long startCost = a / 2 + a % 2, remainingFlips = k - startCost;
+                long j = end;
+                if (remainingFlips > 0) {
+                    // b / 2 + b % 2 = remainingFlips
+                    long b = 2 * remainingFlips; // b <= 2 * remainingFlips
+                    // If a is odd, b is odd too, because the length is even
+                    b -= ((a % 2) != (b % 2)) && b > 0 ? 1 : 0;
+                    /*
+                    The “allowed P at the other end”:
+                    b = P[j] − m <= 2 * remainingFlips
+                    P[i] - m <= 2 * remainingFlips
+                    P[i] <= 2 * remainingFlips + m
+                    */
+                    long allowedP = b + m;
+                    for (; j > start && P[j] != allowedP; j--);
+                }
+                result = max<size_t>(result, j - i + 1);
+            }
+        else
+            for (size_t j = t + 1; j <= end; j++) {
+                long b = P[j] - m;
+                long startCost = b / 2 + b % 2, remainingFlips = k - startCost;
+                size_t i = start;
+                if (remainingFlips > 0) {
+                    // a / 2 + a % 2 = remainingFlips
+                    long a = 2 * remainingFlips; // b <= 2 * remainingFlips
+                    // If a is odd, b is odd too, because the length is even
+                    a -= ((a % 2) != (b % 2)) && a > 0 ? 1 : 0;
+                    /*
+                    The “allowed P at the other end”:
+                    b = P[j] − m <= 2 * remainingFlips
+                    P[i] - m <= 2 * remainingFlips
+                    P[i] <= 2 * remainingFlips + m
+                    */
+                    long allowedP = a + m;
+                    for (; i < t && P[i] != allowedP; i++);
+                }
+                result = max<size_t>(result, j - i + 1);
+            }
+        result = max<size_t>(result, max<size_t>(_BinarySearchLongestValidParenthesesWithFixes(k, P, start, t - 1), _BinarySearchLongestValidParenthesesWithFixes(k, P, t + 1, end)));
+    }
+    return result;
+}
+/* https://app.codility.com/programmers/task/brackets_rotation/
+ * Divide and conquer on the minimum prefix balance.
+The divide and conquer works on prefix balances, P[x] = (number of () − (number of )) in the first x brackets. For a substring from i to j, with m the minimum of P between them, a = P[i] − m and b = P[j] − m.
+
+1. Take t, the position of the minimum P in the current range. Every substring passing through t has m = P[t].
+2. For each index on the smaller side of t, the formula gives the largest P allowed at the other end. A sparse table then finds the farthest index on the other side, of the same parity, with P that small. Each lookup is a binary search, O(log N).
+3. Recurse on the two sides.
+
+Iterating the smaller side keeps the total to O(N log N) lookups, the same reasoning as “small-to-large” merging. That’s where O(N log² N) comes from.
+
+Think of P as a path going up and down. For the substring s[i..j), look at the part of the path from position i to position j:
+
+m is the lowest point on that part of the path.
+a = P[i] − m is how far the path drops below where it started. Each drop below the starting level is a ) with no ( before it to match: an unmatched ).
+b = P[j] − m is how far the path ends above its lowest point. Each step up after the lowest point that never comes back down is a ( with no ) after it: an unmatched (.
+
+Example: s[0..6) = )(())(. The path is P[0..6] = 0, −1, 0, 1, 0, −1, 0.
+
+It starts at 0, the lowest point is m = −1, and it ends at 0.
+a = 0 − (−1) = 1: the first ) has nothing to match.
+b = 0 − (−1) = 1: the last ( has nothing to match.
+Cost = ⌈1/2⌉ + ⌈1/2⌉ = 2 flips, giving ((())). With K = 1, that’s too many.
+
+A second example: s[1..5) = (()). The path is −1, 0, 1, 0, −1, so m = −1, and a = 0, b = 0. It’s already valid and costs 0.
+
+The divide and conquer, step by step:
+
+Point 1: split at the lowest point of the whole range. Over all positions 0 … 7, the lowest P is −1. It first occurs at t = 1. Every substring s[i..j) that contains position t (i ≤ 1 ≤ j) passes through that lowest point, so its m is −1. That means its m is known without any searching. Substrings that don’t contain t lie entirely to the left of t or entirely to the right, and point 3 deals with those.
+
+Point 2: for each start, find the farthest end that’s affordable. Take i = 1 (on the left of t, or at t itself):
+
+a = P[1] − m = −1 − (−1) = 0, so the start costs ⌈0/2⌉ = 0 flips.
+That leaves K − 0 = 1 flip for the b side, so b ≤ 2, since ⌈2/2⌉ = 1.
+b = P[j] − m, so P[j] ≤ m + 2 = 1. That’s the “allowed P at the other end”.
+The length j − i must be even. So j must have the same parity as i: both odd here.
+On the right of t, the farthest odd position with P ≤ 1 is j = 7 (P[7] = 1). So s[1..7) = (())((, length 6. Its b is 2, costing 1 flip ✓.
+Now take i = 0: a = 0 − (−1) = 1, which costs ⌈1/2⌉ = 1 flip. That uses the whole budget, leaving 0 flips for the b side. Since a is odd, b is also odd (the length is even), so b ≥ 1 and costs at least 1 more flip. That’s impossible, so no j works for i = 0.
+You always want the farthest valid end, because we’re looking for the longest substring. Finding it is where the sparse table comes in. It’s a lookup structure that answers “what’s the last position in this range with this parity and P ≤ some value?” with a binary search, instead of scanning every position.
+Which side to loop over. Here the left side of t has 2 positions (0, 1) and the right side has 7 (1 … 7). Looping over the smaller side and doing a lookup on the bigger side keeps the total work down. That choice is what makes it O(N log² N) instead of O(N²). The result is the same whichever side you loop over.
+
+Point 3: repeat on each side. Substrings that don’t contain t = 1 lie entirely within positions 0 … 0, which is too short, or entirely within positions 2 … 7. So the same steps run on 2 … 7: its lowest point is t = 5 (P = −1), and the search finds )) and (( (length 2 each). It then splits again, into 2 … 4 and 6 … 7, and so on, until the ranges are too short to hold a substring.
+
+The full trace finds 6 as the longest, which matches the brute force:
+
+Range of positions	Lowest point t	Best substring found through t
+0 … 7	1 (P = −1)	s[1..7) = (())((, length 6
+2 … 7	5 (P = −1)	)) or ((, length 2
+2 … 4	2 (P = 0)	(), length 2
+6 … 7, 3 … 4	6, 4	nothing longer
+
+Every substring is checked exactly once: in the first range that contains it whose split point t falls inside it. At that point t is its lowest point, so its m is P[t].
+ */
+size_t Search::LongestValidParenthesesWithFixes(string const& str, size_t k)
+{
+    if (str.empty())
+        return 0;
+    if (k >= str.size())
+        return str.size();
+    vector<long> P(str.size() + 1, 0);
+    for (size_t i = 0; i < str.size(); i++)
+        P[i + 1] = (str[i] == ')' ? P[i] - 1 : P[i] + 1);
+    return _BinarySearchLongestValidParenthesesWithFixes(k, P, 0, P.size() - 1);
 }
