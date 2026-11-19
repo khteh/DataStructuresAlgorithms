@@ -139,10 +139,10 @@ INSTANTIATE_TEST_SUITE_P(
 	NumberToRomanTests,
 	NumberToRomanTestFixture,
 	::testing::Values(make_tuple("IV", 4),
-					  make_tuple("IX", 9),
-					  make_tuple("XL", 40),
-					  make_tuple("XC", 90),
-					  make_tuple("CD", 400), make_tuple("CM", 900)));
+		make_tuple("IX", 9),
+		make_tuple("XL", 40),
+		make_tuple("XC", 90),
+		make_tuple("CD", 400), make_tuple("CM", 900)));
 class RomanToNumberTestFixture : public testing::TestWithParam<tuple<size_t, string>>
 {
 public:
@@ -168,10 +168,10 @@ INSTANTIATE_TEST_SUITE_P(
 	RomanToNumberTests,
 	RomanToNumberTestFixture,
 	::testing::Values(make_tuple(4, "IV"),
-					  make_tuple(9, "IX"),
-					  make_tuple(40, "XL"),
-					  make_tuple(90, "XC"),
-					  make_tuple(400, "CD"), make_tuple(900, "CM"), make_tuple(58, "LVIII"), make_tuple(1994, "MCMXCIV")));
+		make_tuple(9, "IX"),
+		make_tuple(40, "XL"),
+		make_tuple(90, "XC"),
+		make_tuple(400, "CD"), make_tuple(900, "CM"), make_tuple(58, "LVIII"), make_tuple(1994, "MCMXCIV")));
 
 class CountDigitsTestFixture : public testing::TestWithParam<tuple<size_t, char, size_t>>
 {
@@ -208,8 +208,8 @@ INSTANTIATE_TEST_SUITE_P(
 	CountDigitsTests,
 	CountDigitsTestFixture,
 	::testing::Values(make_tuple(175, 2, 345),
-					  make_tuple(175, 0, 345),
-					  make_tuple(10, 3, 35)));
+		make_tuple(175, 0, 345),
+		make_tuple(10, 3, 35)));
 class CountNumbersWithUniqueDigitsTestFixture : public testing::TestWithParam<tuple<size_t, size_t>>
 {
 public:
@@ -234,10 +234,10 @@ INSTANTIATE_TEST_SUITE_P(
 	CountNumbersWithUniqueDigitsTests,
 	CountNumbersWithUniqueDigitsTestFixture,
 	::testing::Values(make_tuple(1, 0),
-					  make_tuple(10, 1),
-					  make_tuple(91, 2),   /* [0,100) */
-					  make_tuple(739, 3),  /* [0,1000) */
-					  make_tuple(0, 11))); /* Out of range */
+		make_tuple(10, 1),
+		make_tuple(91, 2),   /* [0,100) */
+		make_tuple(739, 3),  /* [0,1000) */
+		make_tuple(0, 11))); /* Out of range */
 class LargestNumberCompositionProductMathematicalTestFixture : public testing::TestWithParam<tuple<size_t, size_t>>
 {
 public:
@@ -262,9 +262,9 @@ INSTANTIATE_TEST_SUITE_P(
 	LargestNumberCompositionProductTests,
 	LargestNumberCompositionProductMathematicalTestFixture,
 	::testing::Values(make_tuple(6, 5),
-					  make_tuple(12, 7),
-					  make_tuple(18, 8),
-					  make_tuple(36, 10)));
+		make_tuple(12, 7),
+		make_tuple(18, 8),
+		make_tuple(36, 10)));
 
 class KaprekarNumbersTestFixture : public testing::TestWithParam<tuple<vector<long>, long, long>>
 {
@@ -292,7 +292,7 @@ INSTANTIATE_TEST_SUITE_P(
 	KaprekarNumbersTests,
 	KaprekarNumbersTestFixture,
 	::testing::Values(make_tuple(vector<long>{1, 9, 45, 55, 99}, 1, 100),
-					  make_tuple(vector<long>{1, 9, 45, 55, 99, 297, 703, 999, 2223, 2728, 4950, 5050, 7272, 7777, 9999, 17344, 22222, 77778, 82656, 95121, 99999}, 1, 99999)));
+		make_tuple(vector<long>{1, 9, 45, 55, 99, 297, 703, 999, 2223, 2728, 4950, 5050, 7272, 7777, 9999, 17344, 22222, 77778, 82656, 95121, 99999}, 1, 99999)));
 template <typename T>
 class BinomialCoefficientsTestFixtureBase
 {
@@ -317,14 +317,14 @@ protected:
 	size_t _n, _k;
 };
 class BinomialCoefficientsTestFixture : public BinomialCoefficientsTestFixtureBase<BIG_UNSIGNED_INT>,
-										public testing::TestWithParam<tuple<BIG_UNSIGNED_INT, size_t, size_t>>
+	public testing::TestWithParam<tuple<BIG_UNSIGNED_INT, size_t, size_t>>
 {
 public:
 	void SetUp() override
 	{
 		BinomialCoefficientsTestFixtureBase::SetUp(get<0>(GetParam()),
-												   get<1>(GetParam()),
-												   get<2>(GetParam()));
+			get<1>(GetParam()),
+			get<2>(GetParam()));
 	}
 };
 /*
@@ -342,8 +342,8 @@ INSTANTIATE_TEST_SUITE_P(
 	BinomialCoefficientsTests,
 	BinomialCoefficientsTestFixture,
 	::testing::Values(make_tuple(6, 4, 2),
-					  make_tuple(252, 10, 5),
-					  make_tuple(184756, 20, 10)));
+		make_tuple(252, 10, 5),
+		make_tuple(184756, 20, 10)));
 
 template <typename T>
 class MultinomialCoefficientsFixtureBase
@@ -367,15 +367,15 @@ protected:
 	vector<size_t> _k;
 };
 class MultinomialCoefficientsTestFixture : public MultinomialCoefficientsFixtureBase<BIG_UNSIGNED_INT>,
-										   public testing::TestWithParam<tuple<BIG_UNSIGNED_INT, size_t, vector<size_t>, uint128_t>>
+	public testing::TestWithParam<tuple<BIG_UNSIGNED_INT, size_t, vector<size_t>, uint128_t>>
 {
 public:
 	void SetUp() override
 	{
 		MultinomialCoefficientsFixtureBase::SetUp(get<0>(GetParam()),
-												  get<1>(GetParam()),
-												  get<2>(GetParam()),
-												  get<3>(GetParam()));
+			get<1>(GetParam()),
+			get<2>(GetParam()),
+			get<3>(GetParam()));
 	}
 };
 TEST_P(MultinomialCoefficientsTestFixture, MultinomialCoefficientsTests)
@@ -418,8 +418,8 @@ INSTANTIATE_TEST_SUITE_P(
 	PowerSumTests,
 	PowerSumTestFixture,
 	::testing::Values(make_tuple(1, 10, 2),
-					  make_tuple(3, 100, 2),
-					  make_tuple(1, 100, 3)));
+		make_tuple(3, 100, 2),
+		make_tuple(1, 100, 3)));
 class SuperDigitTestFixture : public testing::TestWithParam<tuple<char, string, size_t>>
 {
 public:
@@ -446,8 +446,8 @@ INSTANTIATE_TEST_SUITE_P(
 	SuperDigitTests,
 	SuperDigitTestFixture,
 	::testing::Values(make_tuple(8, "9875", 4),
-					  make_tuple(3, "148", 3), make_tuple(1, "1000000000", 1000),
-					  make_tuple(9, "123", 3), make_tuple(9, "9999999999", 1000)));
+		make_tuple(3, "148", 3), make_tuple(1, "1000000000", 1000),
+		make_tuple(9, "123", 3), make_tuple(9, "9999999999", 1000)));
 template <typename T>
 class FibonacciTestFixtureBase
 {
@@ -467,7 +467,7 @@ protected:
 	long _n;
 };
 class PositiveFibonacciTestFixture : public FibonacciTestFixtureBase<BIG_SIGNED_INT>,
-									 public testing::TestWithParam<tuple<BIG_SIGNED_INT, long>>
+	public testing::TestWithParam<tuple<BIG_SIGNED_INT, long>>
 {
 public:
 	void SetUp() override
@@ -484,7 +484,7 @@ INSTANTIATE_TEST_SUITE_P(
 	PositiveFibonacciTestFixture,
 	::testing::Values(make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(5, 5), make_tuple(8, 6), make_tuple(13, 7), make_tuple(21, 8), make_tuple(34, 9), make_tuple(2880067194370816120, 90)));
 class NegativeFibonacciTestFixture : public FibonacciTestFixtureBase<BIG_SIGNED_INT>,
-									 public testing::TestWithParam<tuple<BIG_SIGNED_INT, long>>
+	public testing::TestWithParam<tuple<BIG_SIGNED_INT, long>>
 {
 public:
 	void SetUp() override
@@ -522,7 +522,7 @@ protected:
 };
 
 class FactorialTestFixture : public FactorialTestFixtureBase<BIG_SIGNED_INT>,
-							 public testing::TestWithParam<tuple<BIG_SIGNED_INT, size_t, size_t>>
+	public testing::TestWithParam<tuple<BIG_SIGNED_INT, size_t, size_t>>
 {
 public:
 	void SetUp() override
@@ -599,9 +599,9 @@ INSTANTIATE_TEST_SUITE_P(
 	FibonacciModifiedTests,
 	FibonacciModifiedTestFixture,
 	::testing::Values(make_tuple("5", 0, 1, 4), make_tuple("2", 2, 0, 2), make_tuple("4", 2, 0, 3), make_tuple("18", 2, 0, 4), make_tuple("27", 0, 1, 5), make_tuple("734", 0, 1, 6), make_tuple("328", 2, 0, 5),
-					  make_tuple("538783", 0, 1, 7), make_tuple("107602", 2, 0, 6), make_tuple("112763264", 2, 1, 6), make_tuple("290287121823", 0, 1, 8),
-					  make_tuple("84266613096281243382112", 0, 1, 9), make_tuple("84266613096281243382112", 1, 1, 8), make_tuple("17970609138239271928332405705914711528208", 0, 2, 8),
-					  make_tuple("11578190732", 2, 0, 7), make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)));
+		make_tuple("538783", 0, 1, 7), make_tuple("107602", 2, 0, 6), make_tuple("112763264", 2, 1, 6), make_tuple("290287121823", 0, 1, 8),
+		make_tuple("84266613096281243382112", 0, 1, 9), make_tuple("84266613096281243382112", 1, 1, 8), make_tuple("17970609138239271928332405705914711528208", 0, 2, 8),
+		make_tuple("11578190732", 2, 0, 7), make_tuple("104292047421056066715537698951727494083004264929891558279344228228718658019003171882044298756195662458280101226593033166933803327203745068186400974453022429724308", 2, 0, 11)));
 class PriorityQueueMedianTestFixture : public testing::TestWithParam<tuple<double, vector<long>>>
 {
 public:
@@ -629,11 +629,11 @@ INSTANTIATE_TEST_SUITE_P(
 	PriorityQueueMedianTests,
 	PriorityQueueMedianTestFixture,
 	::testing::Values(make_tuple(2.5L, vector<long>{3, 2, 1, 4}),						   // 1 2 3 4
-					  make_tuple(7, vector<long>{6, 13, 1, 10, 3, 8}),					   // 1 3 6 8 10 13
-					  make_tuple(7, vector<long>{6, 13, -1, 10, -3, 8}),				   // -3 -1 6 8 10 13
-					  make_tuple(8, vector<long>{6, 13, -1, 10, -3, 8, 17}),			   // -3 -1 6 8 10 13, 17
-					  make_tuple(-0.5L, views::iota(-10, 10) | ranges::to<vector<long>>()) // [-10, 10)
-					  ));
+		make_tuple(7, vector<long>{6, 13, 1, 10, 3, 8}),					   // 1 3 6 8 10 13
+		make_tuple(7, vector<long>{6, 13, -1, 10, -3, 8}),				   // -3 -1 6 8 10 13
+		make_tuple(8, vector<long>{6, 13, -1, 10, -3, 8, 17}),			   // -3 -1 6 8 10 13, 17
+		make_tuple(-0.5L, views::iota(-10, 10) | ranges::to<vector<long>>()) // [-10, 10)
+	));
 class SortedListsMedianTestFixture : public testing::TestWithParam<tuple<double, vector<long>, vector<long>>>
 {
 public:
@@ -665,50 +665,99 @@ INSTANTIATE_TEST_SUITE_P(
 					  b = {2, 4, 6, 8, 10};
 					  assert(median(a, b) == 11 / (double)2);
 					  */
-					  make_tuple(5.5, views::iota(1l, 10l) | views::stride(2) | ranges::to<vector<long>>(),
-								 views::iota(2l, 11l) | views::stride(2) | ranges::to<vector<long>>()),
-					  /*
-						  a = {1, 3, 5, 7, 9};
-						  b = {2, 4, 6, 8, 10, 11};
-						  assert(median(a, b) == 6);
-					  */
-					  make_tuple(6, views::iota(1l, 10l) | views::stride(2) | ranges::to<vector<long>>(),
-								 vector<long>{2, 4, 6, 8, 10, 11}),
-					  /*
-						  a = {1, 3, 5};
-						  b = {2, 4, 6, 8, 10, 11};
-						  assert(median(a, b) == 5);
-					  */
-					  make_tuple(5, views::iota(1l, 6l) | views::stride(2) | ranges::to<vector<long>>(), vector<long>{2, 4, 6, 8, 10, 11}),
-					  /*
-						  a = {1, 3, 5};
-						  b = {2, 4, 6, 8, 10, 11, 13};
-						  assert(median(a, b) == 11 / (double)2);
-					  */
-					  make_tuple(5.5, views::iota(1l, 6l) | views::stride(2) | ranges::to<vector<long>>(), vector<long>{2, 4, 6, 8, 10, 11, 13}),
-					  /*
-							a = {1, 3, 5, 7, 9, 11, 13};
-							b = {2, 4, 6, 8};
-							assert(median(a, b) == 6);
-					  */
-					  make_tuple(6, views::iota(1l, 14l) | views::stride(2) | ranges::to<vector<long>>(),
-								 views::iota(2l, 9l) | views::stride(2) | ranges::to<vector<long>>()),
-					  /*
-							a = {1, 3, 5, 7, 9, 11, 13, 15};
-							b = {2, 4, 6, 8};
-							assert(median(a, b) == (6 + 7) / (double)2);
-					   */
-					  make_tuple(6.5, views::iota(1l, 16l) | views::stride(2) | ranges::to<vector<long>>(),
-								 views::iota(2l, 9l) | views::stride(2) | ranges::to<vector<long>>()),
-					  /*
-							b = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-							assert(median(a, b) == 5);
-					   */
-					  make_tuple(5, vector<long>{}, views::iota(1, 10) | ranges::to<vector<long>>()),
-					  /*
-							b = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-							assert(median(a, b) == 5);
-					   */
-					  make_tuple(5.5, vector<long>{}, views::iota(1, 11) | ranges::to<vector<long>>()),
-					  make_tuple(5, views::iota(1, 10) | ranges::to<vector<long>>(), vector<long>{}),
-					  make_tuple(5.5, views::iota(1, 11) | ranges::to<vector<long>>(), vector<long>{})));
+		make_tuple(5.5, views::iota(1l, 10l) | views::stride(2) | ranges::to<vector<long>>(),
+			views::iota(2l, 11l) | views::stride(2) | ranges::to<vector<long>>()),
+ /*
+	 a = {1, 3, 5, 7, 9};
+	 b = {2, 4, 6, 8, 10, 11};
+	 assert(median(a, b) == 6);
+ */
+		make_tuple(6, views::iota(1l, 10l) | views::stride(2) | ranges::to<vector<long>>(),
+			vector<long>{2, 4, 6, 8, 10, 11}),
+ /*
+	 a = {1, 3, 5};
+	 b = {2, 4, 6, 8, 10, 11};
+	 assert(median(a, b) == 5);
+ */
+		make_tuple(5, views::iota(1l, 6l) | views::stride(2) | ranges::to<vector<long>>(), vector<long>{2, 4, 6, 8, 10, 11}),
+		/*
+			a = {1, 3, 5};
+			b = {2, 4, 6, 8, 10, 11, 13};
+			assert(median(a, b) == 11 / (double)2);
+		*/
+		make_tuple(5.5, views::iota(1l, 6l) | views::stride(2) | ranges::to<vector<long>>(), vector<long>{2, 4, 6, 8, 10, 11, 13}),
+		/*
+			  a = {1, 3, 5, 7, 9, 11, 13};
+			  b = {2, 4, 6, 8};
+			  assert(median(a, b) == 6);
+		*/
+		make_tuple(6, views::iota(1l, 14l) | views::stride(2) | ranges::to<vector<long>>(),
+			views::iota(2l, 9l) | views::stride(2) | ranges::to<vector<long>>()),
+ /*
+	   a = {1, 3, 5, 7, 9, 11, 13, 15};
+	   b = {2, 4, 6, 8};
+	   assert(median(a, b) == (6 + 7) / (double)2);
+  */
+		make_tuple(6.5, views::iota(1l, 16l) | views::stride(2) | ranges::to<vector<long>>(),
+			views::iota(2l, 9l) | views::stride(2) | ranges::to<vector<long>>()),
+ /*
+	   b = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+	   assert(median(a, b) == 5);
+  */
+		make_tuple(5, vector<long>{}, views::iota(1, 10) | ranges::to<vector<long>>()),
+		/*
+			  b = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+			  assert(median(a, b) == 5);
+		 */
+		make_tuple(5.5, vector<long>{}, views::iota(1, 11) | ranges::to<vector<long>>()),
+		make_tuple(5, views::iota(1, 10) | ranges::to<vector<long>>(), vector<long>{}),
+		make_tuple(5.5, views::iota(1, 11) | ranges::to<vector<long>>(), vector<long>{})));
+class IsSparseNumberTestFixture : public testing::TestWithParam<tuple<bool, long>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_var = get<1>(GetParam());
+	}
+	bool IsSparseNumberTest()
+	{
+		return IsSparseNumber(_var);
+	}
+
+protected:
+	bool _expected;
+	long _var;
+};
+TEST_P(IsSparseNumberTestFixture, IsSparseNumberTests)
+{
+	ASSERT_EQ(this->_expected, this->IsSparseNumberTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	IsSparseNumberTests,
+	IsSparseNumberTestFixture,
+	::testing::Values(make_tuple(true, 0), make_tuple(true, 1), make_tuple(true, 2), make_tuple(false, 3), make_tuple(true, 4), make_tuple(true, 5), make_tuple(false, 6), make_tuple(false, 7), make_tuple(true, 8), make_tuple(true, 9)));
+class NextSparseNumberTestFixture : public testing::TestWithParam<tuple<long, long>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_var = get<1>(GetParam());
+	}
+	long NextSparseNumberTest()
+	{
+		return NextSparseNumber(_var);
+	}
+
+protected:
+	long _expected, _var;
+};
+TEST_P(NextSparseNumberTestFixture, NextSparseNumberTests)
+{
+	ASSERT_EQ(this->_expected, this->NextSparseNumberTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+	NextSparseNumberTests,
+	NextSparseNumberTestFixture,
+	::testing::Values(make_tuple(1, 0), make_tuple(2, 1), make_tuple(4, 2), make_tuple(4, 3), make_tuple(5, 4), make_tuple(8, 5), make_tuple(8, 6), make_tuple(8, 7), make_tuple(9, 8), make_tuple(10, 9)));

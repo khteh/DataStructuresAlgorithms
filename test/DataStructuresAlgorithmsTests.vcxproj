@@ -90,6 +90,7 @@
     <ClCompile Include="QueueTests.cpp" />
     <ClCompile Include="SortTests.cpp" />
     <ClCompile Include="SparseNumberTests.cpp" />
+    <ClCompile Include="SparseTableTests.cpp" />
     <ClCompile Include="StackTests.cpp" />
     <ClCompile Include="StringTests.cpp" />
     <ClCompile Include="RangeTests.cpp" />

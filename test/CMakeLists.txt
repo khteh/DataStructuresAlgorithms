@@ -41,7 +41,7 @@ set(Sources
     "QueueTests.cpp"
     "SearchTests.cpp"
     "SortTests.cpp"
-    "SparseNumberTests.cpp"
+    "SparseTableTests.cpp"
     "StackTests.cpp"
     "StringTests.cpp"
     "RangeTests.cpp"
