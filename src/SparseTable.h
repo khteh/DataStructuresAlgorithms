@@ -14,8 +14,8 @@ class SparseTable {
 private:
     vector<T> const& _values;
     vector<vector<size_t>> _table; // _table[level][x]: position of the leftmost best of _values[x .. x + 2^level - 1]
-    Compare _better; // _better(a, b): a is strictly better than b
-    size_t _best(size_t, size_t) const;
+    Compare _compare; // _compare(a, b): a is strictly better than b
+    size_t _betterOf(size_t, size_t) const;
 
 public:
     explicit SparseTable(vector<T> const&, Compare = Compare());

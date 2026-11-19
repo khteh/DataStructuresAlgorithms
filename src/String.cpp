@@ -1327,7 +1327,8 @@ You flip half of the )s to ( and half of the (s to ). For example, "))))" needs 
 If a is odd, b is odd too, because the length is even, and the middle ")(" costs 2.
 So the task becomes: find the longest even-length substring with ⌈a/2⌉ + ⌈b/2⌉ ≤ K.
 
-The divide and conquer works on prefix balances, P[x] = (number of () − (number of )) in the first x brackets. For a substring from i to j, with m the minimum of P between them, a = P[i] − m and b = P[j] − m.
+The divide and conquer works on prefix balances, P[x] = (number of () − (number of )) in the first x brackets.
+For a substring from i to j, with m the minimum of P between them, a = P[i] − m and b = P[j] − m.
 
 1. Take t, the position of the minimum P in the current range. Every substring passing through t has m = P[t].
 2. For each index on the smaller side of t, the formula gives the largest P allowed at the other end. A sparse table then finds the farthest index on the other side, of the same parity, with P that small. Each lookup is a binary search, O(log N).
@@ -1349,6 +1350,12 @@ b = 0 − (−1) = 1: the last ( has nothing to match.
 Cost = ⌈1/2⌉ + ⌈1/2⌉ = 2 flips, giving ((())). With K = 1, that’s too many.
 
 A second example: s[1..5) = (()). The path is −1, 0, 1, 0, −1, so m = −1, and a = 0, b = 0. It’s already valid and costs 0.
+
+The divide and conquer keeps asking two questions about the prefix balances P, and the sparse table answers both quickly:
+
+1. Where is the lowest point between l and r? This picks the split point t for each range. The table answers it in O(1).
+2. What’s the farthest position on one side, of a given parity, with P ≤ some bound? This finds the end of the longest affordable substring.
+   The sparse table answers it in O(log N), by binary searching with question 1.
 
 The divide and conquer, step by step:
 
@@ -1425,7 +1432,8 @@ Every range left is too short, so the answer is 2 ✓
 
 What the trace shows
 Each range finds the longest substring through its lowest point. The () was only found once the ranges reached 2 … 4. Before that, every substring started at the range’s lowest point and ended higher up, which K = 0 can’t afford.
-On an input like this, the lowest point keeps landing at the left edge, so each range is only one position shorter than the one before. That’s the shape that made your recursive version go N levels deep. The fixed version keeps its ranges in a vector instead, and finds each t in O(1) instead of scanning the range.
+On an input like this, the lowest point keeps landing at the left edge, so each range is only one position shorter than the one before.
+That’s the shape that made your recursive version go N levels deep. The fixed version keeps its ranges in a vector instead, and finds each t in O(1) instead of scanning the range.
 
 The end side’s unmatched brackets are always (. The start side’s are always ).
 Why each side has its own kind of bracket. After greedy matching, whatever is left over always looks like )))(((. The leftover ) come first and the leftover ( come last:
@@ -1440,7 +1448,8 @@ End j	Substring s[0..j)	P[j]	b = P[j] − m	Unmatched	Flips
 4	((()	2	2	the first two (	1 (→ ()())
 0	(empty)	0	0	none	0
 
-Only the empty substring has P[j] ≤ 0, so no non-empty substring starting at 0 is affordable with K = 0. When the loop runs over the end side instead, as in range 3 … 4 of the trace, the roles swap. The fixed end’s P[j] − m is the b, and the condition P[i] ≤ … limits a, the start’s unmatched ).
+Only the empty substring has P[j] ≤ 0, so no non-empty substring starting at 0 is affordable with K = 0. When the loop runs over the end side instead, as in range 3 … 4 of the trace, the roles swap.
+The fixed end’s P[j] − m is the b, and the condition P[i] ≤ … limits a, the start’s unmatched ).
 === "((()", k=0 ===
 
 Within one range of the divide and conquer, the lowest point m = P[t] is already known. So:
@@ -1457,9 +1466,19 @@ Search the other side for the farthest end whose b is within that limit.
 There is one subtlety. In general, m depends on both ends, because it’s the lowest point between them. a depends only on i because each range only considers substrings that pass through t.
 That’s why the trace splits at the lowest point: it turns m into a known constant.
 
-SparseTable<T>, a sparse table, finds 't' in O(1).
+SparseTable<T>, a sparse table, finds 't' in O(1). There are log₂ N rows of N entries, so building the table takes O(N log N) time and memory, once.
 rightmost / leftmost binary-search a per-parity sparse table for the farthest end, in O(log N).
 A ranges stack replaces the recursion.
+
+Why this gives O(N log² N)
+
+The divide and conquer does O(N log N) “farthest end” lookups in total, and each one is a binary search of O(log N) steps, each costing O(1).
+Finding each range’s lowest point adds only O(1) per range, so the total is O(N log² N). In the generalised SparseTable<T, Compare>, all of this is unchanged.
+“Lowest” just becomes “best according to Compare”, so a greater<T> table does the same with maximums.
+
+The factor N is the number of positions. The previous step bounded how many times one position is looped over, about log₂ N. To get the total, you add that up over all the positions:
+
+total lookups = (number of positions) × (most times each one is looped over) ≤ (N + 1) × log₂(N + 1)
  */
 size_t String::LongestValidParenthesesWithFixes(string const& str, size_t k)
 {
@@ -1475,13 +1494,22 @@ size_t String::LongestValidParenthesesWithFixes(string const& str, size_t k)
     vector<long> evenP(P.size(), numeric_limits<long>::max()), oddP(P.size(), numeric_limits<long>::max());
     for (size_t x = 0; x < P.size(); x++)
         (x % 2 ? oddP : evenP)[x] = P[x];
+    /*
+    Same parity: the evenP / oddP tables
+
+    A substring s[i..j) needs j − i even, so i and j need the same parity. The code builds a second and third table over copies of P with the positions of the other parity set to ∞ (LONG_MAX):
+
+    oddP:                inf   -1  inf    1  inf   -1  inf    1
+
+    A position holding ∞ is never the minimum and never ≤ any bound. So every lookup in oddP effectively only sees the odd positions.
+    */
     SparseTable<long> lowest(P), sameParity[2] = { SparseTable(evenP), SparseTable(oddP) };
-        /*
-         * The “allowed P at the other end”, or LONG_MIN if this end alone costs more than k flips.
-         * This end has `unmatched` brackets, costing ⌈unmatched / 2⌉. The other end has the remaining flips: at most 2 * remainingFlips unmatched,
-         * and if `unmatched` is odd, the other end's is odd too, because the length is even: at most 2 * remainingFlips - 1.
-         * The other end's unmatched count is P - m, so P <= m + 2 * remainingFlips - (unmatched odd).
-         */
+    /*
+    * The “allowed P at the other end”, or LONG_MIN if this end alone costs more than k flips.
+    * This end has `unmatched` brackets, costing ⌈unmatched / 2⌉. The other end has the remaining flips: at most 2 * remainingFlips unmatched,
+    * and if `unmatched` is odd, the other end's is odd too, because the length is even: at most 2 * remainingFlips - 1.
+    * The other end's unmatched count is P - m, so P <= m + 2 * remainingFlips - (unmatched odd).
+    */
     auto allowed = [k](long m, long unmatched) {
         long remainingFlips = (long)k - (unmatched / 2 + unmatched % 2);
         return remainingFlips < 0 ? numeric_limits<long>::min() : m + 2 * remainingFlips - unmatched % 2;
