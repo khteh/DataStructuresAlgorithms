@@ -1,5 +1,6 @@
 #pragma once
 #include <concepts>
+#include <functional>
 #include <type_traits>
 using namespace std;
 #ifdef __SIZEOF_INT128__
@@ -42,3 +43,23 @@ concept is_128_bits = is_num_bits<T, 128>;
 // You can add more sizes, e.g. 64 bits:
 template <typename T>
 concept is_64_bits = is_num_bits<T, 64>;
+
+/*
+ * A comparator that is a strict weak ordering of T: Compare(a, b) is true when a is strictly before / better than b.
+ * strict_weak_order only checks that Compare can be called with two Ts and returns something usable as bool. The rest
+ * (Compare(a, a) is false, Compare(a, b) and Compare(b, a) are never both true, ...) are semantic requirements no compiler can check.
+ * So the standard comparators known not to be strict are rejected by name: they return true for Compare(a, a).
+ * Callers that take other comparators should still check Compare(a, a) is false at runtime, as SparseTable does.
+ */
+template <typename Compare>
+inline constexpr bool NonStrictComparator = false;
+template <typename T>
+inline constexpr bool NonStrictComparator<less_equal<T>> = true; // Including less_equal<> (T = void)
+template <typename T>
+inline constexpr bool NonStrictComparator<greater_equal<T>> = true;
+template <>
+inline constexpr bool NonStrictComparator<ranges::less_equal> = true;
+template <>
+inline constexpr bool NonStrictComparator<ranges::greater_equal> = true;
+template <typename Compare, typename T>
+concept StrictComparator = strict_weak_order<Compare, T const&, T const&> && !NonStrictComparator<remove_cvref_t<Compare>>;

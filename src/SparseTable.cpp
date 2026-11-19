@@ -9,6 +9,11 @@ template class SparseTable<double, less<double>>;
 template class SparseTable<double, greater<double>>;
 template class SparseTable<string, less<string>>;
 template class SparseTable<string, greater<string>>;
+// Any comparator at runtime, including lambdas: SparseTable<T, function<bool(T const&, T const&)>>
+template class SparseTable<int64_t, function<bool(int64_t const&, int64_t const&)>>;
+template class SparseTable<uint64_t, function<bool(uint64_t const&, uint64_t const&)>>;
+template class SparseTable<double, function<bool(double const&, double const&)>>;
+template class SparseTable<string, function<bool(string const&, string const&)>>;
 #ifdef __SIZEOF_INT128__
 template class SparseTable<int128_t, less<int128_t>>;
 template class SparseTable<int128_t, greater<int128_t>>;
@@ -43,23 +48,63 @@ Its right half 4 … 5 has its minimum at level 1[4] = 5 (P = −1).
 
 A “−” means the block would run past the end. There are log₂ N rows of N entries, so building the table takes O(N log N) time and memory, once.
 
+The constructor rejects any comparator for which Compare(a, a) is true.
+Compare(a, a) true means a non-strict comparator such as a <= b, which would turn ties into wins and LeftMost / RightMost's "at least as good as the bound" into "strictly better".
+This refers to what a non-strict comparator such as less_equal would do to the two places in SparseTable that call _compare. “At least as good as the bound” and “strictly better” differ only in whether a value equal to the bound counts.
+1. LeftMost and RightMost: “at least as good as the bound” vs “strictly better”
+Both decide whether a position qualifies with this test:
+
+!_compare(bound, value) // the bound is not strictly better than the value
+
+What that means depends on the comparator:
+
+Comparator	            !_compare(bound, value)	            In words	                                Does value == bound qualify?
+less (strict)	        !(bound < value) → value <= bound	the value is at least as good as the bound	yes
+less_equal (non-strict)	!(bound <= value) → value < bound	the value is strictly better than the bound	no
+
+With less, “good” means small, so “at least as good as 2” is ≤ 2 and “strictly better than 2” is < 2. A non-strict comparator therefore silently drops every value that equals the bound.
+
+Example: values = {5, 2, 8, 2, 9, 1, 7} and LeftMost(0, 6, 2), the first value that’s at most 2:
+- With less: position 1, the first 2.
+- With less_equal: position 5, the 1, because both 2s now fail the test.
+
+In the bracket problem this is the difference between right and wrong. The bound is the largest P allowed at the other end, and the best end often sits exactly on it. In ((() with K = 0, the () is found only because P[4] = 2 equals the bound 2.
+
+2. _betterOf: “turn ties into wins”
+_betterOf picks the right-hand position only if its value is strictly better:
+
+_compare(_values[right], _values[left]) ? right : left
+
+- With less: on equal values, right < left is false, so the left position is kept. This is the leftmost-tie guarantee.
+- With less_equal: on equal values, right <= left is true. An equal value now counts as a win for the right position, so Index returns the rightmost tie.
+
+So a non-strict comparator breaks both places at once:
+
+Index quietly changes from leftmost to rightmost.
+LeftMost and RightMost stop accepting values equal to the bound.
+
 */
-template <typename T, typename Compare>
-    requires strict_weak_order<Compare, T const&, T const&>
-SparseTable<T, Compare>::SparseTable(vector<T> const& v, Compare better)
-    : _values(v), _table(bit_width(v.size()), vector<size_t>(v.size())), _compare(better)
+template <typename T, StrictComparator<T> Compare>
+SparseTable<T, Compare>::SparseTable(vector<T> const& v, Compare better, SparseTableTie tie)
+    : _values(v), _table(bit_width(v.size()), vector<size_t>(v.size())), _compare(better), _tie(tie)
 {
+    // A strict ordering never puts a value before itself. Compare(a, a) true means a non-strict comparator such as a <= b, which would
+    // turn ties into wins and LeftMost / RightMost's "at least as good as the bound" into "strictly better". O(N), against the O(N log N) build
+    for (T const& value : _values)
+        if (_compare(value, value))
+            throw invalid_argument("SparseTable: Compare must be a strict ordering, but Compare(a, a) is true");
     iota(_table[0].begin(), _table[0].end(), 0); // A block of 1: each position is its own best
     for (size_t level = 1; level < _table.size(); level++)
         for (size_t x = 0; x + (1UL << level) <= _values.size(); x++) // The best of a block of 2^level is the better of its two halves
             _table[level][x] = _betterOf(_table[level - 1][x], _table[level - 1][x + (1UL << (level - 1))]);
 }
-// The better of positions left < right; on a tie, left, so that the leftmost best wins
-template <typename T, typename Compare>
-    requires strict_weak_order<Compare, T const&, T const&>
+// The better of positions left <= right; on a tie, left (the default, so that the leftmost best wins) or right (SparseTableTie::Rightmost)
+template <typename T, StrictComparator<T> Compare>
 size_t SparseTable<T, Compare>::_betterOf(size_t left, size_t right) const
 {
-    return _compare(_values[right], _values[left]) ? right : left;
+    // On a tie (neither value strictly better), left for SparseTableTie::Leftmost, right for SparseTableTie::Rightmost.
+    // Index() relies on left <= right: on a tie, the second block's answer is then the overall rightmost, just as the first block's is the leftmost
+    return (_compare(_values[right], _values[left]) || (_tie == SparseTableTie::Rightmost && !_compare(_values[left], _values[right]))) ? right : left;
 }
 /*
 Position of the leftmost best value in [l, r].
@@ -88,23 +133,21 @@ SparseTable<string>	                    {"pear", "apple", "zebra", "apple"}	1	  
 Any range l … r is covered by two blocks of the same power-of-two size: one starting at l, one ending at r. The size is the largest power of two that fits in the range.
 The two blocks may overlap, but that’s harmless: counting the same position twice doesn’t change the minimum. So a lookup is just two table entries and one comparison:
 
-Query	Length → block size	Block from l	Block ending at r	Lowest point
-Index(0, 7)	8 → 8	0 … 7: position 1 (P = −1)	the same block	1
-Index(2, 7)	6 → 4	2 … 5: position 5 (P = −1)	4 … 7: position 5 (P = −1)	5
-Index(2, 4)	3 → 2	2 … 3: position 2 (P = 0)	3 … 4: position 4 (P = 0)	2 (tie: the leftmost wins)
+Query	    Length → block size	Block from l	            Block ending at r	        Lowest point
+Index(0, 7)	8 → 8	            0 … 7: position 1 (P = −1)	the same block	            1
+Index(2, 7)	6 → 4	            2 … 5: position 5 (P = −1)	4 … 7: position 5 (P = −1)	5
+Index(2, 4)	3 → 2	            2 … 3: position 2 (P = 0)	3 … 4: position 4 (P = 0)	2 (tie: the leftmost wins)
 
 These match the earlier divide-and-conquer trace: the whole range split at t = 1, and range 2 … 7 split at t = 5.
 */
 // [l, r] is covered by two blocks of the largest power of two that fits: [l, l + 2^level) and (r - 2^level, r], which may overlap
-template <typename T, typename Compare>
-    requires strict_weak_order<Compare, T const&, T const&>
+template <typename T, StrictComparator<T> Compare>
 size_t SparseTable<T, Compare>::Index(size_t l, size_t r) const
 {
     size_t level = bit_width(r - l + 1) - 1;
     return _betterOf(_table[level][l], _table[level][r - (1UL << level) + 1]);
 }
-template <typename T, typename Compare>
-    requires strict_weak_order<Compare, T const&, T const&>
+template <typename T, StrictComparator<T> Compare>
 T const& SparseTable<T, Compare>::Best(size_t l, size_t r) const
 {
     // The best value in [l, r]: the minimum for less<T>, the maximum for greater<T>
@@ -115,8 +158,7 @@ T const& SparseTable<T, Compare>::Best(size_t l, size_t r) const
  * For less<T>: the first value <= bound. For greater<T>: the first value >= bound.
  * Binary search: Best(l, x) is at least as good as the bound for every x from the answer on.
  */
-template <typename T, typename Compare>
-    requires strict_weak_order<Compare, T const&, T const&>
+template <typename T, StrictComparator<T> Compare>
 long SparseTable<T, Compare>::LeftMost(long l, long r, T const& bound) const
 {
     if (_compare(bound, Best(l, r)))
@@ -145,9 +187,19 @@ l … r	mid	min of oddP[mid … r]	≤ 1?	Next
 The answer is j = 7: the substring s[1..7) = (())((, length 6, which is the answer for this string. That took 3 steps instead of scanning 7 positions. LeftMost is the mirror image: it searches for the smallest x, testing min of values[l … mid].
  * The largest x in [l, r] whose value is at least as good as the bound, or -1.
  * Binary search: Best(x, r) is at least as good as the bound for every x up to the answer.
+ *
+ * SparseTableTie::Rightmost gives you the rightmost tie from Index deliberately. It does that without the LeftMost/RightMost breakage that less_equal would bring along with it:
+ *                              Index on ties	LeftMost / RightMost with a value equal to the bound
+less, default Leftmost	        leftmost	    qualifies ✓
+less, SparseTableTie::Rightmost	rightmost	    qualifies ✓
+less_equal (now rejected)	    rightmost	    doesn’t qualify ✗
+
+With values = {5, 2, 8, 2, 9, 1, 7}:
+
+SparseTable<long>(values, {}, SparseTableTie::Rightmost): Index(0, 4) returns 3, the second 2, and LeftMost(0, 6, 2) still returns 1.
+A less_equal table, if it were allowed: it would also return 3 from Index, but LeftMost would return 5.
  */
-template <typename T, typename Compare>
-    requires strict_weak_order<Compare, T const&, T const&>
+template <typename T, StrictComparator<T> Compare>
 long SparseTable<T, Compare>::RightMost(long l, long r, T const& bound) const
 {
     if (_compare(bound, Best(l, r)))

@@ -174,7 +174,6 @@ void String::WordsLadder(string const& start, string const& stop, set<string>& d
         dictionary.erase(w);
         permutation.GetPermutations(w, dictionary, permutations);
         for (set<string>::const_iterator it = permutations.begin(); it != permutations.end(); it++)
-        {
             if (*it == stop)
             { // LIKE
                 // Found our word! Now backtrack to record all the single-character change from 'start' to 'stop'
@@ -193,7 +192,6 @@ void String::WordsLadder(string const& start, string const& stop, set<string>& d
                 visited.insert(*it);
                 backtrack[*it] = w; // Key: later; Value: earlier
             }
-        }
     }
 }
 /*
