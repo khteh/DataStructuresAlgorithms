@@ -720,7 +720,10 @@ int main(int argc, char* argv[])
 	assert(LongestValidParenthesesWithFixes(string("((("), 0) == 0);
 	assert(LongestValidParenthesesWithFixes(string("((("), 1) == 2);
 
-	assert(search.LongestValidParenthesesWithFixes(string("("), 0) == 0);
+	assert(search.LongestValidParenthesesWithFixes(string("("), 1) == 0);
+	assert(search.LongestValidParenthesesWithFixes(string(")"), 1) == 0);
+	assert(search.LongestValidParenthesesWithFixes(string(")("), 1) == 0);
+	assert(search.LongestValidParenthesesWithFixes(string(")("), 2) == 2);
 	assert(search.LongestValidParenthesesWithFixes(string(")((()"), 4) == 4);
 	assert(search.LongestValidParenthesesWithFixes(string("((()"), 0) == 2);
 	assert(search.LongestValidParenthesesWithFixes(string("())()"), 0) == 2);

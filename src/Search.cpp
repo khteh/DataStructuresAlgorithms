@@ -962,12 +962,38 @@ Match brackets greedily from left to right, as in the usual stack check. Whateve
 You flip half of the )s to ( and half of the (s to ). For example, "))))" needs 2 flips, giving "()()".
 If a is odd, b is odd too, because the length is even, and the middle ")(" costs 2.
 So the task becomes: find the longest even-length substring with ⌈a/2⌉ + ⌈b/2⌉ ≤ K.
+x:       0  1  2  (k = 1)
+bracket:  )  (
+P[x]     0 -1  0
+t:1 m:-1, a = P[0] - m = 0 - -1 = 1 startCost = 1, remainingFlips = k - 1 = 0 result: str[0,2]
+     start:0 end:2 leftSize=1 rightSize=1
+t:0 m:0 start:0 end:0
+t:2 m:0 start:2 end:2
+
 x:       0  1  2  (k = 2)
 bracket:  )  (
 P[x]     0 -1  0
 t: 1, m = -1, a = P[0] - m = 0 - -1 = 1 startCost = 1, remainingFlips = k - 1 = 1
-              b = 1 * 2 = 2 -> 1 (If a is odd, b is odd too, because the length is even)
+              b = 2 * 1 = 2 -> 1 (If a is odd, b is odd too, because the length is even)
      result: str[0,1]
+start:0 end:2 leftSize=1 rightSize=1
+
+((() (k=0)
+x:       0  1  2  3  4 (k = 0)
+bracket:  (  (  (   )
+P[x]     0  1  2  3  2
+t:0 m:0 start:0 end:4 leftSize=0 rightSize=4
+t:1 m:1 start:1 end:4 leftSize=0 rightSize=3
+t:2 m:2 start:2 end:4 leftSize=0 rightSize=3
+t:4 m:2 start:3 end:4 leftSize=1 rightSize=0
+    b = P[4] - m = 2 - 2 = 0 startCost = 0, remainingFlips = k - 0 = 0
+    result: str[3,4]
+
+Range of positions	Lowest point t	Best substring found through t
+0 … 4	            0 (P = 0)	    s[1..7) = (())((, length 6
+2 … 7	            5 (P = −1)	    )) or ((, length 2
+2 … 4	            2 (P = 0)	    (), length 2
+6 … 7, 3 … 4	    6, 4	        nothing longer
 */
 size_t Search::_BinarySearchLongestValidParenthesesWithFixes(size_t k, vector<long> const& P, long start, long end)
 {
@@ -976,7 +1002,8 @@ size_t Search::_BinarySearchLongestValidParenthesesWithFixes(size_t k, vector<lo
         return 0;
     vector<long>::const_iterator lowestIt = min_element(P.begin() + start, P.begin() + end + 1);
     if (lowestIt != P.begin() + end + 1) {
-        size_t t = distance(P.begin() + start, lowestIt);
+        //size_t t = distance(P.begin() + start, lowestIt);
+        size_t t = distance(P.begin(), lowestIt);
         long m = *lowestIt;
         size_t leftSize = t - start, rightSize = end - t;
         // Loop over the smaller side
@@ -1002,7 +1029,7 @@ size_t Search::_BinarySearchLongestValidParenthesesWithFixes(size_t k, vector<lo
                 result = max<size_t>(result, j - i + 1);
             }
         else
-            for (size_t j = t + 1; j <= end; j++) {
+            for (size_t j = t; j <= end; j++) {
                 long b = P[j] - m;
                 long startCost = b / 2 + b % 2, remainingFlips = k - startCost;
                 size_t i = start;
@@ -1071,10 +1098,10 @@ Point 3: repeat on each side. Substrings that don’t contain t = 1 lie entirely
 The full trace finds 6 as the longest, which matches the brute force:
 
 Range of positions	Lowest point t	Best substring found through t
-0 … 7	1 (P = −1)	s[1..7) = (())((, length 6
-2 … 7	5 (P = −1)	)) or ((, length 2
-2 … 4	2 (P = 0)	(), length 2
-6 … 7, 3 … 4	6, 4	nothing longer
+0 … 7	            1 (P = −1)	    s[1..7) = (())((, length 6
+2 … 7	            5 (P = −1)	    )) or ((, length 2
+2 … 4	            2 (P = 0)	    (), length 2
+6 … 7, 3 … 4	    6, 4	        nothing longer
 
 Every substring is checked exactly once: in the first range that contains it whose split point t falls inside it. At that point t is its lowest point, so its m is P[t].
 
@@ -1082,12 +1109,13 @@ WIP: Using recursive algorithm hits stack overflow.
  */
 size_t Search::LongestValidParenthesesWithFixes(string const& str, size_t k)
 {
-    if (str.empty())
+    if (str.size() < 2)
         return 0;
     if (k >= str.size() - str.size() % 2)
         return str.size() - str.size() % 2;
-    vector<long> P(str.size() + 1, 0);
-    for (size_t i = 0; i < str.size(); i++)
-        P[i + 1] = (str[i] == ')' ? P[i] - 1 : P[i] + 1);
+    vector<long> P;
+    P.push_back(0);
+    for (char c : str)
+        P.push_back(c == ')' ? P.back() - 1 : P.back() + 1);
     return _BinarySearchLongestValidParenthesesWithFixes(k, P, 0, P.size() - 1);
 }
