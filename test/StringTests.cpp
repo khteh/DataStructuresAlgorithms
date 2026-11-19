@@ -265,7 +265,36 @@ INSTANTIATE_TEST_SUITE_P(
     LongestValidParenthesesTests,
     LongestValidParenthesesTestFixture,
     ::testing::Values(make_tuple(0, "("), make_tuple(2, "((()"), make_tuple(2, "())()"), make_tuple(2, "()(()"), make_tuple(4, ")()())"), make_tuple(6, "()(()))))"), make_tuple(0, ")))((("), make_tuple(4, ")()()(((()"), make_tuple(2, "))()(()(()"), make_tuple(6, ")())((()))"), make_tuple(8, "(()))))(()((()))")));
+class LongestValidParenthesesWithFixesTestFixture : public testing::TestWithParam<tuple<size_t, string, size_t>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _data = get<1>(GetParam());
+        _k = get<2>(GetParam());
+    }
+    size_t LongestValidParenthesesWithFixesTest()
+    {
+        return _strObj.LongestValidParenthesesWithFixes(_data, _k);
+    }
 
+protected:
+    String _strObj;
+    size_t _expected, _k;
+    string _data;
+};
+TEST_P(LongestValidParenthesesWithFixesTestFixture, LongestValidParenthesesWithFixesTests)
+{
+    ASSERT_EQ(this->_expected, this->LongestValidParenthesesWithFixesTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    LongestValidParenthesesWithFixesTests,
+    LongestValidParenthesesWithFixesTestFixture,
+    ::testing::Values(make_tuple(0, "(", 1), make_tuple(0, ")", 1), make_tuple(0, ")(", 1), make_tuple(2, ")(", 2), make_tuple(4, ")((()", 4), make_tuple(2, "((()", 0),
+        make_tuple(2, "())()", 0), make_tuple(2, "()(()", 0), make_tuple(4, ")()())", 0), make_tuple(6, "()(()))))", 0), make_tuple(0, ")))(((", 0), make_tuple(4, ")()()(((()", 0),
+        make_tuple(2, "))()(()(()", 0), make_tuple(6, ")())((()))", 0), make_tuple(8, "(()))))(()((()))", 0), make_tuple(6, ")()()(", 3), make_tuple(4, ")))(((", 2), make_tuple(0, ")))((", 0),
+        make_tuple(0, "(((", 0), make_tuple(2, "(((", 1)));
 class CipherChallengeTestFixture : public testing::TestWithParam<tuple<string, size_t, size_t, string>>
 {
 public:
@@ -415,11 +444,11 @@ INSTANTIATE_TEST_SUITE_P(
     WordBreakDFSTests,
     WordBreakDFSFixture,
     ::testing::Values(make_tuple(vector<string>{"Hello World"}, "HelloWorld", set<string>{"Hello", "World"}),
-                      make_tuple(vector<string>{}, "catsandog", set<string>{"cats", "dog", "sand", "and", "cat"}),
-                      make_tuple(vector<string>{"cat sand dog", "cats and dog"}, "catsanddog", set<string>{"cats", "dog", "sand", "and", "cat"}),
-                      make_tuple(vector<string>{"cat and dog"}, "catanddog", set<string>{"cats", "dog", "sand", "and", "cat"}),
-                      make_tuple(vector<string>{"apple pen apple"}, "applepenapple", set<string>{"apple", "pen"}),
-                      make_tuple(vector<string>{"aaa aaaa", "aaaa aaa"}, "aaaaaaa", set<string>{"aaaa", "aaa"})));
+        make_tuple(vector<string>{}, "catsandog", set<string>{"cats", "dog", "sand", "and", "cat"}),
+        make_tuple(vector<string>{"cat sand dog", "cats and dog"}, "catsanddog", set<string>{"cats", "dog", "sand", "and", "cat"}),
+        make_tuple(vector<string>{"cat and dog"}, "catanddog", set<string>{"cats", "dog", "sand", "and", "cat"}),
+        make_tuple(vector<string>{"apple pen apple"}, "applepenapple", set<string>{"apple", "pen"}),
+        make_tuple(vector<string>{"aaa aaaa", "aaaa aaa"}, "aaaaaaa", set<string>{"aaaa", "aaa"})));
 
 class HappyLadyBugsChallengeTestFixture : public StringTestFixture<bool, string>, public testing::TestWithParam<tuple<bool, string>>
 {
@@ -726,8 +755,8 @@ INSTANTIATE_TEST_SUITE_P(
     MaxProductOfNonOverlappingWordLengthsTests,
     MaxProductOfNonOverlappingWordLengthsTestFixture,
     ::testing::Values(make_tuple(16, vector<string>{"abcw", "baz", "foo", "bar", "xtfn", "abcdef"}), // "abcw", "xtfn"
-                      make_tuple(4, vector<string>{"a", "ab", "abc", "d", "cd", "bcd", "abcd"}),     // "ab", "cd"
-                      make_tuple(0, vector<string>{"a", "aa", "aaa", "aaaa"})));
+        make_tuple(4, vector<string>{"a", "ab", "abc", "d", "cd", "bcd", "abcd"}),     // "ab", "cd"
+        make_tuple(0, vector<string>{"a", "aa", "aaa", "aaaa"})));
 class LongestCommonPrefixTestFixture : public StringTestFixture<string, vector<string>>, public testing::TestWithParam<tuple<string, vector<string>>>
 {
 public:

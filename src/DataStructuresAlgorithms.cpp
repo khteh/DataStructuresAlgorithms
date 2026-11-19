@@ -863,75 +863,6 @@ long ConsecutiveMaximumSumOfFactors(vector<zerofactors_t>& data, vector<zerofact
 		result.assign(start, end + 1);
 	return max_so_far;
 }
-/* https://app.codility.com/programmers/task/brackets_rotation/
- * WIP!
- */
-long LongestValidParenthesesWithFixes(string const& str, size_t k)
-{
-	stack<long> stack;
-	long start = -1, end = -1;
-	stack.push(-1); // The first element of stack is used to provide base for next valid string
-	long result = 0;
-	for (size_t i = 0; i < str.size(); i++)
-	{
-		if (str[i] == '(')
-			stack.push(i);
-		else if (str[i] == ')')
-		{
-			stack.pop(); // Remove the last matching opening bracket or -1
-			if (!stack.empty() && (long)(i - stack.top()) > result)
-			{
-				result = i - stack.top();
-				start = stack.top() + 1;
-				end = i;
-			}
-			else if (stack.empty())
-				stack.push(i);
-		}
-	}
-	long* stackEnd = &stack.top() + 1;
-	long* stackBegin = stackEnd - stack.size();
-	vector<long> list(stackBegin, stackEnd);
-	// The algorithm implemented is based on reverse-engineering of the result sets obtained from the remaining stack elements after the for loop above.
-	if (!k || list.empty() || (list.size() == 1 && list[0] == -1))
-		return result;
-	if (!result)
-	{
-		if (list[0] == -1 || list.size() == 1)
-		{
-			result = !(list[0] % 2) ? list[0] : list[0] + 1;
-			result = list.size() == str.size() + 1 && str.size() > 1 ? 2 : min<long>(k, result / 2) * 2;
-		}
-		else
-		{
-			size_t size = list.size();
-			if (list[0] == -1)
-				size--; // remove -1
-						// if (list[0] != 0) {
-			result = !(size % 2) ? size : size - 1;
-			if ((!list[0] && (long)k > (result / 2)) || (list[0] && (long)k >= (result / 2)))
-				result = min<long>(k * 2, result);
-			else
-				result = 0;
-		}
-	}
-	else if (list.size() == 1 && list[0] != -1)
-	{
-		if ((list[0] > end && start > 0) || (list[0] < start && list[0] > 0))
-		{
-			k--;
-			result += 2;
-		}
-	}
-	else
-	{
-		size_t size = list.size();
-		if (list[0] == -1)
-			size--;
-		result += min(k, size / 2 + size % 2) * 2;
-	}
-	return result;
-}
 bool JSONValidation(string json)
 {
 	size_t keyCount = 0, valueCount = 0, leftBraceCount = 0, rightBraceCount = 0;
@@ -2788,7 +2719,7 @@ vector<string> ZigZagEscape(vector<long>& left, vector<long>& right, size_t lInd
 				oss.str("");
 			}
 		}
-	}
+}
 	else if (right.size())
 		for (; rIndex < right.size(); rIndex++)
 			if (right[rIndex] > current)

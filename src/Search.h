@@ -3,7 +3,6 @@ template <typename T>
 constexpr T BinomialCoefficients(size_t, size_t);
 template <typename T>
 constexpr T ceil_div(T, T);
-
 class Search
 {
 private:
@@ -16,7 +15,6 @@ private:
     bool _HasKthSmallestPairs(vector<size_t>&, size_t, size_t);
     bool _HasNUglyNumbers(size_t, uint64_t, uint64_t, uint64_t, uint64_t);
     bool _WithinThreshold(vector<size_t> const&, size_t, size_t);
-    size_t _BinarySearchLongestValidParenthesesWithFixes(size_t, vector<long> const&, long, long);
 
 public:
     void KMPSearch(string const&, string const&, vector<size_t>&);
@@ -36,5 +34,4 @@ public:
     int SmallestDistancePair(vector<size_t>&, size_t);
     size_t NthUglyNumber(size_t, size_t, size_t, size_t);
     size_t SmallestDivisor(vector<size_t> const&, size_t);
-    size_t LongestValidParenthesesWithFixes(string const&, size_t);
 };

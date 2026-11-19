@@ -700,49 +700,6 @@ int main(int argc, char* argv[])
 	a.clear();
 	a = { 1, 1 };
 	assert(minDiffPairs(a, 1) == 0);
-
-	assert(LongestValidParenthesesWithFixes(string("("), 0) == 0);
-	assert(LongestValidParenthesesWithFixes(string("((()"), 0) == 2);
-	assert(LongestValidParenthesesWithFixes(string("())()"), 0) == 2);
-	assert(LongestValidParenthesesWithFixes(string("()(()"), 0) == 2);
-	assert(LongestValidParenthesesWithFixes(string(")()())"), 0) == 4);
-	assert(LongestValidParenthesesWithFixes(string("()(()))))"), 0) == 6);
-	assert(LongestValidParenthesesWithFixes(string(")))((("), 0) == 0);
-	assert(LongestValidParenthesesWithFixes(string(")()()(((()"), 0) == 4);
-	assert(LongestValidParenthesesWithFixes(string("))()(()(()"), 0) == 2);
-	assert(LongestValidParenthesesWithFixes(string(")())((()))"), 0) == 6);
-	assert(LongestValidParenthesesWithFixes(string("(()))))(()((()))"), 0) == 8);
-	assert(LongestValidParenthesesWithFixes(string(")()()("), 3) == 6);
-	assert(LongestValidParenthesesWithFixes(string(")))((("), 2) == 4);
-	assert(LongestValidParenthesesWithFixes(string(")))(("), 0) == 0);
-	assert(LongestValidParenthesesWithFixes(string(")("), 1) == 0);
-	assert(LongestValidParenthesesWithFixes(string(")("), 2) == 2);
-	assert(LongestValidParenthesesWithFixes(string("((("), 0) == 0);
-	assert(LongestValidParenthesesWithFixes(string("((("), 1) == 2);
-
-	assert(search.LongestValidParenthesesWithFixes(string("("), 1) == 0);
-	assert(search.LongestValidParenthesesWithFixes(string(")"), 1) == 0);
-	assert(search.LongestValidParenthesesWithFixes(string(")("), 1) == 0);
-	assert(search.LongestValidParenthesesWithFixes(string(")("), 2) == 2);
-	assert(search.LongestValidParenthesesWithFixes(string(")((()"), 4) == 4);
-	assert(search.LongestValidParenthesesWithFixes(string("((()"), 0) == 2);
-	assert(search.LongestValidParenthesesWithFixes(string("())()"), 0) == 2);
-	assert(search.LongestValidParenthesesWithFixes(string("()(()"), 0) == 2);
-	assert(search.LongestValidParenthesesWithFixes(string(")()())"), 0) == 4);
-	assert(search.LongestValidParenthesesWithFixes(string("()(()))))"), 0) == 6);
-	assert(search.LongestValidParenthesesWithFixes(string(")))((("), 0) == 0);
-	assert(search.LongestValidParenthesesWithFixes(string(")()()(((()"), 0) == 4);
-	assert(search.LongestValidParenthesesWithFixes(string("))()(()(()"), 0) == 2);
-	assert(search.LongestValidParenthesesWithFixes(string(")())((()))"), 0) == 6);
-	assert(search.LongestValidParenthesesWithFixes(string("(()))))(()((()))"), 0) == 8);
-	assert(search.LongestValidParenthesesWithFixes(string(")()()("), 3) == 6);
-	assert(search.LongestValidParenthesesWithFixes(string(")))((("), 2) == 4);
-	assert(search.LongestValidParenthesesWithFixes(string(")))(("), 0) == 0);
-	assert(search.LongestValidParenthesesWithFixes(string(")("), 1) == 0);
-	assert(search.LongestValidParenthesesWithFixes(string(")("), 2) == 2);
-	assert(search.LongestValidParenthesesWithFixes(string("((("), 0) == 0);
-	assert(search.LongestValidParenthesesWithFixes(string("((("), 1) == 2);
-
 	// Tower of Hanoi
 	cout << "Tower Of Hanoi recursive solution: " << endl;
 	vector<shared_ptr<Tower<size_t>>> towers;
