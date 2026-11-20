@@ -38,6 +38,7 @@
 #include "Range.h"
 #include "Search.h"
 #include "Singleton.h"
+#include "SlidingWindow.h"
 #include "Sort.h"
 #include "SparseTable.h"
 #include "Square.h"

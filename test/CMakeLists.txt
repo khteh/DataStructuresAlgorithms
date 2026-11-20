@@ -40,6 +40,7 @@ set(Sources
     "PrefixTrieTests.cpp"
     "QueueTests.cpp"
     "SearchTests.cpp"
+    "SlidingWindowTests.cpp"
     "SortTests.cpp"
     "SparseTableTests.cpp"
     "StackTests.cpp"

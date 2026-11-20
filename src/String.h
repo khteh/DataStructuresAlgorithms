@@ -53,8 +53,6 @@ public:
     size_t AlternateChars(string const&);
     size_t LengthOfLongestSubstring(string const&);
     size_t LengthOfLongestUniqueSubstring(string const&);
-    size_t LongestStringWithCharacterReplacement(string const&, size_t);
-    size_t SteadyGene(string const&);
     size_t MaxProductOfNonOverlappingWordLengths(vector<string> const&);
     string BuildLargestNumber(vector<size_t> const&);
     string Cipher(size_t, size_t, string const&);

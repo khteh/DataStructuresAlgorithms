@@ -165,6 +165,7 @@
     <ClInclude Include="Range.h" />
     <ClInclude Include="Search.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SlidingWindow.h" />
     <ClInclude Include="Sort.h" />
     <ClInclude Include="SparseTable.h" />
     <ClInclude Include="Square.h" />
@@ -212,6 +213,7 @@
     </ClCompile>
     <ClCompile Include="Permutation.cpp" />
     <ClCompile Include="Range.cpp" />
+    <ClCompile Include="SlidingWindow.cpp" />
     <ClCompile Include="Sort.cpp" />
     <ClCompile Include="Square.cpp" />
     <ClCompile Include="StringArithmetic.cpp" />

@@ -1329,53 +1329,6 @@ size_t Range::LiveMedianCalculation(size_t d, vector<size_t> const& data)
 	}
 	return count;
 }
-/*
- * https://leetcode.com/problems/sliding-window-maximum/
- * 100%
- * A sliding window needs monotonicity: if a window is fixable, so is a smaller one inside it.
- * Window position                Max
----------------               -----
-[1  3  -1] -3  5  3  6  7       3
- 1 [3  -1  -3] 5  3  6  7       3
- 1  3 [-1  -3  5] 3  6  7       5
- 1  3  -1 [-3  5  3] 6  7       5
- 1  3  -1  -3 [5  3  6] 7       6
- 1  3  -1  -3  5 [3  6  7]      7
-
- * [1,3,-1,-3,5,3,6,7], k:3
- * i:0 [1] window: [0]
- * i:1 [3] window: [1]
- * i:2 [3 -1] window: [1 2], result: [3]
- * i:3 [3 -1 -3] window: [1 2 3], result: [3 3]
- * i:4 [-1 -3] window: [2 3] => window: [2] => [5] window: [4] result: [3 3 5]
- * i:5 [5 3] => window: [4 5], result: [3 3 5 5]
- * i:6 [6] => window: [6], result: [3 3 5 5 6]
- * i:7 [7] => window: [7], result: [3 3 5 5 6 7]
- *
- * [7,2,4], k:2
- * i:0 [7]
- * i:1 [7 2] => result: [7]
- * i:2 [4] => result: [7 4]
- *
- * [1 -1], k:1
- * i:0 [1] => result: [1]
- * i:1 [-1] => reulst: [1 -1]
- */
-void Range::MaxSlidingWindow(vector<long> const& data, size_t k, vector<long>& result)
-{
-	deque<long> window;
-	for (long i = 0; i < data.size(); i++)
-	{
-		if (!window.empty() && window.front() == (i - k))
-			window.pop_front();
-		for (; !window.empty() && data[window.back()] < data[i]; window.pop_back())
-			;
-		window.push_back(i);
-		if (i >= (k - 1) && !window.empty())
-			result.push_back(data[window.front()]);
-	}
-}
-
 /* https://www.hackerrank.com/challenges/xor-quadruples/problem
  * https://www.hackerrank.com/challenges/xor-quadruples/editorial
  * Time out using conventional 4 for loops due to O(N^3)
@@ -1659,84 +1612,6 @@ int64_t Range::MaxSumTrionic(vector<long> const& data)
 		b = b1;
 		c = c1;
 		result = max(result, c);
-	}
-	return result;
-}
-/*
- * https://leetcode.com/problems/fruit-into-baskets/description/
- * 100%
- * A sliding window needs monotonicity: if a window is fixable, so is a smaller one inside it.
- * Sliding Window approach.
- *
- * [1] 2 1
- * basket[1]: 1
- *
- * 1 [2] 1
- * basket[1]: 1
- * basket[2]: 1
- *
- * 1 2 [1]
- * basket[1]: 2
- * basket[2]: 1
- *
- * ================================
- * [0] 1 2 2
- * basket[0]: 1
- *
- * 0 [1] 2 2
- * basket[0]: 1
- * basket[1]: 1
- *
- * 0 1 [2] 2
- * basket[0]: 0 i:1
- * basket[1]: 1
- * basket[2]: 1
- *
- * 0 1 2 [2]
- * basket[0]: 0 i:1
- * basket[1]: 1
- * basket[2]: 2 j:3 result: j - i + 1 = 3
- *
- * =====================================
- * [1] 2 3 2 2
- * basket[1]: 1
- *
- * 1 [2] 3 2 2
- * basket[1]: 1
- * basket[2]: 1
- *
- * 1 2 [3] 2 2
- * basket[1]: 0 i:1
- * basket[2]: 1
- * basket[3]: 1
- *
- * 1 2 3 [2] 2
- * basket[1]: 0 i:1
- * basket[2]: 2 j:3
- * basket[3]: 1
- *
- * 1 2 3 2 [2]
- * basket[1]: 0 i:1
- * basket[2]: 3 j:4 result: j - i + 1 = 4
- * basket[3]: 1
- *
- * ====================================
- * 1 1 0 2 2 2
- * basket[1]: 0 i:2
- * basket[0]: 1
- * basket[2]: 3 j:5 result: j - i + 1 = 4
- */
-size_t Range::MaxHarvest(vector<size_t> const& fruits, size_t n)
-{
-	map<size_t, size_t> count;
-	size_t result = 0;
-	for (size_t i = 0, j = 0; i < fruits.size() && j < fruits.size(); j++)
-	{
-		count[fruits[j]]++;
-		for (; count.size() > n && i < j; i++)
-			if (!--count[fruits[i]])
-				count.erase(fruits[i]);
-		result = max(result, j - i + 1);
 	}
 	return result;
 }

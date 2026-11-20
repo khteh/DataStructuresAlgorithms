@@ -496,53 +496,6 @@ INSTANTIATE_TEST_SUITE_P(
     GetHintChallengeTests,
     GetHintChallengeTestFixture,
     ::testing::Values(make_tuple("2A2B", "6244988279", "3819888600"), make_tuple("1A3B", "1807", "7810"), make_tuple("1A1B", "1123", "0111")));
-class SteadyGeneChallengeTestFixture : public StringTestFixture<size_t, string>, public testing::TestWithParam<tuple<size_t, string>>
-{
-public:
-    void SetUp() override
-    {
-        StringTestFixture::SetUp(get<0>(GetParam()), get<1>(GetParam()));
-    }
-    size_t SteadyGeneChallengeTest()
-    {
-        return _strObj.SteadyGene(_var1);
-    }
-};
-TEST_P(SteadyGeneChallengeTestFixture, SteadyGeneChallengeTests)
-{
-    ASSERT_EQ(this->_expected, this->SteadyGeneChallengeTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-    SteadyGeneChallengeTests,
-    SteadyGeneChallengeTestFixture,
-    ::testing::Values(make_tuple(1, "ACGTCCGT"), make_tuple(0, "AAGTGCCT"), make_tuple(2, "ACTGAAAG"), make_tuple(5, "GAAATAAA"), make_tuple(5, "TGATGCCGTCCCCTCAACTTGAGTGCTCCTAATGCGTTGC")));
-class LongestStringWithCharacterReplacementTestFixture : public testing::TestWithParam<tuple<size_t, string, size_t>>
-{
-public:
-    void SetUp() override
-    {
-        _expected = get<0>(GetParam());
-        _string = get<1>(GetParam());
-        _k = get<2>(GetParam());
-    }
-    size_t LongestStringWithCharacterReplacementTest()
-    {
-        return _strObj.LongestStringWithCharacterReplacement(_string, _k);
-    }
-
-protected:
-    String _strObj;
-    size_t _expected, _k;
-    string _string;
-};
-TEST_P(LongestStringWithCharacterReplacementTestFixture, LongestStringWithCharacterReplacementTests)
-{
-    ASSERT_EQ(this->_expected, this->LongestStringWithCharacterReplacementTest());
-}
-INSTANTIATE_TEST_SUITE_P(
-    LongestStringWithCharacterReplacementTests,
-    LongestStringWithCharacterReplacementTestFixture,
-    ::testing::Values(make_tuple(4, "ABAB", 2), make_tuple(4, "AABABBA", 1), make_tuple(4, "ACTGAAAG", 1), make_tuple(7, "GAAATAAA", 1)));
 class LongestMatchingWordWithDeletionTestFixture : public testing::TestWithParam<tuple<string, string, set<string>>>
 {
 public:
