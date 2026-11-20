@@ -49,6 +49,7 @@ public:
     bool HappyLadyBugs(string const&);
     long BasicCalculator(string const&);
     long LongestValidParentheses(string const&);
+    size_t LongestValidParenthesesWithFixes(string const&, size_t);
     size_t AlternateChars(string const&);
     size_t LengthOfLongestSubstring(string const&);
     size_t LengthOfLongestUniqueSubstring(string const&);
@@ -69,5 +70,4 @@ public:
     string LongestCommonPrefix(vector<string> const&);
     vector<string> WordBreakDFS(string const&, set<string> const&);
     vector<bool> WeightedUniformStrings(string const&, vector<size_t> const&);
-    size_t LongestValidParenthesesWithFixes(string const&, size_t);
 };

@@ -103,6 +103,340 @@ long String::LongestValidParentheses(string const& str)
     }
     return result;
 }
+/* https://app.codility.com/programmers/task/brackets_rotation/
+ * Divide and conquer on the minimum prefix balance.
+The key fact: the cost of one substring
+Match brackets greedily from left to right, as in the usual stack check. Whatever stays unmatched always looks like )))…(((: a unmatched ) followed by b unmatched (. The fewest flips that make the substring valid is then:
+⌈a/2⌉ + ⌈b/2⌉ (and the length must be even)
+You flip half of the )s to ( and half of the (s to ). For example, "))))" needs 2 flips, giving "()()".
+If a is odd, b is odd too, because the length is even, and the middle ")(" costs 2.
+So the task becomes: find the longest even-length substring with ⌈a/2⌉ + ⌈b/2⌉ ≤ K.
+
+The divide and conquer works on prefix balances, P[x] = (number of () − (number of )) in the first x brackets.
+For a substring from i to j, with m the minimum of P between them, a = P[i] − m and b = P[j] − m.
+
+1. Take t, the position of the minimum P in the current range. Every substring passing through t has m = P[t].
+2. For each index on the smaller side of t, the formula gives the largest P allowed at the other end. A sparse table then finds the farthest index on the other side, of the same parity, with P that small. Each lookup is a binary search, O(log N).
+3. Recurse on the two sides.
+
+Iterating the smaller side keeps the total to O(N log N) lookups, the same reasoning as “small-to-large” merging. That’s where O(N log² N) comes from.
+
+Think of P as a path going up and down. For the substring s[i..j), look at the part of the path from position i to position j:
+
+m is the lowest point on that part of the path (between i and j).
+a = P[i] − m is how far the path drops below where it started. Each drop below the starting level is a ) with no ( before it to match: an unmatched ).
+b = P[j] − m is how far the path ends above its lowest point. Each step up after the lowest point that never comes back down is a ( with no ) after it: an unmatched (.
+
+Example: s[0..6) = )(())(. The path is P[0..6] = 0, −1, 0, 1, 0, −1, 0.
+
+It starts at 0, the lowest point is m = −1, and it ends at 0.
+a = 0 − (−1) = 1: the first ) has nothing to match.
+b = 0 − (−1) = 1: the last ( has nothing to match.
+Cost = ⌈1/2⌉ + ⌈1/2⌉ = 2 flips, giving ((())). With K = 1, that’s too many.
+
+A second example: s[1..5) = (()). The path is −1, 0, 1, 0, −1, so m = −1, and a = 0, b = 0. It’s already valid and costs 0.
+
+The divide and conquer keeps asking two questions about the prefix balances P, and the sparse table answers both quickly:
+
+1. Where is the lowest point between l and r? This picks the split point t for each range. The table answers it in O(1).
+2. What’s the farthest position on one side, of a given parity, with P ≤ some bound? This finds the end of the longest affordable substring.
+   The sparse table answers it in O(log N), by binary searching with question 1.
+
+The divide and conquer, step by step:
+
+Point 1: split at the lowest point of the whole range. Over all positions 0 … 7, the lowest P is −1. It first occurs at t = 1. Every substring s[i..j) that contains position t (i ≤ 1 ≤ j) passes through that lowest point, so its m is −1.
+That means its m is known without any searching. Substrings that don’t contain t lie entirely to the left of t or entirely to the right, and point 3 deals with those.
+
+Point 2: for each start, find the farthest end that’s affordable. Take i = 1 (on the left of t, or at t itself):
+
+a = P[1] − m = −1 − (−1) = 0, so the start costs ⌈0/2⌉ = 0 flips.
+That leaves K − 0 = 1 flip for the b side, so b ≤ 2, since ⌈2/2⌉ = 1.
+b = P[j] − m, so P[j] ≤ m + 2 = 1. That’s the “allowed P at the other end”.
+The length j − i must be even. So j must have the same parity as i: both odd here.
+On the right of t, the farthest odd position with P ≤ 1 is j = 7 (P[7] = 1). So s[1..7) = (())((, length 6. Its b is 2, costing 1 flip ✓.
+Now take i = 0: a = 0 − (−1) = 1, which costs ⌈1/2⌉ = 1 flip. That uses the whole budget, leaving 0 flips for the b side. Since a is odd, b is also odd (the length is even), so b ≥ 1 and costs at least 1 more flip. That’s impossible, so no j works for i = 0.
+You always want the farthest valid end, because we’re looking for the longest substring. Finding it is where the sparse table comes in. It’s a lookup structure that answers “what’s the last position in this range with this parity and P ≤ some value?” with a binary search, instead of scanning every position.
+Which side to loop over. Here the left side of t has 2 positions (0, 1) and the right side has 7 (1 … 7). Looping over the smaller side and doing a lookup on the bigger side keeps the total work down. That choice is what makes it O(N log² N) instead of O(N²). The result is the same whichever side you loop over.
+
+Point 3: repeat on each side. Substrings that don’t contain t = 1 lie entirely within positions 0 … 0, which is too short, or entirely within positions 2 … 7. So the same steps run on 2 … 7: its lowest point is t = 5 (P = −1), and the search finds )) and (( (length 2 each). It then splits again, into 2 … 4 and 6 … 7, and so on, until the ranges are too short to hold a substring.
+
+The full trace finds 6 as the longest, which matches the brute force:
+
+Range of positions	Lowest point t	Best substring found through t
+0 … 7	            1 (P = −1)	    s[1..7) = (())((, length 6
+2 … 7	            5 (P = −1)	    )) or ((, length 2
+2 … 4	            2 (P = 0)	    (), length 2
+6 … 7, 3 … 4	    6, 4	        nothing longer
+
+Every substring is checked exactly once: in the first range that contains it whose split point t falls inside it. At that point t is its lowest point, so its m is P[t].
+
+=== "((()", k=0 ===
+Here is the trace for s = ((() with K = 0. The expected answer is 2, from the () at the end.
+
+Step 0: the prefix balances P
+
+Count +1 for ( and −1 for ), with positions between the brackets:
+
+position x:   0    1    2    3    4
+bracket:        (    (    (    )
+P[x]:         0    1    2    3    2
+
+The rules each step applies:
+For a start i on the left of the lowest point t and an end j on the right:
+
+Unmatched at the start, a = P[i] − m. It costs ⌈a/2⌉ flips.
+Flips left for the other end: K − ⌈a/2⌉. If that’s negative, skip this start.
+Allowed P at the other end: P[j] ≤ m + 2 × (flips left) − (1 if a is odd). With K = 0 and a = 0, that’s simply P[j] ≤ m: the other end can’t have any unmatched (.
+Same parity: j − i must be even, so i and j must both be even or both be odd.
+Farthest end: of the positions that qualify, take the farthest one, since we want the longest substring.
+The trace
+
+Range 0 … 4. P = 0, 1, 2, 3, 2. The lowest point is t = 0 (P = 0), so m = 0.
+
+The left side of t is empty (t is at the left edge), and the right side has 4 positions. So we loop over the left side, which is just i = 0.
+i = 0: a = P[0] − 0 = 0, costing 0 flips. 0 flips are left, so the allowed P at the end is ≤ 0. On the right of t, the even positions are 0, 2 and 4, with P = 0, 2, 2. Only position 0 has P ≤ 0, so j = 0: the empty substring, length 0.
+This is why the whole string can’t count. Any substring starting at 0 ends at P = 2 or more, which means at least 2 unmatched (, and that costs at least 1 flip.
+Split into ranges 0 … −1 (empty) and 1 … 4.
+
+Range 1 … 4. P = 1, 2, 3, 2. Lowest point t = 1 (P = 1), m = 1. The left side is empty again.
+
+i = 1: a = 0, allowed P ≤ 1. The odd positions on the right are 1 and 3, with P = 1 and 3. Only position 1 qualifies, so the substring is empty again, length 0.
+Split into 1 … 0 (empty) and 2 … 4.
+
+Range 2 … 4. P = 2, 3, 2. Lowest point t = 2 (P = 2), m = 2. The first minimum is used, so t is 2, not 4.
+
+i = 2: a = 0, allowed P ≤ 2. The even positions on the right are 2 and 4, with P = 2 and 2. Both qualify, and the farthest is j = 4. So s[2..4) = (), length 2, costing 0 flips ✓.
+Split into 2 … 1 (empty) and 3 … 4.
+
+Range 3 … 4. P = 3, 2. Lowest point t = 4 (P = 2), m = 2. Now the left side has 1 position and the right side none, so we loop over the right side, which is j = 4.
+
+j = 4: b = P[4] − 2 = 0, allowed P at the start ≤ 2. On the left of t, the even positions are just 4 (position 3 is odd), with P = 2. So i = 4: the empty substring, length 0.
+Split into 3 … 3 and 5 … 4, both too short.
+
+Every range left is too short, so the answer is 2 ✓
+
+What the trace shows
+Each range finds the longest substring through its lowest point. The () was only found once the ranges reached 2 … 4. Before that, every substring started at the range’s lowest point and ended higher up, which K = 0 can’t afford.
+On an input like this, the lowest point keeps landing at the left edge, so each range is only one position shorter than the one before.
+That’s the shape that made your recursive version go N levels deep. The fixed version keeps its ranges in a vector instead, and finds each t in O(1) instead of scanning the range.
+
+The end side’s unmatched brackets are always (. The start side’s are always ).
+Why each side has its own kind of bracket. After greedy matching, whatever is left over always looks like )))(((. The leftover ) come first and the leftover ( come last:
+
+A ')' can only be left unmatched if no '(' before it is free. So unmatched ) sit towards the start of the substring. There are a = P[i] − m of them: the path drops a steps below its starting level.
+A '(' can only be left unmatched if no' ') after it closes it. So unmatched ( sit towards the end of the substring. There are b = P[j] − m of them: the path finishes b steps above its lowest point.
+So the start determines 'a', the number of unmatched ')', and the end determines 'b', the number of unmatched '('.
+From the trace, with i = 0 (m = 0) in ((():
+
+End j	Substring s[0..j)	P[j]	b = P[j] − m	Unmatched	Flips
+2	((	2	2	((	1 (→ ())
+4	((()	2	2	the first two (	1 (→ ()())
+0	(empty)	0	0	none	0
+
+Only the empty substring has P[j] ≤ 0, so no non-empty substring starting at 0 is affordable with K = 0. When the loop runs over the end side instead, as in range 3 … 4 of the trace, the roles swap.
+The fixed end’s P[j] − m is the b, and the condition P[i] ≤ … limits a, the start’s unmatched ).
+=== "((()", k=0 ===
+
+Within one range of the divide and conquer, the lowest point m = P[t] is already known. So:
+
+a = P[i] − m depends only on the start i. Pick a start, and a is settled, whichever end you pair it with.
+b = P[j] − m depends only on the end j. Pick an end, and b is settled, whichever start you pair it with.
+
+That separation is what makes the search work:
+
+Pick a start i. Its a, and so its cost ⌈a/2⌉, is known straight away.
+The flips left over decide how large b can be, which is the “allowed P at the other end”.
+Search the other side for the farthest end whose b is within that limit.
+
+There is one subtlety. In general, m depends on both ends, because it’s the lowest point between them. a depends only on i because each range only considers substrings that pass through t.
+That’s why the trace splits at the lowest point: it turns m into a known constant.
+
+SparseTable<T>, a sparse table, finds 't' in O(1). There are log₂ N rows of N entries, so building the table takes O(N log N) time and memory, once.
+rightmost / leftmost binary-search a per-parity sparse table for the farthest end, in O(log N).
+A ranges stack replaces the recursion.
+
+Why this gives O(N log² N)
+
+The divide and conquer does O(N log N) “farthest end” lookups in total, and each one is a binary search of O(log N) steps, each costing O(1).
+Finding each range’s lowest point adds only O(1) per range, so the total is O(N log² N). In the generalised SparseTable<T, Compare>, all of this is unchanged.
+“Lowest” just becomes “best according to Compare”, so a greater<T> table does the same with maximums.
+
+The factor N is the number of positions. The previous step bounded how many times one position is looped over, about log₂ N. To get the total, you add that up over all the positions:
+
+total lookups = (number of positions) × (most times each one is looped over) ≤ (N + 1) × log₂(N + 1)
+===
+Examples of how the function finds its substring:
+(1) "))))", k:1
+It finds all three. The back, the middle and the front are all valid answers, and the algorithm finds them in that order. It only returns the length, though, so it never actually chooses one.
+
+Every )) costs 1 flip, becoming (). The whole string )))) would need a = 4 unmatched ), which costs ⌈4/2⌉ = 2 flips, so 2 is the longest that K = 1 allows.
+
+With P = [0, −1, −2, −3, −4], the lowest point of every range is its right edge. So each range does just one lookup, at j = t:
+
+Range	Lowest point t	Farthest affordable start i	Substring found
+0 … 4	4	            2 (P = −2 ≤ −4 + 2)	        s[2..4) = )), the back
+0 … 3	3	            1 (P = −1 ≤ −3 + 2)	        s[1..3) = )), the middle
+0 … 2	2	            0 (P = 0 ≤ −2 + 2)	        s[0..2) = )), the front
+0 … 1	1	            1, the same parity as j = 1	empty, length 0
+
+At each step the end j has b = 0, so all K = 1 flip goes to the start: a ≤ 2, giving “allowed P ≤ m + 2”. The farthest start with that P, and the same parity, is always exactly 2 positions back.
+
+result = max(result, j - i) keeps only the length. Ties don’t replace it, so if you added a position to the result, you’d get the back )) from the first range, since that’s the first length-2 substring found.
+That’s an accident of the order the ranges are processed in, not a rule. If you need a particular substring, say the leftmost longest, you’d have to record (i, j) and break ties explicitly, for example update only when j - i > result, or when the length is equal and i is smaller.
+
+"Farthest affordable start i":
+b = P[i] - m -> j:4 m:-4 b = -4 - (-4) = 0, r = 1, a <= 2r = 2
+a = P[i] - m -> P[i] - m <= 2
+                P[i] <= 2 + m
+                P[i] <= -2, i:2
+
+(2) "((((", k:1
+It’s the mirror image of )))). The answer is again 2, and again all three (( are found, but now in the order front, middle, back. Each (( costs 1 flip, becoming (). The whole (((( would need b = 4 unmatched (, which costs 2 flips.
+
+P = [0, 1, 2, 3, 4] now rises, so the lowest point of every range is its left edge. The left side of t is empty, so the loop runs over the start i = t, and the lookup searches right for the farthest end:
+
+Range	Lowest point t	Farthest affordable end j	                Substring found
+0 … 4	0	            2 (P = 2 ≤ 0 + 2)	                        s[0..2) = ((, the front
+1 … 4	1	            3 (P = 3 ≤ 1 + 2)	                        s[1..3) = ((, the middle
+2 … 4	2	            4 (P = 4 ≤ 2 + 2)	                        s[2..4) = ((, the back
+3 … 4	3	            3, since position 4 has the wrong parity	empty, length 0
+
+The roles of the two ends have swapped:
+
+In )))), the fixed end j had b = 0, and the flip was spent on the start’s unmatched ), a ≤ 2.
+Here, the fixed start i has a = 0, and the flip is spent on the end’s unmatched (, b ≤ 2. That’s the “allowed P ≤ m + 2”.
+
+So if you recorded the first longest substring found, (((( would give the front (( and )))) the back )). Both are only a result of where the lowest points fall, which decides the order the ranges are processed in. The function itself returns only the length, 2, for both.
+=== Which part(s) of substrings are found? ===
+When each substring is found. A substring is checked in exactly one range: the one whose split point t is that substring’s own lowest point. So the substring you’d get by recording the first longest one, with > so that later ties don’t replace it, is decided by the order the ranges are processed in:
+
+The whole string first. Its split t is the global lowest point, the leftmost one if there are several.
+Then depth-first, right before left. The code pushes (start, t − 1) and then (t + 1, end). The stack pops the last one pushed first, so the right sub-range is processed, fully, before the left one.
+Within a range, the starts (or ends) on the smaller side are looped over in increasing position, and each finds its farthest partner.
+
+Your two examples follow this rule:
+
+)))): the lowest point is the right edge. The first range finds the back )), then the ranges shrink leftwards: middle, then front.
+((((: the lowest point is the left edge. The first range finds the front ((. The right sub-range comes next, giving the middle, then the back.
+
+Where “the first m” misleads. If the longest substring doesn’t pass through the global lowest point, it’s found in a later range, after everything in the right sub-ranges before it. Then the “first longest” depends on the right-before-left stack order, not on where m is in the string.
+For example, if two equally long substrings sit on either side of the global minimum, the one on the right is found first, even though it’s later in the string.
+
+So the “which one” is an artifact of the traversal: the global minimum’s range first, then right before left. It isn’t a rule about where in the string you get the answer.
+If you need a particular substring, say the leftmost or the rightmost longest, record (i, j) and break ties explicitly, for example update when j - i > result, or when the length is equal and i is smaller. That gives the same answer whatever order the ranges are processed in.
+ */
+size_t String::LongestValidParenthesesWithFixes(string const& str, size_t k)
+{
+    if (str.size() < 2)
+        return 0;
+    if (k >= str.size() - str.size() % 2)
+        return str.size() - str.size() % 2;
+    vector<long> P;
+    P.push_back(0);
+    for (char c : str)
+        P.push_back(c == ')' ? P.back() - 1 : P.back() + 1);
+    // The substring s[i..j) has length j - i, so i and j must have the same parity. P only at even / odd positions, LONG_MAX elsewhere:
+    vector<long> evenP(P.size(), numeric_limits<long>::max()), oddP(P.size(), numeric_limits<long>::max());
+    for (size_t x = 0; x < P.size(); x++)
+        (x % 2 ? oddP : evenP)[x] = P[x];
+    /*
+    Same parity: the evenP / oddP tables
+    A substring s[i..j) needs j − i even, so i and j need the same parity. The code builds a second and third table over copies of P with the positions of the other parity set to ∞ (LONG_MAX):
+
+    oddP:                inf   -1  inf    1  inf   -1  inf    1
+
+    A position holding ∞ is never the minimum and never ≤ any bound. So every lookup in oddP effectively only sees the odd positions.
+    */
+    SparseTable<long> lowest(P), sameParity[2] = { SparseTable(evenP), SparseTable(oddP) };
+    /*
+    * The “allowed P at the other end”, or LONG_MIN if this end alone costs more than k flips.
+    * This end has `unmatched` brackets, costing ⌈unmatched / 2⌉. The other end has the remaining flips: at most 2 * remainingFlips unmatched,
+    * and if `unmatched` is odd, the other end's is odd too, because the length is even: at most 2 * remainingFlips - 1.
+    * The other end's unmatched count is P - m, so P <= m + 2 * remainingFlips - (unmatched odd).
+    b / 2 + b % 2 = remainingFlips
+    long b = 2 * remainingFlips; // b <= 2 * remainingFlips <= b is always even.
+    // If a is odd, b is odd too, because the length is even
+    // (a % 2) != (b % 2) → (a % 2) != 0 → “a is odd”
+    b -= ((a % 2) != (b % 2)) && b > 0 ? 1 : 0;
+    The “allowed P at the other end”:
+    b = P[j] − m <= 2 * remainingFlips
+    P[i] - m <= 2 * remainingFlips
+    P[i] <= 2 * remainingFlips + m
+    long allowedP = b + m;
+
+    " - unmatched % 2" is optional. Here are why:
+    1. The cost limit itself needs no parity adjustment. The other end may have b unmatched brackets if ⌈b/2⌉ ≤ remainingFlips, which is simply b ≤ 2 × remainingFlips, for even and odd b alike.
+        For example, with remainingFlips = 1, b = 1 and b = 2 both cost 1, and b = 3 costs 2.
+
+    2. The parity rule is already enforced, by the sameParity tables. The lookup only considers ends j with the same parity as i. Each step changes P by ±1, so P[x] has the same parity as x. So:
+
+    j ≡ i (mod 2) → P[j] ≡ P[i] → b = P[j] − m ≡ P[i] − m = a (mod 2)
+
+    Every candidate the lookup can return already has b with the same parity as a.
+
+    3. So when a is odd, b = 2r (even) never occurs. Because b is always odd, the limits “b ≤ 2r” and “b ≤ 2r − 1” admit exactly the same ends.
+        The model counted it: across 7,454 lookups with odd a, there were 0 same-parity positions with b exactly 2r. Subtracting 1 only tightens the bound to the largest value b can actually take.
+
+    Your old logic starts from b = 2r, which is even, and subtracts 1 when a is odd and b > 0:
+
+    a	    remainingFlips r	Yours	            Current − unmatched % 2	No parity term	Ends that actually qualify
+    even	any	                2r	                2r	                    2r	            even b ≤ 2r
+    odd	    ≥ 1	                2r − 1	            2r − 1	                2r	            odd b ≤ 2r − 1
+    odd	    0	                0 (the b > 0 guard)	−1	                    0	            none: b must be odd, so ≥ 1
+
+    The only row where the bounds differ is the last one, and there no end can qualify under any of them. Your b > 0 guard stops the bound going to −1, but nothing passes a bound of 0 either.
+    The actual b of each end the lookup could return. Those actual values always have a’s parity, because the sameParity table only returns ends of i’s parity.
+
+    A concrete case: m = 0, a = 1 (so P[i] = 1), r = 1, so the limit is 2.
+
+    i.   Same-parity ends have odd P[j], because P[x] has the same parity as x. So P[j] is 1, 3, 5, …, and the actual b = P[j] − 0 is 1, 3, 5, ….
+    ii.  b = 2 would need P[j] = 2, which only an end of the other parity has, and the lookup never sees those.
+    iii. So a limit of 2 and a limit of 1 admit exactly the same ends. That’s why the − 1 is optional: it’s correct, but the parity tables have already excluded what it would exclude.
+
+    Note: ⌈b/2⌉ ≤ remainingFlips ⇔ b ≤ 2 × remainingFlips, and that the even-length rule is handled by the parity tables.
+    Keeping "- unmatched % 2" term is also fine: it’s correct, and some readers will find it shows the parity reasoning explicitly. However, it just isn’t needed for correctness.
+    */
+    auto allowed = [k](long m, long unmatched) {
+        /*
+        startCost = a / 2 + a % 2 <= (% 2) because it is ceiling division.
+        remainingFlips = k - startCost;
+        */
+        long remainingFlips = (long)k - (unmatched / 2 + unmatched % 2);
+        return remainingFlips < 0 ? numeric_limits<long>::min() : m + 2 * remainingFlips - unmatched % 2;
+        };
+    size_t result = 0;
+    vector<pair<long, long>> ranges{ { 0, (long)P.size() - 1 } }; // A stack of ranges instead of recursion, which overflowed the stack on long inputs
+    while (!ranges.empty()) {
+        auto [start, end] = ranges.back();
+        ranges.pop_back();
+        if (start >= end)
+            continue;
+        long t = lowest.Index(start, end), m = P[t]; // Every substring s[i..j) with i <= t <= j has its lowest point at t
+        // Loop over the smaller side
+        if (t - start <= end - t)
+            for (long i = start; i <= t; i++) {
+                long allowedP = allowed(m, P[i] - m); // a = P[i] - m
+                if (allowedP == numeric_limits<long>::min())
+                    continue;
+                long j = sameParity[i % 2].RightMost(t, end, allowedP); // The farthest j on the right of t
+                if (j >= 0)
+                    result = max<size_t>(result, j - i);
+            }
+        else
+            for (long j = t; j <= end; j++) {
+                long allowedP = allowed(m, P[j] - m); // b = P[j] - m
+                if (allowedP == numeric_limits<long>::min())
+                    continue;
+                long i = sameParity[j % 2].LeftMost(start, t, allowedP); // The farthest i on the left of t
+                if (i >= 0)
+                    result = max<size_t>(result, j - i);
+            }
+        // Substrings that don't contain t lie entirely on one side of it
+        ranges.emplace_back(start, t - 1);
+        ranges.emplace_back(t + 1, end);
+    }
+    return result;
+}
 /* https://leetcode.com/problems/letter-combinations-of-a-phone-number/
  * 100%
  */
@@ -1315,233 +1649,4 @@ string String::BuildLargestNumber(vector<size_t> const& a)
     for (multiset<string, BuildLargestNumber_comparator_t>::iterator it = data.begin(); it != data.end(); it++)
         oss << *it;
     return oss.str().empty() || !nonZero ? "0" : oss.str();
-}
-/* https://app.codility.com/programmers/task/brackets_rotation/
- * Divide and conquer on the minimum prefix balance.
-The key fact: the cost of one substring
-Match brackets greedily from left to right, as in the usual stack check. Whatever stays unmatched always looks like )))…(((: a unmatched ) followed by b unmatched (. The fewest flips that make the substring valid is then:
-⌈a/2⌉ + ⌈b/2⌉ (and the length must be even)
-You flip half of the )s to ( and half of the (s to ). For example, "))))" needs 2 flips, giving "()()".
-If a is odd, b is odd too, because the length is even, and the middle ")(" costs 2.
-So the task becomes: find the longest even-length substring with ⌈a/2⌉ + ⌈b/2⌉ ≤ K.
-
-The divide and conquer works on prefix balances, P[x] = (number of () − (number of )) in the first x brackets.
-For a substring from i to j, with m the minimum of P between them, a = P[i] − m and b = P[j] − m.
-
-1. Take t, the position of the minimum P in the current range. Every substring passing through t has m = P[t].
-2. For each index on the smaller side of t, the formula gives the largest P allowed at the other end. A sparse table then finds the farthest index on the other side, of the same parity, with P that small. Each lookup is a binary search, O(log N).
-3. Recurse on the two sides.
-
-Iterating the smaller side keeps the total to O(N log N) lookups, the same reasoning as “small-to-large” merging. That’s where O(N log² N) comes from.
-
-Think of P as a path going up and down. For the substring s[i..j), look at the part of the path from position i to position j:
-
-m is the lowest point on that part of the path (between i and j).
-a = P[i] − m is how far the path drops below where it started. Each drop below the starting level is a ) with no ( before it to match: an unmatched ).
-b = P[j] − m is how far the path ends above its lowest point. Each step up after the lowest point that never comes back down is a ( with no ) after it: an unmatched (.
-
-Example: s[0..6) = )(())(. The path is P[0..6] = 0, −1, 0, 1, 0, −1, 0.
-
-It starts at 0, the lowest point is m = −1, and it ends at 0.
-a = 0 − (−1) = 1: the first ) has nothing to match.
-b = 0 − (−1) = 1: the last ( has nothing to match.
-Cost = ⌈1/2⌉ + ⌈1/2⌉ = 2 flips, giving ((())). With K = 1, that’s too many.
-
-A second example: s[1..5) = (()). The path is −1, 0, 1, 0, −1, so m = −1, and a = 0, b = 0. It’s already valid and costs 0.
-
-The divide and conquer keeps asking two questions about the prefix balances P, and the sparse table answers both quickly:
-
-1. Where is the lowest point between l and r? This picks the split point t for each range. The table answers it in O(1).
-2. What’s the farthest position on one side, of a given parity, with P ≤ some bound? This finds the end of the longest affordable substring.
-   The sparse table answers it in O(log N), by binary searching with question 1.
-
-The divide and conquer, step by step:
-
-Point 1: split at the lowest point of the whole range. Over all positions 0 … 7, the lowest P is −1. It first occurs at t = 1. Every substring s[i..j) that contains position t (i ≤ 1 ≤ j) passes through that lowest point, so its m is −1.
-That means its m is known without any searching. Substrings that don’t contain t lie entirely to the left of t or entirely to the right, and point 3 deals with those.
-
-Point 2: for each start, find the farthest end that’s affordable. Take i = 1 (on the left of t, or at t itself):
-
-a = P[1] − m = −1 − (−1) = 0, so the start costs ⌈0/2⌉ = 0 flips.
-That leaves K − 0 = 1 flip for the b side, so b ≤ 2, since ⌈2/2⌉ = 1.
-b = P[j] − m, so P[j] ≤ m + 2 = 1. That’s the “allowed P at the other end”.
-The length j − i must be even. So j must have the same parity as i: both odd here.
-On the right of t, the farthest odd position with P ≤ 1 is j = 7 (P[7] = 1). So s[1..7) = (())((, length 6. Its b is 2, costing 1 flip ✓.
-Now take i = 0: a = 0 − (−1) = 1, which costs ⌈1/2⌉ = 1 flip. That uses the whole budget, leaving 0 flips for the b side. Since a is odd, b is also odd (the length is even), so b ≥ 1 and costs at least 1 more flip. That’s impossible, so no j works for i = 0.
-You always want the farthest valid end, because we’re looking for the longest substring. Finding it is where the sparse table comes in. It’s a lookup structure that answers “what’s the last position in this range with this parity and P ≤ some value?” with a binary search, instead of scanning every position.
-Which side to loop over. Here the left side of t has 2 positions (0, 1) and the right side has 7 (1 … 7). Looping over the smaller side and doing a lookup on the bigger side keeps the total work down. That choice is what makes it O(N log² N) instead of O(N²). The result is the same whichever side you loop over.
-
-Point 3: repeat on each side. Substrings that don’t contain t = 1 lie entirely within positions 0 … 0, which is too short, or entirely within positions 2 … 7. So the same steps run on 2 … 7: its lowest point is t = 5 (P = −1), and the search finds )) and (( (length 2 each). It then splits again, into 2 … 4 and 6 … 7, and so on, until the ranges are too short to hold a substring.
-
-The full trace finds 6 as the longest, which matches the brute force:
-
-Range of positions	Lowest point t	Best substring found through t
-0 … 7	            1 (P = −1)	    s[1..7) = (())((, length 6
-2 … 7	            5 (P = −1)	    )) or ((, length 2
-2 … 4	            2 (P = 0)	    (), length 2
-6 … 7, 3 … 4	    6, 4	        nothing longer
-
-Every substring is checked exactly once: in the first range that contains it whose split point t falls inside it. At that point t is its lowest point, so its m is P[t].
-
-=== "((()", k=0 ===
-Here is the trace for s = ((() with K = 0. The expected answer is 2, from the () at the end.
-
-Step 0: the prefix balances P
-
-Count +1 for ( and −1 for ), with positions between the brackets:
-
-position x:   0    1    2    3    4
-bracket:        (    (    (    )
-P[x]:         0    1    2    3    2
-The rules each step applies
-
-For a start i on the left of the lowest point t and an end j on the right:
-
-Unmatched at the start, a = P[i] − m. It costs ⌈a/2⌉ flips.
-Flips left for the other end: K − ⌈a/2⌉. If that’s negative, skip this start.
-Allowed P at the other end: P[j] ≤ m + 2 × (flips left) − (1 if a is odd). With K = 0 and a = 0, that’s simply P[j] ≤ m: the other end can’t have any unmatched (.
-Same parity: j − i must be even, so i and j must both be even or both be odd.
-Farthest end: of the positions that qualify, take the farthest one, since we want the longest substring.
-The trace
-
-Range 0 … 4. P = 0, 1, 2, 3, 2. The lowest point is t = 0 (P = 0), so m = 0.
-
-The left side of t is empty (t is at the left edge), and the right side has 4 positions. So we loop over the left side, which is just i = 0.
-i = 0: a = P[0] − 0 = 0, costing 0 flips. 0 flips are left, so the allowed P at the end is ≤ 0. On the right of t, the even positions are 0, 2 and 4, with P = 0, 2, 2. Only position 0 has P ≤ 0, so j = 0: the empty substring, length 0.
-This is why the whole string can’t count. Any substring starting at 0 ends at P = 2 or more, which means at least 2 unmatched (, and that costs at least 1 flip.
-Split into ranges 0 … −1 (empty) and 1 … 4.
-
-Range 1 … 4. P = 1, 2, 3, 2. Lowest point t = 1 (P = 1), m = 1. The left side is empty again.
-
-i = 1: a = 0, allowed P ≤ 1. The odd positions on the right are 1 and 3, with P = 1 and 3. Only position 1 qualifies, so the substring is empty again, length 0.
-Split into 1 … 0 (empty) and 2 … 4.
-
-Range 2 … 4. P = 2, 3, 2. Lowest point t = 2 (P = 2), m = 2. The first minimum is used, so t is 2, not 4.
-
-i = 2: a = 0, allowed P ≤ 2. The even positions on the right are 2 and 4, with P = 2 and 2. Both qualify, and the farthest is j = 4. So s[2..4) = (), length 2, costing 0 flips ✓.
-Split into 2 … 1 (empty) and 3 … 4.
-
-Range 3 … 4. P = 3, 2. Lowest point t = 4 (P = 2), m = 2. Now the left side has 1 position and the right side none, so we loop over the right side, which is j = 4.
-
-j = 4: b = P[4] − 2 = 0, allowed P at the start ≤ 2. On the left of t, the even positions are just 4 (position 3 is odd), with P = 2. So i = 4: the empty substring, length 0.
-Split into 3 … 3 and 5 … 4, both too short.
-
-Every range left is too short, so the answer is 2 ✓
-
-What the trace shows
-Each range finds the longest substring through its lowest point. The () was only found once the ranges reached 2 … 4. Before that, every substring started at the range’s lowest point and ended higher up, which K = 0 can’t afford.
-On an input like this, the lowest point keeps landing at the left edge, so each range is only one position shorter than the one before.
-That’s the shape that made your recursive version go N levels deep. The fixed version keeps its ranges in a vector instead, and finds each t in O(1) instead of scanning the range.
-
-The end side’s unmatched brackets are always (. The start side’s are always ).
-Why each side has its own kind of bracket. After greedy matching, whatever is left over always looks like )))(((. The leftover ) come first and the leftover ( come last:
-
-A ')' can only be left unmatched if no '(' before it is free. So unmatched ) sit towards the start of the substring. There are a = P[i] − m of them: the path drops a steps below its starting level.
-A '(' can only be left unmatched if no' ') after it closes it. So unmatched ( sit towards the end of the substring. There are b = P[j] − m of them: the path finishes b steps above its lowest point.
-So the start determines 'a', the number of unmatched ')', and the end determines 'b', the number of unmatched '('.
-From the trace, with i = 0 (m = 0) in ((():
-
-End j	Substring s[0..j)	P[j]	b = P[j] − m	Unmatched	Flips
-2	((	2	2	((	1 (→ ())
-4	((()	2	2	the first two (	1 (→ ()())
-0	(empty)	0	0	none	0
-
-Only the empty substring has P[j] ≤ 0, so no non-empty substring starting at 0 is affordable with K = 0. When the loop runs over the end side instead, as in range 3 … 4 of the trace, the roles swap.
-The fixed end’s P[j] − m is the b, and the condition P[i] ≤ … limits a, the start’s unmatched ).
-=== "((()", k=0 ===
-
-Within one range of the divide and conquer, the lowest point m = P[t] is already known. So:
-
-a = P[i] − m depends only on the start i. Pick a start, and a is settled, whichever end you pair it with.
-b = P[j] − m depends only on the end j. Pick an end, and b is settled, whichever start you pair it with.
-
-That separation is what makes the search work:
-
-Pick a start i. Its a, and so its cost ⌈a/2⌉, is known straight away.
-The flips left over decide how large b can be, which is the “allowed P at the other end”.
-Search the other side for the farthest end whose b is within that limit.
-
-There is one subtlety. In general, m depends on both ends, because it’s the lowest point between them. a depends only on i because each range only considers substrings that pass through t.
-That’s why the trace splits at the lowest point: it turns m into a known constant.
-
-SparseTable<T>, a sparse table, finds 't' in O(1). There are log₂ N rows of N entries, so building the table takes O(N log N) time and memory, once.
-rightmost / leftmost binary-search a per-parity sparse table for the farthest end, in O(log N).
-A ranges stack replaces the recursion.
-
-Why this gives O(N log² N)
-
-The divide and conquer does O(N log N) “farthest end” lookups in total, and each one is a binary search of O(log N) steps, each costing O(1).
-Finding each range’s lowest point adds only O(1) per range, so the total is O(N log² N). In the generalised SparseTable<T, Compare>, all of this is unchanged.
-“Lowest” just becomes “best according to Compare”, so a greater<T> table does the same with maximums.
-
-The factor N is the number of positions. The previous step bounded how many times one position is looped over, about log₂ N. To get the total, you add that up over all the positions:
-
-total lookups = (number of positions) × (most times each one is looped over) ≤ (N + 1) × log₂(N + 1)
- */
-size_t String::LongestValidParenthesesWithFixes(string const& str, size_t k)
-{
-    if (str.size() < 2)
-        return 0;
-    if (k >= str.size() - str.size() % 2)
-        return str.size() - str.size() % 2;
-    vector<long> P;
-    P.push_back(0);
-    for (char c : str)
-        P.push_back(c == ')' ? P.back() - 1 : P.back() + 1);
-    // The substring s[i..j) has length j - i, so i and j must have the same parity. P only at even / odd positions, LONG_MAX elsewhere:
-    vector<long> evenP(P.size(), numeric_limits<long>::max()), oddP(P.size(), numeric_limits<long>::max());
-    for (size_t x = 0; x < P.size(); x++)
-        (x % 2 ? oddP : evenP)[x] = P[x];
-    /*
-    Same parity: the evenP / oddP tables
-
-    A substring s[i..j) needs j − i even, so i and j need the same parity. The code builds a second and third table over copies of P with the positions of the other parity set to ∞ (LONG_MAX):
-
-    oddP:                inf   -1  inf    1  inf   -1  inf    1
-
-    A position holding ∞ is never the minimum and never ≤ any bound. So every lookup in oddP effectively only sees the odd positions.
-    */
-    SparseTable<long> lowest(P), sameParity[2] = { SparseTable(evenP), SparseTable(oddP) };
-    /*
-    * The “allowed P at the other end”, or LONG_MIN if this end alone costs more than k flips.
-    * This end has `unmatched` brackets, costing ⌈unmatched / 2⌉. The other end has the remaining flips: at most 2 * remainingFlips unmatched,
-    * and if `unmatched` is odd, the other end's is odd too, because the length is even: at most 2 * remainingFlips - 1.
-    * The other end's unmatched count is P - m, so P <= m + 2 * remainingFlips - (unmatched odd).
-    */
-    auto allowed = [k](long m, long unmatched) {
-        long remainingFlips = (long)k - (unmatched / 2 + unmatched % 2);
-        return remainingFlips < 0 ? numeric_limits<long>::min() : m + 2 * remainingFlips - unmatched % 2;
-        };
-    size_t result = 0;
-    vector<pair<long, long>> ranges{ { 0, (long)P.size() - 1 } }; // A stack of ranges instead of recursion, which overflowed the stack on long inputs
-    while (!ranges.empty()) {
-        auto [start, end] = ranges.back();
-        ranges.pop_back();
-        if (start >= end)
-            continue;
-        long t = lowest.Index(start, end), m = P[t]; // Every substring s[i..j) with i <= t <= j has its lowest point at t
-        // Loop over the smaller side
-        if (t - start <= end - t)
-            for (long i = start; i <= t; i++) {
-                long allowedP = allowed(m, P[i] - m); // a = P[i] - m
-                if (allowedP == numeric_limits<long>::min())
-                    continue;
-                long j = sameParity[i % 2].RightMost(t, end, allowedP); // The farthest j on the right of t
-                if (j >= 0)
-                    result = max<size_t>(result, j - i);
-            }
-        else
-            for (long j = t; j <= end; j++) {
-                long allowedP = allowed(m, P[j] - m); // b = P[j] - m
-                if (allowedP == numeric_limits<long>::min())
-                    continue;
-                long i = sameParity[j % 2].LeftMost(start, t, allowedP); // The farthest i on the left of t
-                if (i >= 0)
-                    result = max<size_t>(result, j - i);
-            }
-        // Substrings that don't contain t lie entirely on one side of it
-        ranges.emplace_back(start, t - 1);
-        ranges.emplace_back(t + 1, end);
-    }
-    return result;
 }
