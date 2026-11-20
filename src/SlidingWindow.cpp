@@ -144,9 +144,7 @@ size_t SlidingWindow<T>::MaxHarvest(vector<T> const& fruits, size_t n)
  * A sliding window needs monotonicity: if a window is fixable, so is a smaller one inside it.
  * Sliding window implementation.
  * The key fact: only the letters outside the window matter
-
 Call the substring you replace the window. Whatever is inside it can become anything, and the letters outside stay as they are. So:
-
 A window works if and only if every letter appears at most n/4 times outside it.
 
 1. If a letter appears more than n/4 times outside, no replacement can remove the extra copies, so the gene can’t become steady.
@@ -157,10 +155,9 @@ In the code, genes holds the counts outside the window, not the counts of the wh
 Why a sliding window works here:
 
 Making a window bigger only moves more letters inside, so the outside counts can only go down. A window that works keeps working when it grows. That’s the property that makes the method correct.
-
 When the window works and the loop moves i forward, j stays where it is. It never has to move back.
-
-Moving i forward takes one letter out of the window and puts it back outside. A smaller window can only be the same or worse. So no end before the current j can suddenly work. Those ends had already failed with the bigger window, and with one fewer letter they still fail. So the loop just carries on from the current j:
+Moving i forward takes one letter out of the window and puts it back outside. A smaller window can only be the same or worse. So no end before the current j can suddenly work.
+Those ends had already failed with the bigger window, and with one fewer letter they still fail. So the loop just carries on from the current j:
 
 1. The window works: record j − i, then i++. Try dropping the leftmost letter, to see if a shorter window still works.
 2. The window doesn’t work: j++. Add the next letter on the right.
