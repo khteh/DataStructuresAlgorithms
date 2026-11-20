@@ -323,7 +323,7 @@ public:
 		return _rangeObj.SherlockAndCost(_data);
 	}
 };
-class VectorEqualSplitTestFixture : public RangeTestFixture1<size_t, int>, public testing::TestWithParam<tuple<size_t, vector<int>>>
+class VectorEqualSplitTestFixture : public RangeTestFixture1<size_t, size_t>, public testing::TestWithParam<tuple<size_t, vector<size_t>>>
 {
 public:
 	void SetUp() override
@@ -356,14 +356,14 @@ TEST_P(VectorEqualSplitTestFixture, VectorEqualSplitTests)
 INSTANTIATE_TEST_SUITE_P(
 	VectorEqualSplitTests,
 	VectorEqualSplitTestFixture,
-	::testing::Values(make_tuple(0, vector<int>{1}), make_tuple(0, vector<int>{1, 2}), make_tuple(1, vector<int>{1, 1}), make_tuple(1, vector<int>{0, 0}),
-		make_tuple(2, vector<int>{0, 0, 0}), make_tuple(0, vector<int>{1, 1, 1}), make_tuple(0, vector<int>{2, 2, 2}), make_tuple(0, vector<int>{1, 1, 1, 1, 1}),
-		make_tuple(0, vector<int>{2, 2, 2, 2, 2}), make_tuple(2, vector<int>{1, 1, 1, 1}), make_tuple(1, vector<int>{1, 1, 1, 1, 1, 1}),
-		make_tuple(0, vector<int>{1, 2, 1}), make_tuple(1, vector<int>{1, 2, 1, 2}), make_tuple(2, vector<int>{2, 2, 2, 3, 3}),
-		make_tuple(3, vector<int>{3, 2, 3, 2, 2, 2, 2}), make_tuple(2, vector<int>{1, 1, 1, 1}), make_tuple(3, vector<int>{4, 1, 0, 1, 1, 0, 1}),
-		make_tuple(4, vector<int>{16384, 8192, 8192, 16384, 8192, 8192, 32768, 32768}),
-		make_tuple(1, vector<int>{8760958, 8760957, 547560, 547560, 547560, 273780, 273780, 2190239, 4380479, 4380479, 4380478}),
-		make_tuple(4, vector<int>{0, 0, 0, 0, 0})));
+	::testing::Values(make_tuple(0, vector<size_t>{1}), make_tuple(0, vector<size_t>{1, 2}), make_tuple(1, vector<size_t>{1, 1}), make_tuple(1, vector<size_t>{0, 0}),
+		make_tuple(2, vector<size_t>{0, 0, 0}), make_tuple(0, vector<size_t>{1, 1, 1}), make_tuple(0, vector<size_t>{2, 2, 2}), make_tuple(0, vector<size_t>{1, 1, 1, 1, 1}),
+		make_tuple(0, vector<size_t>{2, 2, 2, 2, 2}), make_tuple(2, vector<size_t>{1, 1, 1, 1}), make_tuple(1, vector<size_t>{1, 1, 1, 1, 1, 1}),
+		make_tuple(0, vector<size_t>{1, 2, 1}), make_tuple(1, vector<size_t>{1, 2, 1, 2}), make_tuple(2, vector<size_t>{2, 2, 2, 3, 3}),
+		make_tuple(3, vector<size_t>{3, 2, 3, 2, 2, 2, 2}), make_tuple(2, vector<size_t>{1, 1, 1, 1}), make_tuple(3, vector<size_t>{4, 1, 0, 1, 1, 0, 1}),
+		make_tuple(4, vector<size_t>{16384, 8192, 8192, 16384, 8192, 8192, 32768, 32768}),
+		make_tuple(1, vector<size_t>{8760958, 8760957, 547560, 547560, 547560, 273780, 273780, 2190239, 4380479, 4380479, 4380478}),
+		make_tuple(4, vector<size_t>{0, 0, 0, 0, 0})));
 class AlmostSortedTestFixture : public RangeTestFixture1<string, long>, public testing::TestWithParam<tuple<string, vector<long>>>
 {
 public:

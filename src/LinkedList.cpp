@@ -19,16 +19,16 @@ LinkedList<T>::LinkedList(shared_ptr<Node<T>> n)
 }
 
 template <typename T>
-LinkedList<T>::LinkedList(vector<T> const &data)
+LinkedList<T>::LinkedList(vector<T> const& data)
 {
 	LoadData(data);
 }
 template <typename T>
-LinkedList<T>::LinkedList(LinkedList &&other) noexcept : _head(move(other._head)), _tail(move(other._tail))
+LinkedList<T>::LinkedList(LinkedList&& other) noexcept : _head(move(other._head)), _tail(move(other._tail))
 {
 }
 template <typename T>
-LinkedList<T> &LinkedList<T>::operator=(LinkedList &&other) noexcept
+LinkedList<T>& LinkedList<T>::operator=(LinkedList&& other) noexcept
 {
 	if (this != &other)
 	{
@@ -44,7 +44,7 @@ LinkedList<T>::~LinkedList()
 	Reset();
 }
 template <typename T>
-void LinkedList<T>::LoadData(vector<T> const &data)
+void LinkedList<T>::LoadData(vector<T> const& data)
 {
 	_head.reset();
 	_tail.reset();
@@ -84,7 +84,7 @@ shared_ptr<Node<T>> LinkedList<T>::Tail()
 	return node;
 }
 template <typename T>
-shared_ptr<Node<T>> LinkedList<T>::Find(const Node<T> &n)
+shared_ptr<Node<T>> LinkedList<T>::Find(const Node<T>& n)
 {
 	shared_ptr<Node<T>> node = nullptr;
 	for (node = _head; node; node = node->Next())
@@ -100,14 +100,14 @@ void LinkedList<T>::Print(shared_ptr<Node<T>> node)
 	cout << endl;
 }
 template <typename T>
-void LinkedList<T>::ToVector(vector<T> &data)
+void LinkedList<T>::ToVector(vector<T>& data)
 {
 	for (shared_ptr<Node<T>> n = _head; n; n = n->Next())
 		data.push_back(n->Item());
 }
 
 template <typename T>
-void LinkedList<T>::SplitList(shared_ptr<Node<T>> &even, shared_ptr<Node<T>> &odd)
+void LinkedList<T>::SplitList(shared_ptr<Node<T>>& even, shared_ptr<Node<T>>& odd)
 {
 	shared_ptr<Node<T>> evenTail, oddTail;
 	even = odd = nullptr;
@@ -143,11 +143,12 @@ void LinkedList<T>::SplitList(shared_ptr<Node<T>> &even, shared_ptr<Node<T>> &od
 	if (oddTail)
 		oddTail->SetNext(nullptr);
 }
-// XXX: After join the ownership of the nodes in 'other' LinkedList is/should be transferred to
-// *this LinkedList. So when other calls Reset() AFTER this->Reset() it results in dangling pointer
-// and undefined behaviour. To prevent that, set other.Head to nullptr
+/* XXX: After join the ownership of the nodes in 'other' LinkedList is/should be transferred to
+* *this LinkedList. So when other calls Reset() AFTER this->Reset() it results in dangling pointer
+* and undefined behaviour. To prevent that, set other.Head to nullptr
+*/
 template <typename T>
-size_t LinkedList<T>::Join(LinkedList<T> &other)
+size_t LinkedList<T>::Join(LinkedList<T>& other)
 {
 	if (*this == other)
 		throw invalid_argument("LinkedList Cannot join itself!");
@@ -166,12 +167,12 @@ size_t LinkedList<T>::Length() const
 	return length;
 }
 template <typename T>
-bool LinkedList<T>::operator==(LinkedList<T> &other)
+bool LinkedList<T>::operator==(LinkedList<T>& other)
 {
 	return Head() == other.Head() && Tail() == other.Tail() && Length() == other.Length();
 }
 template <typename T>
-weak_ordering LinkedList<T>::operator<=>(const LinkedList<T> &other) const
+weak_ordering LinkedList<T>::operator<=>(const LinkedList<T>& other) const
 {
 	return Length() <=> other.Length();
 }
@@ -407,7 +408,7 @@ shared_ptr<Node<T>> LinkedList<T>::Split(shared_ptr<Node<T>> first, size_t size)
  * Merge left and right lists into dest sorted list.
  */
 template <typename T>
-void LinkedList<T>::Merge(shared_ptr<Node<T>> &left, shared_ptr<Node<T>> &right, shared_ptr<Node<T>> &dest)
+void LinkedList<T>::Merge(shared_ptr<Node<T>>& left, shared_ptr<Node<T>>& right, shared_ptr<Node<T>>& dest)
 {
 	for (; left && right;)
 	{
@@ -585,7 +586,7 @@ shared_ptr<Node<T>> LinkedList<T>::AddNumbers(shared_ptr<Node<T>> p1, shared_ptr
 	return nullptr;
 }
 template <typename T>
-shared_ptr<Node<T>> LinkedList<T>::AddNumbers(LinkedList<T> &ll)
+shared_ptr<Node<T>> LinkedList<T>::AddNumbers(LinkedList<T>& ll)
 	requires integral_type<T>
 {
 	return AddNumbers(_head, ll.Head(), T());

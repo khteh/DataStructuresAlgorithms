@@ -882,29 +882,42 @@ bool Range::ContainsNearbyAlmostDuplicate(vector<widest_signed_int> const& nums,
 /*
  * https://www.hackerrank.com/challenges/array-splitting/problem
  * 100%
- * Do NOT change the data type from int to long!
- * Only tested working with int type.
  */
-size_t Range::VectorEqualSplit(vector<int> const& data)
+size_t Range::VectorEqualSplit(vector<size_t> const& data)
 {
-	set<int> unique(data.begin(), data.end());
-	size_t result = 0;
+	set<size_t> unique(data.begin(), data.end());
+	size_t result = 0, i = 0, left = 0;
 	if (data.size() < 2)
 		return result;
-	int right = parallel_reduce(
-		blocked_range<size_t>(0, data.size()), 0,
-		[&](tbb::blocked_range<size_t> const& r, int running_total)
+	/*
+	The result is wrong and fails the hackerrank challenge if '0' is used as identity in parallel_reduce / ranges::fold_left / accumulate.
+	That literal is an int, so the total is squeezed through 32 bits whatever type you replace int with. In the test, only the size_t version with that 0 left unchanged gave wrong answers:
+	So even though your lambda adds in size_t, TBB stores each chunk’s result as an int, combines them as ints, and returns an int. Then:
+
+	1. Each partial sum is cut down to 32 bits when it’s converted to int.
+	2. size_t right = <that int>: when the 32-bit value has its top bit set, it’s negative as an int, and converting a negative int to size_t sign-extends it to a huge number.
+	3. left is added up in real size_t, without this cut, so left never equals right, and the function returns 0.
+
+	From the test: {10⁹, 10⁹, 10⁹, 10⁹} sums to 4,000,000,000. The answer is 2: split in the middle, then each half again. With size_t, right came out as 18,446,744,073,414,584,320, so the function returned 0.
+	Why the 32-bit versions “work”
+
+	1. With uint32_t or int, every sum is already kept to 32 bits, so the cut in step 1 loses nothing. left and right are both totals modulo 2³², computed the same way, so left == right still finds the true midpoint. It works because both sides overflow identically, not because the sums fit. Two caveats:
+	2. With int, the overflow is technically undefined behaviour. It works with GCC in practice, but a compiler is allowed to assume it never happens. A sanitizer build of the real input would report it. uint32_t wraps around by definition, so that version is at least well defined.
+
+	Equal modulo 2³² isn’t equal. The sums can reach 2¹⁴ × 10⁹ ≈ 1.6 × 10¹³, far beyond 2³². Two sides whose true totals differ by an exact multiple of 2³² would look equal. That’s unlikely in HackerRank’s data, but possible.
+	*/
+	size_t right = parallel_reduce(
+		blocked_range<size_t>(0, data.size()), size_t{ 0 } /* 0 is an int → TBB's Value type is int */,
+		[&](tbb::blocked_range<size_t> const& r, size_t running_total)
 		{
 			for (size_t j = r.begin(); j < r.end(); j++)
 				running_total += data[j];
 			return running_total;
 		},
-		std::plus<int>());
-	int left = 0;
-	size_t i = 0;
+		std::plus<size_t>());
 	if (!right)
-		return data.size() - 1;
-	else if (unique.size() == 1 && data[0] && (right % 2 || data.size() % 2))
+		return data.size() - 1; // [0 0 0] -> [0 0] [0] -> [0] [0]
+	else if (unique.size() == 1 && data[0] && (right % 2 || data.size() % 2)) // [1 1 1] -> cannot split!
 		return 0;
 	else
 		for (; i < data.size() && left != right; left += data[i], right -= data[i++])
@@ -912,8 +925,8 @@ size_t Range::VectorEqualSplit(vector<int> const& data)
 	if (left == right && i < data.size())
 	{
 		result++;
-		vector<int> leftSplit = vector<int>(data.begin(), data.begin() + i);
-		vector<int> rightSplit = vector<int>(data.begin() + i, data.end());
+		vector<size_t> leftSplit = vector<size_t>(data.begin(), data.begin() + i);
+		vector<size_t> rightSplit = vector<size_t>(data.begin() + i, data.end());
 		result += max(VectorEqualSplit(leftSplit), VectorEqualSplit(rightSplit));
 	}
 	return result;

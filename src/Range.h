@@ -39,7 +39,7 @@ public:
 	size_t SherlockAndCost(vector<size_t> const&);
 	vector<size_t> WiggleMaxLength(vector<size_t> const&);
 	bool ContainsNearbyAlmostDuplicate(vector<widest_signed_int> const&, widest_signed_int, widest_signed_int);
-	size_t VectorEqualSplit(vector<int> const&); // Only tested working with int type.
+	size_t VectorEqualSplit(vector<size_t> const&);
 	string AlmostSorted(vector<long> const&);
 	size_t PickNumbersFromRange(vector<size_t> const&);
 	vector<long> LastNumbers(size_t, long, long);
