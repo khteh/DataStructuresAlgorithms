@@ -504,11 +504,51 @@ T DynamicProgramming<T>::NumberSolitaire(vector<T> const& data)
 /*
  * https://www.hackerrank.com/challenges/construct-the-array/problem
  * Constraint Satisfaction problem
- * 100% editorial solution but I don't fully understand how it works, especially the line:
- * cout << (x == 1 ? 1LL * (k - 1) * d[n - 2] % mod : d[n - 1]) << endl;
- * f(n) = (k-1)f(n-2) + (k-2)f(n-1)
- * f(0) = 0
- * f(1) = 1
+ * 1 <= x <= k
+The symmetry: every value other than 1 behaves the same
+Take all valid arrays of some length that start with 1. Swap the labels 2 and 3 everywhere, say. Every array ending in 2 becomes one ending in 3, and the reverse, and the rules still hold, because only 1 is special (it’s the start). So for a given length:
+
+>> The number of arrays ending at 2 is the same as ending at 3, or at any other value except 1. <<
+
+That leaves just two quantities to track for arrays of length i:
+
+1. f(i): the number ending at one particular value other than 1, for example at 2.
+2. g(i): the number ending at 1.
+
+The two rules:
+
+Look at what comes just before the last element:
+
+1. Ending at 1: the element before it can be any of the k − 1 values that aren’t 1. Each ends f(i − 1) arrays:
+
+g(i) = (k − 1) · f(i − 1)
+
+2. Ending at some v ≠ 1: the element before it is either 1, which gives g(i − 1) arrays, or one of the other values that is neither 1 nor v. There are k − 2 of those, each giving f(i − 1):
+
+f(i) = g(i − 1) + (k − 2) · f(i − 1)
+
+Substitute the first rule into the second, using g(i − 1) = (k − 1) · f(i − 2):
+
+f(i) = (k − 1) · f(i − 2) + (k − 2) · f(i − 1)
+
+That’s the line inside the loop.
+
+The indices and starting values:
+
+dp[i] is f for an array of length i + 1, that is, i steps after the initial 1:
+
+1. dp[0] = 0: the array [1] can’t end at a value other than 1.
+2. dp[1] = 1: [1, v] is the only length-2 array ending at v.
+
+The loop fills dp[2] up to dp[n − 1]. It only ever needs the last two values, so it keeps them in a 2-element array and uses i % 2 to alternate between the slots.
+
+return x == 1 ? (dp[(n - 2) % 2] * (k - 1)) % modulo : dp[(n - 1) % 2];
+1. x ≠ 1: by the symmetry, the answer is f(n), the same for every such x. That’s dp[n − 1].
+2. x = 1: the answer is g(n) = (k − 1) · f(n − 1). That’s (k − 1) · dp[n − 2], using the first rule.
+
+So it’s just “which of the two quantities does x ask for”. The % 2 is only there because of the 2-slot array.
+
+Example 1:
 n:3, k:3, x:1
 1 [2,3] 1
 1 [k-1] 1 => 2
@@ -524,61 +564,36 @@ result: dp[(n-1)%2] = dp[0] = 1 => [1,3,2]
 n:3, k:3, x:3
 1 [2] 3
 1 [k-2] 3 => 1
-i:2 [1,1] Actual dp: [0,1,1]
-result: dp[(n-1)%2] = 1
+i:2 dp[0] = dp[0] * (3-1) + dp[1] * (3-2) = 1 => [1,1] Actual dp: [0,1,1]
+result: dp[(n-1)%2] = dp[0] = 1 => [1,2,3]
 
+Example 2:
 n:4, k:3, x:1
 1 [2,3] [2,3] 1
 1 [2] [3] 1
 1 [3] [2] 1 => 2
 1 [k-1] [k-1] 1
-i:2 [1,1] Actual dp: [0,1,1]
-i:3 [1,2+1] = [1,3] Actual dp: [0,1,1,3]
-result: dp[(n-2)%2] * (k - 1) = dp[0] * 2 = 2. Actual dp: [0,1,1,3,2]
-
-n:5, k:3, x:1
-1 [2,3] [1,2,3] [2,3] 1
-1 [2] [1] [2] 1
-1 [2] [1] [3] 1
-1 [2] [3] [2] 1
-1 [3] [1] [2] 1
-1 [3] [1] [3] 1
-1 [3] [2] [3] 1
-i:2 [1,1] Actual dp: [0,1,1]
-i:3 [1,2+1] = [1,3] Actual dp: [0,1,1,3]
-i:4 [2+3,3] = [5,3] Actual dp: [0,1,1,3,5]
-result: dp[(n-2)%2] * (k - 1) = dp[1] * 2 = 3*2 = 6. Actual dp: [0,1,1,3,5,6]
+i:2 dp[0] = dp[0] * (3-1) + dp[1] * (3-2) = 1 => [1,1] Actual dp: [0,1,1]
+i:3 dp[1] = dp[1] * (3-1) + dp[0] * (3-2) = 1*2 + 1 = 3 => [1,3] Actual dp: [0,1,1,3]
+result: dp[(n-2)%2] * (k - 1) = dp[0] * 2 = 2. Actual dp: [0,1,1,3,2] => [1,2,3,1] [1,3,2,1]
 
 n:4, k:3, x:2
-1 [2,3] [1,3] 2
-1 [2] [1] 2
-1 [2] [3] 2
-1 [3] [1] 2 => 3
-1 [k-1] [k-1] 2
-i:2 [1,1] Actual dp: [0,1,1]
-i:3 [1,2+1] = [1,3] Actual dp: [0,1,1,3]
-result: dp[(n-1)%2] = 3. Actual dp: [0,1,1,3,3]
-
-n:5, k:3, x:2
-1 [2,3] [1,2,3] [1,3] 2
-1 [2] [1] [3] 2
-1 [2] [3] [1] 2
-1 [3] [1] [3] 2
-1 [3] [2] [1] 2
-1 [3] [1] [3] 2 => 5
-i:2 [1,1] Actual dp: [0,1,1]
-i:3 [1,2+1] = [1,3] Actual dp: [0,1,1,3]
-i:4 [2+3,3] = [5,3] Actual dp: [0,1,1,3,5]
-result: dp[(n-1)%2] = 5. Actual dp: [0,1,1,3,5,5]
+1 [2,3] [2,3] 1
+1 [2] [3] 1
+1 [3] [2] 1 => 2
+1 [k-1] [k-1] 1
+i:2 dp[0] = dp[0] * (3-1) + dp[1] * (3-2) = 1 => [1,1] Actual dp: [0,1,1]
+i:3 dp[1] = dp[1] * (3-1) + dp[0] * (3-2) = 1*2 + 1 = 3 => [1,3] Actual dp: [0,1,1,3]
+result: dp[(n-1)%2] = dp[1] = 3. Actual dp: [0,1,1,3,2] => [1,2,3,2] [1,3,1,2] [1,2,1,2]
 
 n:4, k:3, x:3
-1 [2,3] [1,2] 3
-1 [2] [1] 3
-1 [3] [2] 3
-1 [3] [1] 3 => 3
-i:2 [1,1] Actual dp: [0,1,1]
-i:3 [1,2+1] = [1,3] Actual dp: [0,1,1,3]
-result: dp[(n-1)%2] = 3
+1 [2,3] [2,3] 1
+1 [2] [3] 1
+1 [3] [2] 1 => 2
+1 [k-1] [k-1] 1
+i:2 dp[0] = dp[0] * (3-1) + dp[1] * (3-2) = 1 => [1,1] Actual dp: [0,1,1]
+i:3 dp[1] = dp[1] * (3-1) + dp[0] * (3-2) = 1*2 + 1 = 3 => [1,3] Actual dp: [0,1,1,3]
+result: dp[(n-1)%2] = dp[1] = 3. Actual dp: [0,1,1,3,2] => [1,2,1,3] [1,3,1,3] [1,3,2,3]
  */
 template <typename T>
 T DynamicProgramming<T>::WaysToFillRange(size_t n, size_t k, size_t x)
@@ -586,9 +601,9 @@ T DynamicProgramming<T>::WaysToFillRange(size_t n, size_t k, size_t x)
 {
     const T modulo = 1e9 + 7L;
     vector<T> dp = { 0, 1 };
-    for (T i = 2; i < n; i++)
+    for (size_t i = 2; i < n; i++)
         dp[i % 2] = ((dp[(i - 2) % 2] * (k - 1)) % modulo + (dp[(i - 1) % 2] * (k - 2)) % modulo) % modulo;
-    return x == 1 ? (dp[(n - 2) % 2] * (k - 1)) % modulo : dp[(n - 1) % 2]; // XXX: Don't understand this!
+    return x == 1 ? (dp[(n - 2) % 2] * (k - 1)) % modulo : dp[(n - 1) % 2];
 }
 /*
  * https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm

@@ -788,6 +788,27 @@ bool Search::_HasKthSmallestPairs(vector<long> const& data, size_t k, long dista
  *   The rule: round mid AWAY from the side that keeps it. A search that keeps mid on the start side (start = mid, end = mid - 1,
  *   for the LAST true) must round up instead, for the same reason.
  *
+ * FIRST true:
+ * x:          1      2      3      4      5      6
+condition:  false  false  false  true   true   true
+                                 ^ the first true: the answer
+They want the smallest x where the condition holds, such as the smallest divisor that keeps the sum within the threshold.
+When condition(mid) is true, mid might be that first true, so it’s kept, with end = mid.
+ *
+ * LAST true: is the opposite shape: the condition is true up to some point and false after it, and you want the largest x where it still holds:
+x:          1      2      3      4      5      6
+condition:  true   true   true   true   true   false
+                                        ^ the last true: the answer
+A typical example is the integer square root of 30: the largest x with x² ≤ 30. That’s true for x = 0 … 5 and false from 6 on, so the answer is 5.
+There, when condition(mid) is true, mid might be the last true, so it’s kept on the start side instead. So, in this case, the rounding has to go the other way.
+With start = 4 and end = 5:
+- Rounding down gives mid = 4. If the condition is true, start = mid sets start to 4 again. Nothing changes, and it loops forever. That’s the same trap as before, on the other side.
+- Rounding up gives mid = 5. Either start = 5 or end = 4, and the range shrinks.
+
+So the rule: Round mid away from the side that keeps it:
+1. Keep it on the end side (end = mid, for the first true): round down.
+2. Keep it on the start side (start = mid, for the last true): round up.
+ *
  * Unsigned types and a lower bound of 0: only template B is safe. The answer can be 0 (duplicates, e.g. {1, 1, 6} has distance 0), and
  * template A would then compute end = mid - 1 = 0 - 1, which for size_t wraps around to SIZE_MAX. Template B never computes mid - 1.
  * This function uses long, as the challenge does (signed int), so -1 is just -1 and template A would work here too.
