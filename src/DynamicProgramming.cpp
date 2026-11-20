@@ -128,8 +128,8 @@ T DynamicProgramming<T>::EggDrops(T eggs, T floors)
     }
     // Base case for 1 egg
     ranges::generate(dp[0], [n = 0]() mutable
-                     { return n++; });
-    // size_t attempts = eggDropsDynamicProgramming(eggs, floors, dp);
+        { return n++; });
+// size_t attempts = eggDropsDynamicProgramming(eggs, floors, dp);
     for (T egg = 1; egg < eggs; egg++)
         for (T floor = 2; floor <= floors; floor++)
             for (T i = 2; i <= floor; i++)
@@ -260,7 +260,7 @@ T DynamicProgramming<T>::EggDropsImproved(T eggs, T floors)
  *
  */
 template <typename T>
-bool DynamicProgramming<T>::WordBreak(string const &s, set<string> const &words)
+bool DynamicProgramming<T>::WordBreak(string const& s, set<string> const& words)
 {
     vector<bool> valid(s.size() + 1, false);     // flag to mark substring [0, end) validity
     valid[0] = true;                             // empty substring is a valid string
@@ -285,7 +285,7 @@ bool DynamicProgramming<T>::WordBreak(string const &s, set<string> const &words)
  * [0,0) valid + "cats" [0,4) {3: ["cat"], 4: ["cats"]} -> [0,4) valid; [0,4) valid + "and" [4,7) {3: ["cat"] 4: ["cats"], 7: ["cats and", "cats and"]} -> [0,7) valid
  */
 template <typename T>
-vector<string> DynamicProgramming<T>::WordBreak2(string const &s, set<string> const &words)
+vector<string> DynamicProgramming<T>::WordBreak2(string const& s, set<string> const& words)
 {
     map<size_t, vector<string>> strings;
     vector<bool> valid(s.size() + 1, false); // flag to mark substring [0, end) validity
@@ -404,10 +404,10 @@ A 0  0 0 1 0
 b 0  0 0 1 0
  */
 template <typename T>
-bool DynamicProgramming<T>::Abbreviation(string const &s1, string const &s2)
+bool DynamicProgramming<T>::Abbreviation(string const& s1, string const& s2)
 {
     if (s1.empty() || (s2.empty() && count_if(s1.begin(), s1.end(), [](char c)
-                                              { return isupper(c); }) > 0))
+        { return isupper(c); }) > 0))
         return false;
     vector<vector<bool>> table(s1.size() + 1, vector<bool>(s2.size() + 1)); // Defaults to false initial value
     // dp[i][j] = true iff s1(0..i-1) can match s2(0..j-1)
@@ -446,7 +446,7 @@ i:7(s=eadBeef)	1	1			3			3			1			 1				1				0				0
 i:8(s=DeadBeef)	1	1			3			3			1			 1				1				0				0
 */
 template <typename T>
-size_t DynamicProgramming<T>::FindSubsequence(string const &str, string const &tomatch)
+size_t DynamicProgramming<T>::FindSubsequence(string const& str, string const& tomatch)
 {
     if (tomatch.empty())
         return 1;
@@ -491,7 +491,7 @@ size_t DynamicProgramming<T>::FindSubsequence(string const &str, string const &t
  * dp[n] = max(dp[n], max(max(data[n] + dp[n-1], data[n] + dp[n - 2]), data[n] + dp[n - 3])...)
  */
 template <typename T>
-T DynamicProgramming<T>::NumberSolitaire(vector<T> const &data)
+T DynamicProgramming<T>::NumberSolitaire(vector<T> const& data)
     requires arithmetic_type<T>
 {
     vector<T> dp(data.size(), numeric_limits<T>::min());
@@ -512,7 +512,7 @@ T DynamicProgramming<T>::NumberSolitaire(vector<T> const &data)
 n:3, k:3, x:1
 1 [2,3] 1
 1 [k-1] 1 => 2
-i:2 [1,1] Actual dp: [0,1,1]
+i:2 dp[0] = dp[0] * (3-1) + dp[1] * (3-2) = 1 => [1,1] Actual dp: [0,1,1]
 result: dp[(n-2)%2] * (k-1) = dp[1]*2 = 2
 
 n:3, k:3, x:2
@@ -585,7 +585,7 @@ T DynamicProgramming<T>::WaysToFillRange(size_t n, size_t k, size_t x)
     requires arithmetic_type<T>
 {
     const T modulo = 1e9 + 7L;
-    vector<T> dp = {0, 1};
+    vector<T> dp = { 0, 1 };
     for (T i = 2; i < n; i++)
         dp[i % 2] = ((dp[(i - 2) % 2] * (k - 1)) % modulo + (dp[(i - 1) % 2] * (k - 2)) % modulo) % modulo;
     return x == 1 ? (dp[(n - 2) % 2] * (k - 1)) % modulo : dp[(n - 1) % 2]; // XXX: Don't understand this!
@@ -596,7 +596,7 @@ T DynamicProgramming<T>::WaysToFillRange(size_t n, size_t k, size_t x)
  * 100%
  */
 template <typename T>
-void DynamicProgramming<T>::FloydWarshall(size_t n, vector<vector<T>> const &edges, vector<vector<T>> &distances)
+void DynamicProgramming<T>::FloydWarshall(size_t n, vector<vector<T>> const& edges, vector<vector<T>>& distances)
     requires signed_integral_type<T>
 {
     distances.resize(n + 1);
@@ -667,14 +667,14 @@ where,
  * 100%
  */
 template <typename T>
-T DynamicProgramming<T>::VectorSlicesSum(vector<T> const &data)
+T DynamicProgramming<T>::VectorSlicesSum(vector<T> const& data)
     requires arithmetic_type<T>
 {
     T result = 0;
     const long modulo = 1e9 + 7L;
     if (!data.empty())
     {
-        vector<T> twoPower = {1};
+        vector<T> twoPower = { 1 };
         for (size_t i = 0; i < data.size(); i++)
         {
             T tmp = twoPower.back() * 2;
@@ -786,7 +786,7 @@ size_t DynamicProgramming<T>::UniquePaths(size_t rows, size_t cols)
  *   horse -> rorse (h -> r: 2) -> rose (delete r) -> ros (delete e) = 4
  */
 template <typename T>
-size_t DynamicProgramming<T>::MinimumEditDistance(string const &word1, string const &word2, size_t ins_cost, size_t del_cost, size_t rep_cost)
+size_t DynamicProgramming<T>::MinimumEditDistance(string const& word1, string const& word2, size_t ins_cost, size_t del_cost, size_t rep_cost)
 {
     vector<vector<size_t>> distances(word1.size() + 1, vector<size_t>(word2.size() + 1, 0)); // word index is 1-based
     for (size_t i = 1; i <= word1.size(); i++)
@@ -830,7 +830,7 @@ size_t DynamicProgramming<T>::MinimumEditDistance(string const &word1, string co
  * i:5 max(12,8)=12 [0 5 5 8 8 12] | [8 12]
  */
 template <typename T>
-T DynamicProgramming<T>::NonAdjacentMaxSum(vector<T> &data)
+T DynamicProgramming<T>::NonAdjacentMaxSum(vector<T>& data)
     requires arithmetic_type<T>
 {
     vector<T> result(2, 0);
@@ -917,7 +917,7 @@ Since fives = 0, the loop covers every column down to 0, which is why [1][0] can
 Answer: read row j = 2, the choices with exactly 2 elements: min(1, 5) = 1, min(2, 3) = 2, min(3, 2) = 2. The best is 2.
  */
 template <typename T>
-size_t DynamicProgramming<T>::MaxZeroProduct(vector<T> const &data, size_t count)
+size_t DynamicProgramming<T>::MaxZeroProduct(vector<T> const& data, size_t count)
     requires integral_type<T>
 {
     vector<pair<int, int>> factors; // {twos, fives} per element

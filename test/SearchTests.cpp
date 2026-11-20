@@ -385,7 +385,7 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(3, 3, 3, 5),
 		make_tuple(6, 2, 3, 6),
 		make_tuple(9, 5, 5, 15)));
-class SmallestDistancePairTestFixture : public testing::TestWithParam<tuple<size_t, vector<size_t>, size_t>>
+class SmallestDistancePairTestFixture : public testing::TestWithParam<tuple<long, vector<long>, size_t>>
 {
 public:
 	void SetUp() override
@@ -394,15 +394,16 @@ public:
 		_data = get<1>(GetParam());
 		_k = get<2>(GetParam());
 	}
-	size_t SmallestDistancePairTest()
+	long SmallestDistancePairTest()
 	{
 		return _search.SmallestDistancePair(_data, _k);
 	}
 
 protected:
 	Search _search;
-	size_t _expected, _k;
-	vector<size_t> _data;
+	long _expected;
+	size_t _k;
+	vector<long> _data;
 };
 TEST_P(SmallestDistancePairTestFixture, SmallestDistancePairTests)
 {
@@ -411,11 +412,17 @@ TEST_P(SmallestDistancePairTestFixture, SmallestDistancePairTests)
 INSTANTIATE_TEST_SUITE_P(
 	SmallestDistancePairTests,
 	SmallestDistancePairTestFixture,
-	::testing::Values(make_tuple(0, vector<size_t>{1, 3, 3}, 1),
-		make_tuple(0, vector<size_t>{1, 1, 1}, 2),
-		make_tuple(5, vector<size_t>{1, 6, 1}, 3),
-		make_tuple(58, vector<size_t>{62, 100, 4}, 2),
-		make_tuple(2, vector<size_t>{9, 10, 7, 10, 6, 1, 5, 4, 9, 8}, 18)));
+	::testing::Values(make_tuple(0, vector<long>{1, 3, 3}, 1),
+		make_tuple(0, vector<long>{1, 1, 1}, 2),
+		make_tuple(5, vector<long>{1, 6, 1}, 3),
+		make_tuple(58, vector<long>{62, 100, 4}, 2),
+		make_tuple(2, vector<long>{9, 10, 7, 10, 6, 1, 5, 4, 9, 8}, 18),
+		// Negative values: the distances of {-3, 1, 4} are 4, 7 and 3
+		make_tuple(3, vector<long>{-3, 1, 4}, 1),
+		make_tuple(4, vector<long>{-3, 1, 4}, 2),
+		make_tuple(7, vector<long>{-3, 1, 4}, 3),
+		make_tuple(0, vector<long>{-5, 2, -5}, 1), // A repeated negative value: distance 0
+		make_tuple(7, vector<long>{-5, 2, -5}, 2)));
 class NthUglyNumberTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t, size_t, size_t>>
 {
 public:

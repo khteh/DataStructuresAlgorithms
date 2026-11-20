@@ -12,7 +12,7 @@ private:
     bool _IsValidSubSequence(vector<size_t> const&, size_t, size_t);
     bool _CanMakeBouquets(vector<size_t> const&, size_t, size_t, size_t);
     bool _HasKthSmallest(size_t, size_t, size_t, size_t);
-    bool _HasKthSmallestPairs(vector<size_t>&, size_t, size_t);
+    bool _HasKthSmallestPairs(vector<long> const&, size_t, long);
     bool _HasNUglyNumbers(size_t, uint64_t, uint64_t, uint64_t, uint64_t);
     bool _WithinThreshold(vector<size_t> const&, size_t, size_t);
 
@@ -31,7 +31,7 @@ public:
     size_t MinimumLargestSum(vector<size_t> const&, size_t);
     long MinDaysToMakeBouquets(vector<size_t> const&, size_t, size_t);
     size_t MultiplicationTableKthSmallestNumber(size_t, size_t, size_t);
-    int SmallestDistancePair(vector<size_t>&, size_t);
+    long SmallestDistancePair(vector<long>&, size_t);
     size_t NthUglyNumber(size_t, size_t, size_t, size_t);
     size_t SmallestDivisor(vector<size_t> const&, size_t);
 };

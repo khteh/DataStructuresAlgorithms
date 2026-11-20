@@ -754,14 +754,14 @@ size_t Search::MultiplicationTableKthSmallestNumber(size_t m, size_t n, size_t k
     }
     return start; // start is the minimal k​ satisfying the condition function.
 }
-bool Search::_HasKthSmallestPairs(vector<size_t>& data, size_t k, size_t distance)
+bool Search::_HasKthSmallestPairs(vector<long> const& data, size_t k, long distance)
 {
     size_t pairs = 0;
     // The entire for loop is actually calculating Binomial Coefficients.
     for (size_t i = 0, j = 1; i < data.size() || j < data.size(); i++)
     {
         // If the current pair pointed at has a distance less than or equal to distance, all pairs between these pointers are valid (since the array is already sorted),
-        for (; j < data.size() && abs((long)(data[j] - data[i])) <= (long)distance; j++)
+        for (; j < data.size() && data[j] - data[i] <= distance; j++) // Sorted, so data[j] - data[i] >= 0 for j >= i
             ;
         pairs += (j - i - 1);
     }
@@ -772,64 +772,40 @@ bool Search::_HasKthSmallestPairs(vector<size_t>& data, size_t k, size_t distanc
  * Use binary search
  * 100%
  *
---- size_t mid = start + (end - start) / 2 + (end - start) % 2; --- doesn't work
-1 1 6 k:3 [1,1] [1,6] [1,6]
-[start: 0, end: 5 mid: 3]
-i:0, j:1, v:0 j:2
-i:0, j:2, v:5 pairs = 2 - 0 - 1 = 1
-
-i:1, j:2 v:5
-i:2, j:2 v:0 j:3 pairs += 3 - 2 - 1 = 1 condition: false
-BinomialCoefficients(2) = 2(1) / 2 = 1 condition: false
-
-[start: 4, end: 5 mid:5]
-i:0, j:1, v:0 j:2
-i:0, j:2, v:5 j:3
-pairs += 3 - 0 - 1 = 2
-
-i:1, j:3 pairs += 3 - 1 - 1 = 2 + 1 = 3
-i:2, j:3 pairs += 3 - 2 - 1 = 3 + 0 = 3 condition: true
-BinomialCoefficients(3) = 3(2) / 2 = 3 condition: true
-
-[start: 4, end: 4] => return 4
------- size_t mid = start + (end - start) / 2; --- works
-1 1 6 k:3 [1,1] [1,6] [1,6]
-[start: 0, end: 5 mid: 2]
-i:0, j:1, v:0 j:2
-i:0, j:2, v:5 pairs = 2 - 0 - 1 = 1
-
-i:1, j:2 v:5
-i:2, j:2 v:0 j:3 pairs += 3 - 2 - 1 = 1 condition: false
-BinomialCoefficients(2) = 2(1) / 2 = 1 condition: false
-
-[start: 3, end: 5 mid:4]
-i:0, j:1, v:0 j:2
-i:0, j:2, v:5 j:2
-pairs += 2 - 0 - 1 = 1
-
-i:1, j:2, v:5 pairs += 2 - 1 - 1 = 0 + 1 = 1
-i:2, j:2, v:0, j:3 pairs += 3 - 2 - 1 = 0 + 1 = 1 condition: false
-BinomialCoefficients(2) = 2(1) / 2 = 1 condition: false
-
-[start: 4, end: 5, mid:4]
-i:0, j:1, v:0 j:2
-i:0, j:2, v:5 j:2
-pairs += 2 - 0 - 1 = 1
-
-i:1, j:2, v:5 pairs += 2 - 1 - 1 = 0 + 1 = 1
-i:2, j:2, v:0, j:3 pairs += 3 - 2 - 1 = 0 + 1 = 1 condition: false
-BinomialCoefficients(2) = 2(1) / 2 = 1 condition: false
-
-[start: 5, end: 5, mid:4] => return 5
+ * Binary search for the first value whose condition is true: false ... false true ... true.
+ * Two templates are used in this class. They differ in whether mid is kept, and the rounding of mid must match:
+ *
+ * Template A (MinEatingSpeed, MinCapacityToShipWithinDays, MinimumLargestSum, ...):
+ *   while (start <= end) { if (condition(mid)) end = mid - 1; else start = mid + 1; }
+ *   Both branches discard mid, so the range shrinks every step whichever way mid rounds: rounding down or up both work.
+ *
+ * Template B (SmallestDistancePair, NthUglyNumber, SmallestDivisor):
+ *   while (start < end) { if (condition(mid)) end = mid; else start = mid + 1; }
+ *   end = mid keeps mid, because it might be the answer. That only shrinks the range if mid < end, so mid must round DOWN:
+ *   - start + (end - start) / 2 is always < end while start < end.
+ *   - Rounding up, start + (end - start) / 2 + (end - start) % 2, gives mid == end whenever end - start == 1,
+ *     e.g. start 4, end 5: mid 5. If condition(5) is true, end = mid leaves end at 5, and the loop never ends.
+ *   The rule: round mid AWAY from the side that keeps it. A search that keeps mid on the start side (start = mid, end = mid - 1,
+ *   for the LAST true) must round up instead, for the same reason.
+ *
+ * Unsigned types and a lower bound of 0: only template B is safe. The answer can be 0 (duplicates, e.g. {1, 1, 6} has distance 0), and
+ * template A would then compute end = mid - 1 = 0 - 1, which for size_t wraps around to SIZE_MAX. Template B never computes mid - 1.
+ * This function uses long, as the challenge does (signed int), so -1 is just -1 and template A would work here too.
+ * The other template A functions are safe either way: a lower bound of at least 1, or signed types.
+ *
+ * Example: {1, 1, 6}, k = 3. The pair distances are 0, 5, 5, so the answer is 5.
+ * [start 0, end 5] mid 2: pairs with distance <= 2: 1 < 3, false -> start = 3
+ * [start 3, end 5] mid 4: 1 < 3, false -> start = 5
+ * [start 5, end 5]: start == end -> return 5
 */
-int Search::SmallestDistancePair(vector<size_t>& data, size_t k)
+long Search::SmallestDistancePair(vector<long>& data, size_t k)
 {
     ranges::sort(data);
-    size_t start = 0, end = data.back() - data.front();
+    long start = 0, end = data.back() - data.front(); // Distances: from 0 to the largest
     for (; start < end;)
     {
-        // size_t mid = start + (end - start) / 2 + (end - start) % 2; // XXX: Doesn't work in this case. If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
-        size_t mid = start + (end - start) / 2;
+        // end = mid keeps mid, so mid must round down: rounding up gives mid == end when end - start == 1, and the loop never ends. See comments in SmallestDistancePair.
+        long mid = start + (end - start) / 2;
         if (_HasKthSmallestPairs(data, k, mid))
             end = mid;
         else
@@ -912,7 +888,7 @@ size_t Search::NthUglyNumber(size_t n, size_t a, size_t b, size_t c)
     _lcm_abc = (uint64_t)(_lcm_ab * c) / gcd(_lcm_ab, c);
     for (; start < end;)
     {
-        // size_t mid = start + (end - start) / 2 + (end - start) % 2; // XXX: Doesn't work in this case. If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        // end = mid keeps mid, so mid must round down: rounding up gives mid == end when end - start == 1, and the loop never ends. See comments in SmallestDistancePair.
         size_t mid = start + (end - start) / 2;
         if (_HasNUglyNumbers(n, a, b, c, mid))
             end = mid;
@@ -946,7 +922,7 @@ size_t Search::SmallestDivisor(vector<size_t> const& data, size_t threshold)
     size_t start = 1, end = *ranges::max_element(data);
     for (; start < end;)
     {
-        // size_t mid = start + (end - start) / 2 + (end - start) % 2; // XXX: Doesn't work in this case. If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
+        // end = mid keeps mid, so mid must round down: rounding up gives mid == end when end - start == 1, and the loop never ends. See comments in SmallestDistancePair.
         size_t mid = start + (end - start) / 2;
         if (_WithinThreshold(data, threshold, mid))
             end = mid;
