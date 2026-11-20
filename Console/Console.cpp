@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 	vector<long double> vld;
 	vector<int> data, data1;
 	vector<size_t> udata, udata1;
-	vector<uint64_t> ull;
+	vector<widest_unsigned_int> big_unsigned_int;
 	vector<bool> bools;
 	set<vector<size_t>> usetvec;
 	set<set<size_t>> usetgrid;
@@ -659,14 +659,14 @@ int main(int argc, char* argv[])
 	assert(!IsPrime(10));
 	a.clear();
 	b.clear();
-	ull.clear();
-	ull = { 1, 2, 1, 2 };
-	uint64_t findMaxResult = range.FindMax(ull);
+	big_unsigned_int.clear();
+	big_unsigned_int = { 1, 2, 1, 2 };
+	uint64_t findMaxResult = range.FindMax(big_unsigned_int);
 	assert(findMaxResult == 9);
 
-	ull.clear();
-	ull = { 2, 3, 3, 2 };
-	findMaxResult = range.FindMax(ull);
+	big_unsigned_int.clear();
+	big_unsigned_int = { 2, 3, 3, 2 };
+	findMaxResult = range.FindMax(big_unsigned_int);
 	assert(findMaxResult == 36);
 
 	str = "     Hello     World!!!     ";

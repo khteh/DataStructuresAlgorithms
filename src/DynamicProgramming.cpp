@@ -589,7 +589,7 @@ result: dp[(n-1)%2] = dp[1] = 3. Actual dp: [0,1,1,3,2] => [1,2,1,3] [1,3,1,3] [
  */
 template <typename T>
 T DynamicProgramming<T>::WaysToFillRange(size_t n, size_t k, size_t x)
-    requires arithmetic_type<T>
+    requires wide_integral_type<T>
 {
     const T modulo = 1e9 + 7L;
     vector<T> dp = { 0, 1 };

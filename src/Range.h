@@ -21,10 +21,10 @@ public:
 	size_t SumPairs(size_t, vector<size_t> const&);
 	void SumPairs(size_t, vector<size_t> const&, vector<size_t>&);
 	vector<long> ProductExceptSelf(vector<long> const&);
-	uint64_t FindMax(vector<uint64_t> const&);
-	uint64_t MaxAndPair(vector<uint64_t> const&);
-	uint64_t MaxXorPair(vector<uint64_t> const&);
-	uint64_t BeautifulQuadruples(size_t, size_t, size_t, size_t);
+	widest_unsigned_int FindMax(vector<widest_unsigned_int> const&);
+	widest_unsigned_int MaxAndPair(vector<widest_unsigned_int> const&);
+	widest_unsigned_int MaxXorPair(vector<widest_unsigned_int> const&);
+	widest_unsigned_int BeautifulQuadruples(size_t, size_t, size_t, size_t);
 	size_t GreaterThanSumPairs(size_t, vector<size_t> const&);
 	vector<vector<long>> TripletsZeroSum(vector<long>&);
 	vector<vector<long>> QuadrupletsSum(long, vector<long>&);
@@ -38,7 +38,7 @@ public:
 	long MinEnergyInstallations(vector<size_t>&, long);
 	size_t SherlockAndCost(vector<size_t> const&);
 	vector<size_t> WiggleMaxLength(vector<size_t> const&);
-	bool ContainsNearbyAlmostDuplicate(vector<int64_t> const&, int64_t, int64_t);
+	bool ContainsNearbyAlmostDuplicate(vector<widest_signed_int> const&, widest_signed_int, widest_signed_int);
 	size_t VectorEqualSplit(vector<int> const&); // Only tested working with int type.
 	string AlmostSorted(vector<long> const&);
 	size_t PickNumbersFromRange(vector<size_t> const&);
@@ -52,6 +52,6 @@ public:
 	size_t TrapRainWater(vector<size_t> const&);
 	size_t FirstMissingPositive(vector<long>&);
 	bool IsTrionic(vector<long> const&);
-	int64_t MaxSumTrionic(vector<long> const&);
+	widest_signed_int MaxSumTrionic(vector<long> const&);
 	vector<long> NextGreaterElements(vector<long>&);
 };

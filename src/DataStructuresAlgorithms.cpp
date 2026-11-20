@@ -2719,7 +2719,7 @@ vector<string> ZigZagEscape(vector<long>& left, vector<long>& right, size_t lInd
 				oss.str("");
 			}
 		}
-}
+	}
 	else if (right.size())
 		for (; rIndex < right.size(); rIndex++)
 			if (right[rIndex] > current)
@@ -4539,6 +4539,7 @@ void cpp20variants()
 }
 /*
  * https://www.hackerrank.com/challenges/gena/problem
+ * 100%
  * vector index # is the size of disk
  * vector element is tower #
  *
@@ -4547,8 +4548,6 @@ void cpp20variants()
  * Represent each possible arrangement as a binary number of length 2 * discCount.
  * The rightmost 2 digits represent the pole of disc 1, the next two digits represent the position of disk 2, etc.,
  * Then do a bfs of the graph starting at init_state...
- *
- * 100%
  *
  * [2, 3]
  * Towers: 1 2 3 4

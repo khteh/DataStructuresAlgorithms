@@ -251,8 +251,8 @@ protected:
 	T _expected;
 	size_t _n, _k, _x;
 };
-class WaysToFillRangeTestFixture : public WaysToFillRangeTestFixtureBase<BIG_SIGNED_INT>,
-								   public testing::TestWithParam<tuple<BIG_SIGNED_INT, size_t, size_t, size_t>>
+class WaysToFillRangeTestFixture : public WaysToFillRangeTestFixtureBase<widest_signed_int>,
+								   public testing::TestWithParam<tuple<widest_signed_int, size_t, size_t, size_t>>
 {
 public:
 	void SetUp() override
@@ -271,6 +271,22 @@ INSTANTIATE_TEST_SUITE_P(
 	WaysToFillRangeTests,
 	WaysToFillRangeTestFixture,
 	::testing::Values(make_tuple(2, 3, 3, 1), make_tuple(1, 3, 3, 2), make_tuple(3, 4, 3, 2), make_tuple(0, 5, 2, 2), make_tuple(236568308, 761, 99, 1), make_tuple(151337967, 100000, 100000, 1), make_tuple(413130667, 72071, 66860, 44594)));
+// The products reach about 10^9 x 10^5 = 10^14 before the modulo: any integer of at least 64 bits is enough, not only the widest
+TEST(WaysToFillRangeTests, SixtyFourBitTest)
+{
+	DynamicProgramming<int64_t> signed64;
+	DynamicProgramming<uint64_t> unsigned64;
+	ASSERT_EQ(151337967, signed64.WaysToFillRange(100000, 100000, 1));
+	ASSERT_EQ(413130667, signed64.WaysToFillRange(72071, 66860, 44594));
+	ASSERT_EQ(151337967, unsigned64.WaysToFillRange(100000, 100000, 1));
+	ASSERT_EQ(413130667, unsigned64.WaysToFillRange(72071, 66860, 44594));
+}
+// WaysToFillRange requires wide_integral_type<T>: DynamicProgramming<int> still compiles, but can't call it, rather than silently overflowing
+template <typename T>
+concept CanCallWaysToFillRange = requires(DynamicProgramming<T> dp) { dp.WaysToFillRange(3, 3, 1); };
+static_assert(CanCallWaysToFillRange<int64_t>);
+static_assert(CanCallWaysToFillRange<widest_signed_int>);
+static_assert(!CanCallWaysToFillRange<int>);
 class FloydWarshallTestFixture : public testing::TestWithParam<tuple<vector<long>, size_t, vector<vector<long>>, vector<vector<size_t>>>>
 {
 public:

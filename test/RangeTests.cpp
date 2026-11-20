@@ -177,14 +177,14 @@ INSTANTIATE_TEST_SUITE_P(
 		make_tuple(9, vector<size_t>{4, 2, 0, 3, 2, 5}),
 		make_tuple(1, vector<size_t>{4, 2, 3}), make_tuple(1, vector<size_t>{5, 4, 1, 2})));
 
-class MaxAndPairTestFixture : public RangeTestFixture1<uint64_t, uint64_t>, public testing::TestWithParam<tuple<uint64_t, vector<uint64_t>>>
+class MaxAndPairTestFixture : public RangeTestFixture1<widest_unsigned_int, widest_unsigned_int>, public testing::TestWithParam<tuple<widest_unsigned_int, vector<widest_unsigned_int>>>
 {
 public:
 	void SetUp() override
 	{
 		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
-	uint64_t MaxAndPairTest()
+	widest_unsigned_int MaxAndPairTest()
 	{
 		return _rangeObj.MaxAndPair(_data);
 	}
@@ -196,20 +196,20 @@ TEST_P(MaxAndPairTestFixture, MaxAndPairTests)
 INSTANTIATE_TEST_SUITE_P(
 	MaxAndPairTests,
 	MaxAndPairTestFixture,
-	::testing::Values(make_tuple(8, vector<uint64_t>{16, 12, 8, 4}),
-		make_tuple(0, vector<uint64_t>{4, 8, 16, 2}),
-		make_tuple(8ull, views::iota(0ull, 10ull) | ranges::to<vector<uint64_t>>())
-		/*make_tuple(8, []() -> generator<uint64_t>
+	::testing::Values(make_tuple(8, vector<widest_unsigned_int>{16, 12, 8, 4}),
+		make_tuple(0, vector<widest_unsigned_int>{4, 8, 16, 2}),
+		make_tuple(8ull, views::iota(0ull, 10ull) | ranges::to<vector<widest_unsigned_int>>())
+		/*make_tuple(8, []() -> generator<widest_unsigned_int>
 								  { co_yield ranges::elements_of(views::iota(0, 10)); }() | ranges::to<vector>())*/
 	));
-class MaxXorPairTestFixture : public RangeTestFixture1<uint64_t, uint64_t>, public testing::TestWithParam<tuple<uint64_t, vector<uint64_t>>>
+class MaxXorPairTestFixture : public RangeTestFixture1<widest_unsigned_int, widest_unsigned_int>, public testing::TestWithParam<tuple<widest_unsigned_int, vector<widest_unsigned_int>>>
 {
 public:
 	void SetUp() override
 	{
 		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
-	uint64_t MaxXorPairTest()
+	widest_unsigned_int MaxXorPairTest()
 	{
 		return _rangeObj.MaxXorPair(_data);
 	}
@@ -221,14 +221,14 @@ TEST_P(MaxXorPairTestFixture, MaxXorPairTests)
 INSTANTIATE_TEST_SUITE_P(
 	MaxXorPairTests,
 	MaxXorPairTestFixture,
-	::testing::Values(make_tuple(7, vector<uint64_t>{1, 2, 3, 4, 5, 6, 7}),
-		make_tuple(7, vector<uint64_t>{1, 2, 3, 4}),
-		make_tuple(28, vector<uint64_t>{25, 10, 2, 8, 5, 3}),
-		make_tuple(15ull, views::iota(0ull, 10ull) | ranges::to<vector<uint64_t>>()),
-		make_tuple(4095ull, views::iota(1ull, 3001ull) | ranges::to<vector<uint64_t>>())
-		/*make_tuple(15, []() -> generator<uint64_t>
+	::testing::Values(make_tuple(7, vector<widest_unsigned_int>{1, 2, 3, 4, 5, 6, 7}),
+		make_tuple(7, vector<widest_unsigned_int>{1, 2, 3, 4}),
+		make_tuple(28, vector<widest_unsigned_int>{25, 10, 2, 8, 5, 3}),
+		make_tuple(15ull, views::iota(0ull, 10ull) | ranges::to<vector<widest_unsigned_int>>()),
+		make_tuple(4095ull, views::iota(1ull, 3001ull) | ranges::to<vector<widest_unsigned_int>>())
+		/*make_tuple(15, []() -> generator<widest_unsigned_int>
 								   { co_yield ranges::elements_of(views::iota(0, 10)); }() | ranges::to<vector>()),
-		make_tuple(4095, []() -> generator<uint64_t>
+		make_tuple(4095, []() -> generator<widest_unsigned_int>
 									 { co_yield ranges::elements_of(views::iota(1, 3001)); }() | ranges::to<vector>())*/
 	));
 
@@ -835,7 +835,7 @@ INSTANTIATE_TEST_SUITE_P(
 		make_tuple(vector<size_t>{1, 17, 5, 15, 5, 16, 8}, vector<size_t>{1, 17, 5, 15, 5, 16, 8}),
 		make_tuple(vector<size_t>{1, 17, 5, 15, 5, 16, 8}, vector<size_t>{1, 17, 5, 10, 13, 15, 12, 5, 16, 8}),
 		make_tuple(vector<size_t>{1, 17, 5, 13, 11, 12, 5, 16, 8}, vector<size_t>{1, 17, 5, 10, 13, 11, 12, 5, 16, 8})));
-class ContainsNearbyAlmostDuplicateTestFixture : public testing::TestWithParam<tuple<bool, vector<int64_t>, int64_t, int64_t>>
+class ContainsNearbyAlmostDuplicateTestFixture : public testing::TestWithParam<tuple<bool, vector<widest_signed_int>, widest_signed_int, widest_signed_int>>
 {
 public:
 	void SetUp() override
@@ -852,9 +852,9 @@ public:
 
 protected:
 	Range _rangeObj;
-	int64_t _param, _t;
+	widest_signed_int _param, _t;
 	bool _expected;
-	vector<int64_t> _data;
+	vector<widest_signed_int> _data;
 };
 TEST_P(ContainsNearbyAlmostDuplicateTestFixture, ContainsNearbyAlmostDuplicateTests)
 {
@@ -863,24 +863,24 @@ TEST_P(ContainsNearbyAlmostDuplicateTestFixture, ContainsNearbyAlmostDuplicateTe
 INSTANTIATE_TEST_SUITE_P(
 	ContainsNearbyAlmostDuplicateTests,
 	ContainsNearbyAlmostDuplicateTestFixture,
-	::testing::Values(make_tuple(true, vector<int64_t>{1, 2, 3, 1}, 3, 0),
-		make_tuple(true, vector<int64_t>{1, 0, 1, 1}, 1, 2),
-		make_tuple(false, vector<int64_t>{1, 5, 9, 1, 5, 9}, 2, 3),
-		make_tuple(false, vector<int64_t>{1, 5, 9, 1, 5, 9}, 0, 0),
-		make_tuple(false, vector<int64_t>{1, 5, 9, 1, 5, 9}, 0, 1),
-		make_tuple(true, vector<int64_t>{1, 5, 9, 1, 5, 9}, 3, 0),
-		make_tuple(false, vector<int64_t>{1, 5, 9, 1, 5, 9}, 2, 0),
-		make_tuple(false, vector<int64_t>{1, 5, 9, 1, 5, 9}, -1, -1),
-		make_tuple(true, vector<int64_t>{1, 2, 1}, 2, 0),
-		make_tuple(false, vector<int64_t>{2147483647LL, -1, 2147483647LL}, 1, 2147483647LL),
-		make_tuple(true, vector<int64_t>{2147483647LL, -1, 2147483647LL}, 1, 2147483648LL), // long is 64-bit on Linux and 32-bit on Windows
-		make_tuple(false, vector<int64_t>{2147483647LL, -1, 2147483647LL}, 1, -2147483647LL),
-		make_tuple(false, vector<int64_t>{-2147483648LL, 2147483647LL}, 1, 1),
-		make_tuple(true, vector<int64_t>{4, 1, -1, 6, 5}, 3, 1),
-		make_tuple(true, vector<int64_t>{4, 1, -1, 6, 5}, 3, 2),
-		make_tuple(true, vector<int64_t>{4, 1, -1, 6, 5}, 3, 3),
-		make_tuple(true, vector<int64_t>{4, 1, -1, 6, 5}, 3, 4),
-		make_tuple(true, vector<int64_t>{4, 1, -1, 6, 5}, 3, 5)));
+	::testing::Values(make_tuple(true, vector<widest_signed_int>{1, 2, 3, 1}, 3, 0),
+		make_tuple(true, vector<widest_signed_int>{1, 0, 1, 1}, 1, 2),
+		make_tuple(false, vector<widest_signed_int>{1, 5, 9, 1, 5, 9}, 2, 3),
+		make_tuple(false, vector<widest_signed_int>{1, 5, 9, 1, 5, 9}, 0, 0),
+		make_tuple(false, vector<widest_signed_int>{1, 5, 9, 1, 5, 9}, 0, 1),
+		make_tuple(true, vector<widest_signed_int>{1, 5, 9, 1, 5, 9}, 3, 0),
+		make_tuple(false, vector<widest_signed_int>{1, 5, 9, 1, 5, 9}, 2, 0),
+		make_tuple(false, vector<widest_signed_int>{1, 5, 9, 1, 5, 9}, -1, -1),
+		make_tuple(true, vector<widest_signed_int>{1, 2, 1}, 2, 0),
+		make_tuple(false, vector<widest_signed_int>{2147483647LL, -1, 2147483647LL}, 1, 2147483647LL),
+		make_tuple(true, vector<widest_signed_int>{2147483647LL, -1, 2147483647LL}, 1, 2147483648LL), // long is 64-bit on Linux and 32-bit on Windows
+		make_tuple(false, vector<widest_signed_int>{2147483647LL, -1, 2147483647LL}, 1, -2147483647LL),
+		make_tuple(false, vector<widest_signed_int>{-2147483648LL, 2147483647LL}, 1, 1),
+		make_tuple(true, vector<widest_signed_int>{4, 1, -1, 6, 5}, 3, 1),
+		make_tuple(true, vector<widest_signed_int>{4, 1, -1, 6, 5}, 3, 2),
+		make_tuple(true, vector<widest_signed_int>{4, 1, -1, 6, 5}, 3, 3),
+		make_tuple(true, vector<widest_signed_int>{4, 1, -1, 6, 5}, 3, 4),
+		make_tuple(true, vector<widest_signed_int>{4, 1, -1, 6, 5}, 3, 5)));
 class MinimumBribesTestFixture : public testing::TestWithParam<tuple<long, size_t, vector<long>>>
 {
 public:
@@ -1102,14 +1102,14 @@ INSTANTIATE_TEST_SUITE_P(
 	::testing::Values(make_tuple(true, vector<long>{1, 3, 5, 4, 2, 6}),
 		make_tuple(false, vector<long>{2, 1, 3}),
 		make_tuple(false, vector<long>{2, 3, 1}), make_tuple(false, vector<long>{2, 4, 3, 3})));
-class MaxSumTrionicTestFixture : public RangeTestFixture1<int64_t, long>, public testing::TestWithParam<tuple<int64_t, vector<long>>>
+class MaxSumTrionicTestFixture : public RangeTestFixture1<widest_signed_int, long>, public testing::TestWithParam<tuple<widest_signed_int, vector<long>>>
 {
 public:
 	void SetUp() override
 	{
 		RangeTestFixture1::SetUp(get<0>(GetParam()), get<1>(GetParam()));
 	}
-	int64_t MaxSumTrionicTest()
+	widest_signed_int MaxSumTrionicTest()
 	{
 		return _rangeObj.MaxSumTrionic(_data);
 	}

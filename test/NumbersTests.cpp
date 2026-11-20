@@ -316,8 +316,8 @@ protected:
 	T _expected;
 	size_t _n, _k;
 };
-class BinomialCoefficientsTestFixture : public BinomialCoefficientsTestFixtureBase<BIG_UNSIGNED_INT>,
-	public testing::TestWithParam<tuple<BIG_UNSIGNED_INT, size_t, size_t>>
+class BinomialCoefficientsTestFixture : public BinomialCoefficientsTestFixtureBase<widest_unsigned_int>,
+	public testing::TestWithParam<tuple<widest_unsigned_int, size_t, size_t>>
 {
 public:
 	void SetUp() override
@@ -366,8 +366,8 @@ protected:
 	size_t _n;
 	vector<size_t> _k;
 };
-class MultinomialCoefficientsTestFixture : public MultinomialCoefficientsFixtureBase<BIG_UNSIGNED_INT>,
-	public testing::TestWithParam<tuple<BIG_UNSIGNED_INT, size_t, vector<size_t>, uint128_t>>
+class MultinomialCoefficientsTestFixture : public MultinomialCoefficientsFixtureBase<widest_unsigned_int>,
+	public testing::TestWithParam<tuple<widest_unsigned_int, size_t, vector<size_t>, uint128_t>>
 {
 public:
 	void SetUp() override
@@ -466,8 +466,8 @@ protected:
 	T _expected;
 	long _n;
 };
-class PositiveFibonacciTestFixture : public FibonacciTestFixtureBase<BIG_SIGNED_INT>,
-	public testing::TestWithParam<tuple<BIG_SIGNED_INT, long>>
+class PositiveFibonacciTestFixture : public FibonacciTestFixtureBase<widest_signed_int>,
+	public testing::TestWithParam<tuple<widest_signed_int, long>>
 {
 public:
 	void SetUp() override
@@ -483,8 +483,8 @@ INSTANTIATE_TEST_SUITE_P(
 	PositiveFibonacciTests,
 	PositiveFibonacciTestFixture,
 	::testing::Values(make_tuple(0, 0), make_tuple(1, 1), make_tuple(1, 2), make_tuple(2, 3), make_tuple(3, 4), make_tuple(5, 5), make_tuple(8, 6), make_tuple(13, 7), make_tuple(21, 8), make_tuple(34, 9), make_tuple(2880067194370816120, 90)));
-class NegativeFibonacciTestFixture : public FibonacciTestFixtureBase<BIG_SIGNED_INT>,
-	public testing::TestWithParam<tuple<BIG_SIGNED_INT, long>>
+class NegativeFibonacciTestFixture : public FibonacciTestFixtureBase<widest_signed_int>,
+	public testing::TestWithParam<tuple<widest_signed_int, long>>
 {
 public:
 	void SetUp() override
@@ -521,8 +521,8 @@ protected:
 	size_t _n;
 };
 
-class FactorialTestFixture : public FactorialTestFixtureBase<BIG_SIGNED_INT>,
-	public testing::TestWithParam<tuple<BIG_SIGNED_INT, size_t, size_t>>
+class FactorialTestFixture : public FactorialTestFixtureBase<widest_signed_int>,
+	public testing::TestWithParam<tuple<widest_signed_int, size_t, size_t>>
 {
 public:
 	void SetUp() override

@@ -1,5 +1,7 @@
 #pragma once
+#include <climits> // CHAR_BIT
 #include <concepts>
+#include <cstdint>
 #include <functional>
 #include <type_traits>
 using namespace std;
@@ -12,20 +14,41 @@ typedef unsigned __int128 uint128_t;
 template <typename T>
 concept int128_type =
 #ifdef __SIZEOF_INT128__
-    same_as<remove_cv_t<T>, int128_t> || same_as<remove_cv_t<T>, uint128_t>;
+same_as<remove_cv_t<T>, int128_t> || same_as<remove_cv_t<T>, uint128_t>;
 #else
-    false;
+false;
 #endif
 template <typename T>
 concept integral_type = integral<T> || int128_type<T>;
 template <typename T>
 concept signed_integral_type = signed_integral<T>
 #ifdef __SIZEOF_INT128__
-                               || same_as<remove_cv_t<T>, int128_t>
+|| same_as<remove_cv_t<T>, int128_t>
 #endif
-    ;
+;
 template <typename T>
 concept arithmetic_type = integral<T> || floating_point<T>;
+/*
+ * At least 64 bits: int64_t, uint64_t, long long, and int128_t / uint128_t where the compiler has them. Not int, and not a 32-bit long (MSVC).
+ * Built on integral_type, not integral, so that the 128-bit types count in strict -std=c++XX too, and sized with sizeof rather than
+ * numeric_limits<T>::digits, which strict modes don't define for __int128.
+ */
+template <typename T>
+concept wide_integral_type = integral_type<T> && sizeof(T) * CHAR_BIT >= 64;
+template <typename T>
+concept wide_signed_integral_type = signed_integral_type<T> && sizeof(T) * CHAR_BIT >= 64;
+// The widest integers the compiler offers: 128 bits if it has int128_t, otherwise 64
+#ifdef __SIZEOF_INT128__
+using widest_signed_int = int128_t;
+using widest_unsigned_int = uint128_t;
+#else
+using widest_signed_int = int64_t;
+using widest_unsigned_int = uint64_t;
+#endif
+inline constexpr size_t widest_integral_bits = sizeof(widest_signed_int) * CHAR_BIT;
+// The widest integer the compiler offers, and nothing narrower: a concept checks a type, while widest_signed_int / widest_unsigned_int pick one
+template <typename T>
+concept widest_integral_type = integral_type<T> && sizeof(T) * CHAR_BIT >= widest_integral_bits;
 template <typename T>
 concept floating_point_type = floating_point<T>;
 template <class T, class U>

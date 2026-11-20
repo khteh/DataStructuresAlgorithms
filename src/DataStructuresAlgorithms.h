@@ -80,12 +80,7 @@ namespace ranges = std::ranges;
 #ifdef __SIZEOF_INT128__
 typedef __int128 int128_t;
 typedef unsigned __int128 uint128_t;
-#define BIG_SIGNED_INT int128_t
-#define BIG_UNSIGNED_INT uint128_t
-#else
-#define BIG_SIGNED_INT int64_t
-#define BIG_UNSIGNED_INT uint64_t
-#endif
+#endif // widest_signed_int / widest_unsigned_int (GenericConstraints.h): int128_t / uint128_t where available, otherwise int64_t / uint64_t
 typedef struct ZeroFactors
 {
 	size_t two, five, value;

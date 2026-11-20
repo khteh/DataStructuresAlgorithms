@@ -70,6 +70,7 @@
     <ClCompile Include="DynamicProgrammingTests.cpp" />
     <ClCompile Include="EulerianPathTests.cpp" />
     <ClCompile Include="GameTheoryTests.cpp" />
+    <ClCompile Include="GenericConstraintsTests.cpp" />
     <ClCompile Include="GraphTests.cpp" />
     <ClCompile Include="GreedyAlgorithmTests.cpp" />
     <ClCompile Include="HIndexTests.cpp" />

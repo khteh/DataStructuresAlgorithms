@@ -302,7 +302,7 @@ INSTANTIATE_TEST_SUITE_P(
 	NumberVectorsSumTests,
 	NumberVectorsSumTestFixture,
 	::testing::Values(make_tuple(11111111100, 1234567890, 9876543210), make_tuple(168, 123, 45), make_tuple(0x1dd9b7dde, 0xdeadbeef, 0xfeedbeef)));
-class NumberVectorsMultiplicationTestFixture : public testing::TestWithParam<tuple<BIG_UNSIGNED_INT, size_t, size_t>>
+class NumberVectorsMultiplicationTestFixture : public testing::TestWithParam<tuple<widest_unsigned_int, size_t, size_t>>
 {
 public:
 	void SetUp() override
@@ -311,9 +311,9 @@ public:
 		_var1 = get<1>(GetParam());
 		_var2 = get<2>(GetParam());
 	}
-	BIG_UNSIGNED_INT NumberVectorsMultiplicationTest()
+	widest_unsigned_int NumberVectorsMultiplicationTest()
 	{
-		vector<BIG_UNSIGNED_INT> var1, var2, result;
+		vector<widest_unsigned_int> var1, var2, result;
 		_arithmetic.NumberToVector(_var1, var1);
 		_arithmetic.NumberToVector(_var2, var2);
 		_arithmetic.NumberVectorsMultiplication(var1, var2, result);
@@ -321,7 +321,7 @@ public:
 	}
 
 protected:
-	Arithmetic<BIG_UNSIGNED_INT> _arithmetic;
+	Arithmetic<widest_unsigned_int> _arithmetic;
 	size_t _var1, _var2, _expected;
 };
 TEST_P(NumberVectorsMultiplicationTestFixture, NumberVectorsMultiplicationTests)

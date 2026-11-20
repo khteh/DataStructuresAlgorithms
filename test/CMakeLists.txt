@@ -21,6 +21,7 @@ set(Sources
     "DynamicProgrammingTests.cpp"
     "EulerianPathTests.cpp"
     "GameTheoryTests.cpp"
+    "GenericConstraintsTests.cpp"
     "GraphTests.cpp"
     "GreedyAlgorithmTests.cpp"
     "HeapTests.cpp"
