@@ -27,6 +27,29 @@ template class SparseTable<long, less<long>>;
 template class SparseTable<long, greater<long>>;
 #endif
 /*
+“Sparse” is about which ranges have their answer stored ahead of time. There are about N²/2 possible ranges l … r. The sparse table stores the answer for only the ranges whose length is a power of two: 1, 2, 4, 8, ….
+That’s about N log₂ N of them. Every other range is answered by combining two stored ones. So the table is a sparse sample of all the ranges.
+There is a dense equivalent: store the answer for every range, best[l][r], for all l ≤ r. You build it row by row: best[l][r] is the better of best[l][r − 1] and position r. A query is then a single lookup:
+
+                        Dense table	            Sparse table
+Ranges stored	        all of them,            ~N²/2	only power-of-two lengths, ~N log₂ N
+Build time and memory	O(N²)	                O(N log N)
+Query	                1 lookup	            2 lookups + 1 comparison
+Works for sum, xor, …	yes (no overlap needed)	no (the overlap would count twice)
+N = 30,000	            ~450 million entries,   ~3.6 GB as 8-byte positions	30,000 × 15 ≈ 450,000 entries, ~3.6 MB
+
+The sparse table costs one extra comparison per query and saves a factor of about N / log N in memory. For the bracket problem, the dense table wouldn’t fit in memory.
+For N = 8, as in the )(())(( example, the sparse table stores 8 + 7 + 5 + 1 = 21 of the 36 ranges. That’s not very sparse yet. The saving grows with N.
+Where the name comes from: as far as I know, the name was made popular by Bender and Farach-Colton’s paper “The LCA Problem Revisited” (2000). It describes this structure as an improvement on the naive dense O(N²) table for range-minimum queries.
+
+Other structures for the same range queries:
+Structure	                                        Build	Query	    Notes
+Dense table	                                        O(N²)	O(1)	    only for small N
+Sparse table	                                    O(N log N)	O(1)	min/max-like operations only; no updates
+Segment tree	                                    O(N)	O(log N)	any associative operation, and supports updating values
+Block decomposition + Cartesian tree (Fischer–Heun)	O(N)	O(1)	    optimal, but much more complex
+*/
+/*
 In the bracket problem (String::LongestValidParenthesesWithFixes), use the sparse table on P from the example string "")(())(("".
 Here is the sparse table built over P for ")(())((", the example from before:
 position:              0    1    2    3    4    5    6    7
@@ -47,7 +70,14 @@ Its right half 4 … 5 has its minimum at level 1[4] = 5 (P = −1).
 −1 is lower, so the entry is 5.
 
 A “−” means the block would run past the end. There are log₂ N rows of N entries, so building the table takes O(N log N) time and memory, once.
+=== Overlap example ===
+level 0:  0  1  2  3
+level 1:  0  2  2  -      min(3, 9) at 0; min(9, 1) at 2; min(1, 9) at 2
+level 2:  2  -  -  -      the better of level 1[0] (3) and level 1[2] (1): position 2
 
+level 1 is a level of 2 items. _table[1][0] and _table[1][1] overlaps at [1], _table[1][1] and _table[1][2] overlaps at [2]
+level 2 is a level of 4 items. However, level-1 only has 3. The overlap is at index-1
+===
 The constructor rejects any comparator for which Compare(a, a) is true.
 Compare(a, a) true means a non-strict comparator such as a <= b, which would turn ties into wins and LeftMost / RightMost's "at least as good as the bound" into "strictly better".
 This refers to what a non-strict comparator such as less_equal would do to the two places in SparseTable that call _compare. “At least as good as the bound” and “strictly better” differ only in whether a value equal to the bound counts.
@@ -82,7 +112,6 @@ So a non-strict comparator breaks both places at once:
 
 Index quietly changes from leftmost to rightmost.
 LeftMost and RightMost stop accepting values equal to the bound.
-
 */
 template <typename T, StrictComparator<T> Compare>
 SparseTable<T, Compare>::SparseTable(vector<T> const& v, Compare better, SparseTableTie tie)
