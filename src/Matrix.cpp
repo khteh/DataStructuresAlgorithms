@@ -38,7 +38,7 @@ void Cluster::AddNode(string item)
 	_size++;
 }
 // Implement += first for efficiency
-Cluster &Cluster::operator+=(const Cluster &rhs)
+Cluster& Cluster::operator+=(const Cluster& rhs)
 {
 	this->_size += rhs._size;
 	if (rhs._head)
@@ -58,14 +58,14 @@ Cluster &Cluster::operator+=(const Cluster &rhs)
 	return *this;
 }
 // Friend function allows symmetry (LHS + RHS)
-Cluster operator+(Cluster lhs, const Cluster &rhs)
+Cluster operator+(Cluster lhs, const Cluster& rhs)
 {
 	lhs += rhs; // Reuse += logic
 	return lhs; // Return by value
 }
 
 template <typename T>
-Matrix<T>::Matrix(vector<vector<T>> &grid, T active, T inactive) : _active(active), _inactive(inactive), _grid(grid) {}
+Matrix<T>::Matrix(vector<vector<T>>& grid, T active, T inactive) : _active(active), _inactive(inactive), _grid(grid) {}
 
 /*
 * Matrix area sum using bottom-up dynamic programming
@@ -109,7 +109,7 @@ https://leetcode.com/problems/range-sum-query-2d-immutable/
 https://www.youtube.com/watch?v=PwDqpOMwg6U
 */
 template <typename T>
-Matrix<T>::Matrix(vector<vector<T>> &matrix)
+Matrix<T>::Matrix(vector<vector<T>>& matrix)
 	: _grid(matrix.size(), vector<T>(matrix.empty() ? 0 : matrix[0].size())) // Defaults to zero initial value
 {
 	for (size_t i = 0; i < matrix.size(); i++)
@@ -125,7 +125,7 @@ Matrix<T>::Matrix(vector<vector<T>> &matrix)
 		}
 }
 template <typename T>
-void Matrix<T>::Print(vector<vector<T>> const &grid) const
+void Matrix<T>::Print(vector<vector<T>> const& grid) const
 {
 	for (size_t i = 0; i < grid.size(); i++)
 	{
@@ -142,7 +142,7 @@ void Matrix<T>::Print(vector<vector<T>> const &grid) const
  * 3 2 3
  */
 template <typename T>
-void Matrix<T>::MatrixDistance(vector<vector<T>> &data, size_t x, size_t y)
+void Matrix<T>::MatrixDistance(vector<vector<T>>& data, size_t x, size_t y)
 {
 	if (x < data.size() && y < data[0].size())
 		for (size_t i = 0; i < data.size(); i++)
@@ -157,7 +157,7 @@ void Matrix<T>::MatrixDistance(vector<vector<T>> &data, size_t x, size_t y)
 			}
 }
 template <typename T>
-void Matrix<T>::MatrixSort(vector<vector<T>> &data)
+void Matrix<T>::MatrixSort(vector<vector<T>>& data)
 {
 	Sort<T> sort;
 	vector<T> sorted;
@@ -171,7 +171,7 @@ void Matrix<T>::MatrixSort(vector<vector<T>> &data)
 			data[j][i] = sorted[k++];
 }
 template <typename T>
-void Matrix<T>::MatrixSortWithHeap(vector<vector<T>> &data)
+void Matrix<T>::MatrixSortWithHeap(vector<vector<T>>& data)
 {
 	Heap<T> heap;
 	for (size_t i = 0; i < data.size(); i++)
@@ -186,7 +186,7 @@ void Matrix<T>::MatrixSortWithHeap(vector<vector<T>> &data)
 // You are given a matrix. Elements in matrix can be either 0 or 1. Each row and column of matrix is sorted in ascending order.
 // Find number of '0's in the given matrix. Expected complexity is O(log(N)).
 template <typename T>
-size_t Matrix<T>::MatrixPatternCount(vector<vector<char>> const &data)
+size_t Matrix<T>::MatrixPatternCount(vector<vector<char>> const& data)
 {
 	long i = data.size() - 1, j = data[0].size() - 1, count = 0;
 	for (; i >= 0 && j >= 0; i--, j--)
@@ -225,7 +225,7 @@ size_t Matrix<T>::MatrixPatternCount(vector<vector<char>> const &data)
 [0,2] - [3,3]			37 - (16) = 21
 */
 template <typename T>
-T Matrix<T>::Sum(vector<vector<size_t>> &area)
+T Matrix<T>::Sum(vector<vector<size_t>>& area)
 {
 	if (_grid.empty() || area.empty() || area.size() < 2 || area[0].size() < 2)
 		return 0;
@@ -242,7 +242,7 @@ T Matrix<T>::Sum(vector<vector<size_t>> &area)
 	return sum;
 }
 template <typename T>
-T Matrix<T>::LargestSumSubmatrix(vector<vector<size_t>> &matrix)
+T Matrix<T>::LargestSumSubmatrix(vector<vector<size_t>>& matrix)
 {
 	T sum = numeric_limits<T>::min();
 	for (size_t r1 = 0; r1 < _grid.size(); r1++)
@@ -250,7 +250,7 @@ T Matrix<T>::LargestSumSubmatrix(vector<vector<size_t>> &matrix)
 			for (size_t c1 = 0; c1 < _grid[r1].size(); c1++)
 				for (size_t c2 = c1; c2 < _grid[r2].size(); c2++)
 				{
-					vector<vector<size_t>> area = vector<vector<size_t>>{{r1, c1}, {r2, c2}};
+					vector<vector<size_t>> area = vector<vector<size_t>>{ { r1, c1 },{ r2, c2 } };
 					T tmp = Sum(area);
 					if (tmp > sum)
 					{
@@ -264,7 +264,7 @@ T Matrix<T>::LargestSumSubmatrix(vector<vector<size_t>> &matrix)
  * 100%
  */
 template <typename T>
-bool Matrix<T>::SearchMatrix(T target, vector<vector<T>> const &matrix) const
+bool Matrix<T>::SearchMatrix(T target, vector<vector<T>> const& matrix) const
 {
 	if (matrix.empty())
 		return false;
@@ -320,7 +320,7 @@ bool Matrix<T>::SearchMatrix(T target, vector<vector<T>> const &matrix) const
 	return false;
 }
 template <typename T>
-bool Matrix<T>::SearchMatrixRow(vector<vector<T>> const &matrix, T target, size_t row, T start, T end) const
+bool Matrix<T>::SearchMatrixRow(vector<vector<T>> const& matrix, T target, size_t row, T start, T end) const
 {
 	if (start >= 0 && end < (long)matrix[row].size() && start <= end)
 	{
@@ -337,7 +337,7 @@ bool Matrix<T>::SearchMatrixRow(vector<vector<T>> const &matrix, T target, size_
 	return false;
 }
 template <typename T>
-bool Matrix<T>::SearchMatrixCol(vector<vector<T>> const &matrix, T target, size_t col, T start, T end) const
+bool Matrix<T>::SearchMatrixCol(vector<vector<T>> const& matrix, T target, size_t col, T start, T end) const
 {
 	if (start >= 0 && end < (long)matrix.size() && start <= end)
 	{
@@ -360,7 +360,7 @@ bool Matrix<T>::SearchMatrixCol(vector<vector<T>> const &matrix, T target, size_
  * 7 8 9
  */
 template <typename T>
-vector<T> Matrix<T>::MatrixSprialOrder(vector<vector<T>> const &matrix)
+vector<T> Matrix<T>::MatrixSprialOrder(vector<vector<T>> const& matrix)
 {
 	vector<T> result;
 	int row = 0, col = 0;
@@ -419,7 +419,7 @@ vector<T> Matrix<T>::MatrixSprialOrder(vector<vector<T>> const &matrix)
  * [7] 8 3      9   6  3
  */
 template <typename T>
-void Matrix<T>::RotateMatrix90DegressClockwise(vector<vector<T>> &matrix)
+void Matrix<T>::RotateMatrix90DegressClockwise(vector<vector<T>>& matrix)
 {
 	for (long i = 0, j = matrix.size() - 1; i < j; i++, j--)
 		for (size_t k = 0; k < (size_t)(j - i); k++)
@@ -453,7 +453,7 @@ r2: 4 3 1 2
 r3: 3 1 2 4
  */
 template <typename T>
-void Matrix<T>::RotateMatrixRTimesAntiClockwise(vector<vector<T>> &matrix, size_t rotation)
+void Matrix<T>::RotateMatrixRTimesAntiClockwise(vector<vector<T>>& matrix, size_t rotation)
 {
 	if (!matrix.empty())
 	{
@@ -498,7 +498,7 @@ void Matrix<T>::RotateMatrixRTimesAntiClockwise(vector<vector<T>> &matrix, size_
  * 100%
  */
 template <typename T>
-bool Matrix<T>::SearchMatrix1(T target, vector<vector<T>> const &matrix) const
+bool Matrix<T>::SearchMatrix1(T target, vector<vector<T>> const& matrix) const
 {
 	if (matrix.empty())
 		return false;
@@ -521,7 +521,7 @@ bool Matrix<T>::SearchMatrix1(T target, vector<vector<T>> const &matrix) const
  * 100%
  */
 template <typename T>
-size_t Matrix<T>::ChessQueensMoveCount(size_t dimension, size_t r_q /*[1,dimension]*/, size_t c_q /*[1,dimension]*/, vector<vector<size_t>> const &obstacles)
+size_t Matrix<T>::ChessQueensMoveCount(size_t dimension, size_t r_q /*[1,dimension]*/, size_t c_q /*[1,dimension]*/, vector<vector<size_t>> const& obstacles)
 {
 	r_q--;
 	c_q--;
@@ -559,7 +559,7 @@ size_t Matrix<T>::ChessQueensMoveCount(size_t dimension, size_t r_q /*[1,dimensi
  * Fill up queens from row-0 to bottom. In each row, check if the col is safe and recurse.
  */
 template <typename T>
-void Matrix<T>::ChessQueensPlacements(vector<string> &board, size_t r, vector<vector<string>> &result)
+void Matrix<T>::ChessQueensPlacements(vector<string>& board, size_t r, vector<vector<string>>& result)
 {
 	if (r == board.size())
 	{
@@ -601,7 +601,7 @@ void Matrix<T>::ChessQueensPlacements(vector<string> &board, size_t r, vector<ve
  * 100%
  */
 template <typename T>
-size_t Matrix<T>::GridlandMetro(size_t rows, size_t cols, vector<vector<size_t>> const &tracks)
+size_t Matrix<T>::GridlandMetro(size_t rows, size_t cols, vector<vector<size_t>> const& tracks)
 {
 	size_t count = 0;
 	map<size_t, vector<pair<size_t, size_t>>> occupied;
@@ -653,7 +653,7 @@ size_t Matrix<T>::GridlandMetro(size_t rows, size_t cols, vector<vector<size_t>>
  * 100%
  */
 template <typename T>
-size_t Matrix<T>::SurfaceArea3D(vector<vector<size_t>> const &data)
+size_t Matrix<T>::SurfaceArea3D(vector<vector<size_t>> const& data)
 {
 	size_t zArea = 0, xArea = 0, yArea = 0;
 	for (size_t i = 0; i < data.size(); i++)
@@ -690,7 +690,7 @@ size_t Matrix<T>::SurfaceArea3D(vector<vector<size_t>> const &data)
  * 100%
  */
 template <typename T>
-size_t Matrix<T>::TwoCrosses(vector<string> const &grid)
+size_t Matrix<T>::TwoCrosses(vector<string> const& grid)
 {
 	multimap<size_t, vector<size_t>> crosses;
 	// Firstly, record all the crosses with size > 1. A single cell is considered a valid cross
@@ -882,7 +882,7 @@ Rows: [1,2]	Height:2
 ...
  */
 template <typename T>
-size_t Matrix<T>::LargestPerimeter(vector<string> const &grid)
+size_t Matrix<T>::LargestPerimeter(vector<string> const& grid)
 {
 	size_t result = 0;
 	if (!grid.empty())
@@ -979,7 +979,7 @@ explodeAt5s: [5 9  13] <= %4 == 1
 explodeAt3s: [3 7 11  15] <= %4 == 3
  */
 template <typename T>
-vector<string> Matrix<T>::BomberMan(size_t n, vector<string> const &grid)
+vector<string> Matrix<T>::BomberMan(size_t n, vector<string> const& grid)
 {
 	vector<vector<long>> grid1;
 	vector<string> filled, explodeAt3s, explodeAt5s;
@@ -1067,7 +1067,7 @@ vector<string> Matrix<T>::BomberMan(size_t n, vector<string> const &grid)
  * 100%
  */
 template <typename T>
-T Matrix<T>::MaxQuadrantSum(vector<vector<T>> const &data)
+T Matrix<T>::MaxQuadrantSum(vector<vector<T>> const& data)
 {
 	T sum = 0;
 	for (size_t i = 0; i < data.size() / 2; i++)
@@ -1128,15 +1128,15 @@ True:			sum					sum					sum
 sum:	2	3	1		2	3	1			2	3	1
  */
 template <typename T>
-bool Matrix<T>::ContainersBallsSwap(vector<vector<T>> const &containers)
+bool Matrix<T>::ContainersBallsSwap(vector<vector<T>> const& containers)
 {
 	vector<T> rowSums, colSums;
 	if (!containers.empty())
 		colSums.assign(containers[0].size(), 0);
 	for (size_t i = 0; i < containers.size(); i++)
 	{
-		rowSums.push_back(parallel_reduce(blocked_range<T>(0, containers[i].size()), (T)0, [&](tbb::blocked_range<T> const &r, T running_total)
-										  {
+		rowSums.push_back(parallel_reduce(blocked_range<T>(0, containers[i].size()), (T)0, [&](tbb::blocked_range<T> const& r, T running_total)
+			{
 				for (size_t j = r.begin(); j < r.end(); j++)
 					running_total += containers[i][j];
 				return running_total; }, std::plus<size_t>()));
@@ -1152,7 +1152,7 @@ bool Matrix<T>::ContainersBallsSwap(vector<vector<T>> const &containers)
  * 1 2
  */
 template <typename T>
-pathResult_t Matrix<T>::FindMaxPath(vector<vector<T>> &grid, size_t r, size_t c)
+pathResult_t Matrix<T>::FindMaxPath(vector<vector<T>>& grid, size_t r, size_t c)
 	requires integral_type<T>
 {
 	ostringstream oss;
@@ -1178,7 +1178,7 @@ pathResult_t Matrix<T>::FindMaxPath(vector<vector<T>> &grid, size_t r, size_t c)
  * 100%
  */
 template <typename T>
-bool Matrix<T>::WordExistsInGrid(vector<vector<char>> &board, string const &word)
+bool Matrix<T>::WordExistsInGrid(vector<vector<char>>& board, string const& word)
 {
 	for (size_t i = 0; i < board.size(); i++)
 		for (size_t j = 0; j < board[i].size(); j++)
@@ -1187,7 +1187,7 @@ bool Matrix<T>::WordExistsInGrid(vector<vector<char>> &board, string const &word
 	return false;
 }
 template <typename T>
-bool Matrix<T>::WordExistsInGrid(vector<vector<char>> &board, string const &word, long row, long col, size_t offset)
+bool Matrix<T>::WordExistsInGrid(vector<vector<char>>& board, string const& word, long row, long col, size_t offset)
 {
 	if (row < 0 || col < 0 || row >= (long)board.size() || col >= (long)board[row].size() || offset >= word.size() || word[offset] != board[row][col])
 		return false;
@@ -1195,9 +1195,9 @@ bool Matrix<T>::WordExistsInGrid(vector<vector<char>> &board, string const &word
 		return true;
 	board[row][col] ^= 0x80; // "visited" mark
 	bool flag = WordExistsInGrid(board, word, row, col + 1, offset + 1) ||
-				WordExistsInGrid(board, word, row + 1, col, offset + 1) ||
-				WordExistsInGrid(board, word, row, col - 1, offset + 1) ||
-				WordExistsInGrid(board, word, row - 1, col, offset + 1);
+		WordExistsInGrid(board, word, row + 1, col, offset + 1) ||
+		WordExistsInGrid(board, word, row, col - 1, offset + 1) ||
+		WordExistsInGrid(board, word, row - 1, col, offset + 1);
 	board[row][col] ^= 0x80; //
 	return flag;
 }
@@ -1211,7 +1211,7 @@ bool Matrix<T>::WordExistsInGrid(vector<vector<char>> &board, string const &word
  * Returns min #steps from [r,c] to dest
  */
 template <typename T>
-size_t Matrix<T>::FindShortestPath(vector<vector<T>> &grid, size_t r, size_t c, stack<position_t> &result, T dest, T obstacle)
+size_t Matrix<T>::FindShortestPath(vector<vector<T>>& grid, size_t r, size_t c, stack<position_t>& result, T dest, T obstacle)
 {
 	position_t origin(r, c);
 	set<position_t> visited;
@@ -1275,7 +1275,7 @@ size_t Matrix<T>::FindShortestPath(vector<vector<T>> &grid, size_t r, size_t c, 
 * Returns min #steps from [r,c] to dest, 0 if no path exists
 */
 template <typename T>
-size_t Matrix<T>::PathExists(vector<vector<T>> const &grid, size_t r, size_t c, size_t y, size_t x, stack<position_t> &result, T obstacle)
+size_t Matrix<T>::PathExists(vector<vector<T>> const& grid, size_t r, size_t c, size_t y, size_t x, stack<position_t>& result, T obstacle)
 {
 	position_t origin(r, c), destination(y, x);
 	set<position_t> visited;
@@ -1322,7 +1322,7 @@ size_t Matrix<T>::PathExists(vector<vector<T>> const &grid, size_t r, size_t c, 
 	return 0;
 }
 template <typename T>
-bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const &grid, size_t c, T obstacle)
+bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const& grid, size_t c, T obstacle)
 {
 	position_t origin(0, c);
 	set<position_t> visited;
@@ -1346,11 +1346,11 @@ bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const &grid, size_t c, T o
 				if (r == grid.size() - 1 && grid[r][c] != obstacle)
 				{ // Reach destination. The first reach is the shortest path
 #if 0
-                        result.push(current);
-                        result.push(parent);
-                        for (position_t pos = parent; pos != origin && routes.count(pos); result.push(pos), pos = routes[pos])
-                            ;
-                        return result.size();
+					result.push(current);
+					result.push(parent);
+					for (position_t pos = parent; pos != origin && routes.count(pos); result.push(pos), pos = routes[pos])
+						;
+					return result.size();
 #endif
 					return true;
 				}
@@ -1368,7 +1368,7 @@ bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const &grid, size_t c, T o
 }
 /*
  * https://leetcode.com/problems/last-day-where-you-can-still-cross/
- * Time limit exceeded!
+ * WIP - Time limit exceeded!
  * [[1,2],[2,1],[3,3],[2,2],[1,1],[1,3],[2,3],[3,2],[3,1]]
 0:
 0 0 0
@@ -1396,7 +1396,7 @@ bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const &grid, size_t c, T o
 0 0 1
  */
 template <typename T>
-size_t Matrix<T>::LatestDayToCross(size_t row, size_t col, vector<vector<T>> const &cells)
+size_t Matrix<T>::LatestDayToCross(size_t row, size_t col, vector<vector<T>> const& cells)
 {
 	vector<vector<T>> matrix(row, vector<T>(col, '0'));
 	size_t days = 0;
@@ -1418,7 +1418,6 @@ size_t Matrix<T>::LatestDayToCross(size_t row, size_t col, vector<vector<T>> con
 	}
 	return days;
 }
-
 /*
  * https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem
  * 100%
@@ -1610,7 +1609,7 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_BFS()
 {
 	vector<T> data(_grid.size() * _grid[0].size());
 	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
+		{ return n++; });
 	DisJointSet<T> disjointSet(data);
 	size_t width = _grid[0].size();
 	map<T, size_t> counts;
@@ -1749,7 +1748,7 @@ size_t Matrix<T>::LargestGridCluster_DisjointSet_DFS()
 {
 	vector<T> data(_grid.size() * _grid[0].size());
 	ranges::generate(data, [n = 1]() mutable
-					 { return n++; });
+		{ return n++; });
 	DisJointSet<T> disjointSet(data);
 	size_t width = _grid[0].size();
 	map<T, size_t> counts;
@@ -1791,7 +1790,7 @@ template <typename T>
 size_t Matrix<T>::GridClusterCountBFS()
 {
 	size_t clusters = 0;
-	vector<int> steps = {0, 1, 0, -1, 0};
+	vector<int> steps = { 0, 1, 0, -1, 0 };
 	for (size_t i = 0; i < _grid.size(); i++)
 		for (size_t j = 0; j < _grid[i].size(); j++)
 			if (_grid[i][j] == _active)
@@ -1851,7 +1850,7 @@ size_t Matrix<T>::DisconnectCell(long r, long c)
 	return count;
 }
 template <typename T>
-size_t Matrix<T>::DisconnectCellAllDirections(long r, long c, set<string> &cluster)
+size_t Matrix<T>::DisconnectCellAllDirections(long r, long c, set<string>& cluster)
 {
 	size_t count = 0;
 	ostringstream location;
@@ -1896,7 +1895,7 @@ Cluster Matrix<T>::DisconnectCellAllDirections_LinkedList(long r, long c)
 	return cluster;
 }
 template <typename T>
-size_t Matrix<T>::DisconnectCellAllDirections_DisjointSet(T neighbour, long r, long c, DisJointSet<T> &disjointSet, map<T, size_t> &counts)
+size_t Matrix<T>::DisconnectCellAllDirections_DisjointSet(T neighbour, long r, long c, DisJointSet<T>& disjointSet, map<T, size_t>& counts)
 {
 	size_t count = 0;
 	size_t width = _grid[0].size();

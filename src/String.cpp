@@ -1063,11 +1063,8 @@ string String::DecodeString(string const& str)
             {                                          // k == 1: nothing to do, no copy
                 string segment = result.substr(start); // Get the segment to repeat. costs |seg| <= what we append next
                 if (!segment.empty())
-                {
-                    result.reserve(result.size() + segment.size() * (repeat - 1)); // Reserve enough space to avoid multiple reallocations
                     for (size_t i = 1; i < repeat; i++)
                         result += segment; // Append the segment k-1 more times
-                }
             }
         }
         else

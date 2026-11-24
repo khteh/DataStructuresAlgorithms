@@ -417,14 +417,24 @@ int main(int argc, char* argv[])
 	assert(std::chrono::system_clock::duration::max().count() == numeric_limits<int64_t>::max());
 	assert(signedTicks == ticks);
 	cout << "Current timestamp (ticks since Epoch): " << ticks << ", signed ticks: " << signedTicks << endl;
-#if defined(__cpp_lib_hardware_interference_size)
+#ifdef __cpp_lib_hardware_interference_size
 	static constexpr size_t CacheLineSize = std::hardware_destructive_interference_size;
 #else
 	static constexpr size_t CacheLineSize = 64; // Default standard fallback
 #endif
-	cout << "CacheLineSize: " << CacheLineSize << endl;
+	cout << dec << "CacheLineSize: " << CacheLineSize << endl;
 	cout << "30! " << Factorial<size_t>(30) << endl;			 // The CPU signals loss of precision via a flag in the FPU control registers starting from i=26
 	cout << "Fibonacci(100) " << Fibonacci<size_t>(100) << endl; // The CPU signals loss of precision via a flag in the FPU control registers starting from i=94
+	str.resize(0);
+	str = "Hello, ";
+	assert(strlen("Hello, ") == str.size());
+	str.resize(20); // resize(n) changes size: it adds n − size() '\0' characters to the string. The following += calls would then append after those nulls, leaving a block of garbage in the middle of the output.
+	str += "World!!!";
+	oss.str("");
+	cout << "strlen: " << strlen("Hello, World!!!") << ", str.size(): " << str.size() << ", str: " << str << endl;
+	assert(strlen("Hello, World!!!") != str.size());
+	assert(20 + strlen("World!!!") == str.size());
+
 	grid = { { 1, 3, 5 },{ 2, 4, 6 },{ 7, 8, 9 } };
 	// grid.back() = {7,8,9}
 	assert(grid.back().back() == 9);
