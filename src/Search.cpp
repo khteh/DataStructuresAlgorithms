@@ -777,7 +777,7 @@ bool Search::_HasKthSmallestPairs(vector<long> const& data, size_t k, long dista
  *   while (start <= end) { if (condition(mid)) end = mid - 1; else start = mid + 1; }
  *   Both branches discard mid, so the range shrinks every step whichever way mid rounds: rounding down or up both work.
  *
- * Template B (SmallestDistancePair, NthUglyNumber, SmallestDivisor):
+ * Template B (SmallestDistancePair, LatestDayToCross, NthUglyNumber, SmallestDivisor):
  *   while (start < end) { if (condition(mid)) end = mid; else start = mid + 1; }
  *   end = mid keeps mid, because it might be the answer. That only shrinks the range if mid < end, so mid must round DOWN:
  *   - start + (end - start) / 2 is always < end while start < end.
@@ -829,6 +829,100 @@ long Search::SmallestDistancePair(vector<long>& data, size_t k)
             end = mid;
         else
             start = mid + 1;
+    }
+    return start;
+}
+bool Search::_CanWalkFromTopToBottomRow(size_t row, size_t col, vector<vector<size_t>> const& floodDay, size_t day)
+{
+    // Can you walk from the top row to the bottom row on day `day`? One BFS from every top land cell at once
+    vector<vector<bool>> visited(row, vector<bool>(col, false));
+    queue<position_t> positions;
+    for (size_t c = 0; c < col; c++)
+        if (floodDay[0][c] > day) {
+            positions.emplace(0, c);
+            visited[0][c] = true;
+        }
+    for (; !positions.empty(); positions.pop()) {
+        position_t current = positions.front();
+        if ((size_t)current.row == row - 1)
+            return true;
+        for (size_t k = 0; k < _steps.size() - 1; k++) { // Left, right, up and down
+            long r = current.row + _steps[k], c = current.col + _steps[k + 1];
+            if (r >= 0 && c >= 0 && (size_t)r < row && (size_t)c < col && !visited[r][c] && floodDay[r][c] > day) {
+                visited[r][c] = true;
+                positions.emplace(r, c);
+            }
+        }
+    }
+    return false;
+}
+/*
+ * https://leetcode.com/problems/last-day-where-you-can-still-cross/
+ * 100%
+There is a 1-based binary matrix where 0 represents land and 1 represents water. You are given integers row and col representing the number of rows and columns in the matrix, respectively.
+Initially on day 0, the entire matrix is land. However, each day a new cell becomes flooded with water. You are given a 1-based 2D array cells,
+where cells[i] = [ri, ci] represents that on the ith day, the cell on the rith row and cith column (1-based coordinates) will be covered with water (i.e., changed to 1).
+You want to find the last day that it is possible to walk from the top to the bottom by only walking on land cells. You can start from any cell in the top row and end at any cell in the bottom row.
+You can only travel in the four cardinal directions (left, right, up, and down).
+Return the last day where it is possible to walk from the top to the bottom by only walking on land cells.
+ * [[1,2],[2,1],[3,3],[2,2],[1,1],[1,3],[2,3],[3,2],[3,1]]
+0:
+0 0 0
+0 0 0
+0 0 0
+
+1: [1,2]->[0,1]
+0 1 0
+0 0 0
+0 0 0
+
+2: [2,1]->[1,0]
+0 1 0
+1 0 0
+0 0 0
+
+3: [3,3]->[2,2]
+0 1 0
+1 0 0
+0 0 1 <= last day
+
+4: [2,2]->[1,1]
+0 1 0
+1 1 0
+0 0 1
+ *
+ * Flooding only ever turns land into water, so once a crossing is impossible it stays impossible:
+ * "can cross on day d" is true ... true false ... false, and the answer is the LAST true. So binary search the day, with the template for
+ * the last true (start = mid keeps mid, so mid rounds up), and check each candidate day with one BFS: O(row * col * log(row * col)).
+ * The old version checked the days one by one, re-running a BFS from every top cell separately whenever the path was cut: up to
+ * row * col days x col BFS x row * col cells, which timed out.
+ * Day 0 (no water) always crosses, and the last day (all water) never does.
+ *
+ * "Up" is a valid step: a path may have to go up to get around water, e.g.
+0 1 1 1 1 1
+0 0 1 0 0 0
+1 0 0 0 1 0
+0 1 1 1 0 0
+ */
+size_t Search::LatestDayToCross(size_t row, size_t col, vector<vector<long>> const& cells)
+{
+    // floodDay[r][c]: the day cell (r, c) becomes water (1-based). On day `day`, a cell is land if floodDay[r][c] > day
+    vector<vector<size_t>> floodDay(row, vector<size_t>(col, numeric_limits<size_t>::max()));
+    /*
+     * Initially on day 0, the entire matrix is land. However, each day a new cell becomes flooded with water. You are given a 1-based 2D array cells,
+     * where cells[i] = [ri, ci] represents that on the ith day, the cell on the rith row and cith column (1-based coordinates) will be covered with water (i.e., changed to 1).
+    */
+    for (size_t d = 0; d < cells.size(); d++)
+        floodDay[(size_t)cells[d][0] - 1][(size_t)cells[d][1] - 1] = d + 1; // Mark the cell turned into water on day 'd'. Day-0 is all land. So, "+ 1".
+    // The last day that can cross. start = mid keeps mid, so mid must round up: rounding down gives mid == start when end - start == 1, and
+    // start = mid would never move. mid >= 1 whenever start < end, so end = mid - 1 never goes below 0
+    size_t start = 0, end = cells.size();
+    while (start < end) {
+        size_t mid = start + (end - start) / 2 + (end - start) % 2;
+        if (_CanWalkFromTopToBottomRow(row, col, floodDay, mid))
+            start = mid;
+        else
+            end = mid - 1;
     }
     return start;
 }

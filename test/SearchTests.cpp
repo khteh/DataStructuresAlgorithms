@@ -423,6 +423,111 @@ INSTANTIATE_TEST_SUITE_P(
 		make_tuple(7, vector<long>{-3, 1, 4}, 3),
 		make_tuple(0, vector<long>{-5, 2, -5}, 1), // A repeated negative value: distance 0
 		make_tuple(7, vector<long>{-5, 2, -5}, 2)));
+/*
+ * https://leetcode.com/problems/last-day-where-you-can-still-cross/
+ * The coordinates are 1-based ints up to row * col <= 2 x 10^4, so long: char (Console used Matrix<char>) only reaches 127
+ */
+// Every cell, flooded row by row or column by column, so the answer is known
+static vector<vector<long>> RowMajorCells(long row, long col)
+{
+	vector<vector<long>> cells;
+	for (long r = 1; r <= row; r++)
+		for (long c = 1; c <= col; c++)
+			cells.push_back({ r, c });
+	return cells;
+}
+static vector<vector<long>> ColumnMajorCells(long row, long col)
+{
+	vector<vector<long>> cells;
+	for (long c = 1; c <= col; c++)
+		for (long r = 1; r <= row; r++)
+			cells.push_back({ r, c });
+	return cells;
+}
+class LatestDayToCrossTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t, vector<vector<long>>>>
+{
+public:
+	void SetUp() override
+	{
+		_expected = get<0>(GetParam());
+		_row = get<1>(GetParam());
+		_col = get<2>(GetParam());
+		_cells = get<3>(GetParam());
+	}
+	size_t LatestDayToCrossTest()
+	{
+		return _search.LatestDayToCross(_row, _col, _cells);
+	}
+
+protected:
+	Search _search;
+	size_t _expected, _row, _col;
+	vector<vector<long>> _cells;
+};
+TEST_P(LatestDayToCrossTestFixture, LatestDayToCrossTests)
+{
+	ASSERT_EQ(this->_expected, this->LatestDayToCrossTest()) << this->_row << " x " << this->_col;
+}
+// Columns: expected last day, row, col, cells (1-based, in flooding order)
+INSTANTIATE_TEST_SUITE_P(
+	LatestDayToCrossTests,
+	LatestDayToCrossTestFixture,
+	::testing::Values(
+		make_tuple(2, 2, 2, vector<vector<long>>{{1, 1}, { 2, 1 }, { 1, 2 }, { 2, 2 }}),
+		make_tuple(1, 2, 2, vector<vector<long>>{{1, 1}, { 1, 2 }, { 2, 1 }, { 2, 2 }}),
+		make_tuple(3, 3, 3, vector<vector<long>>{{1, 2}, { 2, 1 }, { 3, 3 }, { 2, 2 }, { 1, 1 }, { 1, 3 }, { 2, 3 }, { 3, 2 }, { 3, 1 }}),
+		make_tuple(3, 6, 2, vector<vector<long>>{{4, 2}, { 6, 2 }, { 2, 1 }, { 4, 1 }, { 6, 1 }, { 3, 1 }, { 2, 2 }, { 3, 2 }, { 1, 1 }, { 5, 1 }, { 5, 2 }, { 1, 2 }}),
+		make_tuple(4, 4, 3, vector<vector<long>>{{3, 1}, { 2, 3 }, { 1, 2 }, { 4, 1 }, { 1, 1 }, { 4, 3 }, { 3, 3 }, { 4, 2 }, { 1, 3 }, { 3, 2 }, { 2, 1 }, { 2, 2 }}),
+		make_tuple(35, 13, 9, vector<vector<long>>{{12, 6}, { 3, 4 }, { 2, 9 }, { 9, 4 }, { 9, 2 }, { 6, 4 }, { 4, 4 }, { 8, 6 }, { 4, 9 }, { 5, 6 }, { 7, 5 }, { 12, 4 }, { 11, 8 }, { 3, 7 }, { 2, 6 }, { 9, 8 }, { 3, 5 }, { 13, 4 }, { 1, 3 }, { 10, 2 }, { 8, 9 }, { 6, 6 }, { 11, 7 }, { 11, 1 }, { 13, 9 }, { 12, 7 }, { 10, 7 }, { 8, 2 }, { 1, 8 }, { 7, 3 }, { 6, 5 }, { 2, 1 }, { 10, 6 }, { 4, 8 }, { 4, 2 }, { 9, 7 }, { 6, 2 }, { 3, 6 }, { 12, 2 }, { 10, 3 }, { 10, 5 }, { 9, 5 }, { 8, 8 }, { 8, 7 }, { 3, 2 }, { 13, 6 }, { 3, 1 }, { 5, 1 }, { 2, 7 }, { 8, 3 }, { 12, 5 }, { 11, 2 }, { 6, 3 }, { 1, 4 }, { 13, 3 }, { 4, 1 }, { 9, 9 }, { 7, 7 }, { 4, 3 }, { 12, 1 }, { 2, 2 }, { 7, 6 }, { 4, 6 }, { 7, 9 }, { 7, 2 }, { 3, 8 }, { 1, 6 }, { 11, 3 }, { 11, 4 }, { 5, 9 }, { 13, 8 }, { 1, 9 }, { 10, 1 }, { 9, 1 }, { 6, 1 }, { 10, 9 }, { 12, 9 }, { 11, 5 }, { 8, 1 }, { 13, 5 }, { 9, 6 }, { 13, 2 }, { 6, 8 }, { 2, 8 }, { 5, 3 }, { 3, 3 }, { 13, 1 }, { 11, 9 }, { 9, 3 }, { 2, 4 }, { 5, 2 }, { 8, 5 }, { 13, 7 }, { 12, 8 }, { 5, 5 }, { 7, 1 }, { 7, 4 }, { 2, 5 }, { 6, 9 }, { 4, 7 }, { 5, 8 }, { 1, 5 }, { 10, 8 }, { 8, 4 }, { 1, 1 }, { 3, 9 }, { 1, 2 }, { 7, 8 }, { 1, 7 }, { 6, 7 }, { 11, 6 }, { 4, 5 }, { 5, 7 }, { 2, 3 }, { 10, 4 }, { 5, 4 }, { 12, 3 }}),
+		// The largest grids LeetCode allows (row * col = 2 x 10^4). Row by row: crossing stops when the whole top row is water, on day col
+		make_tuple(9999, 2, 10000, RowMajorCells(2, 10000)),
+		make_tuple(1, 10000, 2, RowMajorCells(10000, 2)),
+		// Column by column: the last column is the last way across, until its top cell floods on day 100 * 199 + 1
+		make_tuple(19900, 100, 200, ColumnMajorCells(100, 200))));
+// Day by day: flood one more cell, then BFS from the whole top row
+static size_t LatestDayToCrossBruteForce(size_t row, size_t col, vector<vector<long>> const& cells)
+{
+	vector<vector<bool>> water(row, vector<bool>(col, false));
+	for (size_t day = 0;; day++)
+	{
+		if (day)
+			water[cells[day - 1][0] - 1][cells[day - 1][1] - 1] = true;
+		vector<vector<bool>> visited(row, vector<bool>(col, false));
+		queue<pair<size_t, size_t>> q;
+		for (size_t c = 0; c < col; c++)
+			if (!water[0][c])
+				q.emplace(0, c), visited[0][c] = true;
+		bool crossed = false;
+		for (; !q.empty() && !crossed; q.pop())
+		{
+			auto [r, c] = q.front();
+			crossed = r == row - 1;
+			for (auto [dr, dc] : { pair{ -1, 0 }, pair{ 1, 0 }, pair{ 0, -1 }, pair{ 0, 1 } })
+			{
+				long nr = (long)r + dr, nc = (long)c + dc;
+				if (nr >= 0 && nc >= 0 && nr < (long)row && nc < (long)col && !water[nr][nc] && !visited[nr][nc])
+					q.emplace(nr, nc), visited[nr][nc] = true;
+			}
+		}
+		if (!crossed)
+			return day - 1;
+	}
+}
+TEST(LatestDayToCrossTests, RandomTest)
+{
+	mt19937 rng(9);
+	Search search;
+	for (size_t t = 0; t < 500; t++)
+	{
+		size_t row = 2 + rng() % 6, col = 2 + rng() % 6;
+		vector<vector<long>> cells;
+		for (size_t r = 1; r <= row; r++)
+			for (size_t c = 1; c <= col; c++)
+				cells.push_back({ (long)r, (long)c });
+		ranges::shuffle(cells, rng);
+		ASSERT_EQ(LatestDayToCrossBruteForce(row, col, cells), search.LatestDayToCross(row, col, cells)) << row << " x " << col;
+	}
+}
 class NthUglyNumberTestFixture : public testing::TestWithParam<tuple<size_t, size_t, size_t, size_t, size_t>>
 {
 public:

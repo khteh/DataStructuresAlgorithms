@@ -44,7 +44,6 @@ private:
 	size_t DisconnectCellAllDirections(long, long, set<string>&);
 	Cluster DisconnectCellAllDirections_LinkedList(long, long);
 	size_t DisconnectCellAllDirections_DisjointSet(T, long, long, DisJointSet<T>&, map<T, size_t>&);
-	bool TopBottomPathExists(vector<vector<T>> const&, size_t, const T, set<position_t>&);
 
 public:
 	Matrix() = default;
@@ -76,7 +75,6 @@ public:
 	pathResult_t FindMaxPath(vector<vector<T>>&, size_t, size_t)
 		requires integral_type<T>;
 	size_t PathExists(vector<vector<T>> const&, size_t, size_t, size_t, size_t, stack<position_t>&, T);
-	size_t LatestDayToCross(size_t, size_t, vector<vector<T>> const&);
 	size_t FindShortestPath(vector<vector<T>>&, size_t, size_t, stack<position_t>&, T, T);
 	size_t LargestGridCluster_BFS();
 	size_t LargestGridCluster_DFS();

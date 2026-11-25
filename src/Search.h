@@ -7,6 +7,7 @@ class Search
 {
 private:
     uint64_t _lcm_ab, _lcm_bc, _lcm_ac, _lcm_abc;
+    vector<int> _steps = { 0, 1, 0, -1, 0 } /* four cardinal directions (left, right, up, and down). */, _diagonals = { -1, -1, 1, 1, -1 };
     void _KMPTable(string const&, vector<long>&);
     bool _CanEatAllBananasInTime(vector<size_t> const&, size_t, size_t);
     bool _IsValidSubSequence(vector<size_t> const&, size_t, size_t);
@@ -15,7 +16,7 @@ private:
     bool _HasKthSmallestPairs(vector<long> const&, size_t, long);
     bool _HasNUglyNumbers(size_t, uint64_t, uint64_t, uint64_t, uint64_t);
     bool _WithinThreshold(vector<size_t> const&, size_t, size_t);
-
+    bool _CanWalkFromTopToBottomRow(size_t, size_t, vector<vector<size_t>> const&, size_t);
 public:
     void KMPSearch(string const&, string const&, vector<size_t>&);
     vector<long> SearchRange(size_t, vector<size_t> const&);
@@ -34,4 +35,5 @@ public:
     long SmallestDistancePair(vector<long>&, size_t);
     size_t NthUglyNumber(size_t, size_t, size_t, size_t);
     size_t SmallestDivisor(vector<size_t> const&, size_t);
+    size_t LatestDayToCross(size_t, size_t, vector<vector<long>> const&);
 };
