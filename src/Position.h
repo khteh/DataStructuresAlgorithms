@@ -6,11 +6,10 @@ using namespace std;
 namespace ranges = std::ranges;
 typedef struct Position
 {
+    long row, col;
     Position() : row(0), col(0) {}
     Position(long r, long c) : row(r), col(c) {}
-    long row;
-    long col;
-    Position &operator=(Position rhs)
+    Position& operator=(Position rhs)
     {
         row = rhs.row;
         col = rhs.col;
@@ -21,9 +20,9 @@ typedef struct Position
      * and !=, <, <=, > and >= are rewritten from those two.
      * This replaces operator>, which was wrong: its "row == row" was always true, so {0,5} > {1,0} was true.
      */
-    auto operator<=>(Position const &) const = default;
+    auto operator<=>(Position const&) const = default;
     // The operator must be a non-member friend function
-    friend ostream &operator<<(ostream &os, const Position &pos)
+    friend ostream& operator<<(ostream& os, const Position& pos)
     {
         return os << "[" << pos.row << "," << pos.col << "]";
     }

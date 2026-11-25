@@ -1321,8 +1321,15 @@ size_t Matrix<T>::PathExists(vector<vector<T>> const& grid, size_t r, size_t c, 
 	}
 	return 0;
 }
+/*
+Up is a valid step in this grid:
+0 1 1 1 1 1
+0 0 1 0 0 0
+1 0 0 0 1 0
+0 1 1 1 0 0
+*/
 template <typename T>
-bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const& grid, size_t c, T obstacle)
+bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const& grid, size_t c, const T obstacle, set<position_t>& path)
 {
 	position_t origin(0, c);
 	set<position_t> visited;
@@ -1351,6 +1358,11 @@ bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const& grid, size_t c, T o
 					for (position_t pos = parent; pos != origin && routes.count(pos); result.push(pos), pos = routes[pos])
 						;
 					return result.size();
+#else
+					path.insert(current);
+					path.insert(parent);
+					for (position_t pos = parent; pos != origin && routes.count(pos); path.insert(pos), pos = routes[pos])
+						;
 #endif
 					return true;
 				}
@@ -1358,7 +1370,7 @@ bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const& grid, size_t c, T o
 				{ // Obstacle. Cancel this route
 					// Prevent loop
 					positions.push(current);
-					// routes.emplace(current, parent);
+					routes.emplace(current, parent);
 					visited.emplace(current);
 				}
 			}
@@ -1368,6 +1380,11 @@ bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const& grid, size_t c, T o
 }
 /*
  * https://leetcode.com/problems/last-day-where-you-can-still-cross/
+There is a 1-based binary matrix where 0 represents land and 1 represents water. You are given integers row and col representing the number of rows and columns in the matrix, respectively.
+Initially on day 0, the entire matrix is land. However, each day a new cell becomes flooded with water. You are given a 1-based 2D array cells, where cells[i] = [ri, ci] represents that on the ith day, the cell on the rith row and cith column (1-based coordinates) will be covered with water (i.e., changed to 1).
+You want to find the last day that it is possible to walk from the top to the bottom by only walking on land cells. You can start from any cell in the top row and end at any cell in the bottom row.
+You can only travel in the four cardinal directions (left, right, up, and down).
+Return the last day where it is possible to walk from the top to the bottom by only walking on land cells.
  * WIP - Time limit exceeded!
  * [[1,2],[2,1],[3,3],[2,2],[1,1],[1,3],[2,3],[3,2],[3,1]]
 0:
@@ -1399,16 +1416,22 @@ template <typename T>
 size_t Matrix<T>::LatestDayToCross(size_t row, size_t col, vector<vector<T>> const& cells)
 {
 	vector<vector<T>> matrix(row, vector<T>(col, '0'));
+	set<position_t> path;
 	size_t days = 0;
 	for (; days <= cells.size(); days++)
 	{
-		if (days)
+		if (days) {
 			matrix[cells[days - 1][0] - 1][cells[days - 1][1] - 1] = '1';
+			position_t obstacle{ cells[days - 1][0] - 1, cells[days - 1][1] - 1 };
+			if (!path.count(obstacle))
+				continue;
+		}
+		path.clear();
 		bool pathExists = false;
 		for (size_t i = 0; i < col && !pathExists; i++)
 		{
 			if (matrix[0][i] != '1')
-				pathExists = TopBottomPathExists(matrix, i, '1');
+				pathExists = TopBottomPathExists(matrix, i, '1', path);
 		}
 		if (!pathExists)
 		{

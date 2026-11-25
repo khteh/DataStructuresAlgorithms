@@ -27,9 +27,9 @@ public:
 	shared_ptr<Node<string>> Head() const;
 	shared_ptr<Node<string>> Tail() const;
 	// Implement += first for efficiency
-	Cluster &operator+=(const Cluster &);
+	Cluster& operator+=(const Cluster&);
 	// Friend function allows symmetry (LHS + RHS)
-	friend Cluster operator+(Cluster, const Cluster &);
+	friend Cluster operator+(Cluster, const Cluster&);
 };
 template <typename T>
 class Matrix
@@ -37,47 +37,47 @@ class Matrix
 private:
 	T _active, _inactive;
 	vector<vector<T>> _grid;
-	vector<int> _steps = {0, 1, 0, -1, 0} /*four cardinal directions (left, right, up, and down).*/, _diagonals = {-1, -1, 1, 1, -1};
-	void Print(vector<vector<T>> const &) const;
-	bool WordExistsInGrid(vector<vector<char>> &, string const &, long, long, size_t);
+	vector<int> _steps = { 0, 1, 0, -1, 0 } /* four cardinal directions (left, right, up, and down). */, _diagonals = { -1, -1, 1, 1, -1 };
+	void Print(vector<vector<T>> const&) const;
+	bool WordExistsInGrid(vector<vector<char>>&, string const&, long, long, size_t);
 	size_t DisconnectCell(long, long);
-	size_t DisconnectCellAllDirections(long, long, set<string> &);
+	size_t DisconnectCellAllDirections(long, long, set<string>&);
 	Cluster DisconnectCellAllDirections_LinkedList(long, long);
-	size_t DisconnectCellAllDirections_DisjointSet(T, long, long, DisJointSet<T> &, map<T, size_t> &);
-	bool TopBottomPathExists(vector<vector<T>> const &, size_t, T);
+	size_t DisconnectCellAllDirections_DisjointSet(T, long, long, DisJointSet<T>&, map<T, size_t>&);
+	bool TopBottomPathExists(vector<vector<T>> const&, size_t, const T, set<position_t>&);
 
 public:
 	Matrix() = default;
-	Matrix(vector<vector<T>> &, T, T);
-	Matrix(vector<vector<T>> &);
-	void MatrixDistance(vector<vector<T>> &, size_t, size_t);
-	void MatrixSort(vector<vector<T>> &);
-	size_t MatrixPatternCount(vector<vector<char>> const &);
-	void MatrixSortWithHeap(vector<vector<T>> &);
-	T Sum(vector<vector<size_t>> &);
-	T LargestSumSubmatrix(vector<vector<size_t>> &);
-	bool WordExistsInGrid(vector<vector<char>> &, string const &);
-	bool SearchMatrix(T, vector<vector<T>> const &) const;
-	bool SearchMatrix1(T, vector<vector<T>> const &) const;
-	bool SearchMatrixRow(vector<vector<T>> const &, T, size_t, T, T) const;
-	bool SearchMatrixCol(vector<vector<T>> const &, T, size_t, T, T) const;
-	void RotateMatrix90DegressClockwise(vector<vector<T>> &);
-	void RotateMatrixRTimesAntiClockwise(vector<vector<T>> &, size_t);
-	vector<T> MatrixSprialOrder(vector<vector<T>> const &);
-	size_t ChessQueensMoveCount(size_t, size_t /*[1,rows]*/, size_t /*[1,cols]*/, vector<vector<size_t>> const &);
-	void ChessQueensPlacements(vector<string> &, size_t, vector<vector<string>> &);
-	size_t GridlandMetro(size_t, size_t, vector<vector<size_t>> const &);
-	size_t SurfaceArea3D(vector<vector<size_t>> const &);
-	size_t TwoCrosses(vector<string> const &);
-	size_t LargestPerimeter(vector<string> const &);
-	vector<string> BomberMan(size_t, vector<string> const &);
-	T MaxQuadrantSum(vector<vector<T>> const &);
-	bool ContainersBallsSwap(vector<vector<T>> const &);
-	pathResult_t FindMaxPath(vector<vector<T>> &, size_t, size_t)
+	Matrix(vector<vector<T>>&, T, T);
+	Matrix(vector<vector<T>>&);
+	void MatrixDistance(vector<vector<T>>&, size_t, size_t);
+	void MatrixSort(vector<vector<T>>&);
+	size_t MatrixPatternCount(vector<vector<char>> const&);
+	void MatrixSortWithHeap(vector<vector<T>>&);
+	T Sum(vector<vector<size_t>>&);
+	T LargestSumSubmatrix(vector<vector<size_t>>&);
+	bool WordExistsInGrid(vector<vector<char>>&, string const&);
+	bool SearchMatrix(T, vector<vector<T>> const&) const;
+	bool SearchMatrix1(T, vector<vector<T>> const&) const;
+	bool SearchMatrixRow(vector<vector<T>> const&, T, size_t, T, T) const;
+	bool SearchMatrixCol(vector<vector<T>> const&, T, size_t, T, T) const;
+	void RotateMatrix90DegressClockwise(vector<vector<T>>&);
+	void RotateMatrixRTimesAntiClockwise(vector<vector<T>>&, size_t);
+	vector<T> MatrixSprialOrder(vector<vector<T>> const&);
+	size_t ChessQueensMoveCount(size_t, size_t /*[1,rows]*/, size_t /*[1,cols]*/, vector<vector<size_t>> const&);
+	void ChessQueensPlacements(vector<string>&, size_t, vector<vector<string>>&);
+	size_t GridlandMetro(size_t, size_t, vector<vector<size_t>> const&);
+	size_t SurfaceArea3D(vector<vector<size_t>> const&);
+	size_t TwoCrosses(vector<string> const&);
+	size_t LargestPerimeter(vector<string> const&);
+	vector<string> BomberMan(size_t, vector<string> const&);
+	T MaxQuadrantSum(vector<vector<T>> const&);
+	bool ContainersBallsSwap(vector<vector<T>> const&);
+	pathResult_t FindMaxPath(vector<vector<T>>&, size_t, size_t)
 		requires integral_type<T>;
-	size_t PathExists(vector<vector<T>> const &, size_t, size_t, size_t, size_t, stack<position_t> &, T);
-	size_t LatestDayToCross(size_t, size_t, vector<vector<T>> const &);
-	size_t FindShortestPath(vector<vector<T>> &, size_t, size_t, stack<position_t> &, T, T);
+	size_t PathExists(vector<vector<T>> const&, size_t, size_t, size_t, size_t, stack<position_t>&, T);
+	size_t LatestDayToCross(size_t, size_t, vector<vector<T>> const&);
+	size_t FindShortestPath(vector<vector<T>>&, size_t, size_t, stack<position_t>&, T, T);
 	size_t LargestGridCluster_BFS();
 	size_t LargestGridCluster_DFS();
 	size_t LargestGridCluster_DisjointSet_BFS();
