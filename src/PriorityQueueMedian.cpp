@@ -4,7 +4,7 @@
 template class PriorityQueueMedian<long>;
 
 template <typename T>
-PriorityQueueMedian<T>::PriorityQueueMedian(vector<T> const &data)
+PriorityQueueMedian<T>::PriorityQueueMedian(vector<T> const& data)
 {
 	for (typename vector<T>::const_iterator it = data.begin(); it != data.end(); it++)
 		Add(*it);
@@ -17,10 +17,8 @@ PriorityQueueMedian<T>::~PriorityQueueMedian()
 template <typename T>
 void PriorityQueueMedian<T>::Reset()
 {
-	while (!_maxHeap.empty())
-		_maxHeap.pop();
-	while (!_minHeap.empty())
-		_minHeap.pop();
+	for (;!_maxHeap.empty(); _maxHeap.pop());
+	for (;!_minHeap.empty(); _minHeap.pop());
 }
 /*
  * https://leetcode.com/problems/median-of-two-sorted-arrays/

@@ -33,12 +33,12 @@ Graph<TTag, TItem>::Graph() : _totalCost(0)
 {
 }
 template <typename TTag, typename TItem>
-Graph<TTag, TItem>::Graph(vector<TItem> &data) : _totalCost(0)
+Graph<TTag, TItem>::Graph(vector<TItem>& data) : _totalCost(0)
 {
 	AddVertices(data);
 }
 template <typename TTag, typename TItem>
-void Graph<TTag, TItem>::AddVertices(vector<TItem> &data)
+void Graph<TTag, TItem>::AddVertices(vector<TItem>& data)
 {
 	for (size_t i = 0; i < data.size(); i++)
 		AddVertex(i, data[i]); // Use index as Tag in case there are duplicate values in data
@@ -54,7 +54,7 @@ void Graph<TTag, TItem>::Reset()
 	_totalCost = 0;
 	// Vertices hold shared_ptrs to each other (every undirected edge is a 2-cycle). Break those cycles first,
 	// otherwise clearing the map only drops the graph's references and the vertices keep each other alive.
-	for (auto &[tag, vertex] : _vertices)
+	for (auto& [tag, vertex] : _vertices)
 		if (vertex)
 			vertex->ClearNeighbours();
 	_vertices.clear();
@@ -182,10 +182,10 @@ void Graph<TTag, TItem>::Print(shared_ptr<Vertex<TTag, TItem>> vertex) const
 	for (typename vector<shared_ptr<Vertex<TTag, TItem>>>::const_iterator it = neighbours.begin(); it != neighbours.end(); it++, space = true)
 		if (space)
 			cout << setw(oss.str().size()) << " " << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << " " << (*it)->GetTag() << "(" << (*it)->GetItem() << ") "
-				 << " [" << previous->GetCost(*it) << "] " << endl;
+			<< " [" << previous->GetCost(*it) << "] " << endl;
 		else
 			cout << ((*it)->HasNeighbour(previous->GetTag()) ? multi : uni) << " " << (*it)->GetTag() << "(" << (*it)->GetItem() << ") "
-				 << " [" << previous->GetCost(*it) << "] " << endl;
+			<< " [" << previous->GetCost(*it) << "] " << endl;
 }
 /* https://www.hackerrank.com/challenges/primsmstsub/problem
    https://en.wikipedia.org/wiki/Prim%27s_algorithm
@@ -210,9 +210,7 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 	set<TTag> inMST; // Assumption: Every vertex has a unique tag
 
 	// Insert source itself in priority queue and initialize its cost as 0.
-	priorityQueue.emplace(0, start);
-	costs.emplace(start->GetTag(), 0);
-	while (!priorityQueue.empty())
+	for (priorityQueue.emplace(0, start), costs.emplace(start->GetTag(), 0); !priorityQueue.empty();)
 	{
 		typename multimap<long, shared_ptr<Vertex<TTag, TItem>>>::iterator vertex = priorityQueue.begin();
 		shared_ptr<Vertex<TTag, TItem>> u = vertex->second;
@@ -233,11 +231,11 @@ size_t Graph<TTag, TItem>::PrimMinimumSpanningTree(shared_ptr<Vertex<TTag, TItem
 	cout << __FUNCTION__ << " edges of Minimum Spanning Tree: " << endl;
 	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = parents.begin(); it != parents.end(); it++)
 		cout << it->second->GetTag() << " -> " << it->first << endl;
-	return accumulate(costs.begin(), costs.end(), 0, [](long value, const typename map<TTag, long>::value_type &p)
-					  { return value + p.second; });
+	return accumulate(costs.begin(), costs.end(), 0, [](long value, const typename map<TTag, long>::value_type& p)
+		{ return value + p.second; });
 }
 template <typename TTag, typename TItem>
-void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem>>, long> &costs)
+void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem>>, long>& costs)
 {
 	set<shared_ptr<Vertex<TTag, TItem>>> spt; // spt: Shortest Path Tree
 	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(source);
@@ -271,8 +269,8 @@ void Graph<TTag, TItem>::Dijkstra(TTag source, map<shared_ptr<Vertex<TTag, TItem
 					This is an identity check, which is cheaper and arguably more correct for Dijkstra. You want to remove that vertex’s stale queue entry, not any vertex that happens to have an equal tag and item. The rest of the function already works this way, since spt.count(*it) and costs[*it] are keyed on the shared_ptr itself.
 					Use the value comparison only if you could have two distinct Vertex objects that should count as the same node. Note that *it1.second == **it requires Vertex::operator== to be callable on non-const operands, or better, declared as bool operator==(const Vertex&) const.
 					*/
-					erase_if(costsPQ, [it](const auto &it1)
-							 { return it1.second == *it; });
+					erase_if(costsPQ, [it](const auto& it1)
+						{ return it1.second == *it; });
 					costsPQ.emplace(costs[*it] /* + heuristic value in A-Star algorithm */, *it);
 				}
 			}
@@ -316,8 +314,8 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
 					This is an identity check, which is cheaper and arguably more correct for Dijkstra. You want to remove that vertex’s stale queue entry, not any vertex that happens to have an equal tag and item. The rest of the function already works this way, since spt.count(*it) and costs[*it] are keyed on the shared_ptr itself.
 					Use the value comparison only if you could have two distinct Vertex objects that should count as the same node. Note that *it1.second == **it requires Vertex::operator== to be callable on non-const operands, or better, declared as bool operator==(const Vertex&) const.
 					*/
-					erase_if(costsPQ, [it](const auto &it1)
-							 { return it1.second == *it; });
+					erase_if(costsPQ, [it](const auto& it1)
+						{ return it1.second == *it; });
 					costsPQ.emplace(costs[*it] /* + heuristic value in A-Star algorithm */, *it);
 				}
 			}
@@ -329,7 +327,7 @@ long Graph<TTag, TItem>::Dijkstra(TTag src, TTag dest)
  * 100%
  */
 template <typename TTag, typename TItem>
-void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
+void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long>& distances)
 {
 	set<shared_ptr<Vertex<TTag, TItem>>> spt; // spt: Shortest Path Tree
 	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(src);
@@ -364,8 +362,8 @@ void Graph<TTag, TItem>::Dijkstra(TTag src, vector<long> &distances)
 					This is an identity check, which is cheaper and arguably more correct for Dijkstra. You want to remove that vertex’s stale queue entry, not any vertex that happens to have an equal tag and item. The rest of the function already works this way, since spt.count(*it) and costs[*it] are keyed on the shared_ptr itself.
 					Use the value comparison only if you could have two distinct Vertex objects that should count as the same node. Note that *it1.second == **it requires Vertex::operator== to be callable on non-const operands, or better, declared as bool operator==(const Vertex&) const.
 					*/
-					erase_if(costsPQ, [it](const auto &it1)
-							 { return it1.second == *it; });
+					erase_if(costsPQ, [it](const auto& it1)
+						{ return it1.second == *it; });
 					costsPQ.emplace(costs[*it] /* + heuristic value in A-Star algorithm */, *it);
 				}
 			}
@@ -408,7 +406,7 @@ So it’s more accurate to say that Floyd–Warshall supports directed graphs wi
  * Returns false if the graph has a negative cycle. A vertex k is on one exactly when distances[k][k] < 0.
  */
 template <typename TTag, typename TItem>
-bool Graph<TTag, TItem>::FloydWarshallDistances(vector<vector<long>> &distances)
+bool Graph<TTag, TItem>::FloydWarshallDistances(vector<vector<long>>& distances)
 {
 	constexpr long noPath = numeric_limits<long>::max(), minusInfinity = numeric_limits<long>::min();
 	size_t vertices = _vertices.size();
@@ -478,7 +476,7 @@ bool Graph<TTag, TItem>::FloydWarshallDistances(vector<vector<long>> &distances)
 	return !negativeCycle;
 }
 template <typename TTag, typename TItem>
-void Graph<TTag, TItem>::FloydWarshallPath(TTag start, TTag end, vector<TTag> &path)
+void Graph<TTag, TItem>::FloydWarshallPath(TTag start, TTag end, vector<TTag>& path)
 {
 	if (_vertices.count(start) && _vertices.count(end) && _FloydWarshallPaths[start][end])
 	{
@@ -500,7 +498,7 @@ void Graph<TTag, TItem>::FloydWarshallPath(TTag start, TTag end, vector<TTag> &p
  * 3. nodes1 = nodes2 copies a set, which means allocating a fresh copy of every node each time.
  */
 template <typename TTag, typename TItem>
-void Graph<TTag, TItem>::UnbeatenPathsDijkstra(TTag src, vector<long> &distances)
+void Graph<TTag, TItem>::UnbeatenPathsDijkstra(TTag src, vector<long>& distances)
 {
 	set<shared_ptr<Vertex<TTag, TItem>>> spt, nodes1, nodes2;
 	shared_ptr<Vertex<TTag, TItem>> vertex = GetVertex(src);
@@ -631,11 +629,11 @@ vector object (24 bytes)              heap memory
  * Number of neighbourOf[v] = u writes, if every city is processed: Σ deg(u) = 2m. Each road is written once from each end.
  */
 template <typename TTag, typename TItem>
-vector<long> Graph<TTag, TItem>::UnbeatenPaths(size_t n, vector<vector<size_t>> &roads, size_t source)
+vector<long> Graph<TTag, TItem>::UnbeatenPaths(size_t n, vector<vector<size_t>>& roads, size_t source)
 {
 	// Main roads, as an adjacency list indexed by city (1-based)
 	vector<vector<size_t>> adjacency(n + 1);
-	for (vector<size_t> const &road : roads)
+	for (vector<size_t> const& road : roads)
 	{
 		adjacency[road[0]].push_back(road[1]);
 		adjacency[road[1]].push_back(road[0]);
@@ -648,7 +646,7 @@ vector<long> Graph<TTag, TItem>::UnbeatenPaths(size_t n, vector<vector<size_t>> 
 		if (city != source)
 			unvisited.push_back(city);
 	vector<size_t> neighbourOf(n + 1, 0); // neighbourOf[v] == u: v is a main-road neighbour of u
-	vector<size_t> queue{source};		  // BFS queue: a vector with a read index, so popping is O(1)
+	vector<size_t> queue{ source };		  // BFS queue: a vector with a read index, so popping is O(1)
 	queue.reserve(n);
 	for (size_t head = 0; head < queue.size() && !unvisited.empty(); head++)
 	{
@@ -723,7 +721,7 @@ long Graph<TTag, TItem>::Diameter()
  * 100%
  */
 template <typename TTag, typename TItem>
-vector<long> Graph<TTag, TItem>::BFSShortestPaths(size_t nodecount, vector<vector<TTag>> &edges, TTag s)
+vector<long> Graph<TTag, TItem>::BFSShortestPaths(size_t nodecount, vector<vector<TTag>>& edges, TTag s)
 {
 	for (typename vector<vector<TTag>>::iterator it = edges.begin(); it != edges.end(); it++)
 		AddUndirectedEdge((*it)[0], (*it)[1], 6);
@@ -751,7 +749,7 @@ vector<long> Graph<TTag, TItem>::BFSShortestPaths(size_t nodecount, vector<vecto
 	return result;
 }
 template <typename TTag, typename TItem>
-void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>> &result, shared_ptr<Vertex<TTag, TItem>> &start)
+void Graph<TTag, TItem>::GetBFSNodes(map<size_t, vector<shared_ptr<Vertex<TTag, TItem>>>>& result, shared_ptr<Vertex<TTag, TItem>>& start)
 {
 	if (start)
 	{
@@ -829,7 +827,7 @@ long Graph<TTag, TItem>::GetPathsCosts(shared_ptr<Vertex<TTag, TItem>> vertex, s
  * 100%
  */
 template <typename TTag, typename TItem>
-long Graph<TTag, TItem>::GetLowestPathCost(size_t nodecount, vector<TTag> &from, vector<TTag> &to, vector<long> &weight)
+long Graph<TTag, TItem>::GetLowestPathCost(size_t nodecount, vector<TTag>& from, vector<TTag>& to, vector<long>& weight)
 {
 	if (from.size() != to.size() || from.size() != weight.size())
 		throw invalid_argument("from, to and weight data point counts must match!");
@@ -896,13 +894,13 @@ Prune tree of leaf nodes which are in nodes input parameter.
 Return the total path costs pruned.
 */
 template <typename TTag, typename TItem>
-long Graph<TTag, TItem>::Prune(set<TTag> const &nodes, set<TTag> &removed)
+long Graph<TTag, TItem>::Prune(set<TTag> const& nodes, set<TTag>& removed)
 {
 	long cost = 0;
 	for (typename map<TTag, shared_ptr<Vertex<TTag, TItem>>>::iterator it = _vertices.begin(); it != _vertices.end(); it++)
 		if (!removed.count(it->first) && it->second->NeighbourCount() == 1 && nodes.count(it->second->GetTag()))
 		{
-			vector<shared_ptr<Vertex<TTag, TItem>>> leafs{it->second};
+			vector<shared_ptr<Vertex<TTag, TItem>>> leafs{ it->second };
 			size_t size = leafs.size();
 			for (size_t i = 0; i < size; i++)
 			{
@@ -957,7 +955,7 @@ long Graph<TTag, TItem>::Prune(set<TTag> const &nodes, set<TTag> &removed)
 
 */
 template <typename TTag, typename TItem>
-long Graph<TTag, TItem>::PruneMinCost(size_t root, vector<TTag> &from, vector<TTag> &to, vector<long> &weight)
+long Graph<TTag, TItem>::PruneMinCost(size_t root, vector<TTag>& from, vector<TTag>& to, vector<long>& weight)
 {
 	if (from.size() != to.size() || from.size() != weight.size())
 		throw invalid_argument("from, to and weight data point counts must match!");

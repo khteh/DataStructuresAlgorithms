@@ -406,7 +406,7 @@ size_t String::LongestValidParenthesesWithFixes(string const& str, size_t k)
         };
     size_t result = 0;
     vector<pair<long, long>> ranges{ { 0, (long)P.size() - 1 } }; // A stack of ranges instead of recursion, which overflowed the stack on long inputs
-    while (!ranges.empty()) {
+    for (;!ranges.empty();) {
         auto [start, end] = ranges.back();
         ranges.pop_back();
         if (start >= end)
@@ -497,10 +497,8 @@ void String::WordsLadder(string const& start, string const& stop, set<string>& d
     queue<string> actionQ;
     set<string> visited;
     map<string, string> backtrack;
-    actionQ.push(start);
-    visited.emplace(start);
     Permutation<string> permutation;
-    while (!actionQ.empty())
+    for (actionQ.push(start), visited.emplace(start);!actionQ.empty();)
     {
         string w = actionQ.front(); // DAMP
         actionQ.pop();
@@ -513,7 +511,7 @@ void String::WordsLadder(string const& start, string const& stop, set<string>& d
                 // Found our word! Now backtrack to record all the single-character change from 'start' to 'stop'
                 result.push_back(*it);
                 result.push_back(w);
-                while (backtrack.count(w))
+                for (;backtrack.count(w);)
                 {
                     w = backtrack[w];
                     result.push_back(w);

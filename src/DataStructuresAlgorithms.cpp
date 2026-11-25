@@ -206,8 +206,7 @@ template <floating_point_type T>
 constexpr T MachineEpsilonApproximation()
 {
 	T e = 1.0;
-	while ((1 + 0.5 * e) != 1.0)
-		e *= 0.5;
+	for (; (1 + 0.5 * e) != 1.0; e *= 0.5);
 	return e;
 }
 generator<const size_t&> GenerateSequence(size_t start, size_t end)
@@ -253,10 +252,7 @@ vector<string> findUnique(vector<string> const& a, vector<string> const& b)
 			if (*it != *(it + 1))
 				result.push_back(*it);
 			else
-			{
-				while (it != (c.end() - 1) && *it == *(it + 1))
-					it++;
-			}
+				for (;it != (c.end() - 1) && *it == *(it + 1); it++);
 		}
 		else
 			result.push_back(*it);
@@ -986,8 +982,7 @@ string uncompress(string const& str)
 			if (!errno && repeat > 0 && repeat < numeric_limits<unsigned long>::max())
 			{
 				if (*end)
-					while (str[i] != end[0])
-						i++;
+					for (; str[i] != end[0]; i++);
 				else
 					i++;
 				ostringstream oss1;
@@ -2476,7 +2471,7 @@ vector<shared_ptr<Node<string>>> shortest_cycle_path(shared_ptr<Node<string>> no
 {
 	map<shared_ptr<Node<string>>, shared_ptr<Node<string>>> parents;
 	deque<shared_ptr<Node<string>>> q(1, node);
-	while (!q.empty())
+	for (; !q.empty();)
 	{
 		shared_ptr<Node<string>> n = q.front();
 		q.pop_front();

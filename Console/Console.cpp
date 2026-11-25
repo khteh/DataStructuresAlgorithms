@@ -1803,7 +1803,7 @@ int main(int argc, char* argv[])
 	assert(3 == cmatrix.LatestDayToCross(6, 2, cgrid1));
 	cgrid1.clear();
 	cgrid1 = { { 3,1 },{ 2,3 },{ 1,2 },{ 4,1 },{ 1,1 },{ 4,3 },{ 3,3 },{ 4,2 },{ 1,3 },{ 3,2 },{ 2,1 },{ 2,2 } };
-	// assert(4 == cmatrix.LatestDayToCross(4, 3, cgrid1)); XXX: This fails.
+	assert(4 == cmatrix.LatestDayToCross(4, 3, cgrid1));
 	cgrid1.clear();
 	cgrid1 = { { 12, 6 },
 			  { 3, 4 },

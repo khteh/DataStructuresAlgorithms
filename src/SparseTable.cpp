@@ -192,7 +192,7 @@ long SparseTable<T, Compare>::LeftMost(long l, long r, T const& bound) const
 {
     if (_compare(bound, Best(l, r)))
         return -1L;
-    while (l < r) {
+    for (;l < r; ) {
         long mid = (l + r) / 2;
         if (!_compare(bound, Best(l, mid)))
             r = mid;
@@ -233,7 +233,7 @@ long SparseTable<T, Compare>::RightMost(long l, long r, T const& bound) const
 {
     if (_compare(bound, Best(l, r)))
         return -1L;
-    while (l < r) {
+    for (;l < r;) {
         long mid = (l + r + 1) / 2;
         if (!_compare(bound, Best(mid, r)))
             l = mid;

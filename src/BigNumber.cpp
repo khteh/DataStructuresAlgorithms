@@ -4,13 +4,12 @@ using namespace std;
 namespace
 {
 	// Remove leading zero limbs, keeping at least one limb
-	void Trim(BigNumber &number)
+	void Trim(BigNumber& number)
 	{
-		while (number.size() > 1 && !number.back())
-			number.pop_back();
+		for (;number.size() > 1 && !number.back(); number.pop_back());
 	}
 	// number * factor, for 0 <= factor < BigNumberBase. The result may have a leading zero limb.
-	BigNumber MultiplySmall(BigNumber const &number, uint64_t factor)
+	BigNumber MultiplySmall(BigNumber const& number, uint64_t factor)
 	{
 		BigNumber result;
 		result.reserve(number.size() + 1);
@@ -25,7 +24,7 @@ namespace
 		return result;
 	}
 	// {number / divisor, number % divisor}, for 0 < divisor < BigNumberBase
-	pair<BigNumber, uint64_t> DivideSmall(BigNumber const &number, uint64_t divisor)
+	pair<BigNumber, uint64_t> DivideSmall(BigNumber const& number, uint64_t divisor)
 	{
 		BigNumber quotient(number.size(), 0);
 		uint64_t remainder = 0;
@@ -36,14 +35,14 @@ namespace
 			remainder = current % divisor;
 		}
 		Trim(quotient);
-		return {quotient, remainder};
+		return { quotient, remainder };
 	}
 }
 /*
  * Throws std::invalid_argument unless number is a valid BigNumber: non-empty, every limb < BigNumberBase,
  * and no leading zero limbs.
  */
-void BigValidate(BigNumber const &number)
+void BigValidate(BigNumber const& number)
 {
 	if (number.empty())
 		throw invalid_argument("BigNumber: empty: zero is {0}");
@@ -89,7 +88,7 @@ BigNumber BigFromString(string_view decimal)
 	Trim(result);
 	return result;
 }
-string BigToString(BigNumber const &number)
+string BigToString(BigNumber const& number)
 {
 	BigValidate(number);
 	string result = to_string(number.back()); // Most significant limb: no leading zeros
@@ -101,7 +100,7 @@ string BigToString(BigNumber const &number)
 	}
 	return result;
 }
-strong_ordering BigCompare(BigNumber const &a, BigNumber const &b)
+strong_ordering BigCompare(BigNumber const& a, BigNumber const& b)
 {
 	BigValidate(a);
 	BigValidate(b);
@@ -112,7 +111,7 @@ strong_ordering BigCompare(BigNumber const &a, BigNumber const &b)
 			return a[i] <=> b[i];
 	return strong_ordering::equal;
 }
-BigNumber BigAdd(BigNumber const &a, BigNumber const &b)
+BigNumber BigAdd(BigNumber const& a, BigNumber const& b)
 {
 	BigValidate(a);
 	BigValidate(b);
@@ -130,7 +129,7 @@ BigNumber BigAdd(BigNumber const &a, BigNumber const &b)
 /*
  * a - b. Throws std::domain_error if a < b: a BigNumber is unsigned, so the result can't be negative.
  */
-BigNumber BigSubtract(BigNumber const &a, BigNumber const &b)
+BigNumber BigSubtract(BigNumber const& a, BigNumber const& b)
 {
 	if (BigCompare(a, b) == strong_ordering::less) // BigCompare also validates a and b
 		throw domain_error("BigSubtract: a < b, the result would be negative");
@@ -149,7 +148,7 @@ BigNumber BigSubtract(BigNumber const &a, BigNumber const &b)
  * Schoolbook multiplication: every limb of a times every limb of b, O(|a| x |b|).
  * Each product is added straight into its place in the result, with no temporary rows.
  */
-BigNumber BigMultiply(BigNumber const &a, BigNumber const &b)
+BigNumber BigMultiply(BigNumber const& a, BigNumber const& b)
 {
 	BigValidate(a);
 	BigValidate(b);
@@ -180,18 +179,18 @@ BigNumber BigMultiply(BigNumber const &a, BigNumber const &b)
  *    decrease it and add the divisor back.
  * O(|dividend| x |divisor|)
  */
-pair<BigNumber, BigNumber> BigDivide(BigNumber const &dividend, BigNumber const &divisor)
+pair<BigNumber, BigNumber> BigDivide(BigNumber const& dividend, BigNumber const& divisor)
 {
 	BigValidate(dividend);
 	BigValidate(divisor);
 	if (divisor.size() == 1 && !divisor[0])
 		throw domain_error("BigDivide: division by zero");
 	if (BigCompare(dividend, divisor) == strong_ordering::less)
-		return {BigNumber{0}, dividend};
+		return { BigNumber{ 0 }, dividend };
 	if (divisor.size() == 1) // Single-limb divisor: short division
 	{
 		auto [quotient, remainder] = DivideSmall(dividend, divisor[0]);
-		return {quotient, BigFromNumber(remainder)};
+		return { quotient, BigFromNumber(remainder) };
 	}
 	size_t n = divisor.size(), m = dividend.size() - n;
 	uint64_t d = BigNumberBase / (divisor.back() + 1);
@@ -240,5 +239,5 @@ pair<BigNumber, BigNumber> BigDivide(BigNumber const &dividend, BigNumber const 
 	Trim(quotient);
 	u.resize(n); // The remainder is in the low n limbs, still multiplied by d
 	Trim(u);
-	return {quotient, DivideSmall(u, d).first};
+	return { quotient, DivideSmall(u, d).first };
 }

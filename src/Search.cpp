@@ -203,13 +203,11 @@ int Search::BinarySearch(const string& toSearch, vector<string> const& source)
 {
     for (int lower = 0, upper = source.size() - 1, middle = 0; lower <= upper;)
     {
-        while (lower <= upper && source[upper].empty())
-            upper--;
+        for (;lower <= upper && source[upper].empty(); upper--);
         if (lower > upper)
             return -1;
         middle = lower + (upper - lower) / 2 + (upper - lower) % 2;
-        while (source[middle].empty())
-            middle++;
+        for (;source[middle].empty(); middle++);
         if (source[middle] == toSearch)
             return middle;
         else if (toSearch < source[middle])

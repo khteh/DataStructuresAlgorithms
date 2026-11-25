@@ -1217,7 +1217,6 @@ size_t Matrix<T>::FindShortestPath(vector<vector<T>>& grid, size_t r, size_t c, 
 	set<position_t> visited;
 	map<position_t, position_t> routes; // Key: current Value: parent
 	queue<position_t> positions;
-	positions.push(origin);
 	if (grid.empty())
 		return 0;
 	if (r >= grid.size() || c >= grid[0].size())
@@ -1229,7 +1228,7 @@ size_t Matrix<T>::FindShortestPath(vector<vector<T>>& grid, size_t r, size_t c, 
 		result.push(origin);
 		return result.size();
 	}
-	while (!positions.empty())
+	for (positions.push(origin), visited.emplace(origin);!positions.empty();)
 	{
 		position_t parent = positions.front();
 		positions.pop();
@@ -1281,7 +1280,6 @@ size_t Matrix<T>::PathExists(vector<vector<T>> const& grid, size_t r, size_t c, 
 	set<position_t> visited;
 	map<position_t, position_t> routes; // Key: current Value: parent
 	queue<position_t> positions;
-	positions.push(origin);
 	if (grid.empty())
 		return 0;
 	if (r >= grid.size() || y >= grid.size() || c >= grid[0].size() || x >= grid[0].size())
@@ -1291,7 +1289,7 @@ size_t Matrix<T>::PathExists(vector<vector<T>> const& grid, size_t r, size_t c, 
 		result.push(destination);
 		return result.size();
 	}
-	while (!positions.empty())
+	for (positions.push(origin), visited.emplace(origin); !positions.empty(); )
 	{
 		position_t parent = positions.front();
 		positions.pop();
@@ -1322,7 +1320,7 @@ size_t Matrix<T>::PathExists(vector<vector<T>> const& grid, size_t r, size_t c, 
 	return 0;
 }
 /*
-Up is a valid step in this grid:
+"Up" is a valid step in this grid:
 0 1 1 1 1 1
 0 0 1 0 0 0
 1 0 0 0 1 0
@@ -1335,12 +1333,9 @@ bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const& grid, size_t c, con
 	set<position_t> visited;
 	map<position_t, position_t> routes; // Key: current Value: parent
 	queue<position_t> positions;
-	positions.push(origin);
-	if (grid.empty())
+	if (grid.empty() || c >= grid[0].size())
 		return false;
-	if (c >= grid[0].size())
-		return false;
-	while (!positions.empty())
+	for (positions.push(origin), visited.emplace(origin); !positions.empty();)
 	{
 		position_t parent = positions.front();
 		positions.pop();
@@ -1352,18 +1347,11 @@ bool Matrix<T>::TopBottomPathExists(vector<vector<T>> const& grid, size_t c, con
 				position_t current(r, c);
 				if (r == grid.size() - 1 && grid[r][c] != obstacle)
 				{ // Reach destination. The first reach is the shortest path
-#if 0
-					result.push(current);
-					result.push(parent);
-					for (position_t pos = parent; pos != origin && routes.count(pos); result.push(pos), pos = routes[pos])
+					path.emplace(current);
+					path.emplace(parent);
+					for (position_t pos = parent; pos != origin && routes.count(pos); path.emplace(pos), pos = routes[pos])
 						;
-					return result.size();
-#else
-					path.insert(current);
-					path.insert(parent);
-					for (position_t pos = parent; pos != origin && routes.count(pos); path.insert(pos), pos = routes[pos])
-						;
-#endif
+					path.emplace(origin);
 					return true;
 				}
 				else if (grid[r][c] != obstacle && !visited.count(current))
@@ -1417,6 +1405,7 @@ size_t Matrix<T>::LatestDayToCross(size_t row, size_t col, vector<vector<T>> con
 {
 	vector<vector<T>> matrix(row, vector<T>(col, '0'));
 	set<position_t> path;
+	set<size_t> skippedColumns;
 	size_t days = 0;
 	for (; days <= cells.size(); days++)
 	{
@@ -1429,10 +1418,12 @@ size_t Matrix<T>::LatestDayToCross(size_t row, size_t col, vector<vector<T>> con
 		path.clear();
 		bool pathExists = false;
 		for (size_t i = 0; i < col && !pathExists; i++)
-		{
-			if (matrix[0][i] != '1')
-				pathExists = TopBottomPathExists(matrix, i, '1', path);
-		}
+			if (!skippedColumns.count(i)) {
+				if (matrix[0][i] != '1')
+					pathExists = TopBottomPathExists(matrix, i, '1', path);
+				if (!pathExists || matrix[0][i] == '1')
+					skippedColumns.insert(i);
+			}
 		if (!pathExists)
 		{
 			Print(matrix);

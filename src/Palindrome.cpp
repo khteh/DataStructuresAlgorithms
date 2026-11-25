@@ -5,7 +5,7 @@
  * 1 2 3 2 1 Odd count; #odd = 1
  * XXX This will return true but NOT palindrome: "13221"
  */
-bool Palindrome::IsPalindrome(string const &s)
+bool Palindrome::IsPalindrome(string const& s)
 {
     size_t odd = 0;
     size_t length = s.length();
@@ -28,7 +28,7 @@ bool Palindrome::IsPalindrome(string const &s)
  * 121212 => 111222
  *   count:  123 : Even length -> false
  */
-bool Palindrome::IsPalindrome1(string const &s)
+bool Palindrome::IsPalindrome1(string const& s)
 {
     size_t count = 1, odd = 0;
     size_t length = s.length();
@@ -48,7 +48,7 @@ bool Palindrome::IsPalindrome1(string const &s)
     return true;
 }
 // https://en.wikipedia.org/wiki/Palindrome
-bool Palindrome::IsPalindrome2(string const &s)
+bool Palindrome::IsPalindrome2(string const& s)
 {
     for (size_t i = 0, j = s.size() - 1; i <= j;)
     {
@@ -76,7 +76,7 @@ bool Palindrome::IsPalindrome2(string const &s)
  * "ab" -> "a"
  * "aa" -> "aa"
  */
-string Palindrome::FindBiggestPalindromeSubstring(string const &s)
+string Palindrome::FindBiggestPalindromeSubstring(string const& s)
 {
     string result;
     set<char> chars(s.begin(), s.end());
@@ -91,12 +91,8 @@ string Palindrome::FindBiggestPalindromeSubstring(string const &s)
         long left = center / 2;
         long right = left + center % 2;
         string palindrome; // Keep the biggest palindrome around the current 'center'
-        while (left >= 0 && right < (long)length && s[left] == s[right])
-        {
+        for (;left >= 0 && right < (long)length && s[left] == s[right]; left--, right++)
             palindrome = s.substr(left, right - left + 1);
-            left--;
-            right++;
-        }
         if (palindrome.size() > result.size())
             result = move(palindrome);
     }
@@ -130,7 +126,7 @@ center:4 left:2, right:2
 center:5 left:2, right:3
     p: ""
 */
-void Palindrome::FindPalindromeSubstrings(string const &s, set<string> &result)
+void Palindrome::FindPalindromeSubstrings(string const& s, set<string>& result)
 {
     size_t length = s.size();
     for (size_t center = 0; center < 2 * length; center++)
@@ -155,7 +151,7 @@ void Palindrome::FindPalindromeSubstrings(string const &s, set<string> &result)
  * Correctness: 100 %
  * Performance: 25 %
  */
-size_t Palindrome::PalindromeAnagramCount(string const &str)
+size_t Palindrome::PalindromeAnagramCount(string const& str)
 {
     size_t result = 0;
     vector<string> palindromes;
@@ -182,7 +178,7 @@ size_t Palindrome::PalindromeAnagramCount(string const &str)
  * Correctness: 100 %
  * Performance: 37 %
  */
-size_t Palindrome::PalindromeAnagramCount1(string const &str)
+size_t Palindrome::PalindromeAnagramCount1(string const& str)
 {
     size_t result = 0;
     map<char, size_t> counts;
@@ -225,7 +221,7 @@ size_t Palindrome::PalindromeAnagramCount1(string const &str)
  * https://www.hackerrank.com/challenges/richie-rich/problem
  * 100%
  */
-void Palindrome::HighestValuePalindrome(string &s, size_t k)
+void Palindrome::HighestValuePalindrome(string& s, size_t k)
 {
     bool IsPalindrome = true;
     set<size_t> tofix; // Record # characters and positions to fix
@@ -360,7 +356,7 @@ void Palindrome::HighestValuePalindrome(string &s, size_t k)
  *
  * 100%
  */
-size_t Palindrome::ShortPalindrome(const string &s)
+size_t Palindrome::ShortPalindrome(const string& s)
 {
     size_t count = 0;
     vector<size_t> str1(26, 0), str123(26, 0);
@@ -386,7 +382,7 @@ size_t Palindrome::ShortPalindrome(const string &s)
  * https://chalkdustmagazine.com/features/counting-palindromes/
  * 100%
  */
-int64_t Palindrome::MaxSizePalindromeCount(string const &s, size_t l, size_t r)
+int64_t Palindrome::MaxSizePalindromeCount(string const& s, size_t l, size_t r)
 {
     const int64_t modulo = 1e9 + 7L;
     vector<int64_t> factorials;
