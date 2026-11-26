@@ -8,4 +8,5 @@ public:
     size_t MaxHarvest(vector<T> const&, size_t);
     size_t SteadyGene(string const&);
     size_t LongestStringWithCharacterReplacement(string const&, size_t);
+    size_t LongestCommonSubstringWithFixes(string const&, string const&, size_t);
 };

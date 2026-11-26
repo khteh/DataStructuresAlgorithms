@@ -91,6 +91,35 @@ INSTANTIATE_TEST_SUITE_P(
     SteadyGeneChallengeTests,
     SteadyGeneChallengeTestFixture,
     ::testing::Values(make_tuple(2, "ATAA"), make_tuple(1, "ACGTCCGT"), make_tuple(0, "AAGTGCCT"), make_tuple(2, "ACTGAAAG"), make_tuple(5, "GAAATAAA"), make_tuple(5, "TGATGCCGTCCCCTCAACTTGAGTGCTCCTAATGCGTTGC")));
+class LongestCommonSubstringWithFixesTestFixture : public testing::TestWithParam<tuple<size_t, string, string, size_t>>
+{
+public:
+    void SetUp() override
+    {
+        _expected = get<0>(GetParam());
+        _str1 = get<1>(GetParam());
+        _str2 = get<2>(GetParam());
+        _k = get<3>(GetParam());
+    }
+    size_t LongestCommonSubstringWithFixesTest()
+    {
+        return _slidingWindow.LongestCommonSubstringWithFixes(_str1, _str2, _k);
+    }
+protected:
+    SlidingWindow<size_t> _slidingWindow;
+    string _str1, _str2;
+    size_t _expected, _k;
+};
+TEST_P(LongestCommonSubstringWithFixesTestFixture, LongestCommonSubstringWithFixesTests)
+{
+    ASSERT_EQ(this->_expected, this->LongestCommonSubstringWithFixesTest());
+}
+INSTANTIATE_TEST_SUITE_P(
+    LongestCommonSubstringWithFixesTests,
+    LongestCommonSubstringWithFixesTestFixture,
+    ::testing::Values(make_tuple(2, "abcd", "adbc", 0), make_tuple(3, "abcd", "adbc", 1), make_tuple(4, "helloworld", "yellomarin", 0), make_tuple(8, "helloworld", "yellomarin", 3),
+        make_tuple(4, "tabriz", "torino", 2), make_tuple(3, "abacba", "abcaba", 0)));
+
 class LongestStringWithCharacterReplacementTestFixture : public testing::TestWithParam<tuple<size_t, string, size_t>>
 {
 public:

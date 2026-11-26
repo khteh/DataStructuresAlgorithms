@@ -4,7 +4,7 @@ TEST(SuffixTreeTests, SuffixTreeTest)
 {
 	SuffixTree sTree("Mississippi");
 	vector<size_t> indexes;
-	vector<string> subStrings{"Mississippi", "M", "m", "i", "s", "p", "is", "si", "sip", "hi", "sis", "pi", "ppi", "ssi", "issi"};
+	vector<string> subStrings{ "Mississippi", "M", "m", "i", "s", "p", "is", "si", "sip", "hi", "sis", "pi", "ppi", "ssi", "issi" };
 	size_t count = sTree.Count();
 	ASSERT_EQ(53, count);
 	cout << "Suffix tree of \"Mississippi\" has " << count << " nodes" << endl;
@@ -158,73 +158,6 @@ TEST(SuffixTreeTests, SuffixTreeTest)
 	ASSERT_FALSE(subStrings.empty());
 	ASSERT_EQ(1, subStrings.size());
 	ASSERT_EQ("GAGAGAGAGAG", subStrings[0]);
-
-	sTree.Reset();
-	size_t match;
-	sTree.InsertString("abcd");
-	sTree.InsertString("adbc");
-	match = sTree.LongestCommonSubstring(0); // bc
-	ASSERT_EQ(2, match);
-	match = sTree.LongestCommonSubstring(1);
-	ASSERT_EQ(3, match);
-	sTree.Reset();
-	sTree.InsertString("helloworld");
-	sTree.InsertString("yellomarin");
-	match = sTree.LongestCommonSubstring(0); // ello
-	ASSERT_EQ(4, match);
-	match = sTree.LongestCommonSubstring(3);
-	ASSERT_EQ(8, match);
-	sTree.Reset();
-	sTree.InsertString("abacba");
-	sTree.InsertString("abcaba");
-	match = sTree.LongestCommonSubstring(0);
-	ASSERT_EQ(3, match);
-	// match = sTree.LongestCommonSubstring(1); // 'abaxba'
-	// assert(match == 4);
-	sTree.Reset();
-	sTree.InsertString("tabriz");
-	sTree.InsertString("torino");
-	match = sTree.LongestCommonSubstring(0);
-	ASSERT_EQ(2, match);
-	match = sTree.LongestCommonSubstring(2);
-	ASSERT_EQ(4, match);
-	sTree.Reset();
-	sTree.InsertString("abcdefghijkl");
-	sTree.InsertString("bbcabcghijmnopq"); // match "ghij"
-	match = sTree.LongestCommonSubstring(0);
-	ASSERT_EQ(4, match);
-	sTree.Reset();
-	sTree.InsertString("abcdefghijkl");
-	sTree.InsertString("bmnobcdeijkq"); // match "bcde"
-	match = sTree.LongestCommonSubstring(0);
-	ASSERT_EQ(4, match);
-	sTree.Reset();
-	sTree.InsertString("abcdefghijkl");
-	sTree.InsertString("bbijkmnopqrstuv"); // match "bcde" with first string
-	sTree.InsertString("ijklmnopqrst");	   // match "ijk" with all other strings
-	match = sTree.LongestCommonSubstring(0);
-	ASSERT_EQ(3, match);
-	match = sTree.LongestCommonSubstring(1);
-	ASSERT_EQ(4, match);
-	sTree.Reset();
-	sTree.InsertString("abcdefghijkl");
-	sTree.InsertString("bbcfghiopqrstuv");
-	sTree.InsertString("ijklmnopfghistuvw");
-	sTree.InsertString("fghimnopqrstuv"); // match "fghi" with all other strings
-	match = sTree.LongestCommonSubstring(0);
-	ASSERT_EQ(4, match);
-	match = sTree.LongestCommonSubstring(1);
-	ASSERT_EQ(5, match);
-	sTree.Reset();
-	sTree.InsertString("abcdewxyzjkl");
-	sTree.InsertString("bbcwxyzoijkq");
-	sTree.InsertString("ijklmnopwxyzstuv");
-	sTree.InsertString("wxyzmnopqrst");
-	sTree.InsertString("abcdmnopqrstwxyz"); // match "wxyz" with all other strings
-	match = sTree.LongestCommonSubstring(0);
-	ASSERT_EQ(4, match);
-	match = sTree.LongestCommonSubstring(1);
-	ASSERT_EQ(5, match);
 
 	sTree.Reset();
 	sTree.InsertString("Mississippi");

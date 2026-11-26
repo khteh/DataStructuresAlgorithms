@@ -1,5 +1,4 @@
 #pragma once
-class SuffixTreeNode;
 
 /*
  http://en.wikipedia.org/wiki/Suffix_tree
@@ -18,26 +17,6 @@ class SuffixTreeNode;
 	<0>
 	Node count = 53
  */
-class SuffixTree
-{
-private:
-	vector<string> _strings;
-	unique_ptr<SuffixTreeNode> _root;
-	const vector<size_t> GetIndexes();
-
-public:
-	SuffixTree();
-	explicit SuffixTree(string const &);
-	~SuffixTree();
-	void InsertString(string const &);
-	void RemoveString(string const &);
-	const vector<size_t> GetIndexes(string const &);
-	const vector<string> LongestRepeatedSubstring();
-	const size_t LongestCommonSubstring(long); // Uses LongestRepeatedSubstring
-	void Reset();
-	size_t Count() const;
-};
-
 class SuffixTreeNode
 {
 private:
@@ -48,10 +27,28 @@ private:
 public:
 	explicit SuffixTreeNode(char);
 	~SuffixTreeNode();
-	void InsertString(string const &, size_t);
-	void RemoveString(string const &);
+	void InsertString(string const&, size_t);
+	void RemoveString(string const&);
 	const set<size_t> GetIndexes();
-	const set<size_t> GetIndexes(string const &);
+	const set<size_t> GetIndexes(string const&);
 	const map<string, size_t> LongestRepeatedSubstring();
+	size_t Count() const;
+};
+class SuffixTree
+{
+private:
+	vector<string> _strings;
+	unique_ptr<SuffixTreeNode> _root;
+	const vector<size_t> GetIndexes();
+
+public:
+	SuffixTree();
+	explicit SuffixTree(string const&);
+	~SuffixTree();
+	void InsertString(string const&);
+	void RemoveString(string const&);
+	const vector<size_t> GetIndexes(string const&);
+	const vector<string> LongestRepeatedSubstring();
+	void Reset();
 	size_t Count() const;
 };

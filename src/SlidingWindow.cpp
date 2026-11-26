@@ -263,3 +263,148 @@ size_t SlidingWindow<T>::LongestStringWithCharacterReplacement(string const& s, 
     }
     return maxLength;
 }
+/*
+https://www.hackerrank.com/challenges/substring-diff/problem
+WIP - 2 test cases failed
+In this problem, we'll use the term "longest common substring" loosely. It refers to substrings differing at some number or fewer characters when compared *index by index*.
+For example, 'abc' and 'adc' differ in one position, 'aab' and 'aba' differ in two.
+Given two strings and an integer , determine the length of the longest common substrings of the two strings that differ in no more than  positions.
+For example, . Strings  and . Check to see if the whole string (the longest substrings) matches. Given that neither the first nor last characters match and , we need to try shorter substrings.
+The next longest substrings are  and . Two pairs of these substrings only differ in  position:  and . They are of length .
+
+Shift d	−5	−4	−3	−2	−1	0	1	2	3	4	5
+Length	1	2	3	4	5	6	5	4	3	2	1
+All the lengths add up to 6 × 6 = 36: every cell of the comparison table is on exactly one diagonal:
+1 2 3 4	5 6 5 4 3 2 1 -> 5*6 + 6 = 36
+1 2 3 4	5 6
+5 4 3 2 1
+
+With s1 of length n and s2 of length m, the diagonal with shift d, comparing s1[i] with s2[i + d], has length:
+
+min(n, m, n + d, m − d)
+
+Each of the four limits is something that runs out first:
+
+n: it can't pair up more characters than s1 has.
+m: nor more than s2 has.
+n + d: for a negative d, the first |d| characters of s1 have nothing to pair with.
+m − d: for a positive d, the first d characters of s2 have nothing to pair with.
+
+The shifts run from d = −(m − 1) to n − 1, so there are n + m − 1 diagonals.
+
+When the strings have different lengths, n and m with n ≤ m, the longest diagonals have length n, the full shorter string.
+There are m − n + 1 of them, one for each place the shorter string fits inside the longer one.
+With equal lengths, n = m, the formula becomes min(n + d, n − d) = n − |d|.
+Without the gap between n and m there's no plateau, just the peak at d = 0, i.e., the length of the diagonal peaks at d:0.
+
+s1: tabriz
+s2: torino
+
+d:-1 s1[i] - s2[i - 1]
+tabriz
+ torino
+Position	1	2	3	4	5
+s1		    a	b	r	i	z
+s2		    t	o	r	i	n
+Match?		✗	✗	✓	✓	✗
+
+The window is a stretch of these positions, from a left end to a right end:
+dlength = min(n, m, n + d, m - d)
+n == m: dlength = n - |d| = 6 - 1 = 5
+
+Step	What happens	            Window	Mismatches	Length
+1	    right end takes in 1 (a/t)	1 … 1	1	        1
+2	    right end takes in 2 (b/o)	1 … 2	2	        2
+3	    right end takes in 3 (r/r)	1 … 3	2	        3
+4	    right end takes in 4 (i/i)	1 … 4	2	        4
+5	    right end takes in 5 (z/n)	1 … 5	3: too many
+6	    left end drops 1 (a/t)	    2 … 5	2	        4 (briz / orin)
+
+Shift d	Pairs compared	        Match?	Best window (at most 2 mismatches)	Length
+−5	    z/t	                    ✗	    z / t	                            1
+−4	    i/t z/o	                ✗✗	    iz / to	                            2
+−3	    r/t i/o z/r	            ✗✗✗	    ri / to	                            2
+−2	    b/t r/o i/r z/i	        ✗✗✗✗	br / to	                            2
+−1	    a/t b/o r/r i/i z/n	    ✗✗✓✓✗	abri / tori	                        4
+0	    t/t a/o b/r r/i i/n z/o ✓✗✗✗✗✗	tab / tor	                        3
+1	    t/o a/r b/i r/n i/o	    ✗✗✗✗✗	ta / or	                            2
+2	    t/r a/i b/n r/o	        ✗✗✗✗	ta / ri	                            2
+3	    t/i a/n b/o	            ✗✗✗	    ta / in	                            2
+4	    t/n a/o	                ✗✗	    ta / no	                            2
+5	    t/o	                    ✗	    t / o	                            1
+
+Making the window bigger can only add mismatches. Taking in more positions keeps the count the same, if they match, or increases it, if they don't. It never goes down.
+
+s1[i] - s2[i + d]
+-5:
+tabriz
+     torino
+-4:
+tabriz
+    torino
+0:
+tabriz
+torino
+1:
+ tabriz
+torino
+5:
+     tabriz
+torino
+---
+s1: uvwxyz
+s2: abcd
+m:6, n:4
+d: [-5, 3]
+s1[i] s2[i+d]:
+d=-5:
+ uvwxyz
+      abcd
+d=-4:
+ uvwxyz
+      abcd
+
+d=0:
+ uvwxyz
+ abcd
+
+d=3:
+   uvwxyz
+      abcd
+
+s1: abcd
+s2: uvwxyz
+m:4, n:6
+d: [-3, 5]:
+s1[i] s2[i+1]:
+d=-3:
+ abcd
+    uvwxyz
+
+d=0:
+ abcd
+ uvwxyz
+
+d=5:
+      abcd
+ uvwxyz
+*/
+template<typename T>
+size_t SlidingWindow<T>::LongestCommonSubstringWithFixes(string const& str1, string const& str2, size_t k)
+{
+    size_t m = str1.size(), n = str2.size(), result = 0;
+    for (long d = 1 - m; d < (long)n; d++) {
+        size_t dlength = min<size_t>(n, min(m, min<size_t>(n + d, m - d)));
+        for (size_t i = d >= 0 ? 0 : abs(d), j = i, mismatches = 0, count = 0; count < dlength&& i <= j; count++, j++) {
+            if (str1[j] == str2[j + d])
+                result = max(result, j - i + 1);
+            else if (++mismatches > k) {
+                for (;mismatches > k; i++) { // Doesn't work. Shrink from the front.
+                    if (str1[i] != str2[i + d])
+                        mismatches--;
+                }
+            }
+        }
+    }
+    return result;
+}
