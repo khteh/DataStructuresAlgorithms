@@ -641,20 +641,20 @@ int main(int argc, char* argv[])
 	FindDistinct(a, b);
 	assert(b.size() == 20);
 
-	a.clear();
-	b.clear();
-	FindPrimes(20, a); // Find prime numbers 0 to 20: 2,3,5,7,11,13,17,19
-	assert(a.size() == 8);
-	a.clear();
-	b.clear();
-	a = { 15, 10, 3 };
-	b = { 75, 30, 5 };
-	assert(CommonPrimeDivisors(a, b) == 1);
-	a.clear();
-	b.clear();
-	a = { 7, 17, 5, 3 };
-	b = { 7, 11, 5, 2 };
-	assert(CommonPrimeDivisors(a, b) == 2);
+	udata.clear();
+	udata1.clear();
+	FindPrimes(20, udata); // Find prime numbers 0 to 20: 2,3,5,7,11,13,17,19
+	assert(udata.size() == 8);
+	udata.clear();
+	udata1.clear();
+	udata = { 15, 10, 3 };
+	udata1 = { 75, 30, 5 };
+	assert(CommonPrimeDivisors(udata, udata1) == 1);
+	udata.clear();
+	udata1.clear();
+	udata = { 7, 17, 5, 3 };
+	udata1 = { 7, 11, 5, 2 };
+	assert(CommonPrimeDivisors(udata, udata1) == 2);
 
 	assert(!IsPrime(1));
 	assert(IsPrime(2));

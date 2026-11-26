@@ -909,7 +909,7 @@ void FindDistinct(vector<long>& input, vector<long>& output)
 	}
 }
 // http://en.wikipedia.org/wiki/Prime_number - Trial division implementation
-void FindPrimes(unsigned long n, vector<long>& result)
+void FindPrimes(size_t n, vector<size_t>& result)
 {
 	if (n <= 3)
 		result = { 2, 3 };
@@ -917,10 +917,10 @@ void FindPrimes(unsigned long n, vector<long>& result)
 	{
 		long double j;
 		result = { 2, 3 };
-		for (unsigned long i = 4; i <= n; i++)
+		for (size_t i = 4; i <= n; i++)
 		{
 			long double sqrtI = sqrt(i);
-			for (j = 2; j <= sqrtI && (i % (long)j); j++)
+			for (j = 2; j <= sqrtI && (i % (size_t)j); j++)
 				;
 			if (j > sqrtI)
 				result.push_back(i);
@@ -928,7 +928,7 @@ void FindPrimes(unsigned long n, vector<long>& result)
 	}
 }
 // https://en.wikipedia.org/wiki/Primality_test
-bool IsPrime(unsigned long n)
+bool IsPrime(size_t n)
 {
 	if (n <= 3)
 		return n > 1;
@@ -939,29 +939,46 @@ bool IsPrime(unsigned long n)
 			return false;
 	return true;
 }
-// https://app.codility.com/programmers/lessons/12-euclidean_algorithm/common_prime_divisors/
-// Correctness: 100%
-// 61% due to timeout
-size_t CommonPrimeDivisors(vector<long>& data1, vector<long>& data2)
+/* https://app.codility.com/programmers/lessons/12-euclidean_algorithm/common_prime_divisors/
+ * Correctness: 100%
+ * WIP 61% due to timeout
+ * A prime is a positive integer X that has exactly two distinct divisors: 1 and X. The first few prime integers are 2, 3, 5, 7, 11 and 13.
+A prime D is called a prime divisor of a positive integer P if there exists a positive integer K such that D * K = P. For example, 2 and 5 are prime divisors of 20.
+You are given two positive integers A and B. The goal is to check whether the sets of prime divisors of integers A and B are exactly the same.
+For example, given:
+
+A = 15 and B = 75, the prime divisors are the same: {3, 5};
+A = 10 and B = 30, the prime divisors aren't the same: {2, 5} is not equal to {2, 3, 5};
+A = 9 and B = 5, the prime divisors aren't the same: {3} is not equal to {5}.
+
+Given two non-empty arrays A and B of N integers, returns the number of positions K for which the prime divisors of A[K] and B[K] are exactly the same.
+
+For example, given:
+	A[0] = 15   B[0] = 75
+	A[1] = 10   B[1] = 30
+	A[2] = 3    B[2] = 5
+the function should return 1, because only one pair (15, 75) has the same set of prime divisors.
+N: [1..100,000];
+A[i], B[i]: [1..2,147,483,647].
+ */
+size_t CommonPrimeDivisors(vector<size_t>& data1, vector<size_t>& data2)
 {
 	vector<size_t> indices;
-	vector<long> a(data1), b(data2);
-	ranges::sort(a);
-	ranges::sort(b);
-	long maxNum = max(a.back(), b.back());
-	vector<long> primes;
-	FindPrimes(maxNum, primes);
+	if (data1.size() != data2.size())
+		throw invalid_argument("Both data1 and data2 must have the same size!");
+	if (data1.empty() || data2.empty())
+		return 0;
 	if (data1.size() == 1 && data2.size() == 1 && data1[0] == 1 && data2[0] == 1)
 		return 1;
+	size_t maxNum = max<size_t>(*ranges::max_element(data1), *ranges::max_element(data2));
+	vector<size_t> primes;
+	FindPrimes(maxNum, primes);
 	for (size_t i = 0; i < data1.size(); i++)
 	{
 		maxNum = max(data1[i], data2[i]);
 		bool flag = true;
-		for (vector<long>::const_iterator it = primes.begin(); it < primes.end() && *it <= maxNum; it++)
-		{
-			if (!(data1[i] % *it) ^ !(data2[i] % *it))
-				flag = false;
-		}
+		for (vector<size_t>::const_iterator it = primes.begin(); flag && it < primes.end() && *it <= maxNum; it++)
+			flag = !(!(data1[i] % *it) ^ !(data2[i] % *it));// FALSE if *it can only divide one of data1 or data2
 		if (flag)
 			indices.push_back(i);
 	}
@@ -986,8 +1003,7 @@ string uncompress(string const& str)
 				else
 					i++;
 				ostringstream oss1;
-				for (size_t k = 0; k < repeat; k++)
-					oss1 << oss.str();
+				for (size_t k = 0; k < repeat; oss1 << oss.str(), k++);
 				oss.str("");
 				oss << oss1.str();
 			}

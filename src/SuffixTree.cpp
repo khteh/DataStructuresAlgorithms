@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SuffixTree.h"
 #include <iterator>
-void split(const string &s, char delim, vector<size_t> &elems)
+void split(const string& s, char delim, vector<size_t>& elems)
 {
 	std::stringstream ss(s);
 	std::string item;
@@ -12,7 +12,7 @@ void split(const string &s, char delim, vector<size_t> &elems)
 		elems.push_back(i);
 	}
 }
-void splitString(size_t count, const string &s, char delim, set<string> &elems, map<string, size_t> &stringCounts)
+void splitString(size_t count, const string& s, char delim, set<string>& elems, map<string, size_t>& stringCounts)
 {
 	stringstream ss(s);
 	string item;
@@ -32,7 +32,7 @@ SuffixTree::SuffixTree()
 {
 }
 
-SuffixTree::SuffixTree(string const &str)
+SuffixTree::SuffixTree(string const& str)
 	: SuffixTree()
 {
 	InsertString(str);
@@ -51,7 +51,7 @@ size_t SuffixTree::Count() const
 {
 	return _root ? _root->Count() : 0;
 }
-void SuffixTree::InsertString(string const &str)
+void SuffixTree::InsertString(string const& str)
 {
 	if (!str.empty() && ranges::find(_strings, str) == _strings.end())
 	{
@@ -66,7 +66,7 @@ void SuffixTree::InsertString(string const &str)
 			_root->InsertString(str.substr(i), index + i);
 	}
 }
-void SuffixTree::RemoveString(string const &str)
+void SuffixTree::RemoveString(string const& str)
 {
 	_root->RemoveString(str);
 }
@@ -77,7 +77,7 @@ const vector<size_t> SuffixTree::GetIndexes()
 	result.assign(tmp.begin(), tmp.end());
 	return result;
 }
-const vector<size_t> SuffixTree::GetIndexes(string const &s)
+const vector<size_t> SuffixTree::GetIndexes(string const& s)
 {
 	vector<size_t> result;
 	set<size_t> tmp = _root->GetIndexes(s);
@@ -112,7 +112,7 @@ const vector<string> SuffixTree::LongestRepeatedSubstring()
 }
 /*
  * https://www.hackerrank.com/challenges/substring-diff/problem
- * Unfinished work! Timeout!
+ * WIP Timeout!
  */
 const size_t SuffixTree::LongestCommonSubstring(long n)
 {
@@ -201,7 +201,7 @@ size_t SuffixTreeNode::Count() const
 			throw runtime_error("Bogus node!!!");
 	return count;
 }
-void SuffixTreeNode::InsertString(string const &str, size_t index)
+void SuffixTreeNode::InsertString(string const& str, size_t index)
 {
 	_indices.insert(index);
 	if (!str.empty())
@@ -210,7 +210,7 @@ void SuffixTreeNode::InsertString(string const &str, size_t index)
 		result.first->second->InsertString(str.substr(1), index);
 	}
 }
-void SuffixTreeNode::RemoveString(string const &str)
+void SuffixTreeNode::RemoveString(string const& str)
 {
 	if (!str.empty() && _children.count(str[0]))
 	{
@@ -223,7 +223,7 @@ const set<size_t> SuffixTreeNode::GetIndexes()
 	return _indices;
 }
 // Returns the indexes recorded by the last matched charater
-const set<size_t> SuffixTreeNode::GetIndexes(string const &str)
+const set<size_t> SuffixTreeNode::GetIndexes(string const& str)
 {
 	set<size_t> result;
 	if (str.empty())
