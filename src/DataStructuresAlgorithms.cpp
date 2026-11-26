@@ -1964,7 +1964,7 @@ void TestURNG(URNG& urng)
 	vector<string> strings = { { "H", "He", "Li", "Be", "B", "C", "N", "O", "F",
 							   "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc",
 							   "Ti", "V", "Cr", "Mn", "Fe" } };
-	shuffle(strings.begin(), strings.end(), urng);
+	ranges::shuffle(strings, urng);
 	cout << "Randomized vector<string>: ";
 	ranges::copy(strings, ostream_iterator<string>(cout, " "));
 	cout << endl;
