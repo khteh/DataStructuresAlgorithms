@@ -15,7 +15,7 @@ void Knapsack::ClearDPMemoization()
 /* https://www.hackerrank.com/challenges/coin-change/problem
  * Times out due to recursion!
  */
-set<vector<size_t>> Knapsack::CoinsChange(long amount, vector<size_t> &coins)
+set<vector<size_t>> Knapsack::CoinsChange(long amount, vector<size_t>& coins)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0)
@@ -36,15 +36,15 @@ set<vector<size_t>> Knapsack::CoinsChange(long amount, vector<size_t> &coins)
 					{
 						vector<size_t> change(*it);
 						size_t sum = parallel_reduce(
-										 blocked_range<size_t>(0, change.size()), 0,
-										 [&](tbb::blocked_range<size_t> const &r, long running_total)
-										 {
-											 for (size_t i = r.begin(); i < r.end(); i++)
-												 running_total += change[i];
-											 return running_total;
-										 },
-										 std::plus<long>()) +
-									 *coin;
+							blocked_range<size_t>(0, change.size()), 0,
+							[&](tbb::blocked_range<size_t> const& r, long running_total)
+							{
+								for (size_t i = r.begin(); i < r.end(); i++)
+									running_total += change[i];
+								return running_total;
+							},
+							plus<long>()) +
+							*coin;
 						if (sum == amount)
 						{
 							change.push_back(*coin);
@@ -57,7 +57,7 @@ set<vector<size_t>> Knapsack::CoinsChange(long amount, vector<size_t> &coins)
 			} // if (amount >= (long)coins[i]) {
 	return combinations;
 }
-set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<size_t> &coins)
+set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<size_t>& coins)
 {
 	map<size_t, set<vector<size_t>>> dp; // key: amount, value: the coins which make up the amount.
 	ranges::sort(coins);
@@ -106,7 +106,7 @@ set<vector<size_t>> Knapsack::CoinsChangeDynamicProgramming(long amount, vector<
  * ways: 1 0 1 1 1 2 2 2 3 3 4
  * i:    0 1 2 3 4 5 6 7 8 9 10 {5,5},{5,2,3},{2,2,3,3},{2,2,2,2,2}
  */
-size_t Knapsack::CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<size_t> &coins)
+size_t Knapsack::CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<size_t>& coins)
 {
 	if (amount <= 0 || coins.empty())
 		return 0;
@@ -129,7 +129,7 @@ size_t Knapsack::CoinsChangeUniqueWaysDynamicProgramming(long amount, vector<siz
  * ways: 1 0 1 1 1 3 2 5 6 8 14
  * i:    0 1 2 3 4 5 6 7 8 9 10
  */
-size_t Knapsack::CoinsChangeDuplicateWaysDynamicProgramming(long amount, vector<size_t> &coins)
+size_t Knapsack::CoinsChangeDuplicateWaysDynamicProgramming(long amount, vector<size_t>& coins)
 {
 	if (amount <= 0 || coins.empty())
 		return 0;
@@ -149,7 +149,7 @@ size_t Knapsack::CoinsChangeDuplicateWaysDynamicProgramming(long amount, vector<
  * i(amount): 0 1 2     3     4     5        6       7      8       9       10
  *      ways: 0 1 {2,1} {2,2} {3,2} {3,3,1} {2,3,2} {3,2,2} {3,3,3} {4,3,3} {4,4,2}
  */
-long Knapsack::CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size_t> &coins)
+long Knapsack::CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size_t>& coins)
 {
 	if (amount <= 0 || coins.empty())
 		return 0;
@@ -167,7 +167,7 @@ long Knapsack::CoinsChangeFewestCoinsDynamicProgramming(long amount, vector<size
  * To create the sum, use any element of your array zero or more times.
  * 100%
  */
-set<vector<size_t>> Knapsack::_KnapsackCombinations(long amount, vector<size_t> const &numbers)
+set<vector<size_t>> Knapsack::_KnapsackCombinations(long amount, vector<size_t> const& numbers)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0 && !numbers.empty())
@@ -195,13 +195,13 @@ set<vector<size_t>> Knapsack::_KnapsackCombinations(long amount, vector<size_t> 
 							vector<size_t> change(*it);
 							size_t sum = parallel_reduce(
 								blocked_range<size_t>(0, change.size()), 0,
-								[&](tbb::blocked_range<size_t> const &r, long running_total)
+								[&](tbb::blocked_range<size_t> const& r, long running_total)
 								{
 									for (size_t i = r.begin(); i < r.end(); i++)
 										running_total += change[i];
 									return running_total;
 								},
-								std::plus<long>());
+								plus<long>());
 							if ((sum + *number) <= (size_t)amount)
 							{
 								change.push_back(*number);
@@ -218,7 +218,7 @@ set<vector<size_t>> Knapsack::_KnapsackCombinations(long amount, vector<size_t> 
 /* Bounded places an upper bound on the number of copies of each kind of item included in the knapsack
  * Unbounded places no upper bound on the number of copies of each kind of item included in the knapsack
  */
-size_t Knapsack::UnboundedKnapsack(long k, vector<size_t> const &arr)
+size_t Knapsack::UnboundedKnapsack(long k, vector<size_t> const& arr)
 {
 	knapsackCache.clear();
 	set<vector<size_t>> combinations = _KnapsackCombinations(k, arr);
@@ -226,16 +226,16 @@ size_t Knapsack::UnboundedKnapsack(long k, vector<size_t> const &arr)
 	for (set<vector<size_t>>::iterator it = combinations.begin(); it != combinations.end(); it++)
 		sums.insert(parallel_reduce(
 			blocked_range<size_t>(0, it->size()), 0uz,
-			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
+			[&](tbb::blocked_range<size_t> const& r, size_t running_total)
 			{
 				for (size_t i = r.begin(); i < r.end(); i++)
 					running_total += (*it)[i];
 				return running_total;
 			},
-			std::plus<size_t>()));
+			plus<size_t>()));
 	return sums.empty() ? 0 : *sums.rbegin();
 }
-set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> const &numbers)
+set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> const& numbers)
 {
 	set<vector<size_t>> combinations;
 	if (amount > 0 && !numbers.empty())
@@ -256,15 +256,15 @@ set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> const
 					{
 						vector<size_t> tmp1(*it);
 						size_t sum = parallel_reduce(
-										 blocked_range<size_t>(0, tmp1.size()), 0,
-										 [&](tbb::blocked_range<size_t> const &r, long running_total)
-										 {
-											 for (size_t i = r.begin(); i < r.end(); i++)
-												 running_total += tmp1[i];
-											 return running_total;
-										 },
-										 std::plus<long>()) +
-									 *number;
+							blocked_range<size_t>(0, tmp1.size()), 0,
+							[&](tbb::blocked_range<size_t> const& r, long running_total)
+							{
+								for (size_t i = r.begin(); i < r.end(); i++)
+									running_total += tmp1[i];
+								return running_total;
+							},
+							plus<long>()) +
+							*number;
 						if (sum == amount)
 						{
 							tmp1.push_back(*number);
@@ -281,7 +281,7 @@ set<vector<size_t>> Knapsack::_BoundedKnapsack(long amount, vector<size_t> const
 			}
 	return combinations;
 }
-vector<vector<size_t>> Knapsack::BoundedKnapsack(long amount, vector<size_t> const &numbers)
+vector<vector<size_t>> Knapsack::BoundedKnapsack(long amount, vector<size_t> const& numbers)
 {
 	vector<vector<size_t>> result;
 	knapsackCache.clear();
@@ -290,13 +290,13 @@ vector<vector<size_t>> Knapsack::BoundedKnapsack(long amount, vector<size_t> con
 	{
 		size_t sum = parallel_reduce(
 			blocked_range<size_t>(0, it->size()), 0uz,
-			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
+			[&](tbb::blocked_range<size_t> const& r, size_t running_total)
 			{
 				for (size_t i = r.begin(); i < r.end(); i++)
 					running_total += (*it)[i];
 				return running_total;
 			},
-			std::plus<size_t>());
+			plus<size_t>());
 		if (sum == amount)
 			result.push_back(*it);
 	}
@@ -333,13 +333,13 @@ set<vector<size_t>> Knapsack::_BoundedKnapsackCombinationSum(size_t size, size_t
 						change.push_back(i);
 						size_t total = parallel_reduce(
 							blocked_range<size_t>(0, change.size()), 0uz,
-							[&](tbb::blocked_range<size_t> const &r, size_t running_total)
+							[&](tbb::blocked_range<size_t> const& r, size_t running_total)
 							{
 								for (size_t i = r.begin(); i < r.end(); i++)
 									running_total += change[i];
 								return running_total;
 							},
-							std::plus<size_t>());
+							plus<size_t>());
 						if (total == sum)
 						{
 							ranges::sort(change);
@@ -412,7 +412,7 @@ comb: {}
 * #nodes = O(count).
 * TC = O(count * n)
 */
-void Knapsack::_NumberCombinations(size_t start, size_t end, size_t count, vector<size_t> &comb, vector<vector<size_t>> &result)
+void Knapsack::_NumberCombinations(size_t start, size_t end, size_t count, vector<size_t>& comb, vector<vector<size_t>>& result)
 {
 	if (!count)
 		result.push_back(comb);
@@ -429,7 +429,7 @@ void Knapsack::_NumberCombinations(size_t start, size_t end, size_t count, vecto
  * Given two integers n and k, return all possible combinations of k numbers chosen from the range [1, n].
  * You may return the answer in any order. Note that combinations are unordered, i.e., [1,2] and [2,1] are considered to be the same combination.
  */
-void Knapsack::NumberCombinations(size_t n, size_t k, vector<vector<size_t>> &result)
+void Knapsack::NumberCombinations(size_t n, size_t k, vector<vector<size_t>>& result)
 {
 	vector<size_t> comb;
 	_NumberCombinations(1, n, k, comb, result);
@@ -441,7 +441,7 @@ void Knapsack::NumberCombinations(size_t n, size_t k, vector<vector<size_t>> &re
  *  0(1)	1(1)
  *     -1(0) 0(1)
  */
-size_t Knapsack::StairsClimbingDynamicProgramming(long destination, vector<size_t> const &steps)
+size_t Knapsack::StairsClimbingDynamicProgramming(long destination, vector<size_t> const& steps)
 {
 	if (!destination) // 0 step = stays. So it is one possibility.
 		return 1;
@@ -491,7 +491,7 @@ size_t Knapsack::StairsClimbingDynamicProgramming(long destination, vector<size_
  * {1,0,0}, {1,1,0}, {1,1,2}, {4,1,2}, {4,7,2}, {4,7,13}, {24,7,13} => [n % 3] = 24
  *
  */
-size_t Knapsack::StairsClimbingDynamicProgrammingBottomUp(long destination, vector<size_t> const &steps)
+size_t Knapsack::StairsClimbingDynamicProgrammingBottomUp(long destination, vector<size_t> const& steps)
 {
 	/* Limitation: The steps are 1 apart: [1,2,3,...] <- diff=1. What happens if the steps are varying sizes: [1,3,6,8...] <- diffs are different */
 	vector<size_t> combinations(steps.size(), 0);
@@ -500,13 +500,13 @@ size_t Knapsack::StairsClimbingDynamicProgrammingBottomUp(long destination, vect
 	{
 		combinations[i % combinations.size()] = parallel_reduce(
 			blocked_range<size_t>(0, combinations.size()), 0uz, // Sum of half-open [0, steps.size()) elements
-			[&](tbb::blocked_range<size_t> const &r, size_t running_total)
+			[&](tbb::blocked_range<size_t> const& r, size_t running_total)
 			{
 				for (size_t i = r.begin(); i < r.end(); i++)
 					running_total += combinations[i];
 				return running_total;
 			},
-			std::plus<size_t>());
+			plus<size_t>());
 	}
 	return combinations[destination % combinations.size()];
 }

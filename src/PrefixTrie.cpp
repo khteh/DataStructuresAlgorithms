@@ -4,7 +4,7 @@ PrefixTrie::PrefixTrie()
 	: _root(make_unique<PrefixTrieNode>())
 {
 }
-PrefixTrie::PrefixTrie(vector<string> &str)
+PrefixTrie::PrefixTrie(vector<string>& str)
 	: PrefixTrie()
 {
 	for (vector<string>::const_iterator it = str.begin(); it != str.end(); it++)
@@ -19,22 +19,22 @@ size_t PrefixTrie::Count() const
 {
 	return _root ? _root->Count() : 0;
 }
-void PrefixTrie::InsertString(string const &str)
+void PrefixTrie::InsertString(string const& str)
 {
 	if (!_root)
 		_root = make_unique<PrefixTrieNode>();
 	_root->InsertString(str, 0);
 }
-void PrefixTrie::RemoveString(string const &str)
+void PrefixTrie::RemoveString(string const& str)
 {
 	if (_root)
 		_root->RemoveString(str);
 }
-bool PrefixTrie::Find(string const &prefix)
+bool PrefixTrie::Find(string const& prefix)
 {
 	return _root && !prefix.empty() ? _root->Find(prefix) : false;
 }
-vector<string> PrefixTrie::StartsWith(string const &prefix)
+vector<string> PrefixTrie::StartsWith(string const& prefix)
 {
 	return _root ? _root->StartsWith(prefix, 0) : vector<string>();
 }
@@ -42,11 +42,11 @@ vector<string> PrefixTrie::GetNodes()
 {
 	return _root ? _root->GetNodes() : vector<string>();
 }
-PrefixTrieNode *PrefixTrie::GetNode(string const &prefix)
+PrefixTrieNode* PrefixTrie::GetNode(string const& prefix)
 {
 	return _root && !prefix.empty() ? _root->GetNode(prefix, 0) : nullptr;
 }
-string PrefixTrie::LongestCommonPrefix(string const &prefix)
+string PrefixTrie::LongestCommonPrefix(string const& prefix)
 {
 	return _root && !prefix.empty() ? _root->LongestCommonPrefix(prefix) : "";
 }
@@ -109,7 +109,7 @@ vector<string> PrefixTrieNode::GetNodes()
 	}
 	return result;
 }
-vector<string> PrefixTrieNode::StartsWith(string const &prefix, size_t index)
+vector<string> PrefixTrieNode::StartsWith(string const& prefix, size_t index)
 {
 	vector<string> result;
 	if (index < prefix.size() && _children.count(prefix[index]))
@@ -124,7 +124,7 @@ vector<string> PrefixTrieNode::StartsWith(string const &prefix, size_t index)
 			apple, appendix, appetite
 			prefix: app
 			index: 3
-			_children contains 'l', 'e' but ordered to 'e', 'l' as std::map is ordered
+			_children contains 'l', 'e' but ordered to 'e', 'l' as map is ordered
 		*/
 		for (map<char, unique_ptr<PrefixTrieNode>>::iterator it = _children.begin(); it != _children.end(); it++)
 		{
@@ -136,7 +136,7 @@ vector<string> PrefixTrieNode::StartsWith(string const &prefix, size_t index)
 }
 /* Find exact string with '.' wildcard character
  */
-bool PrefixTrieNode::Find(string const &prefix)
+bool PrefixTrieNode::Find(string const& prefix)
 {
 	/* Worst case time complexity: O(26x26)
 	* _key = abc
@@ -179,7 +179,7 @@ bool PrefixTrieNode::Find(string const &prefix)
 	// Either Leaf node (!_key.empty()) or prefix not found
 	return !_key.empty();
 }
-PrefixTrieNode *PrefixTrieNode::GetNode(string const &prefix, size_t index)
+PrefixTrieNode* PrefixTrieNode::GetNode(string const& prefix, size_t index)
 {
 	if (index < prefix.size() && _children.count(prefix[index]))
 		return _children[prefix[index]]->GetNode(prefix, index + 1);
@@ -194,9 +194,9 @@ string PrefixTrieNode::ExtendPrefix()
 		oss << _children.begin()->first << _children.begin()->second->ExtendPrefix();
 	return oss.str();
 }
-string PrefixTrieNode::LongestCommonPrefix(string const &prefix)
+string PrefixTrieNode::LongestCommonPrefix(string const& prefix)
 {
 	string prefix1(prefix);
-	PrefixTrieNode *node = GetNode(prefix, 0);
+	PrefixTrieNode* node = GetNode(prefix, 0);
 	return node ? prefix1.append(node->ExtendPrefix()) : "";
 }

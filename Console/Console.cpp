@@ -837,7 +837,7 @@ int main(int argc, char* argv[])
 				running_total += a[i];
 			return running_total;
 		},
-		std::plus<long>());
+		plus<long>());
 	assert(sum == 123);
 
 	a.clear();
@@ -853,7 +853,7 @@ int main(int argc, char* argv[])
 				running_total += a[i];
 			return running_total;
 		},
-		std::plus<long>());
+		plus<long>());
 	assert(sum == 3);
 
 	a.clear();
@@ -869,7 +869,7 @@ int main(int argc, char* argv[])
 				running_total += a[i];
 			return running_total;
 		},
-		std::plus<long>());
+		plus<long>());
 	assert(sum == 55);
 	a.clear();
 	b.clear();
@@ -885,7 +885,7 @@ int main(int argc, char* argv[])
 				running_total += b[i];
 			return running_total;
 		},
-		std::plus<long>());
+		plus<long>());
 	ranges::copy(b, ostream_iterator<long>(cout, " "));
 	assert(sum == 24);
 	cout << "sum: " << sum << endl;

@@ -3,9 +3,9 @@
 #include <iterator>
 void split(const string& s, char delim, vector<size_t>& elems)
 {
-	std::stringstream ss(s);
-	std::string item;
-	while (std::getline(ss, item, delim))
+	stringstream ss(s);
+	string item;
+	while (getline(ss, item, delim))
 	{
 		size_t i;
 		istringstream(item) >> i;
@@ -17,7 +17,7 @@ void splitString(size_t count, const string& s, char delim, set<string>& elems, 
 	stringstream ss(s);
 	string item;
 	set<string> handled;
-	while (std::getline(ss, item, delim))
+	while (getline(ss, item, delim))
 		if (!item.empty())
 		{
 			pair<map<string, size_t>::iterator, bool> result = stringCounts.emplace(item, count);

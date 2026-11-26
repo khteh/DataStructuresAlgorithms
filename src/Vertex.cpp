@@ -40,12 +40,12 @@ Vertex<TTag, TItem>::Vertex(TTag tag, TItem item, map<shared_ptr<Vertex<TTag, TI
 {
 }
 template <typename TTag, typename TItem>
-Vertex<TTag, TItem>::Vertex(const Vertex<TTag, TItem> &vertex)
+Vertex<TTag, TItem>::Vertex(const Vertex<TTag, TItem>& vertex)
 	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(vertex._tag), _item(vertex._item), _sum(vertex._sum), _cost(vertex._cost), _neighbours(vertex._neighbours)
 {
 }
 template <typename TTag, typename TItem>
-Vertex<TTag, TItem>::Vertex(Vertex<TTag, TItem> &&vertex) noexcept // Move constructor
+Vertex<TTag, TItem>::Vertex(Vertex<TTag, TItem>&& vertex) noexcept // Move constructor
 	: enable_shared_from_this<Vertex<TTag, TItem>>(), _tag(vertex._tag), _item(vertex._item), _sum(vertex._sum), _cost(vertex._cost), _neighbours(vertex._neighbours)
 {
 	vertex.Swap(*this);
@@ -61,7 +61,7 @@ Vertex<TTag, TItem>::~Vertex()
 	_neighbours.clear();
 }
 template <typename TTag, typename TItem>
-void Vertex<TTag, TItem>::Swap(Vertex<TTag, TItem> &other)
+void Vertex<TTag, TItem>::Swap(Vertex<TTag, TItem>& other)
 {
 	swap(_item, other._item);
 	swap(_tag, other._tag);
@@ -145,7 +145,7 @@ size_t Vertex<TTag, TItem>::NeighbourCount() const
 	return _neighbours.size();
 }
 template <typename TTag, typename TItem>
-size_t Vertex<TTag, TItem>::EvenForestDescendentsCount(TTag parent, set<string> &cuts) const
+size_t Vertex<TTag, TItem>::EvenForestDescendentsCount(TTag parent, set<string>& cuts) const
 {
 	ostringstream oss;
 	size_t count = 1; // Include itself
@@ -170,7 +170,7 @@ long Vertex<TTag, TItem>::GetCost(shared_ptr<Vertex<TTag, TItem>> v)
 	if (v->GetTag() == GetTag() && v->GetItem() == GetItem())
 		return 0;
 	/*
-	std::map::operator[] has no const overload. If the key isn’t present, it inserts a default-constructed value, so it always potentially modifies the map.
+	map::operator[] has no const overload. If the key isn’t present, it inserts a default-constructed value, so it always potentially modifies the map.
 	*/
 	return _neighbours.count(v) ? _neighbours[v] : -1;
 }
@@ -261,17 +261,17 @@ void Vertex<TTag, TItem>::ResetTotalCost()
 }
 #if 0
 template <typename T>
-Vertex<TTag, TItem> &Vertex<TTag, TItem>::operator=(const Vertex<TTag, TItem> &rhs) // Copy assignment operator
+Vertex<TTag, TItem>& Vertex<TTag, TItem>::operator=(const Vertex<TTag, TItem>& rhs) // Copy assignment operator
 {
 	_item = rhs.item;
 	_tag = rhs._tag;
 	return *this;
 }
 template <typename T>
-Vertex<TTag, TItem> &Vertex<TTag, TItem>::operator=(Vertex<TTag, TItem> &&rhs) noexcept// Move assignment operator
+Vertex<TTag, TItem>& Vertex<TTag, TItem>::operator=(Vertex<TTag, TItem>&& rhs) noexcept// Move assignment operator
 {
 	// 1. Self-assignment check
-	if (this != &rhs) {	
+	if (this != &rhs) {
 		Vertex<TTag, TItem> tmp(move(rhs));
 		tmp.Swap(*this);
 	}
@@ -285,18 +285,18 @@ This allows the caller to decide whether to construct the rhs parameter
 using its copy constructor or move constructor...
 */
 template <typename TTag, typename TItem>
-Vertex<TTag, TItem> &Vertex<TTag, TItem>::operator=(Vertex<TTag, TItem> rhs)
+Vertex<TTag, TItem>& Vertex<TTag, TItem>::operator=(Vertex<TTag, TItem> rhs)
 {
 	rhs.Swap(*this);
 	return *this;
 }
 template <typename TTag, typename TItem>
-bool Vertex<TTag, TItem>::operator==(const Vertex<TTag, TItem> &rhs) const // const member, const param. it works for const and non-const objects alike
+bool Vertex<TTag, TItem>::operator==(const Vertex<TTag, TItem>& rhs) const // const member, const param. it works for const and non-const objects alike
 {
 	return _item == rhs._item && _tag == rhs._tag;
 }
 template <typename TTag, typename TItem>
-common_comparison_category_t<compare_three_way_result_t<TItem>, weak_ordering> Vertex<TTag, TItem>::operator<=>(const Vertex<TTag, TItem> &rhs) const
+common_comparison_category_t<compare_three_way_result_t<TItem>, weak_ordering> Vertex<TTag, TItem>::operator<=>(const Vertex<TTag, TItem>& rhs) const
 {
 	return _item <=> rhs._item;
 }

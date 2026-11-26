@@ -581,7 +581,7 @@ bool Search::_CanEatAllBananasInTime(vector<size_t> const& piles, size_t rate, s
             for (size_t i = r.begin(); i < r.end(); i++)
                 running_total += (size_t)(piles[i] / rate) + ((piles[i] % rate) ? 1 : 0);
             return running_total; },
-        std::plus<size_t>());
+        plus<size_t>());
     return duration <= hours;
 }
 bool Search::_IsValidSubSequence(vector<size_t> const& data, size_t check, size_t k)
@@ -608,7 +608,7 @@ bool Search::_IsValidSubSequence(vector<size_t> const& data, size_t check, size_
 size_t Search::MinCapacityToShipWithinDays(vector<size_t> const& weights, size_t days)
 {
     /* Start with the weight of the single largest item. If start with min_element, other items with weights larger than it cannot fit into the capacity */
-    size_t start = *ranges::max_element(weights), end = ranges::fold_left(weights, 0, std::plus<size_t>());
+    size_t start = *ranges::max_element(weights), end = ranges::fold_left(weights, 0, plus<size_t>());
     for (; start <= end;)
     {
         int mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid -1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
@@ -631,7 +631,7 @@ size_t Search::MinCapacityToShipWithinDays(vector<size_t> const& weights, size_t
  */
 size_t Search::MinimumLargestSum(vector<size_t> const& data, size_t k)
 {
-    long start = *ranges::max_element(data), end = ranges::fold_left(data, 0, std::plus<long>());
+    long start = *ranges::max_element(data), end = ranges::fold_left(data, 0, plus<long>());
     for (; start <= end;)
     {
         int mid = start + (end - start) / 2 + (end - start) % 2; // If modulo component is added, mid - 1 and mid + 1 should always be used. Otherwise will hit infinite loop for any (end - start) == 1
@@ -1014,7 +1014,7 @@ bool Search::_WithinThreshold(vector<size_t> const& data, size_t threshold, size
 {
 #if 0
     This also works!
-        size_t result = ranges::fold_left(data | std::views::transform([&](size_t x) { return ceil_div(x, check); }), 0, std::plus<size_t>()) <= threshold;
+        size_t result = ranges::fold_left(data | std::views::transform([&](size_t x) { return ceil_div(x, check); }), 0, plus<size_t>()) <= threshold;
 #endif
     size_t result = parallel_reduce(
         blocked_range<size_t>(0, data.size()), 0, [check, &data](tbb::blocked_range<size_t> const& r, size_t running_total)
@@ -1022,7 +1022,7 @@ bool Search::_WithinThreshold(vector<size_t> const& data, size_t threshold, size
             for (size_t i = r.begin(); i < r.end(); i++)
                 running_total += ceil_div(data[i], check);
             return running_total; },
-        std::plus<size_t>());
+        plus<size_t>());
     return result <= threshold;
 }
 /*

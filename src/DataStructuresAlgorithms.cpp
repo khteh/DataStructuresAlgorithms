@@ -1665,7 +1665,7 @@ void EqualAverageDivide(vector<long>& data, vector<long>& left)
 				running_total += data[i];
 			return running_total;
 		},
-		std::plus<long>());
+		plus<long>());
 	for (K = 1; K < (N - K); K++)
 	{
 		if (((K * sum) % N)) //  check if such P can be integer (we operate with array of integers).
@@ -4444,8 +4444,8 @@ void cpp20ranges()
 	a.resize(10);
 	ranges::generate(a, [n = 1]() mutable
 		{ return n++; });
-	ranges::transform(a, a, a.begin(), std::plus{}); // This is binary_transform using 2 vectors. In this case, it uses duplicate vector a.
-	cout << "After transform with std::plus: ";
+	ranges::transform(a, a, a.begin(), plus{}); // This is binary_transform using 2 vectors. In this case, it uses duplicate vector a.
+	cout << "After transform with plus: ";
 	ranges::copy(a, ostream_iterator<long>(cout, ", "));
 	cout << endl;
 }
@@ -5094,7 +5094,7 @@ size_t FindConnectedComponents(vector<long>& data)
 					running_total += !(data[j] & (1L << i)) ? 1 : 0;
 				return running_total;
 			},
-			std::plus<size_t>());
+			plus<size_t>());
 		if (zeroes)
 			result += 1 << zeroes;
 	}

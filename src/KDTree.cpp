@@ -11,12 +11,12 @@ KDTreeCompare<T>::KDTreeCompare(size_t dimension)
 {
 }
 template <typename T>
-bool KDTreeCompare<T>::operator()(const vector<T> &lhs, const vector<T> &rhs) const
+bool KDTreeCompare<T>::operator()(const vector<T>& lhs, const vector<T>& rhs) const
 {
 	return lhs[dimension_] < rhs[dimension_];
 }
 template <typename T>
-KDNode<T>::KDNode(vector<T> &location, long axis, long depth, shared_ptr<KDNode<T>> left, shared_ptr<KDNode<T>> right)
+KDNode<T>::KDNode(vector<T>& location, long axis, long depth, shared_ptr<KDNode<T>> left, shared_ptr<KDNode<T>> right)
 	: location_(location), axis_(axis), depth_(depth), left_(move(left)), right_(move(right))
 {
 }
@@ -49,7 +49,7 @@ shared_ptr<KDNode<T>> KDNode<T>::Right()
 }
 
 template <typename T>
-KDTree<T>::KDTree(vector<vector<T>> &data, long depth)
+KDTree<T>::KDTree(vector<vector<T>>& data, long depth)
 {
 	_root = Construct(data, depth);
 }
@@ -63,8 +63,8 @@ shared_ptr<KDNode<T>> KDTree<T>::Construct(vector<vector<T>> data, long depth)
 	// Select axis based on depth so that axis cycles through all valid values
 	// Assume all points have the same dimension
 	long axis = depth % data[0].size();
-	ranges::sort(data, [axis](const std::vector<T> &a, const std::vector<T> &b)
-				 { return a[axis] < b[axis]; });
+	ranges::sort(data, [axis](const vector<T>& a, const vector<T>& b)
+		{ return a[axis] < b[axis]; });
 	long median = data.size() / 2;
 	vector<vector<T>> left, right;
 	if (median)

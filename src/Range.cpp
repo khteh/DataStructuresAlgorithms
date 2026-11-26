@@ -390,7 +390,7 @@ size_t Range::MinimumCandies(vector<size_t> const& data)
 				running_total += result[i];
 			return running_total;
 		},
-		std::plus<size_t>());
+		plus<size_t>());
 	return sum;
 }
 /*
@@ -914,7 +914,7 @@ size_t Range::VectorEqualSplit(vector<size_t> const& data)
 				running_total += data[j];
 			return running_total;
 		},
-		std::plus<size_t>());
+		plus<size_t>());
 	if (!right)
 		return data.size() - 1; // [0 0 0] -> [0 0] [0] -> [0] [0]
 	else if (unique.size() == 1 && data[0] && (right % 2 || data.size() % 2)) // [1 1 1] -> cannot split!

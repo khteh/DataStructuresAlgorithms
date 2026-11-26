@@ -396,9 +396,9 @@ int64_t Palindrome::MaxSizePalindromeCount(string const& s, size_t l, size_t r)
     factorials.push_back(1);
     for (size_t i = 1; i <= s.size() / 2; i++)
     {
-        if (factorials.back() > 0 && (factorials.back() * i) > std::numeric_limits<int64_t>::max())
+        if (factorials.back() > 0 && (factorials.back() * i) > numeric_limits<int64_t>::max())
             throw range_error("overflow!");
-        if (factorials.back() < 0 && (factorials.back() * i) < std::numeric_limits<int64_t>::min())
+        if (factorials.back() < 0 && (factorials.back() * i) < numeric_limits<int64_t>::min())
             throw range_error("overflow!");
         factorials.push_back((factorials.back() * i) % modulo);
     }

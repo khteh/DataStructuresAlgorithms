@@ -1,15 +1,15 @@
 #include "pch.h"
 #include "cout128.h"
-template ostream &operator<<(ostream &, int128_t);
-template ostream &operator<<(ostream &, uint128_t);
+template ostream& operator<<(ostream&, int128_t);
+template ostream& operator<<(ostream&, uint128_t);
 template string to_string(int128_t);
 template string to_string(uint128_t);
-template istream &operator>>(istream &, int128_t &);
-template istream &operator>>(istream &, uint128_t &);
-template istream &operator>>(istream &&, int128_t &);
-template istream &operator>>(istream &&, uint128_t &);
+template istream& operator>>(istream&, int128_t&);
+template istream& operator>>(istream&, uint128_t&);
+template istream& operator>>(istream&&, int128_t&);
+template istream& operator>>(istream&&, uint128_t&);
 // https://stackoverflow.com/questions/25114597/how-to-print-int128-in-g
-to_chars_result to_chars(char *begin, char *end, uint128_t x) noexcept
+to_chars_result to_chars(char* begin, char* end, uint128_t x) noexcept
 {
     // if x fits into a 64-bit integer, we delegate to std::to_chars
     if (x <= uint64_t(-1))
@@ -35,24 +35,24 @@ to_chars_result to_chars(char *begin, char *end, uint128_t x) noexcept
 
     // The remainder is exactly 19 digits long, and we have to zero-pad
     // to the left if it is shorter.
-    char *result_end = upper_result.ptr + lower_max_digits;
-    char *result_begin = result_end - lower_length;
+    char* result_end = upper_result.ptr + lower_max_digits;
+    char* result_begin = result_end - lower_length;
     memmove(result_begin, upper_result.ptr, size_t(lower_length));
     memset(upper_result.ptr, '0', size_t(lower_max_digits - lower_length));
 
-    return {result_end, std::errc{}};
+    return { result_end, std::errc{} };
 }
-to_chars_result to_chars(char *begin, char *end, int128_t x) noexcept
+to_chars_result to_chars(char* begin, char* end, int128_t x) noexcept
 {
     // For positive numbers, we delegate to the unsigned function immediately.
     if (x >= 0)
         return ::to_chars(begin, end, uint128_t(x));
     // For negatives, we can check if 64 bits are enough and use std::to_chars.
-    if (x >= std::numeric_limits<int64_t>::min())
+    if (x >= numeric_limits<int64_t>::min())
         return std::to_chars(begin, end, int64_t(x));
     // Otherwise, we simply prepend a '-' sign and delegate to the unsigned function.
     if (end - begin < 2)
-        return {begin, std::errc::value_too_large};
+        return { begin, std::errc::value_too_large };
     *begin = '-';
     return ::to_chars(begin + 1, end, -uint128_t(x));
 }
@@ -61,7 +61,7 @@ to_chars_result to_chars(char *begin, char *end, int128_t x) noexcept
 // or hexadecimal, upper case letters, plus sign, fill character and width, and
 // fill placement. isSigned: like the standard integer types, showpos adds a '+'
 // only to signed types, so unsigned values never get one.
-void out128(ostream &out, uint128_t val, bool neg, bool isSigned)
+void out128(ostream& out, uint128_t val, bool neg, bool isSigned)
 {
     // Note if the number is zero. (No hex or octal prefix in this case.)
     auto zero = val == 0;
@@ -72,10 +72,10 @@ void out128(ostream &out, uint128_t val, bool neg, bool isSigned)
 
     // Set base for digits.
     unsigned base = state & ios_base::hex ? 16 : state & ios_base::oct ? 8
-                                                                       : 10;
+        : 10;
 
-    // Space for digits and prefix. Generate digits starting at the end of the
-    // string, going backwards. num will be the digit string. Terminate it.
+// Space for digits and prefix. Generate digits starting at the end of the
+// string, going backwards. num will be the digit string. Terminate it.
     char str[47];
     auto end = str + sizeof(str), num = end;
     *--num = 0;
@@ -151,7 +151,7 @@ void out128(ostream &out, uint128_t val, bool neg, bool isSigned)
         }
 }
 template <is_128_bits T>
-ostream &operator<<(ostream &out, T val)
+ostream& operator<<(ostream& out, T val)
 {
     if constexpr (is_same_v<T, uint128_t>)
         out128(out, val, false, false);
@@ -195,7 +195,7 @@ string to_string(T x)
     // 40 characters is always enough to fit 128-bit integers.
     char buffer[40];
     to_chars_result result = ::to_chars(buffer, end(buffer), x);
-    return string{buffer, result.ptr};
+    return string{ buffer, result.ptr };
 }
 /* Read a 128-bit integer from in. Follows the same rules as the standard operator>> for
  * long long / unsigned long long (std::num_get), so the two behave the same way:
@@ -210,12 +210,12 @@ string to_string(T x)
  * - Empty input or only whitespace: val is unchanged, failbit and eofbit (set by the sentry).
  */
 template <is_128_bits T>
-istream &operator>>(istream &in, T &val)
+istream& operator>>(istream& in, T& val)
 {
     istream::sentry sentry(in); // Skips leading whitespace if skipws is set
     if (!sentry)
         return in;
-    streambuf *buf = in.rdbuf();
+    streambuf* buf = in.rdbuf();
     ios_base::iostate state = ios_base::goodbit;
     int c = buf->sgetc(); // Peek at the next character without consuming it
 
@@ -333,7 +333,7 @@ The same applies to anything in std that uses >> or << internally, such as std::
 They can’t see your global 128-bit operators for the same reason, so they won’t work with them.
  */
 template <is_128_bits T>
-istream &operator>>(istream &&in, T &val)
+istream& operator>>(istream&& in, T& val)
 {
     return in >> val; // in has a name, so it's an lvalue here: calls the overload above
 }

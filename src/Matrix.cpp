@@ -1139,7 +1139,7 @@ bool Matrix<T>::ContainersBallsSwap(vector<vector<T>> const& containers)
 			{
 				for (size_t j = r.begin(); j < r.end(); j++)
 					running_total += containers[i][j];
-				return running_total; }, std::plus<size_t>()));
+				return running_total; }, plus<size_t>()));
 		for (size_t j = 0; j < containers[i].size(); j++)
 			colSums[j] += containers[i][j];
 	}
