@@ -117,7 +117,7 @@ TEST_P(LongestCommonSubstringWithFixesTestFixture, LongestCommonSubstringWithFix
 INSTANTIATE_TEST_SUITE_P(
     LongestCommonSubstringWithFixesTests,
     LongestCommonSubstringWithFixesTestFixture,
-    ::testing::Values(make_tuple(2, "abcd", "adbc", 0), make_tuple(3, "abcd", "adbc", 1), make_tuple(4, "helloworld", "yellomarin", 0), make_tuple(8, "helloworld", "yellomarin", 3),
+    ::testing::Values(make_tuple(0, "", "adbc", 0), make_tuple(4, "abcd", "adbc", 4), make_tuple(2, "abcd", "adbc", 0), make_tuple(3, "abcd", "adbc", 1), make_tuple(4, "helloworld", "yellomarin", 0), make_tuple(8, "helloworld", "yellomarin", 3),
         make_tuple(4, "tabriz", "torino", 2), make_tuple(3, "abacba", "abcaba", 0)));
 
 class LongestStringWithCharacterReplacementTestFixture : public testing::TestWithParam<tuple<size_t, string, size_t>>

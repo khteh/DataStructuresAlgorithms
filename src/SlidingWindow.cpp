@@ -393,14 +393,18 @@ template<typename T>
 size_t SlidingWindow<T>::LongestCommonSubstringWithFixes(string const& str1, string const& str2, size_t k)
 {
     size_t m = str1.size(), n = str2.size(), result = 0;
+    if (str1.empty() || str2.empty())
+        return 0;
+    else if (k >= max(str1.size(), str2.size()))
+        return k;
     for (long d = 1 - m; d < (long)n; d++) {
         size_t dlength = min<size_t>(n, min(m, min<size_t>(n + d, m - d)));
-        for (size_t i = d >= 0 ? 0 : abs(d), j = i, mismatches = 0, count = 0; count < dlength&& i <= j; count++, j++) {
-            if (str1[j] == str2[j + d])
-                result = max(result, j - i + 1);
+        for (size_t l = d >= 0 ? 0 : abs(d), r = l, mismatches = 0, count = 0; count < dlength&& l <= r; count++, r++) {
+            if (str1[r] == str2[r + d])
+                result = max(result, r - l + 1);
             else if (++mismatches > k) {
-                for (;mismatches > k; i++) { // Doesn't work. Shrink from the front.
-                    if (str1[i] != str2[i + d])
+                for (;mismatches > k; l++) { // Doesn't work. Shrink from the front.
+                    if (str1[l] != str2[l + d])
                         mismatches--;
                 }
             }
