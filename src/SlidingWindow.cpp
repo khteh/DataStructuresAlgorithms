@@ -265,7 +265,7 @@ size_t SlidingWindow<T>::LongestStringWithCharacterReplacement(string const& s, 
 }
 /*
 https://www.hackerrank.com/challenges/substring-diff/problem
-WIP - 2 test cases failed
+100%
 In this problem, we'll use the term "longest common substring" loosely. It refers to substrings differing at some number or fewer characters when compared *index by index*.
 For example, 'abc' and 'adc' differ in one position, 'aab' and 'aba' differ in two.
 Given two strings and an integer , determine the length of the longest common substrings of the two strings that differ in no more than  positions.
@@ -279,22 +279,22 @@ All the lengths add up to 6 × 6 = 36: every cell of the comparison table is on 
 1 2 3 4	5 6
 5 4 3 2 1
 
-With s1 of length n and s2 of length m, the diagonal with shift d, comparing s1[i] with s2[i + d], has length:
+With s1 (str1) of length m and s2 (str2) of length n, as in the code, the diagonal with shift d, comparing s1[i] with s2[i + d], has length:
 
-min(n, m, n + d, m − d)
+min(m, n, m + d, n − d)
 
 Each of the four limits is something that runs out first:
 
-n: it can't pair up more characters than s1 has.
-m: nor more than s2 has.
-n + d: for a negative d, the first |d| characters of s1 have nothing to pair with.
-m − d: for a positive d, the first d characters of s2 have nothing to pair with.
+m: it can't pair up more characters than s1 has.
+n: nor more than s2 has.
+m + d: for a negative d, the first |d| characters of s1 have nothing to pair with.
+n − d: for a positive d, the first d characters of s2 have nothing to pair with.
 
 The shifts run from d = −(m − 1) to n − 1, so there are n + m − 1 diagonals.
 
-When the strings have different lengths, n and m with n ≤ m, the longest diagonals have length n, the full shorter string.
-There are m − n + 1 of them, one for each place the shorter string fits inside the longer one.
-With equal lengths, n = m, the formula becomes min(n + d, n − d) = n − |d|.
+When the strings have different lengths, the longest diagonals have length min(m, n), the full shorter string.
+There are |m − n| + 1 of them, one for each place the shorter string fits inside the longer one.
+With equal lengths, m = n, the formula becomes min(m + d, n − d) = n − |d|.
 Without the gap between n and m there's no plateau, just the peak at d = 0, i.e., the length of the diagonal peaks at d:0.
 
 s1: tabriz
@@ -362,21 +362,21 @@ d=-5:
       abcd
 d=-4:
  uvwxyz
-      abcd
+     abcd
 
 d=0:
  uvwxyz
  abcd
 
 d=3:
-   uvwxyz
-      abcd
+    uvwxyz
+ abcd
 
 s1: abcd
 s2: uvwxyz
 m:4, n:6
 d: [-3, 5]:
-s1[i] s2[i+1]:
+s1[i] s2[i+d]:
 d=-3:
  abcd
     uvwxyz
