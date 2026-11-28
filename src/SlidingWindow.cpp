@@ -395,8 +395,8 @@ size_t SlidingWindow<T>::LongestCommonSubstringWithFixes(string const& str1, str
     size_t m = str1.size(), n = str2.size(), result = 0;
     if (str1.empty() || str2.empty())
         return 0;
-    else if (k >= max(str1.size(), str2.size()))
-        return k;
+    else if (k >= min(str1.size(), str2.size()))
+        return min(str1.size(), str2.size());
     for (long d = 1 - m; d < (long)n; d++) {
         size_t dlength = min<size_t>(n, min(m, min<size_t>(n + d, m - d)));
         for (size_t l = d >= 0 ? 0 : abs(d), r = l, mismatches = 0, count = 0; count < dlength&& l <= r; count++, r++) {
