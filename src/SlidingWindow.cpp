@@ -309,7 +309,7 @@ s2		    t	o	r	i	n
 Match?		✗	✗	✓	✓	✗
 
 The window is a stretch of these positions, from a left end to a right end:
-dlength = min(n, m, n + d, m - d)
+dlength = min(m, n, m + d, n - d)
 n == m: dlength = n - |d| = 6 - 1 = 5
 
 Step	What happens	            Window	Mismatches	Length
@@ -397,17 +397,16 @@ size_t SlidingWindow<T>::LongestCommonSubstringWithFixes(string const& str1, str
         return 0;
     else if (k >= min(str1.size(), str2.size()))
         return min(str1.size(), str2.size());
-    for (long d = 1 - m; d < (long)n; d++) {
-        size_t dlength = min<size_t>(n, min(m, min<size_t>(n + d, m - d)));
-        for (size_t l = d >= 0 ? 0 : abs(d), r = l, mismatches = 0, count = 0; count < dlength&& l <= r; count++, r++) {
-            if (str1[r] == str2[r + d])
-                result = max(result, r - l + 1);
-            else if (++mismatches > k) {
-                for (;mismatches > k; l++) { // Doesn't work. Shrink from the front.
-                    if (str1[l] != str2[l + d])
-                        mismatches--;
-                }
-            }
+    for (long d = 1 - (long)m; d < (long)n; d++) { // str1[i] is compared with str2[i + d]
+        size_t start = d >= 0 ? 0 : -d; // The first i on this diagonal
+        size_t dlength = min({ (long)m, (long)n, (long)m + d, (long)n - d }); // m is str1's length and n is str2's
+        for (size_t l = start, r = start, mismatches = 0; r < start + dlength; r++) {
+            if (str1[r] != str2[r + d])
+                mismatches++;
+            for (; mismatches > k; l++) // Too many mismatches: shrink from the left until the window is allowed again
+                if (str1[l] != str2[l + d])
+                    mismatches--;
+            result = max(result, r - l + 1); // Every allowed window counts, whether its last pair matches or not
         }
     }
     return result;
